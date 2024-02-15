@@ -1,0 +1,18 @@
+version: '3.4'
+name: cabinet-app
+
+services:
+  web:
+    build: .
+    container_name: cabinet-app
+    restart: unless-stopped
+    ports:
+      # http://localhost:8081
+      - "8081:80"
+
+#  web:
+#    image: ghcr.io/digital-blueprint/cabinet-app:latest
+#    container_name: cabinet-app
+#    restart: always
+#    ports:
+#      - "8081:80"

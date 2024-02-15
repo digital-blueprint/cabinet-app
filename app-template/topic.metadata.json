@@ -1,0 +1,21 @@
+{
+    "name": {
+        "de": "Cabinet",
+        "en": "Cabinet"
+    },
+    "short_name": {
+        "de": "Cabinet",
+        "en": "Cabinet"
+    },
+    "description": {
+        "de": "Mit dieser Applikation können Sie ......",
+        "en": "With this application you can ......"
+    },
+    "routing_name": "cabinet",
+    "activities": [
+        {"path": "/app/dbp-dd-activity.metadata.json"},
+        {"path": "/app/dbp-qualified-signature-pdf-upload.metadata.json"},
+        {"path": "/app/dbp-official-signature-pdf-upload.metadata.json"}
+    ],
+    "attributes": []
+}

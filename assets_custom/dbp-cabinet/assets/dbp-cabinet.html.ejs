@@ -1,0 +1,256 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="white"/>
+
+    <!-- Meta Data for Search Engines -->
+    <meta title="Postservice | <%= shortName %>">
+    <meta name="description" content="Elektronisches Postservice description" />
+
+    <!-- Meta Data for open graph(facebook & co) -->
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Postservice | <%= shortName %>" />
+    <meta property="og:description" content="Elektronisches Postservice description" />
+    <meta property="og:url" content="<%= appDomain %>" />
+    <meta property="og:site_name" content="epost" />
+
+    <!-- Favicons -->
+    <link rel="shortcut icon" type="image/x-icon" href="<%= getPrivateUrl('icon/favicon.ico') %>">
+    <link rel="icon" type="image/svg+xml" href="<%= getPrivateUrl('icon/favicon.svg') %>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<%= getPrivateUrl('icon/apple-touch-icon.png') %>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<%= getPrivateUrl('icon/favicon-32x32.png') %>">
+    <link rel="icon" type="image/png" sizes="16x16" href="<%= getPrivateUrl('icon/favicon-16x16.png') %>">
+    <link rel="manifest" href="<%= getUrl(name + '.webmanifest') %>">
+    <link rel="mask-icon" href="<%= getPrivateUrl('icon/safari-pinned-tab.svg') %>" color="#e4154b">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-status-bar-style" content="white">
+
+    <!-- Loading spinner -->
+    <script type="module">
+        import {Spinner} from '<%= getPrivateUrl('tug_spinner.js') %>';
+        customElements.define('tug-spinner', Spinner);
+    </script>
+
+    <script type="module">
+        import '<%= getUrl(name + '.js') %>';
+        import {Logo} from '<%= getUrl('logo.js') %>';
+        customElements.define('tug-logo', Logo);
+    </script>
+
+
+    <!-- App bundles-->
+    <script type="module" src="<%= getUrl(name + '.js') %>"></script>
+
+    <!-- Prevent Chrome/Edge from suggesting to translate the page -->
+    <meta name="google" content="notranslate">
+
+    <!-- Font related CSS -->
+    <style>
+        @import "<%= getPrivateUrl('fonts/source-sans-pro/300.css') %>";
+        @import "<%= getPrivateUrl('fonts/source-sans-pro/400.css') %>";
+        @import "<%= getPrivateUrl('fonts/source-sans-pro/600.css') %>";
+
+        html {
+            font-family: 'Source Sans Pro', 'Calibri', 'Arial', 'sans-serif';
+            font-weight: 300;
+            font-size: 16px;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        #spinner{
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .light-theme{
+            --dbp-override-background: white;
+            --dbp-override-content: black;
+
+            --dbp-override-primary: #245b78;
+            --dbp-override-secondary: black;
+            --dbp-override-secondary-surface: white;
+            --dbp-override-on-secondary-surface: black;
+            --dbp-override-secondary-surface-border-color: black;
+
+            --dbp-override-muted: #5c5856;
+            --dbp-override-accent: #e4154b;
+            --dbp-override-info: #245b78;
+            --dbp-override-success: #138800;
+            --dbp-override-warning: #af6405;
+            --dbp-override-warning-surface: #ffad4d;
+            --dbp-override-warning-surface-border-color: #ffad4d;
+            --dbp-override-on-warning-surface: black;
+            --dbp-override-danger: #e4154b;
+
+            --dbp-override-border: 1px solid black;
+
+            --dbp-override-image-nextcloud: url(<%= getUrl('') %>images/nextcloud.svg);
+        }
+
+        .dark-theme {
+            --dbp-override-background: #131313;
+            --dbp-override-content: white;
+
+            --dbp-override-primary: #5483A0;
+            --dbp-override-primary-surface: #507c97;
+            --dbp-override-primary-surface-border-color: #5483A0;
+            --dbp-override-on-primary-surface: black;
+
+            --dbp-override-secondary: white;
+            --dbp-override-secondary-surface: #131313;
+            --dbp-override-on-secondary-surface: white;
+            --dbp-override-secondary-surface-border-color: white;
+
+            --dbp-override-accent: #e4154b;
+            --dbp-override-accent-surface: #e4154b;
+            --dbp-override-on-accent-surface: white;
+
+            --dbp-override-info: #5483A0;
+           --dbp-override-info-surface: #507c97;
+           --dbp-override-on-info-surface: black;
+           --dbp-override-info-surface-border-color: #5483A0;
+
+            --dbp-override-success: #7CB872;
+            --dbp-override-warning: #ffad4d;
+            --dbp-override-danger: #e4154b;
+            --dbp-override-danger-surface: #e4154b;
+            --dbp-override-on-danger-surface: white;
+            --dbp-override-muted: #afaca7;
+
+            --dbp-override-border: 1px solid white;
+
+            --dbp-override-image-nextcloud: url(/apps/greenlight/images/nextcloud.svg);
+        }
+
+
+        /* TU-Graz style override */
+        html {
+            --dbp-override-background: white;
+            --dbp-override-content: black;
+
+            --dbp-override-primary: #245b78;
+            --dbp-override-secondary: black;
+            --dbp-override-secondary-surface: white;
+            --dbp-override-on-secondary-surface: black;
+            --dbp-override-secondary-surface-border-color: black;
+
+            --dbp-override-muted: #5c5856;
+            --dbp-override-accent: #e4154b;
+            --dbp-override-info: #245b78;
+            --dbp-override-success: #138800;
+            --dbp-override-warning: #af6405;
+            --dbp-override-warning-surface: #ffad4d;
+            --dbp-override-warning-surface-border-color: #ffad4d;
+            --dbp-override-on-warning-surface: black;
+            --dbp-override-danger: #e4154b;
+
+            --dbp-override-border: 1px solid black;
+
+            --dbp-override-image-nextcloud: url(<%= getUrl('') %>images/nextcloud.svg);
+        }
+    </style>
+
+    <!-- Preloading/Preconnecting -->
+    <link rel="preconnect" href="<%= entryPointURL %>">
+    <link rel="preconnect" href="<%= keyCloakBaseURL %>">
+</head>
+
+<body>
+<<%= name %>
+    provider-root
+    lang="de" entry-point-url="<%= entryPointURL %>"
+    file-handling-enabled-targets="local,nextcloud,clipboard"
+    <%= enableAnnotations ? 'allow-annotating' : '' %>
+    <%= buildInfo.env !== 'production' ? 'allow-annotating' : '' %>
+    nextcloud-web-app-password-url="<%= nextcloudWebAppPasswordURL %>"
+    nextcloud-webdav-url="<%= nextcloudWebDavURL %>"
+    nextcloud-name="<%= nextcloudName %>"
+    nextcloud-file-url="<%= nextcloudFileURL %>"
+    src="<%= getUrl(name + '.topic.metadata.json') %>"
+    base-path="<%= getUrl('') %>"
+    keycloak-config='{"url": "<%= keyCloakBaseURL %>", "realm": "<%= keyCloakRealm %>", "clientId": "<%= keyCloakClientId %>", "silentCheckSsoRedirectUri": "<%= getUrl('silent-check-sso.html') %>"}'
+    git-info='<%= buildInfo.info %>'
+    build-url='<%= buildInfo.url %>'
+    build-time='<%= buildInfo.time %>'
+    env='<%= buildInfo.env %>'
+    lang-dir="<%= getPrivateUrl('translation_overrides/') %>"
+    html-overrides="global-override"
+    themes='[{"class": "light-theme", "icon": "sun", "name": "Light Mode"},
+                {"class": "dark-theme", "icon": "night", "name": "Dark Mode"}]'
+><tug-spinner id='spinner'></tug-spinner>
+</<%= name %>>
+
+<template id="global-override">
+    <template id="<%= name %>">
+        <div slot="name">
+            <%= shortName %><br />
+            <dbp-translated subscribe="lang">
+                <div slot="de">
+                    Technische Universität Graz
+                </div>
+                <div slot="en">
+                    Graz University of Technology
+                </div>
+            </dbp-translated>
+        </div>
+        <div slot="logo">
+            <style>
+                #main-logo {
+                    padding: 0 50px 0 0;
+                }
+            </style>
+            <a href="https://www.tugraz.at" title="TU Graz Home" target="_blank" rel="noopener">
+                <tug-logo id="main-logo" subscribe="lang"></tug-logo>
+            </a>
+        </div>
+        <div slot="footer-links">
+            <style>
+                .footer-links {
+                    margin-top: 0.5em;
+                }
+
+                .footer-links a {
+                    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+                    padding: 0;
+                    margin-left: 1em;
+                    transition: background-color 0.15s ease 0s, color 0.15s ease 0s;
+                    color: #6c757d;
+                    cursor: pointer;
+                    text-decoration: none;
+                }
+
+                .footer-links a:hover {
+                    color: #fff;
+                    background-color: #000;
+                }
+            </style>
+            <dbp-translated subscribe="lang">
+                <div slot="de" class="footer-links">
+                    <a target="_blank" rel="noopener" href="https://www.tugraz.at/ueber-diese-seite/datenschutzerklaerung/">Datenschutz</a>
+                    <a target="_blank" rel="noopener" href="https://www.tugraz.at/ueber-diese-seite/impressum/">Impressum</a>
+                    <a rel="noopener" href="mailto:aktuell-und-offiziell@tugraz.at">Kontakt</a>
+                </div>
+                <div slot="en" class="footer-links">
+                    <a target="_blank" rel="noopener" href="https://www.tugraz.at/en/about-this-page/privacy-policy/">Privacy Policy</a>
+                    <a target="_blank" rel="noopener" href="https://www.tugraz.at/en/about-this-page/legal-notice/">Legal Notice</a>
+                    <a rel="noopener" href="mailto:aktuell-und-offiziell@tugraz.at">Contact</a>
+                </div>
+            </dbp-translated>
+        </div>
+    </template>
+</template>
+
+<!-- Error handling for too old browsers -->
+<script src="<%= getPrivateUrl('browser-check.js') %>" defer></script>
+<noscript>Diese Applikation benötigt Javascript / This application requires Javascript</noscript>
+</body>
+</html>

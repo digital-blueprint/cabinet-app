@@ -1,0 +1,9 @@
+[submodule "vendor/toolkit"]
+	path = vendor/toolkit
+	url = https://github.com/digital-blueprint/toolkit
+[submodule "vendor/signature"]
+	path = vendor/signature
+	url = https://github.com/digital-blueprint/esign-app
+[submodule "vendor/dispatch"]
+	path = vendor/dispatch
+	url = https://github.com/digital-blueprint/dispatch-app.git
