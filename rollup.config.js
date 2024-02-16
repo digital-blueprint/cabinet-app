@@ -142,8 +142,7 @@ export default (async () => {
                 ? !whitelabel ?
                     [
                         'src/' + pkg.internalName + '.js',
-                        'src/dbp-show-requests.js',
-                        'src/dbp-create-request.js',
+                        'src/dbp-cabinet-search.js',
                         'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',
                         'vendor/signature/src/dbp-official-signature-pdf-upload.js',
                         'vendor/dispatch/src/dbp-create-request.js',
@@ -153,8 +152,7 @@ export default (async () => {
                     :
                     [
                         'src/' + pkg.internalName + '.js',
-                        'src/dbp-show-requests.js',
-                        'src/dbp-create-request.js',
+                        'src/dbp-cabinet-search.js',
                         'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',
                         'vendor/signature/src/dbp-official-signature-pdf-upload.js',
                         'vendor/dispatch/src/dbp-create-request.js',

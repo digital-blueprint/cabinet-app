@@ -3,16 +3,16 @@
     "module_src": "dbp-cabinet-search.js",
     "routing_name": "cabinet-search",
     "name": {
-        "de": "Versandauftrag erstellen",
-        "en": "Create cabinet order"
+        "de": "Akten suchen",
+        "en": "Search cabinets"
     },
     "short_name": {
-        "de": "Versandauftrag erstellen",
-        "en": "Create cabinet order"
+      "de": "Akten suchen",
+      "en": "Search cabinets"
     },
     "description": {
-        "de": "Erlaubt das Erstellen neuer Versandaufträge.",
-        "en": "Allows the creation of new cabinet orders."
+        "de": "Erlaubt das Suchen von Akten.",
+        "en": "Allows searching for cabinets."
     },
     "subscribe": "lang,lang-dir,entry-point-url,auth,html-overrides,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,file-handling-enabled-targets"
 }

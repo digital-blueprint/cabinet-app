@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 
-import '../src/dbp-create-request';
+import '../src/dbp-cabinet-search';
 import '../src/dbp-cabinet.js';
 
 suite('dbp-cabinet-activity basics', () => {
