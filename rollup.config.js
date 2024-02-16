@@ -146,6 +146,8 @@ export default (async () => {
                         'src/dbp-create-request.js',
                         'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',
                         'vendor/signature/src/dbp-official-signature-pdf-upload.js',
+                        'vendor/dispatch/src/dbp-create-request.js',
+                        'vendor/dispatch/src/dbp-show-requests.js',
                         await getPackagePath('@tugraz/web-components', 'src/logo.js'),
                     ]
                     :
@@ -155,6 +157,8 @@ export default (async () => {
                         'src/dbp-create-request.js',
                         'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',
                         'vendor/signature/src/dbp-official-signature-pdf-upload.js',
+                        'vendor/dispatch/src/dbp-create-request.js',
+                        'vendor/dispatch/src/dbp-show-requests.js',
                     ]
                 : globSync('test/**/*.js'),
         output: {
@@ -303,12 +307,17 @@ Dependencies:
                         src: 'vendor/signature/assets/*-placeholder.png',
                         dest: 'dist/' + (await getDistPath('@digital-blueprint/esign-app')),
                     },
+                    {
+                        src: 'vendor/dispatch/assets/*-placeholder.png',
+                        dest: 'dist/' + (await getDistPath('@digital-blueprint/dispatch-app')),
+                    },
                     {src: 'assets/*.css', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: 'assets/*.ico', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: 'assets/translation_overrides/', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: 'assets/*.metadata.json', dest: 'dist'},
                     {src: 'src/*.metadata.json', dest: 'dist'},
                     {src: 'vendor/signature/src/*.metadata.json', dest: 'dist'},
+                    {src: 'vendor/dispatch/src/*.metadata.json', dest: 'dist'},
                     {src: 'assets/*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: 'assets/htaccess-shared', dest: 'dist/shared/', rename: '.htaccess'},
                     {src: 'assets/icon-*.png', dest: 'dist/' + (await getDistPath(pkg.name))},
@@ -318,7 +327,7 @@ Dependencies:
                     {src: 'assets/icon/*', dest: 'dist/' + (await getDistPath(pkg.name, 'icon'))},
                     {src: 'assets/site.webmanifest', dest: 'dist', rename: pkg.internalName + '.webmanifest'},
                     {src: 'assets/silent-check-sso.html', dest: 'dist'},
-                    // the pdfjs worker is needed for signature, pdf-viewer and the annotation loading in cabinet!
+                    // the pdfjs worker is needed for signature, dispatch, pdf-viewer and the annotation loading in cabinet!
                     {
                         src: await getPackagePath('pdfjs-dist', 'legacy/build/pdf.worker.js'),
                         dest: 'dist/local/@digital-blueprint/esign-app/pdfjs',
@@ -374,11 +383,16 @@ Dependencies:
                         src: 'vendor/signature/assets/*-placeholder.png',
                         dest: 'dist/' + (await getDistPath('@digital-blueprint/esign-app')),
                     },
+                    {
+                        src: 'vendor/dispatch/assets/*-placeholder.png',
+                        dest: 'dist/' + (await getDistPath('@digital-blueprint/dispatch-app')),
+                    },
                     {src: customAssetsPath + '*.css', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: customAssetsPath + '*.ico', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: customAssetsPath + 'translation_overrides', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: customAssetsPath + '*.metadata.json', dest: 'dist'},
                     {src: 'vendor/signature/src/*.metadata.json', dest: 'dist'},
+                    {src: 'vendor/dispatch/src/*.metadata.json', dest: 'dist'},
                     {src: customAssetsPath + '*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: customAssetsPath + 'htaccess-shared', dest: 'dist/shared/', rename: '.htaccess'},
                     {src: customAssetsPath + 'icon-*.png', dest: 'dist/' + (await getDistPath(pkg.name))},
@@ -388,7 +402,7 @@ Dependencies:
                     {src: customAssetsPath + 'icon/*', dest: 'dist/' + (await getDistPath(pkg.name, 'icon'))},
                     {src: customAssetsPath + 'site.webmanifest', dest: 'dist', rename: pkg.internalName + '.webmanifest'},
                     {src: customAssetsPath + 'silent-check-sso.html', dest: 'dist'},
-                    // the pdfjs worker is needed for signature, pdf-viewer and the annotation loading in cabinet!
+                    // the pdfjs worker is needed for signature, dispatch, pdf-viewer and the annotation loading in cabinet!
                     {
                         src: await getPackagePath('pdfjs-dist', 'legacy/build/pdf.worker.js'),
                         dest: 'dist/local/@digital-blueprint/esign-app/pdfjs',
