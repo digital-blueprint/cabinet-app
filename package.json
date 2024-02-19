@@ -1,7 +1,7 @@
 {
     "name": "@digital-blueprint/cabinet-app",
     "internalName": "dbp-cabinet",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "main": "src/dbp-cabinet.js",
     "license": "LGPL-2.1-or-later",
     "private": true,
