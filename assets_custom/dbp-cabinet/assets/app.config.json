@@ -27,7 +27,7 @@
         "pdfAsQualifiedlySigningServer": "https://sig-dev.tugraz.at",
         "hiddenActivities": [],
         "shortName": "TU Graz",
-        "appDomain": "https://epost.tugraz.at/",
+        "appDomain": "https://cabinet.tugraz.at/",
         "enableAnnotations": true
     },
     "bs": {
@@ -74,7 +74,7 @@
         "pdfAsQualifiedlySigningServer": "https://sig-dev.tugraz.at",
         "hiddenActivities": [],
         "shortName": "TU Graz",
-        "appDomain": "https://epost.tugraz.at/",
+        "appDomain": "https://cabinet.tugraz.at/",
         "enableAnnotations": true
     },
     "demo": {
@@ -105,7 +105,7 @@
         "pdfAsQualifiedlySigningServer": "https://sig-test.tugraz.at",
         "hiddenActivities": [],
         "shortName": "TU Graz",
-        "appDomain": "https://epost.tugraz.at/",
+        "appDomain": "https://cabinet.tugraz.at/",
         "enableAnnotations": true
     },
     "production": {
@@ -113,7 +113,7 @@
         "entryPointURL": "https://api.tugraz.at",
         "keyCloakBaseURL": "https://auth.tugraz.at/auth",
         "keyCloakRealm": "tugraz",
-        "keyCloakClientId": "epost_tugraz_at",
+        "keyCloakClientId": "cabinet_tugraz_at",
         "matomoUrl": "https://analytics.tugraz.at/",
         "matomoSiteId": 131,
         "nextcloudBaseURL": "https://cloud.tugraz.at",
@@ -121,7 +121,7 @@
         "pdfAsQualifiedlySigningServer": "https://sig.tugraz.at",
         "hiddenActivities": [],
         "shortName": "TU Graz",
-        "appDomain": "https://epost.tugraz.at/",
+        "appDomain": "https://cabinet.tugraz.at/",
         "enableAnnotations": true
     }
 }
