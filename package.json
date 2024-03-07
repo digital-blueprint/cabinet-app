@@ -66,8 +66,11 @@
         "@tugraz/font-source-sans-pro": "^0.2.4",
         "@tugraz/web-components": "^0.3.6",
         "@webcomponents/scoped-custom-element-registry": "^0.0.9",
+        "instantsearch.css": "^8.1.0",
+        "instantsearch.js": "^4.65.0",
         "lit": "^2.7.0 || ^3.0.0",
-        "pdfjs-dist": "^2.12.313"
+        "pdfjs-dist": "^2.12.313",
+        "typesense-instantsearch-adapter": "^2.8.0"
     },
     "scripts": {
         "build": "rollup --bundleConfigAsCjs -c",
