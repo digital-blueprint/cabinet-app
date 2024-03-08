@@ -124,6 +124,7 @@ function getOrigin(url) {
 const atrustHosts = [
     'https://www.handy-signatur.at', // old one
     'https://service.a-trust.at',
+    'http://typesense.localhost:9100',
 ];
 
 config.CSP = `default-src 'self' 'unsafe-eval' 'unsafe-inline' \

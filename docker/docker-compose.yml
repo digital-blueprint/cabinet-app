@@ -29,7 +29,7 @@ services:
     environment:
       TYPESENSE_DATA_DIR: /data/typesense
       TYPESENSE_ENABLE_CORS: "true"
-      TYPESENSE_CORS_DOMAINS: "http://127.0.0.1:8001,http://typesense-dashboard.localhost:9100"
+      TYPESENSE_CORS_DOMAINS: "http://127.0.0.1:8001,http://localhost:8001,http://typesense-dashboard.localhost:9100"
       TYPESENSE_API_KEY: "xyz"
     volumes:
       - typesense:/data/typesense

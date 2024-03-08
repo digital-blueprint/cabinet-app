@@ -21,6 +21,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.activity = new Activity(metadata);
         this.entryPointUrl = '';
         this.fuzzySearch = true;
+        this.searchIndexName = 'students';
 
         const typesenseConfig = {
             host: 'typesense.localhost',
@@ -39,8 +40,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     protocol: typesenseConfig.protocol,
                 },
             ],
-            // Cache search results from server. Defaults to 2 minutes. Set to 0 to disable caching.
-            cacheSearchResultsForSeconds: 2 * 60,
         };
     }
 
@@ -122,12 +121,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     getSearchParameters() {
         // https://typesense.org/docs/0.25.1/api/search.html#ranking-and-sorting-parameters
         let searchParameters = {
-            group_by: 'group_id',
-            group_limit: 1,
-            min_len_1typo: 2,
-            facet_query_num_typos: 0,
-            query_by: "event_title,event_description,event_location_name,program_name,organization_name",
-            sort_by: "_text_match:desc,event_end:asc" // see https://plan.tugraz.at/task/51022#comment-6396
+            query_by: "name",
         };
 
         if (!this.fuzzySearch) {
@@ -144,9 +138,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     getTypesenseInstantsearchAdapterConfig() {
         return {
             server: this.serverConfig,
-            geoLocationField: "location",
-            // XXX: https://github.com/typesense/typesense-instantsearch-adapter?tab=readme-ov-file#special-characters-in-field-names--values
-            facetableFieldsWithSpecialCharacters: ["event_address_city", "organization_name"],
             additionalSearchParameters: this.getSearchParameters()
         };
     }
@@ -191,8 +182,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 item: (hit) => {
                     return `
                         <div>
-                            <h2>${hit.event_title}</h2>
-                            <p>${hit.event_description}</p>
+                            <h2>${hit.name}</h2>
+                            <p>${hit.age}</p>
                         </div>
                     `;
                 },
