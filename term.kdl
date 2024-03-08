@@ -1,3 +1,4 @@
+// https://zellij.dev/documentation/creating-a-layout
 layout {
   pane split_direction="vertical" {
     pane {
