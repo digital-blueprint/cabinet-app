@@ -1,0 +1,58 @@
+version: "3.4"
+name: "cabinet-app"
+
+services:
+
+  traefik:
+    image: traefik:2.11
+    restart: unless-stopped
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=cabinet-app_traefik"
+      - "--entryPoints.http.address=:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "127.0.0.1:9100:80"
+    networks:
+      - traefik
+
+  typesense:
+    image: typesense/typesense:0.25.2
+    restart: unless-stopped
+    depends_on:
+      - traefik
+    networks:
+      - traefik
+      - typesense
+    environment:
+      TYPESENSE_DATA_DIR: /data/typesense
+      TYPESENSE_ENABLE_CORS: "true"
+      TYPESENSE_CORS_DOMAINS: "http://127.0.0.1:8001,http://typesense-dashboard.localhost:9100"
+      TYPESENSE_API_KEY: "xyz"
+    volumes:
+      - typesense:/data/typesense
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.typesense-router.rule=Host(`typesense.localhost`)"
+      - "traefik.http.routers.typesense-router.entrypoints=http"
+
+  typesense-dashboard:
+    image: ghcr.io/bfritscher/typesense-dashboard:latest
+    restart: unless-stopped
+    networks:
+      - traefik
+    depends_on:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.typesense-dashboard.rule=Host(`typesense-dashboard.localhost`)"
+      - "traefik.http.routers.typesense-dashboard.entrypoints=http"
+
+volumes:
+  typesense:
+
+networks:
+  traefik:
+  typesense:

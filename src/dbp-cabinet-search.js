@@ -23,10 +23,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.fuzzySearch = true;
 
         const typesenseConfig = {
-            host: 'wisskomm-search-dev.tugraz.at',
-            port: '443',
-            protocol: 'https',
-            key: 'frontend-search-key-1---'
+            host: 'typesense.localhost',
+            port: '9100',
+            protocol: 'http',
+            key: 'xyz'
         };
 
         this.serverConfig = {

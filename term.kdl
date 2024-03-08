@@ -1,13 +1,24 @@
 layout {
   pane split_direction="vertical" {
-    pane command="npm" {
+    pane {
+      command "npm"
       args "run" "watch"
     }
-    pane command="npm" {
+    pane {
+      command "npm"
       args "install"
     }
   }
-  pane focus=true
+  pane split_direction="vertical" {
+    pane {
+      command "docker"
+      args "compose" "up"
+      cwd "./docker"
+    }
+    pane {
+      cwd "./docker"
+    }
+  }
   pane size=1 borderless=true {
     plugin location="zellij:status-bar"
   }
