@@ -112,6 +112,22 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${commonStyles.getModalDialogCSS()}
             ${commonStyles.getButtonCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
+
+            .ais-Hits-list {
+                display: grid;
+                grid-auto-flow: column;
+                grid-gap: 20px;
+                grid-template-rows: 125px 100px;
+                justify-content: space-between;
+                align-content: space-between;
+                padding: 0;
+            }
+
+            .ais-Hits-item {
+                padding: 20px;
+                border: 1px solid black;
+                list-style-type: none;
+            }
         `;
     }
 
@@ -181,10 +197,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             templates: {
                 item: (hit) => {
                     return `
-                        <div>
-                            <h2>${hit.name}</h2>
-                            <p>${hit.age}</p>
-                        </div>
+                        <h2>${hit.name}</h2>
+                        <p>age: ${hit.age}</p>
                     `;
                 },
             },
@@ -202,9 +216,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 </span>
             </div>
 
-            Implementation here:
-            <div id="searchbox">searchbox</div>
-            <div id="hits">hits</div>
+            <h1>Search</h1>
+            <div id="searchbox"></div>
+            <div id="hits"></div>
         `;
         // ${unsafeHTML('<div id="searchbox">searchbox</div><div id="hits">hits</div>')}
     }
