@@ -21,26 +21,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.activity = new Activity(metadata);
         this.entryPointUrl = '';
         this.fuzzySearch = true;
-        this.searchIndexName = 'students';
-
-        const typesenseConfig = {
-            host: 'typesense.localhost',
-            port: '9100',
-            protocol: 'http',
-            key: 'xyz'
-        };
-
-        this.serverConfig = {
-            // Be sure to use an API key that only allows searches, in production
-            apiKey: typesenseConfig.key,
-            nodes: [
-                {
-                    host: typesenseConfig.host,
-                    port: typesenseConfig.port,
-                    protocol: typesenseConfig.protocol,
-                },
-            ],
-        };
+        this.typesenseHost = '';
+        this.typesensePort = '';
+        this.typesenseProtocol = '';
+        this.typesenseKey = '';
+        this.typesenseCollection = '';
     }
 
     static get scopedElements() {
@@ -54,6 +39,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             ...super.properties,
             lang: {type: String},
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
+            typesenseHost: { type: String, attribute: 'typesense-host' },
+            typesensePort: { type: String, attribute: 'typesense-port' },
+            typesenseProtocol: { type: String, attribute: 'typesense-protocol' },
+            typesenseKey: { type: String, attribute: 'typesense-key' },
+            typesenseCollection: { type: String, attribute: 'typesense-collection' },
         };
     }
 
@@ -83,6 +73,19 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         this.updateComplete.then(() => {
             console.log('-- updateComplete --');
+
+            this.serverConfig = {
+                // Be sure to use an API key that only allows searches, in production
+                apiKey: this.typesenseKey,
+                nodes: [
+                    {
+                        host: this.typesenseHost,
+                        port: this.typesensePort,
+                        protocol: this.typesenseProtocol,
+                    },
+                ],
+            };
+            console.log('serverConfig', this.serverConfig);
 
             this.search = this.createInstantsearch();
             const search = this.search;
@@ -172,7 +175,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // typesenseInstantsearchAdapter.typesenseClient is no Typesense.Client instance, it's a Typesense.SearchClient instance!
         const searchClient = typesenseInstantsearchAdapter.searchClient;
 
-        let searchIndexName = this.searchIndexName;
+        let searchIndexName = this.typesenseCollection;
 
         return instantsearch({
             searchClient,

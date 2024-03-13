@@ -12,7 +12,21 @@
         "pdfAsQualifiedlySigningServer": "https://sig-dev.tugraz.at",
         "hiddenActivities": [],
         "shortName": "dbp",
-        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/"
+        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/",
+        "typesense-local": {
+            "host": "typesense.localhost",
+            "port": "9100",
+            "protocol": "http",
+            "key": "xyz",
+            "collection": "cabinet-students"
+        },
+        "typesense": {
+            "host": "toolbox-backend-dev.tugraz.at",
+            "port": "443",
+            "protocol": "https",
+            "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
+            "collection": "cabinet-students"
+        }
     },
     "localCustom": {
         "basePath": "/dist/",
@@ -28,7 +42,21 @@
         "hiddenActivities": [],
         "shortName": "TU Graz",
         "appDomain": "https://cabinet.tugraz.at/",
-        "enableAnnotations": true
+        "enableAnnotations": true,
+        "typesense-local": {
+            "host": "typesense.localhost",
+            "port": "9100",
+            "protocol": "http",
+            "key": "xyz",
+            "collection": "cabinet-students"
+        },
+        "typesense": {
+            "host": "toolbox-backend-dev.tugraz.at",
+            "port": "443",
+            "protocol": "https",
+            "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
+            "collection": "cabinet-students"
+        }
     },
     "bs": {
         "basePath": "/dist/",
@@ -59,7 +87,14 @@
         "pdfAsQualifiedlySigningServer": "https://sig-dev.tugraz.at",
         "hiddenActivities": [],
         "shortName": "dbp",
-        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/"
+        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/",
+        "typesense": {
+            "host": "toolbox-backend-dev.tugraz.at",
+            "port": "443",
+            "protocol": "https",
+            "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
+            "collection": "cabinet-students"
+        }
     },
     "developmentCustom": {
         "basePath": "/tugapps/cabinet/",
@@ -75,7 +110,14 @@
         "hiddenActivities": [],
         "shortName": "TU Graz",
         "appDomain": "https://cabinet.tugraz.at/",
-        "enableAnnotations": true
+        "enableAnnotations": true,
+        "typesense": {
+            "host": "toolbox-backend-dev.tugraz.at",
+            "port": "443",
+            "protocol": "https",
+            "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
+            "collection": "cabinet-students"
+        }
     },
     "demo": {
         "basePath": "/apps/cabinet/",
@@ -90,7 +132,14 @@
         "pdfAsQualifiedlySigningServer": "https://sig-test.tugraz.at",
         "hiddenActivities": [],
         "shortName": "dbp",
-        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/"
+        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/",
+        "typesense": {
+            "host": "toolbox-backend-demo.tugraz.at",
+            "port": "443",
+            "protocol": "https",
+            "key": "please-add-your-key-here",
+            "collection": "cabinet-students"
+        }
     },
     "demoCustom": {
         "basePath": "/tugapps/cabinet/",
@@ -106,7 +155,14 @@
         "hiddenActivities": [],
         "shortName": "TU Graz",
         "appDomain": "https://cabinet.tugraz.at/",
-        "enableAnnotations": true
+        "enableAnnotations": true,
+        "typesense": {
+            "host": "toolbox-backend-demo.tugraz.at",
+            "port": "443",
+            "protocol": "https",
+            "key": "please-add-your-key-here",
+            "collection": "cabinet-students"
+        }
     },
     "production": {
         "basePath": "/",
@@ -122,6 +178,13 @@
         "hiddenActivities": [],
         "shortName": "TU Graz",
         "appDomain": "https://cabinet.tugraz.at/",
-        "enableAnnotations": true
+        "enableAnnotations": true,
+        "typesense": {
+            "host": "toolbox-backend-prod.tugraz.at",
+            "port": "443",
+            "protocol": "https",
+            "key": "please-add-your-key-here",
+            "collection": "cabinet-students"
+        }
     }
 }

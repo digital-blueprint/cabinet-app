@@ -95,6 +95,19 @@ if ((devConfig != undefined && appEnv in devConfig)) {
         pdfAsQualifiedlySigningServer: 'https://test',
         hiddenActivities: [],
         enableAnnotations: true,
+        // typesense: {
+        //     host: 'toolbox-backend-dev.tugraz.at',
+        //     port: '443',
+        //     protocol: 'https',
+        //     key: '8NfxGOHntZ3Aat1fWByyoadCctmb7klF'
+        // },
+        typesense: {
+            host: 'typesense.localhost',
+            port: '9100',
+            protocol: 'http',
+            key: 'xyz',
+            collection: 'cabinet-students'
+        },
     };
 } else {
     console.error(`Unknown build environment: '${appEnv}', use one of '${Object.keys(appConfig)}'`);
@@ -124,7 +137,6 @@ function getOrigin(url) {
 const atrustHosts = [
     'https://www.handy-signatur.at', // old one
     'https://service.a-trust.at',
-    'http://typesense.localhost:9100',
 ];
 
 config.CSP = `default-src 'self' 'unsafe-eval' 'unsafe-inline' \
@@ -132,6 +144,7 @@ ${getOrigin(config.matomoUrl)} ${getOrigin(config.keyCloakBaseURL)} ${getOrigin(
     config.entryPointURL
 )} \
 ${getOrigin(config.nextcloudBaseURL)} ${atrustHosts.map((h) => getOrigin(h)).join(' ')} \
+${config.typesense.protocol + '://' + config.typesense.host + ':' + config.typesense.port} \
 ${getOrigin(config.pdfAsQualifiedlySigningServer)}; \
 img-src * blob: data:`;
 
@@ -222,6 +235,11 @@ export default (async () => {
                     shortName: config.shortName,
                     appDomain: config.appDomain,
                     enableAnnotations: config.enableAnnotations,
+                    typesenseHost: config.typesense.host,
+                    typesensePort: config.typesense.port,
+                    typesenseProtocol: config.typesense.protocol,
+                    typesenseKey: config.typesense.key,
+                    typesenseCollection: config.typesense.collection,
                 },
             }),
             !whitelabel &&
@@ -255,6 +273,11 @@ export default (async () => {
                     shortName: config.shortName,
                     appDomain: config.appDomain,
                     enableAnnotations: config.enableAnnotations,
+                    typesenseHost: config.typesense.host,
+                    typesensePort: config.typesense.port,
+                    typesenseProtocol: config.typesense.protocol,
+                    typesenseKey: config.typesense.key,
+                    typesenseCollection: config.typesense.collection,
                 },
             }),
             replace({

@@ -12,7 +12,14 @@
         "pdfAsQualifiedlySigningServer": "",
         "hiddenActivities": [],
         "shortName": "dbp",
-        "appDomain": ""
+        "appDomain": "",
+        "typesense": {
+            "host": "toolbox-backend-dev.tugraz.at",
+            "port": "443",
+            "protocol": "https",
+            "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
+            "collection": "cabinet-students"
+        }
     },
     "localCustom": {
         "basePath": "/dist/",
@@ -27,7 +34,14 @@
         "pdfAsQualifiedlySigningServer": "",
         "hiddenActivities": [],
         "shortName": "dbp",
-        "appDomain": ""
+        "appDomain": "",
+        "typesense": {
+            "host": "toolbox-backend-dev.tugraz.at",
+            "port": "443",
+            "protocol": "https",
+            "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
+            "collection": "cabinet-students"
+        }
     },
     "development": {
         "basePath": "/apps/cabinet/",
@@ -42,6 +56,13 @@
         "pdfAsQualifiedlySigningServer": "https://sig-dev.tugraz.at",
         "hiddenActivities": [],
         "shortName": "dbp",
-        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/"
+        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/",
+        "typesense": {
+            "host": "toolbox-backend-dev.tugraz.at",
+            "port": "443",
+            "protocol": "https",
+            "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
+            "collection": "cabinet-students"
+        }
     }
 }
