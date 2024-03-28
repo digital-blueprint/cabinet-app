@@ -56,6 +56,19 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         this.cabinetRequestsTable.setLocale(this.lang);
                     }
                     break;
+                case "auth":
+                    if (!this.serverConfig) {
+                        return;
+                    }
+
+                    // Update the bearer token in additional headers for the Typesense Instantsearch adapter
+                    this.serverConfig.additionalHeaders = { 'Authorization': 'Bearer ' + this.auth.token };
+
+                    console.log('this.serverConfig auth-update', this.serverConfig);
+
+                    // Update the Typesense Instantsearch adapter configuration with the new bearer token
+                    this.typesenseInstantsearchAdapter.updateConfiguration(this.getTypesenseInstantsearchAdapterConfig());
+                    break;
             }
         });
 
@@ -80,10 +93,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 nodes: [
                     {
                         host: this.typesenseHost,
+                        // TODO: Add setting for the path
+                        path: '/cabinet/typesense',
                         port: this.typesensePort,
                         protocol: this.typesenseProtocol,
                     },
                 ],
+                additionalHeaders: { 'Authorization': 'Bearer ' + this.auth.token, },
             };
             console.log('serverConfig', this.serverConfig);
 

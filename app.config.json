@@ -14,9 +14,10 @@
         "shortName": "dbp",
         "appDomain": "",
         "typesense": {
-            "host": "toolbox-backend-dev.tugraz.at",
-            "port": "443",
-            "protocol": "https",
+            "host": "127.0.0.1",
+            "path": "/cabinet/typesense/",
+            "port": "8000",
+            "protocol": "http",
             "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
             "collection": "cabinet-students"
         }
@@ -36,9 +37,10 @@
         "shortName": "dbp",
         "appDomain": "",
         "typesense": {
-            "host": "toolbox-backend-dev.tugraz.at",
-            "port": "443",
-            "protocol": "https",
+            "host": "127.0.0.1",
+            "path": "/cabinet/typesense/",
+            "port": "8000",
+            "protocol": "http",
             "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
             "collection": "cabinet-students"
         }
