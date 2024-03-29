@@ -104,6 +104,7 @@ if ((devConfig != undefined && appEnv in devConfig)) {
         typesense: {
             host: 'typesense.localhost',
             port: '9100',
+            path: '/',
             protocol: 'http',
             key: 'xyz',
             collection: 'cabinet-students'
@@ -237,6 +238,7 @@ export default (async () => {
                     enableAnnotations: config.enableAnnotations,
                     typesenseHost: config.typesense.host,
                     typesensePort: config.typesense.port,
+                    typesensePath: config.typesense.path,
                     typesenseProtocol: config.typesense.protocol,
                     typesenseKey: config.typesense.key,
                     typesenseCollection: config.typesense.collection,
@@ -275,6 +277,7 @@ export default (async () => {
                     enableAnnotations: config.enableAnnotations,
                     typesenseHost: config.typesense.host,
                     typesensePort: config.typesense.port,
+                    typesensePath: config.typesense.path,
                     typesenseProtocol: config.typesense.protocol,
                     typesenseKey: config.typesense.key,
                     typesenseCollection: config.typesense.collection,

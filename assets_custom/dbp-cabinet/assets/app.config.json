@@ -25,7 +25,7 @@
             "path": "/cabinet/typesense/",
             "port": "8000",
             "protocol": "http",
-            "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
+            "key": "",
             "collection": "cabinet-students"
         }
     },
@@ -56,7 +56,7 @@
             "path": "/cabinet/typesense/",
             "port": "8000",
             "protocol": "http",
-            "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
+            "key": "",
             "collection": "cabinet-students"
         }
     },
@@ -93,6 +93,7 @@
         "typesense": {
             "host": "toolbox-backend-dev.tugraz.at",
             "port": "443",
+            "path": "/",
             "protocol": "https",
             "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
             "collection": "cabinet-students"
@@ -116,6 +117,7 @@
         "typesense": {
             "host": "toolbox-backend-dev.tugraz.at",
             "port": "443",
+            "path": "/",
             "protocol": "https",
             "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
             "collection": "cabinet-students"
@@ -138,6 +140,7 @@
         "typesense": {
             "host": "toolbox-backend-demo.tugraz.at",
             "port": "443",
+            "path": "/",
             "protocol": "https",
             "key": "please-add-your-key-here",
             "collection": "cabinet-students"
@@ -161,6 +164,7 @@
         "typesense": {
             "host": "toolbox-backend-demo.tugraz.at",
             "port": "443",
+            "path": "/",
             "protocol": "https",
             "key": "please-add-your-key-here",
             "collection": "cabinet-students"
@@ -184,6 +188,7 @@
         "typesense": {
             "host": "toolbox-backend-prod.tugraz.at",
             "port": "443",
+            "path": "/",
             "protocol": "https",
             "key": "please-add-your-key-here",
             "collection": "cabinet-students"

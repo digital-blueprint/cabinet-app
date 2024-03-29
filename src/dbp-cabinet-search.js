@@ -23,6 +23,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.fuzzySearch = true;
         this.typesenseHost = '';
         this.typesensePort = '';
+        this.typesensePath = '';
         this.typesenseProtocol = '';
         this.typesenseKey = '';
         this.typesenseCollection = '';
@@ -41,6 +42,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
             typesenseHost: { type: String, attribute: 'typesense-host' },
             typesensePort: { type: String, attribute: 'typesense-port' },
+            typesensePath: { type: String, attribute: 'typesense-path' },
             typesenseProtocol: { type: String, attribute: 'typesense-protocol' },
             typesenseKey: { type: String, attribute: 'typesense-key' },
             typesenseCollection: { type: String, attribute: 'typesense-collection' },
@@ -93,9 +95,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 nodes: [
                     {
                         host: this.typesenseHost,
-                        // TODO: Add setting for the path
-                        path: '/cabinet/typesense',
                         port: this.typesensePort,
+                        path: this.typesensePath,
                         protocol: this.typesenseProtocol,
                     },
                 ],
