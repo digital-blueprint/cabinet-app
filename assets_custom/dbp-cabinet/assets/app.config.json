@@ -91,11 +91,11 @@
         "shortName": "dbp",
         "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/",
         "typesense": {
-            "host": "toolbox-backend-dev.tugraz.at",
+            "host": "api-dev.tugraz.at",
             "port": "443",
-            "path": "/",
+            "path": "/cabinet/typesense/",
             "protocol": "https",
-            "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
+            "key": "",
             "collection": "cabinet-students"
         }
     },
@@ -115,11 +115,11 @@
         "appDomain": "https://cabinet.tugraz.at/",
         "enableAnnotations": true,
         "typesense": {
-            "host": "toolbox-backend-dev.tugraz.at",
+            "host": "api-dev.tugraz.at",
             "port": "443",
-            "path": "/",
+            "path": "/cabinet/typesense/",
             "protocol": "https",
-            "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
+            "key": "",
             "collection": "cabinet-students"
         }
     },
@@ -138,11 +138,11 @@
         "shortName": "dbp",
         "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/",
         "typesense": {
-            "host": "toolbox-backend-demo.tugraz.at",
+            "host": "api-demo.tugraz.at",
             "port": "443",
-            "path": "/",
+            "path": "/cabinet/typesense/",
             "protocol": "https",
-            "key": "please-add-your-key-here",
+            "key": "",
             "collection": "cabinet-students"
         }
     },
@@ -162,11 +162,11 @@
         "appDomain": "https://cabinet.tugraz.at/",
         "enableAnnotations": true,
         "typesense": {
-            "host": "toolbox-backend-demo.tugraz.at",
+            "host": "api-demo.tugraz.at",
             "port": "443",
-            "path": "/",
+            "path": "/cabinet/typesense/",
             "protocol": "https",
-            "key": "please-add-your-key-here",
+            "key": "",
             "collection": "cabinet-students"
         }
     },
@@ -186,11 +186,11 @@
         "appDomain": "https://cabinet.tugraz.at/",
         "enableAnnotations": true,
         "typesense": {
-            "host": "toolbox-backend-prod.tugraz.at",
+            "host": "api.tugraz.at",
             "port": "443",
-            "path": "/",
+            "path": "/cabinet/typesense/",
             "protocol": "https",
-            "key": "please-add-your-key-here",
+            "key": "",
             "collection": "cabinet-students"
         }
     }

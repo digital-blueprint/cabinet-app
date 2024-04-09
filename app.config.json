@@ -60,11 +60,11 @@
         "shortName": "dbp",
         "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/",
         "typesense": {
-            "host": "toolbox-backend-dev.tugraz.at",
+            "host": "api-dev.tugraz.at",
             "port": "443",
-            "path": "/",
+            "path": "/cabinet/typesense/",
             "protocol": "https",
-            "key": "8NfxGOHntZ3Aat1fWByyoadCctmb7klF",
+            "key": "",
             "collection": "cabinet-students"
         }
     }
