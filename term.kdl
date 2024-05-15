@@ -10,16 +10,16 @@ layout {
       args "install"
     }
   }
-  pane split_direction="vertical" {
-    pane {
-      command "docker"
-      args "compose" "up"
-      cwd "./docker"
-    }
-    pane {
-      cwd "./docker"
-    }
-  }
+//  pane split_direction="vertical" {
+//    pane {
+//      command "docker"
+//      args "compose" "up"
+//      cwd "./docker"
+//    }
+//    pane {
+//      cwd "./docker"
+//    }
+//  }
   pane size=1 borderless=true {
     plugin location="zellij:status-bar"
   }
