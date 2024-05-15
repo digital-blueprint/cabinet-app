@@ -12,6 +12,7 @@ import metadata from './dbp-cabinet-search.metadata.json';
 import instantsearch from 'instantsearch.js';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import {configure, hits, searchBox} from 'instantsearch.js/es/widgets';
+import EmailCorrespondence from './blob-schema/email';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -229,6 +230,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         const i18n = this._i18n;
         console.log('-- Render --');
 
+        let handler = new EmailCorrespondence();
+        customElements.define('dbp-cabinet-email-correspondence', handler.getFormComponent());
+
         return html`
             <div class="control ${classMap({hidden: this.isLoggedIn() || !this.isLoading() || !this.loadingTranslations })}">
                 <span class="loading">
@@ -239,6 +243,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             <h1>Search</h1>
             <div id="searchbox"></div>
             <div id="hits"></div>
+            <dbp-cabinet-email-correspondence></dbp-cabinet-email-correspondence>
         `;
         // ${unsafeHTML('<div id="searchbox">searchbox</div><div id="hits">hits</div>')}
     }
