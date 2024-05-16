@@ -12,7 +12,7 @@ import metadata from './dbp-cabinet-search.metadata.json';
 import instantsearch from 'instantsearch.js';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import {configure, hits, searchBox} from 'instantsearch.js/es/widgets';
-import EmailCorrespondence from './blob-schema/email';
+// import EmailCorrespondence from './blob-schema/email';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -89,6 +89,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         this.updateComplete.then(() => {
             console.log('-- updateComplete --');
+            this.loadModules();
 
             this.serverConfig = {
                 // Be sure to use an API key that only allows searches, in production
@@ -230,8 +231,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         const i18n = this._i18n;
         console.log('-- Render --');
 
-        let handler = new EmailCorrespondence();
-        customElements.define('dbp-cabinet-email-correspondence', handler.getFormComponent());
+        // let handler = new EmailCorrespondence();
+        // customElements.define('dbp-cabinet-email-correspondence', handler.getFormComponent());
 
         return html`
             <div class="control ${classMap({hidden: this.isLoggedIn() || !this.isLoading() || !this.loadingTranslations })}">
@@ -246,6 +247,32 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             <dbp-cabinet-email-correspondence></dbp-cabinet-email-correspondence>
         `;
         // ${unsafeHTML('<div id="searchbox">searchbox</div><div id="hits">hits</div>')}
+    }
+
+    async loadModules() {
+        try {
+            // Fetch the JSON file containing module paths
+            // TODO: Adapt path!
+            const response = await fetch('/dist/modules.json');
+            const data = await response.json();
+
+            console.log('data', data);
+
+            // Iterate over the module paths and dynamically import each module
+            for (const path of data['blob-schema']) {
+                const module = await import(path);
+
+                // Example usage of imported modules
+                if (module.greet1) {
+                    console.log(module.greet1('World from module1'));
+                }
+                if (module.greet2) {
+                    console.log(module.greet2('World from module2'));
+                }
+            }
+        } catch (error) {
+            console.error('Error loading modules:', error);
+        }
     }
 }
 

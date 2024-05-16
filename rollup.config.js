@@ -158,6 +158,8 @@ export default (async () => {
                     [
                         'src/' + pkg.internalName + '.js',
                         'src/dbp-cabinet-search.js',
+                        'src/blob-schema/email.js',
+                        'src/blob-schema/email2.js',
                         'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',
                         'vendor/signature/src/dbp-official-signature-pdf-upload.js',
                         'vendor/dispatch/src/dbp-create-request.js',
@@ -168,6 +170,8 @@ export default (async () => {
                     [
                         'src/' + pkg.internalName + '.js',
                         'src/dbp-cabinet-search.js',
+                        'src/blob-schema/email.js',
+                        'src/blob-schema/email2.js',
                         'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',
                         'vendor/signature/src/dbp-official-signature-pdf-upload.js',
                         'vendor/dispatch/src/dbp-create-request.js',
@@ -341,6 +345,7 @@ Dependencies:
                     {src: 'assets/translation_overrides/', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: 'assets/*.metadata.json', dest: 'dist'},
                     {src: 'src/*.metadata.json', dest: 'dist'},
+                    {src: 'assets/modules.json', dest: 'dist'},
                     {src: 'vendor/signature/src/*.metadata.json', dest: 'dist'},
                     {src: 'vendor/dispatch/src/*.metadata.json', dest: 'dist'},
                     {src: 'assets/*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
@@ -416,6 +421,7 @@ Dependencies:
                     {src: customAssetsPath + '*.ico', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: customAssetsPath + 'translation_overrides', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: customAssetsPath + '*.metadata.json', dest: 'dist'},
+                    {src: customAssetsPath + 'modules.json', dest: 'dist'},
                     {src: 'vendor/signature/src/*.metadata.json', dest: 'dist'},
                     {src: 'vendor/dispatch/src/*.metadata.json', dest: 'dist'},
                     {src: customAssetsPath + '*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
