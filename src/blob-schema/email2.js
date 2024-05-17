@@ -5,6 +5,8 @@ import {createInstance} from '../i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
 export default class EmailCorrespondence2 {
+    name = 'email-correspondence2';
+
     constructor() {
     }
 
@@ -18,7 +20,9 @@ export default class EmailCorrespondence2 {
     }
 
     getInstantSearchConfig() {
-        return {};
+        return {
+            "data": "Settings for email2 correspondence search"
+        };
     }
 }
 

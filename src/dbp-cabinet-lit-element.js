@@ -26,6 +26,7 @@ export default class DBPCabinetLitElement extends DBPLitElement {
             nextcloudName: {type: String, attribute: 'nextcloud-name'},
             nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
             nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
+            basePath: {type: String, attribute: 'base-path'},
         };
     }
 

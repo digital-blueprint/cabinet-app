@@ -12,6 +12,7 @@ import metadata from './dbp-cabinet-search.metadata.json';
 import instantsearch from 'instantsearch.js';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import {hits, searchBox} from 'instantsearch.js/es/widgets';
+import EmailCorrespondence from './blob-schema/email';
 // import {configure} from 'instantsearch.js/es/widgets';
 // import EmailCorrespondence from './blob-schema/email';
 
@@ -29,6 +30,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.typesenseProtocol = '';
         this.typesenseKey = '';
         this.typesenseCollection = '';
+        this.blobSchemaForms = {};
     }
 
     static get scopedElements() {
@@ -48,6 +50,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             typesenseProtocol: { type: String, attribute: 'typesense-protocol' },
             typesenseKey: { type: String, attribute: 'typesense-key' },
             typesenseCollection: { type: String, attribute: 'typesense-collection' },
+            blobSchemaForms: { type: Object, attribute: false },
         };
     }
 
@@ -230,9 +233,33 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
     }
 
+    getBlobSchemaFormsHtml() {
+        const ids = Object.keys(this.blobSchemaForms);
+        let results = [];
+        console.log('ids', ids);
+
+        ids.forEach((id) => {
+            const tagName = 'dbp-cabinet-schema-form-' + id;
+            if (!customElements.get(tagName)) {
+                customElements.define(tagName, this.blobSchemaForms[id]);
+            }
+
+            // TODO: The tag doesn't get rendered, maybe because the component is not ready yet
+            results.push(html`
+                <p>
+                    <h3>${id} - ${tagName}</h3>
+                    <${tagName}></${tagName}>
+                </p>
+            `);
+        });
+
+        return results;
+    }
+
     render() {
         const i18n = this._i18n;
         console.log('-- Render --');
+        console.log('this.blobSchemaForms', this.blobSchemaForms);
 
         // let handler = new EmailCorrespondence();
         // customElements.define('dbp-cabinet-email-correspondence', handler.getFormComponent());
@@ -247,6 +274,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             <h1>Search</h1>
             <div id="searchbox"></div>
             <div id="hits"></div>
+            <h2>Blob Schema Forms</h2>
+            ${this.getBlobSchemaFormsHtml()}
             <dbp-cabinet-email-correspondence></dbp-cabinet-email-correspondence>
         `;
         // ${unsafeHTML('<div id="searchbox">searchbox</div><div id="hits">hits</div>')}
@@ -255,24 +284,34 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     async loadModules() {
         try {
             // Fetch the JSON file containing module paths
-            // TODO: Adapt path!
-            const response = await fetch('/dist/modules.json');
+            const response = await fetch(this.basePath + 'modules.json');
             const data = await response.json();
 
             console.log('data', data);
+            let forms = {};
 
             // Iterate over the module paths and dynamically import each module
             for (const path of data['blob-schema']) {
                 const module = await import(path);
 
+                console.log('module', module);
+                const object = new module.default();
+
                 // Example usage of imported modules
-                if (module.greet1) {
-                    console.log(module.greet1('World from module1'));
+                if (object.name) {
+                    console.log(object.name);
                 }
-                if (module.greet2) {
-                    console.log(module.greet2('World from module2'));
+
+                if (object.getFormComponent) {
+                    forms[object.name] = object.getFormComponent();
+                    console.log(object.getFormComponent());
+                }
+                if (object.getInstantSearchConfig) {
+                    console.log(object.getInstantSearchConfig());
                 }
             }
+
+            this.blobSchemaForms = forms;
         } catch (error) {
             console.error('Error loading modules:', error);
         }
