@@ -5,6 +5,7 @@
       nodejs_20
       curl
       zellij # smart terminal workspace
+      lazygit # git terminal
     ];
 }
 
