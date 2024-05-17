@@ -70,7 +70,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     console.log('this.serverConfig auth-update', this.serverConfig);
 
                     // Update the Typesense Instantsearch adapter configuration with the new bearer token
-                    this.typesenseInstantsearchAdapter.updateConfiguration(this.getTypesenseInstantsearchAdapterConfig());
+                    if (this.typesenseInstantsearchAdapter) {
+                        this.typesenseInstantsearchAdapter.updateConfiguration(this.getTypesenseInstantsearchAdapterConfig());
+                    }
                     break;
             }
         });
@@ -106,20 +108,20 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             };
             console.log('serverConfig', this.serverConfig);
 
-            this.search = this.createInstantsearch();
-            const search = this.search;
-
-            search.addWidgets([
-                configure({
-                    hitsPerPage: 12,
-                }),
-                this.createSearchBox(),
-                this.createHits(),
-            ]);
-
-            search.start();
-
-            console.log('search', search);
+            // this.search = this.createInstantsearch();
+            // const search = this.search;
+            //
+            // search.addWidgets([
+            //     configure({
+            //         hitsPerPage: 12,
+            //     }),
+            //     this.createSearchBox(),
+            //     this.createHits(),
+            // ]);
+            //
+            // search.start();
+            //
+            // console.log('search', search);
         });
     }
 
