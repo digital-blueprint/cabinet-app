@@ -11,7 +11,8 @@ import {Activity} from './activity.js';
 import metadata from './dbp-cabinet-search.metadata.json';
 import instantsearch from 'instantsearch.js';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
-import {configure, hits, searchBox} from 'instantsearch.js/es/widgets';
+import {hits, searchBox} from 'instantsearch.js/es/widgets';
+// import {configure} from 'instantsearch.js/es/widgets';
 // import EmailCorrespondence from './blob-schema/email';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
