@@ -2,6 +2,7 @@
 layout {
   pane size="60%" {
     command "lazygit"
+    focus true
   }
   pane split_direction="vertical" size="40%" {
     pane {
