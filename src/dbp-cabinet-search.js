@@ -12,6 +12,7 @@ import metadata from './dbp-cabinet-search.metadata.json';
 import instantsearch from 'instantsearch.js';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import {hits, searchBox} from 'instantsearch.js/es/widgets';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import EmailCorrespondence from './blob-schema/email';
 // import {configure} from 'instantsearch.js/es/widgets';
 // import EmailCorrespondence from './blob-schema/email';
@@ -244,11 +245,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 customElements.define(tagName, this.blobSchemaForms[id]);
             }
 
-            // TODO: The tag doesn't get rendered, maybe because the component is not ready yet
             results.push(html`
                 <p>
                     <h3>${id} - ${tagName}</h3>
-                    <${tagName}></${tagName}>
+                    ${unsafeHTML(`<${tagName}></${tagName}>`)}
                 </p>
             `);
         });
@@ -276,7 +276,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             <div id="hits"></div>
             <h2>Blob Schema Forms</h2>
             ${this.getBlobSchemaFormsHtml()}
-            <dbp-cabinet-email-correspondence></dbp-cabinet-email-correspondence>
+<!--            <dbp-cabinet-email-correspondence></dbp-cabinet-email-correspondence>-->
         `;
         // ${unsafeHTML('<div id="searchbox">searchbox</div><div id="hits">hits</div>')}
     }
