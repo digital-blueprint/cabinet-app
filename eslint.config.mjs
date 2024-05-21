@@ -13,10 +13,10 @@ export default [
             jsdoc: jsdoc,
         },
         languageOptions: {
-            ecmaVersion: 2020,
+            ecmaVersion: 2022,
             globals: {
                 ...globals.browser,
-                ...globals.es2020,
+                ...globals.2020,
                 ...globals.mocha,
             },
         },
