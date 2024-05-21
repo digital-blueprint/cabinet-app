@@ -16,7 +16,7 @@ export default [
             ecmaVersion: 2022,
             globals: {
                 ...globals.browser,
-                ...globals.2020,
+                ...globals.es2020,
                 ...globals.mocha,
             },
         },
