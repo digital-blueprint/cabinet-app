@@ -13,7 +13,6 @@ import instantsearch from 'instantsearch.js';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import {hits, searchBox} from 'instantsearch.js/es/widgets';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
-import EmailCorrespondence from './blob-schema/email';
 // import {configure} from 'instantsearch.js/es/widgets';
 // import EmailCorrespondence from './blob-schema/email';
 
@@ -261,9 +260,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('-- Render --');
         console.log('this.blobSchemaForms', this.blobSchemaForms);
 
-        // let handler = new EmailCorrespondence();
-        // customElements.define('dbp-cabinet-email-correspondence', handler.getFormComponent());
-
         return html`
             <div class="control ${classMap({hidden: this.isLoggedIn() || !this.isLoading() || !this.loadingTranslations })}">
                 <span class="loading">
@@ -276,7 +272,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             <div id="hits"></div>
             <h2>Blob Schema Forms</h2>
             ${this.getBlobSchemaFormsHtml()}
-<!--            <dbp-cabinet-email-correspondence></dbp-cabinet-email-correspondence>-->
         `;
         // ${unsafeHTML('<div id="searchbox">searchbox</div><div id="hits">hits</div>')}
     }
