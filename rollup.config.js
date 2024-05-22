@@ -188,10 +188,6 @@ export default (async () => {
         //preserveEntrySignatures: false,
         // external: ['zlib', 'http', 'fs', 'https', 'url'],
         onwarn: function (warning, warn) {
-            // ignore chai warnings
-            if (warning.code === 'CIRCULAR_DEPENDENCY' && warning.message.includes('/chai/')) {
-                return;
-            }
             // more eval
             if (warning.code === 'EVAL' && warning.id.includes('pdfAnnotate.js')) {
                 return;
