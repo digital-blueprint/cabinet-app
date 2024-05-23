@@ -13,8 +13,7 @@ import instantsearch from 'instantsearch.js';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import {hits, searchBox} from 'instantsearch.js/es/widgets';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
-// import {configure} from 'instantsearch.js/es/widgets';
-// import EmailCorrespondence from './blob-schema/email';
+import {configure} from 'instantsearch.js/es/widgets';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -112,20 +111,20 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             };
             console.log('serverConfig', this.serverConfig);
 
-            // this.search = this.createInstantsearch();
-            // const search = this.search;
-            //
-            // search.addWidgets([
-            //     configure({
-            //         hitsPerPage: 12,
-            //     }),
-            //     this.createSearchBox(),
-            //     this.createHits(),
-            // ]);
-            //
-            // search.start();
-            //
-            // console.log('search', search);
+            this.search = this.createInstantsearch();
+            const search = this.search;
+
+            search.addWidgets([
+                configure({
+                    hitsPerPage: 12,
+                }),
+                this.createSearchBox(),
+                this.createHits(),
+            ]);
+
+            search.start();
+
+            console.log('search', search);
         });
     }
 
