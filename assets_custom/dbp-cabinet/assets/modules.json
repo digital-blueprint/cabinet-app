@@ -1,0 +1,6 @@
+{
+  "blob-schema": [
+    "./email.js",
+    "./email2.js"
+  ]
+}
