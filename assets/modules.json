@@ -1,6 +1,6 @@
 {
-  "blob-schema": [
-    "./email.js",
-    "./email2.js"
-  ]
+  "blob-schemas": {
+    "email-correspondence": "./email.js",
+    "email-correspondence2": "./email2.js"
+  }
 }
