@@ -1,5 +1,5 @@
 {
-  "blob-schemas": {
+  "filetypes": {
     "email-correspondence": "./email.js",
     "email-correspondence2": "./email2.js"
   }

@@ -158,8 +158,8 @@ export default (async () => {
                     [
                         'src/' + pkg.internalName + '.js',
                         'src/dbp-cabinet-search.js',
-                        'src/blob-schema/email.js',
-                        'src/blob-schema/email2.js',
+                        'src/filetypes/email.js',
+                        'src/filetypes/email2.js',
                         'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',
                         'vendor/signature/src/dbp-official-signature-pdf-upload.js',
                         'vendor/dispatch/src/dbp-create-request.js',
@@ -170,8 +170,8 @@ export default (async () => {
                     [
                         'src/' + pkg.internalName + '.js',
                         'src/dbp-cabinet-search.js',
-                        'src/blob-schema/email.js',
-                        'src/blob-schema/email2.js',
+                        'src/filetypes/email.js',
+                        'src/filetypes/email2.js',
                         'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',
                         'vendor/signature/src/dbp-official-signature-pdf-upload.js',
                         'vendor/dispatch/src/dbp-create-request.js',

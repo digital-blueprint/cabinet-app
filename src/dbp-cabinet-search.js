@@ -246,7 +246,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             results.push(html`
                 <p>
                     <h3>${id} - ${tagName}</h3>
-                    ${unsafeHTML(`<${tagName}></${tagName}>`)}
+                    ${unsafeHTML(`<${tagName} user-id="123"></${tagName}>`)}
                 </p>
             `);
         });
@@ -286,7 +286,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             // Iterate over the module paths and dynamically import each module
             // TODO: In a real-life scenario, you would probably want access only those keys that are needed
-            for (const [schemaKey, path] of Object.entries(data["blob-schemas"])) {
+            for (const [schemaKey, path] of Object.entries(data["filetypes"])) {
                 const module = await import(path);
 
                 console.log('schemaKey', schemaKey);
