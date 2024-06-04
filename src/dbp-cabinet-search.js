@@ -285,6 +285,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             let forms = {};
 
             // Iterate over the module paths and dynamically import each module
+            // TODO: In a real-life scenario, you would probably want access only those keys that are needed
             for (const [schemaKey, path] of Object.entries(data["blob-schemas"])) {
                 const module = await import(path);
 
