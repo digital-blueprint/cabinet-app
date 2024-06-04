@@ -19,6 +19,10 @@ export default class EmailCorrespondence {
         return EmailCorrespondenceElement;
     }
 
+    getHitComponent() {
+        return EmailCorrespondenceElement;
+    }
+
     getInstantSearchConfig() {
         return {
             "data": "Settings for email correspondence search"
@@ -31,6 +35,7 @@ class EmailCorrespondenceElement extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.userId = '';
     }
 
     static get scopedElements() {
@@ -42,6 +47,7 @@ class EmailCorrespondenceElement extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
+            userId: {type: String, attribute: 'user-id'},
         };
     }
 
@@ -58,6 +64,8 @@ class EmailCorrespondenceElement extends ScopedElementsMixin(DBPLitElement) {
         return html`
             <form>
                 <h2>Email Correspondence Form</h2>
+                lang: ${this.lang}<br />
+                user-id: ${this.userId}<br />
                 <fieldset>
                     <legend>About</legend>
                     <input type="text" id="about" name="about" required>

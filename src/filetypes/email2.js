@@ -19,6 +19,10 @@ export default class EmailCorrespondence2 {
         return EmailCorrespondenceElement;
     }
 
+    getHitComponent() {
+        return EmailCorrespondenceElement;
+    }
+
     getInstantSearchConfig() {
         return {
             "data": "Settings for email2 correspondence search"
@@ -53,11 +57,11 @@ class EmailCorrespondenceElement extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
-        console.log('-- Render EmailCorrespondenceElement --');
+        console.log('-- Render EmailCorrespondenceElement2 --');
 
         return html`
             <form>
-                <h2>Email Correspondence Form</h2>
+                <h2>Email Correspondence Form 2 (${this.lang})</h2>
                 <fieldset>
                     <legend>About</legend>
                     <input type="text" id="about" name="about" required>

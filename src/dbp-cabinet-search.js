@@ -29,7 +29,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.typesenseProtocol = '';
         this.typesenseKey = '';
         this.typesenseCollection = '';
-        this.blobSchemaForms = {};
+        this.fileTypeForms = {};
+        this.fileTypeHitComponents = {};
     }
 
     static get scopedElements() {
@@ -49,7 +50,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             typesenseProtocol: { type: String, attribute: 'typesense-protocol' },
             typesenseKey: { type: String, attribute: 'typesense-key' },
             typesenseCollection: { type: String, attribute: 'typesense-collection' },
-            blobSchemaForms: { type: Object, attribute: false },
+            fileTypeForms: { type: Object, attribute: false },
+            fileTypeHitComponents: { type: Object, attribute: false },
         };
     }
 
@@ -223,30 +225,43 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             container: this._("#hits"),
             templates: {
                 item: (hit) => {
+                    console.log('hit', hit);
+            //         const tagName = 'dbp-cabinet-filetype-hit-' + id;
+            //         if (!customElements.get(tagName)) {
+            //             customElements.define(tagName, this.fileTypeForms[id]);
+            //         }
+            //
+            //         results.push(html`
+            //     <p>
+            //         <h3>${id} - ${tagName}</h3>
+            //         ${unsafeHTML(`<${tagName} user-id="123" lang="${this.lang}"></${tagName}>`)}
+            //     </p>
+            // `);
                     return `
                         <h2>${hit.name}</h2>
                         <p>age: ${hit.age}</p>
+                        <!-- TODO: Include file type specific hit components -->
                     `;
                 },
             },
         });
     }
 
-    getBlobSchemaFormsHtml() {
-        const ids = Object.keys(this.blobSchemaForms);
+    getFileTypeFormsHtml() {
+        const ids = Object.keys(this.fileTypeForms);
         let results = [];
         console.log('ids', ids);
 
         ids.forEach((id) => {
-            const tagName = 'dbp-cabinet-schema-form-' + id;
+            const tagName = 'dbp-cabinet-filetype-form-' + id;
             if (!customElements.get(tagName)) {
-                customElements.define(tagName, this.blobSchemaForms[id]);
+                customElements.define(tagName, this.fileTypeForms[id]);
             }
 
             results.push(html`
                 <p>
                     <h3>${id} - ${tagName}</h3>
-                    ${unsafeHTML(`<${tagName} user-id="123"></${tagName}>`)}
+                    ${unsafeHTML(`<${tagName} user-id="123" lang="${this.lang}"></${tagName}>`)}
                 </p>
             `);
         });
@@ -257,7 +272,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     render() {
         const i18n = this._i18n;
         console.log('-- Render --');
-        console.log('this.blobSchemaForms', this.blobSchemaForms);
+        console.log('this.fileTypeForms', this.fileTypeForms);
 
         return html`
             <div class="control ${classMap({hidden: this.isLoggedIn() || !this.isLoading() || !this.loadingTranslations })}">
@@ -270,7 +285,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             <div id="searchbox"></div>
             <div id="hits"></div>
             <h2>Blob Schema Forms</h2>
-            ${this.getBlobSchemaFormsHtml()}
+            ${this.getFileTypeFormsHtml()}
         `;
         // ${unsafeHTML('<div id="searchbox">searchbox</div><div id="hits">hits</div>')}
     }
@@ -283,6 +298,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             console.log('data', data);
             let forms = {};
+            let hitComponents = {};
 
             // Iterate over the module paths and dynamically import each module
             // TODO: In a real-life scenario, you would probably want access only those keys that are needed
@@ -301,14 +317,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 if (object.getFormComponent) {
                     forms[object.name] = object.getFormComponent();
-                    console.log(object.getFormComponent());
+                }
+                if (object.getHitComponent) {
+                    hitComponents[object.name] = object.getHitComponent();
                 }
                 if (object.getInstantSearchConfig) {
                     console.log(object.getInstantSearchConfig());
                 }
             }
 
-            this.blobSchemaForms = forms;
+            this.fileTypeForms = forms;
+            this.fileTypeHitComponents = hitComponents;
         } catch (error) {
             console.error('Error loading modules:', error);
         }

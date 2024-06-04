@@ -107,7 +107,7 @@ if ((devConfig != undefined && appEnv in devConfig)) {
             path: '/',
             protocol: 'http',
             key: 'xyz',
-            collection: 'cabinet-students'
+            collection: 'cabinet-files'
         },
     };
 } else {
