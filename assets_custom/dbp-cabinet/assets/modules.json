@@ -1,6 +1,6 @@
 {
   "filetypes": {
-    "email-correspondence": "./email.js",
-    "email-correspondence2": "./email2.js"
+    "email": "./email.js",
+    "email2": "./email2.js"
   }
 }

@@ -226,22 +226,19 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             templates: {
                 item: (hit) => {
                     console.log('hit', hit);
-            //         const tagName = 'dbp-cabinet-filetype-hit-' + id;
-            //         if (!customElements.get(tagName)) {
-            //             customElements.define(tagName, this.fileTypeForms[id]);
-            //         }
-            //
-            //         results.push(html`
-            //     <p>
-            //         <h3>${id} - ${tagName}</h3>
-            //         ${unsafeHTML(`<${tagName} user-id="123" lang="${this.lang}"></${tagName}>`)}
-            //     </p>
-            // `);
-                    return `
-                        <h2>${hit.name}</h2>
-                        <p>age: ${hit.age}</p>
-                        <!-- TODO: Include file type specific hit components -->
-                    `;
+                    const id = hit.filetype;
+                    const tagName = 'dbp-cabinet-filetype-hit-' + id;
+                    const fileTypeHitComponent = this.fileTypeHitComponents[id];
+
+                    if (!customElements.get(tagName) && fileTypeHitComponent) {
+                        customElements.define(tagName, fileTypeHitComponent);
+                    }
+
+                    // Serialize the hit object to a string and pass it as a parameter to the hit component
+                    // TODO: Do we need to replace "&apos;" with "'" in the components again?
+                    // Keep in mind that the "lang" will not change when you click on the language switcher,
+                    // it only changes if you search for a new term and instantsearch redraws the hits
+                    return `<${tagName} data='${JSON.stringify(hit).replace(/'/g, "&apos;")}' lang="${this.lang}"></${tagName}>`;
                 },
             },
         });
@@ -258,6 +255,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 customElements.define(tagName, this.fileTypeForms[id]);
             }
 
+            // TODO: Only use "html", if we really need use sanitized HTML
             results.push(html`
                 <p>
                     <h3>${id} - ${tagName}</h3>

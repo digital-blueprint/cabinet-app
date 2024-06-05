@@ -5,7 +5,7 @@ import {createInstance} from '../i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
 export default class EmailCorrespondence2 {
-    name = 'email-correspondence2';
+    name = 'email2';
 
     constructor() {
     }
@@ -16,11 +16,11 @@ export default class EmailCorrespondence2 {
      * @returns {string}
      */
     getFormComponent() {
-        return EmailCorrespondenceElement;
+        return CabinetFormEmailElement;
     }
 
     getHitComponent() {
-        return EmailCorrespondenceElement;
+        return CabinetFormEmailElement;
     }
 
     getInstantSearchConfig() {
@@ -30,7 +30,7 @@ export default class EmailCorrespondence2 {
     }
 }
 
-class EmailCorrespondenceElement extends ScopedElementsMixin(DBPLitElement) {
+class CabinetFormEmailElement extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this._i18n = createInstance();
@@ -57,7 +57,7 @@ class EmailCorrespondenceElement extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
-        console.log('-- Render EmailCorrespondenceElement2 --');
+        console.log('-- Render CabinetFormEmailElement2 --');
 
         return html`
             <form>

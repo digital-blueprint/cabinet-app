@@ -5,7 +5,7 @@ import {createInstance} from '../i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
 export default class EmailCorrespondence {
-    name = 'email-correspondence';
+    name = 'email';
 
     constructor() {
     }
@@ -16,11 +16,11 @@ export default class EmailCorrespondence {
      * @returns {string}
      */
     getFormComponent() {
-        return EmailCorrespondenceElement;
+        return CabinetFormEmailElement;
     }
 
     getHitComponent() {
-        return EmailCorrespondenceElement;
+        return CabinetHitEmailElement;
     }
 
     getInstantSearchConfig() {
@@ -30,7 +30,7 @@ export default class EmailCorrespondence {
     }
 }
 
-class EmailCorrespondenceElement extends ScopedElementsMixin(DBPLitElement) {
+class CabinetFormEmailElement extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this._i18n = createInstance();
@@ -59,7 +59,7 @@ class EmailCorrespondenceElement extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
-        console.log('-- Render EmailCorrespondenceElement --');
+        console.log('-- Render CabinetFormEmailElement --');
 
         return html`
             <form>
@@ -168,6 +168,53 @@ class EmailCorrespondenceElement extends ScopedElementsMixin(DBPLitElement) {
 
                 <button type="submit">Submit</button>
             </form>
+        `;
+    }
+}
+
+class CabinetHitEmailElement extends ScopedElementsMixin(DBPLitElement) {
+    constructor() {
+        super();
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
+        this.userId = '';
+        this.data = {};
+    }
+
+    static get scopedElements() {
+        return {
+        };
+    }
+
+    static get properties() {
+        return {
+            ...super.properties,
+            lang: {type: String},
+            userId: {type: String, attribute: 'user-id'},
+            data: {type: Object},
+        };
+    }
+
+    static get styles() {
+        // language=css
+        return css`
+            h2 {
+                margin: 0;
+            }
+
+            ${commonStyles.getGeneralCSS(false)}
+        `;
+    }
+
+    render() {
+        console.log('-- Render CabinetFormEmailElement --');
+        console.log('this.data', this.data);
+
+        return html`
+            <form>
+                <h2>Email Hit</h2>
+                lang: ${this.lang}<br />
+                filename: ${this.data.filename}<br />
         `;
     }
 }
