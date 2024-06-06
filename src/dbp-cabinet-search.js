@@ -228,7 +228,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     const id = hit.filetype;
                     const tagPart = pascalToKebab(hit.filetype);
                     const tagName = 'dbp-cabinet-filetype-hit-' + tagPart;
-                    // TODO: Fix
                     const fileTypeHitComponent = this.fileTypeHitComponents[id];
 
                     if (!customElements.get(tagName) && fileTypeHitComponent) {
@@ -237,9 +236,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                     // Serialize the hit object to a string and pass it as a parameter to the hit component
                     // TODO: Do we need to replace "&apos;" with "'" in the components again?
-                    // Keep in mind that the "lang" will not change when you click on the language switcher,
-                    // it only changes if you search for a new term and instantsearch redraws the hits
-                    return `<${tagName} data='${JSON.stringify(hit).replace(/'/g, "&apos;")}' lang="${this.lang}"></${tagName}>`;
+                    return `<${tagName} subscribe="lang" data='${JSON.stringify(hit).replace(/'/g, "&apos;")}'></${tagName}>`;
                 },
             },
         });
@@ -261,7 +258,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             results.push(html`
                 <p>
                     <h3>${id} - ${tagName}</h3>
-                    ${unsafeHTML(`<${tagName} user-id="123" lang="${this.lang}"></${tagName}>`)}
+                    ${unsafeHTML(`<${tagName} subscribe="lang" user-id="123"></${tagName}>`)}
                 </p>
             `);
         });
