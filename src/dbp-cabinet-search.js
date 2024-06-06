@@ -225,10 +225,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             templates: {
                 item: (hit) => {
                     console.log('hit', hit);
-                    const id = hit.filetype;
+                    const id = hit.id;
+                    console.log('id', id);
+                    const filetype = hit.filetype;
                     const tagPart = pascalToKebab(hit.filetype);
                     const tagName = 'dbp-cabinet-filetype-hit-' + tagPart;
-                    const fileTypeHitComponent = this.fileTypeHitComponents[id];
+                    const fileTypeHitComponent = this.fileTypeHitComponents[filetype];
 
                     if (!customElements.get(tagName) && fileTypeHitComponent) {
                         customElements.define(tagName, fileTypeHitComponent);
@@ -236,10 +238,19 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                     // Serialize the hit object to a string and pass it as a parameter to the hit component
                     // TODO: Do we need to replace "&apos;" with "'" in the components again?
-                    return `<${tagName} subscribe="lang" data='${JSON.stringify(hit).replace(/'/g, "&apos;")}'></${tagName}>`;
+                    // Note: We can't use "html" in a hit template, because instantsearch.js is writing to the DOM directly
+                    // TODO: How to call "this.editFile" without "html"? Maybe use an event?
+                    return `
+                        <${tagName} subscribe="lang" data='${JSON.stringify(hit).replace(/'/g, "&apos;")}'></${tagName}>
+                        <button @click="${() => this.editFile(id)}">Edit</button>
+                    `;
                 },
             },
         });
+    }
+
+    editFile() {
+        console.log('editFile');
     }
 
     getFileTypeFormsHtml() {
