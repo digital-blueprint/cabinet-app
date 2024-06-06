@@ -1,6 +1,9 @@
 {
   "filetypes": {
     "email": "./email.js",
-    "email2": "./email2.js"
+    "conversation": "./conversation.js",
+    "letter": "./letter.js",
+    "personalLicence": "./personalLicence.js",
+    "citizenshipCertificate": "./citizenshipCertificate.js"
   }
 }

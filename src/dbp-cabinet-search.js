@@ -14,6 +14,7 @@ import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import {hits, searchBox} from 'instantsearch.js/es/widgets';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {configure} from 'instantsearch.js/es/widgets';
+import {pascalToKebab} from './utils';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -118,7 +119,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             search.addWidgets([
                 configure({
-                    hitsPerPage: 12,
+                    hitsPerPage: 24,
                 }),
                 this.createSearchBox(),
                 this.createHits(),
@@ -144,18 +145,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .ais-Hits-list {
                 display: grid;
-                grid-auto-flow: column;
-                grid-gap: 20px;
-                grid-template-rows: 125px 100px;
-                justify-content: space-between;
-                align-content: space-between;
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 20px;
                 padding: 0;
             }
 
             .ais-Hits-item {
-                padding: 20px;
+                padding: 5px;
                 border: 1px solid black;
                 list-style-type: none;
+                overflow: hidden;
             }
         `;
     }
@@ -227,7 +226,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 item: (hit) => {
                     console.log('hit', hit);
                     const id = hit.filetype;
-                    const tagName = 'dbp-cabinet-filetype-hit-' + id;
+                    const tagPart = pascalToKebab(hit.filetype);
+                    const tagName = 'dbp-cabinet-filetype-hit-' + tagPart;
+                    // TODO: Fix
                     const fileTypeHitComponent = this.fileTypeHitComponents[id];
 
                     if (!customElements.get(tagName) && fileTypeHitComponent) {
@@ -250,12 +251,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('ids', ids);
 
         ids.forEach((id) => {
-            const tagName = 'dbp-cabinet-filetype-form-' + id;
+            const tagPart = pascalToKebab(id);
+            const tagName = 'dbp-cabinet-filetype-form-' + tagPart;
             if (!customElements.get(tagName)) {
                 customElements.define(tagName, this.fileTypeForms[id]);
             }
 
-            // TODO: Only use "html", if we really need use sanitized HTML
+            // Note: Only use "html", if we really need use sanitized HTML
             results.push(html`
                 <p>
                     <h3>${id} - ${tagName}</h3>
@@ -281,6 +283,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             <h1>Search</h1>
             <div id="searchbox"></div>
+            <h2>Search Results</h2>
             <div id="hits"></div>
             <h2>Blob Schema Forms</h2>
             ${this.getFileTypeFormsHtml()}
@@ -325,7 +328,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             this.fileTypeForms = forms;
+            console.log('forms', forms);
             this.fileTypeHitComponents = hitComponents;
+            console.log('hitComponents', hitComponents);
         } catch (error) {
             console.error('Error loading modules:', error);
         }

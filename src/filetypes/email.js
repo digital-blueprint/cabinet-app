@@ -4,33 +4,31 @@ import {css, html} from 'lit';
 import {createInstance} from '../i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
-export default class EmailCorrespondence {
+export default class {
     name = 'email';
 
     constructor() {
     }
 
     /**
-     * TODO: Handle translation
-     * TODO: Handle parameter with object
      * @returns {string}
      */
     getFormComponent() {
-        return CabinetFormEmailElement;
+        return CabinetFormElement;
     }
 
     getHitComponent() {
-        return CabinetHitEmailElement;
+        return CabinetHitElement;
     }
 
     getInstantSearchConfig() {
         return {
-            "data": "Settings for email correspondence search"
+            "data": "Settings for instantsearch"
         };
     }
 }
 
-class CabinetFormEmailElement extends ScopedElementsMixin(DBPLitElement) {
+class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this._i18n = createInstance();
@@ -59,11 +57,11 @@ class CabinetFormEmailElement extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
-        console.log('-- Render CabinetFormEmailElement --');
+        console.log('-- Render CabinetFormElement --');
 
         return html`
             <form>
-                <h2>Email Correspondence Form</h2>
+                <h2>Email Form</h2>
                 lang: ${this.lang}<br />
                 user-id: ${this.userId}<br />
                 <fieldset>
@@ -172,7 +170,7 @@ class CabinetFormEmailElement extends ScopedElementsMixin(DBPLitElement) {
     }
 }
 
-class CabinetHitEmailElement extends ScopedElementsMixin(DBPLitElement) {
+class CabinetHitElement extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
         this._i18n = createInstance();
@@ -200,6 +198,8 @@ class CabinetHitEmailElement extends ScopedElementsMixin(DBPLitElement) {
         return css`
             h2 {
                 margin: 0;
+                font-size: 1.2em;
+                color: #2baff5;
             }
 
             ${commonStyles.getGeneralCSS(false)}
@@ -207,12 +207,9 @@ class CabinetHitEmailElement extends ScopedElementsMixin(DBPLitElement) {
     }
 
     render() {
-        console.log('-- Render CabinetFormEmailElement --');
-        console.log('this.data', this.data);
-
         return html`
             <form>
-                <h2>Email Hit</h2>
+                <h2>Email</h2>
                 lang: ${this.lang}<br />
                 filename: ${this.data.filename}<br />
         `;
