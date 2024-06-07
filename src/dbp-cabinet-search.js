@@ -301,24 +301,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <dbp-mini-spinner text=${i18n.t('loading-message')}></dbp-mini-spinner>
                 </span>
             </div>
-            <script>
-                function emitCustomEvent(id) {
-                    // Get the button element by its ID
-                    const button = document.getElementById('myButton');
-                    console.log( "id", id );
-
-                    // Create a new custom event
-                    const event = new CustomEvent('buttonClicked', {
-                        detail: {
-                            message: 'Button was clicked!',
-                            time: new Date(),
-                        }
-                    });
-
-                    // Dispatch the custom event
-                    button.dispatchEvent(event);
-                }
-            </script>
 
             <h1>Search</h1>
             <div id="searchbox"></div>
