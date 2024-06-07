@@ -3,7 +3,9 @@ import {AppShell} from '@dbp-toolkit/app-shell';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import {Translated} from '@dbp-toolkit/common/src/translated';
 import {Translation} from '@dbp-toolkit/common/src/translation';
+import {Modal} from '@dbp-toolkit/common/src/modal';
 
 commonUtils.defineCustomElement('dbp-cabinet', AppShell);
 commonUtils.defineCustomElement('dbp-translated', Translated);
 commonUtils.defineCustomElement('dbp-translation', Translation);
+commonUtils.defineCustomElement('dbp-modal', Modal);

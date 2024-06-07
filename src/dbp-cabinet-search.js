@@ -32,6 +32,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.typesenseCollection = '';
         this.fileTypeForms = {};
         this.fileTypeHitComponents = {};
+        this.editFileId = '';
     }
 
     static get scopedElements() {
@@ -53,6 +54,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             typesenseCollection: { type: String, attribute: 'typesense-collection' },
             fileTypeForms: { type: Object, attribute: false },
             fileTypeHitComponents: { type: Object, attribute: false },
+            editFileId: { type: String },
         };
     }
 
@@ -92,6 +94,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     openFileEditDialog(id) {
         console.log('openFileEditDialog', id);
+        // TODO: Use correct form component for the file type
+        // TODO: Load the file data and populate the form
+        this.editFileId = id;
+        this._('#file-edit-modal').open();
     }
 
     connectedCallback() {
@@ -320,6 +326,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             <div id="hits"></div>
             <h2>Blob Schema Forms</h2>
             ${this.getFileTypeFormsHtml()}
+
+            <dbp-modal id="file-edit-modal" modal-id="file-edit-modal" title="${i18n.t('file-edit-modal-title')}" subscribe="lang">
+                <div slot="content">
+                    Content<br />
+                    File ID: ${this.editFileId}
+                </div>
+                <div slot="footer" class="modal-footer">
+                    Footer
+                </div>
+            </dbp-modal>
         `;
         // ${unsafeHTML('<div id="searchbox">searchbox</div><div id="hits">hits</div>')}
     }
