@@ -90,10 +90,20 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         super.disconnectedCallback();
     }
 
+    openFileEditDialog(id) {
+        console.log('openFileEditDialog', id);
+    }
+
     connectedCallback() {
         super.connectedCallback();
+        let that = this;
         this._loginStatus = '';
         this._loginState = [];
+
+        // Listen to DbpCabinetFileEdit events, to open the file edit dialog
+        document.addEventListener('DbpCabinetFileEdit', function(event) {
+            that.openFileEditDialog(event.detail.id);
+        });
 
         this.updateComplete.then(() => {
             console.log('-- updateComplete --');
@@ -218,15 +228,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     createHits() {
-        console.log('this._(#hits)', this._('#hits'));
-
         return hits({
             container: this._("#hits"),
+            escapeHTML: true,
             templates: {
                 item: (hit) => {
-                    console.log('hit', hit);
                     const id = hit.id;
-                    console.log('id', id);
                     const filetype = hit.filetype;
                     const tagPart = pascalToKebab(hit.filetype);
                     const tagName = 'dbp-cabinet-filetype-hit-' + tagPart;
@@ -238,11 +245,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                     // Serialize the hit object to a string and pass it as a parameter to the hit component
                     // TODO: Do we need to replace "&apos;" with "'" in the components again?
-                    // Note: We can't use "html" in a hit template, because instantsearch.js is writing to the DOM directly
-                    // TODO: How to call "this.editFile" without "html"? Maybe use an event?
+                    // Note: We can't use "html" in a hit template, because instantsearch.js is writing to the DOM directly in a web component
+                    // Note: We can't access local functions, nor can we use a script tag, so we are using a custom event to open the file edit dialog
                     return `
                         <${tagName} subscribe="lang" data='${JSON.stringify(hit).replace(/'/g, "&apos;")}'></${tagName}>
-                        <button @click="${() => this.editFile(id)}">Edit</button>
+                        <button onclick="document.dispatchEvent(new CustomEvent('DbpCabinetFileEdit', {detail: {id: '${id}'}}))">Edit</button>
                     `;
                 },
             },
@@ -288,6 +295,24 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <dbp-mini-spinner text=${i18n.t('loading-message')}></dbp-mini-spinner>
                 </span>
             </div>
+            <script>
+                function emitCustomEvent(id) {
+                    // Get the button element by its ID
+                    const button = document.getElementById('myButton');
+                    console.log( "id", id );
+
+                    // Create a new custom event
+                    const event = new CustomEvent('buttonClicked', {
+                        detail: {
+                            message: 'Button was clicked!',
+                            time: new Date(),
+                        }
+                    });
+
+                    // Dispatch the custom event
+                    button.dispatchEvent(event);
+                }
+            </script>
 
             <h1>Search</h1>
             <div id="searchbox"></div>
