@@ -92,11 +92,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         super.disconnectedCallback();
     }
 
-    openFileEditDialog(id) {
-        console.log('openFileEditDialog', id);
+    openFileEditDialog(id, hit) {
         // TODO: Use correct form component for the file type
         // TODO: Load the file data and populate the form
         this.editFileId = id;
+        console.log('openFileEditDialog hit', hit);
         this._('#file-edit-modal').open();
     }
 
@@ -108,7 +108,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Listen to DbpCabinetFileEdit events, to open the file edit dialog
         document.addEventListener('DbpCabinetFileEdit', function(event) {
-            that.openFileEditDialog(event.detail.id);
+            that.openFileEditDialog(event.detail.id, event.detail.hit);
         });
 
         this.updateComplete.then(() => {
@@ -249,13 +249,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         customElements.define(tagName, fileTypeHitComponent);
                     }
 
+                    const hitObjectString = JSON.stringify(hit).replace(/'/g, "&apos;");
+
                     // Serialize the hit object to a string and pass it as a parameter to the hit component
                     // TODO: Do we need to replace "&apos;" with "'" in the components again?
                     // Note: We can't use "html" in a hit template, because instantsearch.js is writing to the DOM directly in a web component
                     // Note: We can't access local functions, nor can we use a script tag, so we are using a custom event to open the file edit dialog
+                    // TODO: Find a way to serialize the hit object to a string and pass it as a parameter to the hit component
                     return `
-                        <${tagName} subscribe="lang" data='${JSON.stringify(hit).replace(/'/g, "&apos;")}'></${tagName}>
-                        <button onclick="document.dispatchEvent(new CustomEvent('DbpCabinetFileEdit', {detail: {id: '${id}'}}))">Edit</button>
+                        <${tagName} subscribe="lang" data='${hitObjectString}'></${tagName}>
+                        <button onclick="document.dispatchEvent(new CustomEvent('DbpCabinetFileEdit', {detail: {id: '${id}', hit: {}}}))">Edit</button>
                     `;
                 },
             },
