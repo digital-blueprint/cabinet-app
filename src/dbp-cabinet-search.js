@@ -33,6 +33,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.fileTypeForms = {};
         this.fileTypeHitComponents = {};
         this.editFileId = '';
+        this.editFiletype = '';
     }
 
     static get scopedElements() {
@@ -92,11 +93,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         super.disconnectedCallback();
     }
 
-    openFileEditDialog(id, hit) {
-        // TODO: Use correct form component for the file type
+    openFileEditDialog(id, filetype, hit) {
         // TODO: Load the file data and populate the form
+        this.editFiletype = filetype;
         this.editFileId = id;
         console.log('openFileEditDialog hit', hit);
+        console.log('filetype', filetype);
+        // TODO: Why is the dialog only opening after the second click?
         this._('#file-edit-modal').open();
     }
 
@@ -108,7 +111,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Listen to DbpCabinetFileEdit events, to open the file edit dialog
         document.addEventListener('DbpCabinetFileEdit', function(event) {
-            that.openFileEditDialog(event.detail.id, event.detail.hit);
+            that.openFileEditDialog(event.detail.id, event.detail.filetype, event.detail.hit);
         });
 
         this.updateComplete.then(() => {
@@ -258,7 +261,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // TODO: Find a way to serialize the hit object to a string and pass it as a parameter to the hit component
                     return `
                         <${tagName} subscribe="lang" data='${hitObjectString}'></${tagName}>
-                        <button onclick="document.dispatchEvent(new CustomEvent('DbpCabinetFileEdit', {detail: {id: '${id}', hit: {}}}))">Edit</button>
+                        <button onclick="document.dispatchEvent(new CustomEvent('DbpCabinetFileEdit', {detail: {id: '${id}', filetype: '${filetype}', hit: {}}}))">Edit</button>
                     `;
                 },
             },
@@ -293,6 +296,34 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         return results;
     }
 
+    getFileEditModalHtml() {
+        if (this.editFiletype === '') {
+            console.log('this.editFiletype empty', this.editFiletype);
+            return html`<dbp-modal id="file-edit-modal" modal-id="file-edit-modal"></dbp-modal>`;
+        }
+
+        const i18n = this._i18n;
+        const tagPart = pascalToKebab(this.editFiletype);
+        const tagName = 'dbp-cabinet-filetype-form-' + tagPart;
+        if (!customElements.get(tagName)) {
+            customElements.define(tagName, this.fileTypeForms[this.editFiletype]);
+        }
+
+        return html`
+            <dbp-modal id="file-edit-modal" modal-id="file-edit-modal" title="${i18n.t('file-edit-modal-title')}" subscribe="lang">
+                <div slot="content">
+                    Content<br />
+                    File ID: ${this.editFileId}<br />
+                    Filetype: ${this.editFiletype}<br />
+                    ${unsafeHTML(`<${tagName} subscribe="lang" user-id="123"></${tagName}>`)}
+                </div>
+                <div slot="footer" class="modal-footer">
+                    Footer
+                </div>
+            </dbp-modal>
+        `;
+    }
+
     render() {
         const i18n = this._i18n;
         console.log('-- Render --');
@@ -309,18 +340,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             <div id="searchbox"></div>
             <h2>Search Results</h2>
             <div id="hits"></div>
-            <h2>Blob Schema Forms</h2>
-            ${this.getFileTypeFormsHtml()}
-
-            <dbp-modal id="file-edit-modal" modal-id="file-edit-modal" title="${i18n.t('file-edit-modal-title')}" subscribe="lang">
-                <div slot="content">
-                    Content<br />
-                    File ID: ${this.editFileId}
-                </div>
-                <div slot="footer" class="modal-footer">
-                    Footer
-                </div>
-            </dbp-modal>
+            ${this.getFileEditModalHtml()}
         `;
         // ${unsafeHTML('<div id="searchbox">searchbox</div><div id="hits">hits</div>')}
     }
