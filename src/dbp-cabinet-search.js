@@ -36,7 +36,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             "id": "",
             "filetype": "",
         };
-        this.filetypeHits = [];
     }
 
     static get scopedElements() {
@@ -255,11 +254,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                     const hitObjectString = JSON.stringify(hit).replace(/'/g, "&apos;");
 
-                    // Since it's hard to serialize the hit object to a string and pass it as a
-                    // parameter to the hit component, we store it in a map
-                    // TODO: Find a better solution to pass the hit object to the filetype edit modal
-                    // this.filetypeHits[id] = hit;
-
                     // Serialize the hit object to a string and pass it as a parameter to the hit component
                     // TODO: Do we need to replace "&apos;" with "'" in the components again?
                     // Note: We can't use "html" in a hit template, because instantsearch.js is writing to the DOM directly in a web component
@@ -268,7 +262,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // TODO: Subscriber attribute "lang" doesn't work anymore, how to do a normal attribute in preact?
                     // TODO: DbpCabinetFileEdit doesn't need id and filetype any more
                     return html`
-                        test123: <${tagName} subscribe="lang" data='${hitObjectString}'></${tagName}>
+                        <${tagName} subscribe="lang" data='${hitObjectString}'></${tagName}>
                         <button onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetFileEdit', {detail: {id: id, filetype: filetype, hit: hit}}));}}>Edit</button>
                     `;
                     // return `
@@ -319,7 +313,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         const id = hit.id;
-        // const hit = this.filetypeHits[id];
         const i18n = this._i18n;
         const tagPart = pascalToKebab(filetype);
         const tagName = 'dbp-cabinet-filetype-form-' + tagPart;
