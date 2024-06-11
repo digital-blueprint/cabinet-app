@@ -95,11 +95,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         super.disconnectedCallback();
     }
 
-    openFileEditDialog(id, filetype, hit) {
+    openFileEditDialog(hit) {
         this.editHitData = hit;
         console.log('openFileEditDialog hit', hit);
-        console.log('filetype', filetype);
-        // TODO: Why is the dialog only opening after the second click?
+        // TODO: Why is the dialog only opening after the second click after a page reload?
         this._('#file-edit-modal').open();
     }
 
@@ -111,7 +110,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Listen to DbpCabinetFileEdit events, to open the file edit dialog
         document.addEventListener('DbpCabinetFileEdit', function(event) {
-            that.openFileEditDialog(event.detail.id, event.detail.filetype, event.detail.hit);
+            that.openFileEditDialog(event.detail.hit);
         });
 
         this.updateComplete.then(() => {
@@ -254,9 +253,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                     // Note: We can't access local functions, nor can we use a script tag, so we are using a custom event to open the file edit dialog (is this still the case with preact?)
                     // TODO: Subscriber attribute "lang" doesn't work anymore, how to do a normal attribute in preact?
+                    // Note: "html" is preact htm, not lit-html!
                     return html`
                         <${tagName} subscribe="lang" data=${hit}></${tagName}>
-                        <button onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetFileEdit', {detail: {id: id, filetype: filetype, hit: hit}}));}}>Edit</button>
+                        <button onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetFileEdit', {detail: {hit: hit}}));}}>Edit</button>
                     `;
                 },
             },
