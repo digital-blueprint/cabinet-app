@@ -252,23 +252,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         customElements.define(tagName, fileTypeHitComponent);
                     }
 
-                    const hitObjectString = JSON.stringify(hit).replace(/'/g, "&apos;");
-
-                    // Serialize the hit object to a string and pass it as a parameter to the hit component
-                    // TODO: Do we need to replace "&apos;" with "'" in the components again?
-                    // Note: We can't use "html" in a hit template, because instantsearch.js is writing to the DOM directly in a web component
-                    // Note: We can't access local functions, nor can we use a script tag, so we are using a custom event to open the file edit dialog
-                    // TODO: Find a way to serialize the hit object to a string and pass it as a parameter to the hit component
+                    // Note: We can't access local functions, nor can we use a script tag, so we are using a custom event to open the file edit dialog (is this still the case with preact?)
                     // TODO: Subscriber attribute "lang" doesn't work anymore, how to do a normal attribute in preact?
-                    // TODO: DbpCabinetFileEdit doesn't need id and filetype any more
                     return html`
-                        <${tagName} subscribe="lang" data='${hitObjectString}'></${tagName}>
+                        <${tagName} subscribe="lang" data=${hit}></${tagName}>
                         <button onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetFileEdit', {detail: {id: id, filetype: filetype, hit: hit}}));}}>Edit</button>
                     `;
-                    // return `
-                    //     <${tagName} subscribe="lang" data='${hitObjectString}'></${tagName}>
-                    //     <button onclick="document.dispatchEvent(new CustomEvent('DbpCabinetFileEdit', {detail: {id: '${id}', filetype: '${filetype}', hit: {}}}))">Edit</button>
-                    // `;
                 },
             },
         });
