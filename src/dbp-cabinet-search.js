@@ -32,8 +32,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.typesenseCollection = '';
         this.fileTypeForms = {};
         this.fileTypeHitComponents = {};
-        this.editFileId = '';
-        this.editFiletype = '';
+        this.editHitData = {
+            "id": "",
+            "filetype": "",
+        };
+        this.filetypeHits = [];
     }
 
     static get scopedElements() {
@@ -55,7 +58,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             typesenseCollection: { type: String, attribute: 'typesense-collection' },
             fileTypeForms: { type: Object, attribute: false },
             fileTypeHitComponents: { type: Object, attribute: false },
-            editFileId: { type: String },
+            editHitData: { type: Object },
         };
     }
 
@@ -94,9 +97,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     openFileEditDialog(id, filetype, hit) {
-        // TODO: Load the file data and populate the form
-        this.editFiletype = filetype;
-        this.editFileId = id;
+        this.editHitData = hit;
         console.log('openFileEditDialog hit', hit);
         console.log('filetype', filetype);
         // TODO: Why is the dialog only opening after the second click?
@@ -241,7 +242,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             container: this._("#hits"),
             escapeHTML: true,
             templates: {
-                item: (hit) => {
+                item: (hit, {html}) => {
                     const id = hit.id;
                     const filetype = hit.filetype;
                     const tagPart = pascalToKebab(hit.filetype);
@@ -254,15 +255,26 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                     const hitObjectString = JSON.stringify(hit).replace(/'/g, "&apos;");
 
+                    // Since it's hard to serialize the hit object to a string and pass it as a
+                    // parameter to the hit component, we store it in a map
+                    // TODO: Find a better solution to pass the hit object to the filetype edit modal
+                    // this.filetypeHits[id] = hit;
+
                     // Serialize the hit object to a string and pass it as a parameter to the hit component
                     // TODO: Do we need to replace "&apos;" with "'" in the components again?
                     // Note: We can't use "html" in a hit template, because instantsearch.js is writing to the DOM directly in a web component
                     // Note: We can't access local functions, nor can we use a script tag, so we are using a custom event to open the file edit dialog
                     // TODO: Find a way to serialize the hit object to a string and pass it as a parameter to the hit component
-                    return `
-                        <${tagName} subscribe="lang" data='${hitObjectString}'></${tagName}>
-                        <button onclick="document.dispatchEvent(new CustomEvent('DbpCabinetFileEdit', {detail: {id: '${id}', filetype: '${filetype}', hit: {}}}))">Edit</button>
+                    // TODO: Subscriber attribute "lang" doesn't work anymore, how to do a normal attribute in preact?
+                    // TODO: DbpCabinetFileEdit doesn't need id and filetype any more
+                    return html`
+                        test123: <${tagName} subscribe="lang" data='${hitObjectString}'></${tagName}>
+                        <button onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetFileEdit', {detail: {id: id, filetype: filetype, hit: hit}}));}}>Edit</button>
                     `;
+                    // return `
+                    //     <${tagName} subscribe="lang" data='${hitObjectString}'></${tagName}>
+                    //     <button onclick="document.dispatchEvent(new CustomEvent('DbpCabinetFileEdit', {detail: {id: '${id}', filetype: '${filetype}', hit: {}}}))">Edit</button>
+                    // `;
                 },
             },
         });
@@ -297,25 +309,32 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     getFileEditModalHtml() {
-        if (this.editFiletype === '') {
-            console.log('this.editFiletype empty', this.editFiletype);
+        const hit = this.editHitData;
+        console.log('hit', hit);
+        const filetype = hit.filetype;
+
+        if (filetype === '') {
+            console.log('filetype empty', filetype);
             return html`<dbp-modal id="file-edit-modal" modal-id="file-edit-modal"></dbp-modal>`;
         }
 
+        const id = hit.id;
+        // const hit = this.filetypeHits[id];
         const i18n = this._i18n;
-        const tagPart = pascalToKebab(this.editFiletype);
+        const tagPart = pascalToKebab(filetype);
         const tagName = 'dbp-cabinet-filetype-form-' + tagPart;
         if (!customElements.get(tagName)) {
-            customElements.define(tagName, this.fileTypeForms[this.editFiletype]);
+            customElements.define(tagName, this.fileTypeForms[filetype]);
         }
 
         return html`
             <dbp-modal id="file-edit-modal" modal-id="file-edit-modal" title="${i18n.t('file-edit-modal-title')}" subscribe="lang">
                 <div slot="content">
                     Content<br />
-                    File ID: ${this.editFileId}<br />
-                    Filetype: ${this.editFiletype}<br />
-                    ${unsafeHTML(`<${tagName} subscribe="lang" user-id="123"></${tagName}>`)}
+                    File ID: ${id}<br />
+                    Filetype: ${filetype}<br />
+                    Size: ${hit.filesize}<br />
+                    ${unsafeHTML(`<${tagName} id="dbp-cabinet-filetype-form-${id}" subscribe="lang" user-id="123"></${tagName}>`)}
                 </div>
                 <div slot="footer" class="modal-footer">
                     Footer
