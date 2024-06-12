@@ -281,6 +281,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             customElements.define(tagName, this.fileTypeForms[filetype]);
         }
 
+        // TODO: The "data" property is not passed to the custom element yet because of unsafeHTML!
         return html`
             <dbp-modal id="file-edit-modal" modal-id="file-edit-modal" title="${i18n.t('file-edit-modal-title')}" subscribe="lang">
                 <div slot="content">
@@ -288,7 +289,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     File ID: ${id}<br />
                     Filetype: ${filetype}<br />
                     Size: ${hit.filesize}<br />
-                    ${unsafeHTML(`<${tagName} id="dbp-cabinet-filetype-form-${id}" subscribe="lang" user-id="123"></${tagName}>`)}
+                    ${unsafeHTML(`<${tagName} id="dbp-cabinet-filetype-form-${id}" subscribe="lang" user-id="123" .data=${hit}></${tagName}>`)}
                 </div>
                 <div slot="footer" class="modal-footer">
                     Footer

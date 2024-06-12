@@ -33,6 +33,7 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.data = {};
         this.userId = '';
     }
 
@@ -45,6 +46,7 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
+            data: {type: Object},
             userId: {type: String, attribute: 'user-id'},
         };
     }
@@ -58,6 +60,8 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
 
     render() {
         console.log('-- Render CabinetFormElement --');
+        console.log('this.data', this.data);
+        const data = this.data;
 
         return html`
             <form>
@@ -66,13 +70,13 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
                 user-id: ${this.userId}<br />
                 <fieldset>
                     <legend>About</legend>
-                    <input type="text" id="about" name="about" required>
+                    <input type="text" id="about" name="about" value="${data.filename}" required>
                     <label for="about">About</label>
                 </fieldset>
 
                 <fieldset>
                     <legend>Comment</legend>
-                    <textarea id="comment" name="comment"></textarea>
+                    <textarea id="comment" name="comment">${data.filesize}</textarea>
                     <label for="comment">Comment</label>
                 </fieldset>
 
