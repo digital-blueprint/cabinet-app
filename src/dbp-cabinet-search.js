@@ -292,6 +292,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     getFileEditModalHtml() {
+        // TODO: In production it maybe would be better to fetch the typesense document again to get the latest data
         const hit = this.editHitData;
         console.log('hit', hit);
         const filetype = hit.filetype;
