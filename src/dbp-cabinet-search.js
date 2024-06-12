@@ -183,7 +183,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     getSearchParameters() {
         // https://typesense.org/docs/0.25.1/api/search.html#ranking-and-sorting-parameters
         let searchParameters = {
-            query_by: "name",
+            query_by: "filename,filetype",
         };
 
         if (!this.fuzzySearch) {
