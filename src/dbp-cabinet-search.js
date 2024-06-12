@@ -241,7 +241,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             escapeHTML: true,
             templates: {
                 item: (hit, {html}) => {
-                    const id = hit.id;
                     const filetype = hit.filetype;
                     const tagPart = pascalToKebab(hit.filetype);
                     const tagName = 'dbp-cabinet-filetype-hit-' + tagPart;
@@ -261,34 +260,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 },
             },
         });
-    }
-
-    editFile() {
-        console.log('editFile');
-    }
-
-    getFileTypeFormsHtml() {
-        const ids = Object.keys(this.fileTypeForms);
-        let results = [];
-        console.log('ids', ids);
-
-        ids.forEach((id) => {
-            const tagPart = pascalToKebab(id);
-            const tagName = 'dbp-cabinet-filetype-form-' + tagPart;
-            if (!customElements.get(tagName)) {
-                customElements.define(tagName, this.fileTypeForms[id]);
-            }
-
-            // Note: Only use "html", if we really need use sanitized HTML
-            results.push(html`
-                <p>
-                    <h3>${id} - ${tagName}</h3>
-                    ${unsafeHTML(`<${tagName} subscribe="lang" user-id="123"></${tagName}>`)}
-                </p>
-            `);
-        });
-
-        return results;
     }
 
     getFileEditModalHtml() {
@@ -344,7 +315,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             <div id="hits"></div>
             ${this.getFileEditModalHtml()}
         `;
-        // ${unsafeHTML('<div id="searchbox">searchbox</div><div id="hits">hits</div>')}
     }
 
     async loadModules() {
@@ -358,7 +328,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             let hitComponents = {};
 
             // Iterate over the module paths and dynamically import each module
-            // TODO: In a real-life scenario, you would probably want access only those keys that are needed
+            // TODO: In a real-life scenario, you would probably want access only those keys that are needed (but we will need them all)
             for (const [schemaKey, path] of Object.entries(data["filetypes"])) {
                 const module = await import(path);
 
