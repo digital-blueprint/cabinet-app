@@ -12,7 +12,6 @@ import metadata from './dbp-cabinet-search.metadata.json';
 import instantsearch from 'instantsearch.js';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import {hits, searchBox} from 'instantsearch.js/es/widgets';
-import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {configure} from 'instantsearch.js/es/widgets';
 import {pascalToKebab} from './utils';
 
