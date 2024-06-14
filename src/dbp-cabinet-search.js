@@ -1,6 +1,6 @@
 import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
-// import {unsafeHTML} from 'lit/directives/unsafe-html.js';
+import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPCabinetLitElement from "./dbp-cabinet-lit-element";
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -281,15 +281,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             customElements.define(tagName, this.fileTypeForms[filetype]);
         }
 
-        // TODO: The "data" property is not passed to the custom element yet because of unsafeHTML!
-        return html`
+        // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
+        // a variable and need to set the "data" property from a variable too!
+        return staticHtml`
             <dbp-modal id="file-edit-modal" modal-id="file-edit-modal" title="${i18n.t('file-edit-modal-title')}" subscribe="lang">
                 <div slot="content">
                     Content<br />
                     File ID: ${id}<br />
                     Filetype: ${filetype}<br />
                     Size: ${hit.filesize}<br />
-                    ${unsafeHTML(`<${tagName} id="dbp-cabinet-filetype-form-${id}" subscribe="lang" user-id="123" .data=${hit}></${tagName}>`)}
+                    <${unsafeStatic(tagName)} id="dbp-cabinet-filetype-form-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
                 </div>
                 <div slot="footer" class="modal-footer">
                     Footer
