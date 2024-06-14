@@ -1,6 +1,7 @@
 import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
 import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
+import {ref, createRef} from 'lit/directives/ref.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPCabinetLitElement from "./dbp-cabinet-lit-element";
 import * as commonUtils from '@dbp-toolkit/common/utils';
@@ -35,6 +36,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             "id": "",
             "filetype": "",
         };
+        this.fileEditModalRef = createRef();
     }
 
     static get scopedElements() {
@@ -98,7 +100,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.editHitData = hit;
         console.log('openFileEditDialog hit', hit);
         // TODO: Why is the dialog only opening after the second click after a page reload?
-        this._('#file-edit-modal').open();
+        this.fileEditModalRef.value.open();
     }
 
     connectedCallback() {
@@ -269,7 +271,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         if (filetype === '') {
             console.log('filetype empty', filetype);
-            return html`<dbp-modal id="file-edit-modal" modal-id="file-edit-modal"></dbp-modal>`;
+            return html`<dbp-modal ${ref(this.fileEditModalRef)} modal-id="file-edit-modal"></dbp-modal>`;
         }
 
         const id = hit.id;
@@ -283,7 +285,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
-            <dbp-modal id="file-edit-modal" modal-id="file-edit-modal" title="${i18n.t('file-edit-modal-title')}" subscribe="lang">
+            <dbp-modal ${ref(this.fileEditModalRef)} modal-id="file-edit-modal" title="${i18n.t('file-edit-modal-title')}" subscribe="lang">
                 <div slot="content">
                     Content<br />
                     File ID: ${id}<br />
