@@ -97,10 +97,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     openFileEditDialog(hit) {
+        // TODO: It seems that the dialog is not opening on first click, because it takes some time until the hit data is rendered
         this.editHitData = hit;
         console.log('openFileEditDialog hit', hit);
         // TODO: Why is the dialog only opening after the second click after a page reload?
         this.fileEditModalRef.value.open();
+        // setTimeout(() => {
+        //     this.fileEditModalRef.value.open();
+        // }, 100);
     }
 
     connectedCallback() {
