@@ -101,6 +101,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // We need to wait until rendering is complete after this.editHitData has changed,
         // or the dialog will not open on the first click
+        // https://lit.dev/docs/components/lifecycle/#updatecomplete
         await this.updateComplete;
 
         this.fileEditModalRef.value.open();
