@@ -34,7 +34,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.fileTypeHitComponents = {};
         this.editHitData = {
             "id": "",
-            "filetype": "",
+            "objectType": "",
         };
         this.fileEditModalRef = createRef();
     }
@@ -188,7 +188,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     getSearchParameters() {
         // https://typesense.org/docs/0.25.1/api/search.html#ranking-and-sorting-parameters
         let searchParameters = {
-            query_by: "filename,filetype",
+            query_by: "filename,objectType",
         };
 
         if (!this.fuzzySearch) {
@@ -246,10 +246,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             escapeHTML: true,
             templates: {
                 item: (hit, {html}) => {
-                    const filetype = hit.filetype;
-                    const tagPart = pascalToKebab(hit.filetype);
-                    const tagName = 'dbp-cabinet-filetype-hit-' + tagPart;
-                    const fileTypeHitComponent = this.fileTypeHitComponents[filetype];
+                    const objectType = hit.objectType;
+                    const tagPart = pascalToKebab(hit.objectType);
+                    const tagName = 'dbp-cabinet-objectType-hit-' + tagPart;
+                    const fileTypeHitComponent = this.fileTypeHitComponents[objectType];
 
                     if (!customElements.get(tagName) && fileTypeHitComponent) {
                         customElements.define(tagName, fileTypeHitComponent);
@@ -271,19 +271,19 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // TODO: In production it maybe would be better to fetch the typesense document again to get the latest data
         const hit = this.editHitData;
         console.log('hit', hit);
-        const filetype = hit.filetype;
+        const objectType = hit.objectType;
 
-        if (filetype === '') {
-            console.log('filetype empty', filetype);
+        if (objectType === '') {
+            console.log('objectType empty', objectType);
             return html`<dbp-modal ${ref(this.fileEditModalRef)} modal-id="file-edit-modal"></dbp-modal>`;
         }
 
         const id = hit.id;
         const i18n = this._i18n;
-        const tagPart = pascalToKebab(filetype);
-        const tagName = 'dbp-cabinet-filetype-form-' + tagPart;
+        const tagPart = pascalToKebab(objectType);
+        const tagName = 'dbp-cabinet-objectType-form-' + tagPart;
         if (!customElements.get(tagName)) {
-            customElements.define(tagName, this.fileTypeForms[filetype]);
+            customElements.define(tagName, this.fileTypeForms[objectType]);
         }
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
@@ -293,9 +293,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div slot="content">
                     Content<br />
                     File ID: ${id}<br />
-                    Filetype: ${filetype}<br />
+                    ObjectType: ${objectType}<br />
                     Size: ${hit.filesize}<br />
-                    <${unsafeStatic(tagName)} id="dbp-cabinet-filetype-form-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
+                    <${unsafeStatic(tagName)} id="dbp-cabinet-objectType-form-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
                 </div>
                 <div slot="footer" class="modal-footer">
                     Footer
@@ -336,7 +336,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             // Iterate over the module paths and dynamically import each module
             // TODO: In a real-life scenario, you would probably want access only those keys that are needed (but we will need them all)
-            for (const [schemaKey, path] of Object.entries(data["filetypes"])) {
+            for (const [schemaKey, path] of Object.entries(data["objectTypes"])) {
                 const module = await import(path);
 
                 console.log('schemaKey', schemaKey);

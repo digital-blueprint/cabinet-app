@@ -107,7 +107,7 @@ if ((devConfig != undefined && appEnv in devConfig)) {
             path: '/',
             protocol: 'http',
             key: 'xyz',
-            collection: 'cabinet-files'
+            collection: 'cabinet-documents'
         },
     };
 } else {
@@ -158,11 +158,11 @@ export default (async () => {
                     [
                         'src/' + pkg.internalName + '.js',
                         'src/dbp-cabinet-search.js',
-                        'src/filetypes/email.js',
-                        'src/filetypes/conversation.js',
-                        'src/filetypes/letter.js',
-                        'src/filetypes/personalLicence.js',
-                        'src/filetypes/citizenshipCertificate.js',
+                        'src/objectTypes/fileEmail.js',
+                        'src/objectTypes/fileConversation.js',
+                        'src/objectTypes/fileLetter.js',
+                        'src/objectTypes/filePersonalLicence.js',
+                        'src/objectTypes/fileCitizenshipCertificate.js',
                         'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',
                         'vendor/signature/src/dbp-official-signature-pdf-upload.js',
                         'vendor/dispatch/src/dbp-create-request.js',
@@ -173,11 +173,11 @@ export default (async () => {
                     [
                         'src/' + pkg.internalName + '.js',
                         'src/dbp-cabinet-search.js',
-                        'src/filetypes/email.js',
-                        'src/filetypes/conversation.js',
-                        'src/filetypes/letter.js',
-                        'src/filetypes/personalLicence.js',
-                        'src/filetypes/citizenshipCertificate.js',
+                        'src/objectTypes/fileEmail.js',
+                        'src/objectTypes/fileConversation.js',
+                        'src/objectTypes/fileLetter.js',
+                        'src/objectTypes/filePersonalLicence.js',
+                        'src/objectTypes/fileCitizenshipCertificate.js',
                         'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',
                         'vendor/signature/src/dbp-official-signature-pdf-upload.js',
                         'vendor/dispatch/src/dbp-create-request.js',

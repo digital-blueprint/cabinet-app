@@ -5,7 +5,7 @@ import {createInstance} from '../i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
 export default class {
-    name = 'citizenshipCertificate';
+    name = 'fileLetter';
 
     constructor() {
     }
@@ -61,13 +61,19 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
 
         return html`
             <form>
-                <h2>citizenshipCertificate Form</h2>
+                <h2>Letter Form</h2>
                 lang: ${this.lang}<br />
                 user-id: ${this.userId}<br />
                 <fieldset>
                     <legend>About</legend>
                     <input type="text" id="about" name="about" required>
                     <label for="about">About</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Comment</legend>
+                    <textarea id="comment" name="comment"></textarea>
+                    <label for="comment">Comment</label>
                 </fieldset>
                 <button type="submit">Submit</button>
             </form>
@@ -104,7 +110,7 @@ class CabinetHitElement extends ScopedElementsMixin(DBPLitElement) {
             h2 {
                 margin: 0;
                 font-size: 1.2em;
-                color: #d55e6b;
+                color: #f5ab53;
             }
 
             ${commonStyles.getGeneralCSS(false)}
@@ -114,9 +120,10 @@ class CabinetHitElement extends ScopedElementsMixin(DBPLitElement) {
     render() {
         return html`
             <form>
-                <h2>citizenshipCertificate</h2>
+                <h2>Letter</h2>
                 lang: ${this.lang}<br />
                 filename: ${this.data.filename}<br />
+                filesize: ${this.data.filesize}<br />
         `;
     }
 }

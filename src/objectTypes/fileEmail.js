@@ -5,7 +5,7 @@ import {createInstance} from '../i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
 export default class {
-    name = 'email';
+    name = 'fileEmail';
 
     constructor() {
     }
@@ -124,7 +124,7 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
 
                     <fieldset>
                         <legend>Email</legend>
-                        <input type="email" id="sender_email" name="sender_email" required>
+                        <input type="fileEmail" id="sender_email" name="sender_email" required>
                         <label for="sender_email">Email</label>
                     </fieldset>
                 </fieldset>
@@ -145,20 +145,20 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
 
                     <fieldset>
                         <legend>Email</legend>
-                        <input type="email" id="recipient_email" name="recipient_email" required>
+                        <input type="fileEmail" id="recipient_email" name="recipient_email" required>
                         <label for="recipient_email">Email</label>
                     </fieldset>
                 </fieldset>
 
                 <fieldset>
                     <legend>CC Recipient</legend>
-                    <input type="email" id="ccRecipient" name="ccRecipient">
+                    <input type="fileEmail" id="ccRecipient" name="ccRecipient">
                     <label for="ccRecipient">CC Recipient</label>
                 </fieldset>
 
                 <fieldset>
                     <legend>BCC Recipient</legend>
-                    <input type="email" id="bccRecipient" name="bccRecipient">
+                    <input type="fileEmail" id="bccRecipient" name="bccRecipient">
                     <label for="bccRecipient">BCC Recipient</label>
                 </fieldset>
 
