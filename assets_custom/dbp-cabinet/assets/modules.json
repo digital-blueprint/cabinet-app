@@ -4,6 +4,7 @@
     "fileConversation": "./fileConversation.js",
     "fileLetter": "./fileLetter.js",
     "filePersonalLicence": "./filePersonalLicence.js",
-    "fileCitizenshipCertificate": "./fileCitizenshipCertificate.js"
+    "fileCitizenshipCertificate": "./fileCitizenshipCertificate.js",
+    "student": "./student.js"
   }
 }
