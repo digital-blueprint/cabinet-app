@@ -34,6 +34,7 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.userId = '';
+        this.data = {};
     }
 
     static get scopedElements() {
@@ -46,6 +47,7 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
             ...super.properties,
             lang: {type: String},
             userId: {type: String, attribute: 'user-id'},
+            data: {type: Object},
         };
     }
 
@@ -58,6 +60,7 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
 
     render() {
         console.log('-- Render CabinetFormElement --');
+        const data = this.data;
 
         return html`
             <form>
