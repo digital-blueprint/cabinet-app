@@ -122,7 +122,7 @@ class CabinetHitElement extends ScopedElementsMixin(DBPLitElement) {
             <form>
                 <h2>Letter</h2>
                 lang: ${this.lang}<br />
-                filename: ${this.data.filename}<br />
+                filename: ${this.data['file-filename']}<br />
                 filesize: ${this.data.filesize}<br />
         `;
     }

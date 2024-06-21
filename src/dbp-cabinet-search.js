@@ -188,7 +188,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     getSearchParameters() {
         // https://typesense.org/docs/0.25.1/api/search.html#ranking-and-sorting-parameters
         let searchParameters = {
-            query_by: "filename,objectType",
+            query_by: "file-filename,objectType",
         };
 
         if (!this.fuzzySearch) {
@@ -248,7 +248,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 item: (hit, {html}) => {
                     const objectType = hit.objectType;
                     const tagPart = pascalToKebab(hit.objectType);
-                    const tagName = 'dbp-cabinet-objectType-hit-' + tagPart;
+                    const tagName = 'dbp-cabinet-object-type-hit-' + tagPart;
                     const fileTypeHitComponent = this.fileTypeHitComponents[objectType];
 
                     if (!customElements.get(tagName) && fileTypeHitComponent) {

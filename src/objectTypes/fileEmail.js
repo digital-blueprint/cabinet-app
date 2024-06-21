@@ -70,7 +70,7 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
                 user-id: ${this.userId}<br />
                 <fieldset>
                     <legend>About</legend>
-                    <input type="text" id="about" name="about" value="${data.filename}" required>
+                    <input type="text" id="about" name="about" value="${data['file-filename']}" required>
                     <label for="about">About</label>
                 </fieldset>
 
@@ -215,7 +215,7 @@ class CabinetHitElement extends ScopedElementsMixin(DBPLitElement) {
             <form>
                 <h2>Email</h2>
                 lang: ${this.lang}<br />
-                filename: ${this.data.filename}<br />
+                filename: ${this.data['file-filename']}<br />
         `;
     }
 }

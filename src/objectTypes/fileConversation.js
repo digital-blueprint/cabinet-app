@@ -123,7 +123,7 @@ class CabinetHitElement extends ScopedElementsMixin(DBPLitElement) {
                 <h2>Conversation</h2>
                 Some special information here<br />
                 lang: ${this.lang}<br />
-                filename: ${this.data.filename}<br />
+                filename: ${this.data['file-filename']}<br />
         `;
     }
 }
