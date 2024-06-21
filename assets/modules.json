@@ -3,7 +3,7 @@
     "fileEmail": "./fileEmail.js",
     "fileConversation": "./fileConversation.js",
     "fileLetter": "./fileLetter.js",
-    "filePersonalLicence": "./filePersonalLicence.js",
+    "filePersonalLicense": "./filePersonalLicense.js",
     "fileCitizenshipCertificate": "./fileCitizenshipCertificate.js",
     "student": "./student.js"
   }

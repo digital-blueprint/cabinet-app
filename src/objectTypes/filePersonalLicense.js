@@ -5,7 +5,7 @@ import {createInstance} from '../i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
 export default class {
-    name = 'filePersonalLicence';
+    name = 'filePersonalLicense';
 
     constructor() {
     }
@@ -61,7 +61,7 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
 
         return html`
             <form>
-                <h2>filePersonalLicence Form</h2>
+                <h2>filePersonalLicense Form</h2>
                 lang: ${this.lang}<br />
                 user-id: ${this.userId}<br />
                 <fieldset>
@@ -114,7 +114,7 @@ class CabinetHitElement extends ScopedElementsMixin(DBPLitElement) {
     render() {
         return html`
             <form>
-                <h2>filePersonalLicence</h2>
+                <h2>filePersonalLicense</h2>
                 lang: ${this.lang}<br />
                 filename: ${this.data['file-filename']}<br />
         `;
