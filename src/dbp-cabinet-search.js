@@ -30,8 +30,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.typesenseProtocol = '';
         this.typesenseKey = '';
         this.typesenseCollection = '';
-        this.fileTypeForms = {};
-        this.fileTypeHitComponents = {};
+        this.objectTypeForms = {};
+        this.objectTypeHitComponents = {};
         this.editHitData = {
             "id": "",
             "objectType": "",
@@ -56,8 +56,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             typesenseProtocol: { type: String, attribute: 'typesense-protocol' },
             typesenseKey: { type: String, attribute: 'typesense-key' },
             typesenseCollection: { type: String, attribute: 'typesense-collection' },
-            fileTypeForms: { type: Object, attribute: false },
-            fileTypeHitComponents: { type: Object, attribute: false },
+            objectTypeForms: { type: Object, attribute: false },
+            objectTypeHitComponents: { type: Object, attribute: false },
             editHitData: { type: Object },
         };
     }
@@ -249,10 +249,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     const objectType = hit.objectType;
                     const tagPart = pascalToKebab(hit.objectType);
                     const tagName = 'dbp-cabinet-object-type-hit-' + tagPart;
-                    const fileTypeHitComponent = this.fileTypeHitComponents[objectType];
+                    const objectTypeHitComponent = this.objectTypeHitComponents[objectType];
 
-                    if (!customElements.get(tagName) && fileTypeHitComponent) {
-                        customElements.define(tagName, fileTypeHitComponent);
+                    console.log('tagName', tagName);
+                    console.log('objectTypeHitComponent', objectTypeHitComponent);
+
+                    if (!customElements.get(tagName) && objectTypeHitComponent) {
+                        customElements.define(tagName, objectTypeHitComponent);
                     }
 
                     // Note: We can't access local functions, nor can we use a script tag, so we are using a custom event to open the file edit dialog (is this still the case with preact?)
@@ -281,9 +284,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         const id = hit.id;
         const i18n = this._i18n;
         const tagPart = pascalToKebab(objectType);
-        const tagName = 'dbp-cabinet-objectType-form-' + tagPart;
+        const tagName = 'dbp-cabinet-object-type-form-' + tagPart;
+
+        console.log('objectType', objectType);
+        console.log('tagName', tagName);
+        console.log('this.objectTypeForms[objectType]', this.objectTypeForms[objectType]);
+
         if (!customElements.get(tagName)) {
-            customElements.define(tagName, this.fileTypeForms[objectType]);
+            customElements.define(tagName, this.objectTypeForms[objectType]);
         }
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
@@ -295,7 +303,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     File ID: ${id}<br />
                     ObjectType: ${objectType}<br />
                     Size: ${hit.filesize}<br />
-                    <${unsafeStatic(tagName)} id="dbp-cabinet-objectType-form-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
+                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-form-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
                 </div>
                 <div slot="footer" class="modal-footer">
                     Footer
@@ -307,7 +315,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     render() {
         const i18n = this._i18n;
         console.log('-- Render --');
-        console.log('this.fileTypeForms', this.fileTypeForms);
+        console.log('this.objectTypeForms', this.objectTypeForms);
 
         return html`
             <div class="control ${classMap({hidden: this.isLoggedIn() || !this.isLoading() || !this.loadingTranslations })}">
@@ -360,9 +368,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
             }
 
-            this.fileTypeForms = forms;
+            this.objectTypeForms = forms;
             console.log('forms', forms);
-            this.fileTypeHitComponents = hitComponents;
+            this.objectTypeHitComponents = hitComponents;
             console.log('hitComponents', hitComponents);
         } catch (error) {
             console.error('Error loading modules:', error);
