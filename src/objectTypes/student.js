@@ -111,7 +111,7 @@ class CabinetHitElement extends ScopedElementsMixin(DBPLitElement) {
             h2 {
                 margin: 0;
                 font-size: 1.2em;
-                color: #1ace38;
+                color: #1a9ece;
             }
 
             ${commonStyles.getGeneralCSS(false)}
