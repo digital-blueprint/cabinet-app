@@ -55,6 +55,7 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
         // language=css
         return css`
             ${commonStyles.getGeneralCSS(false)}
+            ${commonStyles.getButtonCSS()}
         `;
     }
 
@@ -79,7 +80,7 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
                     <label for="lastname">Lastname</label>
                 </fieldset>
 
-                <button type="submit">Submit</button>
+                <button class="button is-primary" type="submit">Submit</button>
             </form>
         `;
     }
@@ -118,6 +119,7 @@ class CabinetHitElement extends ScopedElementsMixin(DBPLitElement) {
             }
 
             ${commonStyles.getGeneralCSS(false)}
+            ${commonStyles.getButtonCSS()}
         `;
     }
 

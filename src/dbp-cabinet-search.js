@@ -159,6 +159,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS(false)}
+            ${commonStyles.getButtonCSS()}
             ${commonStyles.getLinkCss()}
             ${commonStyles.getNotificationCSS()}
             ${commonStyles.getActivityCSS()}
@@ -263,7 +264,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // Note: "html" is preact htm, not lit-html!
                     return html`
                         <${tagName} subscribe="lang" data=${hit}></${tagName}>
-                        <button onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentEdit', {detail: {hit: hit}}));}}>Edit</button>
+                        <button class="button is-primary" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentEdit', {detail: {hit: hit}}));}}>Edit</button>
                     `;
                 },
             },
