@@ -397,7 +397,7 @@ Dependencies:
                     {
                         src: await getPackagePath('tabulator-tables', 'dist/css'),
                         dest:
-                            'dist/' + (await getDistPath(pkg.name, 'tabulator-tables')),
+                            'dist/' + (await getDistPath('@digital-blueprint/dispatch-app', 'tabulator-tables')),
                     },
                     {
                         src: await getPackagePath('tabulator-tables', 'dist/css'),
@@ -473,7 +473,7 @@ Dependencies:
                     {
                         src: await getPackagePath('tabulator-tables', 'dist/css'),
                         dest:
-                            'dist/' + (await getDistPath(pkg.name, 'tabulator-tables')),
+                            'dist/' + (await getDistPath('@digital-blueprint/dispatch-app', 'tabulator-tables')),
                     },
                     {
                         src: await getPackagePath('tabulator-tables', 'dist/css'),
