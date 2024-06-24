@@ -113,8 +113,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this._loginStatus = '';
         this._loginState = [];
 
-        // Listen to DbpCabinetFileEdit events, to open the file edit dialog
-        document.addEventListener('DbpCabinetFileEdit', function(event) {
+        // Listen to DbpCabinetDocumentEdit events, to open the file edit dialog
+        document.addEventListener('DbpCabinetDocumentEdit', function(event) {
             that.openFileEditDialog(event.detail.hit);
         });
 
@@ -263,7 +263,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // Note: "html" is preact htm, not lit-html!
                     return html`
                         <${tagName} subscribe="lang" data=${hit}></${tagName}>
-                        <button onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetFileEdit', {detail: {hit: hit}}));}}>Edit</button>
+                        <button onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentEdit', {detail: {hit: hit}}));}}>Edit</button>
                     `;
                 },
             },
