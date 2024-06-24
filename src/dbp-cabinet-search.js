@@ -96,7 +96,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         super.disconnectedCallback();
     }
 
-    async openFileEditDialog(hit) {
+    async openDocumentEditDialog(hit) {
         this.editHitData = hit;
 
         // We need to wait until rendering is complete after this.editHitData has changed,
@@ -115,7 +115,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Listen to DbpCabinetDocumentEdit events, to open the file edit dialog
         document.addEventListener('DbpCabinetDocumentEdit', function(event) {
-            that.openFileEditDialog(event.detail.hit);
+            that.openDocumentEditDialog(event.detail.hit);
         });
 
         this.updateComplete.then(() => {
