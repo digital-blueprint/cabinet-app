@@ -32,11 +32,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.typesenseCollection = '';
         this.objectTypeForms = {};
         this.objectTypeHitComponents = {};
-        this.editHitData = {
+        this.hitData = {
             "id": "",
             "objectType": "",
         };
-        this.fileEditModalRef = createRef();
+        this.documentEditModalRef = createRef();
+        this.documentViewModalRef = createRef();
     }
 
     static get scopedElements() {
@@ -97,14 +98,25 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async openDocumentEditDialog(hit) {
-        this.editHitData = hit;
+        this.hitData = hit;
 
         // We need to wait until rendering is complete after this.editHitData has changed,
         // or the dialog will not open on the first click
         // https://lit.dev/docs/components/lifecycle/#updatecomplete
         await this.updateComplete;
 
-        this.fileEditModalRef.value.open();
+        this.documentEditModalRef.value.open();
+    }
+
+    async openDocumentViewDialog(hit) {
+        this.hitData = hit;
+
+        // We need to wait until rendering is complete after this.editHitData has changed,
+        // or the dialog will not open on the first click
+        // https://lit.dev/docs/components/lifecycle/#updatecomplete
+        await this.updateComplete;
+
+        this.documentViewModalRef.value.open();
     }
 
     connectedCallback() {
@@ -116,6 +128,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Listen to DbpCabinetDocumentEdit events, to open the file edit dialog
         document.addEventListener('DbpCabinetDocumentEdit', function(event) {
             that.openDocumentEditDialog(event.detail.hit);
+        });
+
+        // Listen to DbpCabinetDocumentView events, to open the file edit dialog
+        document.addEventListener('DbpCabinetDocumentView', function(event) {
+            that.openDocumentViewDialog(event.detail.hit);
         });
 
         this.updateComplete.then(() => {
@@ -262,30 +279,40 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // Note: We can't access local functions, nor can we use a script tag, so we are using a custom event to open the file edit dialog (is this still the case with preact?)
                     // TODO: Subscriber attribute "lang" doesn't work anymore, how to do a normal attribute in preact?
                     // Note: "html" is preact htm, not lit-html!
+
+                    const buttonRowHtml = objectType === 'student' ? html`
+                        <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentTugo', {detail: {hit: hit}}));}}>TUGO</button>
+                        <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentEdit', {detail: {hit: hit}}));}}>Add Document</button>
+                        <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}}));}}>More</button>
+                    ` : html`
+                        <button class="button is-primary" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentDownload', {detail: {hit: hit}}));}}>Download</button>
+                        <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}}));}}>View</button>
+                    `;
+
                     return html`
                         <${tagName} subscribe="lang" data=${hit}></${tagName}>
-                        <button class="button is-primary" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentEdit', {detail: {hit: hit}}));}}>Edit</button>
+                        ${buttonRowHtml}
                     `;
                 },
             },
         });
     }
 
-    getFileEditModalHtml() {
+    getDocumentEditModalHtml() {
         // TODO: In production it maybe would be better to fetch the typesense document again to get the latest data
-        const hit = this.editHitData;
+        const hit = this.hitData;
         console.log('hit', hit);
         const objectType = hit.objectType;
 
         if (objectType === '') {
             console.log('objectType empty', objectType);
-            return html`<dbp-modal ${ref(this.fileEditModalRef)} modal-id="file-edit-modal"></dbp-modal>`;
+            return html`<dbp-modal ${ref(this.documentEditModalRef)} modal-id="document-edit-modal"></dbp-modal>`;
         }
 
         const id = hit.id;
         const i18n = this._i18n;
         const tagPart = pascalToKebab(objectType);
-        const tagName = 'dbp-cabinet-object-type-form-' + tagPart;
+        const tagName = 'dbp-cabinet-object-type-edit-form-' + tagPart;
 
         console.log('objectType', objectType);
         console.log('tagName', tagName);
@@ -298,16 +325,55 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
-            <dbp-modal ${ref(this.fileEditModalRef)} modal-id="file-edit-modal" title="${i18n.t('file-edit-modal-title')}" subscribe="lang">
+            <dbp-modal ${ref(this.documentEditModalRef)} modal-id="document-edit-modal" title="${i18n.t('document-edit-modal-title')}" subscribe="lang">
                 <div slot="content">
-                    Content<br />
-                    File ID: ${id}<br />
+                    Document ID: ${id}<br />
                     ObjectType: ${objectType}<br />
                     Size: ${hit.filesize}<br />
-                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-form-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
+                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-edit-form-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
                 </div>
                 <div slot="footer" class="modal-footer">
                     Footer
+                </div>
+            </dbp-modal>
+        `;
+    }
+
+    getDocumentViewModalHtml() {
+        // TODO: In production it maybe would be better to fetch the typesense document again to get the latest data
+        const hit = this.hitData;
+        console.log('hit', hit);
+        const objectType = hit.objectType;
+
+        if (objectType === '') {
+            console.log('objectType empty', objectType);
+            return html`<dbp-modal ${ref(this.documentViewModalRef)} modal-id="document-view-modal"></dbp-modal>`;
+        }
+
+        const id = hit.id;
+        const i18n = this._i18n;
+        const tagPart = pascalToKebab(objectType);
+        const tagName = 'dbp-cabinet-object-type-view-form-' + tagPart;
+
+        console.log('objectType', objectType);
+        console.log('tagName', tagName);
+        console.log('this.objectTypeForms[objectType]', this.objectTypeForms[objectType]);
+
+        if (!customElements.get(tagName)) {
+            customElements.define(tagName, this.objectTypeForms[objectType]);
+        }
+
+        // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
+        // a variable and need to set the "data" property from a variable too!
+        return staticHtml`
+            <dbp-modal ${ref(this.documentViewModalRef)} modal-id="document-view-modal" title="${i18n.t('document-view-modal-title')}" subscribe="lang">
+                <div slot="content">
+                    Document ID: ${id}<br />
+                    ObjectType: ${objectType}<br />
+                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-form-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
+                </div>
+                <div slot="footer" class="modal-footer">
+                    View Footer
                 </div>
             </dbp-modal>
         `;
@@ -329,7 +395,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             <div id="searchbox"></div>
             <h2>Search Results</h2>
             <div id="hits"></div>
-            ${this.getFileEditModalHtml()}
+            ${this.getDocumentEditModalHtml()}
+            ${this.getDocumentViewModalHtml()}
         `;
     }
 
