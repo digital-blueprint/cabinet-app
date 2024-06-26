@@ -1,18 +1,9 @@
-import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {css, html} from 'lit';
-import {createInstance} from '../i18n';
-import * as commonStyles from '@dbp-toolkit/common/styles';
+import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 
-export default class {
+export default class extends BaseObject {
     name = 'student';
 
-    constructor() {
-    }
-
-    /**
-     * @returns {string}
-     */
     getFormComponent() {
         return CabinetFormElement;
     }
@@ -21,44 +12,12 @@ export default class {
         return CabinetHitElement;
     }
 
-    getInstantSearchConfig() {
-        return {
-            "data": "Settings for instantsearch"
-        };
+    getViewComponent() {
+        return CabinetViewElement;
     }
 }
 
-class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
-    constructor() {
-        super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-        this.userId = '';
-        this.data = {};
-    }
-
-    static get scopedElements() {
-        return {
-        };
-    }
-
-    static get properties() {
-        return {
-            ...super.properties,
-            lang: {type: String},
-            userId: {type: String, attribute: 'user-id'},
-            data: {type: Object},
-        };
-    }
-
-    static get styles() {
-        // language=css
-        return css`
-            ${commonStyles.getGeneralCSS(false)}
-            ${commonStyles.getButtonCSS()}
-        `;
-    }
-
+class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
         const data = this.data;
@@ -86,50 +45,35 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
     }
 }
 
-class CabinetHitElement extends ScopedElementsMixin(DBPLitElement) {
-    constructor() {
-        super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-        this.userId = '';
-        this.data = {};
-    }
-
-    static get scopedElements() {
-        return {
-        };
-    }
-
-    static get properties() {
-        return {
-            ...super.properties,
-            lang: {type: String},
-            userId: {type: String, attribute: 'user-id'},
-            data: {type: Object},
-        };
-    }
-
+class CabinetHitElement extends BaseHitElement {
     static get styles() {
         // language=css
         return css`
-            h2 {
-                margin: 0;
-                font-size: 1.2em;
-                color: #1a9ece;
-            }
+            ${super.styles}
 
-            ${commonStyles.getGeneralCSS(false)}
-            ${commonStyles.getButtonCSS()}
+            h2 {
+                color: #f3aa13;
+            }
         `;
     }
 
     render() {
         return html`
-            <form>
-                <h2>Student</h2>
-                lang: ${this.lang}<br />
-                firstname: ${this.data['student-firstname']}<br />
-                lastname: ${this.data['student-lastname']}<br />
+            <h2>Student</h2>
+            lang: ${this.lang}<br />
+            firstname: ${this.data['student-firstname']}<br />
+            lastname: ${this.data['student-lastname']}<br />
+        `;
+    }
+}
+
+class CabinetViewElement extends BaseViewElement {
+    render() {
+        return html`
+            <h2>Student</h2>
+            lang: ${this.lang}<br />
+            firstname: ${this.data['student-firstname']}<br />
+            lastname: ${this.data['student-lastname']}<br />
         `;
     }
 }

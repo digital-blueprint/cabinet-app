@@ -32,6 +32,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.typesenseCollection = '';
         this.objectTypeForms = {};
         this.objectTypeHitComponents = {};
+        this.objectTypeViewComponents = {};
         this.hitData = {
             "id": "",
             "objectType": "",
@@ -57,9 +58,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             typesenseProtocol: { type: String, attribute: 'typesense-protocol' },
             typesenseKey: { type: String, attribute: 'typesense-key' },
             typesenseCollection: { type: String, attribute: 'typesense-collection' },
-            objectTypeForms: { type: Object, attribute: false },
-            objectTypeHitComponents: { type: Object, attribute: false },
-            editHitData: { type: Object },
+            // objectTypeForms: { type: Object, attribute: false },
+            // objectTypeHitComponents: { type: Object, attribute: false },
+            // objectTypeViewComponents: { type: Object, attribute: false },
+            hitData: { type: Object, attribute: false },
         };
     }
 
@@ -100,7 +102,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     async openDocumentEditDialog(hit) {
         this.hitData = hit;
 
-        // We need to wait until rendering is complete after this.editHitData has changed,
+        // We need to wait until rendering is complete after this.hitData has changed,
         // or the dialog will not open on the first click
         // https://lit.dev/docs/components/lifecycle/#updatecomplete
         await this.updateComplete;
@@ -111,7 +113,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     async openDocumentViewDialog(hit) {
         this.hitData = hit;
 
-        // We need to wait until rendering is complete after this.editHitData has changed,
+        // We need to wait until rendering is complete after this.hitData has changed,
         // or the dialog will not open on the first click
         // https://lit.dev/docs/components/lifecycle/#updatecomplete
         await this.updateComplete;
@@ -132,6 +134,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Listen to DbpCabinetDocumentView events, to open the file edit dialog
         document.addEventListener('DbpCabinetDocumentView', function(event) {
+            console.log('event.detail.hit', event.detail.hit);
             that.openDocumentViewDialog(event.detail.hit);
         });
 
@@ -353,14 +356,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         const id = hit.id;
         const i18n = this._i18n;
         const tagPart = pascalToKebab(objectType);
-        const tagName = 'dbp-cabinet-object-type-view-form-' + tagPart;
+        const tagName = 'dbp-cabinet-object-type-view-' + tagPart;
 
         console.log('objectType', objectType);
         console.log('tagName', tagName);
-        console.log('this.objectTypeForms[objectType]', this.objectTypeForms[objectType]);
+        console.log('this.objectTypeViewComponents[objectType]', this.objectTypeViewComponents[objectType]);
 
         if (!customElements.get(tagName)) {
-            customElements.define(tagName, this.objectTypeForms[objectType]);
+            customElements.define(tagName, this.objectTypeViewComponents[objectType]);
         }
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
@@ -370,7 +373,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div slot="content">
                     Document ID: ${id}<br />
                     ObjectType: ${objectType}<br />
-                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-form-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
+                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
                 </div>
                 <div slot="footer" class="modal-footer">
                     View Footer
@@ -409,6 +412,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             console.log('data', data);
             let forms = {};
             let hitComponents = {};
+            let viewComponents = {};
 
             // Iterate over the module paths and dynamically import each module
             // TODO: In a real-life scenario, you would probably want access only those keys that are needed (but we will need them all)
@@ -431,6 +435,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 if (object.getHitComponent) {
                     hitComponents[object.name] = object.getHitComponent();
                 }
+                if (object.getViewComponent) {
+                    viewComponents[object.name] = object.getViewComponent();
+                }
                 if (object.getInstantSearchConfig) {
                     console.log(object.getInstantSearchConfig());
                 }
@@ -440,6 +447,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             console.log('forms', forms);
             this.objectTypeHitComponents = hitComponents;
             console.log('hitComponents', hitComponents);
+            this.objectTypeViewComponents = viewComponents;
+            console.log('viewComponents', viewComponents);
         } catch (error) {
             console.error('Error loading modules:', error);
         }

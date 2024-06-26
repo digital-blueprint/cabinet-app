@@ -3,12 +3,10 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {css, html} from 'lit';
 import {createInstance} from '../i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
+import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 
-export default class {
+export default class extends BaseObject {
     name = 'fileConversation';
-
-    constructor() {
-    }
 
     /**
      * @returns {string}
@@ -21,42 +19,12 @@ export default class {
         return CabinetHitElement;
     }
 
-    getInstantSearchConfig() {
-        return {
-            "data": "Settings for instantsearch"
-        };
+    getViewComponent() {
+        return CabinetViewElement;
     }
 }
 
-class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
-    constructor() {
-        super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-        this.userId = '';
-    }
-
-    static get scopedElements() {
-        return {
-        };
-    }
-
-    static get properties() {
-        return {
-            ...super.properties,
-            lang: {type: String},
-            userId: {type: String, attribute: 'user-id'},
-        };
-    }
-
-    static get styles() {
-        // language=css
-        return css`
-            ${commonStyles.getGeneralCSS(false)}
-            ${commonStyles.getButtonCSS()}
-        `;
-    }
-
+class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
 
@@ -82,40 +50,15 @@ class CabinetFormElement extends ScopedElementsMixin(DBPLitElement) {
     }
 }
 
-class CabinetHitElement extends ScopedElementsMixin(DBPLitElement) {
-    constructor() {
-        super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-        this.userId = '';
-        this.data = {};
-    }
-
-    static get scopedElements() {
-        return {
-        };
-    }
-
-    static get properties() {
-        return {
-            ...super.properties,
-            lang: {type: String},
-            userId: {type: String, attribute: 'user-id'},
-            data: {type: Object},
-        };
-    }
-
+class CabinetHitElement extends BaseHitElement {
     static get styles() {
         // language=css
         return css`
+            ${super.styles}
+
             h2 {
-                margin: 0;
-                font-size: 1.2em;
                 color: #1ace38;
             }
-
-            ${commonStyles.getGeneralCSS(false)}
-            ${commonStyles.getButtonCSS()}
         `;
     }
 
@@ -126,6 +69,16 @@ class CabinetHitElement extends ScopedElementsMixin(DBPLitElement) {
                 Some special information here<br />
                 lang: ${this.lang}<br />
                 filename: ${this.data['file-filename']}<br />
+        `;
+    }
+}
+
+class CabinetViewElement extends BaseViewElement {
+    render() {
+        return html`
+            <h2>Conversation</h2>
+            lang: ${this.lang}<br />
+            filename: ${this.data['file-filename']}<br />
         `;
     }
 }
