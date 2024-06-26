@@ -58,9 +58,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             typesenseProtocol: { type: String, attribute: 'typesense-protocol' },
             typesenseKey: { type: String, attribute: 'typesense-key' },
             typesenseCollection: { type: String, attribute: 'typesense-collection' },
-            // objectTypeForms: { type: Object, attribute: false },
-            // objectTypeHitComponents: { type: Object, attribute: false },
-            // objectTypeViewComponents: { type: Object, attribute: false },
             hitData: { type: Object, attribute: false },
         };
     }
@@ -134,7 +131,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Listen to DbpCabinetDocumentView events, to open the file edit dialog
         document.addEventListener('DbpCabinetDocumentView', function(event) {
-            console.log('event.detail.hit', event.detail.hit);
             that.openDocumentViewDialog(event.detail.hit);
         });
 
@@ -272,9 +268,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     const tagName = 'dbp-cabinet-object-type-hit-' + tagPart;
                     const objectTypeHitComponent = this.objectTypeHitComponents[objectType];
 
-                    console.log('tagName', tagName);
-                    console.log('objectTypeHitComponent', objectTypeHitComponent);
-
                     if (!customElements.get(tagName) && objectTypeHitComponent) {
                         customElements.define(tagName, objectTypeHitComponent);
                     }
@@ -385,7 +378,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     render() {
         const i18n = this._i18n;
         console.log('-- Render --');
-        console.log('this.objectTypeForms', this.objectTypeForms);
 
         return html`
             <div class="control ${classMap({hidden: this.isLoggedIn() || !this.isLoading() || !this.loadingTranslations })}">
