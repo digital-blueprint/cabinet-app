@@ -1,8 +1,4 @@
-import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {css, html} from 'lit';
-import {createInstance} from '../i18n';
-import * as commonStyles from '@dbp-toolkit/common/styles';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 
 export default class extends BaseObject {

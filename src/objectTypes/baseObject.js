@@ -5,7 +5,7 @@ import {createInstance} from '../i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 
 export class BaseObject {
-    name = 'student';
+    name = 'baseObject';
 
     constructor() {
     }
@@ -66,6 +66,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
 
         return html`
             <form>
+                <h2>${data.objectType}</h2>
                 <button class="button is-primary" type="submit">Submit</button>
             </form>
         `;
