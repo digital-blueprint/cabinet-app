@@ -273,7 +273,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     }
 
                     // Note: We can't access local functions, nor can we use a script tag, so we are using a custom event to open the file edit dialog (is this still the case with preact?)
-                    // TODO: Subscriber attribute "lang" doesn't work anymore, how to do a normal attribute in preact?
                     // Note: "html" is preact htm, not lit-html!
 
                     const buttonRowHtml = objectType === 'person' ? html`
@@ -285,8 +284,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}}));}}>View</button>
                     `;
 
+                    // TODO: Subscriber attribute "lang" doesn't work anymore, so we need to set the lang attribute manually, so it at least works when the hit is rendered initially
                     return html`
-                        <${tagName} subscribe="lang" data=${hit}></${tagName}>
+                        <${tagName} subscribe="lang" lang="${this.lang}" data=${hit}></${tagName}>
                         ${buttonRowHtml}
                     `;
                 },
