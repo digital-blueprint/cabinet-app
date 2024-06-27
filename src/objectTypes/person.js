@@ -2,7 +2,7 @@ import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 
 export default class extends BaseObject {
-    name = 'student';
+    name = 'person';
 
     getFormComponent() {
         return CabinetFormElement;
@@ -24,18 +24,18 @@ class CabinetFormElement extends BaseFormElement {
 
         return html`
             <form>
-                <h2>Student Form</h2>
+                <h2>Person Form</h2>
                 lang: ${this.lang}<br />
                 user-id: ${this.userId}<br />
                 <fieldset>
                     <legend>Firstname</legend>
-                    <input type="text" id="firstname" name="firstname" value="${data['student-firstname']}" required>
+                    <input type="text" id="firstname" name="firstname" value="${data['person-firstname']}" required>
                     <label for="firstname">Firstname</label>
                 </fieldset>
 
                 <fieldset>
                     <legend>Lastname</legend>
-                    <input type="text" id="lastname" name="lastname" value="${data['student-lastname']}" required>
+                    <input type="text" id="lastname" name="lastname" value="${data['person-lastname']}" required>
                     <label for="lastname">Lastname</label>
                 </fieldset>
 
@@ -59,10 +59,10 @@ class CabinetHitElement extends BaseHitElement {
 
     render() {
         return html`
-            <h2>Student</h2>
+            <h2>Person</h2>
             lang: ${this.lang}<br />
-            firstname: ${this.data['student-firstname']}<br />
-            lastname: ${this.data['student-lastname']}<br />
+            firstname: ${this.data['person-firstname']}<br />
+            lastname: ${this.data['person-lastname']}<br />
         `;
     }
 }
@@ -70,10 +70,10 @@ class CabinetHitElement extends BaseHitElement {
 class CabinetViewElement extends BaseViewElement {
     render() {
         return html`
-            <h2>Student</h2>
+            <h2>Person</h2>
             lang: ${this.lang}<br />
-            firstname: ${this.data['student-firstname']}<br />
-            lastname: ${this.data['student-lastname']}<br />
+            firstname: ${this.data['person-firstname']}<br />
+            lastname: ${this.data['person-lastname']}<br />
         `;
     }
 }

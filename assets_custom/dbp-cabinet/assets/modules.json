@@ -5,6 +5,6 @@
     "fileLetter": "./fileLetter.js",
     "filePersonalLicense": "./filePersonalLicense.js",
     "fileCitizenshipCertificate": "./fileCitizenshipCertificate.js",
-    "student": "./student.js"
+    "person": "./person.js"
   }
 }

@@ -276,7 +276,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // TODO: Subscriber attribute "lang" doesn't work anymore, how to do a normal attribute in preact?
                     // Note: "html" is preact htm, not lit-html!
 
-                    const buttonRowHtml = objectType === 'student' ? html`
+                    const buttonRowHtml = objectType === 'person' ? html`
                         <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentTugo', {detail: {hit: hit}}));}}>TUGO</button>
                         <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentEdit', {detail: {hit: hit}}));}}>Add Document</button>
                         <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}}));}}>More</button>
