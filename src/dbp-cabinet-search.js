@@ -331,6 +331,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         const id = hit.id;
         const i18n = this._i18n;
 
+        // TODO: Check if PDF was uploaded
+        // TODO: Add PDF viewer
+
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
