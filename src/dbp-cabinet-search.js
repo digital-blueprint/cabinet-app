@@ -15,6 +15,8 @@ import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import {hits, searchBox} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
 import {pascalToKebab} from './utils';
+import {FileSink, FileSource} from '@dbp-toolkit/file-handling';
+import {PdfPreview} from '@digital-blueprint/esign-app/src/dbp-pdf-preview';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -37,13 +39,18 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             "id": "",
             "objectType": "",
         };
+        this.documentAddModalRef = createRef();
         this.documentEditModalRef = createRef();
         this.documentViewModalRef = createRef();
+        this.documentFile = null;
     }
 
     static get scopedElements() {
         return {
             'dbp-icon': Icon,
+            'dbp-file-source': FileSource,
+            'dbp-file-sink': FileSink,
+            'dbp-pdf-preview': PdfPreview,
         };
     }
 
@@ -59,6 +66,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             typesenseKey: { type: String, attribute: 'typesense-key' },
             typesenseCollection: { type: String, attribute: 'typesense-collection' },
             hitData: { type: Object, attribute: false },
+            documentFile: { type: File, attribute: false },
         };
     }
 
@@ -107,6 +115,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.documentEditModalRef.value.open();
     }
 
+    async openDocumentAddDialog(hit) {
+        this.hitData = hit;
+        // Open the file source dialog to select a file
+        this._('#file-source').setAttribute('dialog-open', '');
+    }
+
     async openDocumentViewDialog(hit) {
         this.hitData = hit;
 
@@ -127,6 +141,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Listen to DbpCabinetDocumentEdit events, to open the file edit dialog
         document.addEventListener('DbpCabinetDocumentEdit', function(event) {
             that.openDocumentEditDialog(event.detail.hit);
+        });
+
+        // Listen to DbpCabinetDocumentEdit events, to open the file edit dialog
+        document.addEventListener('DbpCabinetDocumentAdd', function(event) {
+            that.openDocumentAddDialog(event.detail.hit);
         });
 
         // Listen to DbpCabinetDocumentView events, to open the file edit dialog
@@ -277,7 +296,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                     const buttonRowHtml = objectType === 'person' ? html`
                         <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentTugo', {detail: {hit: hit}}));}}>TUGO</button>
-                        <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentEdit', {detail: {hit: hit}}));}}>Add Document</button>
+                        <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentAdd', {detail: {hit: hit}}));}}>Add Document</button>
                         <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}}));}}>More</button>
                     ` : html`
                         <button class="button is-primary" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentDownload', {detail: {hit: hit}}));}}>Download</button>
@@ -292,6 +311,41 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 },
             },
         });
+    }
+
+    /**
+     * Returns the modal dialog for adding a document to a person after the document was selected
+     * in the file source
+     */
+    getDocumentAddModalHtml() {
+        const hit = this.hitData;
+        console.log('hit', hit);
+
+        const file = this.documentFile;
+        console.log('file', file);
+
+        if (hit.objectType !== 'person' || file === null) {
+            return html`<dbp-modal ${ref(this.documentAddModalRef)} modal-id="document-add-modal"></dbp-modal>`;
+        }
+
+        const id = hit.id;
+        const i18n = this._i18n;
+
+        // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
+        // a variable and need to set the "data" property from a variable too!
+        return staticHtml`
+            <dbp-modal ${ref(this.documentAddModalRef)} modal-id="document-add-modal" title="${i18n.t('document-add-modal-title')}" subscribe="lang">
+                <div slot="content">
+                    <h1>Document Add</h1>
+                    Document ID: ${id}<br />
+                    File name: ${file.name}<br />
+                    File size: ${file.size}<br />
+                </div>
+                <div slot="footer" class="modal-footer">
+                    Footer
+                </div>
+            </dbp-modal>
+        `;
     }
 
     getDocumentEditModalHtml() {
@@ -390,9 +444,42 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             <div id="searchbox"></div>
             <h2>Search Results</h2>
             <div id="hits"></div>
+            ${this.getDocumentAddModalHtml()}
             ${this.getDocumentEditModalHtml()}
             ${this.getDocumentViewModalHtml()}
+            <dbp-file-source
+                id="file-source"
+                context="${i18n.t('cabinet-search.file-picker-context')}"
+                subscribe="nextcloud-store-session:nextcloud-store-session"
+                allowed-mime-types="application/pdf"
+                enabled-targets="${this.fileHandlingEnabledTargets}"
+                nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
+                nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
+                nextcloud-name="${this.nextcloudName}"
+                nextcloud-auth-info="${this.nextcloudAuthInfo}"
+                nextcloud-file-url="${this.nextcloudFileURL}"
+                decompress-zip
+                max-file-size="32000"
+                lang="${this.lang}"
+                text="${i18n.t('cabinet-search.upload-area-text')}"
+                button-label="${i18n.t('cabinet-search.upload-button-label')}"
+                @dbp-file-source-file-selected="${this.onDocumentFileSelected}"></dbp-file-source>
         `;
+    }
+
+    /**
+     * @param ev
+     */
+    async onDocumentFileSelected(ev) {
+        console.log('ev.detail.file', ev.detail.file);
+        this.documentFile = ev.detail.file;
+
+        // We need to wait until rendering is complete after this.documentFile has changed
+        await this.updateComplete;
+
+        // Opens the modal dialog for adding a document to a person after the document was
+        // selected in the file source
+        this.documentAddModalRef.value.open();
     }
 
     async loadModules() {
