@@ -16,7 +16,7 @@ import {hits, searchBox} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
 import {pascalToKebab} from './utils';
 import {FileSink, FileSource} from '@dbp-toolkit/file-handling';
-import {PdfPreview} from '@digital-blueprint/esign-app/src/dbp-pdf-preview';
+import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -50,7 +50,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-icon': Icon,
             'dbp-file-source': FileSource,
             'dbp-file-sink': FileSink,
-            'dbp-pdf-preview': PdfPreview,
+            'dbp-pdf-viewer': PdfViewer,
         };
     }
 
@@ -215,6 +215,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 list-style-type: none;
                 overflow: hidden;
             }
+
+            #document-add-modal .block {
+                display: flex;
+                gap: 1em;
+            }
         `;
     }
 
@@ -337,12 +342,18 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
-            <dbp-modal ${ref(this.documentAddModalRef)} modal-id="document-add-modal" title="${i18n.t('document-add-modal-title')}" subscribe="lang">
+            <dbp-modal ${ref(this.documentAddModalRef)} id="document-add-modal" modal-id="document-add-modal" title="${i18n.t('document-add-modal-title')}" subscribe="lang">
                 <div slot="content">
                     <h1>Document Add</h1>
                     Document ID: ${id}<br />
                     File name: ${file.name}<br />
                     File size: ${file.size}<br />
+                    <div class="block">
+                        <dbp-pdf-viewer id="document-add-pdf-viewer" lang="${this.lang}" auto-resize="cover"></dbp-pdf-viewer>
+                        <div class="container">
+                            Choose a document type:<br />
+                        </div>
+                    </div>
                 </div>
                 <div slot="footer" class="modal-footer">
                     Footer
@@ -479,6 +490,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // We need to wait until rendering is complete after this.documentFile has changed
         await this.updateComplete;
+
+        // Show the PDF in the PDF viewer
+        await this._('#document-add-pdf-viewer').showPDF(this.documentFile);
 
         // Opens the modal dialog for adding a document to a person after the document was
         // selected in the file source
