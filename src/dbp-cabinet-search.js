@@ -6,7 +6,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPCabinetLitElement from "./dbp-cabinet-lit-element";
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {Icon} from "@dbp-toolkit/common";
+import {Icon, Modal} from '@dbp-toolkit/common';
 import {classMap} from "lit/directives/class-map.js";
 import {Activity} from './activity.js';
 import metadata from './dbp-cabinet-search.metadata.json';
@@ -43,6 +43,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.documentEditModalRef = createRef();
         this.documentViewModalRef = createRef();
         this.documentFile = null;
+        this.fileDocumentTypeNames = {};
     }
 
     static get scopedElements() {
@@ -51,6 +52,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-file-source': FileSource,
             'dbp-file-sink': FileSink,
             'dbp-pdf-viewer': PdfViewer,
+            'dbp-modal': Modal,
         };
     }
 
@@ -330,7 +332,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('file', file);
 
         if (hit.objectType !== 'person' || file === null) {
-            return html`<dbp-modal ${ref(this.documentAddModalRef)} modal-id="document-add-modal"></dbp-modal>`;
+            return html`<dbp-modal ${ref(this.documentAddModalRef)} id="document-add-modal" modal-id="document-add-modal"></dbp-modal>`;
         }
 
         const id = hit.id;
@@ -351,7 +353,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="block">
                         <dbp-pdf-viewer id="document-add-pdf-viewer" lang="${this.lang}" auto-resize="cover"></dbp-pdf-viewer>
                         <div class="container">
-                            Choose a document type:<br />
+                            <p>
+                                You are about to upload the following document:<br /> 
+                                ${file.name}<br />
+                                Please select a document type to continue.
+                            </p>
+                            <p>
+                                ${this.getDocumentTypeSelector()}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -359,6 +368,19 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     Footer
                 </div>
             </dbp-modal>
+        `;
+    }
+
+    getDocumentTypeSelector() {
+        const fileDocumentTypeNames = this.fileDocumentTypeNames;
+        const options = Object.keys(fileDocumentTypeNames).map((key) => {
+            return html`<option value="${key}">${fileDocumentTypeNames[key]}</option>`;
+        });
+
+        return html`
+            <select id="document-type" name="document-type" required>
+                ${options}
+            </select>
         `;
     }
 
@@ -520,9 +542,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 console.log('module', module);
                 const object = new module.default();
 
-                // Example usage of imported modules
                 if (object.name) {
-                    console.log(object.name);
+                    const name = object.name;
+                    console.log(name);
+                    // If the name starts with "file", add it to the list of file document types
+                    if (name.startsWith('file')) {
+                        // TODO: We might need some kind of translation here
+                        this.fileDocumentTypeNames[name] = name;
+                    }
                 }
 
                 if (object.getFormComponent) {
@@ -545,6 +572,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             console.log('hitComponents', hitComponents);
             this.objectTypeViewComponents = viewComponents;
             console.log('viewComponents', viewComponents);
+            console.log('fileDocumentTypeNames', this.fileDocumentTypeNames);
         } catch (error) {
             console.error('Error loading modules:', error);
         }
