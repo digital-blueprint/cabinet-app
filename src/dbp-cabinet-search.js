@@ -183,7 +183,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             setTimeout(() => {
                 this._('input.ais-SearchBox-input').value = ' ';
                 search.refresh();
-            }, 500);
+            }, 1000);
         });
     }
 
