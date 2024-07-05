@@ -218,10 +218,18 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 overflow: hidden;
             }
 
-            #document-add-modal .block {
-                display: flex;
-                gap: 1em;
+            #document-add-modal .content {
+                display: grid;
+                grid-template-columns: 1fr 2fr;
+                gap: 10px 10px;
+                grid-auto-flow: row;
             }
+
+            #document-add-modal .description { grid-area: 1 / 1 / 2 / 3; }
+
+            #document-add-modal .pdf-preview { grid-area: 2 / 1 / 3 / 2; }
+
+            #document-add-modal .form { grid-area: 2 / 2 / 3 / 3; }
         `;
     }
 
@@ -354,23 +362,25 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 min-height="80%"
                 title="${i18n.t('document-add-modal-title')}"
                 subscribe="lang">
-                <div slot="content">
-                    <h1>Document Add</h1>
-                    Document ID: ${id}<br />
-                    File name: ${file.name}<br />
-                    File size: ${file.size}<br />
-                    <div class="block">
+                <div slot="content" class="content">
+                    <div class="description">
+                        <h1>Document Add</h1>
+                        Document ID: ${id}<br />
+                        File name: ${file.name}<br />
+                        File size: ${file.size}<br />
+                    </div>
+                    <div class="pdf-preview">
                         <dbp-pdf-viewer id="document-add-pdf-viewer" lang="${this.lang}" auto-resize="cover"></dbp-pdf-viewer>
-                        <div class="container">
-                            <p>
-                                You are about to upload the following document:<br /> 
-                                ${file.name}<br />
-                                Please select a document type to continue.
-                            </p>
-                            <p>
-                                ${this.getDocumentTypeSelector()}
-                            </p>
-                        </div>
+                    </div>
+                    <div class="form">
+                        <p>
+                            You are about to upload the following document:<br /> 
+                            ${file.name}<br />
+                            Please select a document type to continue.
+                        </p>
+                        <p>
+                            ${this.getDocumentTypeSelector()}
+                        </p>
                     </div>
                 </div>
                 <div slot="footer" class="modal-footer">
