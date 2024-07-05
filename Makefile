@@ -3,3 +3,6 @@ term:
 
 term-kill:
 	zellij delete-session cabinet-app -f
+
+open-browser:
+	open http://localhost:8001
