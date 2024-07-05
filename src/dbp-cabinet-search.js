@@ -339,10 +339,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         const i18n = this._i18n;
 
         // TODO: Check if PDF was uploaded
-        // TODO: Add PDF viewer
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
+        // TODO: The modal is far to small and doesn't resize when the window is resized
         return staticHtml`
             <dbp-modal ${ref(this.documentAddModalRef)} id="document-add-modal" modal-id="document-add-modal" title="${i18n.t('document-add-modal-title')}" subscribe="lang">
                 <div slot="content">
@@ -514,6 +514,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         await this.updateComplete;
 
         // Show the PDF in the PDF viewer
+        // TODO: For some reason th PDF only shows if you resize the browser window
         await this._('#document-add-pdf-viewer').showPDF(this.documentFile);
 
         // Opens the modal dialog for adding a document to a person after the document was
