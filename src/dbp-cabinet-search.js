@@ -1,4 +1,3 @@
-import {createInstance} from './i18n.js';
 import {css, html} from 'lit';
 import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
 import {ref, createRef} from 'lit/directives/ref.js';
@@ -6,7 +5,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPCabinetLitElement from "./dbp-cabinet-lit-element";
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {Button, Icon, Modal} from '@dbp-toolkit/common';
+import { Icon, Modal} from '@dbp-toolkit/common';
 import {classMap} from "lit/directives/class-map.js";
 import {Activity} from './activity.js';
 import metadata from './dbp-cabinet-search.metadata.json';
@@ -15,16 +14,12 @@ import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import {hits, searchBox} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
 import {pascalToKebab} from './utils';
-import {FileSink, FileSource} from '@dbp-toolkit/file-handling';
-import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
+import {CabinetAddDocument} from './components/dbp-cabinet-add-document.js';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.activity = new Activity(metadata);
-        this.entryPointUrl = '';
         this.fuzzySearch = true;
         this.typesenseHost = '';
         this.typesensePort = '';
@@ -39,9 +34,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             "id": "",
             "objectType": "",
         };
-        this.documentAddModalRef = createRef();
         this.documentEditModalRef = createRef();
         this.documentViewModalRef = createRef();
+        this.documentAddComponentRef = createRef();
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
     }
@@ -49,19 +44,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     static get scopedElements() {
         return {
             'dbp-icon': Icon,
-            'dbp-file-source': FileSource,
-            'dbp-file-sink': FileSink,
-            'dbp-pdf-viewer': PdfViewer,
             'dbp-modal': Modal,
-            'dbp-button': Button,
+            'dbp-cabinet-add-document': CabinetAddDocument,
         };
     }
 
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
-            entryPointUrl: { type: String, attribute: 'entry-point-url' },
             typesenseHost: { type: String, attribute: 'typesense-host' },
             typesensePort: { type: String, attribute: 'typesense-port' },
             typesensePath: { type: String, attribute: 'typesense-path' },
@@ -78,9 +68,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             switch (propName) {
                 case 'lang':
                     this._i18n.changeLanguage(this.lang);
-                    if (this.cabinetRequestsTable) {
-                        this.cabinetRequestsTable.setLocale(this.lang);
-                    }
                     break;
                 case "auth":
                     if (!this.serverConfig) {
@@ -148,7 +135,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Listen to DbpCabinetDocumentEdit events, to open the file edit dialog
         document.addEventListener('DbpCabinetDocumentAdd', function(event) {
-            that.openDocumentAddDialog(event.detail.hit);
+            that.documentAddComponentRef.value.openDocumentAddDialog(event.detail.hit);
         });
 
         // Listen to DbpCabinetDocumentView events, to open the file edit dialog
@@ -217,19 +204,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 list-style-type: none;
                 overflow: hidden;
             }
-
-            #document-add-modal .content {
-                display: grid;
-                grid-template-columns: 1fr 2fr;
-                gap: 10px 10px;
-                grid-auto-flow: row;
-            }
-
-            #document-add-modal .description { grid-area: 1 / 1 / 2 / 3; }
-
-            #document-add-modal .pdf-preview { grid-area: 2 / 1 / 3 / 2; }
-
-            #document-add-modal .form { grid-area: 2 / 2 / 3 / 3; }
         `;
     }
 
@@ -326,71 +300,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 },
             },
         });
-    }
-
-    /**
-     * Returns the modal dialog for adding a document to a person after the document was selected
-     * in the file source
-     */
-    getDocumentAddModalHtml() {
-        const hit = this.hitData;
-        console.log('hit', hit);
-
-        const file = this.documentFile;
-        console.log('file', file);
-
-        if (hit.objectType !== 'person' || file === null) {
-            return html`<dbp-modal ${ref(this.documentAddModalRef)} id="document-add-modal" modal-id="document-add-modal"></dbp-modal>`;
-        }
-
-        const id = hit.id;
-        const i18n = this._i18n;
-
-        // TODO: Check if PDF was uploaded
-
-        // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
-        // a variable and need to set the "data" property from a variable too!
-        // TODO: The modal is far to small and doesn't resize when the window is resized
-        return staticHtml`
-            <dbp-modal
-                ${ref(this.documentAddModalRef)}
-                id="document-add-modal"
-                modal-id="document-add-modal"
-                width="80%"
-                height="80%"
-                min-width="80%"
-                min-height="80%"
-                title="${i18n.t('document-add-modal-title')}"
-                subscribe="lang">
-                <div slot="content" class="content">
-                    <div class="description">
-                        <h1>Document Add</h1>
-                        Document ID: ${id}<br />
-                        File name: ${file.name}<br />
-                        File size: ${file.size}<br />
-                    </div>
-                    <div class="pdf-preview">
-                        <dbp-pdf-viewer id="document-add-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
-                    </div>
-                    <div class="form">
-                        <p>
-                            You are about to upload the following document:<br /> 
-                            ${file.name}
-                        </p>
-                        <p>
-                            Please select a document type to continue.
-                        </p>
-                        <p>
-                            ${this.getDocumentTypeSelector()}
-                            <dbp-button @click="${this.onDocumentAddSubmit}">Select</dbp-button>
-                        </p>
-                    </div>
-                </div>
-                <div slot="footer" class="modal-footer">
-                    Footer
-                </div>
-            </dbp-modal>
-        `;
     }
 
     getDocumentTypeSelector() {
@@ -518,50 +427,18 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             <div id="searchbox"></div>
             <h2>Search Results</h2>
             <div id="hits"></div>
-            ${this.getDocumentAddModalHtml()}
             ${this.getDocumentEditModalHtml()}
             ${this.getDocumentViewModalHtml()}
-            <dbp-file-source
-                id="file-source"
-                context="${i18n.t('cabinet-search.file-picker-context')}"
-                subscribe="nextcloud-store-session:nextcloud-store-session"
-                allowed-mime-types="application/pdf"
+            <dbp-cabinet-add-document
+                ${ref(this.documentAddComponentRef)}
+                subscribe="lang"
                 enabled-targets="${this.fileHandlingEnabledTargets}"
                 nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
                 nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
                 nextcloud-name="${this.nextcloudName}"
                 nextcloud-auth-info="${this.nextcloudAuthInfo}"
-                nextcloud-file-url="${this.nextcloudFileURL}"
-                decompress-zip
-                max-file-size="32000"
-                lang="${this.lang}"
-                text="${i18n.t('cabinet-search.upload-area-text')}"
-                button-label="${i18n.t('cabinet-search.upload-button-label')}"
-                @dbp-file-source-file-selected="${this.onDocumentFileSelected}"></dbp-file-source>
+                nextcloud-file-url="${this.nextcloudFileURL}"></dbp-cabinet-add-document>
         `;
-    }
-
-    /**
-     * @param ev
-     */
-    async onDocumentFileSelected(ev) {
-        console.log('ev.detail.file', ev.detail.file);
-        this.documentFile = ev.detail.file;
-
-        // We need to wait until rendering is complete after this.documentFile has changed
-        await this.updateComplete;
-
-        const pdfViewer = this._('#document-add-pdf-viewer');
-
-        // Load the PDF in the PDF viewer
-        await pdfViewer.showPDF(this.documentFile);
-
-        // Workaround to trigger a resize after the PDF was loaded, so the PDF is shown correctly
-        pdfViewer._onWindowResize();
-
-        // Opens the modal dialog for adding a document to a person after the document was
-        // selected in the file source
-        this.documentAddModalRef.value.open();
     }
 
     async loadModules() {
@@ -616,6 +493,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.objectTypeViewComponents = viewComponents;
             console.log('viewComponents', viewComponents);
             console.log('fileDocumentTypeNames', this.fileDocumentTypeNames);
+
+            this.documentAddComponentRef.value.fileDocumentTypeNames = this.fileDocumentTypeNames;
         } catch (error) {
             console.error('Error loading modules:', error);
         }
