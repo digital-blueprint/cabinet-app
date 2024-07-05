@@ -6,7 +6,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPCabinetLitElement from "./dbp-cabinet-lit-element";
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {Icon, Modal} from '@dbp-toolkit/common';
+import {Button, Icon, Modal} from '@dbp-toolkit/common';
 import {classMap} from "lit/directives/class-map.js";
 import {Activity} from './activity.js';
 import metadata from './dbp-cabinet-search.metadata.json';
@@ -53,6 +53,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-file-sink': FileSink,
             'dbp-pdf-viewer': PdfViewer,
             'dbp-modal': Modal,
+            'dbp-button': Button,
         };
     }
 
@@ -374,11 +375,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="form">
                         <p>
                             You are about to upload the following document:<br /> 
-                            ${file.name}<br />
+                            ${file.name}
+                        </p>
+                        <p>
                             Please select a document type to continue.
                         </p>
                         <p>
                             ${this.getDocumentTypeSelector()}
+                            <dbp-button @click="${this.onDocumentAddSubmit}">Select</dbp-button>
                         </p>
                     </div>
                 </div>
