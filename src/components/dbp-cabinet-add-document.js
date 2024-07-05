@@ -1,14 +1,11 @@
 import {css, html} from 'lit';
-import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
+import {html as staticHtml} from 'lit/static-html.js';
 import {ref, createRef} from 'lit/directives/ref.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPCabinetLitElement from "../dbp-cabinet-lit-element";
-import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal} from '@dbp-toolkit/common';
-import {classMap} from "lit/directives/class-map.js";
-import {pascalToKebab} from '../utils';
-import {FileSink, FileSource} from '@dbp-toolkit/file-handling';
+import {FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 
 export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement) {
