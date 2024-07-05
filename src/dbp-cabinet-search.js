@@ -548,9 +548,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // We need to wait until rendering is complete after this.documentFile has changed
         await this.updateComplete;
 
-        // Show the PDF in the PDF viewer
-        // TODO: For some reason th PDF only shows if you resize the browser window
-        await this._('#document-add-pdf-viewer').showPDF(this.documentFile);
+        const pdfViewer = this._('#document-add-pdf-viewer');
+
+        // Load the PDF in the PDF viewer
+        await pdfViewer.showPDF(this.documentFile);
+
+        // Workaround to trigger a resize after the PDF was loaded, so the PDF is shown correctly
+        pdfViewer._onWindowResize();
 
         // Opens the modal dialog for adding a document to a person after the document was
         // selected in the file source
