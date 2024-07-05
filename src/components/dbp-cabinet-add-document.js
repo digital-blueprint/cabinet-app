@@ -43,10 +43,6 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         };
     }
 
-    setHitData(hitData) {
-        this.hitData = hitData;
-    }
-
     setFileDocumentTypeNames(fileDocumentTypeNames) {
         this.fileDocumentTypeNames = fileDocumentTypeNames;
     }
