@@ -135,7 +135,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Listen to DbpCabinetDocumentEdit events, to open the file edit dialog
         document.addEventListener('DbpCabinetDocumentAdd', function(event) {
-            that.documentAddComponentRef.value.openDocumentAddDialog(event.detail.hit);
+            /**
+             * @type {CabinetAddDocument}
+             */
+            const component = that.documentAddComponentRef.value;
+            component.openDocumentAddDialog(event.detail.hit);
         });
 
         // Listen to DbpCabinetDocumentView events, to open the file edit dialog
@@ -489,7 +493,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             console.log('viewComponents', viewComponents);
             console.log('fileDocumentTypeNames', this.fileDocumentTypeNames);
 
-            this.documentAddComponentRef.value.fileDocumentTypeNames = this.fileDocumentTypeNames;
+            /**
+             * @type {CabinetAddDocument}
+             */
+            const component = this.documentAddComponentRef.value;
+            component.setFileDocumentTypeNames(this.fileDocumentTypeNames);
         } catch (error) {
             console.error('Error loading modules:', error);
         }
