@@ -1,5 +1,5 @@
 import {css, html} from 'lit';
-import {html as staticHtml} from 'lit/static-html.js';
+import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
 import {ref, createRef} from 'lit/directives/ref.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPCabinetLitElement from "../dbp-cabinet-lit-element";
@@ -7,6 +7,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal} from '@dbp-toolkit/common';
 import {FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
+import {pascalToKebab} from '../utils';
 
 export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -23,6 +24,7 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         this.documentViewModalRef = createRef();
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
+        this.documentType = '';
     }
 
     static get scopedElements() {
@@ -38,13 +40,44 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
     static get properties() {
         return {
             ...super.properties,
-            hitData: { type: Object, attribute: 'hit-data' },
+            hitData: { type: Object, attribute: false },
             documentFile: { type: File, attribute: false },
+            documentType: { type: String, attribute: false },
         };
     }
 
     setFileDocumentTypeNames(fileDocumentTypeNames) {
         this.fileDocumentTypeNames = fileDocumentTypeNames;
+    }
+
+    setFileDocumentFormComponents(fileDocumentFormComponents) {
+        this.objectTypeFormComponents = fileDocumentFormComponents;
+    }
+
+    getDocumentEditFormHtml() {
+        const documentType = this.documentType;
+
+        if (documentType === '') {
+            console.log('documentType empty', documentType);
+            return html``;
+        }
+
+        const tagPart = pascalToKebab(documentType);
+        const tagName = 'dbp-cabinet-object-type-edit-form-' + tagPart;
+
+        console.log('objectType', documentType);
+        console.log('tagName', tagName);
+        console.log('this.objectTypeFormComponents[documentType]', this.objectTypeFormComponents[documentType]);
+
+        if (!customElements.get(tagName)) {
+            customElements.define(tagName, this.objectTypeFormComponents[documentType]);
+        }
+
+        // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
+        // a variable and need to set the "data" property from a variable too!
+        return staticHtml`
+            <${unsafeStatic(tagName)} id="edit-form" subscribe="lang"></${unsafeStatic(tagName)}>
+        `;
     }
 
     async openDocumentAddDialog(hit) {
@@ -108,10 +141,7 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
 
         // TODO: Check if PDF was uploaded
 
-        // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
-        // a variable and need to set the "data" property from a variable too!
-        // TODO: The modal is far to small and doesn't resize when the window is resized
-        return staticHtml`
+        return html`
             <dbp-modal
                 ${ref(this.documentAddModalRef)}
                 id="document-add-modal"
@@ -133,17 +163,7 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
                         <dbp-pdf-viewer id="document-add-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
                     </div>
                     <div class="form">
-                        <p>
-                            You are about to upload the following document:<br /> 
-                            ${file.name}
-                        </p>
-                        <p>
-                            Please select a document type to continue.
-                        </p>
-                        <p>
-                            ${this.getDocumentTypeSelector()}
-                            <dbp-button @click="${this.onDocumentAddSubmit}">Select</dbp-button>
-                        </p>
+                        ${this.getDocumentTypeFormPartHtml()}
                     </div>
                 </div>
                 <div slot="footer" class="modal-footer">
@@ -151,6 +171,36 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
                 </div>
             </dbp-modal>
         `;
+    }
+
+    getDocumentTypeFormPartHtml() {
+        if (this.documentType === '') {
+            const file = this.documentFile;
+
+            return html`
+                <p>
+                    You are about to upload the following document:<br />
+                    ${file.name}
+                </p>
+                <p>
+                    Please select a document type to continue.
+                </p>
+                <p>
+                    ${this.getDocumentTypeSelector()}
+                    <dbp-button @click="${this.onDocumentTypeSelected}">Select</dbp-button>
+                </p>
+            `;
+        } else {
+            return html`
+                ${this.getDocumentEditFormHtml()}
+            `;
+        }
+    }
+
+    onDocumentTypeSelected() {
+        const documentType = this._('#document-type').value;
+        console.log('documentType', documentType);
+        this.documentType = documentType;
     }
 
     getDocumentTypeSelector() {

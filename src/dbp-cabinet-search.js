@@ -438,7 +438,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             const data = await response.json();
 
             console.log('data', data);
-            let forms = {};
+            let formComponents = {};
             let hitComponents = {};
             let viewComponents = {};
 
@@ -463,7 +463,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 if (object.getFormComponent) {
-                    forms[object.name] = object.getFormComponent();
+                    formComponents[object.name] = object.getFormComponent();
                 }
                 if (object.getHitComponent) {
                     hitComponents[object.name] = object.getHitComponent();
@@ -476,8 +476,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
             }
 
-            this.objectTypeFormComponents = forms;
-            console.log('forms', forms);
+            this.objectTypeFormComponents = formComponents;
+            console.log('formComponents', formComponents);
             this.objectTypeHitComponents = hitComponents;
             console.log('hitComponents', hitComponents);
             this.objectTypeViewComponents = viewComponents;
@@ -489,6 +489,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
              */
             const component = this.documentAddComponentRef.value;
             component.setFileDocumentTypeNames(this.fileDocumentTypeNames);
+            component.setFileDocumentFormComponents(formComponents);
         } catch (error) {
             console.error('Error loading modules:', error);
         }
