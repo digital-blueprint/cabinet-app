@@ -179,7 +179,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             search.start();
 
-            console.log('search', search);
+            // TODO: Improve on workaround to show hits after the page loads
+            setTimeout(() => {
+                this._('input.ais-SearchBox-input').value = ' ';
+                search.refresh();
+            }, 500);
         });
     }
 
