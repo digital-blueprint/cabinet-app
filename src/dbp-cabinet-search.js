@@ -431,13 +431,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${this.getDocumentViewModalHtml()}
             <dbp-cabinet-add-document
                 ${ref(this.documentAddComponentRef)}
-                subscribe="lang"
-                enabled-targets="${this.fileHandlingEnabledTargets}"
-                nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
-                nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
-                nextcloud-name="${this.nextcloudName}"
-                nextcloud-auth-info="${this.nextcloudAuthInfo}"
-                nextcloud-file-url="${this.nextcloudFileURL}"></dbp-cabinet-add-document>
+                subscribe="lang,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
+            ></dbp-cabinet-add-document>
         `;
     }
 
