@@ -27,7 +27,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.typesenseProtocol = '';
         this.typesenseKey = '';
         this.typesenseCollection = '';
-        this.objectTypeForms = {};
+        this.objectTypeFormComponents = {};
         this.objectTypeHitComponents = {};
         this.objectTypeViewComponents = {};
         this.hitData = {
@@ -328,10 +328,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         console.log('objectType', objectType);
         console.log('tagName', tagName);
-        console.log('this.objectTypeForms[objectType]', this.objectTypeForms[objectType]);
+        console.log('this.objectTypeFormComponents[objectType]', this.objectTypeFormComponents[objectType]);
 
         if (!customElements.get(tagName)) {
-            customElements.define(tagName, this.objectTypeForms[objectType]);
+            customElements.define(tagName, this.objectTypeFormComponents[objectType]);
         }
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
@@ -476,7 +476,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
             }
 
-            this.objectTypeForms = forms;
+            this.objectTypeFormComponents = forms;
             console.log('forms', forms);
             this.objectTypeHitComponents = hitComponents;
             console.log('hitComponents', hitComponents);

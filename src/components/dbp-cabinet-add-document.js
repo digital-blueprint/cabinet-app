@@ -11,7 +11,7 @@ import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
-        this.objectTypeForms = {};
+        this.objectTypeFormComponents = {};
         this.objectTypeHitComponents = {};
         this.objectTypeViewComponents = {};
         this.hitData = {
