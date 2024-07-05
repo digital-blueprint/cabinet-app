@@ -344,7 +344,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // a variable and need to set the "data" property from a variable too!
         // TODO: The modal is far to small and doesn't resize when the window is resized
         return staticHtml`
-            <dbp-modal ${ref(this.documentAddModalRef)} id="document-add-modal" modal-id="document-add-modal" title="${i18n.t('document-add-modal-title')}" subscribe="lang">
+            <dbp-modal
+                ${ref(this.documentAddModalRef)}
+                id="document-add-modal"
+                modal-id="document-add-modal"
+                width="80%"
+                height="80%"
+                min-width="80%"
+                min-height="80%"
+                title="${i18n.t('document-add-modal-title')}"
+                subscribe="lang">
                 <div slot="content">
                     <h1>Document Add</h1>
                     Document ID: ${id}<br />
@@ -411,7 +420,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
-            <dbp-modal ${ref(this.documentEditModalRef)} modal-id="document-edit-modal" title="${i18n.t('document-edit-modal-title')}" subscribe="lang">
+            <dbp-modal
+                ${ref(this.documentEditModalRef)}
+                modal-id="document-edit-modal"
+                title="${i18n.t('document-edit-modal-title')}"
+                width="80%"
+                height="80%"
+                min-width="80%"
+                min-height="80%"
+                subscribe="lang">
                 <div slot="content">
                     Document ID: ${id}<br />
                     ObjectType: ${objectType}<br />
@@ -452,7 +469,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
-            <dbp-modal ${ref(this.documentViewModalRef)} modal-id="document-view-modal" title="${i18n.t('document-view-modal-title')}" subscribe="lang">
+            <dbp-modal
+                ${ref(this.documentViewModalRef)}
+                modal-id="document-view-modal"
+                title="${i18n.t('document-view-modal-title')}"
+                width="80%"
+                height="80%"
+                min-width="80%"
+                min-height="80%"
+                subscribe="lang">
                 <div slot="content">
                     Document ID: ${id}<br />
                     ObjectType: ${objectType}<br />
