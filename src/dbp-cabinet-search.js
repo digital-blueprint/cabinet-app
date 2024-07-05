@@ -200,9 +200,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${commonStyles.getLinkCss()}
             ${commonStyles.getNotificationCSS()}
             ${commonStyles.getActivityCSS()}
-            ${commonStyles.getModalDialogCSS()}
-            ${commonStyles.getButtonCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
+            ${commonStyles.getFormAddonsCSS()}
 
             .ais-Hits-list {
                 display: grid;
@@ -370,7 +369,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         File size: ${file.size}<br />
                     </div>
                     <div class="pdf-preview">
-                        <dbp-pdf-viewer id="document-add-pdf-viewer" lang="${this.lang}" auto-resize="cover"></dbp-pdf-viewer>
+                        <dbp-pdf-viewer id="document-add-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
                     </div>
                     <div class="form">
                         <p>
@@ -397,7 +396,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
 
         return html`
-            <select id="document-type" name="document-type" required>
+            <select id="document-type" class="select" name="document-type" required>
                 ${options}
             </select>
         `;
