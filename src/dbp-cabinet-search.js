@@ -310,19 +310,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
     }
 
-    getDocumentTypeSelector() {
-        const fileDocumentTypeNames = this.fileDocumentTypeNames;
-        const options = Object.keys(fileDocumentTypeNames).map((key) => {
-            return html`<option value="${key}">${fileDocumentTypeNames[key]}</option>`;
-        });
-
-        return html`
-            <select id="document-type" class="select" name="document-type" required>
-                ${options}
-            </select>
-        `;
-    }
-
     getDocumentEditModalHtml() {
         // TODO: In production it maybe would be better to fetch the typesense document again to get the latest data
         const hit = this.hitData;
