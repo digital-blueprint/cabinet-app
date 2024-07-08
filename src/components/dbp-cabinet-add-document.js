@@ -86,18 +86,6 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         this._('#file-source').setAttribute('dialog-open', '');
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-        let that = this;
-        this._loginStatus = '';
-        this._loginState = [];
-
-        // Listen to DbpCabinetDocumentEdit events, to open the file edit dialog
-        document.addEventListener('DbpCabinetDocumentAdd', function(event) {
-            that.openDocumentAddDialog(event.detail.hit);
-        });
-    }
-
     static get styles() {
         // language=css
         return css`
