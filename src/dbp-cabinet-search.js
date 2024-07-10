@@ -139,7 +139,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
              * @type {CabinetAddDocument}
              */
             const component = that.documentAddComponentRef.value;
-            component.openDocumentAddDialog(event.detail.hit);
+            component.openDocumentAddDialogWithHit(event.detail.hit);
         });
 
         // Listen to DbpCabinetDocumentView events, to open the file edit dialog

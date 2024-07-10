@@ -20,8 +20,6 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
             "objectType": "",
         };
         this.documentAddModalRef = createRef();
-        this.documentEditModalRef = createRef();
-        this.documentViewModalRef = createRef();
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
         this.documentType = '';
@@ -80,8 +78,21 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         `;
     }
 
-    async openDocumentAddDialog(hit) {
+    async openDocumentAddDialogWithHit(hit = null) {
         this.hitData = hit;
+        await this.openDocumentAddDialog();
+    }
+
+    async openDocumentAddDialog() {
+        this.documentType = '';
+
+        /**
+         * @type {Modal}
+         */
+        const documentAddModal = this.documentAddModalRef.value;
+        // Make sure the document-add dialog is closed
+        documentAddModal.close();
+
         // Open the file source dialog to select a file
         this._('#file-source').setAttribute('dialog-open', '');
     }
@@ -142,6 +153,7 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
                 subscribe="lang">
                 <div slot="content" class="content">
                     <div class="description">
+                        <a href="#" @click=${this.openDocumentAddDialog}>&lt;&lt; Back to document upload</a>
                         <h1>Document Add</h1>
                         Document ID: ${id}<br />
                         File name: ${file.name}<br />
