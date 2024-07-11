@@ -2,7 +2,7 @@ import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 
 export default class extends BaseObject {
-    name = 'fileLetter';
+    name = 'file-cabinet-letter';
 
     /**
      * @returns {string}
@@ -63,7 +63,7 @@ class CabinetHitElement extends BaseHitElement {
             <form>
                 <h2>Letter</h2>
                 lang: ${this.lang}<br />
-                filename: ${this.data['file-filename']}<br />
+                filename: ${this.data.file.base.fileName}<br />
                 filesize: ${this.data.filesize}<br />
         `;
     }
@@ -74,7 +74,7 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <h2>Letter</h2>
             lang: ${this.lang}<br />
-            filename: ${this.data['file-filename']}<br />
+            filename: ${this.data.file.base.fileName}<br />
         `;
     }
 }

@@ -18,7 +18,7 @@
             "port": "9100",
             "protocol": "http",
             "key": "xyz",
-            "collection": "cabinet-documents"
+            "collection": "cabinet"
         },
         "typesense": {
             "host": "127.0.0.1",
@@ -26,7 +26,7 @@
             "port": "8000",
             "protocol": "http",
             "key": "",
-            "collection": "cabinet-documents"
+            "collection": "cabinet"
         }
     },
     "localCustom": {
@@ -49,7 +49,7 @@
             "port": "9100",
             "protocol": "http",
             "key": "xyz",
-            "collection": "cabinet-documents"
+            "collection": "cabinet"
         },
         "typesense": {
             "host": "127.0.0.1",
@@ -57,7 +57,7 @@
             "port": "8000",
             "protocol": "http",
             "key": "",
-            "collection": "cabinet-documents"
+            "collection": "cabinet"
         }
     },
     "bs": {
@@ -96,7 +96,7 @@
             "path": "/cabinet/typesense/",
             "protocol": "https",
             "key": "",
-            "collection": "cabinet-documents"
+            "collection": "cabinet"
         }
     },
     "developmentCustom": {
@@ -120,7 +120,7 @@
             "path": "/cabinet/typesense/",
             "protocol": "https",
             "key": "",
-            "collection": "cabinet-documents"
+            "collection": "cabinet"
         }
     },
     "demo": {
@@ -143,7 +143,7 @@
             "path": "/cabinet/typesense/",
             "protocol": "https",
             "key": "",
-            "collection": "cabinet-documents"
+            "collection": "cabinet"
         }
     },
     "demoCustom": {
@@ -167,7 +167,7 @@
             "path": "/cabinet/typesense/",
             "protocol": "https",
             "key": "",
-            "collection": "cabinet-documents"
+            "collection": "cabinet"
         }
     },
     "production": {
@@ -191,7 +191,7 @@
             "path": "/cabinet/typesense/",
             "protocol": "https",
             "key": "",
-            "collection": "cabinet-documents"
+            "collection": "cabinet"
         }
     }
 }

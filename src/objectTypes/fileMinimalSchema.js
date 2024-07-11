@@ -2,8 +2,11 @@ import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 
 export default class extends BaseObject {
-    name = 'person';
+    name = 'file-cabinet-minimalSchema';
 
+    /**
+     * @returns {string}
+     */
     getFormComponent() {
         return CabinetFormElement;
     }
@@ -20,25 +23,17 @@ export default class extends BaseObject {
 class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
-        const data = this.data;
 
         return html`
             <form>
-                <h2>Person Form</h2>
+                <h2>fileMinimalSchema Form</h2>
                 lang: ${this.lang}<br />
                 user-id: ${this.userId}<br />
                 <fieldset>
-                    <legend>Firstname</legend>
-                    <input type="text" id="firstname" name="firstname" value="${base.givenName}" required>
-                    <label for="firstname">Firstname</label>
+                    <legend>About</legend>
+                    <input type="text" id="about" name="about" required>
+                    <label for="about">About</label>
                 </fieldset>
-
-                <fieldset>
-                    <legend>Lastname</legend>
-                    <input type="text" id="lastname" name="lastname" value="${base.familyName}" required>
-                    <label for="lastname">Lastname</label>
-                </fieldset>
-
                 <button class="button is-primary" type="submit">Submit</button>
             </form>
         `;
@@ -52,17 +47,17 @@ class CabinetHitElement extends BaseHitElement {
             ${super.styles}
 
             h2 {
-                color: #f3aa13;
+                color: #8e24e0;
             }
         `;
     }
 
     render() {
         return html`
-            <h2>Person</h2>
-            lang: ${this.lang}<br />
-            firstname: ${this.data.base.givenName}<br />
-            lastname: ${this.data.base.familyName}<br />
+            <form>
+                <h2>fileMinimalSchema</h2>
+                lang: ${this.lang}<br />
+                filename: ${this.data.file.base.fileName}<br />
         `;
     }
 }
@@ -70,10 +65,9 @@ class CabinetHitElement extends BaseHitElement {
 class CabinetViewElement extends BaseViewElement {
     render() {
         return html`
-            <h2>Person</h2>
+            <h2>Minimal Schema</h2>
             lang: ${this.lang}<br />
-            firstname: ${this.data.base.givenName}<br />
-            lastname: ${this.data.base.familyName}<br />
+            filename: ${this.data.file.base.fileName}<br />
         `;
     }
 }

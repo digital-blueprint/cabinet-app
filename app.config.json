@@ -19,7 +19,7 @@
             "port": "8000",
             "protocol": "http",
             "key": "",
-            "collection": "cabinet-documents"
+            "collection": "cabinet"
         }
     },
     "localCustom": {
@@ -42,7 +42,7 @@
             "port": "8000",
             "protocol": "http",
             "key": "",
-            "collection": "cabinet-documents"
+            "collection": "cabinet"
         }
     },
     "development": {
@@ -65,7 +65,7 @@
             "path": "/cabinet/typesense/",
             "protocol": "https",
             "key": "",
-            "collection": "cabinet-documents"
+            "collection": "cabinet"
         }
     }
 }

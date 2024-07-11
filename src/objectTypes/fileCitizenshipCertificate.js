@@ -2,7 +2,7 @@ import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 
 export default class extends BaseObject {
-    name = 'fileCitizenshipCertificate';
+    name = 'file-cabinet-citizenshipCertificate';
 
     /**
      * @returns {string}
@@ -56,7 +56,7 @@ class CabinetHitElement extends BaseHitElement {
             <form>
                 <h2>fileCitizenshipCertificate</h2>
                 lang: ${this.lang}<br />
-                filename: ${this.data['file-filename']}<br />
+                filename: ${this.data.file.base.fileName}<br />
         `;
     }
 }
@@ -66,7 +66,7 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <h2>Citizenship Certificate</h2>
             lang: ${this.lang}<br />
-            filename: ${this.data['file-filename']}<br />
+            filename: ${this.data.file.base.fileName}<br />
         `;
     }
 }

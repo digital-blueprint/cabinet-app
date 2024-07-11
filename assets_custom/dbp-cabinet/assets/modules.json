@@ -1,10 +1,11 @@
 {
   "objectTypes": {
-    "fileEmail": "./fileEmail.js",
-    "fileConversation": "./fileConversation.js",
-    "fileLetter": "./fileLetter.js",
-    "filePersonalLicense": "./filePersonalLicense.js",
-    "fileCitizenshipCertificate": "./fileCitizenshipCertificate.js",
+    "file-cabinet-email": "./fileEmail.js",
+    "file-cabinet-conversation": "./fileConversation.js",
+    "file-cabinet-letter": "./fileLetter.js",
+    "file-cabinet-identityDocument": "./filePersonalLicense.js",
+    "file-cabinet-minimalSchema": "./fileMinimalSchema.js",
+    "file-cabinet-citizenshipCertificate": "./fileCitizenshipCertificate.js",
     "person": "./person.js"
   }
 }

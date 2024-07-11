@@ -110,7 +110,7 @@ if ((devConfig != undefined && appEnv in devConfig)) {
             path: '/',
             protocol: 'http',
             key: 'xyz',
-            collection: 'cabinet-documents'
+            collection: 'cabinet'
         },
     };
 } else {
@@ -165,6 +165,7 @@ export default (async () => {
                         'src/objectTypes/fileConversation.js',
                         'src/objectTypes/fileLetter.js',
                         'src/objectTypes/filePersonalLicense.js',
+                        'src/objectTypes/fileMinimalSchema.js',
                         'src/objectTypes/fileCitizenshipCertificate.js',
                         'src/objectTypes/person.js',
                         'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',
@@ -181,6 +182,7 @@ export default (async () => {
                         'src/objectTypes/fileConversation.js',
                         'src/objectTypes/fileLetter.js',
                         'src/objectTypes/filePersonalLicense.js',
+                        'src/objectTypes/fileMinimalSchema.js',
                         'src/objectTypes/fileCitizenshipCertificate.js',
                         'src/objectTypes/person.js',
                         'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',

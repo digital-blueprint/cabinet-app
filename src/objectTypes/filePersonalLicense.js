@@ -2,7 +2,7 @@ import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 
 export default class extends BaseObject {
-    name = 'filePersonalLicense';
+    name = 'file-cabinet-identityDocument';
 
     /**
      * @returns {string}
@@ -57,7 +57,7 @@ class CabinetHitElement extends BaseHitElement {
             <form>
                 <h2>filePersonalLicense</h2>
                 lang: ${this.lang}<br />
-                filename: ${this.data['file-filename']}<br />
+                filename: ${this.data.file.base.fileName}<br />
         `;
     }
 }
@@ -67,7 +67,7 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <h2>Personal License</h2>
             lang: ${this.lang}<br />
-            filename: ${this.data['file-filename']}<br />
+            filename: ${this.data.file.base.fileName}<br />
         `;
     }
 }

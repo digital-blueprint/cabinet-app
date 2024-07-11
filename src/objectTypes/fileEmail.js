@@ -4,7 +4,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 
 export default class extends BaseObject {
-    name = 'fileEmail';
+    name = 'file-cabinet-email';
 
     /**
      * @returns {string}
@@ -65,7 +65,7 @@ class CabinetFormElement extends BaseFormElement {
                 user-id: ${this.userId}<br />
                 <fieldset>
                     <legend>About</legend>
-                    <input type="text" id="about" name="about" value="${data['file-filename']}" required>
+                    <input type="text" id="about" name="about" value="${data.file.base.fileName}" required>
                     <label for="about">About</label>
                 </fieldset>
 
@@ -186,7 +186,7 @@ class CabinetHitElement extends BaseHitElement {
             <form>
                 <h2>Email</h2>
                 lang: ${this.lang}<br />
-                filename: ${this.data['file-filename']}<br />
+                filename: ${this.data.file.base.fileName}<br />
         `;
     }
 }
@@ -196,7 +196,7 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <h2>Email</h2>
             lang: ${this.lang}<br />
-            filename: ${this.data['file-filename']}<br />
+            filename: ${this.data.file.base.fileName}<br />
         `;
     }
 }

@@ -227,7 +227,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     getSearchParameters() {
         // https://typesense.org/docs/0.25.1/api/search.html#ranking-and-sorting-parameters
         let searchParameters = {
-            query_by: "file-filename,objectType",
+            query_by: "base.familyName,base.givenName,file.base.fileName,objectType",
+            // TODO: Enable again when we have sorting in our Typesense schema
+            // sort_by: "base.familyName:asc,base.givenName:asc,objectType:asc"
         };
 
         if (!this.fuzzySearch) {
