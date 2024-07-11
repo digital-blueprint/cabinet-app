@@ -82,6 +82,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // Update the Typesense Instantsearch adapter configuration with the new bearer token
                     if (this.typesenseInstantsearchAdapter) {
                         this.typesenseInstantsearchAdapter.updateConfiguration(this.getTypesenseInstantsearchAdapterConfig());
+                    } else {
+                        this.initInstantsearch();
                     }
                     break;
             }
@@ -149,7 +151,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         this.updateComplete.then(() => {
             console.log('-- updateComplete --');
-            this.loadModules();
 
             this.serverConfig = {
                 // Be sure to use an API key that only allows searches, in production
@@ -159,32 +160,36 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         host: this.typesenseHost,
                         port: this.typesensePort,
                         path: this.typesensePath,
-                        protocol: this.typesenseProtocol,
-                    },
+                        protocol: this.typesenseProtocol
+                    }
                 ],
-                additionalHeaders: { 'Authorization': 'Bearer ' + this.auth.token, },
+                additionalHeaders: {'Authorization': 'Bearer ' + this.auth.token}
             };
             console.log('serverConfig', this.serverConfig);
 
-            this.search = this.createInstantsearch();
-            const search = this.search;
-
-            search.addWidgets([
-                configure({
-                    hitsPerPage: 24,
-                }),
-                this.createSearchBox(),
-                this.createHits(),
-            ]);
-
-            search.start();
-
-            // TODO: Improve on workaround to show hits after the page loads
-            setTimeout(() => {
-                this._('input.ais-SearchBox-input').value = ' ';
-                search.refresh();
-            }, 1000);
+            this.loadModules();
         });
+    }
+
+    initInstantsearch() {
+        this.search = this.createInstantsearch();
+        const search = this.search;
+
+        search.addWidgets([
+            configure({
+                hitsPerPage: 24
+            }),
+            this.createSearchBox(),
+            this.createHits()
+        ]);
+
+        search.start();
+
+        // TODO: Improve on workaround to show hits after the page loads
+        setTimeout(() => {
+            this._('input.ais-SearchBox-input').value = ' ';
+            search.refresh();
+        }, 1000);
     }
 
     static get styles() {
