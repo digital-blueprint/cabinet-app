@@ -5,7 +5,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPCabinetLitElement from "./dbp-cabinet-lit-element";
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import { Icon, Modal} from '@dbp-toolkit/common';
+import {Icon, InlineNotification, Modal} from '@dbp-toolkit/common';
 import {classMap} from "lit/directives/class-map.js";
 import {Activity} from './activity.js';
 import metadata from './dbp-cabinet-search.metadata.json';
@@ -46,6 +46,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-icon': Icon,
             'dbp-modal': Modal,
             'dbp-cabinet-add-document': CabinetAddDocument,
+            'dbp-inline-notification': InlineNotification,
         };
     }
 
@@ -422,17 +423,23 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <dbp-mini-spinner text=${i18n.t('loading-message')}></dbp-mini-spinner>
                 </span>
             </div>
+            <dbp-inline-notification class=" ${classMap({hidden: this.isLoggedIn() || this.isLoading() || this.loadingTranslations})}"
+                                     type="warning"
+                                     body="${i18n.t('error-login-message')}">
+            </dbp-inline-notification>
 
-            <h1>Search</h1>
-            <div id="searchbox"></div>
-            <h2>Search Results</h2>
-            <div id="hits"></div>
-            ${this.getDocumentEditModalHtml()}
-            ${this.getDocumentViewModalHtml()}
-            <dbp-cabinet-add-document
-                ${ref(this.documentAddComponentRef)}
-                subscribe="lang,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
-            ></dbp-cabinet-add-document>
+            <div class="${classMap({hidden: !this.isLoggedIn() || this.isLoading() || this.loadingTranslations})}">
+                <h1>Search</h1>
+                <div id="searchbox"></div>
+                <h2>Search Results</h2>
+                <div id="hits"></div>
+                ${this.getDocumentEditModalHtml()}
+                ${this.getDocumentViewModalHtml()}
+                <dbp-cabinet-add-document
+                    ${ref(this.documentAddComponentRef)}
+                    subscribe="lang,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
+                ></dbp-cabinet-add-document>
+            </div>
         `;
     }
 

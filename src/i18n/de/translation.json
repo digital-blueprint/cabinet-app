@@ -1,4 +1,5 @@
 {
     "cabinet-search": {
-    }
+    },
+    "error-login-message": "Sie müssen angemeldet sein um diese Funktion nutzen zu können!"
 }
