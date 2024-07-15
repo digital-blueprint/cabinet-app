@@ -3,6 +3,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {css, html} from 'lit';
 import {createInstance} from '../i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
+import * as formElements from './formElements';
 
 export class BaseObject {
     name = 'baseObject';
@@ -67,6 +68,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         return html`
             <form>
                 <h2>${data.objectType}</h2>
+                ${formElements.stringElement('objectType', data.objectType)}
                 <button class="button is-primary" type="submit">Submit</button>
             </form>
         `;

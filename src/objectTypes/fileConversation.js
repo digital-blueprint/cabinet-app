@@ -1,5 +1,6 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
+import * as formElements from './formElements.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-conversation';
@@ -29,17 +30,8 @@ class CabinetFormElement extends BaseFormElement {
                 <h2>Conversation Form</h2>
                 lang: ${this.lang}<br />
                 user-id: ${this.userId}<br />
-                <fieldset>
-                    <legend>About</legend>
-                    <input type="text" id="about" name="about" required>
-                    <label for="about">About</label>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Comment</legend>
-                    <textarea id="comment" name="comment"></textarea>
-                    <label for="comment">Comment</label>
-                </fieldset>
+                ${formElements.stringElement('about', '')}
+                ${formElements.stringElement('comment', '')}
                 <button class="button is-primary" type="submit">Submit</button>
             </form>
         `;
