@@ -34,7 +34,7 @@
         "chai": "^5.0.0",
         "eslint": "^9",
         "eslint-plugin-jsdoc": "^48.0.0",
-        "glob": "^10.0.0",
+        "glob": "^11.0.0",
         "globals": "^15.1.0",
         "i18next-parser": "^9.0.0",
         "karma": "^6.0.0",
