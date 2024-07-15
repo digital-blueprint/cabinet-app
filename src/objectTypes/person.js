@@ -29,13 +29,13 @@ class CabinetFormElement extends BaseFormElement {
                 user-id: ${this.userId}<br />
                 <fieldset>
                     <legend>Firstname</legend>
-                    <input type="text" id="firstname" name="firstname" value="${base.givenName}" required>
+                    <input type="text" id="firstname" name="firstname" value="${data.base.givenName}" required>
                     <label for="firstname">Firstname</label>
                 </fieldset>
 
                 <fieldset>
                     <legend>Lastname</legend>
-                    <input type="text" id="lastname" name="lastname" value="${base.familyName}" required>
+                    <input type="text" id="lastname" name="lastname" value="${data.base.familyName}" required>
                     <label for="lastname">Lastname</label>
                 </fieldset>
 
