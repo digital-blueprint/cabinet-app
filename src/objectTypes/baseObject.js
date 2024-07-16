@@ -44,6 +44,35 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         };
     }
 
+    storeBlobItem(event) {
+        event.preventDefault();
+
+        const formElement = this.shadowRoot.querySelector('form');
+        const data = this.gatherFormDataFromElement(formElement);
+        console.log('data', data);
+
+        // TODO: Store blob item
+        alert('TODO: Store item!\n' + JSON.stringify(data));
+    }
+
+    gatherFormDataFromElement(formElement) {
+        const formData = new FormData(formElement);
+        const data = {};
+
+        for (let [key, value] of formData.entries()) {
+            if (data[key] !== undefined) {
+                if (!Array.isArray(data[key])) {
+                    data[key] = [data[key]];
+                }
+                data[key].push(value);
+            } else {
+                data[key] = value;
+            }
+        }
+
+        return data;
+    }
+
     static get properties() {
         return {
             ...super.properties,
@@ -58,6 +87,26 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         return css`
             ${commonStyles.getGeneralCSS(false)}
             ${commonStyles.getButtonCSS()}
+
+            .button-row {
+                margin-top: 1em;
+                text-align: right;
+            }
+        `;
+    }
+
+    cancelForm(event) {
+        event.preventDefault();
+        // TODO: Implement "cancel"
+        alert('What should this do?');
+    }
+
+    getButtonRowHtml() {
+        return html`
+            <div class="button-row">
+                <button class="button is-secondary" type="submit" @click=${this.cancelForm}>Cancel</button>
+                <button class="button is-primary" type="submit" @click=${this.storeBlobItem}>Save</button>
+            </div>
         `;
     }
 
@@ -69,7 +118,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             <form>
                 <h2>${data.objectType}</h2>
                 ${formElements.stringElement('objectType', data.objectType)}
-                <button class="button is-primary" type="submit">Submit</button>
+                ${this.getButtonRowHtml()}
             </form>
         `;
     }

@@ -1,5 +1,6 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
+import * as formElements from './formElements.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-minimalSchema';
@@ -28,13 +29,9 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>fileMinimalSchema Form</h2>
                 lang: ${this.lang}<br />
-                user-id: ${this.userId}<br />
-                <fieldset>
-                    <legend>About</legend>
-                    <input type="text" id="about" name="about" required>
-                    <label for="about">About</label>
-                </fieldset>
-                <button class="button is-primary" type="submit">Submit</button>
+                ${formElements.stringElement('file-cabinet-minimalSchema:subjectOf', 'Subject of', '')}
+                ${formElements.stringElement('file-cabinet-minimalSchema:comment', 'Comment', '', false, 5)}
+                ${this.getButtonRowHtml()}
             </form>
         `;
     }

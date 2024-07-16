@@ -29,10 +29,11 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>Conversation Form</h2>
                 lang: ${this.lang}<br />
-                user-id: ${this.userId}<br />
-                ${formElements.stringElement('about', '')}
-                ${formElements.stringElement('comment', '')}
-                <button class="button is-primary" type="submit">Submit</button>
+                ${formElements.stringElement('file.conversation.agent.givenName', 'Given name', '')}
+                ${formElements.stringElement('file.conversation.agent.familyName', 'Family name', '')}
+                ${formElements.stringElement('file.conversation.abstract', 'Abstract', '', false, 10)}
+                ${formElements.stringElement('file-cabinet-conversation:comment', 'Comment', '', false, 5)}
+                ${this.getButtonRowHtml()}
             </form>
         `;
     }
