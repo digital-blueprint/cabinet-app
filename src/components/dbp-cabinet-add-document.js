@@ -149,7 +149,6 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
                 height="80%"
                 min-width="80%"
                 min-height="80%"
-                title="${i18n.t('document-add-modal-title')}"
                 subscribe="lang">
                 <div slot="content" class="content">
                     <div class="description">
