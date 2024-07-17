@@ -8,7 +8,15 @@ const sanitizeForHtmlId = (str) => {
         .toLowerCase();               // Convert to lowercase
 };
 
-export const stringElement = (name, label, data = "", isRequired = false, rows = 1) => {
+/**
+ *
+ * @param name
+ * @param label
+ * @param value - the string to display
+ * @param isRequired
+ * @param rows
+ */
+export const stringElement = (name, label, value = "", isRequired = false, rows = 1) => {
     const id = sanitizeForHtmlId(name);
     return html`
         <fieldset>
@@ -19,15 +27,56 @@ export const stringElement = (name, label, data = "", isRequired = false, rows =
                     name="${name}" 
                     rows="${rows}"
                     ?required=${isRequired}
-                  >${data}</textarea>`
+                  >${value}</textarea>`
                 : html`<input 
                     type="text" 
                     id="form-input-${id}" 
                     name="${name}" 
-                    value="${data}"
+                    value="${value}"
                     ?required=${isRequired}
                   >`
             }
+            <label for="form-input-${name}">${label}</label>
+        </fieldset>
+    `;
+};
+
+/**
+ *
+ * @param name
+ * @param label
+ * @param value - YYYY-MM-DD (iso8601)
+ * @param isRequired
+ */
+export const dateElement = (name, label, value = "", isRequired = false) => {
+    const id = sanitizeForHtmlId(name);
+    return html`
+        <fieldset>
+            <legend>${label}</legend>
+            <input
+                type="date"
+                id="form-input-${id}"
+                name="${name}"
+                value="${value}"
+                ?required=${isRequired} />
+            <label for="form-input-${name}">${label}</label>
+        </fieldset>
+    `;
+};
+
+export const enumElement = (name, label, value = "", items = {}, isRequired = false) => {
+    const id = sanitizeForHtmlId(name);
+    return html`
+        <fieldset>
+            <legend>${label}</legend>
+            <select
+                id="form-input-${id}"
+                name="${name}"
+                ?required=${isRequired}>
+                ${Object.keys(items).map((key) => html`
+                    <option value="${key}" ?selected=${key === value}>${items[key]}</option>
+                `)}
+            </select>
             <label for="form-input-${name}">${label}</label>
         </fieldset>
     `;
