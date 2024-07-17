@@ -151,7 +151,7 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
                 subscribe="lang">
                 <div slot="content" class="content">
                     <div class="description">
-                        <a href="#" @click=${this.openDocumentAddDialog}>&lt;&lt; Back to document upload</a>
+                        ${this.getBackLink()}
                         <h1>Document Add</h1>
                         Document ID: ${id}<br />
                         File name: ${file.name}<br />
@@ -169,6 +169,18 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
                 </div>
             </dbp-modal>
         `;
+    }
+
+    getBackLink() {
+        if (this.documentType === '') {
+            return html`<a href="#" @click=${this.openDocumentAddDialog}>&lt;&lt; Back to document upload</a>`;
+        } else {
+            return html`<a href="#" @click=${this.resetDocumentType}>&lt;&lt; Back to document type selection</a>`;
+        }
+    }
+
+    resetDocumentType() {
+        this.documentType = '';
     }
 
     getDocumentTypeFormPartHtml() {
