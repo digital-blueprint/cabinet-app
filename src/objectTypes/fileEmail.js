@@ -1,6 +1,4 @@
 import {css, html} from 'lit';
-import {createInstance} from '../i18n';
-import * as commonStyles from '@dbp-toolkit/common/styles';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 import * as formElements from './formElements.js';
 

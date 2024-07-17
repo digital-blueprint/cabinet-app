@@ -136,7 +136,6 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         }
 
         const id = hit.id;
-        const i18n = this._i18n;
 
         // TODO: Check if PDF was uploaded
 
