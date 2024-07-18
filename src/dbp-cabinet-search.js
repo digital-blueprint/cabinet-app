@@ -15,6 +15,8 @@ import {hits, searchBox} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
 import {pascalToKebab} from './utils';
 import {CabinetAddDocument} from './components/dbp-cabinet-add-document.js';
+import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
+import {CabinetViewFile} from './components/dbp-cabinet-view-file.js';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -35,7 +37,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             "objectType": "",
         };
         this.documentEditModalRef = createRef();
-        this.documentViewModalRef = createRef();
+        this.documentViewPersonModalRef = createRef();
+        this.documentViewFileModalRef = createRef();
         this.documentAddComponentRef = createRef();
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
@@ -46,6 +49,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-icon': Icon,
             'dbp-modal': Modal,
             'dbp-cabinet-add-document': CabinetAddDocument,
+            'dbp-cabinet-view-person': CabinetViewPerson,
+            'dbp-cabinet-view-file': CabinetViewFile,
             'dbp-inline-notification': InlineNotification,
         };
     }
@@ -122,7 +127,21 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // https://lit.dev/docs/components/lifecycle/#updatecomplete
         await this.updateComplete;
 
-        this.documentViewModalRef.value.open();
+        const objectType = hit.objectType;
+
+        if (objectType === 'person') {
+            /**
+             * @type {CabinetViewPerson}
+             */
+            const component = this.documentViewPersonModalRef.value;
+            component.openDocumentAddDialogWithHit(hit);
+        } else {
+            /**
+             * @type {CabinetViewPerson}
+             */
+            const component = this.documentViewFileModalRef.value;
+            component.openDocumentAddDialogWithHit(hit);
+        }
     }
 
     connectedCallback() {
@@ -372,47 +391,31 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         const hit = this.hitData;
         console.log('hit', hit);
         const objectType = hit.objectType;
+        console.log('objectType', objectType);
 
         if (objectType === '') {
-            console.log('objectType empty', objectType);
-            return html`<dbp-modal ${ref(this.documentViewModalRef)} modal-id="document-view-modal"></dbp-modal>`;
+            return html``;
         }
 
-        const id = hit.id;
-        const i18n = this._i18n;
-        const tagPart = pascalToKebab(objectType);
-        const tagName = 'dbp-cabinet-object-type-view-' + tagPart;
-
-        console.log('objectType', objectType);
-        console.log('tagName', tagName);
-        console.log('this.objectTypeViewComponents[objectType]', this.objectTypeViewComponents[objectType]);
-
-        if (!customElements.get(tagName)) {
-            customElements.define(tagName, this.objectTypeViewComponents[objectType]);
+        if (objectType === 'person') {
+            // We need to use staticHtml here, because we want to set the tag name from
+            // a variable and need to set the "data" property from a variable too!
+            return staticHtml`
+                <dbp-cabinet-view-person
+                    ${ref(this.documentViewPersonModalRef)}
+                    subscribe="lang,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
+                    .data=${hit}
+                ></dbp-cabinet-view-person>
+            `;
+        } else {
+            return staticHtml`
+                <dbp-cabinet-view-file
+                    ${ref(this.documentViewFileModalRef)}
+                    subscribe="lang,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
+                    .data=${hit}
+                ></dbp-cabinet-view-file>
+            `;
         }
-
-        // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
-        // a variable and need to set the "data" property from a variable too!
-        return staticHtml`
-            <dbp-modal
-                ${ref(this.documentViewModalRef)}
-                modal-id="document-view-modal"
-                title="${i18n.t('document-view-modal-title')}"
-                width="80%"
-                height="80%"
-                min-width="80%"
-                min-height="80%"
-                subscribe="lang">
-                <div slot="content">
-                    Document ID: ${id}<br />
-                    ObjectType: ${objectType}<br />
-                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
-                </div>
-                <div slot="footer" class="modal-footer">
-                    View Footer
-                </div>
-            </dbp-modal>
-        `;
     }
 
     render() {
