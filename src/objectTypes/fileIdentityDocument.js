@@ -32,7 +32,7 @@ class CabinetFormElement extends BaseFormElement {
 
         return html`
             <form>
-                <h2>filePersonalLicense Form</h2>
+                <h2>fileIdentityDocument Form</h2>
                 lang: ${this.lang}<br />
                 ${formElements.stringElement('file-cabinet-personalLicenseSchema:comment', 'Comment', '', false, 5)}
                 ${formElements.dateElement('file-cabinet-identityDocument:dateCreated', 'Created date', '', false)}
@@ -58,7 +58,7 @@ class CabinetHitElement extends BaseHitElement {
     render() {
         return html`
             <form>
-                <h2>filePersonalLicense</h2>
+                <h2>fileIdentityDocument</h2>
                 lang: ${this.lang}<br />
                 filename: ${this.data.file.base.fileName}<br />
         `;
