@@ -134,13 +134,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
              * @type {CabinetViewPerson}
              */
             const component = this.documentViewPersonModalRef.value;
-            component.openDocumentAddDialogWithHit(hit);
+            component.setObjectTypeViewComponents(this.objectTypeViewComponents);
+            await component.openDialogWithHit(hit);
         } else {
             /**
-             * @type {CabinetViewPerson}
+             * @type {CabinetViewFile}
              */
             const component = this.documentViewFileModalRef.value;
-            component.openDocumentAddDialogWithHit(hit);
+            component.setObjectTypeViewComponents(this.objectTypeViewComponents);
+            await component.openDialogWithHit(hit);
         }
     }
 
@@ -504,9 +506,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             /**
              * @type {CabinetAddDocument}
              */
-            const component = this.documentAddComponentRef.value;
-            component.setFileDocumentTypeNames(this.fileDocumentTypeNames);
-            component.setFileDocumentFormComponents(formComponents);
+            const addDocumentComponent = this.documentAddComponentRef.value;
+            addDocumentComponent.setFileDocumentTypeNames(this.fileDocumentTypeNames);
+            addDocumentComponent.setFileDocumentFormComponents(formComponents);
         } catch (error) {
             console.error('Error loading modules:', error);
         }
