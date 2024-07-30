@@ -152,6 +152,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this._loginStatus = '';
         this._loginState = [];
 
+        this.addEventListener('DbpCabinetDocumentTugo', (event) => {
+            let hit = event.detail.hit;
+            window.open(hit.person.coUrl);
+        });
+
         // Listen to DbpCabinetDocumentEdit events, to open the file edit dialog
         this.addEventListener('DbpCabinetDocumentEdit', function(event) {
             that.openDocumentEditDialog(event.detail.hit);
