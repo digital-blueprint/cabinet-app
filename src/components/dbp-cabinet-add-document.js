@@ -74,7 +74,7 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
-            <${unsafeStatic(tagName)} id="edit-form" subscribe="lang"></${unsafeStatic(tagName)}>
+            <${unsafeStatic(tagName)} id="edit-form" subscribe="auth,lang,entry-point-url" document-type=></${unsafeStatic(tagName)}>
         `;
     }
 

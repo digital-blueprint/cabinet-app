@@ -4,6 +4,7 @@ import {css, html} from 'lit';
 import {createInstance} from '../i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './formElements';
+import {combineURLs} from '@dbp-toolkit/common';
 
 export class BaseObject {
     name = 'baseObject';
@@ -37,6 +38,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         this.lang = this._i18n.language;
         this.userId = '';
         this.data = {};
+        this.entryPointUrl = '';
+        this.auth = {};
     }
 
     static get scopedElements() {
@@ -44,7 +47,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         };
     }
 
-    storeBlobItem(event) {
+    async storeBlobItem(event) {
         event.preventDefault();
 
         const formElement = this.shadowRoot.querySelector('form');
@@ -53,6 +56,30 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
 
         // TODO: Store blob item
         alert('TODO: Store item!\n' + JSON.stringify(data));
+
+        const apiUrl = combineURLs(this.entryPointUrl, `/cabinet/signature`);
+        const body = {
+            'prefix': '',
+            // TODO: Add name if file
+            'fileName': '',
+            // TODO: Add document type
+            'type': '',
+        };
+
+        let response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/ld+json',
+                Authorization: 'Bearer ' + this.auth.token,
+            },
+            body: JSON.stringify(body),
+        });
+        if (!response.ok) {
+            throw response;
+        }
+        let result = await response.json();
+        console.log('result', result);
+        alert('Result:\n' + JSON.stringify(result));
     }
 
     gatherFormDataFromElement(formElement) {
@@ -79,6 +106,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             lang: {type: String},
             userId: {type: String, attribute: 'user-id'},
             data: {type: Object},
+            auth: { type: Object },
+            entryPointUrl: { type: String, attribute: 'entry-point-url' },
         };
     }
 
