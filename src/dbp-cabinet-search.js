@@ -153,12 +153,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this._loginState = [];
 
         // Listen to DbpCabinetDocumentEdit events, to open the file edit dialog
-        document.addEventListener('DbpCabinetDocumentEdit', function(event) {
+        this.addEventListener('DbpCabinetDocumentEdit', function(event) {
             that.openDocumentEditDialog(event.detail.hit);
         });
 
         // Listen to DbpCabinetDocumentEdit events, to open the file edit dialog
-        document.addEventListener('DbpCabinetDocumentAdd', function(event) {
+        this.addEventListener('DbpCabinetDocumentAdd', function(event) {
             /**
              * @type {CabinetAddDocument}
              */
@@ -167,7 +167,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
 
         // Listen to DbpCabinetDocumentView events, to open the file edit dialog
-        document.addEventListener('DbpCabinetDocumentView', function(event) {
+        this.addEventListener('DbpCabinetDocumentView', function(event) {
             that.openDocumentViewDialog(event.detail.hit);
         });
 
@@ -321,12 +321,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // Note: "html" is preact htm, not lit-html!
 
                     const buttonRowHtml = objectType === 'person' ? html`
-                        <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentTugo', {detail: {hit: hit}}));}}>TUGO</button>
-                        <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentAdd', {detail: {hit: hit}}));}}>Add Document</button>
-                        <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}}));}}>More</button>
+                        <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentTugo', {detail: {hit: hit}, bubbles: true, composed: true}));}}>TUGO</button>
+                        <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentAdd', {detail: {hit: hit}, bubbles: true, composed: true}));}}>Add Document</button>
+                        <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>More</button>
                     ` : html`
-                        <button class="button is-primary" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentDownload', {detail: {hit: hit}}));}}>Download</button>
-                        <button class="button" onclick=${() => { document.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}}));}}>View</button>
+                        <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentDownload', {detail: {hit: hit}, bubbles: true, composed: true}));}}>Download</button>
+                        <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>View</button>
                     `;
 
                     // TODO: Subscriber attribute "lang" doesn't work anymore, so we need to set the lang attribute manually, so it at least works when the hit is rendered initially
