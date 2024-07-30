@@ -4,7 +4,6 @@ import {css, html} from 'lit';
 import {createInstance} from '../i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './formElements';
-import {combineURLs} from '@dbp-toolkit/common';
 
 export class BaseObject {
     name = 'baseObject';
@@ -47,39 +46,18 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         };
     }
 
-    async storeBlobItem(event) {
+    storeBlobItem(event) {
         event.preventDefault();
 
         const formElement = this.shadowRoot.querySelector('form');
         const data = this.gatherFormDataFromElement(formElement);
         console.log('data', data);
 
-        // TODO: Store blob item
-        alert('TODO: Store item!\n' + JSON.stringify(data));
+        // alert('TODO: Store item!\n' + JSON.stringify(data));
 
-        const apiUrl = combineURLs(this.entryPointUrl, `/cabinet/signature`);
-        const body = {
-            'prefix': '',
-            // TODO: Add name if file
-            'fileName': '',
-            // TODO: Add document type
-            'type': '',
-        };
-
-        let response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-            body: JSON.stringify(body),
-        });
-        if (!response.ok) {
-            throw response;
-        }
-        let result = await response.json();
-        console.log('result', result);
-        alert('Result:\n' + JSON.stringify(result));
+        const customEvent = new CustomEvent("DbpCabinetDocumentAddSave",
+            {"detail": data, bubbles: true, composed: true});
+        this.dispatchEvent(customEvent);
     }
 
     gatherFormDataFromElement(formElement) {

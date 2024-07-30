@@ -4,7 +4,7 @@ import {ref, createRef} from 'lit/directives/ref.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPCabinetLitElement from "../dbp-cabinet-lit-element";
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {Button, Icon, Modal} from '@dbp-toolkit/common';
+import {Button, Icon, Modal, combineURLs} from '@dbp-toolkit/common';
 import {FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {pascalToKebab} from '../utils';
@@ -23,6 +23,17 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
         this.documentType = '';
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+
+        this.updateComplete.then(() => {
+            this.addEventListener('DbpCabinetDocumentAddSave', async (event) => {
+                alert('DbpCabinetDocumentAddSave result:\n' + JSON.stringify(event.detail));
+                await this.storeDocumentToBlob(event.detail);
+            });
+        } );
     }
 
     static get scopedElements() {
@@ -50,6 +61,35 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
 
     setFileDocumentFormComponents(fileDocumentFormComponents) {
         this.objectTypeFormComponents = fileDocumentFormComponents;
+    }
+
+    async storeDocumentToBlob(formData) {
+        console.log('this.entryPointUrl', this.entryPointUrl);
+
+        // TODO: Why is this.entryPointUrl empty!?
+        const apiUrl = combineURLs(this.entryPointUrl, `/cabinet/signature`);
+        const body = {
+            'prefix': '',
+            // TODO: Add name of file
+            'fileName': '',
+            // TODO: Add document type
+            'type': '',
+        };
+
+        let response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/ld+json',
+                Authorization: 'Bearer ' + this.auth.token,
+            },
+            body: JSON.stringify(body),
+        });
+        if (!response.ok) {
+            throw response;
+        }
+        let result = await response.json();
+        console.log('result', result);
+        alert('Result:\n' + JSON.stringify(result));
     }
 
     getDocumentEditFormHtml() {
