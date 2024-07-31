@@ -65,32 +65,61 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
     }
 
     async storeDocumentToBlob(formData) {
-        console.log('this.entryPointUrl', this.entryPointUrl);
+        const uploadUrl = await this.createBlobUploadUrl();
+        alert('uploadUrl:\n' + uploadUrl);
 
-        // TODO: Why is this.entryPointUrl empty!?
+        // TODO: Use correct meta data
+        const fileData = await this.uploadDocumentToBlob(uploadUrl, formData);
+        alert('fileData:\n' + JSON.stringify(fileData));
+    }
+
+    async createBlobUploadUrl() {
         const apiUrl = combineURLs(this.entryPointUrl, `/cabinet/signature`);
         const body = {
             'prefix': '',
-            // TODO: Add name of file
-            'fileName': '',
-            // TODO: Add document type
-            'type': '',
+            'fileName': this.documentFile.name,
+            'type': this.documentType
         };
 
         let response = await fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this.auth.token,
+                Authorization: 'Bearer ' + this.auth.token
             },
-            body: JSON.stringify(body),
+            body: JSON.stringify(body)
         });
         if (!response.ok) {
             throw response;
         }
-        let result = await response.text();
-        console.log('result', result);
-        alert('Result:\n' + result);
+        const url = await response.text();
+        console.log('Upload url', url);
+
+        return url;
+    }
+
+    async uploadDocumentToBlob(uploadUrl, metaData) {
+        // TODO: Use form data
+        const body = {
+            'file': this.documentFile,
+            'metadata': metaData,
+        };
+
+        let response = await fetch(uploadUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: 'Bearer ' + this.auth.token
+            },
+            body: JSON.stringify(body)
+        });
+        if (!response.ok) {
+            throw response;
+        }
+        const data = await response.json();
+        console.log('File data', JSON.stringify(data));
+
+        return data;
     }
 
     getDocumentEditFormHtml() {
