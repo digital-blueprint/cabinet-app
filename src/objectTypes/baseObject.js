@@ -50,7 +50,9 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         event.preventDefault();
 
         const formElement = this.shadowRoot.querySelector('form');
-        const data = this.gatherFormDataFromElement(formElement);
+        const data = {
+            'formData': this.gatherFormDataFromElement(formElement),
+        };
         console.log('data', data);
 
         // alert('TODO: Store item!\n' + JSON.stringify(data));

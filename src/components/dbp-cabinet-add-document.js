@@ -31,7 +31,8 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         this.updateComplete.then(() => {
             this.addEventListener('DbpCabinetDocumentAddSave', async (event) => {
                 alert('DbpCabinetDocumentAddSave result:\n' + JSON.stringify(event.detail));
-                await this.storeDocumentToBlob(event.detail);
+                const data = event.detail;
+                await this.storeDocumentToBlob(data.formData);
             });
         } );
     }
@@ -87,9 +88,9 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         if (!response.ok) {
             throw response;
         }
-        let result = await response.json();
+        let result = await response.text();
         console.log('result', result);
-        alert('Result:\n' + JSON.stringify(result));
+        alert('Result:\n' + result);
     }
 
     getDocumentEditFormHtml() {
