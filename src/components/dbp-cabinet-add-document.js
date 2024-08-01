@@ -23,6 +23,8 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
         this.documentType = '';
+        // TODO: Do we need a prefix?
+        this.blobDocumentPrefix = 'document-';
     }
 
     connectedCallback() {
@@ -74,20 +76,21 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
     }
 
     async createBlobUploadUrl() {
-        const apiUrl = combineURLs(this.entryPointUrl, `/cabinet/signature`);
-        const body = {
-            'prefix': '',
+        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/signature`);
+        const apiUrl = new URL(baseUrl);
+        const params = {
+            'prefix': this.blobDocumentPrefix,
             'fileName': this.documentFile.name,
             'type': this.documentType
         };
+        apiUrl.search = new URLSearchParams(params).toString();
 
-        let response = await fetch(apiUrl, {
+        let response = await fetch(apiUrl.toString(), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/ld+json',
                 Authorization: 'Bearer ' + this.auth.token
-            },
-            body: JSON.stringify(body)
+            }
         });
         if (!response.ok) {
             throw response;
@@ -99,20 +102,21 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
     }
 
     async uploadDocumentToBlob(uploadUrl, metaData) {
-        // TODO: Use form data
-        const body = {
-            'file': this.documentFile,
-            'metadata': metaData,
-        };
+        let formData = new FormData();
+        formData.append('metadata', metaData);
+        formData.append('file', this.documentFile);
+        formData.append('fileName', this.documentFile.name);
+        formData.append('prefix', this.blobDocumentPrefix);
 
-        let response = await fetch(uploadUrl, {
+        const options = {
             method: 'POST',
             headers: {
-                'Content-Type': 'multipart/form-data',
-                Authorization: 'Bearer ' + this.auth.token
+                Authorization: 'Bearer ' + this.auth.token,
             },
-            body: JSON.stringify(body)
-        });
+            body: formData,
+        };
+
+        let response = await fetch(uploadUrl, options);
         if (!response.ok) {
             throw response;
         }
