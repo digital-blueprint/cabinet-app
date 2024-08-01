@@ -25,6 +25,7 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
 
+        // TODO: We need to use syntax like this: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/citizenshipCertificate_example.json?ref_type=heads
         return html`
             <form>
                 <h2>Conversation Form</h2>
