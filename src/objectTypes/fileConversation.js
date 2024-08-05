@@ -30,10 +30,10 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>Conversation Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.stringElement('file.conversation.agent.givenName', 'Given name', '')}
-                ${formElements.stringElement('file.conversation.agent.familyName', 'Family name', '')}
-                ${formElements.stringElement('file.conversation.abstract', 'Abstract', '', false, 10)}
-                ${formElements.stringElement('file-cabinet-conversation:comment', 'Comment', '', false, 5)}
+                ${formElements.stringElement('agent[givenName]', 'Given name', '')}
+                ${formElements.stringElement('agent[familyName]', 'Family name', '')}
+                ${formElements.stringElement('abstract', 'Abstract', '', false, 10)}
+                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
                 ${this.getButtonRowHtml()}
             </form>
         `;

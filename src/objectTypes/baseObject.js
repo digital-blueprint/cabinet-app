@@ -64,14 +64,23 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
 
     gatherFormDataFromElement(formElement) {
         const formData = new FormData(formElement);
-        const data = {};
+        // TODO: Get the correct persId
+        const data = {
+            "about": {
+                "@type": "Person",
+                "persId": "AD0F11111"
+            },
+        };
 
         for (let [key, value] of formData.entries()) {
-            if (data[key] !== undefined) {
-                if (!Array.isArray(data[key])) {
-                    data[key] = [data[key]];
+            if (key.includes('[')) {
+                let [mainKey, subKey] = key.split('[');
+                subKey = subKey.replace(']', '');
+
+                if (!data[mainKey]) {
+                    data[mainKey] = {};
                 }
-                data[key].push(value);
+                data[mainKey][subKey] = value;
             } else {
                 data[key] = value;
             }
