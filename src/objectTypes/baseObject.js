@@ -64,11 +64,10 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
 
     gatherFormDataFromElement(formElement) {
         const formData = new FormData(formElement);
-        // TODO: Get the correct persId
         const data = {
             "about": {
                 "@type": "Person",
-                "persId": "AD0F11111"
+                "persId": this.data.base.studId
             },
         };
 

@@ -81,7 +81,8 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         const params = {
             'prefix': this.blobDocumentPrefix,
             'fileName': this.documentFile.name,
-            'type': this.documentType
+            // TODO: Does this replacing always work?
+            'type': this.documentType.replace('file-cabinet-', '')
         };
         apiUrl.search = new URLSearchParams(params).toString();
 
@@ -103,7 +104,7 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
 
     async uploadDocumentToBlob(uploadUrl, metaData) {
         let formData = new FormData();
-        formData.append('metadata', metaData);
+        formData.append('metadata', JSON.stringify(metaData));
         formData.append('file', this.documentFile);
         formData.append('fileName', this.documentFile.name);
         formData.append('prefix', this.blobDocumentPrefix);
@@ -148,7 +149,7 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
-            <${unsafeStatic(tagName)} id="edit-form" subscribe="auth,lang,entry-point-url" document-type=></${unsafeStatic(tagName)}>
+            <${unsafeStatic(tagName)} id="edit-form" subscribe="auth,lang,entry-point-url" .data=${this.hitData} document-type=></${unsafeStatic(tagName)}>
         `;
     }
 
