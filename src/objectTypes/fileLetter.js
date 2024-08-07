@@ -32,7 +32,7 @@ class CabinetFormElement extends BaseFormElement {
                 ${formElements.stringElement('file.letter.sender.givenName', 'Sender given name', '')}
                 ${formElements.stringElement('file.letter.sender.familyName', 'Sender family name', '')}
                 ${formElements.stringElement('file.letter.sender.worksFor.legalName', 'Works for legal name', '')}
-                ${formElements.stringElement('file.conversation.abstract', 'Abstract', '', false, 10)}
+                ${formElements.stringElement('file.communication.abstract', 'Abstract', '', false, 10)}
                 ${formElements.stringElement('file-cabinet-letter:comment', 'Comment', '', false, 5)}
                 ${this.getButtonRowHtml()}
             </form>

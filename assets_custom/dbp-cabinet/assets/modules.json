@@ -1,7 +1,7 @@
 {
   "objectTypes": {
     "file-cabinet-email": "./fileEmail.js",
-    "file-cabinet-conversation": "./fileConversation.js",
+    "file-cabinet-communication": "./fileCommunication.js",
     "file-cabinet-letter": "./fileLetter.js",
     "file-cabinet-identityDocument": "./fileIdentityDocument.js",
     "file-cabinet-minimalSchema": "./fileMinimalSchema.js",

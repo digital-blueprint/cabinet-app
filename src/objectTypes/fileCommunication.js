@@ -3,7 +3,7 @@ import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './ba
 import * as formElements from './formElements.js';
 
 export default class extends BaseObject {
-    name = 'file-cabinet-conversation';
+    name = 'file-cabinet-communication';
 
     /**
      * @returns {string}
@@ -27,7 +27,7 @@ class CabinetFormElement extends BaseFormElement {
 
         return html`
             <form>
-                <h2>Conversation Form</h2>
+                <h2>Communication Form</h2>
                 lang: ${this.lang}<br />
                 ${formElements.stringElement('agent[givenName]', 'Given name', '')}
                 ${formElements.stringElement('agent[familyName]', 'Family name', '')}
@@ -54,7 +54,7 @@ class CabinetHitElement extends BaseHitElement {
     render() {
         return html`
             <form>
-                <h2>Conversation</h2>
+                <h2>Communication</h2>
                 Some special information here<br />
                 lang: ${this.lang}<br />
                 filename: ${this.data.file.base.fileName}<br />
@@ -65,7 +65,7 @@ class CabinetHitElement extends BaseHitElement {
 class CabinetViewElement extends BaseViewElement {
     render() {
         return html`
-            <h2>Conversation</h2>
+            <h2>Communication</h2>
             lang: ${this.lang}<br />
             filename: ${this.data.file.base.fileName}<br />
         `;
