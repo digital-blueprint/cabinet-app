@@ -30,10 +30,10 @@ class CabinetFormElement extends BaseFormElement {
         return html`
             <form>
                 <h2>Email Form</h2>
-                ${formElements.stringElement('file-cabinet-email:sender.givenName', 'Sender given name', '')}
-                ${formElements.stringElement('file-cabinet-email:sender.familyName', 'Sender family name', '')}
-                ${formElements.stringElement('file-cabinet-email:sender.email', 'Sender email', '')}
-                ${formElements.stringElement('file-cabinet-email:comment', 'Comment', '', false, 5)}
+                ${formElements.stringElement('sender[givenName]', 'Sender given name', '')}
+                ${formElements.stringElement('sender[familyName]', 'Sender family name', '')}
+                ${formElements.stringElement('sender[email]', 'Sender email', '')}
+                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
                 ${this.getButtonRowHtml()}
             </form>
         `;

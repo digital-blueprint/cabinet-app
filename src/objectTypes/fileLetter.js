@@ -25,15 +25,16 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
 
+        // TODO: Does "sender[worksFor][legalName]" already work?
         return html`
             <form>
                 <h2>Letter Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.stringElement('file.letter.sender.givenName', 'Sender given name', '')}
-                ${formElements.stringElement('file.letter.sender.familyName', 'Sender family name', '')}
-                ${formElements.stringElement('file.letter.sender.worksFor.legalName', 'Works for legal name', '')}
-                ${formElements.stringElement('file.communication.abstract', 'Abstract', '', false, 10)}
-                ${formElements.stringElement('file-cabinet-letter:comment', 'Comment', '', false, 5)}
+                ${formElements.stringElement('sender[givenName]', 'Sender given name', '')}
+                ${formElements.stringElement('sender[familyName]', 'Sender family name', '')}
+                ${formElements.stringElement('sender[worksFor][legalName]', 'Works for legal name', '')}
+                ${formElements.stringElement('abstract', 'Abstract', '', false, 10)}
+                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
                 ${this.getButtonRowHtml()}
             </form>
         `;

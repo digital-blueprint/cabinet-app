@@ -29,8 +29,8 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>fileMinimalSchema Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.stringElement('file-cabinet-minimalSchema:subjectOf', 'Subject of', '')}
-                ${formElements.stringElement('file-cabinet-minimalSchema:comment', 'Comment', '', false, 5)}
+                ${formElements.stringElement('subjectOf', 'Subject of', '')}
+                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
                 ${this.getButtonRowHtml()}
             </form>
         `;

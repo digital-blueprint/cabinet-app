@@ -1,5 +1,5 @@
 import {css, html} from 'lit';
-import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
+import {BaseFormElement, BaseHitElement, BaseObject, BaseViewElement} from './baseObject';
 import * as formElements from './formElements.js';
 
 export default class extends BaseObject {
@@ -22,14 +22,65 @@ export default class extends BaseObject {
 }
 
 class CabinetFormElement extends BaseFormElement {
+    getNationalityItems() {
+        return {
+            ALB: "Albanian",
+            AND: "Andorran",
+            AUT: "Austrian",
+            BLR: "Belarusian",
+            BEL: "Belgian",
+            BIH: "Bosnian",
+            BGR: "Bulgarian",
+            HRV: "Croatian",
+            CYP: "Cypriot",
+            CZE: "Czech",
+            DNK: "Danish",
+            EST: "Estonian",
+            FIN: "Finnish",
+            FRA: "French",
+            DEU: "German",
+            GRC: "Greek",
+            HUN: "Hungarian",
+            ISL: "Icelandic",
+            IRL: "Irish",
+            ITA: "Italian",
+            LVA: "Latvian",
+            LIE: "Liechtensteiner",
+            LTU: "Lithuanian",
+            LUX: "Luxembourgish",
+            MLT: "Maltese",
+            MDA: "Moldovan",
+            MCO: "Monégasque",
+            MNE: "Montenegrin",
+            NLD: "Dutch",
+            MKD: "North Macedonian",
+            NOR: "Norwegian",
+            POL: "Polish",
+            PRT: "Portuguese",
+            ROU: "Romanian",
+            RUS: "Russian",
+            SMR: "Sammarinese",
+            SRB: "Serbian",
+            SVK: "Slovak",
+            SVN: "Slovenian",
+            ESP: "Spanish",
+            SWE: "Swedish",
+            CHE: "Swiss",
+            UKR: "Ukrainian",
+            GBR: "British",
+            VAT: "Vatican"
+        };
+    }
     render() {
         console.log('-- Render CabinetFormElement --');
 
+        // See https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/citizenshipCertificate_example.json
         return html`
             <form>
                 <h2>fileCitizenshipCertificate Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.stringElement('file-cabinet-citizenshipCertificate:comment', 'Comment', '', false, 5)}
+                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
+                ${formElements.enumElement('nationality', 'Nationality', '', this.getNationalityItems(), false)}
                 ${this.getButtonRowHtml()}
             </form>
         `;

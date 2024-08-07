@@ -34,9 +34,8 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>fileIdentityDocument Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.stringElement('file-cabinet-personalLicenseSchema:comment', 'Comment', '', false, 5)}
-                ${formElements.dateElement('file-cabinet-identityDocument:dateCreated', 'Created date', '', false)}
-                ${formElements.enumElement('file-cabinet-identityDocument:additionalType', 'Additional type', '', additionalTypeItems, false)}
+                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
+                ${formElements.enumElement('additionalType', 'Additional type', '', additionalTypeItems, false)}
                 ${this.getButtonRowHtml()}
             </form>
         `;
