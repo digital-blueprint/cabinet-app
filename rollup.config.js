@@ -40,6 +40,9 @@ let devPath = 'assets_custom/dbp-cabinet/assets/';
 // deployment path
 let deploymentPath = '../assets/';
 
+let enableEsign = true;
+let enableDispatch = true;
+
 let useHTTPS = false;
 
 // set whitelabel bool according to used environment
@@ -152,6 +155,30 @@ ${config.typesense.protocol + '://' + config.typesense.host + ':' + config.types
 ${getOrigin(config.pdfAsQualifiedlySigningServer)}; \
 img-src * blob: data:`;
 
+let input = [
+    'src/' + pkg.internalName + '.js',
+    'src/dbp-cabinet-search.js',
+    'src/objectTypes/fileEmail.js',
+    'src/objectTypes/fileCommunication.js',
+    'src/objectTypes/fileLetter.js',
+    'src/objectTypes/fileIdentityDocument.js',
+    'src/objectTypes/fileMinimalSchema.js',
+    'src/objectTypes/fileCitizenshipCertificate.js',
+    'src/objectTypes/person.js',
+];
+if (enableEsign) {
+    input = [...input,
+        'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',
+        'vendor/signature/src/dbp-official-signature-pdf-upload.js',
+    ];
+}
+if (enableDispatch) {
+    input = [...input,
+        'vendor/dispatch/src/dbp-create-request.js',
+        'vendor/dispatch/src/dbp-show-requests.js',
+    ];
+}
+
 export default (async () => {
     let privatePath = await getDistPath(pkg.name);
     return {
@@ -159,36 +186,12 @@ export default (async () => {
             appEnv != 'test'
                 ? !whitelabel ?
                     [
-                        'src/' + pkg.internalName + '.js',
-                        'src/dbp-cabinet-search.js',
-                        'src/objectTypes/fileEmail.js',
-                        'src/objectTypes/fileCommunication.js',
-                        'src/objectTypes/fileLetter.js',
-                        'src/objectTypes/fileIdentityDocument.js',
-                        'src/objectTypes/fileMinimalSchema.js',
-                        'src/objectTypes/fileCitizenshipCertificate.js',
-                        'src/objectTypes/person.js',
-                        'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',
-                        'vendor/signature/src/dbp-official-signature-pdf-upload.js',
-                        'vendor/dispatch/src/dbp-create-request.js',
-                        'vendor/dispatch/src/dbp-show-requests.js',
+                        ...input,
                         await getPackagePath('@tugraz/web-components', 'src/logo.js'),
                     ]
                     :
                     [
-                        'src/' + pkg.internalName + '.js',
-                        'src/dbp-cabinet-search.js',
-                        'src/objectTypes/fileEmail.js',
-                        'src/objectTypes/fileCommunication.js',
-                        'src/objectTypes/fileLetter.js',
-                        'src/objectTypes/fileIdentityDocument.js',
-                        'src/objectTypes/fileMinimalSchema.js',
-                        'src/objectTypes/fileCitizenshipCertificate.js',
-                        'src/objectTypes/person.js',
-                        'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',
-                        'vendor/signature/src/dbp-official-signature-pdf-upload.js',
-                        'vendor/dispatch/src/dbp-create-request.js',
-                        'vendor/dispatch/src/dbp-show-requests.js',
+                        ...input,
                     ]
                 : globSync('test/**/*.js'),
         output: {
