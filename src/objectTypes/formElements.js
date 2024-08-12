@@ -8,6 +8,15 @@ const sanitizeForHtmlId = (str) => {
         .toLowerCase();               // Convert to lowercase
 };
 
+export const getAdditionalTypes = () => {
+    return {
+        'BirthCertificate': 'Birth Certificate',
+        'DriversLicence': 'Drivers Licence',
+        'Passport': 'Passport',
+        'PersonalLicence': 'Personal Licence',
+    };
+};
+
 /**
  *
  * @param name

@@ -24,18 +24,12 @@ export default class extends BaseObject {
 class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
-        const additionalTypeItems = {
-            'PersonalLicence': 'Personal Licence',
-            'Passport': 'Passport',
-            'DriversLicence': 'Drivers Licence',
-        };
-
         return html`
             <form>
                 <h2>fileIdentityDocument Form</h2>
                 lang: ${this.lang}<br />
                 ${formElements.stringElement('comment', 'Comment', '', false, 5)}
-                ${formElements.enumElement('additionalType', 'Additional type', '', additionalTypeItems, false)}
+                ${formElements.enumElement('additionalType', 'Additional type', '', formElements.getAdditionalTypes(), false)}
                 ${this.getButtonRowHtml()}
             </form>
         `;
