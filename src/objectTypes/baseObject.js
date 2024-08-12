@@ -62,6 +62,25 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         this.dispatchEvent(customEvent);
     }
 
+    setNestedValue(obj, path, value) {
+        const keys = path.replace(/\]/g, '').split('[');
+        let current = obj;
+
+        for (let i = 0; i < keys.length; i++) {
+            const key = keys[i];
+            if (i === keys.length - 1) {
+                // Last key, set the value
+                current[key] = value;
+            } else {
+                // Not the last key, create nested object if it doesn't exist
+                if (!current[key] || typeof current[key] !== 'object') {
+                    current[key] = {};
+                }
+                current = current[key];
+            }
+        }
+    }
+
     gatherFormDataFromElement(formElement) {
         const formData = new FormData(formElement);
         const data = {
@@ -72,17 +91,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         };
 
         for (let [key, value] of formData.entries()) {
-            if (key.includes('[')) {
-                let [mainKey, subKey] = key.split('[');
-                subKey = subKey.replace(']', '');
-
-                if (!data[mainKey]) {
-                    data[mainKey] = {};
-                }
-                data[mainKey][subKey] = value;
-            } else {
-                data[key] = value;
-            }
+            this.setNestedValue(data, key, value);
         }
 
         return data;

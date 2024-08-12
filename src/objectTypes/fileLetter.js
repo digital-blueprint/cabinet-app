@@ -25,7 +25,6 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
 
-        // TODO: Does "sender[worksFor][legalName]" already work?
         return html`
             <form>
                 <h2>Letter Form</h2>
