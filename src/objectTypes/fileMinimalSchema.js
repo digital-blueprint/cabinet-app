@@ -1,7 +1,6 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 import * as formElements from './formElements.js';
-import {getStudentLifeCyclePhase} from './formElements.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-minimalSchema';
