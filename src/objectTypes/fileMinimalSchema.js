@@ -1,6 +1,7 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 import * as formElements from './formElements.js';
+import {getStudentLifeCyclePhase} from './formElements.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-minimalSchema';
@@ -30,7 +31,8 @@ class CabinetFormElement extends BaseFormElement {
                 <h2>fileMinimalSchema Form</h2>
                 lang: ${this.lang}<br />
                 ${formElements.stringElement('studyField', 'Study field', '')}
-                ${formElements.enumElement('additionalType', 'Additional type', '', formElements.getAdditionalTypes(), false)}
+                ${formElements.enumElement('additionalType', 'Additional type', '', formElements.getMinimalSchemaAdditionalTypes(), false)}
+                ${formElements.enumElement('studentLifeCyclePhase', 'Student lifecycle phase', '', formElements.getStudentLifeCyclePhase(), false)}
                 ${formElements.stringElement('subjectOf', 'Subject of', '')}
                 ${formElements.stringElement('comment', 'Comment', '', false, 5)}
                 ${this.getButtonRowHtml()}

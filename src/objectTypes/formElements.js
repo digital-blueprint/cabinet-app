@@ -8,12 +8,30 @@ const sanitizeForHtmlId = (str) => {
         .toLowerCase();               // Convert to lowercase
 };
 
-export const getAdditionalTypes = () => {
+export const getIdentifyDocumentAdditionalTypes = () => {
     return {
         'BirthCertificate': 'Birth Certificate',
         'DriversLicence': 'Drivers Licence',
         'Passport': 'Passport',
         'PersonalLicence': 'Personal Licence',
+    };
+};
+
+export const getMinimalSchemaAdditionalTypes = () => {
+    return {
+        'BirthCertificate': 'Birth Certificate',
+        'DriversLicence': 'Drivers Licence',
+        'Passport': 'Passport',
+        'PersonalLicence': 'Personal Licence',
+    };
+};
+
+export const getStudentLifeCyclePhase = () => {
+    return {
+        'ApplicationPhase': 'Application phase',
+        'StudyPhase': 'Study phase',
+        'GraduationPhase': 'Graduation phase',
+        'GeneralDocuments': 'General documents',
     };
 };
 

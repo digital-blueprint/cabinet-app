@@ -1,6 +1,7 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 import * as formElements from './formElements.js';
+import {getIdentifyDocumentAdditionalTypes} from './formElements.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-identityDocument';
@@ -29,7 +30,7 @@ class CabinetFormElement extends BaseFormElement {
                 <h2>fileIdentityDocument Form</h2>
                 lang: ${this.lang}<br />
                 ${formElements.stringElement('comment', 'Comment', '', false, 5)}
-                ${formElements.enumElement('additionalType', 'Additional type', '', formElements.getAdditionalTypes(), false)}
+                ${formElements.enumElement('additionalType', 'Additional type', '', formElements.getIdentifyDocumentAdditionalTypes(), false)}
                 ${this.getButtonRowHtml()}
             </form>
         `;

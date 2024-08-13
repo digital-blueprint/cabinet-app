@@ -103,6 +103,9 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
     }
 
     async uploadDocumentToBlob(uploadUrl, metaData) {
+        metaData['@type'] = 'DocumentFile';
+        metaData['fileSource'] = 'blob-cabinetBucket';
+        metaData['objectType'] = this.documentType;
         metaData['dateCreated'] = new Date().toISOString().split('T')[0];
         console.log('metaData to upload', metaData);
 
