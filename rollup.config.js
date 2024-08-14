@@ -158,9 +158,8 @@ img-src * blob: data:`;
 let input = [
     'src/' + pkg.internalName + '.js',
     'src/dbp-cabinet-search.js',
-    'src/objectTypes/fileEmail.js',
+    'src/objectTypes/fileAdmissionNotice.js',
     'src/objectTypes/fileCommunication.js',
-    'src/objectTypes/fileLetter.js',
     'src/objectTypes/fileIdentityDocument.js',
     'src/objectTypes/fileMinimalSchema.js',
     'src/objectTypes/fileCitizenshipCertificate.js',

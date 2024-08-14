@@ -1,8 +1,7 @@
 {
   "objectTypes": {
-    "file-cabinet-email": "./fileEmail.js",
+    "file-admission-notice": "./fileAdmissionNotice.js",
     "file-cabinet-communication": "./fileCommunication.js",
-    "file-cabinet-letter": "./fileLetter.js",
     "file-cabinet-identityDocument": "./fileIdentityDocument.js",
     "file-cabinet-minimalSchema": "./fileMinimalSchema.js",
     "file-cabinet-citizenshipCertificate": "./fileCitizenshipCertificate.js",
