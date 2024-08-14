@@ -70,7 +70,6 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         const uploadUrl = await this.createBlobUploadUrl();
         alert('uploadUrl:\n' + uploadUrl);
 
-        // TODO: Use correct meta data
         const fileData = await this.uploadDocumentToBlob(uploadUrl, formData);
         alert('fileData:\n' + JSON.stringify(fileData));
     }
@@ -106,7 +105,7 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         metaData['@type'] = 'DocumentFile';
         metaData['fileSource'] = 'blob-cabinetBucket';
         metaData['objectType'] = this.documentType;
-        metaData['dateCreated'] = new Date().toISOString().split('T')[0];
+        // metaData['dateCreated'] = new Date().toISOString().split('T')[0];
         console.log('metaData to upload', metaData);
 
         let formData = new FormData();

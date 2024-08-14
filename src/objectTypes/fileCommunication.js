@@ -21,11 +21,18 @@ export default class extends BaseObject {
     }
 }
 
+const getAdditionalTypes = () => {
+    return {
+        'Communication': 'Communication',
+    };
+};
+
 class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
 
-        // See https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/communication_example.json
+        // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/communication.jschema
+        // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/communication_example.json
         return html`
             <form>
                 <h2>Communication Form</h2>
@@ -33,7 +40,10 @@ class CabinetFormElement extends BaseFormElement {
                 ${formElements.stringElement('agent[givenName]', 'Given name', '')}
                 ${formElements.stringElement('agent[familyName]', 'Family name', '')}
                 ${formElements.stringElement('abstract', 'Abstract', '', false, 10)}
-                ${formElements.stringElement('studyField', 'studyField', '')}
+                ${formElements.stringElement('studyField', 'Study field', '')}
+                ${formElements.enumElement('additionalType', 'Additional types', '', getAdditionalTypes(), false)}
+                ${formElements.enumElement('studentLifeCyclePhase', 'Student lifecycle phase', '', formElements.getStudentLifeCyclePhase(), false)}
+                ${formElements.dateTimeElement('dateCreated', 'Date created', '')}
                 ${formElements.stringElement('comment', 'Comment', '', false, 5)}
                 ${this.getButtonRowHtml()}
             </form>

@@ -8,24 +8,6 @@ const sanitizeForHtmlId = (str) => {
         .toLowerCase();               // Convert to lowercase
 };
 
-export const getIdentifyDocumentAdditionalTypes = () => {
-    return {
-        'BirthCertificate': 'Birth Certificate',
-        'DriversLicence': 'Drivers Licence',
-        'Passport': 'Passport',
-        'PersonalLicence': 'Personal Licence',
-    };
-};
-
-export const getMinimalSchemaAdditionalTypes = () => {
-    return {
-        'BirthCertificate': 'Birth Certificate',
-        'DriversLicence': 'Drivers Licence',
-        'Passport': 'Passport',
-        'PersonalLicence': 'Personal Licence',
-    };
-};
-
 export const getStudentLifeCyclePhase = () => {
     return {
         'ApplicationPhase': 'Application phase',
@@ -82,6 +64,29 @@ export const dateElement = (name, label, value = "", isRequired = false) => {
             <legend>${label}</legend>
             <input
                 type="date"
+                id="form-input-${id}"
+                name="${name}"
+                value="${value}"
+                ?required=${isRequired} />
+            <label for="form-input-${name}">${label}</label>
+        </fieldset>
+    `;
+};
+
+/**
+ *
+ * @param name
+ * @param label
+ * @param value
+ * @param isRequired
+ */
+export const dateTimeElement = (name, label, value = "", isRequired = false) => {
+    const id = sanitizeForHtmlId(name);
+    return html`
+        <fieldset>
+            <legend>${label}</legend>
+            <input
+                type="datetime-local"
                 id="form-input-${id}"
                 name="${name}"
                 value="${value}"

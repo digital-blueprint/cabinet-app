@@ -21,6 +21,15 @@ export default class extends BaseObject {
     }
 }
 
+const getAdditionalTypes = () => {
+    return {
+        'BirthCertificate': 'Birth Certificate',
+        'DriversLicence': 'Drivers Licence',
+        'Passport': 'Passport',
+        'PersonalLicence': 'Personal Licence',
+    };
+};
+
 class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
@@ -30,8 +39,9 @@ class CabinetFormElement extends BaseFormElement {
                 <h2>fileMinimalSchema Form</h2>
                 lang: ${this.lang}<br />
                 ${formElements.stringElement('studyField', 'Study field', '')}
-                ${formElements.enumElement('additionalType', 'Additional type', '', formElements.getMinimalSchemaAdditionalTypes(), false)}
+                ${formElements.enumElement('additionalType', 'Additional type', '', getAdditionalTypes(), false)}
                 ${formElements.enumElement('studentLifeCyclePhase', 'Student lifecycle phase', '', formElements.getStudentLifeCyclePhase(), false)}
+                ${formElements.dateElement('dateCreated', 'Date created', '')}
                 ${formElements.stringElement('subjectOf', 'Subject of', '')}
                 ${formElements.stringElement('comment', 'Comment', '', false, 5)}
                 ${this.getButtonRowHtml()}

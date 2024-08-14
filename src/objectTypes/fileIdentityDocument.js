@@ -21,6 +21,15 @@ export default class extends BaseObject {
     }
 }
 
+const getAdditionalTypes = () => {
+    return {
+        'BirthCertificate': 'Birth Certificate',
+        'DriversLicence': 'Drivers Licence',
+        'Passport': 'Passport',
+        'PersonalLicence': 'Personal Licence',
+    };
+};
+
 class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
@@ -29,7 +38,7 @@ class CabinetFormElement extends BaseFormElement {
                 <h2>fileIdentityDocument Form</h2>
                 lang: ${this.lang}<br />
                 ${formElements.stringElement('comment', 'Comment', '', false, 5)}
-                ${formElements.enumElement('additionalType', 'Additional type', '', formElements.getIdentifyDocumentAdditionalTypes(), false)}
+                ${formElements.enumElement('additionalType', 'Additional type', '', getAdditionalTypes(), false)}
                 ${this.getButtonRowHtml()}
             </form>
         `;
