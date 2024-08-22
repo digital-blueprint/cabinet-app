@@ -74,13 +74,15 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
 
-        // See https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/citizenshipCertificate_example.json
+        // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/citizenshipCertificate.schema.json
+        // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/citizenshipCertificate_example.json
         return html`
             <form>
                 <h2>fileCitizenshipCertificate Form</h2>
                 lang: ${this.lang}<br />
                 ${formElements.stringElement('comment', 'Comment', '', false, 5)}
                 ${formElements.enumElement('nationality', 'Nationality', '', this.getNationalityItems(), false)}
+                ${formElements.dateElement('dateCreated', 'Date created', '', true)}
                 ${this.getButtonRowHtml()}
             </form>
         `;

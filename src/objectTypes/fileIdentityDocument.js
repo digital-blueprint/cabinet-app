@@ -33,12 +33,16 @@ const getAdditionalTypes = () => {
 class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
+
+        // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/identityDocument.schema.json
+        // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/identityDocument_example.json
         return html`
             <form>
                 <h2>fileIdentityDocument Form</h2>
                 lang: ${this.lang}<br />
                 ${formElements.stringElement('comment', 'Comment', '', false, 5)}
                 ${formElements.enumElement('additionalType', 'Additional type', '', getAdditionalTypes(), false)}
+                ${formElements.dateElement('dateCreated', 'Date created', '', true)}
                 ${this.getButtonRowHtml()}
             </form>
         `;

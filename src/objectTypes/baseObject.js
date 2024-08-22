@@ -118,10 +118,12 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             dataValues[name] = element.getAttribute('data-value');
         });
 
+        console.log('this.data', this.data);
+
         const data = {
             "about": {
                 "@type": "Person",
-                "persId": this.data.base.studId
+                "persId": this.data.base.studId || this.data.base.objectID,
             },
         };
 
