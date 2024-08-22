@@ -73,6 +73,14 @@ export const dateElement = (name, label, value = "", isRequired = false) => {
     `;
 };
 
+const updateDateTimeElementDataValue = (input) => {
+    const date = new Date(input.value);
+    if (isNaN(date.getTime())) return; // Invalid date
+
+    // Set the data-value attribute to the ISO 8601 string including a timezone, because we want also store the timezone in Blob metadata
+    input.setAttribute('data-value', date.toISOString());
+};
+
 /**
  *
  * @param name
@@ -88,6 +96,7 @@ export const dateTimeElement = (name, label, value = "", isRequired = false) => 
             <input
                 type="datetime-local"
                 id="form-input-${id}"
+                @change=${e => updateDateTimeElementDataValue(e.target)}
                 name="${name}"
                 value="${value}"
                 ?required=${isRequired} />

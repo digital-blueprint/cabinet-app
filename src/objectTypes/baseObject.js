@@ -83,6 +83,15 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
 
     gatherFormDataFromElement(formElement) {
         const formData = new FormData(formElement);
+
+        // Check if any elements have a "data-value" attribute, because we want to use that value instead of the form value
+        const elementsWithDataValue = formElement.querySelectorAll('[data-value]');
+        let dataValues = {};
+        elementsWithDataValue.forEach(element => {
+            const name = element.getAttribute('name') || element.id;
+            dataValues[name] = element.getAttribute('data-value');
+        });
+
         const data = {
             "about": {
                 "@type": "Person",
@@ -91,6 +100,11 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         };
 
         for (let [key, value] of formData.entries()) {
+            // Check if we have a "data-value" attribute for this element
+            if (dataValues[key]) {
+                value = dataValues[key];
+            }
+
             this.setNestedValue(data, key, value);
         }
 
