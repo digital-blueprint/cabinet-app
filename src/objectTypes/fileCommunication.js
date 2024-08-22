@@ -43,7 +43,7 @@ class CabinetFormElement extends BaseFormElement {
                 ${formElements.stringElement('studyField', 'Study field', '')}
                 ${formElements.enumElement('additionalType', 'Additional types', '', getAdditionalTypes(), false)}
                 ${formElements.enumElement('studentLifeCyclePhase', 'Student lifecycle phase', '', formElements.getStudentLifeCyclePhase(), false)}
-                ${formElements.dateTimeElement('dateCreated', 'Date created', '')}
+                ${formElements.dateTimeElement('dateCreated', 'Date created', '', true)}
                 ${formElements.stringElement('comment', 'Comment', '', false, 5)}
                 ${this.getButtonRowHtml()}
             </form>

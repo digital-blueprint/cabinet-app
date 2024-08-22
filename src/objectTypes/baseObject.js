@@ -46,8 +46,34 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         };
     }
 
+    validateForm() {
+        // Select all input elements with the 'required' attribute
+        const formElement = this.shadowRoot.querySelector('form');
+        const requiredFields = formElement.querySelectorAll('input[required], select[required], textarea[required]');
+
+        // Loop through each required field
+        for (let field of requiredFields) {
+            // Check if the field is empty
+            if (!field.value.trim()) {
+                // If empty, alert the user and return false to prevent form submission
+                // TODO: We will need to put those results into a div or something instead of using an alert for each single of them!
+                alert(`Please fill out the ${field.name || 'required'} field.`);
+
+                return false;
+            }
+        }
+
+        // If all required fields are filled, return true to allow form submission
+        return true;
+    }
+
     storeBlobItem(event) {
         event.preventDefault();
+
+        // Validate the form before proceeding
+        if (!this.validateForm()) {
+            return;
+        }
 
         const formElement = this.shadowRoot.querySelector('form');
         const data = {
