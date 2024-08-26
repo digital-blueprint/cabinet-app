@@ -3,7 +3,7 @@ import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './ba
 import * as formElements from './formElements.js';
 
 export default class extends BaseObject {
-    name = 'file-admission-notice';
+    name = 'file-cabinet-admissionNotice';
 
     /**
      * @returns {string}
@@ -28,6 +28,14 @@ class CabinetFormElement extends BaseFormElement {
         };
     };
 
+    getDecisions = () => {
+        return {
+            'rejected': 'Rejected',
+            'refused': 'Refused',
+            'granted': 'Granted',
+        };
+    };
+
     render() {
         console.log('-- Render CabinetFormElement --');
         console.log('this.data', this.data);
@@ -43,6 +51,8 @@ class CabinetFormElement extends BaseFormElement {
                 ${formElements.stringElement('subjectOf', 'Subject of', '')}
                 ${formElements.enumElement('additionalType', 'Additional type', '', this.getAdditionalTypes(), false)}
                 ${formElements.dateElement('dateCreated', 'Date created', '', true)}
+                ${formElements.stringElement('previousStudy', 'Previous study', '')}
+                ${formElements.enumElement('decision', 'Decision', '', this.getDecisions(), false)}
                 ${formElements.stringElement('comment', 'Comment', '', false, 5)}
                 ${this.getButtonRowHtml()}
             </form>
