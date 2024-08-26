@@ -21,13 +21,13 @@ export default class extends BaseObject {
     }
 }
 
-const getAdditionalTypes = () => {
-    return {
-        'Communication': 'Communication',
-    };
-};
-
 class CabinetFormElement extends BaseFormElement {
+    getAdditionalTypes = () => {
+        return {
+            'Communication': 'Communication',
+        };
+    };
+
     render() {
         console.log('-- Render CabinetFormElement --');
 
@@ -40,9 +40,9 @@ class CabinetFormElement extends BaseFormElement {
                 ${formElements.stringElement('agent[givenName]', 'Given name', '')}
                 ${formElements.stringElement('agent[familyName]', 'Family name', '')}
                 ${formElements.stringElement('abstract', 'Abstract', '', false, 10)}
-                ${formElements.stringElement('studyField', 'Study field', '')}
-                ${formElements.enumElement('additionalType', 'Additional types', '', getAdditionalTypes(), false)}
-                ${formElements.enumElement('studentLifeCyclePhase', 'Student lifecycle phase', '', formElements.getStudentLifeCyclePhase(), false)}
+                ${formElements.stringElement('studyField', 'Study field', '', true)}
+                ${formElements.enumElement('additionalType', 'Additional types', '', this.getAdditionalTypes(), false)}
+                ${formElements.enumElement('studentLifeCyclePhase', 'Student lifecycle phase', '', formElements.getStudentLifeCyclePhase(), true)}
                 ${formElements.dateTimeElement('dateCreated', 'Date created', '', true)}
                 ${formElements.stringElement('comment', 'Comment', '', false, 5)}
                 ${this.getButtonRowHtml()}

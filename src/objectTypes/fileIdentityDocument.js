@@ -21,16 +21,15 @@ export default class extends BaseObject {
     }
 }
 
-const getAdditionalTypes = () => {
-    return {
-        'BirthCertificate': 'Birth Certificate',
-        'DriversLicence': 'Drivers Licence',
-        'Passport': 'Passport',
-        'PersonalLicence': 'Personal Licence',
-    };
-};
-
 class CabinetFormElement extends BaseFormElement {
+    getAdditionalTypes = () => {
+        return {
+            'DriversLicence': 'Drivers Licence',
+            'Passport': 'Passport',
+            'PersonalLicence': 'Personal Licence',
+        };
+    };
+
     render() {
         console.log('-- Render CabinetFormElement --');
 
@@ -40,9 +39,13 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>fileIdentityDocument Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
-                ${formElements.enumElement('additionalType', 'Additional type', '', getAdditionalTypes(), false)}
+                ${formElements.stringElement('studyField', 'Study field', '', true)}
+                ${formElements.stringElement('identifier', 'Identifier', '', true)}
+                ${formElements.enumElement('studentLifeCyclePhase', 'Student lifecycle phase', '', formElements.getStudentLifeCyclePhase(), true)}
+                ${formElements.enumElement('nationality', 'Nationality', '', formElements.getNationalityItems(), true)}
+                ${formElements.enumElement('additionalType', 'Additional type', '', this.getAdditionalTypes(), true)}
                 ${formElements.dateElement('dateCreated', 'Date created', '', true)}
+                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
                 ${this.getButtonRowHtml()}
             </form>
         `;

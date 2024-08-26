@@ -22,55 +22,12 @@ export default class extends BaseObject {
 }
 
 class CabinetFormElement extends BaseFormElement {
-    getNationalityItems() {
+    getAdditionalTypes = () => {
         return {
-            ALB: "Albanian",
-            AND: "Andorran",
-            AUT: "Austrian",
-            BLR: "Belarusian",
-            BEL: "Belgian",
-            BIH: "Bosnian",
-            BGR: "Bulgarian",
-            HRV: "Croatian",
-            CYP: "Cypriot",
-            CZE: "Czech",
-            DNK: "Danish",
-            EST: "Estonian",
-            FIN: "Finnish",
-            FRA: "French",
-            DEU: "German",
-            GRC: "Greek",
-            HUN: "Hungarian",
-            ISL: "Icelandic",
-            IRL: "Irish",
-            ITA: "Italian",
-            LVA: "Latvian",
-            LIE: "Liechtensteiner",
-            LTU: "Lithuanian",
-            LUX: "Luxembourgish",
-            MLT: "Maltese",
-            MDA: "Moldovan",
-            MCO: "Monégasque",
-            MNE: "Montenegrin",
-            NLD: "Dutch",
-            MKD: "North Macedonian",
-            NOR: "Norwegian",
-            POL: "Polish",
-            PRT: "Portuguese",
-            ROU: "Romanian",
-            RUS: "Russian",
-            SMR: "Sammarinese",
-            SRB: "Serbian",
-            SVK: "Slovak",
-            SVN: "Slovenian",
-            ESP: "Spanish",
-            SWE: "Swedish",
-            CHE: "Swiss",
-            UKR: "Ukrainian",
-            GBR: "British",
-            VAT: "Vatican"
+            'CitizenshipCertificate': 'Citizenship Certificate',
         };
-    }
+    };
+
     render() {
         console.log('-- Render CabinetFormElement --');
 
@@ -80,9 +37,12 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>fileCitizenshipCertificate Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
-                ${formElements.enumElement('nationality', 'Nationality', '', this.getNationalityItems(), false)}
+                ${formElements.enumElement('studentLifeCyclePhase', 'Student lifecycle phase', '', formElements.getStudentLifeCyclePhase(), true)}
+                ${formElements.enumElement('additionalType', 'Additional types', '', this.getAdditionalTypes(), false)}
+                ${formElements.stringElement('studyField', 'Study field', '', true)}
+                ${formElements.enumElement('nationality', 'Nationality', '', formElements.getNationalityItems(), false)}
                 ${formElements.dateElement('dateCreated', 'Date created', '', true)}
+                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
                 ${this.getButtonRowHtml()}
             </form>
         `;

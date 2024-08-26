@@ -21,16 +21,16 @@ export default class extends BaseObject {
     }
 }
 
-const getAdditionalTypes = () => {
-    return {
-        'BirthCertificate': 'Birth Certificate',
-        'DriversLicence': 'Drivers Licence',
-        'Passport': 'Passport',
-        'PersonalLicence': 'Personal Licence',
-    };
-};
-
 class CabinetFormElement extends BaseFormElement {
+    getAdditionalTypes = () => {
+        return {
+            'BirthCertificate': 'Birth Certificate',
+            'DriversLicence': 'Drivers Licence',
+            'Passport': 'Passport',
+            'PersonalLicence': 'Personal Licence',
+        };
+    };
+
     render() {
         console.log('-- Render CabinetFormElement --');
 
@@ -40,9 +40,9 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>fileMinimalSchema Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.stringElement('studyField', 'Study field', '')}
-                ${formElements.enumElement('additionalType', 'Additional type', '', getAdditionalTypes(), false)}
-                ${formElements.enumElement('studentLifeCyclePhase', 'Student lifecycle phase', '', formElements.getStudentLifeCyclePhase(), false)}
+                ${formElements.stringElement('studyField', 'Study field', '', true)}
+                ${formElements.enumElement('additionalType', 'Additional type', '', this.getAdditionalTypes(), false)}
+                ${formElements.enumElement('studentLifeCyclePhase', 'Student lifecycle phase', '', formElements.getStudentLifeCyclePhase(), true)}
                 ${formElements.dateElement('dateCreated', 'Date created', '', true)}
                 ${formElements.stringElement('subjectOf', 'Subject of', '')}
                 ${formElements.stringElement('comment', 'Comment', '', false, 5)}
