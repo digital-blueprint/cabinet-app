@@ -185,9 +185,16 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
             ${commonStyles.getButtonCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
 
+            #document-add-modal {
+                --dbp-modal-min-width: 85vw;
+                --dbp-modal-max-width: 85vw;
+                --dbp-modal-min-height: 90vh;
+                --dbp-modal-max-height: 90vh;
+            }
+
             #document-add-modal .content {
                 display: grid;
-                grid-template-columns: 1fr 2fr;
+                grid-template-columns: 1fr 1fr;
                 gap: 10px 10px;
                 grid-auto-flow: row;
             }
@@ -224,10 +231,6 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
                 ${ref(this.documentAddModalRef)}
                 id="document-add-modal"
                 modal-id="document-add-modal"
-                width="80%"
-                height="80%"
-                min-width="80%"
-                min-height="80%"
                 subscribe="lang">
                 <div slot="content" class="content">
                     <div class="description">
