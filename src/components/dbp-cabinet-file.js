@@ -9,7 +9,7 @@ import {FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {pascalToKebab} from '../utils';
 
-export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement) {
+export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
         this.objectTypeFormComponents = {};
@@ -25,6 +25,7 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         this.documentType = '';
         // TODO: Do we need a prefix?
         this.blobDocumentPrefix = 'document-';
+        this.mode = 'view';
     }
 
     connectedCallback() {
@@ -55,6 +56,7 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
             hitData: { type: Object, attribute: false },
             documentFile: { type: File, attribute: false },
             documentType: { type: String, attribute: false },
+            mode: { type: String },
         };
     }
 
@@ -64,6 +66,10 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
 
     setFileDocumentFormComponents(fileDocumentFormComponents) {
         this.objectTypeFormComponents = fileDocumentFormComponents;
+    }
+
+    setObjectTypeViewComponents(objectTypeViewComponents) {
+        this.objectTypeViewComponents = objectTypeViewComponents;
     }
 
     async storeDocumentToBlob(formData) {
@@ -155,6 +161,35 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
             <${unsafeStatic(tagName)} id="edit-form" subscribe="auth,lang,entry-point-url" .data=${this.hitData} document-type=></${unsafeStatic(tagName)}>
+        `;
+    }
+
+    getDocumentViewFormHtml() {
+        const documentType = this.documentType;
+
+        if (documentType === '') {
+            console.log('documentType empty', documentType);
+            return html``;
+        }
+
+
+        const hit = this.hitData;
+        const id = hit.id;
+        const tagPart = pascalToKebab(documentType);
+        const tagName = 'dbp-cabinet-object-type-view-' + tagPart;
+
+        console.log('documentType', documentType);
+        console.log('tagName', tagName);
+        console.log('this.objectTypeViewComponents[objectType]', this.objectTypeViewComponents[documentType]);
+
+        if (!customElements.get(tagName)) {
+            customElements.define(tagName, this.objectTypeViewComponents[documentType]);
+        }
+
+        // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
+        // a variable and need to set the "data" property from a variable too!
+        return staticHtml`
+            <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
         `;
     }
 
@@ -267,26 +302,33 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
     }
 
     getDocumentTypeFormPartHtml() {
-        if (this.documentType === '') {
-            const file = this.documentFile;
+        switch (this.mode) {
+            case 'view':
+                return html`
+                        ${this.getDocumentViewFormHtml()}
+                    `;
+            case 'add':
+                if (this.documentType === '') {
+                    const file = this.documentFile;
 
-            return html`
-                <p>
-                    You are about to upload the following document:<br />
-                    ${file.name}
-                </p>
-                <p>
-                    Please select a document type to continue.
-                </p>
-                <p>
-                    ${this.getDocumentTypeSelector()}
-                    <dbp-button @click="${this.onDocumentTypeSelected}">Select</dbp-button>
-                </p>
-            `;
-        } else {
-            return html`
-                ${this.getDocumentEditFormHtml()}
-            `;
+                    return html`
+                        <p>
+                            You are about to upload the following document:<br />
+                            ${file.name}
+                        </p>
+                        <p>
+                            Please select a document type to continue.
+                        </p>
+                        <p>
+                            ${this.getDocumentTypeSelector()}
+                            <dbp-button @click="${this.onDocumentTypeSelected}">Select</dbp-button>
+                        </p>
+                    `;
+                } else {
+                    return html`
+                        ${this.getDocumentEditFormHtml()}
+                    `;
+                }
         }
     }
 
@@ -310,29 +352,39 @@ export class CabinetAddDocument extends ScopedElementsMixin(DBPCabinetLitElement
     }
 
     render() {
-        const i18n = this._i18n;
         console.log('-- Render --');
 
+        switch (this.mode) {
+            case 'view':
+                return this.getViewHtml();
+            case 'add':
+                return this.getAddHtml();
+        }
+    }
+
+    getAddHtml() {
+        const i18n = this._i18n;
+
         return html`
-            ${this.getDocumentAddModalHtml()}
-            <dbp-file-source
-                id="file-source"
-                context="${i18n.t('cabinet-search.file-picker-context')}"
-                subscribe="nextcloud-store-session:nextcloud-store-session"
-                allowed-mime-types="application/pdf"
-                enabled-targets="${this.fileHandlingEnabledTargets}"
-                nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
-                nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
-                nextcloud-name="${this.nextcloudName}"
-                nextcloud-auth-info="${this.nextcloudAuthInfo}"
-                nextcloud-file-url="${this.nextcloudFileURL}"
-                decompress-zip
-                max-file-size="32000"
-                lang="${this.lang}"
-                text="${i18n.t('cabinet-search.upload-area-text')}"
-                button-label="${i18n.t('cabinet-search.upload-button-label')}"
-                @dbp-file-source-file-selected="${this.onDocumentFileSelected}"></dbp-file-source>
-        `;
+                ${this.getDocumentAddModalHtml()}
+                <dbp-file-source
+                    id="file-source"
+                    context="${i18n.t('cabinet-search.file-picker-context')}"
+                    subscribe="nextcloud-store-session:nextcloud-store-session"
+                    allowed-mime-types="application/pdf"
+                    enabled-targets="${this.fileHandlingEnabledTargets}"
+                    nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
+                    nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
+                    nextcloud-name="${this.nextcloudName}"
+                    nextcloud-auth-info="${this.nextcloudAuthInfo}"
+                    nextcloud-file-url="${this.nextcloudFileURL}"
+                    decompress-zip
+                    max-file-size="32000"
+                    lang="${this.lang}"
+                    text="${i18n.t('cabinet-search.upload-area-text')}"
+                    button-label="${i18n.t('cabinet-search.upload-button-label')}"
+                    @dbp-file-source-file-selected="${this.onDocumentFileSelected}"></dbp-file-source>
+                `;
     }
 
     /**

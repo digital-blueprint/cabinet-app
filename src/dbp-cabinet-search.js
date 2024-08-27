@@ -14,7 +14,7 @@ import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import {hits, searchBox} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
 import {pascalToKebab} from './utils';
-import {CabinetAddDocument} from './components/dbp-cabinet-add-document.js';
+import {CabinetFile} from './components/dbp-cabinet-file.js';
 import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetViewFile} from './components/dbp-cabinet-view-file.js';
 
@@ -39,7 +39,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.documentEditModalRef = createRef();
         this.documentViewPersonModalRef = createRef();
         this.documentViewFileModalRef = createRef();
-        this.documentAddComponentRef = createRef();
+        this.documentFileComponentRef = createRef();
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
     }
@@ -48,7 +48,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         return {
             'dbp-icon': Icon,
             'dbp-modal': Modal,
-            'dbp-cabinet-add-document': CabinetAddDocument,
+            'dbp-cabinet-file': CabinetFile,
             'dbp-cabinet-view-person': CabinetViewPerson,
             'dbp-cabinet-view-file': CabinetViewFile,
             'dbp-inline-notification': InlineNotification,
@@ -138,7 +138,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             await component.openDialogWithHit(hit);
         } else {
             /**
-             * @type {CabinetViewFile}
+             * @type {CabinetFile}
              */
             const component = this.documentViewFileModalRef.value;
             component.setObjectTypeViewComponents(this.objectTypeViewComponents);
@@ -165,9 +165,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Listen to DbpCabinetDocumentEdit events, to open the file edit dialog
         this.addEventListener('DbpCabinetDocumentAdd', function(event) {
             /**
-             * @type {CabinetAddDocument}
+             * @type {CabinetFile}
              */
-            const component = that.documentAddComponentRef.value;
+            const component = that.documentFileComponentRef.value;
             component.openDocumentAddDialogWithHit(event.detail.hit);
         });
 
@@ -416,11 +416,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             `;
         } else {
             return staticHtml`
-                <dbp-cabinet-view-file
+                <dbp-cabinet-file
+                    mode="view"
                     ${ref(this.documentViewFileModalRef)}
                     subscribe="lang,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
                     .data=${hit}
-                ></dbp-cabinet-view-file>
+                ></dbp-cabinet-file>
             `;
         }
     }
@@ -447,10 +448,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div id="hits"></div>
                 ${this.getDocumentEditModalHtml()}
                 ${this.getDocumentViewModalHtml()}
-                <dbp-cabinet-add-document
-                    ${ref(this.documentAddComponentRef)}
+                <dbp-cabinet-file
+                    mode="add"
+                    ${ref(this.documentFileComponentRef)}
                     subscribe="lang,auth,entry-point-url,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
-                ></dbp-cabinet-add-document>
+                ></dbp-cabinet-file>
             </div>
         `;
     }
@@ -509,9 +511,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             console.log('fileDocumentTypeNames', this.fileDocumentTypeNames);
 
             /**
-             * @type {CabinetAddDocument}
+             * @type {CabinetFile}
              */
-            const addDocumentComponent = this.documentAddComponentRef.value;
+            const addDocumentComponent = this.documentFileComponentRef.value;
             addDocumentComponent.setFileDocumentTypeNames(this.fileDocumentTypeNames);
             addDocumentComponent.setFileDocumentFormComponents(formComponents);
         } catch (error) {
