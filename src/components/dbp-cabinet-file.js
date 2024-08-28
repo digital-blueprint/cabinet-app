@@ -26,6 +26,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // TODO: Do we need a prefix?
         this.blobDocumentPrefix = 'document-';
         this.mode = 'view';
+        this.modalRef = createRef();
     }
 
     connectedCallback() {
@@ -198,6 +199,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         await this.openDocumentAddDialog();
     }
 
+    async openDialogWithHit(hit = null) {
+        this.hitData = hit;
+
+        // Wait until hit data is set and rendering is complete
+        await this.updateComplete;
+
+        /**
+         * @type {Modal}
+         */
+        const modal = this.modalRef.value;
+        console.log('modal', modal);
+        modal.open();
+    }
+
     async openDocumentAddDialog() {
         this.documentType = '';
 
@@ -247,6 +262,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      * in the file source
      */
     getDocumentAddModalHtml() {
+        console.log('getDocumentAddModalHtml');
         const hit = this.hitData;
         console.log('hit', hit);
 
@@ -359,7 +375,53 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 return this.getViewHtml();
             case 'add':
                 return this.getAddHtml();
+            default:
+                console.error('mode not found', this.mode);
+                return html`<dbp-modal ${ref(this.modalRef)} modal-id="view-modal"></dbp-modal>`;
         }
+    }
+
+    getViewHtml() {
+        console.log('File View HTML');
+        const hit = this.hitData;
+        console.log('hit', hit);
+        const objectType = hit.objectType;
+
+        if (objectType === '') {
+            console.log('objectType empty', objectType);
+            return html`<dbp-modal ${ref(this.modalRef)} modal-id="view-modal"></dbp-modal>`;
+        }
+
+        const id = hit.id;
+        const tagPart = pascalToKebab(objectType);
+        const tagName = 'dbp-cabinet-object-type-view-' + tagPart;
+
+        console.log('objectType', objectType);
+        console.log('tagName', tagName);
+        console.log('this.objectTypeViewComponents[objectType]', this.objectTypeViewComponents[objectType]);
+
+        if (!customElements.get(tagName)) {
+            customElements.define(tagName, this.objectTypeViewComponents[objectType]);
+        }
+
+        // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
+        // a variable and need to set the "data" property from a variable too!
+        return staticHtml`
+            <dbp-modal
+                ${ref(this.modalRef)}
+                id="view-modal"
+                modal-id="view-modal"
+                subscribe="lang">
+                <div slot="content">
+                    Document ID: ${id}<br />
+                    ObjectType: ${objectType}<br />
+                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
+                </div>
+                <div slot="footer" class="modal-footer">
+                    View Footer
+                </div>
+            </dbp-modal>
+        `;
     }
 
     getAddHtml() {
