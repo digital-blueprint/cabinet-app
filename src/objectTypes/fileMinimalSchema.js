@@ -1,6 +1,7 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 import * as formElements from './formElements.js';
+import * as viewElements from './viewElements.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-minimalSchema';
@@ -21,16 +22,16 @@ export default class extends BaseObject {
     }
 }
 
-class CabinetFormElement extends BaseFormElement {
-    getAdditionalTypes = () => {
-        return {
-            'BirthCertificate': 'Birth Certificate',
-            'DriversLicence': 'Drivers Licence',
-            'Passport': 'Passport',
-            'PersonalLicence': 'Personal Licence',
-        };
+export const getAdditionalTypes = () => {
+    return {
+        'BirthCertificate': 'Birth Certificate',
+        'DriversLicence': 'Drivers Licence',
+        'Passport': 'Passport',
+        'PersonalLicence': 'Personal Licence',
     };
+};
 
+class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
 
@@ -41,7 +42,7 @@ class CabinetFormElement extends BaseFormElement {
                 <h2>fileMinimalSchema Form</h2>
                 lang: ${this.lang}<br />
                 ${formElements.stringElement('studyField', 'Study field', '', true)}
-                ${formElements.enumElement('additionalType', 'Additional type', '', this.getAdditionalTypes(), false)}
+                ${formElements.enumElement('additionalType', 'Additional type', '', getAdditionalTypes(), false)}
                 ${formElements.enumElement('studentLifeCyclePhase', 'Student lifecycle phase', '', formElements.getStudentLifeCyclePhase(), true)}
                 ${formElements.dateElement('dateCreated', 'Date created', '', true)}
                 ${formElements.stringElement('subjectOf', 'Subject of', '')}
@@ -80,6 +81,12 @@ class CabinetViewElement extends BaseViewElement {
             <h2>Minimal Schema</h2>
             lang: ${this.lang}<br />
             filename: ${this.data.file.base.fileName}<br />
+            ${viewElements.stringElement('Study field', this.data.file.base.studyField)}
+            ${viewElements.enumElement('Additional type', this.data.file.base.additionalType, getAdditionalTypes(), false)}
+            ${viewElements.enumElement('Student lifecycle phase', this.data.file.base.studentLifeCyclePhase, formElements.getStudentLifeCyclePhase(), true)}
+            ${viewElements.dateElement('Date created', this.data.file.base.dateCreated)}
+            ${viewElements.stringElement('Subject of', this.data.file.base.subjectOf)}
+            ${viewElements.stringElement('Comment', this.data.file.base.comment)}
         `;
     }
 }
