@@ -208,7 +208,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         return input
             .split('.')
             .map(part => part.replace(/([A-Z])/g, '-$1').toLowerCase())
-            .join('-')
+            .join('-');
     }
 
     static get styles() {
