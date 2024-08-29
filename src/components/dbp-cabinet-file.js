@@ -21,8 +21,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         };
         this.documentModalRef = createRef();
         this.documentFile = null;
-        this.fileDocumentTypeNames = {};
-        this.documentType = '';
+        this.fileObjectTypeNames = {};
+        this.objectType = '';
         // TODO: Do we need a prefix?
         this.blobDocumentPrefix = 'document-';
         this.mode = 'view';
@@ -56,13 +56,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             ...super.properties,
             hitData: { type: Object, attribute: false },
             documentFile: { type: File, attribute: false },
-            documentType: { type: String, attribute: false },
+            objectType: { type: String, attribute: false },
             mode: { type: String },
         };
     }
 
-    setFileDocumentTypeNames(fileDocumentTypeNames) {
-        this.fileDocumentTypeNames = fileDocumentTypeNames;
+    setFileObjectTypeNames(fileObjectTypeNames) {
+        this.fileObjectTypeNames = fileObjectTypeNames;
     }
 
     setFileDocumentFormComponents(fileDocumentFormComponents) {
@@ -88,7 +88,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             'prefix': this.blobDocumentPrefix,
             'fileName': this.documentFile.name,
             // TODO: Does this replacing always work?
-            'type': this.documentType.replace('file-cabinet-', '')
+            'type': this.objectType.replace('file-cabinet-', '')
         };
         apiUrl.search = new URLSearchParams(params).toString();
 
@@ -111,7 +111,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     async uploadDocumentToBlob(uploadUrl, metaData) {
         metaData['@type'] = 'DocumentFile';
         metaData['fileSource'] = 'blob-cabinetBucket';
-        metaData['objectType'] = this.documentType;
+        metaData['objectType'] = this.objectType;
         // metaData['dateCreated'] = new Date().toISOString().split('T')[0];
         console.log('metaData to upload', metaData);
 
@@ -140,52 +140,52 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     getDocumentEditFormHtml() {
-        const documentType = this.documentType;
+        const objectType = this.objectType;
 
-        if (documentType === '') {
-            console.log('documentType empty', documentType);
+        if (objectType === '') {
+            console.log('objectType empty', objectType);
             return html``;
         }
 
-        const tagPart = pascalToKebab(documentType);
+        const tagPart = pascalToKebab(objectType);
         const tagName = 'dbp-cabinet-object-type-edit-form-' + tagPart;
 
-        console.log('objectType', documentType);
+        console.log('objectType', objectType);
         console.log('tagName', tagName);
-        console.log('this.objectTypeFormComponents[documentType]', this.objectTypeFormComponents[documentType]);
+        console.log('this.objectTypeFormComponents[objectType]', this.objectTypeFormComponents[objectType]);
 
         if (!customElements.get(tagName)) {
-            customElements.define(tagName, this.objectTypeFormComponents[documentType]);
+            customElements.define(tagName, this.objectTypeFormComponents[objectType]);
         }
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
-            <${unsafeStatic(tagName)} id="edit-form" subscribe="auth,lang,entry-point-url" .data=${this.hitData} document-type=></${unsafeStatic(tagName)}>
+            <${unsafeStatic(tagName)} id="edit-form" subscribe="auth,lang,entry-point-url" .data=${this.hitData} object-type=></${unsafeStatic(tagName)}>
         `;
     }
 
     getDocumentViewFormHtml() {
-        const documentType = this.documentType;
-        console.log('documentType', documentType);
+        const objectType = this.objectType;
+        console.log('objectType', objectType);
 
-        if (documentType === '') {
-            console.log('documentType empty', documentType);
+        if (objectType === '') {
+            console.log('objectType empty', objectType);
             return html``;
         }
 
 
         const hit = this.hitData;
         const id = hit.id;
-        const tagPart = pascalToKebab(documentType);
+        const tagPart = pascalToKebab(objectType);
         const tagName = 'dbp-cabinet-object-type-view-' + tagPart;
 
-        console.log('documentType', documentType);
+        console.log('objectType', objectType);
         console.log('tagName', tagName);
-        console.log('this.objectTypeViewComponents[objectType]', this.objectTypeViewComponents[documentType]);
+        console.log('this.objectTypeViewComponents[objectType]', this.objectTypeViewComponents[objectType]);
 
         if (!customElements.get(tagName)) {
-            customElements.define(tagName, this.objectTypeViewComponents[documentType]);
+            customElements.define(tagName, this.objectTypeViewComponents[objectType]);
         }
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
@@ -203,7 +203,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     async openDialogWithHit(hit = null) {
         this.hitData = hit;
         console.log('openDialogWithHit hit', hit);
-        this.documentType = hit.objectType;
+        this.objectType = hit.objectType;
 
         // Wait until hit data is set and rendering is complete
         await this.updateComplete;
@@ -217,7 +217,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async openDocumentAddDialog() {
-        this.documentType = '';
+        this.objectType = '';
 
         /**
          * @type {Modal}
@@ -303,7 +303,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <dbp-pdf-viewer id="document-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
                     </div>
                     <div class="form">
-                        ${this.getDocumentTypeFormPartHtml()}
+                        ${this.getObjectTypeFormPartHtml()}
                     </div>
                 </div>
                 <div slot="footer" class="modal-footer">
@@ -314,25 +314,25 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     getBackLink() {
-        if (this.documentType === '') {
+        if (this.objectType === '') {
             return html`<a href="#" @click=${this.openDocumentAddDialog}>&lt;&lt; Back to document upload</a>`;
         } else {
-            return html`<a href="#" @click=${this.resetDocumentType}>&lt;&lt; Back to document type selection</a>`;
+            return html`<a href="#" @click=${this.resetObjectType}>&lt;&lt; Back to document type selection</a>`;
         }
     }
 
-    resetDocumentType() {
-        this.documentType = '';
+    resetObjectType() {
+        this.objectType = '';
     }
 
-    getDocumentTypeFormPartHtml() {
+    getObjectTypeFormPartHtml() {
         switch (this.mode) {
             case 'view':
                 return html`
                     ${this.getDocumentViewFormHtml()}
                 `;
             case 'add':
-                if (this.documentType === '') {
+                if (this.objectType === '') {
                     const file = this.documentFile;
 
                     return html`
@@ -344,8 +344,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             Please select a document type to continue.
                         </p>
                         <p>
-                            ${this.getDocumentTypeSelector()}
-                            <dbp-button @click="${this.onDocumentTypeSelected}">Select</dbp-button>
+                            ${this.getObjectTypeSelector()}
+                            <dbp-button @click="${this.onObjectTypeSelected}">Select</dbp-button>
                         </p>
                     `;
                 } else {
@@ -356,20 +356,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
     }
 
-    onDocumentTypeSelected() {
-        const documentType = this._('#document-type').value;
-        console.log('documentType', documentType);
-        this.documentType = documentType;
+    onObjectTypeSelected() {
+        const objectType = this._('#object-type').value;
+        console.log('objectType', objectType);
+        this.objectType = objectType;
     }
 
-    getDocumentTypeSelector() {
-        const fileDocumentTypeNames = this.fileDocumentTypeNames;
-        const options = Object.keys(fileDocumentTypeNames).map((key) => {
-            return html`<option value="${key}">${fileDocumentTypeNames[key]}</option>`;
+    getObjectTypeSelector() {
+        const fileObjectTypeNames = this.fileObjectTypeNames;
+        const options = Object.keys(fileObjectTypeNames).map((key) => {
+            return html`<option value="${key}">${fileObjectTypeNames[key]}</option>`;
         });
 
         return html`
-            <select id="document-type" class="select" name="document-type" required>
+            <select id="object-type" class="select" name="object-type" required>
                 ${options}
             </select>
         `;

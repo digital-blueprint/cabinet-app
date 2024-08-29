@@ -153,7 +153,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         const fileAdditionalTypeRefinementList = panel({
             templates: {
                 header(options, { html }) {
-                    return i18n.t('cabinet-search.filter-document-type-title');
+                    return i18n.t('cabinet-search.filter-object-type-title');
                 },
             },
             collapsed: () => true,

@@ -534,7 +534,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
              * @type {CabinetFile}
              */
             const addDocumentComponent = this.documentFileComponentRef.value;
-            addDocumentComponent.setFileDocumentTypeNames(this.fileDocumentTypeNames);
+            addDocumentComponent.setFileObjectTypeNames(this.fileDocumentTypeNames);
             addDocumentComponent.setFileDocumentFormComponents(formComponents);
         } catch (error) {
             console.error('Error loading modules:', error);

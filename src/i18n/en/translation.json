@@ -4,7 +4,7 @@
         "type-filter-group-title": "Category",
         "person-filter-group-title": "Person properties",
         "document-filter-group-title": "Document properties",
-        "filter-document-type-title": "Document type",
+        "filter-object-type-title": "Document type",
         "filter-base-person-title": "Person",
         "filter-person-nationality-title": "Nationality",
         "filter-document-study-field": "Study"
