@@ -1,8 +1,9 @@
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
+import {css, html} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button} from '@dbp-toolkit/common';
-import {css, html} from 'lit';
+import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
+// import {pascalToKebab} from '../utils';
 import {panel, refinementList} from 'instantsearch.js/es/widgets/index.js';
 
 export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
@@ -43,13 +44,96 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     createAndAddWidget() {
+        // const createCategoryRefinementList = this.generateFacet('@type', false);
+
+        // Person facets
+        const createBasePersonRefinementList = this.generateFacet(
+            'base.person'
+        );
+        const createPersonNationalitiesRefinementList = this.generateFacet(
+            'person.nationalities.text'
+        );
+        const createPersonAdmissionQualificationTypeKeyRefinementList = this.generateFacet(
+            'person.admissionQualificationType.key',
+        );
+        const createPersonHomeAddressPlaceRefinementList = this.generateFacet(
+            'person.homeAddress.place',
+        );
+        const createPersonStudAddressPlaceRefinementList = this.generateFacet(
+            'person.studAddress.place',
+        );
+        const createPersonStudAddressCountryKeyRefinementList = this.generateFacet(
+            'person.studAddress.country.key',
+        );
+        const createPersonImmatriculationSemesterRefinementList = this.generateFacet(
+            'person.immatriculationSemester',
+        );
+        const createPersonExmatriculationSemesterRefinementList = this.generateFacet(
+            'person.exmatriculationSemester',
+        );
+        const createPersonExmatriculationStatusKeyRefinementList = this.generateFacet(
+            'person.exmatriculationStatus.key',
+        );
+        const createPersonAcademicTitlesRefinementList = this.generateFacet(
+            'person.academicTitles',
+        );
+        const createPersonGenderKeyRefinementList = this.generateFacet(
+            'person.gender.key',
+        );
+        const createPersonStudiesNameRefinementList = this.generateFacet(
+            'person.studies.name'
+        );
+        const createPersonStudiesTypeRefinementList = this.generateFacet(
+            'person.studies.type',
+        );
+        const createPersonApplicationsStudyTypeRefinementList = this.generateFacet(
+            'person.applications.studyType',
+        );
+
+        // File facets
+        const createFileAdditionalTypeRefinementList = this.generateFacet(
+            'file.base.additionalType'
+        );
+        const createFileBaseStudentLifeCyclePhaseRefinementList = this.generateFacet(
+            'file.base.studentLifeCyclePhase',
+        );
+        const createFileBaseStudyFieldRefinementList = this.generateFacet(
+            'file.base.studyField'
+        );
+        const createFileBaseSubjectOfRefinementList = this.generateFacet(
+            'file.base.subjectOf',
+        );
+        const createFileCitizenshipCertificateNationalityRefinementList = this.generateFacet(
+            'file.citizenshipCertificate.nationality',
+        );
+        const createFileIdentityDocumentNationalityRefinementList = this.generateFacet(
+            'file.identityDocument.nationality',
+        );
+
         this.search.addWidgets([
             this.createCategoryRefinementList(),
-            this.createBasePersonRefinementList(),
-            this.createPersonStudiesRefinementList(),
-            this.createPersonNationalitiesRefinementList(),
-            this.createFileAdditionalTypeRefinementList(),
-            this.createFileStudyFieldRefinementList(),
+            createBasePersonRefinementList(),
+
+            createPersonNationalitiesRefinementList(),
+            createPersonAdmissionQualificationTypeKeyRefinementList(),
+            createPersonHomeAddressPlaceRefinementList(),
+            createPersonStudAddressPlaceRefinementList(),
+            createPersonStudAddressCountryKeyRefinementList(),
+            createPersonImmatriculationSemesterRefinementList(),
+            createPersonExmatriculationSemesterRefinementList(),
+            createPersonExmatriculationStatusKeyRefinementList(),
+            createPersonAcademicTitlesRefinementList(),
+            createPersonGenderKeyRefinementList(),
+            createPersonStudiesNameRefinementList(),
+            createPersonStudiesTypeRefinementList(),
+            createPersonApplicationsStudyTypeRefinementList(),
+
+            createFileAdditionalTypeRefinementList(),
+            createFileBaseStudentLifeCyclePhaseRefinementList(),
+            createFileBaseStudyFieldRefinementList(),
+            createFileBaseSubjectOfRefinementList(),
+            createFileCitizenshipCertificateNationalityRefinementList(),
+            createFileIdentityDocumentNationalityRefinementList(),
         ]);
     }
 
@@ -78,175 +162,53 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
     }
 
-    // base.person
-    createBasePersonRefinementList() {
+    generateFacet(schemaField) {
         const i18n = this._i18n;
+        let that = this;
 
-        const fileAdditionalTypeRefinementList = panel({
-            templates: {
-                header(options, { html }) {
-                    return i18n.t('cabinet-search.filter-base-person-title');
+        const cssClass = this.schemaNameToKebabCase(schemaField);
+        const translationKey = this.schemaNameToKebabCase(schemaField);
+        // console.log('schemaField: ', schemaField);
+        // console.log('cssClass: ', cssClass);
+        // console.log('translationKey: ', translationKey);
+        return function() {
+            const GeneratedRefinementList = panel({
+                templates: {
+                    header(options, { html }) {
+                        return i18n.t(`cabinet-search.filter-${translationKey}-title`);
+                    },
                 },
-            },
-            collapsed: () => true,
-        })(refinementList);
+                collapsed: () => true,
+            })(refinementList);
 
-        return fileAdditionalTypeRefinementList({
-            container: this._("#base-person"),
-            attribute: 'base.person',
-            templates: {
-                item(item, {html}) {
-                    return html`
-                        <div class="refinement-list-item refinement-list-item--base-person">
-                            <div class="refinement-list-item-inner">
-                                <label class="refinement-list-item-checkbox">
-                                    <input type="checkbox" class="custom-checkbox" aria-label="${item.label}" value="${item.value}" checked=${item.isRefined} />
-                                </label>
-                                <span class="refinement-list-item-name" title="${item.label}">${item.label}</span>
-                            </div>
-                            <span class="refinement-list-item-count">(${item.count})</span>
+            return GeneratedRefinementList({
+                container: that._(`#${cssClass}`),
+                attribute: schemaField,
+                templates: {
+                    item(item, {html}) {
+                        // console.log(`${schemaField}: `, item);
+                        return html`
+                    <div class="refinement-list-item refinement-list-item--${cssClass}">
+                        <div class="refinement-list-item-inner">
+                            <label class="refinement-list-item-checkbox">
+                                <input type="checkbox" class="custom-checkbox" aria-label="${item.label}" value="${item.value}" ?checked=${item.isRefined} />
+                            </label>
+                            <span class="refinement-list-item-name" title="${item.label}">${item.label}</span>
                         </div>
+                        <span class="refinement-list-item-count">(${item.count})</span>
+                    </div>
                     `;
-                }
-            },
-        });
+                    }
+                },
+            });
+        };
     }
 
-    // person.nationalities.text
-    createPersonNationalitiesRefinementList() {
-        const i18n = this._i18n;
-
-        const fileAdditionalTypeRefinementList = panel({
-            templates: {
-                header(options, { html }) {
-                    return i18n.t('cabinet-search.filter-person-nationality-title');
-                },
-            },
-            collapsed: () => true,
-        })(refinementList);
-
-        return fileAdditionalTypeRefinementList({
-            container: this._("#person-nationalities"),
-            attribute: 'person.nationalities.text',
-            templates: {
-                item(item, {html}) {
-                    return html`
-                        <div class="refinement-list-item refinement-list-item--person-nationalities">
-                            <div class="refinement-list-item-inner">
-                                <label class="refinement-list-item-checkbox">
-                                    <input type="checkbox" class="custom-checkbox" aria-label="${item.label}" value="${item.value}" checked=${item.isRefined} />
-                                </label>
-                                <span class="refinement-list-item-name" title="${item.label}">${item.label}</span>
-                            </div>
-                            <span class="refinement-list-item-count">(${item.count})</span>
-                        </div>
-                    `;
-                }
-            },
-        });
-    }
-
-    // file.base.additionalType
-    createFileAdditionalTypeRefinementList() {
-        const i18n = this._i18n;
-
-        const fileAdditionalTypeRefinementList = panel({
-            templates: {
-                header(options, { html }) {
-                    return i18n.t('cabinet-search.filter-object-type-title');
-                },
-            },
-            collapsed: () => true,
-        })(refinementList);
-
-        return fileAdditionalTypeRefinementList({
-            container: this._("#file-additional-type"),
-            attribute: 'file.base.additionalType',
-            templates: {
-                item(item, {html}) {
-                    return html`
-                        <div class="refinement-list-item refinement-list-item--categories">
-                            <div class="refinement-list-item-inner">
-                                <label class="refinement-list-item-checkbox">
-                                    <input type="checkbox" class="custom-checkbox" aria-label="${item.label}" value="${item.value}" checked=${item.isRefined} />
-                                </label>
-                                <span class="refinement-list-item-name" title="${item.label}">${item.label}</span>
-                            </div>
-                            <span class="refinement-list-item-count">(${item.count})</span>
-                        </div>
-                    `;
-                }
-            },
-        });
-    }
-
-    // file.base.studyField
-    createFileStudyFieldRefinementList() {
-        const i18n = this._i18n;
-
-        const fileStudyFieldRefinementList = panel({
-            templates: {
-                header(options, { html }) {
-                    return i18n.t('cabinet-search.filter-document-study-field');
-                },
-            },
-            collapsed: () => true,
-        })(refinementList);
-
-        return fileStudyFieldRefinementList({
-            container: this._("#file-study-field"),
-            attribute: 'file.base.studyField',
-            templates: {
-                item(item, {html}) {
-                    // console.log('Study field:', item);
-                    return html`
-                        <div class="refinement-list-item refinement-list-item--categories">
-                            <div class="refinement-list-item-inner">
-                                <label class="refinement-list-item-checkbox">
-                                    <input type="checkbox" class="custom-checkbox" aria-label="${item.label}" value="${item.value}" checked=${item.isRefined} />
-                                </label>
-                                <span class="refinement-list-item-name" title="${item.label}">${item.label}</span>
-                            </div>
-                            <span class="refinement-list-item-count">(${item.count})</span>
-                        </div>
-                    `;
-                }
-            },
-        });
-    }
-
-    // person.studies.name
-    createPersonStudiesRefinementList() {
-        const i18n = this._i18n;
-
-        const personStudiesRefinementList = panel({
-            templates: {
-                header(options, { html }) {
-                    return i18n.t('cabinet-search.filter-document-study-field');
-                },
-            },
-            collapsed: () => true,
-        })(refinementList);
-
-        return personStudiesRefinementList({
-            container: this._("#person-studies"),
-            attribute: 'person.studies.name',
-            templates: {
-                item(item, {html}) {
-                    return html`
-                        <div class="refinement-list-item refinement-list-item--categories">
-                            <div class="refinement-list-item-inner">
-                                <label class="refinement-list-item-checkbox">
-                                    <input type="checkbox" class="custom-checkbox" aria-label="${item.label}" value="${item.value}" checked=${item.isRefined} />
-                                </label>
-                                <span class="refinement-list-item-name" title="${item.label}">${item.label}</span>
-                            </div>
-                            <span class="refinement-list-item-count">(${item.count})</span>
-                        </div>
-                    `;
-                }
-            },
-        });
+    schemaNameToKebabCase(input) {
+        return input
+            .split('.')
+            .map(part => part.replace(/([A-Z])/g, '-$1').toLowerCase())
+            .join('-')
     }
 
     static get styles() {
@@ -259,7 +221,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 border: 1px solid var(--dbp-content);
                 height: 100%;
             }
-            
+
             .filter-header {
                 padding: 1em;
                 border-bottom: 1px solid var(--dbp-content);
@@ -311,7 +273,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 gap: 1em;
                 justify-content: space-between;
             }
-            
+
             .refinement-list-item-inner {
                 display: flex;
                 max-width: 80%;
@@ -352,13 +314,29 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div id="person-filters" class="filter-group filter-group--person">
                         <h3 class="filter-title">${i18n.t('cabinet-search.person-filter-group-title')}</h3>
                         <div id="base-person" class="filter filter--base-person"></div>
-                        <div id="person-nationalities" class="filter filter--person-nationalities"></div>
-                        <div id="person-studies" class="filter filter--person-studies"></div>
+                        <div id="person-nationalities-text" class="filter filter--person-nationalities-text"></div>
+                        <div id="person-admission-qualification-type-key" class="filter filter--person"></div>
+                        <div id="person-home-address-place" class="filter filter--person"></div>
+                        <div id="person-stud-address-place" class="filter filter--person"></div>
+                        <div id="person-stud-address-country-key" class="filter filter--person"></div>
+                        <div id="person-immatriculation-semester" class="filter filter--person"></div>
+                        <div id="person-exmatriculation-semester" class="filter filter--person"></div>
+                        <div id="person-exmatriculation-status-key" class="filter filter--person"></div>
+                        <div id="person-academic-titles" class="filter filter--person"></div>
+                        <div id="person-gender-key" class="filter filter--person"></div>
+                        <div id="person-studies-name" class="filter filter--person-studies-name"></div>
+                        <div id="person-studies-type" class="filter filter--person"></div>
+                        <div id="person-applications-study-type" class="filter filter--person"></div>
                     </div>
                     <div id="document-filters" class="filter-group filter-group--document">
                         <h3 class="filter-title">${i18n.t('cabinet-search.document-filter-group-title')}</h3>
-                        <div id="file-additional-type" class="filter filter--categories"></div>
-                        <div id="file-study-field" class="filter filter--study"></div>
+                        <div id="document-type" class="filter filter--document-type"></div>
+                        <div id="file-base-additional-type" class="filter filter--file-base-additional-type"></div>
+                        <div id="file-base-student-life-cycle-phase" class="filter filter--file-"></div>
+                        <div id="file-base-study-field" class="filter filter--file-base-study-field"></div>
+                        <div id="file-base-subject-of" class="filter filter--file-"></div>
+                        <div id="file-citizenship-certificate-nationality" class="filter filter--file-citizenship-certificate-nationality"></div>
+                        <div id="file-identity-document-nationality" class="filter filter--file-identity-document-nationality"></div>
                     </div>
                 </div>
             </div>

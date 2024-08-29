@@ -7,7 +7,12 @@
         "filter-object-type-title": "Dokumenttyp",
         "filter-base-person-title": "Person",
         "filter-person-nationality-title": "Nationalität",
-        "filter-document-study-field": "Studie"
+        "filter-document-study-field": "Studie",
+
+        "filter-file-base-additional-type-title": "File typ",
+        "filter-file-base-study-field-title": "Studienbereich",
+        "filter-file-citizenship-certificate-nationality-title": "Staatsangehörigkeitsbescheinigung Nationalität",
+        "filter-file-identity-document-nationality-title": "Ausweisdokument Staatsangehörigkeit"
     },
     "error-login-message": "Sie müssen angemeldet sein um diese Funktion nutzen zu können!"
 }
