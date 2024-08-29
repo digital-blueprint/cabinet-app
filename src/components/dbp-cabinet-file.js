@@ -19,7 +19,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             "id": "",
             "objectType": "",
         };
-        this.documentAddModalRef = createRef();
+        this.documentModalRef = createRef();
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
         this.documentType = '';
@@ -167,6 +167,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     getDocumentViewFormHtml() {
         const documentType = this.documentType;
+        console.log('documentType', documentType);
 
         if (documentType === '') {
             console.log('documentType empty', documentType);
@@ -201,6 +202,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async openDialogWithHit(hit = null) {
         this.hitData = hit;
+        console.log('openDialogWithHit hit', hit);
+        this.documentType = hit.objectType;
 
         // Wait until hit data is set and rendering is complete
         await this.updateComplete;
@@ -208,7 +211,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         /**
          * @type {Modal}
          */
-        const modal = this.modalRef.value;
+        const modal = this.documentModalRef.value;
         console.log('modal', modal);
         modal.open();
     }
@@ -219,7 +222,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         /**
          * @type {Modal}
          */
-        const documentAddModal = this.documentAddModalRef.value;
+        const documentAddModal = this.documentModalRef.value;
         // Make sure the document-add dialog is closed
         documentAddModal.close();
 
@@ -235,25 +238,25 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${commonStyles.getButtonCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
 
-            #document-add-modal {
+            #document-modal {
                 --dbp-modal-min-width: 85vw;
                 --dbp-modal-max-width: 85vw;
                 --dbp-modal-min-height: 90vh;
                 --dbp-modal-max-height: 90vh;
             }
 
-            #document-add-modal .content {
+            #document-modal .content {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 10px 10px;
                 grid-auto-flow: row;
             }
 
-            #document-add-modal .description { grid-area: 1 / 1 / 2 / 3; }
+            #document-modal .description { grid-area: 1 / 1 / 2 / 3; }
 
-            #document-add-modal .pdf-preview { grid-area: 2 / 1 / 3 / 2; }
+            #document-modal .pdf-preview { grid-area: 2 / 1 / 3 / 2; }
 
-            #document-add-modal .form { grid-area: 2 / 2 / 3 / 3; }
+            #document-modal .form { grid-area: 2 / 2 / 3 / 3; }
         `;
     }
 
@@ -261,17 +264,22 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Returns the modal dialog for adding a document to a person after the document was selected
      * in the file source
      */
-    getDocumentAddModalHtml() {
+    getDocumentModalHtml() {
         console.log('getDocumentAddModalHtml');
         const hit = this.hitData;
         console.log('hit', hit);
 
-        const file = this.documentFile;
+        let file = this.documentFile;
         console.log('file', file);
 
-        if (hit.objectType !== 'person' || file === null) {
-            return html`<dbp-modal ${ref(this.documentAddModalRef)} id="document-add-modal" modal-id="document-add-modal"></dbp-modal>`;
+        // if (hit.objectType !== 'person' || file === null) {
+        //     return html`<dbp-modal ${ref(this.documentModalRef)} id="document-modal" modal-id="document-modal"></dbp-modal>`;
+        // }
+        if (file === null) {
+            return html`<dbp-modal ${ref(this.documentModalRef)} id="document-modal" modal-id="document-modal"></dbp-modal>`;
         }
+
+        console.log('this.mode', this.mode);
 
         const id = hit.id;
 
@@ -279,20 +287,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         return html`
             <dbp-modal
-                ${ref(this.documentAddModalRef)}
-                id="document-add-modal"
-                modal-id="document-add-modal"
+                ${ref(this.documentModalRef)}
+                id="document-modal"
+                modal-id="document-modal"
                 subscribe="lang">
                 <div slot="content" class="content">
                     <div class="description">
                         ${this.getBackLink()}
-                        <h1>Document Add</h1>
+                        <h1>Document Add/View/Edit</h1>
                         Document ID: ${id}<br />
                         File name: ${file.name}<br />
                         File size: ${file.size}<br />
                     </div>
                     <div class="pdf-preview">
-                        <dbp-pdf-viewer id="document-add-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
+                        <dbp-pdf-viewer id="document-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
                     </div>
                     <div class="form">
                         ${this.getDocumentTypeFormPartHtml()}
@@ -321,8 +329,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         switch (this.mode) {
             case 'view':
                 return html`
-                        ${this.getDocumentViewFormHtml()}
-                    `;
+                    ${this.getDocumentViewFormHtml()}
+                `;
             case 'add':
                 if (this.documentType === '') {
                     const file = this.documentFile;
@@ -372,7 +380,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         switch (this.mode) {
             case 'view':
-                return this.getViewHtml();
+                // TODO: Load the PDF from blob
+                this.documentFile = new File(["foo"], 'test.pdf', {type: 'application/pdf'});
+
+                // return this.getViewHtml();
+                return this.getDocumentModalHtml();
             case 'add':
                 return this.getAddHtml();
             default:
@@ -428,25 +440,25 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const i18n = this._i18n;
 
         return html`
-                ${this.getDocumentAddModalHtml()}
-                <dbp-file-source
-                    id="file-source"
-                    context="${i18n.t('cabinet-search.file-picker-context')}"
-                    subscribe="nextcloud-store-session:nextcloud-store-session"
-                    allowed-mime-types="application/pdf"
-                    enabled-targets="${this.fileHandlingEnabledTargets}"
-                    nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
-                    nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
-                    nextcloud-name="${this.nextcloudName}"
-                    nextcloud-auth-info="${this.nextcloudAuthInfo}"
-                    nextcloud-file-url="${this.nextcloudFileURL}"
-                    decompress-zip
-                    max-file-size="32000"
-                    lang="${this.lang}"
-                    text="${i18n.t('cabinet-search.upload-area-text')}"
-                    button-label="${i18n.t('cabinet-search.upload-button-label')}"
-                    @dbp-file-source-file-selected="${this.onDocumentFileSelected}"></dbp-file-source>
-                `;
+            ${this.getDocumentModalHtml()}
+            <dbp-file-source
+                id="file-source"
+                context="${i18n.t('cabinet-search.file-picker-context')}"
+                subscribe="nextcloud-store-session:nextcloud-store-session"
+                allowed-mime-types="application/pdf"
+                enabled-targets="${this.fileHandlingEnabledTargets}"
+                nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
+                nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
+                nextcloud-name="${this.nextcloudName}"
+                nextcloud-auth-info="${this.nextcloudAuthInfo}"
+                nextcloud-file-url="${this.nextcloudFileURL}"
+                decompress-zip
+                max-file-size="32000"
+                lang="${this.lang}"
+                text="${i18n.t('cabinet-search.upload-area-text')}"
+                button-label="${i18n.t('cabinet-search.upload-button-label')}"
+                @dbp-file-source-file-selected="${this.onDocumentFileSelected}"></dbp-file-source>
+            `;
     }
 
     /**
@@ -459,7 +471,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // We need to wait until rendering is complete after this.documentFile has changed
         await this.updateComplete;
 
-        const pdfViewer = this._('#document-add-pdf-viewer');
+        // TODO: We can use a reference here instead of a querySelector
+        const pdfViewer = this._('#document-pdf-viewer');
 
         // Load the PDF in the PDF viewer
         await pdfViewer.showPDF(this.documentFile);
@@ -469,6 +482,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Opens the modal dialog for adding a document to a person after the document was
         // selected in the file source
-        this.documentAddModalRef.value.open();
+        this.documentModalRef.value.open();
     }
 }
