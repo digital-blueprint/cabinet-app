@@ -17,6 +17,7 @@ import {pascalToKebab} from './utils';
 import {CabinetFile} from './components/dbp-cabinet-file.js';
 import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetViewFile} from './components/dbp-cabinet-view-file.js';
+import {CabinetFacets} from './components/dbp-cabinet-facets.js';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -40,6 +41,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.documentViewPersonModalRef = createRef();
         this.documentViewFileModalRef = createRef();
         this.documentFileComponentRef = createRef();
+        this.cabinetFacetsRef = createRef();
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
     }
@@ -52,6 +54,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-cabinet-view-person': CabinetViewPerson,
             'dbp-cabinet-view-file': CabinetViewFile,
             'dbp-inline-notification': InlineNotification,
+            'dbp-cabinet-facets': CabinetFacets,
         };
     }
 
@@ -231,11 +234,19 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${commonStyles.getRadioAndCheckboxCss()}
             ${commonStyles.getFormAddonsCSS()}
 
+            .result-container {
+                margin-top: 2em;
+                display: grid;
+                grid-template-columns: 20em minmax(0, 1fr);
+                gap: 20px;
+            }
+
             .ais-Hits-list {
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
                 gap: 20px;
                 padding: 0;
+                margin-top: 0;
             }
 
             .ais-Hits-item {
@@ -444,8 +455,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             <div class="${classMap({hidden: !this.isLoggedIn() || this.isLoading() || this.loadingTranslations})}">
                 <h1>Search</h1>
                 <div id="searchbox"></div>
-                <h2>Search Results</h2>
-                <div id="hits"></div>
+                <div class="result-container">
+                    <dbp-cabinet-facets
+                        ${ref(this.cabinetFacetsRef)}
+                        .search="${this.search}"
+                        subscribe="lang">
+                    </dbp-cabinet-facets>
+                    <div class="results">
+                        <div id="hits"></div>
+                    </div>
+                </div>
+
                 ${this.getDocumentEditModalHtml()}
                 ${this.getDocumentViewModalHtml()}
                 <dbp-cabinet-file
