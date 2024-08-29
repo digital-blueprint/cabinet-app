@@ -41,7 +41,6 @@ class CabinetFormElement extends BaseFormElement {
                 lang: ${this.lang}<br />
                 ${formElements.stringElement('studyField', 'Study field', '', true)}
                 ${formElements.stringElement('identifier', 'Identifier', '', true)}
-                ${formElements.enumElement('studentLifeCyclePhase', 'Student lifecycle phase', '', formElements.getStudentLifeCyclePhase(), true)}
                 ${formElements.enumElement('nationality', 'Nationality', '', formElements.getNationalityItems(), true)}
                 ${formElements.enumElement('additionalType', 'Additional type', '', this.getAdditionalTypes(), true)}
                 ${formElements.dateElement('dateCreated', 'Date created', '', true)}

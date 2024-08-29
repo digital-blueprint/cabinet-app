@@ -8,15 +8,6 @@ const sanitizeForHtmlId = (str) => {
         .toLowerCase();               // Convert to lowercase
 };
 
-export const getStudentLifeCyclePhase = () => {
-    return {
-        'ApplicationPhase': 'Application phase',
-        'StudyPhase': 'Study phase',
-        'GraduationPhase': 'Graduation phase',
-        'GeneralDocuments': 'General documents',
-    };
-};
-
 export const getNationalityItems = () => {
     return {
         ALB: "Albanian",
@@ -45,7 +36,7 @@ export const getNationalityItems = () => {
         LUX: "Luxembourgish",
         MLT: "Maltese",
         MDA: "Moldovan",
-        MCO: "Monégasque",
+        MCO: "Monï¿½gasque",
         MNE: "Montenegrin",
         NLD: "Dutch",
         MKD: "North Macedonian",
