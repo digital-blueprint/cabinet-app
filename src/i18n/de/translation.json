@@ -1,18 +1,35 @@
 {
     "cabinet-search": {
-        "filters": "Filters",
+        "filters": "Filter",
         "type-filter-group-title": "Kategorie",
-        "person-filter-group-title": "Eigenschaften der Person",
-        "document-filter-group-title": "Eigenschaften des Dokuments",
+        "person-filter-group-title": "Persönliche Eigenschaften",
+        "document-filter-group-title": "Dokumenteigenschaften",
+
         "filter-object-type-title": "Dokumenttyp",
         "filter-base-person-title": "Person",
-        "filter-person-nationality-title": "Nationalität",
-        "filter-document-study-field": "Studie",
+        "filter-person-nationalities-text-title": "Nationalität",
 
-        "filter-file-base-additional-type-title": "File typ",
-        "filter-file-base-study-field-title": "Studienbereich",
-        "filter-file-citizenship-certificate-nationality-title": "Staatsangehörigkeitsbescheinigung Nationalität",
-        "filter-file-identity-document-nationality-title": "Ausweisdokument Staatsangehörigkeit"
+        "filter-person-admission-qualification-type-key-title": "Zulassungsqualifikationstyp",
+        "filter-person-home-address-place-title": "Heimatadresse",
+        "filter-person-stud-address-place-title": "Studienadresse",
+        "filter-person-stud-address-country-key-title": "Studienadressland",
+        "filter-person-immatriculation-semester-title":"Immatrikulationssemester",
+        "filter-person-exmatriculation-semester-title": "Exmatrikulationssemester",
+        "filter-person-exmatriculation-status-key-title": "Exmatrikulationsstatus",
+        "filter-person-academic-titles-title": "Akademische Titel",
+        "filter-person-gender-key-title": "Geschlecht",
+        "filter-person-studies-name-title": "Studium",
+        "filter-person-studies-type-title": "Studienart",
+        "filter-person-applications-study-type-title": "Studienart",
+
+        "filter-file-base-additional-type-title": "Dateityp",
+        "filter-file-base-student-life-cycle-phase-title": "Studienzyklusphase",
+        "filter-file-base-study-field-title": "Studienfach",
+        "filter-file-base-subject-of-title": "Gegenstand des Titels",
+        "filter-file-citizenship-certificate-nationality-title": "Nationalität auf Staatsbürgerschaftsnachweis",
+        "filter-file-identity-document-nationality-title": "Nationalität auf Ausweisdokument",
+
+        "search-placeholder-person-home-address": "Städte suchen"
     },
     "error-login-message": "Sie müssen angemeldet sein um diese Funktion nutzen zu können!"
 }

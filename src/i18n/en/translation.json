@@ -27,7 +27,9 @@
         "filter-file-base-study-field-title": "Study field",
         "filter-file-base-subject-of-title": "Subject of title",
         "filter-file-citizenship-certificate-nationality-title": "Citizenship cert. nationality",
-        "filter-file-identity-document-nationality-title": "Identity document nationality"
+        "filter-file-identity-document-nationality-title": "Identity document nationality",
+
+        "search-placeholder-person-home-address": "Search cities"
     },
     "error-login-message": "You need to be logged in to use this function!"
 }

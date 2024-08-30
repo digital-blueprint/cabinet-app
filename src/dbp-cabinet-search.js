@@ -5,6 +5,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPCabinetLitElement from "./dbp-cabinet-lit-element";
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
+import {getCurrentRefinementCSS} from './styles';
 import {Icon, InlineNotification, Modal} from '@dbp-toolkit/common';
 import {classMap} from "lit/directives/class-map.js";
 import {Activity} from './activity.js';
@@ -233,18 +234,27 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${commonStyles.getActivityCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
             ${commonStyles.getFormAddonsCSS()}
+            ${getCurrentRefinementCSS()}
 
             .result-container {
                 margin-top: 2em;
                 display: grid;
                 grid-template-columns: 20em minmax(0, 1fr);
-                gap: 20px;
+                grid-template-areas: "empty header" "sidebar main";
+                gap: 0 2em;
             }
 
+            dbp-cabinet-facets {
+                grid-row-start: 2;
+            }
+            
+            .results {
+                grid-area: main;
+            }
             .ais-Hits-list {
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 20px;
+                gap: 2em;
                 padding: 0;
                 margin-top: 0;
             }
