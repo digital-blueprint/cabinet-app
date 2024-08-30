@@ -6,5 +6,6 @@
     "file-cabinet-minimalSchema": "./fileMinimalSchema.js",
     "file-cabinet-citizenshipCertificate": "./fileCitizenshipCertificate.js",
     "person": "./person.js"
-  }
+  },
+  "instantSearch": "./instantSearch.js"
 }

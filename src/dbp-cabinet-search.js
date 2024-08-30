@@ -45,6 +45,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.cabinetFacetsRef = createRef();
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
+        this.instantSearchSomething = {};
     }
 
     static get scopedElements() {
@@ -539,6 +540,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.objectTypeViewComponents = viewComponents;
             console.log('viewComponents', viewComponents);
             console.log('fileDocumentTypeNames', this.fileDocumentTypeNames);
+
+            const instantSearchModule = await import(data["instantSearch"]);
+            this.instantSearchSomething = new instantSearchModule.default();
+
+            // const facetWidgets = this.instantSearchSomething.getFacetWidgets();
+            // console.log('FacetWidgets: ', facetWidgets);
+            // if (facetWidgets) {
+            //     this.search.addWidgets([facetWidgets]);
+            // }
 
             /**
              * @type {CabinetFile}

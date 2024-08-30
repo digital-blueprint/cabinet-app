@@ -164,6 +164,7 @@ let input = [
     'src/objectTypes/fileMinimalSchema.js',
     'src/objectTypes/fileCitizenshipCertificate.js',
     'src/objectTypes/person.js',
+    'src/modules/instantSearch.js',
 ];
 if (enableEsign) {
     input = [...input,
