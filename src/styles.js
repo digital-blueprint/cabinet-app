@@ -44,6 +44,7 @@ export function getCurrentRefinementCSS() {
             background: none;
             border: none 0;
             cursor: pointer;
+            color: var(--dbp-content);
         }
     `;
 }

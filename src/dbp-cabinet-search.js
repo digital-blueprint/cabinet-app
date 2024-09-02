@@ -238,7 +238,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${getCurrentRefinementCSS()}
 
             .result-container {
-                margin-top: 2em;
+                margin-top: .5em;
                 display: grid;
                 grid-template-columns: 20em minmax(0, 1fr);
                 grid-template-areas: "empty header" "sidebar main";
@@ -252,6 +252,20 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             .results {
                 grid-area: main;
             }
+            
+            .ais-SearchBox-form {
+                display: flex;
+            }
+            
+            .ais-SearchBox-input {
+                flex-grow: 1;
+                height: 2em;
+            }
+            
+            .ais-SearchBox-submit {
+                width: 2em;
+            }
+            
             .ais-Hits-list {
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -262,7 +276,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .ais-Hits-item {
                 padding: 5px;
-                border: 1px solid black;
+                border: 1px solid var(--dbp-content);
                 list-style-type: none;
                 overflow: hidden;
             }
