@@ -123,9 +123,9 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         const createFileAdditionalTypeRefinementList = this.generateFacet(
             'file.base.additionalType',
         );
-        // const createFileBaseIsPartOfRefinementList = this.generateFacet(
-        //     'file.base.isPartOf',
-        // );
+        const createFileBaseIsPartOfRefinementList = this.generateFacet(
+            'file.base.isPartOf',
+        );
         const createFileBaseStudyFieldRefinementList = this.generateFacet(
             'file.base.studyField'
         );
@@ -162,7 +162,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             createPersonApplicationsStudyTypeRefinementList(),
 
             createFileAdditionalTypeRefinementList(),
-            // createFileBaseIsPartOfRefinementList(),
+            createFileBaseIsPartOfRefinementList(),
             createFileBaseStudyFieldRefinementList(),
             createFileBaseSubjectOfRefinementList(),
             createFileCitizenshipCertificateNationalityRefinementList(),
@@ -444,9 +444,9 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <div
                             id="file-base-additional-type"
                             class="filter filter--file-base-additional-type"></div>
-<!--                        <div-->
-<!--                            id="file-base-is-part-of"-->
-<!--                            class="filter filter&#45;&#45;file-"></div>-->
+                        <div
+                            id="file-base-is-part-of"
+                            class="filter filter--file-"></div>
                         <div
                             id="file-base-study-field"
                             class="filter filter--file-base-study-field"></div>
