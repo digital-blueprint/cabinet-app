@@ -123,7 +123,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         const data = {
             "about": {
                 "@type": "Person",
-                "persId": this.data.base.studId || this.data.base.objectID,
+                "persId": this.data.base.identNrObfuscated || this.data.base.studId || this.data.base.objectID,
             },
         };
 
