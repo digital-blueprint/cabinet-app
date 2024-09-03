@@ -74,7 +74,7 @@ class CabinetHitElement extends BaseHitElement {
     render() {
         return html`
             <form>
-                <h2>Email</h2>
+                <h2>admissionNotice</h2>
                 lang: ${this.lang}<br />
                 filename: ${this.data.file.base.fileName}<br />
         `;
@@ -84,7 +84,7 @@ class CabinetHitElement extends BaseHitElement {
 class CabinetViewElement extends BaseViewElement {
     render() {
         return html`
-            <h2>Email</h2>
+            <h2>admissionNotice</h2>
             lang: ${this.lang}<br />
             filename: ${this.data.file.base.fileName}<br />
         `;
