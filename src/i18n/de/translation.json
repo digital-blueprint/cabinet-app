@@ -31,7 +31,9 @@
 
         "search-placeholder-person-home-address": "Städte suchen",
         "search-placeholder-person-nationalities-text": "Land suchen",
-        "search-placeholder-person-student-address": "Land suchen"
+        "search-placeholder-person-student-address": "Land suchen",
+
+        "refinement-delete-filters": "Auswahl löschen"
     },
     "error-login-message": "Sie müssen angemeldet sein um diese Funktion nutzen zu können!"
 }

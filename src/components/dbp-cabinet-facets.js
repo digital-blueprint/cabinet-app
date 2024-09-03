@@ -1,11 +1,11 @@
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {css, html} from 'lit';
+import {css, html, render} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 // import {Button, IconButton, Translated} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
 // import {pascalToKebab} from '../utils';
-import {panel, refinementList} from 'instantsearch.js/es/widgets/index.js';
-import {currentRefinements} from 'instantsearch.js/es/widgets';
+import {panel, refinementList } from 'instantsearch.js/es/widgets/index.js';
+import {connectCurrentRefinements, connectClearRefinements} from 'instantsearch.js/es/connectors';
 
 export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -17,12 +17,24 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     connectedCallback() {
         super.connectedCallback();
+
+        const allFiltersContainer = document.createElement('div');
+        allFiltersContainer.setAttribute('id', 'filters-container');
+        allFiltersContainer.classList.add('filters-container');
+
         const currentRefinementsContainer = document.createElement('div');
         currentRefinementsContainer.setAttribute('id', 'current-filters');
         currentRefinementsContainer.classList.add('current-filters');
 
+        const clearRefinementsContainer = document.createElement('div');
+        clearRefinementsContainer.setAttribute('id', 'clear-filters');
+        clearRefinementsContainer.classList.add('clear-filters');
+
+        allFiltersContainer.append(currentRefinementsContainer);
+        allFiltersContainer.append(clearRefinementsContainer);
+
         this.searchResultsElement = /** @type {HTMLElement} */ (this.closest('.result-container'));
-        this.searchResultsElement.prepend(currentRefinementsContainer);
+        this.searchResultsElement.prepend(allFiltersContainer);
     }
 
     static get scopedElements() {
@@ -54,8 +66,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     createAndAddWidget() {
-        // const createCategoryRefinementList = this.generateFacet('@type', false);
-
         // Person facets
         const createBasePersonRefinementList = this.generateFacet('base.person');
         const createPersonNationalitiesRefinementList = this.generateFacet(
@@ -150,14 +160,93 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             'file.identityDocument.nationality',
         );
 
+        // Filters
+        const renderCurrentRefinements = (renderOptions) => {
+            // const i18n = this._i18n;
+            const {
+                items,
+                refine,
+            } = renderOptions;
+
+            // Render the widget
+            let listItems = items.map(item => {
+                return item.refinements.map(refinement => {
+                    let label;
+                    switch (item.attribute) {
+                        default:
+                            label = refinement.value;
+                            break;
+                    }
+                    return html`
+                            <li class='ais-CurrentRefinements-category'>
+                                <span class='ais-CurrentRefinements-categoryLabel'>${label}</span>
+                                <button class='ais-CurrentRefinements-delete' @click="${() => refine(refinement)}">
+                                    <span class="visually-hidden">Filter löschen</span>
+                                    <span class="filter-close-icon"></span>
+                                </button>
+                            </li>
+                    `;
+                });
+            });
+
+            const container = this.searchResultsElement.querySelector('#current-filters');
+            render(html`
+                <div class="ais-CurrentRefinements">
+                    <ul class="ais-CurrentRefinements-list">
+                        ${listItems}
+                        <li id="clear-refinement" class="clear-refinement-container"></li>
+                    </ul>
+                </div>`,
+                container);
+        };
+        const createCurrentRefinements = () => {
+            const customCurrentRefinements = connectCurrentRefinements(renderCurrentRefinements);
+
+            return customCurrentRefinements({
+                container: this.searchResultsElement.querySelector('#current-filters'),
+            });
+        };
+
+        // Clear refinements widget
+        const renderClearRefinements = (renderOptions, isFirstRender) => {
+            const i18n = this._i18n;
+            const { canRefine, refine } = renderOptions;
+
+            if (isFirstRender) {
+                const clearButton = document.createElement('button');
+                const clearButtonText = document.createElement('span');
+
+                clearButtonText.textContent = i18n.t('cabinet-search.refinement-delete-filters');
+                clearButton.appendChild(clearButtonText);
+                clearButton.classList.add('clear-refinements-button');
+
+                clearButton.addEventListener('click', () => {
+                    refine();
+                });
+                this.searchResultsElement.querySelector('.clear-refinement-container').appendChild(clearButton);
+            }
+
+            this.searchResultsElement.querySelector('.clear-refinement-container').querySelector('button').disabled = !canRefine;
+        };
+
+        const createClearRefinements = () => {
+            const customClearRefinements = connectClearRefinements(renderClearRefinements);
+
+            return customClearRefinements({
+                container: this.searchResultsElement.querySelector('#clear-filters'),
+            });
+        };
+
         this.search.addWidgets([
+            // Category filter
             this.createCategoryRefinementList(),
 
-            currentRefinements({
-                container: this.searchResultsElement,
-            }),
+            // Filters
+            createCurrentRefinements(),
+            // Clear filters
+            createClearRefinements(),
+            // Person filters
             createBasePersonRefinementList(),
-
             createPersonNationalitiesRefinementList(),
             createPersonAdmissionQualificationTypeKeyRefinementList(),
             createPersonHomeAddressPlaceRefinementList(),
@@ -171,7 +260,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             createPersonStudiesNameRefinementList(),
             createPersonStudiesTypeRefinementList(),
             createPersonApplicationsStudyTypeRefinementList(),
-
+            // File filters
             createFileAdditionalTypeRefinementList(),
             createFileBaseIsPartOfRefinementList(),
             createFileBaseStudyFieldRefinementList(),
@@ -232,6 +321,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             const defaultPanelOptions = {
                 templates: {
                     header(options, {html}) {
+                        // console.log(options.items, options);
                         return i18n.t(`cabinet-search.filter-${translationKey}-title`);
                     },
                 },
@@ -250,7 +340,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 attribute: schemaField,
                 sortBy: ['name:asc'],
                 templates: {
-                    item(item, {html}) {
+                    item(item, {html, label, count, isRefined, value, parent }) {
+                        // console.log('FIELD: ', schemaField, 'item: ', item);
                         return html`
                             <div class="refinement-list-item refinement-list-item--${cssClass}">
                                 <div class="refinement-list-item-inner">
@@ -271,6 +362,18 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         `;
                     },
                 },
+                // transformItems(items, { results }) {
+                //     console.log(items);
+                //     console.log(results);
+                //     return items.map((item) => {
+                //         // console.log(item);
+                //         // const parentItem = item.data.find((i) => i.value === item.value);
+                //         return {
+                //             ...item,
+                //             // parent: parentItem?.parent,
+                //         };
+                //     });
+                // },
             };
             const refinementListOptions = {
                 ...defaultRefinementListOptions,

@@ -238,7 +238,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${getCurrentRefinementCSS()}
 
             .result-container {
-                margin-top: .5em;
+                margin-top: 1em;
                 display: grid;
                 grid-template-columns: 20em minmax(0, 1fr);
                 grid-template-areas: "empty header" "sidebar main";
@@ -292,6 +292,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             query_by: "base.familyName,base.givenName,file.base.fileName,objectType",
             // TODO: Enable again when we have sorting in our Typesense schema
             // sort_by: "base.familyName:asc,base.givenName:asc,objectType:asc"
+            facet_return_parent: 'person.admissionQualificationType.key, person.studAddress.country.key, person.exmatriculationStatus.key, person.gender.key, person.immatriculationSemester, person.exmatriculationSemester, file.base.studyField ',
         };
 
         if (!this.fuzzySearch) {
