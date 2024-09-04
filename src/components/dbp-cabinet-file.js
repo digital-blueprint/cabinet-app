@@ -82,6 +82,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async createBlobUploadUrl() {
+        // TODO: Use correct URL
         const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/signature`);
         const apiUrl = new URL(baseUrl);
         const params = {
@@ -93,7 +94,36 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         apiUrl.search = new URLSearchParams(params).toString();
 
         let response = await fetch(apiUrl.toString(), {
+            // TODO: Will be GET in the future
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/ld+json',
+                Authorization: 'Bearer ' + this.auth.token
+            }
+        });
+        if (!response.ok) {
+            throw response;
+        }
+        const url = await response.text();
+        console.log('Upload url', url);
+
+        return url;
+    }
+
+    async createBlobDownloadUrl() {
+        // TODO: Use correct URL
+        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/blob/signature/get/` + this.hitData.file.base.fileId);
+        const apiUrl = new URL(baseUrl);
+        const params = {
+            'prefix': this.blobDocumentPrefix,
+            'fileName': this.documentFile.name,
+            // TODO: Does this replacing always work?
+            'type': this.objectType.replace('file-cabinet-', '')
+        };
+        apiUrl.search = new URLSearchParams(params).toString();
+
+        let response = await fetch(apiUrl.toString(), {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/ld+json',
                 Authorization: 'Bearer ' + this.auth.token
@@ -216,6 +246,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         modal.open();
     }
 
+    async downloadFile() {
+        // console.log('hitData', this.hitData);
+        console.log('fileId', this.hitData.file.base.fileId);
+
+        let url = await this.createBlobDownloadUrl();
+        console.log('url', url);
+
+        // TODO: Implement PDF download
+        confirm('Download PDF: ' + this.hitData.file.base.fileId);
+    }
+
     async openDocumentAddDialog() {
         this.objectType = '';
 
@@ -257,6 +298,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             #document-modal .pdf-preview { grid-area: 2 / 1 / 3 / 2; }
 
             #document-modal .form { grid-area: 2 / 2 / 3 / 3; }
+
+            #document-modal .fileButtons {
+                display: flex;
+                justify-content: right;
+                margin-bottom: 10px;
+                gap: 5px;
+            }
         `;
     }
 
@@ -300,6 +348,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         File size: ${file.size}<br />
                     </div>
                     <div class="pdf-preview">
+                        <div class="fileButtons">
+                            <button @click="${this.downloadFile}">Download</button>
+                            <button @click="${this.openDocumentAddDialog}">Replace PDF</button>
+                        </div>
                         <dbp-pdf-viewer id="document-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
                     </div>
                     <div class="form">
@@ -383,60 +435,16 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 // TODO: Load the PDF from blob
                 this.documentFile = new File(["foo"], 'test.pdf', {type: 'application/pdf'});
 
-                // return this.getViewHtml();
-                return this.getDocumentModalHtml();
+                return this.getHtml();
             case 'add':
-                return this.getAddHtml();
+                return this.getHtml();
             default:
                 console.error('mode not found', this.mode);
                 return html`<dbp-modal ${ref(this.modalRef)} modal-id="view-modal"></dbp-modal>`;
         }
     }
 
-    getViewHtml() {
-        console.log('File View HTML');
-        const hit = this.hitData;
-        console.log('hit', hit);
-        const objectType = hit.objectType;
-
-        if (objectType === '') {
-            console.log('objectType empty', objectType);
-            return html`<dbp-modal ${ref(this.modalRef)} modal-id="view-modal"></dbp-modal>`;
-        }
-
-        const id = hit.id;
-        const tagPart = pascalToKebab(objectType);
-        const tagName = 'dbp-cabinet-object-type-view-' + tagPart;
-
-        console.log('objectType', objectType);
-        console.log('tagName', tagName);
-        console.log('this.objectTypeViewComponents[objectType]', this.objectTypeViewComponents[objectType]);
-
-        if (!customElements.get(tagName)) {
-            customElements.define(tagName, this.objectTypeViewComponents[objectType]);
-        }
-
-        // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
-        // a variable and need to set the "data" property from a variable too!
-        return staticHtml`
-            <dbp-modal
-                ${ref(this.modalRef)}
-                id="view-modal"
-                modal-id="view-modal"
-                subscribe="lang">
-                <div slot="content">
-                    Document ID: ${id}<br />
-                    ObjectType: ${objectType}<br />
-                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
-                </div>
-                <div slot="footer" class="modal-footer">
-                    View Footer
-                </div>
-            </dbp-modal>
-        `;
-    }
-
-    getAddHtml() {
+    getHtml() {
         const i18n = this._i18n;
 
         return html`
