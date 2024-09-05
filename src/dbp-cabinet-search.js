@@ -489,7 +489,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <dbp-cabinet-file
                     mode="view"
                     ${ref(this.documentViewFileModalRef)}
-                    subscribe="lang,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
+                    subscribe="lang,auth,entry-point-url,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
                     .data=${hit}
                 ></dbp-cabinet-file>
             `;

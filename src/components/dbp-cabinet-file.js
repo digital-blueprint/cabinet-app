@@ -82,20 +82,25 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async createBlobUploadUrl() {
-        // TODO: Use correct URL
+        if (this.entryPointUrl === '') {
+            return '';
+        }
+
         const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/signature`);
         const apiUrl = new URL(baseUrl);
         const params = {
+            'method': 'POST',
             'prefix': this.blobDocumentPrefix,
             'fileName': this.documentFile.name,
             // TODO: Does this replacing always work?
             'type': this.objectType.replace('file-cabinet-', '')
         };
+
         apiUrl.search = new URLSearchParams(params).toString();
 
         let response = await fetch(apiUrl.toString(), {
             // TODO: Will be GET in the future
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/ld+json',
                 Authorization: 'Bearer ' + this.auth.token
@@ -110,16 +115,26 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         return url;
     }
 
-    async createBlobDownloadUrl() {
-        // TODO: Use correct URL
-        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/blob/signature/get/` + this.hitData.file.base.fileId);
+    async createBlobDownloadUrl( includeData = false) {
+        if (this.entryPointUrl === '') {
+            return '';
+        }
+
+        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/signature`);
         const apiUrl = new URL(baseUrl);
         const params = {
+            'method': 'GET',
+            'identifier': this.hitData.file.base.fileId,
             'prefix': this.blobDocumentPrefix,
             'fileName': this.documentFile.name,
             // TODO: Does this replacing always work?
             'type': this.objectType.replace('file-cabinet-', '')
         };
+
+        if (includeData) {
+            params['includeData'] = '1';
+        }
+
         apiUrl.search = new URLSearchParams(params).toString();
 
         let response = await fetch(apiUrl.toString(), {
@@ -133,9 +148,26 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             throw response;
         }
         const url = await response.text();
-        console.log('Upload url', url);
+        console.log('Download url', url);
 
         return url;
+    }
+
+    async loadBlobItem(url) {
+        let response = await fetch(url.toString(), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/ld+json',
+                Authorization: 'Bearer ' + this.auth.token
+            }
+        });
+        if (!response.ok) {
+            throw response;
+        }
+        const json = await response.json();
+        console.log('json', json);
+
+        return json;
     }
 
     async uploadDocumentToBlob(uploadUrl, metaData) {
@@ -255,6 +287,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // TODO: Implement PDF download
         confirm('Download PDF: ' + this.hitData.file.base.fileId);
+
+        await this.loadBlobItem(url);
     }
 
     async openDocumentAddDialog() {
