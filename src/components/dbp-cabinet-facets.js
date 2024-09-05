@@ -67,184 +67,108 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     createAndAddWidget() {
         // Person facets
-        const createBasePersonRefinementList = this.generateFacet('base.person');
+        const createBasePersonRefinementList = this.generateFacet(
+            'base.person',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-base-person')}}
+        );
         const createPersonNationalitiesRefinementList = this.generateFacet(
             'person.nationalities.text',
-            {
-                facet: {
-                    searchable: true,
-                    limit: 20,
-                    searchablePlaceholder: this._i18n.t(
-                        'cabinet-search.search-placeholder-person-nationalities-text',
-                    ),
-                    searchableShowReset: true,
-                },
-            },
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-nationalities-text')}}
         );
         const createPersonAdmissionQualificationTypeKeyRefinementList = this.generateFacet(
             'person.admissionQualificationType.key',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-admission-qualification-type')}}
         );
         const createPersonHomeAddressPlaceRefinementList = this.generateFacet(
             'person.homeAddress.place',
-            {
-                panel: {},
-                facet: {
-                    searchable: true,
-                    limit: 20,
-                    searchablePlaceholder: this._i18n.t(
-                        'cabinet-search.search-placeholder-person-home-address',
-                    ),
-                    searchableShowReset: true,
-                },
-            },
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-home-address')}}
         );
         const createPersonStudAddressPlaceRefinementList = this.generateFacet(
             'person.studAddress.place',
-            {
-                panel: {},
-                facet: {
-                    searchable: true,
-                    limit: 20,
-                    searchablePlaceholder: this._i18n.t(
-                        'cabinet-search.search-placeholder-person-student-address',
-                    ),
-                    searchableShowReset: true,
-                },
-            },
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-student-address')}}
         );
         const createPersonStudAddressCountryKeyRefinementList = this.generateFacet(
             'person.studAddress.country.key',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-student-address-country')}}
         );
         const createPersonImmatriculationSemesterRefinementList = this.generateFacet(
             'person.immatriculationSemester',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-immatriculation-semester')}}
         );
         const createPersonExmatriculationSemesterRefinementList = this.generateFacet(
             'person.exmatriculationSemester',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-exmatriculation-semester')}}
         );
         const createPersonExmatriculationStatusKeyRefinementList = this.generateFacet(
             'person.exmatriculationStatus.key',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-exmatriculation-status')}}
         );
         const createPersonAcademicTitlesRefinementList = this.generateFacet(
-            'person.academicTitles'
+            'person.academicTitles',
+            { facet: {
+                searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-academic-titles'),
+                    transformItems(items) {
+                        return items.map((item) => {
+                            // Set label for empty value
+                            let label = item.value === " " ? "no title" : item.label;
+                            return {
+                                ...item,
+                                label: label,
+                            };
+                        });
+                    },
+            }}
         );
         const createPersonGenderKeyRefinementList = this.generateFacet(
-            'person.gender.key'
+            'person.gender.key',
+            { facet: { searchable: false }}
         );
         const createPersonStudiesNameRefinementList = this.generateFacet(
-            'person.studies.name'
+            'person.studies.name',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-studies-name')}}
         );
         const createPersonStudiesTypeRefinementList = this.generateFacet(
-            'person.studies.type'
+            'person.studies.type',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-studies-type')}}
         );
         const createPersonApplicationsStudyTypeRefinementList = this.generateFacet(
             'person.applications.studyType',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-applications-study-type')}}
         );
 
         // File facets
         const createFileAdditionalTypeRefinementList = this.generateFacet(
             'file.base.additionalType',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-additional-type')}}
         );
         const createFileBaseIsPartOfRefinementList = this.generateFacet(
             'file.base.isPartOf',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-is-part-of')}}
         );
         const createFileBaseStudyFieldRefinementList = this.generateFacet(
-            'file.base.studyField'
+            'file.base.studyField',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-study-field')}}
         );
         const createFileBaseSubjectOfRefinementList = this.generateFacet(
-            'file.base.subjectOf'
+            'file.base.subjectOf',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-subject-of')}}
         );
         const createFileCitizenshipCertificateNationalityRefinementList = this.generateFacet(
             'file.citizenshipCertificate.nationality',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-student-address')}}
         );
         const createFileIdentityDocumentNationalityRefinementList = this.generateFacet(
             'file.identityDocument.nationality',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-student-address')}}
         );
-
-        // Filters
-        const renderCurrentRefinements = (renderOptions) => {
-            // const i18n = this._i18n;
-            const {
-                items,
-                refine,
-            } = renderOptions;
-
-            // Render the widget
-            let listItems = items.map(item => {
-                return item.refinements.map(refinement => {
-                    let label;
-                    switch (item.attribute) {
-                        default:
-                            label = refinement.value;
-                            break;
-                    }
-                    return html`
-                            <li class='ais-CurrentRefinements-category'>
-                                <span class='ais-CurrentRefinements-categoryLabel'>${label}</span>
-                                <button class='ais-CurrentRefinements-delete' @click="${() => refine(refinement)}">
-                                    <span class="visually-hidden">Filter löschen</span>
-                                    <span class="filter-close-icon"></span>
-                                </button>
-                            </li>
-                    `;
-                });
-            });
-
-            const container = this.searchResultsElement.querySelector('#current-filters');
-            render(html`
-                <div class="ais-CurrentRefinements">
-                    <ul class="ais-CurrentRefinements-list">
-                        ${listItems}
-                        <li id="clear-refinement" class="clear-refinement-container"></li>
-                    </ul>
-                </div>`,
-                container);
-        };
-        const createCurrentRefinements = () => {
-            const customCurrentRefinements = connectCurrentRefinements(renderCurrentRefinements);
-
-            return customCurrentRefinements({
-                container: this.searchResultsElement.querySelector('#current-filters'),
-            });
-        };
-
-        // Clear refinements widget
-        const renderClearRefinements = (renderOptions, isFirstRender) => {
-            const i18n = this._i18n;
-            const { canRefine, refine } = renderOptions;
-
-            if (isFirstRender) {
-                const clearButton = document.createElement('button');
-                const clearButtonText = document.createElement('span');
-
-                clearButtonText.textContent = i18n.t('cabinet-search.refinement-delete-filters');
-                clearButton.appendChild(clearButtonText);
-                clearButton.classList.add('clear-refinements-button');
-
-                clearButton.addEventListener('click', () => {
-                    refine();
-                });
-                this.searchResultsElement.querySelector('.clear-refinement-container').appendChild(clearButton);
-            }
-
-            this.searchResultsElement.querySelector('.clear-refinement-container').querySelector('button').disabled = !canRefine;
-        };
-
-        const createClearRefinements = () => {
-            const customClearRefinements = connectClearRefinements(renderClearRefinements);
-
-            return customClearRefinements({
-                container: this.searchResultsElement.querySelector('#clear-filters'),
-            });
-        };
 
         this.search.addWidgets([
             // Category filter
             this.createCategoryRefinementList(),
-
             // Filters
-            createCurrentRefinements(),
+            this.createCurrentRefinements(),
             // Clear filters
-            createClearRefinements(),
+            this.createClearRefinements(),
             // Person filters
             createBasePersonRefinementList(),
             createPersonNationalitiesRefinementList(),
@@ -302,6 +226,87 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
     }
 
+    createCurrentRefinements = () => {
+        const customCurrentRefinements = connectCurrentRefinements(this.renderCurrentRefinements);
+
+        return customCurrentRefinements({
+            container: this.searchResultsElement.querySelector('#current-filters'),
+            transformItems(items, { results }) {
+                console.log(items);
+                console.log(results);
+                return items;
+            },
+        });
+    };
+
+    renderCurrentRefinements = (renderOptions) => {
+        // const i18n = this._i18n;
+        const {
+            items,
+            refine,
+        } = renderOptions;
+
+        // Render the widget
+        let listItems = items.map(item => {
+            return item.refinements.map(refinement => {
+                let label;
+                switch (item.attribute) {
+                    default:
+                        label = refinement.label;
+                        break;
+                }
+                return html`
+                    <li class='ais-CurrentRefinements-category'>
+                        <span class='ais-CurrentRefinements-categoryLabel'>${label}</span>
+                        <button class='ais-CurrentRefinements-delete' @click="${() => refine(refinement)}">
+                            <span class="visually-hidden">Filter löschen</span>
+                            <span class="filter-close-icon"></span>
+                        </button>
+                    </li>
+                `;
+            });
+        });
+
+        const container = this.searchResultsElement.querySelector('#current-filters');
+        render(html`
+                <div class="ais-CurrentRefinements">
+                    <ul class="ais-CurrentRefinements-list">
+                        ${listItems}
+                        <li id="clear-refinement" class="clear-refinement-container"></li>
+                    </ul>
+                </div>`,
+            container);
+    };
+
+    renderClearRefinements = (renderOptions, isFirstRender) => {
+        const i18n = this._i18n;
+        const { canRefine, refine } = renderOptions;
+
+        if (isFirstRender) {
+            const clearButton = document.createElement('button');
+            const clearButtonText = document.createElement('span');
+
+            clearButtonText.textContent = i18n.t('cabinet-search.refinement-delete-filters');
+            clearButton.appendChild(clearButtonText);
+            clearButton.classList.add('clear-refinements-button');
+
+            clearButton.addEventListener('click', () => {
+                refine();
+            });
+            this.searchResultsElement.querySelector('.clear-refinement-container').appendChild(clearButton);
+        }
+
+        this.searchResultsElement.querySelector('.clear-refinement-container').querySelector('button').disabled = !canRefine;
+    };
+
+    createClearRefinements = () => {
+        const customClearRefinements = connectClearRefinements(this.renderClearRefinements);
+
+        return customClearRefinements({
+            container: this.searchResultsElement.querySelector('#clear-filters'),
+        });
+    };
+
     /**
      * Generate facets based on schema name
      * @param {string} schemaField - name of the schema field
@@ -315,7 +320,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         const cssClass = this.schemaNameToKebabCase(schemaField);
         const translationKey = this.schemaNameToKebabCase(schemaField);
 
-        console.log('cssClass: ', cssClass);
+        // console.log('cssClass: ', cssClass);
 
         return function () {
             const defaultPanelOptions = {
@@ -327,6 +332,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 },
                 collapsed: () => true,
                 hidden(options) {
+                    console.log('getFacetValues: ', options.results.getFacetValues(schemaField, {}));
                     return options.items.length <= 1;
                 },
             };
@@ -339,8 +345,11 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 container: that._(`#${cssClass}`),
                 attribute: schemaField,
                 sortBy: ['name:asc'],
+                limit: 12,
+                searchable: true,
+                searchableShowReset: true,
                 templates: {
-                    item(item, {html, label, count, isRefined, value, parent }) {
+                    item(item, {html}) {
                         // console.log('FIELD: ', schemaField, 'item: ', item);
                         return html`
                             <div class="refinement-list-item refinement-list-item--${cssClass}">
@@ -362,18 +371,25 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         `;
                     },
                 },
-                // transformItems(items, { results }) {
-                //     console.log(items);
-                //     console.log(results);
-                //     return items.map((item) => {
-                //         // console.log(item);
-                //         // const parentItem = item.data.find((i) => i.value === item.value);
-                //         return {
-                //             ...item,
-                //             // parent: parentItem?.parent,
-                //         };
-                //     });
-                // },
+                transformItems(items, { results }) {
+                    return items.map((item) => {
+                        let label = item.label;
+                        let highlighted = item.highlighted;
+                        let value = item.value;;
+                        if (item.label.startsWith('{"key')) {
+                            let facetParent = JSON.parse(item.label);
+                            label = facetParent.text;
+                            value = facetParent.key;
+                            highlighted = facetParent.key;
+                        }
+                        return {
+                            ...item,
+                            label: label,
+                            value: value,
+                            highlighted: highlighted,
+                        };
+                    });
+                },
             };
             const refinementListOptions = {
                 ...defaultRefinementListOptions,

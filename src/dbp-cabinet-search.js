@@ -20,6 +20,24 @@ import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetViewFile} from './components/dbp-cabinet-view-file.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
 
+
+class CustomTypesenseInstantSearchAdapter extends TypesenseInstantSearchAdapter {
+    _adaptAndPerformTypesenseRequest(request) {
+        let response = super._adaptAndPerformTypesenseRequest(request);
+        response.then((res) => {
+            if (Array.isArray(res.results) && res.results.length > 0 &&
+                Array.isArray(res.results[0].facet_counts) && res.results[0].facet_counts.length > 0) {
+                res.results[0].facet_counts.forEach((facet) => {
+                    facet.counts.forEach((count) => {
+                        count.value = count.parent !== undefined ? JSON.stringify(count.parent) : count.value;
+                    });
+                });
+            }
+        });
+        return response;
+    }
+}
+
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
@@ -292,7 +310,20 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             query_by: "base.familyName,base.givenName,file.base.fileName,objectType",
             // TODO: Enable again when we have sorting in our Typesense schema
             // sort_by: "base.familyName:asc,base.givenName:asc,objectType:asc"
-            facet_return_parent: 'person.admissionQualificationType.key, person.studAddress.country.key, person.exmatriculationStatus.key, person.gender.key, person.immatriculationSemester, person.exmatriculationSemester, file.base.studyField ',
+            facet_return_parent: 'person.admissionQualificationType.key, person.studAddress.country.key, person.exmatriculationStatus.key, person.gender.key',
+
+            /*
+            file.base.studyField no key
+
+            "base": {
+                "additionalType": "Communication",
+                "fileId": "0191b18e-ef8d-735b-ac34-0e3ba40d5592",
+                "fileName": "strategic_essay_97.pdf",
+                "fileSource": "cabinet-bucket",
+                "studyField": "890",
+                "subjectOf": "VR 2023/789-B"
+            },
+           */
         };
 
         if (!this.fuzzySearch) {
@@ -317,7 +348,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Create the Instantsearch instance
      */
     createInstantsearch() {
-        const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter(
+        const typesenseInstantsearchAdapter = new CustomTypesenseInstantSearchAdapter(
             this.getTypesenseInstantsearchAdapterConfig());
 
         // We need to leak the typesenseInstantsearchAdapter instance to the global scope,
@@ -341,6 +372,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     createSearchBox() {
         return searchBox({
             container: this._("#searchbox"),
+            showReset: false,
+            showLoadingIndicator: false,
         });
     }
 
