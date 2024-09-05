@@ -41,6 +41,7 @@ class CabinetFormElement extends BaseFormElement {
                 ${formElements.stringElement('agent[familyName]', 'Family name', '')}
                 ${formElements.stringElement('abstract', 'Abstract', '', false, 10)}
                 ${formElements.stringElement('studyField', 'Study field', '', true)}
+                ${formElements.stringElement('semester', 'Semester', '', true)}
                 ${formElements.enumElement('additionalType', 'Additional types', '', this.getAdditionalTypes(), false)}
                 ${formElements.dateTimeElement('dateCreated', 'Date created', '', true)}
                 ${formElements.stringElement('comment', 'Comment', '', false, 5)}

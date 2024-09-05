@@ -47,6 +47,7 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>admissionNotice Form</h2>
                 ${formElements.stringElement('studyField', 'Study field', '', true)}
+                ${formElements.stringElement('semester', 'Semester', '', true)}
                 ${formElements.stringElement('subjectOf', 'Subject of', '')}
                 ${formElements.enumElement('additionalType', 'Additional type', '', this.getAdditionalTypes(), false)}
                 ${formElements.dateElement('dateCreated', 'Date created', '', true)}

@@ -37,8 +37,9 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>fileCitizenshipCertificate Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.enumElement('additionalType', 'Additional types', '', this.getAdditionalTypes(), false)}
                 ${formElements.stringElement('studyField', 'Study field', '', true)}
+                ${formElements.stringElement('semester', 'Semester', '', true)}
+                ${formElements.enumElement('additionalType', 'Additional types', '', this.getAdditionalTypes(), false)}
                 ${formElements.enumElement('nationality', 'Nationality', '', formElements.getNationalityItems(), false)}
                 ${formElements.dateElement('dateCreated', 'Date created', '', true)}
                 ${formElements.stringElement('comment', 'Comment', '', false, 5)}

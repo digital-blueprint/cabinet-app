@@ -40,6 +40,7 @@ class CabinetFormElement extends BaseFormElement {
                 <h2>fileIdentityDocument Form</h2>
                 lang: ${this.lang}<br />
                 ${formElements.stringElement('studyField', 'Study field', '', true)}
+                ${formElements.stringElement('semester', 'Semester', '', true)}
                 ${formElements.stringElement('identifier', 'Identifier', '', true)}
                 ${formElements.enumElement('nationality', 'Nationality', '', formElements.getNationalityItems(), true)}
                 ${formElements.enumElement('additionalType', 'Additional type', '', this.getAdditionalTypes(), true)}

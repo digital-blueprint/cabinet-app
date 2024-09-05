@@ -42,6 +42,7 @@ class CabinetFormElement extends BaseFormElement {
                 <h2>fileMinimalSchema Form</h2>
                 lang: ${this.lang}<br />
                 ${formElements.stringElement('studyField', 'Study field', '', true)}
+                ${formElements.stringElement('semester', 'Semester', '', true)}
                 ${formElements.enumElement('additionalType', 'Additional type', '', getAdditionalTypes(), false)}
                 ${formElements.dateElement('dateCreated', 'Date created', '', true)}
                 ${formElements.stringElement('subjectOf', 'Subject of', '')}
@@ -81,6 +82,7 @@ class CabinetViewElement extends BaseViewElement {
             lang: ${this.lang}<br />
             filename: ${this.data.file.base.fileName}<br />
             ${viewElements.stringElement('Study field', this.data.file.base.studyField)}
+            ${viewElements.stringElement('Semester', this.data.file.base.semester)}
             ${viewElements.enumElement('Additional type', this.data.file.base.additionalType, getAdditionalTypes(), false)}
             ${viewElements.dateElement('Date created', this.data.file.base.dateCreated)}
             ${viewElements.stringElement('Subject of', this.data.file.base.subjectOf)}
