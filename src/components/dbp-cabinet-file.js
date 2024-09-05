@@ -273,7 +273,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const url = await this.createBlobDownloadUrl(true);
         let blobFile = await this.loadBlobItem(url);
         console.log('blobFile', blobFile);
-        // TODO: Doesn't work yet
+        // TODO: Doesn't work yet, it needs to be converted to a File object!
         await this.showPdf(blobFile.contentUrl);
 
         /**
