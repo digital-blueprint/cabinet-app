@@ -270,6 +270,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Wait until hit data is set and rendering is complete
         await this.updateComplete;
 
+        const url = await this.createBlobDownloadUrl(true);
+        let blobFile = await this.loadBlobItem(url);
+        console.log('blobFile', blobFile);
+        // TODO: Doesn't work yet
+        await this.showPdf(blobFile.contentUrl);
+
         /**
          * @type {Modal}
          */
@@ -282,12 +288,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // console.log('hitData', this.hitData);
         console.log('fileId', this.hitData.file.base.fileId);
 
+        // TODO: We need to do this as soon the "view" dialog is opened to be able to show the preview
         let url = await this.createBlobDownloadUrl();
         console.log('url', url);
 
         // TODO: Implement PDF download
-        confirm('Download PDF: ' + this.hitData.file.base.fileId);
-
         await this.loadBlobItem(url);
     }
 
@@ -508,7 +513,19 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      */
     async onDocumentFileSelected(ev) {
         console.log('ev.detail.file', ev.detail.file);
-        this.documentFile = ev.detail.file;
+        await this.showPdf(ev.detail.file);
+
+        // Opens the modal dialog for adding a document to a person after the document was
+        // selected in the file source
+        this.documentModalRef.value.open();
+    }
+
+    /**
+     * @param documentFile
+     */
+    async showPdf(documentFile) {
+        console.log('documentFile', documentFile);
+        this.documentFile = documentFile;
 
         // We need to wait until rendering is complete after this.documentFile has changed
         await this.updateComplete;
@@ -521,9 +538,5 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Workaround to trigger a resize after the PDF was loaded, so the PDF is shown correctly
         pdfViewer._onWindowResize();
-
-        // Opens the modal dialog for adding a document to a person after the document was
-        // selected in the file source
-        this.documentModalRef.value.open();
     }
 }
