@@ -12,31 +12,13 @@ import {Activity} from './activity.js';
 import metadata from './dbp-cabinet-search.metadata.json';
 import instantsearch from 'instantsearch.js';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
-import {hits, searchBox} from 'instantsearch.js/es/widgets';
+import {hits, searchBox, stats} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
 import {pascalToKebab} from './utils';
 import {CabinetFile} from './components/dbp-cabinet-file.js';
 import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetViewFile} from './components/dbp-cabinet-view-file.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
-
-
-class CustomTypesenseInstantSearchAdapter extends TypesenseInstantSearchAdapter {
-    _adaptAndPerformTypesenseRequest(request) {
-        let response = super._adaptAndPerformTypesenseRequest(request);
-        response.then((res) => {
-            if (Array.isArray(res.results) && res.results.length > 0 &&
-                Array.isArray(res.results[0].facet_counts) && res.results[0].facet_counts.length > 0) {
-                res.results[0].facet_counts.forEach((facet) => {
-                    facet.counts.forEach((count) => {
-                        count.value = count.parent !== undefined ? JSON.stringify(count.parent) : count.value;
-                    });
-                });
-            }
-        });
-        return response;
-    }
-}
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -230,7 +212,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 hitsPerPage: 24
             }),
             this.createSearchBox(),
-            this.createHits()
+            this.createHits(),
+            this.createStats(),
         ]);
 
         search.start();
@@ -258,7 +241,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             .result-container {
                 margin-top: 1em;
                 display: grid;
-                grid-template-columns: 20em minmax(0, 1fr);
+                grid-template-columns: 24em minmax(0, 1fr);
                 grid-template-areas: "empty header" "sidebar main";
                 gap: 0 2em;
             }
@@ -348,7 +331,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Create the Instantsearch instance
      */
     createInstantsearch() {
-        const typesenseInstantsearchAdapter = new CustomTypesenseInstantSearchAdapter(
+        const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter(
             this.getTypesenseInstantsearchAdapterConfig());
 
         // We need to leak the typesenseInstantsearchAdapter instance to the global scope,
@@ -411,6 +394,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     `;
                 },
             },
+        });
+    }
+
+    createStats() {
+        return stats({
+            container: this._('#result-count'),
         });
     }
 
@@ -515,6 +504,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <h1>Search</h1>
                 <div id="searchbox"></div>
                 <div class="result-container">
+                    <div id="result-count"></div>
                     <dbp-cabinet-facets
                         ${ref(this.cabinetFacetsRef)}
                         .search="${this.search}"

@@ -65,6 +65,10 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         super.update(changedProperties);
     }
 
+    firstUpdated() {
+        console.log('-- First Updated --');
+    }
+
     createAndAddWidget() {
         // Person facets
         const createBasePersonRefinementList = this.generateFacet(
@@ -76,7 +80,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-nationalities-text')}}
         );
         const createPersonAdmissionQualificationTypeKeyRefinementList = this.generateFacet(
-            'person.admissionQualificationType.key',
+            'person.admissionQualificationType.text',
             { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-admission-qualification-type')}}
         );
         const createPersonHomeAddressPlaceRefinementList = this.generateFacet(
@@ -88,7 +92,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-student-address')}}
         );
         const createPersonStudAddressCountryKeyRefinementList = this.generateFacet(
-            'person.studAddress.country.key',
+            'person.studAddress.country.text',
             { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-student-address-country')}}
         );
         const createPersonImmatriculationSemesterRefinementList = this.generateFacet(
@@ -100,36 +104,44 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-exmatriculation-semester')}}
         );
         const createPersonExmatriculationStatusKeyRefinementList = this.generateFacet(
-            'person.exmatriculationStatus.key',
+            'person.exmatriculationStatus.text',
             { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-exmatriculation-status')}}
         );
         const createPersonAcademicTitlesRefinementList = this.generateFacet(
             'person.academicTitles',
-            { facet: {
-                searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-academic-titles'),
+            {
+                facet: {
+                    searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-academic-titles'),
+                    showMore: true,
+                    showMoreLimit: 50,
                     transformItems(items) {
-                        return items.map((item) => {
-                            // Set label for empty value
-                            let label = item.value === " " ? "no title" : item.label;
-                            return {
-                                ...item,
-                                label: label,
-                            };
-                        });
-                    },
-            }}
+                        // Remove items without a label.
+                        items = items.filter(item => item.label.trim() !== '');
+                        return items;
+                    }
+                }
+            }
         );
+
         const createPersonGenderKeyRefinementList = this.generateFacet(
-            'person.gender.key',
-            { facet: { searchable: false }}
+            'person.gender.text',
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-gender')}}
         );
         const createPersonStudiesNameRefinementList = this.generateFacet(
             'person.studies.name',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-studies-name')}}
+            { facet: {
+                searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-studies-name'),
+                showMore: true,
+                showMoreLimit: 50,
+            }}
         );
         const createPersonStudiesTypeRefinementList = this.generateFacet(
             'person.studies.type',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-studies-type')}}
+            { facet: {
+                searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-studies-type'),
+                showMore: true,
+                showMoreLimit: 50,
+            }}
         );
         const createPersonApplicationsStudyTypeRefinementList = this.generateFacet(
             'person.applications.studyType',
@@ -192,6 +204,17 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             createFileCitizenshipCertificateNationalityRefinementList(),
             createFileIdentityDocumentNationalityRefinementList(),
         ]);
+
+        // Add event listeners to open filters by clicking panel headers
+        this._a('.ais-Panel-header').forEach((panelHeader) => {
+            panelHeader.addEventListener('mousedown', (event) => {
+                if (event.target.closest('.ais-Panel-collapseButton')) {
+                    return;
+                } else {
+                    panelHeader.querySelector('.ais-Panel-collapseButton').click();
+                }
+            });
+        });
     }
 
     // @type
@@ -231,11 +254,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         return customCurrentRefinements({
             container: this.searchResultsElement.querySelector('#current-filters'),
-            transformItems(items, { results }) {
-                console.log(items);
-                console.log(results);
-                return items;
-            },
         });
     };
 
@@ -320,8 +338,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         const cssClass = this.schemaNameToKebabCase(schemaField);
         const translationKey = this.schemaNameToKebabCase(schemaField);
 
-        // console.log('cssClass: ', cssClass);
-
         return function () {
             const defaultPanelOptions = {
                 templates: {
@@ -332,7 +348,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 },
                 collapsed: () => true,
                 hidden(options) {
-                    console.log('getFacetValues: ', options.results.getFacetValues(schemaField, {}));
                     return options.items.length <= 1;
                 },
             };
@@ -344,13 +359,13 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             const defaultRefinementListOptions = {
                 container: that._(`#${cssClass}`),
                 attribute: schemaField,
-                sortBy: ['name:asc'],
+                sortBy: ['count:desc'],
                 limit: 12,
                 searchable: true,
-                searchableShowReset: true,
+                searchableShowReset: false,
+                // searchableIsAlwaysActive: false, // don't show search if less than limit items exists.
                 templates: {
                     item(item, {html}) {
-                        // console.log('FIELD: ', schemaField, 'item: ', item);
                         return html`
                             <div class="refinement-list-item refinement-list-item--${cssClass}">
                                 <div class="refinement-list-item-inner">
@@ -370,25 +385,9 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                             </div>
                         `;
                     },
-                },
-                transformItems(items, { results }) {
-                    return items.map((item) => {
-                        let label = item.label;
-                        let highlighted = item.highlighted;
-                        let value = item.value;;
-                        if (item.label.startsWith('{"key')) {
-                            let facetParent = JSON.parse(item.label);
-                            label = facetParent.text;
-                            value = facetParent.key;
-                            highlighted = facetParent.key;
-                        }
-                        return {
-                            ...item,
-                            label: label,
-                            value: value,
-                            highlighted: highlighted,
-                        };
-                    });
+                    searchableSubmit(data, { html }) {
+                        return null;
+                    }
                 },
             };
             const refinementListOptions = {
@@ -401,6 +400,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             return PanelWidget(refinementListOptions);
         };
     }
+
 
     /**
      * Convert schema name to kebabCase for css classes and translation keys
@@ -458,7 +458,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             .ais-SearchBox-form {
                 display: flex;
                 gap: 0.25em;
-                padding-top: 0.25em;
+                padding-top: 0.5em;
             }
 
             .ais-SearchBox-input {
@@ -483,7 +483,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             .ais-Panel-body {
                 border: 1px solid var(--dbp-content);
                 border-top: none 0;
-                padding: 0 0.25em;
+                padding: 0 0.5em;
             }
 
             .refinement-list-item {
@@ -512,6 +512,14 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 opacity: 0;
                 display: none;
             }
+            
+            .ais-RefinementList-noResults {
+                margin: .5em 0;
+            }
+
+            button.ais-RefinementList-showMore {
+                margin-bottom: 1em;
+            }
         `;
     }
 
@@ -537,15 +545,15 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         </h3>
                         <div id="base-person" class="filter filter--base-person"></div>
                         <div id="person-nationalities-text" class="filter filter--person-nationalities"></div>
-                        <div id="person-admission-qualification-type-key" class="filter filter--person-admission-qualification-type"></div>
+                        <div id="person-admission-qualification-type-text" class="filter filter--person-admission-qualification-type"></div>
                         <div id="person-home-address-place" class="filter filter--person"></div>
                         <div id="person-stud-address-place" class="filter filter--person"></div>
-                        <div id="person-stud-address-country-key" class="filter filter--person-stud-address-country"></div>
+                        <div id="person-stud-address-country-text" class="filter filter--person-stud-address-country"></div>
                         <div id="person-immatriculation-semester" class="filter filter--person-immatriculation-semester"></div>
                         <div id="person-exmatriculation-semester" class="filter filter--person-exmatriculation-semester"></div>
-                        <div id="person-exmatriculation-status-key" class="filter filter--person-exmatriculation-status"></div>
+                        <div id="person-exmatriculation-status-text" class="filter filter--person-exmatriculation-status"></div>
                         <div id="person-academic-titles" class="filter filter--person-academic-titles"></div>
-                        <div id="person-gender-key" class="filter filter--person-gender"></div>
+                        <div id="person-gender-text" class="filter filter--person-gender"></div>
                         <div id="person-studies-name" class="filter filter--person-studies-name"></div>
                         <div id="person-studies-type" class="filter filter--person-studies-type"></div>
                         <div id="person-applications-study-type" class="filter filter--person-applications-study"></div>

@@ -11,7 +11,7 @@ export default class {
     getFacetWidgets() {
         // const cabinetFacests = new CabinetFacets();
         // return [
-        //     cabinetFacests.createPersonNationalitiesRefinementList(),
+        //     CabinetFacets.getFacetGenderTranslations(),
         // ];
         // return { "something" : "foo" };
     }
