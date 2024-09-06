@@ -469,6 +469,15 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 flex-grow: 1;
             }
 
+            input[type="search"]::-webkit-search-cancel-button {
+                -webkit-appearance: none;
+                appearance: none;
+            }
+            .ais-SearchBox-input::-webkit-search-cancel-button  {
+                -webkit-appearance: none;
+                appearance: none;
+            }
+
             .ais-RefinementList-list {
                 list-style: none;
                 margin: 0;
