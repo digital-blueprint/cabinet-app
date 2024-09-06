@@ -1,3 +1,5 @@
+// noinspection CssUnusedSymbol,JSUnresolvedReference
+
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {css, html, render} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -57,7 +59,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     this._i18n.changeLanguage(this.lang);
                     break;
                 case 'search':
-                    this.createAndAddWidget();
+                    this.afterSearchInit();
                     break;
             }
         });
@@ -65,151 +67,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         super.update(changedProperties);
     }
 
-
-    setFacetsConfig(facetsConfig) {
-        this.facetsConfig = facetsConfig;
-    }
-
-    // firstUpdated() {
-    //     console.log('-- First Updated --');
-    // }
-
-    createAndAddWidget() {
-        // Person facets
-        const createBasePersonRefinementList = this.generateFacet(
-            'base.person',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-base-person')}}
-        );
-        const createPersonNationalitiesRefinementList = this.generateFacet(
-            'person.nationalities.text',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-nationalities-text')}}
-        );
-        const createPersonAdmissionQualificationTypeKeyRefinementList = this.generateFacet(
-            'person.admissionQualificationType.text',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-admission-qualification-type')}}
-        );
-        const createPersonHomeAddressPlaceRefinementList = this.generateFacet(
-            'person.homeAddress.place',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-home-address')}}
-        );
-        const createPersonStudAddressPlaceRefinementList = this.generateFacet(
-            'person.studAddress.place',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-student-address')}}
-        );
-        const createPersonStudAddressCountryKeyRefinementList = this.generateFacet(
-            'person.studAddress.country.text',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-student-address-country')}}
-        );
-        const createPersonImmatriculationSemesterRefinementList = this.generateFacet(
-            'person.immatriculationSemester',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-immatriculation-semester')}}
-        );
-        const createPersonExmatriculationSemesterRefinementList = this.generateFacet(
-            'person.exmatriculationSemester',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-exmatriculation-semester')}}
-        );
-        const createPersonExmatriculationStatusKeyRefinementList = this.generateFacet(
-            'person.exmatriculationStatus.text',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-exmatriculation-status')}}
-        );
-        const createPersonAcademicTitlesRefinementList = this.generateFacet(
-            'person.academicTitles',
-            {
-                facet: {
-                    searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-academic-titles'),
-                    showMore: true,
-                    showMoreLimit: 50,
-                    transformItems(items) {
-                        // Remove items without a label.
-                        items = items.filter(item => item.label.trim() !== '');
-                        return items;
-                    }
-                }
-            }
-        );
-
-        const createPersonGenderKeyRefinementList = this.generateFacet(
-            'person.gender.text',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-gender')}}
-        );
-        const createPersonStudiesNameRefinementList = this.generateFacet(
-            'person.studies.name',
-            { facet: {
-                searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-studies-name'),
-                showMore: true,
-                showMoreLimit: 50,
-            }}
-        );
-        const createPersonStudiesTypeRefinementList = this.generateFacet(
-            'person.studies.type',
-            { facet: {
-                searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-studies-type'),
-                showMore: true,
-                showMoreLimit: 50,
-            }}
-        );
-        const createPersonApplicationsStudyTypeRefinementList = this.generateFacet(
-            'person.applications.studyType',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-applications-study-type')}}
-        );
-
-        // File facets
-        const createFileAdditionalTypeRefinementList = this.generateFacet(
-            'file.base.additionalType',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-additional-type')}}
-        );
-        const createFileBaseIsPartOfRefinementList = this.generateFacet(
-            'file.base.isPartOf',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-is-part-of')}}
-        );
-        const createFileBaseStudyFieldRefinementList = this.generateFacet(
-            'file.base.studyField',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-study-field')}}
-        );
-        const createFileBaseSubjectOfRefinementList = this.generateFacet(
-            'file.base.subjectOf',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-subject-of')}}
-        );
-        const createFileCitizenshipCertificateNationalityRefinementList = this.generateFacet(
-            'file.citizenshipCertificate.nationality',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-citizenship-certificate-nationality')}}
-        );
-        const createFileIdentityDocumentNationalityRefinementList = this.generateFacet(
-            'file.identityDocument.nationality',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-identity-document-nationality')}}
-        );
-
-        this.search.addWidgets([
-            // Category filter
-            this.createCategoryRefinementList(),
-            // Filters
-            this.createCurrentRefinements(),
-            // Clear filters
-            this.createClearRefinements(),
-            // Person filters
-            createBasePersonRefinementList(),
-            createPersonNationalitiesRefinementList(),
-            createPersonAdmissionQualificationTypeKeyRefinementList(),
-            createPersonHomeAddressPlaceRefinementList(),
-            createPersonStudAddressPlaceRefinementList(),
-            createPersonStudAddressCountryKeyRefinementList(),
-            createPersonImmatriculationSemesterRefinementList(),
-            createPersonExmatriculationSemesterRefinementList(),
-            createPersonExmatriculationStatusKeyRefinementList(),
-            createPersonAcademicTitlesRefinementList(),
-            createPersonGenderKeyRefinementList(),
-            createPersonStudiesNameRefinementList(),
-            createPersonStudiesTypeRefinementList(),
-            createPersonApplicationsStudyTypeRefinementList(),
-            // File filters
-            createFileAdditionalTypeRefinementList(),
-            createFileBaseIsPartOfRefinementList(),
-            createFileBaseStudyFieldRefinementList(),
-            createFileBaseSubjectOfRefinementList(),
-            createFileCitizenshipCertificateNationalityRefinementList(),
-            createFileIdentityDocumentNationalityRefinementList(),
-        ]);
-
+    afterSearchInit() {
         // Add event listeners to open filters by clicking panel headers
         this._a('.ais-Panel-header').forEach((panelHeader) => {
             panelHeader.addEventListener('mousedown', (event) => {
@@ -220,6 +78,25 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
             });
         });
+    }
+
+    /**
+     * Set facets configurations
+     * @param facetsConfig {array} - configuration for the facets
+     */
+    createFacetsFromConfig(facetsConfig) {
+        let facets = [];
+
+        facets.push(this.createCategoryRefinementList());
+
+        facets.push(this.createCurrentRefinements());
+        facets.push(this.createClearRefinements());
+        facetsConfig.forEach((facetConfig) => {
+            const facet = this.generateFacet(facetConfig.schemaField, facetConfig.facetOptions);
+            facets.push(facet());
+        });
+        // this.facetConfigs = facets;
+        return facets;
     }
 
     // @type
@@ -390,7 +267,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                             </div>
                         `;
                     },
-                    searchableSubmit(data, { html }) {
+                    searchableSubmit() {
                         return null;
                     }
                 },
@@ -424,7 +301,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS(false)}
-
             .filters {
                 border: 1px solid var(--dbp-content);
                 height: 100%;
@@ -454,7 +330,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             .filter-title {
                 margin: 0;
             }
-            
+
             .filter:has(> [hidden]) {
                 display: none;
             }
@@ -474,7 +350,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 -webkit-appearance: none;
                 appearance: none;
             }
-            .ais-SearchBox-input::-webkit-search-cancel-button  {
+
+            .ais-SearchBox-input::-webkit-search-cancel-button {
                 -webkit-appearance: none;
                 appearance: none;
             }
@@ -492,6 +369,11 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 border: 1px solid var(--dbp-content);
                 padding: 0.5em;
                 justify-content: space-between;
+            }
+
+            /* Prevent text selection on panel headers on click */
+            .ais-Panel-header > span {
+                user-select: none;
             }
 
             .ais-Panel-body {
@@ -525,10 +407,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             .ais-Panel--collapsed .ais-Panel-body {
                 opacity: 0;
                 display: none;
-            }
-            
-            .ais-RefinementList-noResults {
-                margin: .5em 0;
             }
 
             button.ais-RefinementList-showMore {

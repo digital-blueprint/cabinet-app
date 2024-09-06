@@ -216,6 +216,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.createStats(),
         ]);
 
+        search.addWidgets(
+            this.createFacets()
+        );
+
         search.start();
 
         // TODO: Improve on workaround to show hits after the page loads
@@ -401,6 +405,34 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         return stats({
             container: this._('#result-count'),
         });
+    }
+
+    createFacets() {
+        const facets = this.cabinetFacetsRef.value.createFacetsFromConfig(
+            [
+                { "schemaField": "base.person", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-base-person')}}},
+                { "schemaField": "person.nationalities.text", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-nationalities-text')}}},
+                { "schemaField": "person.admissionQualificationType.text", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-admission-qualification-type')}}},
+                { "schemaField": "person.homeAddress.place", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-home-address')}}},
+                { "schemaField": "person.studAddress.place", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-student-address')}}},
+                { "schemaField": "person.studAddress.country.text", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-student-address-country')}}},
+                { "schemaField": "person.immatriculationSemester", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-immatriculation-semester')}}},
+                { "schemaField": "person.exmatriculationSemester", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-exmatriculation-semester')}}},
+                { "schemaField": "person.exmatriculationStatus.text", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-exmatriculation-status')}}},
+                { "schemaField": "person.academicTitles", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-academic-titles'), showMore: true, showMoreLimit: 50, transformItems: items => items.filter(item => item.label.trim() !== '')}}},
+                { "schemaField": "person.gender.text", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-gender')}}},
+                { "schemaField": "person.studies.name", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-studies-name'), showMore: true, showMoreLimit: 50}}},
+                { "schemaField": "person.studies.type", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-studies-type'), showMore: true, showMoreLimit: 50}}},
+                { "schemaField": "person.applications.studyType", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-applications-study-type')}}},
+                { "schemaField": "file.base.additionalType", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-additional-type')}}},
+                { "schemaField": "file.base.isPartOf", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-is-part-of')}}},
+                { "schemaField": "file.base.studyField", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-study-field')}}},
+                { "schemaField": "file.base.subjectOf", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-subject-of')}}},
+                { "schemaField": "file.citizenshipCertificate.nationality", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-citizenship-certificate-nationality')}}},
+                { "schemaField": "file.identityDocument.nationality", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-identity-document-nationality')}}}
+            ]
+        );
+        return facets;
     }
 
     getDocumentEditModalHtml() {
