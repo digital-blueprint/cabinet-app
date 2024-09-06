@@ -50,7 +50,8 @@
         "search-placeholder-file-student-address": "[de] Search country",
         "search-placeholder-file-student-address": "[de] Search country",
 
-        "refinement-delete-filters": "Auswahl löschen"
+        "refinement-delete-all-filters": "Filter löschen",
+        "refinement-delete-filter-button-text": "Auswahl löschen"
     },
     "error-login-message": "Sie müssen angemeldet sein um diese Funktion nutzen zu können!"
 }

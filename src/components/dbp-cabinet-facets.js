@@ -69,6 +69,10 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('-- First Updated --');
     }
 
+    // firstUpdated() {
+    //     console.log('-- First Updated --');
+    // }
+
     createAndAddWidget() {
         // Person facets
         const createBasePersonRefinementList = this.generateFacet(
@@ -258,7 +262,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     };
 
     renderCurrentRefinements = (renderOptions) => {
-        // const i18n = this._i18n;
+        const i18n = this._i18n;
         const {
             items,
             refine,
@@ -274,10 +278,12 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         break;
                 }
                 return html`
-                    <li class='ais-CurrentRefinements-category'>
-                        <span class='ais-CurrentRefinements-categoryLabel'>${label}</span>
-                        <button class='ais-CurrentRefinements-delete' @click="${() => refine(refinement)}">
-                            <span class="visually-hidden">Filter löschen</span>
+                    <li class="ais-CurrentRefinements-category">
+                        <span class="ais-CurrentRefinements-categoryLabel">${label}</span>
+                        <button class="ais-CurrentRefinements-delete"
+                                title="${i18n.t('cabinet-search.refinement-delete-filter-button-text')}"
+                                @click="${() => refine(refinement)}">
+                            <span class="visually-hidden">${i18n.t('cabinet-search.refinement-delete-filter-button-text')}</span>
                             <span class="filter-close-icon"></span>
                         </button>
                     </li>
@@ -304,7 +310,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             const clearButton = document.createElement('button');
             const clearButtonText = document.createElement('span');
 
-            clearButtonText.textContent = i18n.t('cabinet-search.refinement-delete-filters');
+            clearButtonText.textContent = i18n.t('cabinet-search.refinement-delete-all-filters');
             clearButton.appendChild(clearButtonText);
             clearButton.classList.add('clear-refinements-button');
 
@@ -342,7 +348,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             const defaultPanelOptions = {
                 templates: {
                     header(options, {html}) {
-                        // console.log(options.items, options);
                         return i18n.t(`cabinet-search.filter-${translationKey}-title`);
                     },
                 },
@@ -363,7 +368,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 limit: 12,
                 searchable: true,
                 searchableShowReset: false,
-                // searchableIsAlwaysActive: false, // don't show search if less than limit items exists.
                 templates: {
                     item(item, {html}) {
                         return html`
