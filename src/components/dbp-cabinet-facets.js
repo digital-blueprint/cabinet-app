@@ -65,8 +65,9 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         super.update(changedProperties);
     }
 
-    firstUpdated() {
-        console.log('-- First Updated --');
+
+    setFacetsConfig(facetsConfig) {
+        this.facetsConfig = facetsConfig;
     }
 
     // firstUpdated() {
@@ -171,11 +172,11 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         );
         const createFileCitizenshipCertificateNationalityRefinementList = this.generateFacet(
             'file.citizenshipCertificate.nationality',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-student-address')}}
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-citizenship-certificate-nationality')}}
         );
         const createFileIdentityDocumentNationalityRefinementList = this.generateFacet(
             'file.identityDocument.nationality',
-            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-student-address')}}
+            { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-identity-document-nationality')}}
         );
 
         this.search.addWidgets([

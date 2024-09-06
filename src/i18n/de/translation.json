@@ -47,8 +47,8 @@
         "search-placeholder-file-base-is-part-of": "Suchen...",
         "search-placeholder-file-base-study-field": "[de] Search study field",
         "search-placeholder-file-base-subject-of": "[de] Search subject",
-        "search-placeholder-file-student-address": "[de] Search country",
-        "search-placeholder-file-student-address": "[de] Search country",
+        "search-placeholder-file-citizenship-certificate-nationality": "[de] Search country",
+        "search-placeholder-file-identity-document-nationality": "[de] Search country",
 
         "refinement-delete-all-filters": "Filter löschen",
         "refinement-delete-filter-button-text": "Auswahl löschen"
