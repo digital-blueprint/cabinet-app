@@ -410,6 +410,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     createFacets() {
         const facets = this.cabinetFacetsRef.value.createFacetsFromConfig(
             [
+                { "schemaField": "@type", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-base-person'), searchable: false, sortBy: ['alpha:asc']}}, "usePanel": false},
                 { "schemaField": "base.person", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-base-person')}}},
                 { "schemaField": "person.nationalities.text", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-nationalities-text')}}},
                 { "schemaField": "person.admissionQualificationType.text", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-admission-qualification-type')}}},

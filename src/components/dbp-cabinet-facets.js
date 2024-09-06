@@ -82,17 +82,20 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     /**
      * Set facets configurations
-     * @param facetsConfig {array} - configuration for the facets
+     * @param facetsConfigs {array} - configuration for the facets
      */
-    createFacetsFromConfig(facetsConfig) {
+    createFacetsFromConfig(facetsConfigs) {
+        if (Array.isArray(facetsConfigs) === false) {
+            return false;
+        }
         let facets = [];
 
-        facets.push(this.createCategoryRefinementList());
+        // facets.push(this.createCategoryRefinementList());
 
         facets.push(this.createCurrentRefinements());
         facets.push(this.createClearRefinements());
-        facetsConfig.forEach((facetConfig) => {
-            const facet = this.generateFacet(facetConfig.schemaField, facetConfig.facetOptions);
+        facetsConfigs.forEach((facetConfig) => {
+            const facet = this.generateFacet(facetConfig.schemaField, facetConfig.facetOptions, facetConfig.usePanel);
             facets.push(facet());
         });
         // this.facetConfigs = facets;
@@ -213,14 +216,17 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Generate facets based on schema name
      * @param {string} schemaField - name of the schema field
      * @param {object} facetOptions - options for the panel and the facet
+     * @param {boolean} usePanel - whether to use panel or not
      * @returns {function(): *}
      */
-    generateFacet(schemaField, facetOptions = {}) {
+    generateFacet(schemaField, facetOptions = {}, usePanel = true) {
         const i18n = this._i18n;
         let that = this;
 
-        const cssClass = this.schemaNameToKebabCase(schemaField);
-        const translationKey = this.schemaNameToKebabCase(schemaField);
+        const schemaFieldSafe = schemaField.replace(/[@#]/g, '');
+
+        const cssClass = this.schemaNameToKebabCase(schemaFieldSafe);
+        const translationKey = this.schemaNameToKebabCase(schemaFieldSafe);
 
         return function () {
             const defaultPanelOptions = {
@@ -276,6 +282,10 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 ...defaultRefinementListOptions,
                 ...(facetOptions.facet || {}),
             };
+
+            if (usePanel === false) {
+                return refinementList(refinementListOptions);
+            }
 
             const PanelWidget = panel(panelOptions)(refinementList);
 
@@ -386,6 +396,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 display: flex;
                 gap: 1em;
                 justify-content: space-between;
+                cursor: pointer;
             }
 
             .refinement-list-item-inner {
@@ -429,7 +440,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <h3 class="filter-title">
                             ${i18n.t('cabinet-search.type-filter-group-title')}
                         </h3>
-                        <div id="categories" class="filter filter--categories"></div>
+                        <div id="type" class="filter filter--categories"></div>
                     </div>
                     <div id="person-filters" class="filter-group filter-group--person">
                         <h3 class="filter-title">
