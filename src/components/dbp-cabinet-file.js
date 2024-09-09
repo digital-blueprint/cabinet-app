@@ -7,7 +7,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal, combineURLs} from '@dbp-toolkit/common';
 import {FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
-import {pascalToKebab} from '../utils';
+import {dataURLtoFile, pascalToKebab} from '../utils';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -273,8 +273,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const url = await this.createBlobDownloadUrl(true);
         let blobFile = await this.loadBlobItem(url);
         console.log('blobFile', blobFile);
-        // TODO: Doesn't work yet, it needs to be converted to a File object!
-        await this.showPdf(blobFile.contentUrl);
+        // TODO: Test if this really works
+        const file = dataURLtoFile(blobFile.contentUrl, blobFile.fileName);
+        console.log('file', file);
+        await this.showPdf(file);
 
         /**
          * @type {Modal}
