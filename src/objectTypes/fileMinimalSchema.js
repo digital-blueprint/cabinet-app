@@ -25,9 +25,8 @@ export default class extends BaseObject {
 export const getAdditionalTypes = () => {
     return {
         'BirthCertificate': 'Birth Certificate',
-        'DriversLicence': 'Drivers Licence',
-        'Passport': 'Passport',
-        'PersonalLicence': 'Personal Licence',
+        'MaritalStatusCertificate': 'Marital Status Certificate',
+        'SupervisionAcceptance': 'Supervision Acceptance',
     };
 };
 
