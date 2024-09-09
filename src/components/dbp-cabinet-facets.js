@@ -90,16 +90,37 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
         let facets = [];
 
-        // facets.push(this.createCategoryRefinementList());
-
         facets.push(this.createCurrentRefinements());
         facets.push(this.createClearRefinements());
+
         facetsConfigs.forEach((facetConfig) => {
-            const facet = this.generateFacet(facetConfig.schemaField, facetConfig.facetOptions, facetConfig.usePanel);
-            facets.push(facet());
+            if (Object.hasOwn(facetConfig, 'filter-group')) {
+                this.addFilterHeader(facetConfig['filter-group']);
+            } else {
+                const facet = this.generateFacet(
+                    facetConfig.groupId,
+                    facetConfig.schemaField,
+                    facetConfig.facetOptions,
+                    facetConfig.usePanel
+                );
+                facets.push(facet());
+            }
         });
-        // this.facetConfigs = facets;
+
         return facets;
+    }
+
+    addFilterHeader(filterGroup) {
+        let filterGroupHtml = document.createElement('div');
+        filterGroupHtml.setAttribute('id', `${filterGroup.id}`);
+        filterGroupHtml.classList.add('filter-group');
+        filterGroupHtml.classList.add(`filter-group--${filterGroup.id}`);
+        filterGroupHtml.innerHTML = `
+            <h3 class="filter-title">
+                ${this._i18n.t(`${filterGroup.name}`)}
+            </h3>
+        `;
+        this._('#filters-container').appendChild(filterGroupHtml);
     }
 
     // @type
@@ -214,19 +235,27 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     /**
      * Generate facets based on schema name
+     * @param {string} groupId - id of the filter group
      * @param {string} schemaField - name of the schema field
      * @param {object} facetOptions - options for the panel and the facet
      * @param {boolean} usePanel - whether to use panel or not
      * @returns {function(): *}
      */
-    generateFacet(schemaField, facetOptions = {}, usePanel = true) {
+    generateFacet(groupId, schemaField, facetOptions = {}, usePanel = true) {
         const i18n = this._i18n;
         let that = this;
 
+        // Remove special characters from schema field name to use as css class and translation key.
         const schemaFieldSafe = schemaField.replace(/[@#]/g, '');
 
         const cssClass = this.schemaNameToKebabCase(schemaFieldSafe);
         const translationKey = this.schemaNameToKebabCase(schemaFieldSafe);
+
+        const filterItem = document.createElement('div');
+        filterItem.classList.add('filter');
+        filterItem.setAttribute('id', `${cssClass}`);
+        filterItem.classList.add(`filter--${cssClass}`);
+        this._(`#${groupId}`).appendChild(filterItem);
 
         return function () {
             const defaultPanelOptions = {
@@ -435,44 +464,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div class="filter-header">
                     <h2 class="filter-header__title">${i18n.t('cabinet-search.filters')}</h2>
                 </div>
-                <div class="filters-container">
-                    <div id="person-filters" class="filter-group filter-group--type">
-                        <h3 class="filter-title">
-                            ${i18n.t('cabinet-search.type-filter-group-title')}
-                        </h3>
-                        <div id="type" class="filter filter--categories"></div>
-                    </div>
-                    <div id="person-filters" class="filter-group filter-group--person">
-                        <h3 class="filter-title">
-                            ${i18n.t('cabinet-search.person-filter-group-title')}
-                        </h3>
-                        <div id="base-person" class="filter filter--base-person"></div>
-                        <div id="person-nationalities-text" class="filter filter--person-nationalities"></div>
-                        <div id="person-admission-qualification-type-text" class="filter filter--person-admission-qualification-type"></div>
-                        <div id="person-home-address-place" class="filter filter--person"></div>
-                        <div id="person-stud-address-place" class="filter filter--person"></div>
-                        <div id="person-stud-address-country-text" class="filter filter--person-stud-address-country"></div>
-                        <div id="person-immatriculation-semester" class="filter filter--person-immatriculation-semester"></div>
-                        <div id="person-exmatriculation-semester" class="filter filter--person-exmatriculation-semester"></div>
-                        <div id="person-exmatriculation-status-text" class="filter filter--person-exmatriculation-status"></div>
-                        <div id="person-academic-titles" class="filter filter--person-academic-titles"></div>
-                        <div id="person-gender-text" class="filter filter--person-gender"></div>
-                        <div id="person-studies-name" class="filter filter--person-studies-name"></div>
-                        <div id="person-studies-type" class="filter filter--person-studies-type"></div>
-                        <div id="person-applications-study-type" class="filter filter--person-applications-study"></div>
-                    </div>
-                    <div id="document-filters" class="filter-group filter-group--document">
-                        <h3 class="filter-title">
-                            ${i18n.t('cabinet-search.document-filter-group-title')}
-                        </h3>
-                        <div id="document-type" class="filter filter--document-type"></div>
-                        <div id="file-base-additional-type" class="filter filter--file-base-additional-type"></div>
-                        <div id="file-base-is-part-of" class="filter filter--file-is-part-of"></div>
-                        <div id="file-base-study-field" class="filter filter--file-base-study-field"></div>
-                        <div id="file-base-subject-of" class="filter filter--file-base-subject-of"></div>
-                        <div id="file-citizenship-certificate-nationality" class="filter filter--file-citizenship-certificate-nationality"></div>
-                        <div id="file-identity-document-nationality" class="filter filter--file-identity-document-nationality"></div>
-                    </div>
+                <div id="filters-container" class="filters-container">
                 </div>
             </div>
         `;
