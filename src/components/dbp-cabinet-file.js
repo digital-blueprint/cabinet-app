@@ -1,10 +1,10 @@
 import {css, html} from 'lit';
 import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
-import {ref, createRef} from 'lit/directives/ref.js';
+import {createRef, ref} from 'lit/directives/ref.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import DBPCabinetLitElement from "../dbp-cabinet-lit-element";
+import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {Button, Icon, Modal, combineURLs} from '@dbp-toolkit/common';
+import {Button, combineURLs, Icon, Modal} from '@dbp-toolkit/common';
 import {FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {dataURLtoFile, pascalToKebab} from '../utils';
@@ -115,7 +115,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         return url;
     }
 
-    async createBlobDownloadUrl( includeData = false) {
+    /**
+     * @param identifier
+     * @param fileName
+     * @param includeData Whether to include file data in the response
+     * @returns {Promise<string>}
+     */
+    async createBlobDownloadUrl(identifier, fileName, includeData = false) {
         if (this.entryPointUrl === '') {
             return '';
         }
@@ -124,9 +130,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const apiUrl = new URL(baseUrl);
         const params = {
             'method': 'GET',
-            'identifier': this.hitData.file.base.fileId,
+            'identifier': identifier,
             'prefix': this.blobDocumentPrefix,
-            'fileName': this.documentFile.name,
+            'fileName': fileName,
             // TODO: Does this replacing always work?
             'type': this.objectType.replace('file-cabinet-', '')
         };
@@ -262,6 +268,16 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         await this.openDocumentAddDialog();
     }
 
+    async downloadFileFromBlob(fileId, fileName, includeData = false) {
+        const url = await this.createBlobDownloadUrl(fileId, fileName, includeData);
+        console.log('downloadFileFromBlob url', url);
+        let blobFile = await this.loadBlobItem(url);
+        console.log('downloadFileFromBlob blobFile', blobFile);
+
+        // TODO: Test if this really works
+        return dataURLtoFile(blobFile.contentUrl, blobFile.fileName);
+    }
+
     async openDialogWithHit(hit = null) {
         this.hitData = hit;
         console.log('openDialogWithHit hit', hit);
@@ -270,19 +286,22 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Wait until hit data is set and rendering is complete
         await this.updateComplete;
 
-        const url = await this.createBlobDownloadUrl(true);
-        let blobFile = await this.loadBlobItem(url);
-        console.log('blobFile', blobFile);
         // TODO: Test if this really works
-        const file = dataURLtoFile(blobFile.contentUrl, blobFile.fileName);
-        console.log('file', file);
-        await this.showPdf(file);
+        const file = await this.downloadFileFromBlob(this.hitData.file.base.fileId, this.documentFile.name, true);
+        console.log('openDialogWithHit file', file);
+        // TODO: Where is the PDF viewer?
+        // await this.showPdf(file);
+
+        this.documentFile = file;
+
+        // We need to wait until rendering is complete after this.documentFile has changed
+        await this.updateComplete;
 
         /**
          * @type {Modal}
          */
         const modal = this.documentModalRef.value;
-        console.log('modal', modal);
+        console.log('openDialogWithHit modal', modal);
         modal.open();
     }
 
@@ -290,12 +309,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // console.log('hitData', this.hitData);
         console.log('fileId', this.hitData.file.base.fileId);
 
-        // TODO: We need to do this as soon the "view" dialog is opened to be able to show the preview
-        let url = await this.createBlobDownloadUrl();
-        console.log('url', url);
-
-        // TODO: Implement PDF download
-        await this.loadBlobItem(url);
+        const file = await this.downloadFileFromBlob(
+            this.hitData.file.base.fileId, this.documentFile.name);
+        console.log('downloadFile file', file);
     }
 
     async openDocumentAddDialog() {
@@ -356,10 +372,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     getDocumentModalHtml() {
         console.log('getDocumentAddModalHtml');
         const hit = this.hitData;
-        console.log('hit', hit);
+        console.log('getDocumentModalHtml hit', hit);
 
         let file = this.documentFile;
-        console.log('file', file);
+        console.log('getDocumentModalHtml file', file);
 
         // if (hit.objectType !== 'person' || file === null) {
         //     return html`<dbp-modal ${ref(this.documentModalRef)} id="document-modal" modal-id="document-modal"></dbp-modal>`;
@@ -468,15 +484,27 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         `;
     }
 
-    render() {
+    async render() {
         console.log('-- Render --');
 
         switch (this.mode) {
             case 'view':
-                // TODO: Load the PDF from blob
-                this.documentFile = new File(["foo"], 'test.pdf', {type: 'application/pdf'});
+                {
+                    if (this.documentFile === null) {
+                        console.log('render this.hitData.file', this.hitData.file);
+                        if (this.hitData.file !== undefined) {
+                            const file = await this.downloadFileFromBlob(
+                                this.hitData.file.base.fileId, this.hitData.file.base.fileName, true);
+                            console.log('render file', file);
+                            // await this.showPdf(file);
+                            this.documentFile = file;
+                        } else {
+                            this.documentFile = new File(["foo"], 'no-file-available.pdf', {type: 'application/pdf'});
+                        }
+                    }
 
-                return this.getHtml();
+                    return this.getHtml();
+                }
             case 'add':
                 return this.getHtml();
             default:
