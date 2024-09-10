@@ -18,9 +18,9 @@
         "filter-person-exmatriculation-status-text-title": "Exmatriculation status",
         "filter-person-academic-titles-title": "Academic titles",
         "filter-person-gender-text-title": "Gender",
-        "filter-person-studies-name-title": "Study",
+        "filter-person-studies-name-title": "Study name",
         "filter-person-studies-type-title": "Study type",
-        "filter-person-applications-study-type-title": "Study type",
+        "filter-person-applications-study-type-title": "Application study type",
 
         "filter-file-base-additional-type-title": "File type",
         "filter-file-base-is-part-of-title": "Is part of title",
