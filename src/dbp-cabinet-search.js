@@ -45,7 +45,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.cabinetFacetsRef = createRef();
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
-        this.instantSearchSomething = {};
+        this.instantSearch = {};
+        this.facetConfigs = [];
     }
 
     static get scopedElements() {
@@ -216,9 +217,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.createStats(),
         ]);
 
-        search.addWidgets(
-            this.createFacets()
-        );
+        if (this.facetConfigs.length > 0) {
+            search.addWidgets(
+                this.createFacets()
+            );
+        }
+        // @TODO delete facet container from DOM if no facetConfigs passed.
 
         search.start();
 
@@ -408,35 +412,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     createFacets() {
-        const facets = this.cabinetFacetsRef.value.createFacetsFromConfig(
-            [
-                { "filter-group": { "id": "category", "name": "cabinet-search.type-filter-group-title"}},
-                { "groupId": "category", "schemaField": "@type", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-base-person'), searchable: false, sortBy: ['alpha:asc']}}, "usePanel": false},
-                { "filter-group": { "id": "person", "name": "cabinet-search.person-filter-group-title"}},
-                { "groupId": "person", "schemaField": "base.person", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-base-person')}}},
-                { "groupId": "person", "schemaField": "person.nationalities.text", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-nationalities-text')}}},
-                { "groupId": "person", "schemaField": "person.admissionQualificationType.text", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-admission-qualification-type')}}},
-                { "groupId": "person",  "schemaField": "person.homeAddress.place", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-home-address')}}},
-                { "groupId": "person",  "schemaField": "person.studAddress.place", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-student-address')}}},
-                { "groupId": "person",  "schemaField": "person.studAddress.country.text", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-student-address-country')}}},
-                { "groupId": "person",  "schemaField": "person.immatriculationSemester", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-immatriculation-semester')}}},
-                { "groupId": "person",  "schemaField": "person.exmatriculationSemester", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-exmatriculation-semester')}}},
-                { "groupId": "person",  "schemaField": "person.exmatriculationStatus.text", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-exmatriculation-status')}}},
-                { "groupId": "person",  "schemaField": "person.academicTitles", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-academic-titles'), showMore: true, showMoreLimit: 50, transformItems: items => items.filter(item => item.label.trim() !== '')}}},
-                { "groupId": "person",  "schemaField": "person.gender.text", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-gender')}}},
-                { "groupId": "person",  "schemaField": "person.studies.name", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-studies-name'), showMore: true, showMoreLimit: 50}}},
-                { "groupId": "person",  "schemaField": "person.studies.type", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-studies-type'), showMore: true, showMoreLimit: 50}}},
-                { "groupId": "person",  "schemaField": "person.applications.studyType", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-person-applications-study-type')}}},
-                { "filter-group": { "id": "file", "name": "cabinet-search.document-filter-group-title"}},
-                { "groupId": "file",  "schemaField": "file.base.additionalType", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-additional-type')}}},
-                { "groupId": "file",  "schemaField": "file.base.isPartOf", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-is-part-of')}}},
-                { "groupId": "file",  "schemaField": "file.base.studyField", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-study-field')}}},
-                { "groupId": "file",  "schemaField": "file.base.subjectOf", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-base-subject-of')}}},
-                { "groupId": "file",  "schemaField": "file.citizenshipCertificate.nationality", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-citizenship-certificate-nationality')}}},
-                { "groupId": "person",  "schemaField": "file.identityDocument.nationality", "facetOptions": { facet: { searchablePlaceholder: this._i18n.t('cabinet-search.search-placeholder-file-identity-document-nationality')}}}
-            ]
-        );
-        return facets;
+        return this.cabinetFacetsRef.value.createFacetsFromConfig(this.facetConfigs);
     }
 
     getDocumentEditModalHtml() {
@@ -553,6 +529,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 ${this.getDocumentEditModalHtml()}
                 ${this.getDocumentViewModalHtml()}
+
                 <dbp-cabinet-file
                     mode="add"
                     ${ref(this.documentFileComponentRef)}
@@ -616,13 +593,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             console.log('fileDocumentTypeNames', this.fileDocumentTypeNames);
 
             const instantSearchModule = await import(data["instantSearch"]);
-            this.instantSearchSomething = new instantSearchModule.default();
+            this.instantSearch = new instantSearchModule.default();
 
-            // const facetWidgets = this.instantSearchSomething.getFacetWidgets();
-            // console.log('FacetWidgets: ', facetWidgets);
-            // if (facetWidgets) {
-            //     this.search.addWidgets([facetWidgets]);
-            // }
+            this.facetConfigs = this.instantSearch.getFacetsConfig();
+            console.log('FacetWidgets: ', this.facetConfigs);
 
             /**
              * @type {CabinetFile}

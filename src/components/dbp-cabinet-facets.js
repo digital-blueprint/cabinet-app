@@ -86,9 +86,11 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
      */
     createFacetsFromConfig(facetsConfigs) {
         if (Array.isArray(facetsConfigs) === false) {
-            return false;
+            return [];
         }
         let facets = [];
+        // Translate placeholders
+        facetsConfigs = this.translatePlaceholders(facetsConfigs);
 
         facets.push(this.createCurrentRefinements());
         facets.push(this.createClearRefinements());
@@ -105,6 +107,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 );
                 facets.push(facet());
             }
+            facetConfig = null;
         });
 
         return facets;
@@ -266,7 +269,10 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 },
                 collapsed: () => true,
                 hidden(options) {
-                    return options.items.length <= 1;
+                    const facetValues = options.results.getFacetValues(schemaField, {});
+                    // Too slow, too many items...
+                    // that.displayFacetCount(schemaField, facetValues);
+                    return Array.isArray(facetValues) ? facetValues.length == 0 : false;
                 },
             };
             const panelOptions = {
@@ -277,7 +283,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             const defaultRefinementListOptions = {
                 container: that._(`#${cssClass}`),
                 attribute: schemaField,
-                sortBy: ['count:desc'],
+                sortBy: ['count:desc', 'name:asc'],
                 limit: 12,
                 searchable: true,
                 searchableShowReset: false,
@@ -305,7 +311,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     searchableSubmit() {
                         return null;
                     }
-                },
+                }
             };
             const refinementListOptions = {
                 ...defaultRefinementListOptions,
@@ -321,6 +327,59 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             return PanelWidget(refinementListOptions);
         };
     }
+
+    // displayFacetCount(schemaField, facetValues) {
+    //     if (!schemaField) return;
+    //     const schemaFieldSafe = schemaField.replace(/[@#]/g, '');
+    //     const facetID = this.schemaNameToKebabCase(schemaFieldSafe);
+    //
+    //     let notEmptyFacetValues = [];
+    //
+    //     // Remove empty (no-label) facets.
+    //     if (Array.isArray(facetValues) && facetValues.length > 0) {
+    //         if (Object.prototype.hasOwnProperty.call(facetValues[0], 'name')) {
+    //             notEmptyFacetValues = facetValues.filter(obj => obj.name.trim() !== '');
+    //         }
+    //         else {
+    //             notEmptyFacetValues = facetValues.filter(obj => obj.textContent.trim() !== '');
+    //         }
+    //     }
+    //
+    //     const facetCount = notEmptyFacetValues.length;
+    //     const facetCounter = this._(`#${facetID} .facet-count`);
+    //     if (!facetCounter) {
+    //         // Inject counter element if not present.
+    //         const facetCountHtml = document.createElement('span');
+    //         facetCountHtml.classList.add('facet-count');
+    //         // Most screen readers will announce the number of list items.
+    //         facetCountHtml.setAttribute('aria-hidden', "true");
+    //         facetCountHtml.textContent = `(${facetCount})`;
+    //         this._(`#${facetID} .ais-Panel-header span`).appendChild(facetCountHtml);
+    //     } else {
+    //         // Just update the count value.
+    //         facetCounter.textContent = `(${facetCount})`;
+    //     }
+    // }
+
+    // Translate placeholders in array of objects
+    translatePlaceholders(facetsConfigs) {
+        const i18n = this._i18n;
+        return facetsConfigs.map(item => {
+            if (item['filter-group']) {
+                return item;
+            }
+
+            if (item.facetOptions && item.facetOptions.facet) {
+                const facet = item.facetOptions.facet;
+
+                if (facet.searchablePlaceholder) {
+                    facet.searchablePlaceholder = i18n.t(facet.searchablePlaceholder);
+                }
+            }
+
+            return item;
+        });
+    };
 
 
     /**
@@ -413,6 +472,12 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             /* Prevent text selection on panel headers on click */
             .ais-Panel-header > span {
                 user-select: none;
+            }
+            
+            .facet-count {
+                padding-left: 0.5em;
+                font-size: 14px;
+                color: var(--dbp-muted);
             }
 
             .ais-Panel-body {
