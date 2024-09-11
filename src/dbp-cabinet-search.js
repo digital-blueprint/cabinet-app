@@ -158,11 +158,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this._loginStatus = '';
         this._loginState = [];
 
-        this.addEventListener('DbpCabinetDocumentTugo', (event) => {
-            let hit = event.detail.hit;
-            window.open(hit.person.coUrl);
-        });
-
         // Listen to DbpCabinetDocumentEdit events, to open the file edit dialog
         this.addEventListener('DbpCabinetDocumentEdit', function(event) {
             that.openDocumentEditDialog(event.detail.hit);
@@ -387,7 +382,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // Note: "html" is preact htm, not lit-html!
 
                     const buttonRowHtml = objectType === 'person' ? html`
-                        <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentTugo', {detail: {hit: hit}, bubbles: true, composed: true}));}}>TUGO</button>
                         <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentAdd', {detail: {hit: hit}, bubbles: true, composed: true}));}}>Add Document</button>
                         <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>More</button>
                     ` : html`
