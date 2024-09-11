@@ -117,11 +117,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     /**
      * @param identifier
-     * @param fileName
      * @param includeData Whether to include file data in the response
      * @returns {Promise<string>}
      */
-    async createBlobDownloadUrl(identifier, fileName, includeData = false) {
+    async createBlobDownloadUrl(identifier, includeData = false) {
         if (this.entryPointUrl === '') {
             return '';
         }
@@ -132,7 +131,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             'method': 'GET',
             'identifier': identifier,
             'prefix': this.blobDocumentPrefix,
-            'fileName': fileName,
             // TODO: Does this replacing always work?
             'type': this.objectType.replace('file-cabinet-', '')
         };
@@ -268,8 +266,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         await this.openDocumentAddDialog();
     }
 
-    async downloadFileFromBlob(fileId, fileName, includeData = false) {
-        const url = await this.createBlobDownloadUrl(fileId, fileName, includeData);
+    async downloadFileFromBlob(fileId, includeData = false) {
+        const url = await this.createBlobDownloadUrl(fileId, includeData);
         console.log('downloadFileFromBlob url', url);
         let blobFile = await this.loadBlobItem(url);
         console.log('downloadFileFromBlob blobFile', blobFile);
@@ -286,16 +284,16 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Wait until hit data is set and rendering is complete
         await this.updateComplete;
 
-        // TODO: Test if this really works
-        const file = await this.downloadFileFromBlob(this.hitData.file.base.fileId, this.documentFile.name, true);
-        console.log('openDialogWithHit file', file);
-        // TODO: Where is the PDF viewer?
-        // await this.showPdf(file);
+        if (this.hitData.file) {
+            const file = await this.downloadFileFromBlob(this.hitData.file.base.fileId, true);
+            console.log('openDialogWithHit file', file);
+            await this.showPdf(file);
 
-        this.documentFile = file;
+            this.documentFile = file;
 
-        // We need to wait until rendering is complete after this.documentFile has changed
-        await this.updateComplete;
+            // We need to wait until rendering is complete after this.documentFile has changed
+            await this.updateComplete;
+        }
 
         /**
          * @type {Modal}
@@ -306,12 +304,25 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async downloadFile() {
-        // console.log('hitData', this.hitData);
-        console.log('fileId', this.hitData.file.base.fileId);
+        console.log('downloadFile this.documentFile', this.documentFile);
+        const fileUrl = URL.createObjectURL(this.documentFile);
 
-        const file = await this.downloadFileFromBlob(
-            this.hitData.file.base.fileId, this.documentFile.name);
-        console.log('downloadFile file', file);
+        // Open a new tab/window with the file URL
+        const newWindow = window.open(fileUrl, '_blank');
+
+        // Check if the new window was successfully opened
+        if (newWindow) {
+            // If opened successfully, focus on the new window
+            newWindow.focus();
+        } else {
+            // If the pop-up was blocked, inform the user
+            alert('Please allow pop-ups to download the file.');
+        }
+
+        // Set up cleanup after a short delay
+        setTimeout(() => {
+            URL.revokeObjectURL(fileUrl);
+        }, 1000);
     }
 
     async openDocumentAddDialog() {
@@ -381,7 +392,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         //     return html`<dbp-modal ${ref(this.documentModalRef)} id="document-modal" modal-id="document-modal"></dbp-modal>`;
         // }
         if (file === null) {
-            return html`<dbp-modal ${ref(this.documentModalRef)} id="document-modal" modal-id="document-modal"></dbp-modal>`;
+            return html`
+                <dbp-modal ${ref(this.documentModalRef)} id="document-modal" modal-id="document-modal"></dbp-modal>
+                <dbp-pdf-viewer id="document-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
+            `;
         }
 
         console.log('this.mode', this.mode);
@@ -484,27 +498,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         `;
     }
 
-    async render() {
+    render() {
         console.log('-- Render --');
 
         switch (this.mode) {
             case 'view':
-                {
-                    if (this.documentFile === null) {
-                        console.log('render this.hitData.file', this.hitData.file);
-                        if (this.hitData.file !== undefined) {
-                            const file = await this.downloadFileFromBlob(
-                                this.hitData.file.base.fileId, this.hitData.file.base.fileName, true);
-                            console.log('render file', file);
-                            // await this.showPdf(file);
-                            this.documentFile = file;
-                        } else {
-                            this.documentFile = new File(["foo"], 'no-file-available.pdf', {type: 'application/pdf'});
-                        }
-                    }
-
-                    return this.getHtml();
-                }
             case 'add':
                 return this.getHtml();
             default:
