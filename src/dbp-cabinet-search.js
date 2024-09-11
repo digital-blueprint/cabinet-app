@@ -383,7 +383,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                     const buttonRowHtml = objectType === 'person' ? html`
                         <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentAdd', {detail: {hit: hit}, bubbles: true, composed: true}));}}>Add Document</button>
-                        <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>More</button>
+                        <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>More</button>
                     ` : html`
                         <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>More</button>
                     `;
