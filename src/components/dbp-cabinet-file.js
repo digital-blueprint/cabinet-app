@@ -26,6 +26,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             "objectType": "",
         };
         this.documentModalRef = createRef();
+        this.documentPdfViewerRef = createRef();
         this.documentFile = null;
         this.fileObjectTypeNames = {};
         this.objectType = '';
@@ -400,7 +401,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (file === null) {
             return html`
                 <dbp-modal ${ref(this.documentModalRef)} id="document-modal" modal-id="document-modal"></dbp-modal>
-                <dbp-pdf-viewer id="document-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
+                <dbp-pdf-viewer ${ref(this.documentPdfViewerRef)} id="document-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
             `;
         }
 
@@ -429,7 +430,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             <button @click="${this.downloadFile}">Download</button>
                             <button @click="${this.openDocumentAddDialog}">Replace PDF</button>
                         </div>
-                        <dbp-pdf-viewer id="document-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
+                        <dbp-pdf-viewer ${ref(this.documentPdfViewerRef)} id="document-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
                     </div>
                     <div class="form">
                         ${this.getObjectTypeFormPartHtml()}
@@ -565,13 +566,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // We need to wait until rendering is complete after this.documentFile has changed
         await this.updateComplete;
 
-        // TODO: We can use a reference here instead of a querySelector
-        const pdfViewer = this._('#document-pdf-viewer');
+        /**
+         * @type {PdfViewer}
+         */
+        const pdfViewer = this.documentPdfViewerRef.value;
+        // const pdfViewer = this._('#document-pdf-viewer');
 
         // Load the PDF in the PDF viewer
         await pdfViewer.showPDF(this.documentFile);
-
-        // Workaround to trigger a resize after the PDF was loaded, so the PDF is shown correctly
-        pdfViewer._onWindowResize();
     }
 }
