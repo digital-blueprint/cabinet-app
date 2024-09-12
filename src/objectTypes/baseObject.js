@@ -165,8 +165,10 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
 
     cancelForm(event) {
         event.preventDefault();
-        // TODO: Implement "cancel"
-        alert('What should this do?');
+
+        const customEvent = new CustomEvent("DbpCabinetDocumentFormCancel",
+            {bubbles: true, composed: true});
+        this.dispatchEvent(customEvent);
     }
 
     getButtonRowHtml() {

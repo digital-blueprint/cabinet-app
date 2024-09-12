@@ -8,6 +8,7 @@ import {Button, combineURLs, Icon, Modal} from '@dbp-toolkit/common';
 import {FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {dataURLtoFile, pascalToKebab} from '../utils';
+import {classMap} from 'lit/directives/class-map.js';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static Modes = {
@@ -41,9 +42,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         this.updateComplete.then(() => {
             this.addEventListener('DbpCabinetDocumentAddSave', async (event) => {
-                alert('DbpCabinetDocumentAddSave result:\n' + JSON.stringify(event.detail));
+                console.log('JSON.stringify(event.detail)', JSON.stringify(event.detail));
                 const data = event.detail;
                 await this.storeDocumentToBlob(data.formData);
+            });
+
+            this.addEventListener('DbpCabinetDocumentFormCancel', async (event) => {
+                if (this.mode === CabinetFile.Modes.ADD) {
+                    this.objectType = '';
+                } else {
+                    this.mode = CabinetFile.Modes.VIEW;
+                }
             });
         } );
     }
@@ -82,10 +91,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async storeDocumentToBlob(formData) {
         const uploadUrl = await this.createBlobUploadUrl();
-        alert('uploadUrl:\n' + uploadUrl);
+        console.log('storeDocumentToBlob uploadUrl', uploadUrl);
 
         const fileData = await this.uploadDocumentToBlob(uploadUrl, formData);
-        alert('fileData:\n' + JSON.stringify(fileData));
+        console.log('storeDocumentToBlob fileData', fileData);
+
+        if (fileData.identifier) {
+            alert('Document stored successfully with id ' + fileData.identifier + '!');
+
+            // TODO: Get the hit data of the stored file from typesense
+            // this.mode = CabinetFile.Modes.VIEW;
+        }
     }
 
     async createBlobUploadUrl() {
@@ -310,6 +326,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         modal.open();
     }
 
+    async editFile() {
+        this.mode = CabinetFile.Modes.EDIT;
+    }
+
     async downloadFile() {
         console.log('downloadFile this.documentFile', this.documentFile);
         const fileUrl = URL.createObjectURL(this.documentFile);
@@ -419,20 +439,24 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 subscribe="lang">
                 <div slot="content" class="content">
                     <div class="description">
-                        ${this.getBackLink()}
-                        <h1>Document Add/View/Edit</h1>
+                        <h1>Document ${this.mode}</h1>
                         Document ID: ${id}<br />
                         File name: ${file.name}<br />
                         File size: ${file.size}<br />
                     </div>
                     <div class="pdf-preview">
                         <div class="fileButtons">
-                            <button @click="${this.downloadFile}">Download</button>
-                            <button @click="${this.openDocumentAddDialog}">Replace PDF</button>
+                            <button class="button" @click="${this.downloadFile}">Download</button>
+                            <button class="button" @click="${this.openDocumentAddDialog}">Replace PDF</button>
                         </div>
                         <dbp-pdf-viewer ${ref(this.documentPdfViewerRef)} id="document-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
                     </div>
                     <div class="form">
+                        <div class="fileButtons">
+                            <button @click="${this.editFile}" class="${classMap({
+                                hidden: this.mode !== CabinetFile.Modes.VIEW,
+                            })} button is-primary">Edit</button>
+                        </div>
                         ${this.getObjectTypeFormPartHtml()}
                     </div>
                 </div>
@@ -441,18 +465,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 </div>
             </dbp-modal>
         `;
-    }
-
-    getBackLink() {
-        if (this.objectType === '') {
-            return html`<a href="#" @click=${this.openDocumentAddDialog}>&lt;&lt; Back to document upload</a>`;
-        } else {
-            return html`<a href="#" @click=${this.resetObjectType}>&lt;&lt; Back to document type selection</a>`;
-        }
-    }
-
-    resetObjectType() {
-        this.objectType = '';
     }
 
     getObjectTypeFormPartHtml() {
@@ -483,6 +495,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         ${this.getDocumentEditFormHtml()}
                     `;
                 }
+            case CabinetFile.Modes.EDIT:
+                return html`
+                    ${this.getDocumentEditFormHtml()}
+                `;
         }
     }
 
