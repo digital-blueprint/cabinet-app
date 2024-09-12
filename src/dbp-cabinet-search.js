@@ -481,7 +481,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         } else {
             return staticHtml`
                 <dbp-cabinet-file
-                    mode="view"
+                    mode="${CabinetFile.Modes.VIEW}"
                     ${ref(this.documentViewFileModalRef)}
                     subscribe="lang,auth,entry-point-url,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
                     .data=${hit}
@@ -524,7 +524,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 ${this.getDocumentViewModalHtml()}
 
                 <dbp-cabinet-file
-                    mode="add"
+                    mode="${CabinetFile.Modes.ADD}"
                     ${ref(this.documentFileComponentRef)}
                     subscribe="lang,auth,entry-point-url,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
                 ></dbp-cabinet-file>
