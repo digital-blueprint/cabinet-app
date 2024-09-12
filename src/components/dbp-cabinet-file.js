@@ -10,6 +10,12 @@ import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {dataURLtoFile, pascalToKebab} from '../utils';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
+    static Modes = {
+        VIEW: 'view',
+        EDIT: 'edit',
+        ADD: 'add',
+    };
+
     constructor() {
         super();
         this.objectTypeFormComponents = {};
@@ -25,7 +31,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.objectType = '';
         // TODO: Do we need a prefix?
         this.blobDocumentPrefix = 'document-';
-        this.mode = 'view';
+        this.mode = CabinetFile.Modes.VIEW;
         this.modalRef = createRef();
     }
 
@@ -450,11 +456,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     getObjectTypeFormPartHtml() {
         switch (this.mode) {
-            case 'view':
+            case CabinetFile.Modes.VIEW:
                 return html`
                     ${this.getDocumentViewFormHtml()}
                 `;
-            case 'add':
+            case CabinetFile.Modes.ADD:
                 if (this.objectType === '') {
                     const file = this.documentFile;
 
@@ -502,8 +508,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('-- Render --');
 
         switch (this.mode) {
-            case 'view':
-            case 'add':
+            case CabinetFile.Modes.EDIT:
+            case CabinetFile.Modes.VIEW:
+            case CabinetFile.Modes.ADD:
                 return this.getHtml();
             default:
                 console.error('mode not found', this.mode);
