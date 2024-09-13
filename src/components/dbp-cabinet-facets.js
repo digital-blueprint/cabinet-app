@@ -484,9 +484,9 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 width: 100%;
                 background: linear-gradient(
                     0deg,
-                    rgba(255, 255, 255, 1) 0%,
-                    rgba(255, 255, 255, 0.6) 60%,
-                    rgba(255, 255, 255, 0) 100%
+                    rgb(from var(--dbp-background) r g b / 100%) 0%,
+                    rgb(from var(--dbp-background) r g b / 60%) 60%,
+                    rgb(from var(--dbp-background) r g b / 0%) 100%
                 );
                 pointer-events: none;
                 z-index: 99;
