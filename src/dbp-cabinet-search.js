@@ -212,14 +212,22 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.createStats(),
         ]);
 
-        if (this.facetConfigs.length > 0) {
+        if (this.facetConfigs.length === 0) {
+            this._('dbp-cabinet-facets').remove();
+            this._('.result-container').classList.add('no-facets');
+        }
+
+        if (this.facetConfigs.length > 0 && this.search) {
             search.addWidgets(
                 this.createFacets()
             );
         }
-        // @TODO delete facet container from DOM if no facetConfigs passed.
-
         search.start();
+
+        search.on('render', () => {
+            console.log('All widgets, including refinementList, have been rendered');
+            this.cabinetFacetsRef.value.handleGradientDisplay();
+        });
 
         // TODO: Improve on workaround to show hits after the page loads
         setTimeout(() => {
@@ -247,6 +255,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 grid-template-columns: 24em minmax(0, 1fr);
                 grid-template-areas: "empty header" "sidebar main";
                 gap: 0 2em;
+            }
+            
+            .result-container.wide-facets {
+                grid-template-columns: 40em minmax(0, 1fr);
+            }
+                
+            .result-container.no-facets {
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-areas: "header" "main";
             }
 
             dbp-cabinet-facets {
@@ -587,9 +604,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             const instantSearchModule = await import(data["instantSearch"]);
             this.instantSearch = new instantSearchModule.default();
-
             this.facetConfigs = this.instantSearch.getFacetsConfig();
-            console.log('FacetWidgets: ', this.facetConfigs);
 
             /**
              * @type {CabinetFile}

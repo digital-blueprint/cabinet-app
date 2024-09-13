@@ -71,9 +71,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Add event listeners to open filters by clicking panel headers
         this._a('.ais-Panel-header').forEach((panelHeader) => {
             panelHeader.addEventListener('mousedown', (event) => {
-                if (event.target.closest('.ais-Panel-collapseButton')) {
-                    return;
-                } else {
+                if (!event.target.closest('.ais-Panel-collapseButton')) {
                     panelHeader.querySelector('.ais-Panel-collapseButton').click();
                 }
             });
@@ -103,7 +101,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     facetConfig.groupId,
                     facetConfig.schemaField,
                     facetConfig.facetOptions,
-                    facetConfig.usePanel
+                    facetConfig.usePanel,
                 );
                 facets.push(facet());
             }
@@ -126,38 +124,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         this._('#filters-container').appendChild(filterGroupHtml);
     }
 
-    // @type
-    createCategoryRefinementList() {
-        // const i18n = this._i18n;
-
-        return refinementList({
-            container: this._('#categories'),
-            attribute: '@type',
-            templates: {
-                item(item, {html}) {
-                    return html`
-                        <div class="refinement-list-item refinement-list-item--categories">
-                            <div class="refinement-list-item-inner">
-                                <label class="refinement-list-item-checkbox">
-                                    <input
-                                        type="checkbox"
-                                        class="custom-checkbox"
-                                        aria-label="${item.label}"
-                                        value="${item.value}"
-                                        checked=${item.isRefined} />
-                                </label>
-                                <span class="refinement-list-item-name" title="${item.label}">
-                                    ${item.label}
-                                </span>
-                            </div>
-                            <span class="refinement-list-item-count">(${item.count})</span>
-                        </div>
-                    `;
-                },
-            },
-        });
-    }
-
     createCurrentRefinements = () => {
         const customCurrentRefinements = connectCurrentRefinements(this.renderCurrentRefinements);
 
@@ -168,14 +134,11 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     renderCurrentRefinements = (renderOptions) => {
         const i18n = this._i18n;
-        const {
-            items,
-            refine,
-        } = renderOptions;
+        const {items, refine} = renderOptions;
 
         // Render the widget
-        let listItems = items.map(item => {
-            return item.refinements.map(refinement => {
+        let listItems = items.map((item) => {
+            return item.refinements.map((refinement) => {
                 let label;
                 switch (item.attribute) {
                     default:
@@ -185,10 +148,13 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 return html`
                     <li class="ais-CurrentRefinements-category">
                         <span class="ais-CurrentRefinements-categoryLabel">${label}</span>
-                        <button class="ais-CurrentRefinements-delete"
-                                title="${i18n.t('cabinet-search.refinement-delete-filter-button-text')}"
-                                @click="${() => refine(refinement)}">
-                            <span class="visually-hidden">${i18n.t('cabinet-search.refinement-delete-filter-button-text')}</span>
+                        <button
+                            class="ais-CurrentRefinements-delete"
+                            title="${i18n.t('cabinet-search.refinement-delete-filter-button-text')}"
+                            @click="${() => refine(refinement)}">
+                            <span class="visually-hidden">
+                                ${i18n.t('cabinet-search.refinement-delete-filter-button-text')}
+                            </span>
                             <span class="filter-close-icon"></span>
                         </button>
                     </li>
@@ -197,19 +163,22 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
 
         const container = this.searchResultsElement.querySelector('#current-filters');
-        render(html`
+        render(
+            html`
                 <div class="ais-CurrentRefinements">
                     <ul class="ais-CurrentRefinements-list">
                         ${listItems}
                         <li id="clear-refinement" class="clear-refinement-container"></li>
                     </ul>
-                </div>`,
-            container);
+                </div>
+            `,
+            container,
+        );
     };
 
     renderClearRefinements = (renderOptions, isFirstRender) => {
         const i18n = this._i18n;
-        const { canRefine, refine } = renderOptions;
+        const {canRefine, refine} = renderOptions;
 
         if (isFirstRender) {
             const clearButton = document.createElement('button');
@@ -222,10 +191,14 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             clearButton.addEventListener('click', () => {
                 refine();
             });
-            this.searchResultsElement.querySelector('.clear-refinement-container').appendChild(clearButton);
+            this.searchResultsElement
+                .querySelector('.clear-refinement-container')
+                .appendChild(clearButton);
         }
 
-        this.searchResultsElement.querySelector('.clear-refinement-container').querySelector('button').disabled = !canRefine;
+        this.searchResultsElement
+            .querySelector('.clear-refinement-container')
+            .querySelector('button').disabled = !canRefine;
     };
 
     createClearRefinements = () => {
@@ -270,9 +243,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 collapsed: () => true,
                 hidden(options) {
                     const facetValues = options.results.getFacetValues(schemaField, {});
-                    // Too slow, too many items...
-                    // that.displayFacetCount(schemaField, facetValues);
-                    return Array.isArray(facetValues) ? facetValues.length == 0 : false;
+                    return Array.isArray(facetValues) ? facetValues.length === 0 : false;
                 },
             };
             const panelOptions = {
@@ -310,8 +281,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     },
                     searchableSubmit() {
                         return null;
-                    }
-                }
+                    },
+                },
             };
             const refinementListOptions = {
                 ...defaultRefinementListOptions,
@@ -328,43 +299,10 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         };
     }
 
-    // displayFacetCount(schemaField, facetValues) {
-    //     if (!schemaField) return;
-    //     const schemaFieldSafe = schemaField.replace(/[@#]/g, '');
-    //     const facetID = this.schemaNameToKebabCase(schemaFieldSafe);
-    //
-    //     let notEmptyFacetValues = [];
-    //
-    //     // Remove empty (no-label) facets.
-    //     if (Array.isArray(facetValues) && facetValues.length > 0) {
-    //         if (Object.prototype.hasOwnProperty.call(facetValues[0], 'name')) {
-    //             notEmptyFacetValues = facetValues.filter(obj => obj.name.trim() !== '');
-    //         }
-    //         else {
-    //             notEmptyFacetValues = facetValues.filter(obj => obj.textContent.trim() !== '');
-    //         }
-    //     }
-    //
-    //     const facetCount = notEmptyFacetValues.length;
-    //     const facetCounter = this._(`#${facetID} .facet-count`);
-    //     if (!facetCounter) {
-    //         // Inject counter element if not present.
-    //         const facetCountHtml = document.createElement('span');
-    //         facetCountHtml.classList.add('facet-count');
-    //         // Most screen readers will announce the number of list items.
-    //         facetCountHtml.setAttribute('aria-hidden', "true");
-    //         facetCountHtml.textContent = `(${facetCount})`;
-    //         this._(`#${facetID} .ais-Panel-header span`).appendChild(facetCountHtml);
-    //     } else {
-    //         // Just update the count value.
-    //         facetCounter.textContent = `(${facetCount})`;
-    //     }
-    // }
-
     // Translate placeholders in array of objects
     translatePlaceholders(facetsConfigs) {
         const i18n = this._i18n;
-        return facetsConfigs.map(item => {
+        return facetsConfigs.map((item) => {
             if (item['filter-group']) {
                 return item;
             }
@@ -379,8 +317,85 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             return item;
         });
-    };
+    }
 
+    handleGradientDisplay() {
+        const facetWidgets = this._a('#filters-container .filter');
+
+         if (facetWidgets) {
+             facetWidgets.forEach(facetWidget => {
+
+                 const COLLAPSED_COUNT = 12;
+                 const EXPANDED_COUNT = 30;
+                 const showMoreButton  = facetWidget.querySelector('.ais-RefinementList-showMore');
+                 const searchBox = facetWidget.querySelector('.ais-SearchBox-input');
+                 const resetButton = facetWidget.querySelector('.ais-SearchBox-reset');
+                 const facetList = facetWidget.querySelector('.ais-RefinementList-list');
+                 const facetItems = facetWidget.querySelectorAll('.refinement-list-item');
+                 const facetCount = facetItems.length;
+
+                 // Toggle is-expanded class on showMoreButton click
+                 if (showMoreButton && showMoreButton.getAttribute('data-event-added') === null) {
+                     showMoreButton.addEventListener('click', () => {
+                         facetWidget.querySelector('.ais-RefinementList-list').classList.toggle('is-expanded');
+                     });
+                     showMoreButton.setAttribute('data-event-added', 'true');
+                 }
+
+                 if (searchBox) {
+                     // Handle gradient on search
+                     if (searchBox.getAttribute('data-event-added') === null) {
+                         searchBox.addEventListener('input', () => {
+                             setTimeout(() => {
+                                 this.showHideFacetGradientOnSearch(facetWidget);
+                             }, 200);
+                         });
+                         searchBox.setAttribute('data-event-added', 'true');
+                     }
+
+                     // Handle gradient on search reset
+                     if (resetButton && resetButton.getAttribute('data-event-added') === null) {
+                         resetButton.addEventListener('click', (event) => {
+                             setTimeout(() => {
+                                 this.showHideFacetGradientOnSearch(facetWidget);
+                             }, 200);
+                         });
+                         resetButton.setAttribute('data-event-added', 'true');
+                     }
+                 }
+
+                 // Check if facet needs gradient
+                 if (facetList) {
+                     const isExpanded = facetList.classList.contains('is-expanded');
+
+                     if (!showMoreButton) {
+                         facetWidget.classList.add('no-gradient');
+                         return;
+                     }
+                     // Remove gradient if all facet items are visible.
+                     if (!isExpanded && facetCount < COLLAPSED_COUNT) {
+                         facetWidget.classList.add('no-gradient');
+                     }
+                     if (isExpanded && facetCount < EXPANDED_COUNT) {
+                         facetWidget.classList.add('no-gradient');
+                     }
+                 }
+             });
+        }
+    }
+
+    showHideFacetGradientOnSearch(facetWidget) {
+        const EXPANDED_COUNT = 30;
+        const facetItems = facetWidget.querySelectorAll('.refinement-list-item');
+        const facetCount = facetItems.length;
+        const isShowMoreButtonPresent  = facetWidget.querySelector('.ais-RefinementList-showMore');
+
+        if (!isShowMoreButtonPresent && facetCount < EXPANDED_COUNT) {
+            facetWidget.classList.add('no-gradient');
+        } else {
+            facetWidget.classList.remove('no-gradient');
+        }
+    }
 
     /**
      * Convert schema name to kebabCase for css classes and translation keys
@@ -399,6 +414,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS(false)}
+            
             .filters {
                 border: 1px solid var(--dbp-content);
                 height: 100%;
@@ -444,7 +460,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 flex-grow: 1;
             }
 
-            input[type="search"]::-webkit-search-cancel-button {
+            input[type='search']::-webkit-search-cancel-button {
                 -webkit-appearance: none;
                 appearance: none;
             }
@@ -458,6 +474,24 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 list-style: none;
                 margin: 0;
                 padding: 0.5em 0;
+                position: relative;
+            }
+
+            .filter:not(.no-gradient) .ais-RefinementList-list:after {
+                content: '';
+                display: block;
+                height: 30px;
+                width: 100%;
+                background: linear-gradient(
+                    0deg,
+                    rgba(255, 255, 255, 1) 0%,
+                    rgba(255, 255, 255, 0.6) 60%,
+                    rgba(255, 255, 255, 0) 100%
+                );
+                pointer-events: none;
+                z-index: 99;
+                position: absolute;
+                bottom: 0.5em;
             }
 
             .ais-Panel-header {
@@ -472,12 +506,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             /* Prevent text selection on panel headers on click */
             .ais-Panel-header > span {
                 user-select: none;
-            }
-            
-            .facet-count {
-                padding-left: 0.5em;
-                font-size: 14px;
-                color: var(--dbp-muted);
             }
 
             .ais-Panel-body {
@@ -529,8 +557,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div class="filter-header">
                     <h2 class="filter-header__title">${i18n.t('cabinet-search.filters')}</h2>
                 </div>
-                <div id="filters-container" class="filters-container">
-                </div>
+                <div id="filters-container" class="filters-container"></div>
             </div>
         `;
     }
