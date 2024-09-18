@@ -73,6 +73,7 @@
         "instantsearch.js": "^4.65.0",
         "lit": "^3.0.0",
         "pdfjs-dist": "^4.3  <4.6",
+        "typesense": "^1.8.2",
         "typesense-instantsearch-adapter": "^2.8.0"
     },
     "scripts": {

@@ -35,6 +35,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.blobDocumentPrefix = 'document-';
         this.mode = CabinetFile.Modes.VIEW;
         this.modalRef = createRef();
+        this.typesenseService = null;
     }
 
     connectedCallback() {
@@ -89,6 +90,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.objectTypeViewComponents = objectTypeViewComponents;
     }
 
+    setTypesenseService(typesenseService) {
+        this.typesenseService = typesenseService;
+    }
+
     async storeDocumentToBlob(formData) {
         const uploadUrl = await this.createBlobUploadUrl();
         console.log('storeDocumentToBlob uploadUrl', uploadUrl);
@@ -101,6 +106,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             // TODO: Get the hit data of the stored file from typesense
             // this.mode = CabinetFile.Modes.VIEW;
+
+            console.log('storeDocumentToBlob this.typesenseService', this.typesenseService);
         }
     }
 

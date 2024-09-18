@@ -19,6 +19,7 @@ import {CabinetFile} from './components/dbp-cabinet-file.js';
 import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetViewFile} from './components/dbp-cabinet-view-file.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
+import {TypesenseService} from './services/typesense.js';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -47,6 +48,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.fileDocumentTypeNames = {};
         this.instantSearch = {};
         this.facetConfigs = [];
+        this.typesenseInstantsearchAdapter = null;
+        this.typesenseService = null;
     }
 
     static get scopedElements() {
@@ -90,6 +93,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     this.serverConfig.additionalHeaders = { 'Authorization': 'Bearer ' + this.auth.token };
 
                     console.log('this.serverConfig auth-update', this.serverConfig);
+
+                    // Init the Typesense service with the new bearer token
+                    // TODO: This breaks search
+                    // this.initTypesenseService();
 
                     // Update the Typesense Instantsearch adapter configuration with the new bearer token
                     if (this.typesenseInstantsearchAdapter) {
@@ -148,6 +155,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
              */
             const component = this.documentViewFileModalRef.value;
             component.setObjectTypeViewComponents(this.objectTypeViewComponents);
+            component.setTypesenseService(this.typesenseService);
             await component.openDialogWithHit(hit);
         }
     }
@@ -169,6 +177,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
              * @type {CabinetFile}
              */
             const component = that.documentFileComponentRef.value;
+            component.setTypesenseService(this.typesenseService);
             component.openDocumentAddDialogWithHit(event.detail.hit);
         });
 
@@ -345,6 +354,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             server: this.serverConfig,
             additionalSearchParameters: this.getSearchParameters()
         };
+    }
+
+    initTypesenseService() {
+        this.typesenseService = new TypesenseService(this.serverConfig, this.collectionName, this.auth.token);
     }
 
     /**
