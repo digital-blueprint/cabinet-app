@@ -1,4 +1,4 @@
-import Typesense from 'typesense';
+// import Typesense from 'typesense';
 
 export class TypesenseService {
     constructor(serverConfig, collectionsName) {
