@@ -50,6 +50,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.facetConfigs = [];
         this.typesenseInstantsearchAdapter = null;
         this.typesenseService = null;
+        this.serverConfig = null;
     }
 
     static get scopedElements() {
@@ -95,8 +96,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     console.log('this.serverConfig auth-update', this.serverConfig);
 
                     // Init the Typesense service with the new bearer token
-                    // TODO: This breaks search
-                    // this.initTypesenseService();
+                    this.initTypesenseService();
 
                     // Update the Typesense Instantsearch adapter configuration with the new bearer token
                     if (this.typesenseInstantsearchAdapter) {
@@ -357,7 +357,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     initTypesenseService() {
-        this.typesenseService = new TypesenseService(this.serverConfig, this.collectionName, this.auth.token);
+        if (!this.serverConfig || !this.typesenseCollection || !this.auth.token) {
+            return;
+        }
+
+        this.typesenseService = new TypesenseService(this.serverConfig, this.typesenseCollection);
+        console.log('initTypesenseService this.typesenseService', this.typesenseService);
     }
 
     /**
