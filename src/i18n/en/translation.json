@@ -7,7 +7,7 @@
 
         "filter-object-type-title": "Document type",
         "filter-base-person-title": "Person",
-        "filter-base-birth-date-title": "Birth date",
+        "filter-base-birth-date-timestamp-title": "Birth date",
         "filter-person-studies-name-title": "Study name",
         "filter-person-studies-type-title": "Study type",
         "filter-person-personal-status-text-title": "Personal status",

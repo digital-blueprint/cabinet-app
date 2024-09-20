@@ -20,6 +20,7 @@ import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetViewFile} from './components/dbp-cabinet-view-file.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
 import {TypesenseService} from './services/typesense.js';
+import {updateDatePickersForExternalRefinementChange} from './components/dbp-cabinet-date-facet.js';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -231,11 +232,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 this.createFacets()
             );
         }
+
         search.start();
 
         search.on('render', () => {
-            console.log('All widgets, including refinementList, have been rendered');
+            // Handle gradients display on facets.
             this.cabinetFacetsRef.value.handleGradientDisplay();
+        });
+
+        // Clear date facets on refinement clearing.
+        search.helper.on('change', (res) => {
+            updateDatePickersForExternalRefinementChange(res, this.cabinetFacetsRef.value.facets);
         });
 
         // TODO: Improve on workaround to show hits after the page loads
@@ -265,11 +272,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 grid-template-areas: "empty header" "sidebar main";
                 gap: 0 2em;
             }
-            
+
             .result-container.wide-facets {
                 grid-template-columns: 40em minmax(0, 1fr);
             }
-                
+
             .result-container.no-facets {
                 grid-template-columns: minmax(0, 1fr);
                 grid-template-areas: "header" "main";
@@ -278,24 +285,24 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             dbp-cabinet-facets {
                 grid-row-start: 2;
             }
-            
+
             .results {
                 grid-area: main;
             }
-            
+
             .ais-SearchBox-form {
                 display: flex;
             }
-            
+
             .ais-SearchBox-input {
                 flex-grow: 1;
                 height: 2em;
             }
-            
+
             .ais-SearchBox-submit {
                 width: 2em;
             }
-            
+
             .ais-Hits-list {
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));

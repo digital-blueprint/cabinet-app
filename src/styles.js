@@ -16,7 +16,7 @@ export function getCurrentRefinementCSS() {
             min-height: 4em;
         }
         
-        .filters-container {
+        .refinement-container {
             min-height: 3em;
             grid-area: header;
         }

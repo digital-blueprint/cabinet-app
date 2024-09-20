@@ -3,11 +3,10 @@
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {css, html, render} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-// import {Button, IconButton, Translated} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
-// import {pascalToKebab} from '../utils';
 import {panel, refinementList } from 'instantsearch.js/es/widgets/index.js';
 import {connectCurrentRefinements, connectClearRefinements} from 'instantsearch.js/es/connectors';
+import {createDateRefinement} from './dbp-cabinet-date-facet.js';
 
 export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -15,14 +14,15 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         // this.search = null;
         /** @type {HTMLElement} */
         this.searchResultsElement = null;
+        this.facets = [];
     }
 
     connectedCallback() {
         super.connectedCallback();
 
         const allFiltersContainer = document.createElement('div');
-        allFiltersContainer.setAttribute('id', 'filters-container');
-        allFiltersContainer.classList.add('filters-container');
+        allFiltersContainer.setAttribute('id', 'refinement-container');
+        allFiltersContainer.classList.add('refinement-container');
 
         const currentRefinementsContainer = document.createElement('div');
         currentRefinementsContainer.setAttribute('id', 'current-filters');
@@ -97,12 +97,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             if (Object.hasOwn(facetConfig, 'filter-group')) {
                 this.addFilterHeader(facetConfig['filter-group']);
             } else {
-                const facet = this.generateFacet(
-                    facetConfig.groupId,
-                    facetConfig.schemaField,
-                    facetConfig.facetOptions,
-                    facetConfig.usePanel,
-                );
+                const facet = this.generateFacet(facetConfig);
                 facets.push(facet());
             }
             facetConfig = null;
@@ -140,10 +135,20 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         let listItems = items.map((item) => {
             return item.refinements.map((refinement) => {
                 let label;
-                switch (item.attribute) {
-                    default:
+                switch (refinement.type) {
+                    case 'numeric': {
+                        const activeFacet = this.facets.find(facet => facet.attribute === refinement.attribute);
+                        if (activeFacet && activeFacet.fieldType === 'datepicker') {
+                            let date = new Date(refinement.value * 1000).toLocaleDateString();
+                            let operatorLabel = refinement.operator === '>=' ? 'after' : 'before';
+                            label = `${operatorLabel} ${date}`;
+                        }
+                        break;
+                    }
+                    default: {
                         label = refinement.label;
                         break;
+                    }
                 }
                 return html`
                     <li class="ais-CurrentRefinements-category">
@@ -162,6 +167,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             });
         });
 
+        /** @type {HTMLElement} */
         const container = this.searchResultsElement.querySelector('#current-filters');
         render(
             html`
@@ -211,26 +217,34 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     /**
      * Generate facets based on schema name
-     * @param {string} groupId - id of the filter group
-     * @param {string} schemaField - name of the schema field
-     * @param {object} facetOptions - options for the panel and the facet
-     * @param {boolean} usePanel - whether to use panel or not
+     * @param {object} facetConfig - configuration for the facet
      * @returns {function(): *}
      */
-    generateFacet(groupId, schemaField, facetOptions = {}, usePanel = true) {
+    generateFacet(facetConfig) {
         const i18n = this._i18n;
         let that = this;
+
+        const {
+            groupId,
+            schemaField,
+            schemaFieldType = 'checkbox',
+            facetOptions = {},
+            usePanel = true
+          } = facetConfig;
+
 
         // Remove special characters from schema field name to use as css class and translation key.
         const schemaFieldSafe = schemaField.replace(/[@#]/g, '');
 
         const cssClass = this.schemaNameToKebabCase(schemaFieldSafe);
+        const cssTypeClass = this.schemaNameToKebabCase(schemaFieldType);
         const translationKey = this.schemaNameToKebabCase(schemaFieldSafe);
 
         const filterItem = document.createElement('div');
         filterItem.classList.add('filter');
         filterItem.setAttribute('id', `${cssClass}`);
         filterItem.classList.add(`filter--${cssClass}`);
+        filterItem.classList.add(`filter-type-${cssTypeClass}`);
         this._(`#${groupId}`).appendChild(filterItem);
 
         return function () {
@@ -251,51 +265,79 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 ...(facetOptions.panel || {}),
             };
 
-            const defaultRefinementListOptions = {
-                container: that._(`#${cssClass}`),
-                attribute: schemaField,
-                sortBy: ['count:desc', 'name:asc'],
-                limit: 12,
-                searchable: true,
-                searchableShowReset: false,
-                templates: {
-                    item(item, {html}) {
-                        return html`
-                            <div class="refinement-list-item refinement-list-item--${cssClass}">
-                                <div class="refinement-list-item-inner">
-                                    <label class="refinement-list-item-checkbox">
-                                        <input
-                                            type="checkbox"
-                                            class="custom-checkbox"
-                                            aria-label="${item.label}"
-                                            value="${item.value}"
-                                            checked=${item.isRefined} />
-                                    </label>
-                                    <span class="refinement-list-item-name" title="${item.label}">
+
+            if (schemaFieldType === 'checkbox') {
+
+                const defaultRefinementListOptions = {
+                    fieldType: schemaFieldType,
+                    container: that._(`#${cssClass}`),
+                    attribute: schemaField,
+                    sortBy: ['count:desc', 'name:asc'],
+                    limit: 12,
+                    searchable: true,
+                    searchableShowReset: false,
+                    templates: {
+                        item(item, {html}) {
+                            return html`
+                                <div class="refinement-list-item refinement-list-item--${cssClass}">
+                                    <div class="refinement-list-item-inner">
+                                        <label class="refinement-list-item-checkbox">
+                                            <input
+                                                type="checkbox"
+                                                class="custom-checkbox"
+                                                aria-label="${item.label}"
+                                                value="${item.value}"
+                                                checked=${item.isRefined} />
+                                        </label>
+                                        <span class="refinement-list-item-name" title="${item.label}">
                                         ${item.label}
                                     </span>
+                                    </div>
+                                    <span class="refinement-list-item-count">(${item.count})</span>
                                 </div>
-                                <span class="refinement-list-item-count">(${item.count})</span>
-                            </div>
-                        `;
+                            `;
+                        },
+                        searchableSubmit() {
+                            return null;
+                        },
                     },
-                    searchableSubmit() {
-                        return null;
-                    },
-                },
-            };
-            const refinementListOptions = {
-                ...defaultRefinementListOptions,
-                ...(facetOptions.facet || {}),
-            };
+                };
+                const refinementListOptions = {
+                    ...defaultRefinementListOptions,
+                    ...(facetOptions.facet || {}),
+                };
 
-            if (usePanel === false) {
-                return refinementList(refinementListOptions);
+                that.facets.push(refinementListOptions);
+
+                if (usePanel === false) {
+                    return refinementList(refinementListOptions);
+                } else {
+                    const PanelWidget = panel(panelOptions)(refinementList);
+                    return PanelWidget(refinementListOptions);
+                }
             }
 
-            const PanelWidget = panel(panelOptions)(refinementList);
+            if (schemaFieldType === 'datepicker') {
 
-            return PanelWidget(refinementListOptions);
+                const defaultDateRefinementOptions = {
+                    fieldType: schemaFieldType,
+                    attribute: schemaField,
+                    container: that._(`#${cssClass}`),
+                };
+                const dateRefinementOptions = {
+                    ...defaultDateRefinementOptions,
+                    ...(facetOptions.facet || {}),
+                };
+
+                that.facets.push(dateRefinementOptions);
+
+                if (usePanel === false) {
+                    return createDateRefinement(dateRefinementOptions);
+                } else {
+                    const PanelWidget = panel(panelOptions)(createDateRefinement);
+                    return PanelWidget(dateRefinementOptions);
+                }
+            }
         };
     }
 
@@ -414,7 +456,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS(false)}
-            
+
             .filters {
                 border: 1px solid var(--dbp-content);
                 height: 100%;
@@ -512,6 +554,16 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 border: 1px solid var(--dbp-content);
                 border-top: none 0;
                 padding: 0 0.5em;
+            }
+
+            .filter-type-datepicker .ais-Panel-body {
+                padding: 1em 0;
+            }
+
+            .filter-type-datepicker .ais-Panel-body > div {
+                display: flex;
+                gap: 1.5em;
+                justify-content: center;
             }
 
             .refinement-list-item {
