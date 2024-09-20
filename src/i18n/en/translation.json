@@ -61,7 +61,9 @@
         "search-placeholder-file-identity-document-nationality": "Search country",
 
         "refinement-delete-all-filters": "Clear filters",
-        "refinement-delete-filter-button-text": "Delete filter"
+        "refinement-delete-filter-button-text": "Delete filter",
+        "refinement-date-before-text": "before",
+        "refinement-date-after-text": "after"
     },
     "error-login-message": "You need to be logged in to use this function!"
 }

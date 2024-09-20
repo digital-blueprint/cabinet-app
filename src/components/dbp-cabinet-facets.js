@@ -139,8 +139,12 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     case 'numeric': {
                         const activeFacet = this.facets.find(facet => facet.attribute === refinement.attribute);
                         if (activeFacet && activeFacet.fieldType === 'datepicker') {
-                            let date = new Date(refinement.value * 1000).toLocaleDateString();
-                            let operatorLabel = refinement.operator === '>=' ? 'after' : 'before';
+                            let date = new Date(refinement.value * 1000).toLocaleDateString('de-AT', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric'
+                            });
+                            let operatorLabel = refinement.operator === '>=' ? i18n.t('cabinet-search.refinement-date-before-text') : i18n.t('cabinet-search.refinement-date-before-text');
                             label = `${operatorLabel} ${date}`;
                         }
                         break;
@@ -565,6 +569,30 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 gap: 1.5em;
                 justify-content: center;
             }
+            
+            .filter input[type="date"] {
+                padding: .5em;
+            }
+
+            /* input wrapper */
+            ::-internal-datetime-container {position: relative}
+            /* date field wrappers */
+            ::-webkit-datetime-edit {
+                max-width: max-content;
+                padding-right: .5em;
+            }
+            ::-webkit-datetime-edit-fields-wrapper {}
+            /* date separator */
+            ::-webkit-datetime-edit-text {}
+            /* date fields */
+            ::-webkit-datetime-edit-month-field {}
+            ::-webkit-datetime-edit-day-field {}
+            ::-webkit-datetime-edit-year-field {}
+            /* calendar button */
+            ::-webkit-calendar-picker-indicator { cursor: pointer; }
+            /* ??? */
+            ::-webkit-inner-spin-button {}
+            
 
             .refinement-list-item {
                 display: flex;

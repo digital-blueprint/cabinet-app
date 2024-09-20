@@ -52,7 +52,9 @@
         "search-placeholder-file-identity-document-nationality": "[de] Search country",
 
         "refinement-delete-all-filters": "Filter löschen",
-        "refinement-delete-filter-button-text": "Auswahl löschen"
+        "refinement-delete-filter-button-text": "Auswahl löschen",
+        "refinement-date-before-text": "vorher",
+        "refinement-date-after-text": "nach"
     },
     "error-login-message": "Sie müssen angemeldet sein um diese Funktion nutzen zu können!"
 }
