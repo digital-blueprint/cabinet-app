@@ -166,6 +166,8 @@ export function createDateRefinement(widgetParams) {
                 const id = `${type}-date-${kebabAttribute}`;
                 dateSelector.setAttribute('id', id);
                 dateSelector.classList.add(`${type}-date`);
+                // Set max date to today
+                dateSelector.setAttribute('max', new Date().toISOString().split('T')[0]);
                 dateSelector.addEventListener('change', updateRefinement);
                 return dateSelector;
             }
