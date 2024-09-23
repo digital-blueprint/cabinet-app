@@ -584,10 +584,10 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 padding: .5em;
             }
 
-            input[type="date"]:invalid::after {
+            /* input[type="date"]:invalid::after {
                 display: block;
                 content: "✖";
-            }
+            } */
 
             /* input wrapper */
             ::-internal-datetime-container {position: relative}
