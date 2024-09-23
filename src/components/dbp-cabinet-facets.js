@@ -70,9 +70,13 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     afterSearchInit() {
         // Add event listeners to open filters by clicking panel headers
         this._a('.ais-Panel-header').forEach((panelHeader) => {
-            panelHeader.addEventListener('mousedown', (event) => {
-                if (!event.target.closest('.ais-Panel-collapseButton')) {
-                    panelHeader.querySelector('.ais-Panel-collapseButton').click();
+            const header = /** @type {HTMLElement} */(panelHeader);
+            header.addEventListener('mousedown', (event) => {
+                if (event.target instanceof HTMLElement && !event.target.closest('.ais-Panel-collapseButton')) {
+                    const collapseButton = header.querySelector('.ais-Panel-collapseButton');
+                    if (collapseButton instanceof HTMLElement) {
+                        collapseButton.click();
+                    }
                 }
             });
         });
@@ -129,14 +133,17 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     renderCurrentRefinements = (renderOptions) => {
         const i18n = this._i18n;
-        const {items, refine} = renderOptions;
+        const {items, refine, widgetParams} = renderOptions;
+        const container = widgetParams.container;
 
         // Render the widget
         let listItems = items.map((item) => {
             return item.refinements.map((refinement) => {
+                // Set refinement filter labels
                 let label;
                 switch (refinement.type) {
                     case 'numeric': {
+                        // Date picker refinement filter labels
                         const activeFacet = this.facets.find(facet => facet.attribute === refinement.attribute);
                         if (activeFacet && activeFacet.fieldType === 'datepicker') {
                             let date = new Date(refinement.value * 1000).toLocaleDateString('de-AT', {
@@ -150,6 +157,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         break;
                     }
                     default: {
+                        // Set checkbox refinement filter labels
                         label = refinement.label;
                         break;
                     }
@@ -172,7 +180,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
 
         /** @type {HTMLElement} */
-        const container = this.searchResultsElement.querySelector('#current-filters');
+        // const container = this.searchResultsElement.querySelector('#current-filters');
         render(
             html`
                 <div class="ais-CurrentRefinements">
@@ -368,65 +376,67 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     handleGradientDisplay() {
         const facetWidgets = this._a('#filters-container .filter');
 
-         if (facetWidgets) {
-             facetWidgets.forEach(facetWidget => {
+        if (facetWidgets) {
+            facetWidgets.forEach(facetWidget => {
 
-                 const COLLAPSED_COUNT = 12;
-                 const EXPANDED_COUNT = 30;
-                 const showMoreButton  = facetWidget.querySelector('.ais-RefinementList-showMore');
-                 const searchBox = facetWidget.querySelector('.ais-SearchBox-input');
-                 const resetButton = facetWidget.querySelector('.ais-SearchBox-reset');
-                 const facetList = facetWidget.querySelector('.ais-RefinementList-list');
-                 const facetItems = facetWidget.querySelectorAll('.refinement-list-item');
-                 const facetCount = facetItems.length;
+                const widget = /** @type {HTMLElement} */ (facetWidget);
 
-                 // Toggle is-expanded class on showMoreButton click
-                 if (showMoreButton && showMoreButton.getAttribute('data-event-added') === null) {
-                     showMoreButton.addEventListener('click', () => {
-                         facetWidget.querySelector('.ais-RefinementList-list').classList.toggle('is-expanded');
-                     });
-                     showMoreButton.setAttribute('data-event-added', 'true');
-                 }
+                const COLLAPSED_COUNT = 12;
+                const EXPANDED_COUNT = 30;
+                const showMoreButton  = widget.querySelector('.ais-RefinementList-showMore');
+                const searchBox = widget.querySelector('.ais-SearchBox-input');
+                const resetButton = widget.querySelector('.ais-SearchBox-reset');
+                const facetList = widget.querySelector('.ais-RefinementList-list');
+                const facetItems = widget.querySelectorAll('.refinement-list-item');
+                const facetCount = facetItems.length;
 
-                 if (searchBox) {
-                     // Handle gradient on search
-                     if (searchBox.getAttribute('data-event-added') === null) {
-                         searchBox.addEventListener('input', () => {
-                             setTimeout(() => {
-                                 this.showHideFacetGradientOnSearch(facetWidget);
-                             }, 200);
-                         });
-                         searchBox.setAttribute('data-event-added', 'true');
-                     }
+                // Toggle is-expanded class on showMoreButton click
+                if (showMoreButton && showMoreButton.getAttribute('data-event-added') === null) {
+                    showMoreButton.addEventListener('click', () => {
+                        widget.querySelector('.ais-RefinementList-list').classList.toggle('is-expanded');
+                    });
+                    showMoreButton.setAttribute('data-event-added', 'true');
+                }
 
-                     // Handle gradient on search reset
-                     if (resetButton && resetButton.getAttribute('data-event-added') === null) {
-                         resetButton.addEventListener('click', (event) => {
-                             setTimeout(() => {
-                                 this.showHideFacetGradientOnSearch(facetWidget);
-                             }, 200);
-                         });
-                         resetButton.setAttribute('data-event-added', 'true');
-                     }
-                 }
+                if (searchBox) {
+                    // Handle gradient on search
+                    if (searchBox.getAttribute('data-event-added') === null) {
+                        searchBox.addEventListener('input', () => {
+                            setTimeout(() => {
+                                this.showHideFacetGradientOnSearch(facetWidget);
+                            }, 200);
+                        });
+                        searchBox.setAttribute('data-event-added', 'true');
+                    }
 
-                 // Check if facet needs gradient
-                 if (facetList) {
-                     const isExpanded = facetList.classList.contains('is-expanded');
+                    // Handle gradient on search reset
+                    if (resetButton && resetButton.getAttribute('data-event-added') === null) {
+                        resetButton.addEventListener('click', (event) => {
+                            setTimeout(() => {
+                                this.showHideFacetGradientOnSearch(facetWidget);
+                            }, 200);
+                        });
+                        resetButton.setAttribute('data-event-added', 'true');
+                    }
+                }
 
-                     if (!showMoreButton) {
-                         facetWidget.classList.add('no-gradient');
-                         return;
-                     }
-                     // Remove gradient if all facet items are visible.
-                     if (!isExpanded && facetCount < COLLAPSED_COUNT) {
-                         facetWidget.classList.add('no-gradient');
-                     }
-                     if (isExpanded && facetCount < EXPANDED_COUNT) {
-                         facetWidget.classList.add('no-gradient');
-                     }
-                 }
-             });
+                // Check if facet needs gradient
+                if (facetList) {
+                    const isExpanded = facetList.classList.contains('is-expanded');
+
+                    if (!showMoreButton) {
+                        widget.classList.add('no-gradient');
+                        return;
+                    }
+                    // Remove gradient if all facet items are visible.
+                    if (!isExpanded && facetCount < COLLAPSED_COUNT) {
+                        widget.classList.add('no-gradient');
+                    }
+                    if (isExpanded && facetCount < EXPANDED_COUNT) {
+                        widget.classList.add('no-gradient');
+                    }
+                }
+            });
         }
     }
 
@@ -569,9 +579,14 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 gap: 1.5em;
                 justify-content: center;
             }
-            
+
             .filter input[type="date"] {
                 padding: .5em;
+            }
+
+            input[type="date"]:invalid::after {
+                display: block;
+                content: "✖";
             }
 
             /* input wrapper */
@@ -592,7 +607,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             ::-webkit-calendar-picker-indicator { cursor: pointer; }
             /* ??? */
             ::-webkit-inner-spin-button {}
-            
+
 
             .refinement-list-item {
                 display: flex;

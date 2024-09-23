@@ -9,6 +9,20 @@ export default class {
 
     /**
      * Customize facets config. These attributes are merged with the default config.
+     * Each configuration object in the returned array can have the following properties:
+     *
+     *  filter-group: An object defining a filter group.
+     *  id: A unique identifier for the filter group.
+     *  name: The translation key used as title of the filter group.
+     *  groupId: A name of the group ID to which the schema field belongs.
+     *  schemaField: A the typesense schema field to be used for the facet.
+     *  schemaFieldType: The type of the facet (e.g., "checkbox", "datepicker").
+     *  facetOptions: An object containing options for the facet.
+     *  facet: An object to override facet options.
+     *  - facet options: https://www.algolia.com/doc/api-reference/widgets/refinement-list/js/
+     *  panel: An object to override panel options.
+     *  - panel options: https://www.algolia.com/doc/api-reference/widgets/panel/js/
+     *  usePanel: A boolean indicating whether to use a panel for the facet (optional).
      * @returns {Array} - Array of search facets config
      */
     getFacetsConfig() {
