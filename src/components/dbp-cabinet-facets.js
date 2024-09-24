@@ -123,6 +123,23 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         this._('#filters-container').appendChild(filterGroupHtml);
     }
 
+    hideFilterGroupIfEmpty() {
+        const filterGroups = this._a('#filters-container .filter-group');
+        filterGroups.forEach( filterGroup => {
+            const filterGroupElement = /** @type HTMLElement */(filterGroup);
+            const refinementLists = filterGroupElement.querySelectorAll('.filter .ais-RefinementList');
+            if (refinementLists.length === 0) {
+                return;
+            }
+            const activeFilters = Array.from(refinementLists).filter((list) => !list.classList.contains('ais-RefinementList--noRefinement'));
+            if (activeFilters.length === 0) {
+                filterGroupElement.classList.add('display-none');
+            } else {
+                filterGroupElement.classList.remove('display-none');
+            }
+        });
+      }
+
     createCurrentRefinements = () => {
         const customCurrentRefinements = connectCurrentRefinements(this.renderCurrentRefinements);
 
@@ -470,6 +487,10 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS(false)}
+
+            .display-none {
+                display: none !important;
+            }
 
             .filters {
                 border: 1px solid var(--dbp-content);

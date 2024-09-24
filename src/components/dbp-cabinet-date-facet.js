@@ -169,6 +169,7 @@ export function createDateRefinement(widgetParams) {
                 // Set max date to today
                 dateSelector.setAttribute('max', new Date().toISOString().split('T')[0]);
                 dateSelector.addEventListener('change', updateRefinement);
+
                 return dateSelector;
             }
 

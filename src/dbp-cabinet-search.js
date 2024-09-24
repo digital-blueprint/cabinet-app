@@ -238,6 +238,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         search.on('render', () => {
             // Handle gradients display on facets.
             this.cabinetFacetsRef.value.handleGradientDisplay();
+            this.cabinetFacetsRef.value.hideFilterGroupIfEmpty();
         });
 
         // Clear date facets on refinement clearing.
