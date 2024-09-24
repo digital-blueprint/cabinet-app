@@ -284,7 +284,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     fieldType: schemaFieldType,
                     container: that._(`#${cssClass}`),
                     attribute: schemaField,
-                    sortBy: ['count:desc', 'name:asc'],
+                    sortBy: ['isRefined:desc','count:desc', 'name:asc'],
                     limit: 12,
                     searchable: true,
                     searchableShowReset: false,
