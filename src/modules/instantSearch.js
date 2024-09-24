@@ -60,8 +60,8 @@ export default class {
             { "groupId": "file", "schemaField": "file.base.isPartOf", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-base-is-part-of', searchable: false}}},
             { "groupId": "file", "schemaField": "file.base.subjectOf", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-base-subject-of', searchable: false}}},
             // file.decision ==? file.admissionNotice.decision | facet: false in cabinet.typesense.yaml
-            { "groupId": "file",  "schemaField": "file.citizenshipCertificate.nationality", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-citizenship-certificate-nationality', searchable: false}}},
-            { "groupId": "file",  "schemaField": "file.identityDocument.nationality", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-identity-document-nationality', searchable: false}}}
+            { "groupId": "file",  "schemaField": "file.file-cabinet-citizenshipCertificate.nationality", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-citizenship-certificate-nationality', searchable: false}}},
+            { "groupId": "file",  "schemaField": "file.file-cabinet-identityDocument.nationality", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-identity-document-nationality', searchable: false}}}
         ];
     }
 }

@@ -31,8 +31,8 @@
         "filter-file-base-study-field-title": "Studium",
         "filter-file-base-is-part-of-title": "Zugeordneter Vorgang",
         "filter-file-base-subject-of-title": "Geschäftszahl",
-        "filter-file-citizenship-certificate-nationality-title": "Nationalität auf Staatsbürgerschaftsnachweis",
-        "filter-file-identity-document-nationality-title": "Staatsbürgerschaft laut Dokument",
+        "filter-file-file-cabinet-citizenship-certificate-nationality-title": "Nationalität auf Staatsbürgerschaftsnachweis",
+        "filter-file-file-cabinet-identity-document-nationality-title": "Staatsbürgerschaft laut Dokument",
 
         "search-placeholder-base-person": "Person suchen",
         "search-placeholder-base-birth-date": "Search birth date",
