@@ -126,7 +126,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     hideFilterGroupIfEmpty() {
         const filterGroups = this._a('#filters-container .filter-group');
         filterGroups.forEach( filterGroup => {
-            const filterGroupElement = /** @type HTMLElement */(filterGroup);
+            const filterGroupElement = /** @type {HTMLElement} */(filterGroup);
             const refinementLists = filterGroupElement.querySelectorAll('.filter .ais-RefinementList');
             if (refinementLists.length === 0) {
                 return;
