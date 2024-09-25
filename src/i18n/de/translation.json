@@ -25,7 +25,7 @@
         "filter-person-exmatriculation-semester-title": "Abmeldesemester",
         "filter-person-exmatriculation-status-text-title": "Exmatrikulationsstatus",
 
-        "filter-file-base-additional-type-title": "Dokumenttyp",
+        "filter-file-base-additional-type-text-title": "Dokumenttyp",
         "filter-file-base-file-source-title": "Digitalisatsquelle",
         "filter-file-base-semester-title": "Semester",
         "filter-file-base-study-field-title": "Studium",

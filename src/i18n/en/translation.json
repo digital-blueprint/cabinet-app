@@ -25,7 +25,7 @@
         "filter-person-exmatriculation-semester-title": "Semester of last exmatriculation",
         "filter-person-exmatriculation-status-text-title": "Exmatriculation status",
 
-        "filter-file-base-additional-type-title": "Document type",
+        "filter-file-base-additional-type-text-title": "Document type",
         "filter-file-base-file-source-title": "Digital document source",
         "filter-file-base-semester-title": "Semester",
         "filter-file-base-study-field-title": "Study field",

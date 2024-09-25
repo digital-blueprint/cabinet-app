@@ -51,7 +51,7 @@ export default class {
             { "groupId": "person", "schemaField": "person.studAddress.country.text", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-student-address-country', showMore: true, showMoreLimit: showMoreLimitValue}}},
             { "groupId": "person", "schemaField": "person.applications.studyType", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-applications-study-type', searchable: false}}},
             { "filter-group": { "id": "file", "name": "cabinet-search.document-filter-group-title"}},
-            { "groupId": "file", "schemaField": "file.base.additionalType", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-base-additional-type', searchable: false}}},
+            { "groupId": "file", "schemaField": "file.base.additionalType.text", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-base-additional-type', searchable: false}}},
             // file.uploadDate ==?
             // file.recommended.deletionDate == ?
             { "groupId": "file", "schemaField": "file.base.fileSource", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-base-file-source', searchable: false}}},

@@ -82,10 +82,13 @@ class CabinetViewElement extends BaseViewElement {
             filename: ${this.data.file.base.fileName}<br />
             ${viewElements.stringElement('Study field', this.data.file.base.studyField)}
             ${viewElements.stringElement('Semester', this.data.file.base.semester)}
-            ${viewElements.enumElement('Additional type', this.data.file.base.additionalType, getAdditionalTypes(), false)}
-            ${viewElements.dateElement('Date created', this.data.file.base.dateCreated)}
+            ${viewElements.enumElement('Additional type', this.data.file.base.additionalType.key, getAdditionalTypes(), false)}
+            ${viewElements.dateElement('Date created', (new Date(this.data.file.base.createdTimestamp * 1000)).toISOString())}
+            ${viewElements.dateElement('Date modified', (new Date(this.data.file.base.modifiedTimestamp * 1000)).toISOString())}
+            ${viewElements.stringElement('Mime type', this.data.file.base.mimeType)}
             ${viewElements.stringElement('Subject of', this.data.file.base.subjectOf)}
             ${viewElements.stringElement('Comment', this.data.file.base.comment)}
+            ${viewElements.dateElement('Date created', this.data.file["file-cabinet-minimalSchema"].dateCreated)}
         `;
     }
 }
