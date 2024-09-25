@@ -306,7 +306,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .ais-Hits-list {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
                 gap: 2em;
                 padding: 0;
                 margin-top: 0;
@@ -317,7 +317,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 border: 1px solid var(--dbp-content);
                 list-style-type: none;
                 overflow: hidden;
+                min-height: calc(300px + 5vh);
             }
+            .hits-person-footer{
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+            }    
         `;
     }
 
@@ -425,8 +431,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // Note: "html" is preact htm, not lit-html!
 
                     const buttonRowHtml = objectType === 'person' ? html`
+                    <div class="hits-person-footer">
                         <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentAdd', {detail: {hit: hit}, bubbles: true, composed: true}));}}>Add Document</button>
-                        <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>More</button>
+                        <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>View</button>
+                    </div>   
                     ` : html`
                         <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>More</button>
                     `;
