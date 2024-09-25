@@ -5,14 +5,14 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPCabinetLitElement from "./dbp-cabinet-lit-element";
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {getCurrentRefinementCSS} from './styles';
+import {getCurrentRefinementCSS, getPaginationCSS} from './styles';
 import {Icon, InlineNotification, Modal} from '@dbp-toolkit/common';
 import {classMap} from "lit/directives/class-map.js";
 import {Activity} from './activity.js';
 import metadata from './dbp-cabinet-search.metadata.json';
 import instantsearch from 'instantsearch.js';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
-import {hits, searchBox, stats} from 'instantsearch.js/es/widgets';
+import {hits, searchBox, stats, pagination} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
 import {pascalToKebab} from './utils';
 import {CabinetFile} from './components/dbp-cabinet-file.js';
@@ -225,6 +225,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.createSearchBox(),
             this.createHits(),
             this.createStats(),
+            this.createPagination(),
         ]);
 
         if (this.facetConfigs.length === 0) {
@@ -270,6 +271,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${commonStyles.getRadioAndCheckboxCss()}
             ${commonStyles.getFormAddonsCSS()}
             ${getCurrentRefinementCSS()}
+            ${getPaginationCSS()}
 
             .result-container {
                 margin-top: 1em;
@@ -465,6 +467,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
     }
 
+
+    createPagination() {
+        return pagination({
+            container: this._('#pagination'),
+        });
+    }
+
     createFacets() {
         return this.cabinetFacetsRef.value.createFacetsFromConfig(this.facetConfigs);
     }
@@ -578,6 +587,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </dbp-cabinet-facets>
                     <div class="results">
                         <div id="hits"></div>
+                        <div id="pagination"></div>
                     </div>
                 </div>
 
