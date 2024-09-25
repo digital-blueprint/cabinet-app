@@ -14,6 +14,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         // this.search = null;
         /** @type {HTMLElement} */
         this.searchResultsElement = null;
+        this.search = null;
         this.facets = [];
     }
 
@@ -71,7 +72,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Add event listeners to open filters by clicking panel headers
         this._a('.ais-Panel-header').forEach((panelHeader) => {
             const header = /** @type {HTMLElement} */(panelHeader);
-            header.addEventListener('mousedown', (event) => {
+            header.addEventListener('click', (event) => {
                 if (event.target instanceof HTMLElement && !event.target.closest('.ais-Panel-collapseButton')) {
                     const collapseButton = header.querySelector('.ais-Panel-collapseButton');
                     if (collapseButton instanceof HTMLElement) {
@@ -80,6 +81,39 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
             });
         });
+    }
+
+
+    filterOnSelectedPerson(event) {
+        if (event.detail.person) {
+            // @TODO: don't hardcode facet name?
+            const facetName = 'base.person';
+            const value = event.detail.person;
+
+            // Get the InstantSearch helper
+            const helper = this.search.helper;
+
+            // Toggle the refinement
+            helper.toggleRefinement(facetName, value).search();
+            this.openFacetOnPersonSelect(facetName);
+        }
+    }
+
+    /**
+     * Open a facet if a person is selected with the "person select" button
+     * @param {string} facetName - the name of the facet field
+     */
+    openFacetOnPersonSelect(facetName) {
+        const facetID = facetName.replace('.', '-');
+
+        /** @type {HTMLElement} */
+        const facet = this._(`#${facetID}`);
+
+        if (facet && facet.querySelector('.ais-Panel').classList.contains('ais-Panel--collapsed')) {
+            /** @type {HTMLElement} */
+            const facetHeader = facet.querySelector('.ais-Panel-header');
+            facetHeader.click();
+        }
     }
 
     /**

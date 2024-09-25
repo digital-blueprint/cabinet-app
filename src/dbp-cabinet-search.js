@@ -187,6 +187,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             that.openDocumentViewDialog(event.detail.hit);
         });
 
+        // Listen to DbpCabinetFilterPerson events to filter to a specific person
+        this.addEventListener('DbpCabinetFilterPerson', function(event) {
+            that.cabinetFacetsRef.value.filterOnSelectedPerson(event);
+        });
+
         this.updateComplete.then(() => {
             console.log('-- updateComplete --');
 
@@ -323,7 +328,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 display: flex;
                 justify-content: flex-end;
                 gap: 10px;
-            }    
+            }
         `;
     }
 
@@ -434,7 +439,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="hits-person-footer">
                         <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentAdd', {detail: {hit: hit}, bubbles: true, composed: true}));}}>Add Document</button>
                         <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>View</button>
-                    </div>   
+                        <button class="button select-person-button"
+                            onclick="${(event) => { this.dispatchEvent(new CustomEvent('DbpCabinetFilterPerson', {detail: {person: hit.base.person}, bubbles: true, composed: true}));
+                            }}">
+                            ${ /*@TODO: find something to test here */ hit ? 'Select' : 'Unselect' }
+                        </button>
+                    </div>
                     ` : html`
                         <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>More</button>
                     `;
