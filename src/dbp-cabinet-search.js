@@ -331,6 +331,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 justify-content: flex-end;
                 gap: 10px;
             }
+            .hits-docs-footer{
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+            }    
         `;
     }
 
@@ -448,7 +453,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         </button>
                     </div>
                     ` : html`
-                        <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>More</button>
+                    <div class="hits-docs-footer">
+                        <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>view</button>
+                    </div>    
                     `;
 
                     // TODO: Subscriber attribute "lang" doesn't work anymore, so we need to set the lang attribute manually, so it at least works when the hit is rendered initially
