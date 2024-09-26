@@ -32,6 +32,8 @@ class Address {
     /** @type {string} */
     place;
     /** @type {string} */
+    region;
+    /** @type {string} */
     postCode;
     /** @type {KeyedText} */
     country;
@@ -300,6 +302,7 @@ class CabinetViewElement extends BaseViewElement {
                         <li><b>note:</b> ${hit.person.homeAddress?.note}</li>
                         <li><b>street:</b> ${hit.person.homeAddress?.street}</li>
                         <li><b>place:</b> ${hit.person.homeAddress?.place}</li>
+                        <li><b>region:</b> ${hit.person.homeAddress?.region}</li>
                         <li><b>postCode:</b> ${hit.person.homeAddress?.postCode}</li>
                         <li><b>country:</b> ${hit.person.homeAddress?.country?.text}</li>
                     </ul>
@@ -309,6 +312,7 @@ class CabinetViewElement extends BaseViewElement {
                         <li><b>note:</b> ${hit.person.studAddress?.note}</li>
                         <li><b>street:</b> ${hit.person.studAddress?.street}</li>
                         <li><b>place:</b> ${hit.person.studAddress?.place}</li>
+                        <li><b>region:</b> ${hit.person.studAddress?.region}</li>
                         <li><b>postCode:</b> ${hit.person.studAddress?.postCode}</li>
                         <li><b>country:</b> ${hit.person.studAddress?.country?.text}</li>
                     </ul>
