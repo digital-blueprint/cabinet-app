@@ -75,11 +75,13 @@ class CabinetHitElement extends BaseHitElement {
             }
             .ais-com-Hits-content {
                 margin-bottom:calc(150px + 5vh);
-            }    
+            }
         `;
     }
 
     render() {
+        console.log('data from Communication: ', this.data);
+        const lastModified = new Date(this.data.file.base.modifiedTimestamp * 1000).toLocaleString();
         return html`
             <form>
                 <header class="ais-com-Hits-header">
@@ -96,6 +98,8 @@ class CabinetHitElement extends BaseHitElement {
                 Some special information here<br />
                 lang: ${this.lang}<br />
                 filename: ${this.data.file.base.fileName}<br />
+                dateCreated: ${this.data.file['file-cabinet-communication'].dateCreated}<br />
+                lastModified: ${lastModified}<br />
                 </main>
         `;
     }
@@ -108,6 +112,7 @@ class CabinetViewElement extends BaseViewElement {
             <h2>Communication</h2>
             lang: ${this.lang}<br />
             filename: ${this.data.file.base.fileName}<br />
+            dateCreated: ${this.data.file['file-cabinet-communication'].dateCreated}<br />
         `;
     }
 }

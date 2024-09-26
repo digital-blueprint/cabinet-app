@@ -12,7 +12,7 @@ import {Activity} from './activity.js';
 import metadata from './dbp-cabinet-search.metadata.json';
 import instantsearch from 'instantsearch.js';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
-import {hits, searchBox, stats, pagination} from 'instantsearch.js/es/widgets';
+import {hits, searchBox, sortBy, stats, pagination} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
 import {pascalToKebab} from './utils';
 import {CabinetFile} from './components/dbp-cabinet-file.js';
@@ -224,8 +224,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             }),
             this.createSearchBox(),
             this.createHits(),
+            this.createSortBy(),
             this.createStats(),
-            this.createPagination(),
+            this.createPagination('#pagination-bottom'),
         ]);
 
         if (this.facetConfigs.length === 0) {
@@ -298,6 +299,22 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 grid-area: main;
             }
 
+            .search-box-container {
+                display: flex;
+            }
+
+            .search-box-widget {
+                flex-grow: 1;
+            }
+
+            .sort-widget .ais-SortBy-select {
+                height: 2em;
+                padding: 2px 1px;
+                /* override toolkit select style */
+                -webkit-appearance: revert;
+                background: initial;
+            }
+
             .ais-SearchBox-form {
                 display: flex;
             }
@@ -346,22 +363,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // https://typesense.org/docs/0.25.1/api/search.html#ranking-and-sorting-parameters
         let searchParameters = {
             query_by: "base.familyName,base.givenName,file.base.fileName,objectType",
-            // TODO: Enable again when we have sorting in our Typesense schema
-            // sort_by: "base.familyName:asc,base.givenName:asc,objectType:asc"
-            facet_return_parent: 'person.admissionQualificationType.key, person.studAddress.country.key, person.exmatriculationStatus.key, person.gender.key',
-
-            /*
-            file.base.studyField no key
-
-            "base": {
-                "additionalType": "Communication",
-                "fileId": "0191b18e-ef8d-735b-ac34-0e3ba40d5592",
-                "fileName": "strategic_essay_97.pdf",
-                "fileSource": "cabinet-bucket",
-                "studyField": "890",
-                "subjectOf": "VR 2023/789-B"
-            },
-           */
+            sort_by: "@type:desc,_text_match:desc,base.familyName:asc"
         };
 
         if (!this.fuzzySearch) {
@@ -468,6 +470,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
     }
 
+    createSortBy() {
+        return sortBy({
+            container: this._('#sort-by'),
+            items: [
+                { label: 'Best Match', value: `${this.typesenseCollection}` },
+                { label: 'Family name', value: `${this.typesenseCollection}/sort/@type:desc,base.familyName:asc,_text_match:desc` },
+                { label: 'Last modified Documents', value: `${this.typesenseCollection}/sort/@type:asc,file.base.modifiedTimestamp:desc,_text_match:desc` }
+            ],
+        });
+    }
+
     createStats() {
         return stats({
             container: this._('#result-count'),
@@ -475,9 +488,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
 
-    createPagination() {
+    createPagination(id) {
         return pagination({
-            container: this._('#pagination'),
+            container: this._(id),
         });
     }
 
@@ -584,7 +597,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             <div class="${classMap({hidden: !this.isLoggedIn() || this.isLoading() || this.loadingTranslations})}">
                 <h1>Search</h1>
-                <div id="searchbox"></div>
+                <div class="search-box-container">
+                    <div id="searchbox" class="search-box-widget"></div>
+                    <div id="sort-by" class="sort-widget"></div>
+                </div>
                 <div class="result-container">
                     <div id="result-count"></div>
                     <dbp-cabinet-facets
@@ -594,7 +610,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </dbp-cabinet-facets>
                     <div class="results">
                         <div id="hits"></div>
-                        <div id="pagination"></div>
+                        <div id="pagination-bottom"></div>
                     </div>
                 </div>
 
