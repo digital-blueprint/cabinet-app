@@ -6,6 +6,7 @@
       curl
       zellij # smart terminal workspace
       lazygit # git terminal
+      just # task runner
     ];
 }
 

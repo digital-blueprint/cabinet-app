@@ -1,0 +1,24 @@
+# Use `just <recipe>` to run a recipe
+# https://just.systems/man/en/
+
+# By default, run the `--list` command
+default:
+    @just --list
+
+# Variables
+
+whiteSource := "dbp_logo_small_on_white.svg"
+blackSource := "dbp_logo_small_on_black.svg"
+
+# Build all icons
+all: icon-192 icon-512
+
+# Build the 192x192 icon
+icon-192:
+    inkscape {{ whiteSource }} --export-filename=icon-192.png -w 192 -h 192
+    inkscape {{ blackSource }} --export-filename=icon-192.png -w 192 -h 192
+
+# Build the 512x512 icon
+icon-512:
+    inkscape {{ whiteSource }} --export-filename=icon-512.png -w 512 -h 512
+    inkscape {{ blackSource }} --export-filename=icon-512.png -w 512 -h 512
