@@ -311,10 +311,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .sort-widget .ais-SortBy-select {
                 height: 2em;
-                padding: 2px 1px;
+                padding: 1px 1px;
                 /* override toolkit select style */
                 -webkit-appearance: revert;
                 background: initial;
+            }
+
+            .sort-widget .ais-SortBy-select option {
+                background-color: var(--dbp-background);
+                color: var(--dbp-content);
             }
 
             .ais-SearchBox-form {
@@ -324,10 +329,20 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             .ais-SearchBox-input {
                 flex-grow: 1;
                 height: 2em;
+                background-color: var(--dbp-background);
+                color: var(--dbp-content);
+                border: var(--dbp-border);
             }
 
             .ais-SearchBox-submit {
                 width: 2em;
+                background-color: var(--dbp-background);
+                color: var(--dbp-content);
+                border: var(--dbp-border);
+            }
+
+            .ais-SearchBox-submit svg path {
+                fill: var(--dbp-content);
             }
 
             .ais-Hits-list {
