@@ -104,11 +104,33 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (fileData.identifier) {
             alert('Document stored successfully with id ' + fileData.identifier + '!');
 
-            // TODO: Get the hit data of the stored file from typesense
-            // this.mode = CabinetFile.Modes.VIEW;
-
             console.log('storeDocumentToBlob this.typesenseService', this.typesenseService);
+
+            // Try to fetch the document from Typesense again and again until it is found
+            // TODO: Setup some kind of spinner or loading indicator
+            this.fetchFileDocumentFromTypesense(fileData.identifier);
         }
+    }
+
+    async fetchFileDocumentFromTypesense(fileId, increment = 0) {
+        // Stop after 10 attempts
+        if (increment >= 10) {
+            // TODO: Setup some kind of error message
+            console.error('Could not fetch file document from Typesense after 10 attempts!');
+            return;
+        }
+
+        const item = await this.typesenseService.fetchFileDocument(fileId);
+
+        // IF the document was found, set the hit data and switch to view mode
+        if (item !== null) {
+            this.hitData = item;
+            this.mode = CabinetFile.Modes.VIEW;
+            return;
+        }
+
+        // Try again in 1 second
+        setTimeout(() => { this.fetchFileDocumentFromTypesense(fileId, ++increment); }, 1000);
     }
 
     async createBlobUploadUrl() {

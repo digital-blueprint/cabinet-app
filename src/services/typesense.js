@@ -15,4 +15,24 @@ export class TypesenseService {
             console.error('Error fetching item:', error);
         }
     }
+
+    // Fetch a file document by fileId
+    async fetchFileDocument(fileId) {
+        if (!fileId) {
+            throw new Error('fileId is required');
+        }
+
+        try {
+            return await this.client.collections(this.collectionName).documents('file.' + fileId).retrieve();
+        } catch (error) {
+            // If the document is not found, return null
+            if (error.name === 'ObjectNotFound') {
+                return null;
+            }
+
+            // We escalate other errors
+            console.error('Error fetching file document:', error);
+            throw error;
+        }
+    }
 }
