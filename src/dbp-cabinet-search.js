@@ -421,6 +421,24 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         this.typesenseService = new TypesenseService(this.serverConfig, this.typesenseCollection);
         console.log('initTypesenseService this.typesenseService', this.typesenseService);
+
+        // Update the Typesense service with the new bearer token
+        /**
+         * @type {CabinetFile}
+         */
+        const viewFileComponent = this.documentViewFileModalRef.value;
+        if (viewFileComponent) {
+            viewFileComponent.setTypesenseService(this.typesenseService);
+        }
+
+        // Update the Typesense service with the new bearer token
+        /**
+         * @type {CabinetFile}
+         */
+        const fileComponent = this.documentFileComponentRef.value;
+        if (fileComponent) {
+            fileComponent.setTypesenseService(this.typesenseService);
+        }
     }
 
     /**
