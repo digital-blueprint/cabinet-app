@@ -96,15 +96,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                     console.log('this.serverConfig auth-update', this.serverConfig);
 
-                    // Init the Typesense service with the new bearer token
-                    this.initTypesenseService();
-
                     // Update the Typesense Instantsearch adapter configuration with the new bearer token
                     if (this.typesenseInstantsearchAdapter) {
                         this.typesenseInstantsearchAdapter.updateConfiguration(this.getTypesenseInstantsearchAdapterConfig());
                     } else {
                         this.initInstantsearch();
                     }
+
+                    // Init the Typesense service with the new bearer token
+                    // This needs to happen after the Typesense Instantsearch adapter has been initialized,
+                    // not before, or Instantsearch will break! Maybe there is some leaked stated between the two?
+                    this.initTypesenseService();
                     break;
             }
         });
