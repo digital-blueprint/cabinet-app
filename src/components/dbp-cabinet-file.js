@@ -95,6 +95,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async storeDocumentToBlob(formData) {
+        // TODO: Disable "Save" button while uploading (BaseFormElement.getButtonRowHtml)
         const uploadUrl = await this.createBlobUploadUrl();
         console.log('storeDocumentToBlob uploadUrl', uploadUrl);
 
@@ -115,7 +116,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     async fetchFileDocumentFromTypesense(fileId, increment = 0) {
         // Stop after 10 attempts
         if (increment >= 10) {
-            // TODO: Setup some kind of error message
+            // TODO: Setup some kind of error message and decide what to do
             console.error('Could not fetch file document from Typesense after 10 attempts!');
             return;
         }
