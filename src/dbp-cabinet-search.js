@@ -311,7 +311,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .sort-widget .ais-SortBy-select {
                 height: 2em;
-                padding: 1px 1px;
+                padding: 1px .5em;
                 /* override toolkit select style */
                 -webkit-appearance: revert;
                 background: initial;
@@ -332,6 +332,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 background-color: var(--dbp-background);
                 color: var(--dbp-content);
                 border: var(--dbp-border);
+                padding-inline: .5em;
             }
 
             .ais-SearchBox-submit {
@@ -339,11 +340,23 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 background-color: var(--dbp-background);
                 color: var(--dbp-content);
                 border: var(--dbp-border);
+                /* prevent double borders */
+                border-left: 0 none;
+                border-right: 0 none;
             }
 
             .ais-SearchBox-submit svg path {
                 fill: var(--dbp-content);
             }
+
+            .ais-SearchBox-submit svg {
+                transition: transform 0.15s ease-in-out;
+            }
+
+            .ais-SearchBox-submit:hover svg {
+                transform: scale(1.5);
+            }
+
 
             .ais-Hits-list {
                 display: grid;
@@ -503,7 +516,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             container: this._('#result-count'),
         });
     }
-
 
     createPagination(id) {
         return pagination({
