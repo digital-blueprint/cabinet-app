@@ -221,8 +221,8 @@ class CabinetHitElement extends BaseHitElement {
             }
             .right-column {
                 text-align: right;
-                
-            }    
+
+            }
         `;
     }
 

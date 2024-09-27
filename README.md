@@ -25,7 +25,7 @@ git submodule update --init
 # install dependencies
 npm install
 
-# constantly build dist/bundle.js and run a local web-server on port 8001 
+# constantly build dist/bundle.js and run a local web-server on port 8001
 npm run watch
 
 # constantly build dist/bundle.js and run a local web-server on port 8001 using a custom assets directory assets_custom/
@@ -113,7 +113,7 @@ You can add multiple attributes to the `<dbp-greenlight>` tag.
 | attribute name | value | Link to description                                                                                                                 |
 |----------------|-------|-------------------------------------------------------------------------------------------------------------------------------------|
 | `provider-root` | Boolean | [app-shell](https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/main/packages/app-shell#attributes)                          |
-| `lang`         | String | [language-select](https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/main/packages/language-select#attributes)              | 
+| `lang`         | String | [language-select](https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/main/packages/language-select#attributes)              |
 | `entry-point-url` | String | [app-shell](https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/main/packages/app-shell#attributes)                          |
 | `keycloak-config` | Object | [app-shell](https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/main/packages/app-shell#attributes)                          |
 | `base-path` | String | [app-shell](https://gitlab.tugraz.at/dbp/web-components/toolkit/-/tree/main/packages/app-shell#attributes)                          |

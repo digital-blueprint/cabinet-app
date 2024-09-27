@@ -72,16 +72,16 @@ export const stringElement = (name, label, value = "", isRequired = false, rows 
         <fieldset>
             <legend>${label}</legend>
             ${rows > 1
-                ? html`<textarea 
-                    id="form-input-${id}" 
-                    name="${name}" 
+                ? html`<textarea
+                    id="form-input-${id}"
+                    name="${name}"
                     rows="${rows}"
                     ?required=${isRequired}
                   >${value}</textarea>`
-                : html`<input 
-                    type="text" 
-                    id="form-input-${id}" 
-                    name="${name}" 
+                : html`<input
+                    type="text"
+                    id="form-input-${id}"
+                    name="${name}"
                     value="${value}"
                     ?required=${isRequired}
                   >`
