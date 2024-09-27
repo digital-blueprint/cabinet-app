@@ -45,23 +45,25 @@ export default class {
             { "groupId": "person", "schemaField": "person.immatriculationSemester", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-immatriculation-semester', showMore: true, showMoreLimit: showMoreLimitValue}}},
             { "groupId": "person", "schemaField": "person.exmatriculationSemester", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-exmatriculation-semester', showMore: true, showMoreLimit: showMoreLimitValue}}},
             { "groupId": "person", "schemaField": "person.homeAddress.country.text", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-home-address-country-text', showMore: true, showMoreLimit: showMoreLimitValue}}},
-            // person:homeAddressRegion ==? person.homeAddress.place | facet: true - in cabinet.typesense.yaml
-            { "groupId": "person", "schemaField": "person.homeAddress.place", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-home-address', showMore: true, showMoreLimit: showMoreLimitValue}}},
-            { "groupId": "person", "schemaField": "person.studAddress.place", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-student-address', showMore: true, showMoreLimit: showMoreLimitValue}}},
+            { "groupId": "person", "schemaField": "person.homeAddress.region", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-home-address-region', showMore: true, showMoreLimit: showMoreLimitValue}}},
+            { "groupId": "person", "schemaField": "person.homeAddress.place", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-home-address-place', showMore: true, showMoreLimit: showMoreLimitValue}}},
+            { "groupId": "person", "schemaField": "person.studAddress.region", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-student-address-region', showMore: true, showMoreLimit: showMoreLimitValue}}},
+            { "groupId": "person", "schemaField": "person.studAddress.place", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-student-address-place', showMore: true, showMoreLimit: showMoreLimitValue}}},
             { "groupId": "person", "schemaField": "person.studAddress.country.text", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-student-address-country', showMore: true, showMoreLimit: showMoreLimitValue}}},
             { "groupId": "person", "schemaField": "person.applications.studyType", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-applications-study-type', searchable: false}}},
             { "filter-group": { "id": "file", "name": "cabinet-search.document-filter-group-title"}},
-            { "groupId": "file", "schemaField": "file.base.additionalType.text", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-base-additional-type', searchable: false}}},
+            { "groupId": "file", "schemaField": "file.base.additionalType.text", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
             // file.uploadDate ==?
             // file.recommended.deletionDate == ?
-            { "groupId": "file", "schemaField": "file.base.fileSource", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-base-file-source', searchable: false}}},
-            { "groupId": "file", "schemaField": "file.base.semester", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-base-semester', searchable: false}}},
-            { "groupId": "file", "schemaField": "file.base.studyField", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-base-study-field', searchable: false}}},
-            { "groupId": "file", "schemaField": "file.base.isPartOf", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-base-is-part-of', searchable: false}}},
-            { "groupId": "file", "schemaField": "file.base.subjectOf", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-base-subject-of', searchable: false}}},
-            // file.decision ==? file.admissionNotice.decision | facet: false in cabinet.typesense.yaml
-            { "groupId": "file",  "schemaField": "file.file-cabinet-citizenshipCertificate.nationality", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-citizenship-certificate-nationality', searchable: false}}},
-            { "groupId": "file",  "schemaField": "file.file-cabinet-identityDocument.nationality", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-file-identity-document-nationality', searchable: false}}}
+            { "groupId": "file", "schemaField": "file.base.mimeType", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
+            { "groupId": "file", "schemaField": "file.base.fileSource", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
+            { "groupId": "file", "schemaField": "file.base.semester", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
+            { "groupId": "file", "schemaField": "file.base.studyField", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
+            { "groupId": "file", "schemaField": "file.base.isPartOf", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
+            { "groupId": "file", "schemaField": "file.base.subjectOf", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
+            { "groupId": "file", "schemaField": "file.file-cabinet-admissionNotice.decision", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
+            { "groupId": "file", "schemaField": "file.file-cabinet-citizenshipCertificate.nationality", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
+            { "groupId": "file", "schemaField": "file.file-cabinet-identityDocument.nationality", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}}
         ];
     }
 }
