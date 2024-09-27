@@ -491,7 +491,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         return sortBy({
             container: this._('#sort-by'),
             items: [
-                { label: 'Best Match', value: `${this.typesenseCollection}/sort/@type:desc,_text_match:desc,base.familyName:asc` },
+                { label: 'Best Match', value: `${this.typesenseCollection}` }, // "@type:desc,_text_match:desc,base.familyName:asc"
                 { label: 'Family name', value: `${this.typesenseCollection}/sort/@type:desc,base.familyName:asc,_text_match:desc` },
                 { label: 'Last modified Documents', value: `${this.typesenseCollection}/sort/@type:asc,file.base.modifiedTimestamp:desc,_text_match:desc` }
             ],
