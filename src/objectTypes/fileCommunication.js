@@ -72,7 +72,7 @@ class CabinetHitElement extends BaseHitElement {
             .ais-com-Hits-content {
                 margin-bottom:calc(150px + 5vh);
             }
-             .com-item1 {
+            .com-item1 {
                 grid-column: 1 / 2;
                 color:#1ace38;
             }
