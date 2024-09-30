@@ -95,7 +95,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async storeDocumentToBlob(formData) {
-        // TODO: Disable "Save" button while uploading (BaseFormElement.getButtonRowHtml)
         const uploadUrl = await this.createBlobUploadUrl();
         console.log('storeDocumentToBlob uploadUrl', uploadUrl);
 

@@ -39,6 +39,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         this.data = {};
         this.entryPointUrl = '';
         this.auth = {};
+        this.saveButtonEnabled = true;
     }
 
     static get scopedElements() {
@@ -75,6 +76,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             return;
         }
 
+        this.saveButtonEnabled = false;
         const formElement = this.shadowRoot.querySelector('form');
         const data = {
             'formData': this.gatherFormDataFromElement(formElement),
@@ -147,6 +149,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             data: {type: Object},
             auth: { type: Object },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
+            saveButtonEnabled: { type: Boolean, attribute: false },
         };
     }
 
@@ -175,7 +178,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         return html`
             <div class="button-row">
                 <button class="button is-secondary" type="submit" @click=${this.cancelForm}>Cancel</button>
-                <button class="button is-primary" type="submit" @click=${this.storeBlobItem}>Save</button>
+                <button class="button is-primary" type="submit" ?disabled=${!this.saveButtonEnabled} @click=${this.storeBlobItem}>Save</button>
             </div>
         `;
     }
