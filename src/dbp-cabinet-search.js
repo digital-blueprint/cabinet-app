@@ -358,7 +358,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 transform: scale(1.5);
             }
 
-
             .ais-Hits-list {
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
@@ -375,14 +374,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 min-height: calc(300px + 5vh);
             }
             .hits-person-footer{
-                display: flex;
-                justify-content: flex-end;
+                display: grid;
+                justify-content: end;
                 gap: 10px;
-            }
-            .hits-docs-footer{
-                display: flex;
-                justify-content: flex-end;
+                grid-template-columns: auto auto auto;
+            }  
+            .hits-doc-footer{
+                display: grid;
+                justify-content: end;
                 gap: 10px;
+                grid-template-columns: auto;
             }
         `;
     }
@@ -494,7 +495,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // Note: "html" is preact htm, not lit-html!
 
                     const buttonRowHtml = objectType === 'person' ? html`
-                    <div class="hits-person-footer">
+                    <footer class="hits-person-footer">
                         <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentAdd', {detail: {hit: hit}, bubbles: true, composed: true}));}}>Add Document</button>
                         <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>View</button>
                         <button class="button select-person-button"
@@ -502,11 +503,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                             }}">
                             ${ /*@TODO: find something to test here */ hit ? 'Select' : 'Unselect' }
                         </button>
-                    </div>
+                    </footer>
                     ` : html`
-                    <div class="hits-docs-footer">
+                    
+                    <footer class="hits-doc-footer">
                         <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>view</button>
-                    </div>
+                    </footer>
+                    
                     `;
 
                     // TODO: Subscriber attribute "lang" doesn't work anymore, so we need to set the lang attribute manually, so it at least works when the hit is rendered initially
