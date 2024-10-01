@@ -114,7 +114,7 @@ class Person {
         /** @type {?Address} */
         homeAddress;
         /** @type {?Address} */
-        studAddress;
+        studyAddress;
         /** @type {?string} */
         emailAddressUniversity;
         /** @type {?string} */
@@ -307,14 +307,14 @@ class CabinetViewElement extends BaseViewElement {
                         <li><b>country:</b> ${hit.person.homeAddress?.country?.text}</li>
                     </ul>
                 </li>
-                <li><b>studAddress:</b>
+                <li><b>studyAddress:</b>
                     <ul>
-                        <li><b>note:</b> ${hit.person.studAddress?.note}</li>
-                        <li><b>street:</b> ${hit.person.studAddress?.street}</li>
-                        <li><b>place:</b> ${hit.person.studAddress?.place}</li>
-                        <li><b>region:</b> ${hit.person.studAddress?.region}</li>
-                        <li><b>postCode:</b> ${hit.person.studAddress?.postCode}</li>
-                        <li><b>country:</b> ${hit.person.studAddress?.country?.text}</li>
+                        <li><b>note:</b> ${hit.person.studyAddress?.note}</li>
+                        <li><b>street:</b> ${hit.person.studyAddress?.street}</li>
+                        <li><b>place:</b> ${hit.person.studyAddress?.place}</li>
+                        <li><b>region:</b> ${hit.person.studyAddress?.region}</li>
+                        <li><b>postCode:</b> ${hit.person.studyAddress?.postCode}</li>
+                        <li><b>country:</b> ${hit.person.studyAddress?.country?.text}</li>
                     </ul>
                 </li>
                 <li><b>emailAddressUniversity:</b> ${hit.person.emailAddressUniversity}</li>
