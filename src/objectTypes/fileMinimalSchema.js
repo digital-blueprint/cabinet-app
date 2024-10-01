@@ -35,12 +35,6 @@ class CabinetFormElement extends BaseFormElement {
         console.log('-- Render CabinetFormElement --');
         console.log('render this.data', this.data);
 
-        if (!this.data.file) {
-            this.data.file = {
-                base: {},
-            };
-        }
-
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/minimalSchema.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/minimalSchema_example.json
         return html`
