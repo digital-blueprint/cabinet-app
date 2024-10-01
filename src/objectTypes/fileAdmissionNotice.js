@@ -1,6 +1,7 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 import * as formElements from './formElements.js';
+import {renderFieldWithHighlight} from '../utils';
 
 export default class extends BaseObject {
     name = 'file-cabinet-admissionNotice';
@@ -77,7 +78,8 @@ class CabinetHitElement extends BaseHitElement {
             <form>
                 <h2>admissionNotice</h2>
                 lang: ${this.lang}<br />
-                filename: ${this.data.file.base.fileName}<br />
+                <!-- filename: ${this.data.file.base.fileName}<br /> -->
+                filename: ${renderFieldWithHighlight(this.data, 'file.base.fileName')}<br />
         `;
     }
 }

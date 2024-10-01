@@ -1,5 +1,6 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
+import {renderFieldWithHighlight} from '../utils';
 
 export default class extends BaseObject {
     name = 'person';
@@ -265,8 +266,10 @@ class CabinetHitElement extends BaseHitElement {
             </header>
             <main class="ais-Hits-content">
             lang: ${this.lang}<br />
-            givenName: ${hit.base.givenName}<br />
-            familyName: ${hit.base.familyName}<br />
+            <!-- givenName: ${hit.base.givenName}<br /> -->
+            givenName: ${renderFieldWithHighlight(hit, 'base.givenName')}<br />
+            <!-- familyName: ${hit.base.familyName}<br /> -->
+            familyName: ${renderFieldWithHighlight(hit, 'base.familyName')}<br />
             </main>
         `;
     }
