@@ -7,12 +7,12 @@ const getRefinedState = function getRefinedState(helper, attribute, value) {
     resolvedState = resolvedState.removeNumericRefinement(attribute);
 
     if (startDate !== null) {
-        const startDateTimestamp = startDate / 1000;
+        const startDateTimestamp = Math.round(startDate / 1000);
         resolvedState = resolvedState.addNumericRefinement(attribute, '>=', startDateTimestamp);
     }
 
     if (endDate !== null) {
-        const endDateTimestamp = endDate / 1000;
+        const endDateTimestamp = Math.round(endDate / 1000);
         resolvedState = resolvedState.addNumericRefinement(attribute, '<=', endDateTimestamp);
     }
 
@@ -59,7 +59,7 @@ function connectComplexDateRangeRefinement(renderFn, unmountFn = noop) {
             getWidgetRenderState({ results, helper }) {
                 if (!connectorState.refine) {
                     connectorState.refine = (value) => {
-                        let refinedState = getRefinedState(helper, attribute,value);
+                        let refinedState = getRefinedState(helper, attribute, value);
                         if (refinedState) {
                             helper.setState(refinedState).search();
                         }
@@ -153,8 +153,22 @@ export function createDateRefinement(widgetParams) {
             const { widgetParams, refine } = options;
 
             let updateRefinement = () => {
-                let startTimestamp = Date.parse(startDateSelector.value ) || null;
-                let endTimestamp = Date.parse(endDateSelector.value ) || null;
+                // Convert date to timestamp in seconds (UTC)
+                let startDate, endDate = null;
+                // Don't allow end date to be before start date
+                if (startDateSelector.value !== "") {
+                    startDate = startDateSelector.value + 'T00:00:00.000Z';
+                    const minDate = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date(startDate));
+                    endDateSelector.setAttribute('min', minDate);
+                }
+                // Don't allow start date to be before end date
+                if (endDateSelector.value !== "") {
+                    endDate = endDateSelector.value + 'T23:59:59.000Z';
+                    const maxDate = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date(startDate));
+                    startDateSelector.setAttribute('max', maxDate);
+                }
+                const startTimestamp = Date.parse(startDate) || null;
+                const endTimestamp = Date.parse(endDate) || null;
 
                 refine([startTimestamp, endTimestamp]);
             };
@@ -166,8 +180,9 @@ export function createDateRefinement(widgetParams) {
                 const id = `${type}-date-${kebabAttribute}`;
                 dateSelector.setAttribute('id', id);
                 dateSelector.classList.add(`${type}-date`);
-                // Set max date to today
-                dateSelector.setAttribute('max', new Date().toISOString().split('T')[0]);
+                // Set max date to today as a iso date string in local time
+                const maxDate = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
+                dateSelector.setAttribute('max', maxDate);
                 dateSelector.addEventListener('change', updateRefinement);
 
                 return dateSelector;
