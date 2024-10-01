@@ -159,7 +159,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             const component = this.documentViewFileModalRef.value;
             component.setObjectTypeViewComponents(this.objectTypeViewComponents);
             component.setTypesenseService(this.typesenseService);
-            await component.openDialogWithHit(hit);
+            await component.openDialogWithFileHit(hit);
         }
     }
 
@@ -182,7 +182,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             const component = that.documentFileComponentRef.value;
             component.setTypesenseService(this.typesenseService);
             component.setObjectTypeViewComponents(this.objectTypeViewComponents);
-            component.openDocumentAddDialogWithHit(event.detail.hit);
+            component.openDocumentAddDialogWithPersonHit(event.detail.hit);
         });
 
         // Listen to DbpCabinetDocumentView events, to open the file edit dialog

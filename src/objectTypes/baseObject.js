@@ -37,6 +37,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         this.lang = this._i18n.language;
         this.userId = '';
         this.data = {};
+        this.personId = '';
         this.entryPointUrl = '';
         this.auth = {};
         this.saveButtonEnabled = true;
@@ -125,7 +126,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         const data = {
             "about": {
                 "@type": "Person",
-                "persId": this.data.base.identNrObfuscated || this.data.base.studId || this.data.base.objectID,
+                "persId": this.personId,
             },
         };
 
@@ -146,6 +147,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             ...super.properties,
             lang: {type: String},
             userId: {type: String, attribute: 'user-id'},
+            personId: {type: String, attribute: 'person-id'},
             data: {type: Object},
             auth: { type: Object },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },

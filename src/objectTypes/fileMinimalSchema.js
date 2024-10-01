@@ -33,6 +33,13 @@ export const getAdditionalTypes = () => {
 class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
+        console.log('render this.data', this.data);
+
+        if (!this.data.file) {
+            this.data.file = {
+                base: {},
+            };
+        }
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/minimalSchema.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/minimalSchema_example.json
@@ -40,7 +47,8 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>fileMinimalSchema Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.stringElement('studyField', 'Study field', '', true)}
+                studyField: ${this.data.file ? this.data.file.base.studyField : ''}<br />
+                ${formElements.stringElement('studyField', 'Study field', this.data.file ? this.data.file.base.studyField : '', true)}
                 ${formElements.stringElement('semester', 'Semester', '', true)}
                 ${formElements.enumElement('additionalType', 'Additional type', '', getAdditionalTypes(), false)}
                 ${formElements.dateElement('dateCreated', 'Date created', '', true)}
@@ -82,7 +90,7 @@ class CabinetViewElement extends BaseViewElement {
             filename: ${this.data.file.base.fileName}<br />
             ${viewElements.stringElement('Study field', this.data.file.base.studyField)}
             ${viewElements.stringElement('Semester', this.data.file.base.semester)}
-            ${viewElements.enumElement('Additional type', this.data.file.base.additionalType.key, getAdditionalTypes(), false)}
+            ${viewElements.enumElement('Additional type', this.data.file.base.additionalType.key, getAdditionalTypes())}
             ${viewElements.dateElement('Date created', (new Date(this.data.file.base.createdTimestamp * 1000)).toISOString())}
             ${viewElements.dateElement('Date modified', (new Date(this.data.file.base.modifiedTimestamp * 1000)).toISOString())}
             ${viewElements.stringElement('Mime type', this.data.file.base.mimeType)}

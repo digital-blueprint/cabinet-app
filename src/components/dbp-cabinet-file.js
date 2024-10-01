@@ -22,7 +22,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.objectTypeFormComponents = {};
         this.objectTypeHitComponents = {};
         this.objectTypeViewComponents = {};
-        this.hitData = {
+        this.personHitData = this.fileHitData = {
             "id": "",
             "objectType": "",
         };
@@ -71,7 +71,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            hitData: { type: Object, attribute: false },
+            personHitData: { type: Object, attribute: false },
+            fileHitData: { type: Object, attribute: false },
             documentFile: { type: File, attribute: false },
             objectType: { type: String, attribute: false },
             mode: { type: String },
@@ -124,7 +125,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // IF the document was found, set the hit data and switch to view mode
         if (item !== null) {
-            this.hitData = item;
+            this.fileHitData = item;
             this.mode = CabinetFile.Modes.VIEW;
             return;
         }
@@ -279,7 +280,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
-            <${unsafeStatic(tagName)} id="edit-form" subscribe="auth,lang,entry-point-url" .data=${this.hitData} object-type=></${unsafeStatic(tagName)}>
+            <${unsafeStatic(tagName)}
+             id="edit-form"
+             subscribe="auth,lang,entry-point-url"
+             .fileHitData=${this.fileHitData}
+             person-id="${this.personHitData.base.identNrObfuscated || this.personHitData.base.studId || this.personHitData.base.objectID}"
+             object-type=></${unsafeStatic(tagName)}>
         `;
     }
 
@@ -292,8 +298,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             return html``;
         }
 
-
-        const hit = this.hitData;
+        const hit = this.fileHitData;
         const id = hit.id;
         const tagPart = pascalToKebab(objectType);
         const tagName = 'dbp-cabinet-object-type-view-' + tagPart;
@@ -313,8 +318,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         `;
     }
 
-    async openDocumentAddDialogWithHit(hit = null) {
-        this.hitData = hit;
+    async openDocumentAddDialogWithPersonHit(hit = null) {
+        this.personHitData = hit;
         await this.openDocumentAddDialog();
     }
 
@@ -328,16 +333,16 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         return dataURLtoFile(blobFile.contentUrl, blobFile.fileName);
     }
 
-    async openDialogWithHit(hit = null) {
-        this.hitData = hit;
+    async openDialogWithFileHit(hit = null) {
+        this.fileHitData = hit;
         console.log('openDialogWithHit hit', hit);
         this.objectType = hit.objectType;
 
         // Wait until hit data is set and rendering is complete
         await this.updateComplete;
 
-        if (this.hitData.file) {
-            const file = await this.downloadFileFromBlob(this.hitData.file.base.fileId, true);
+        if (this.fileHitData.file) {
+            const file = await this.downloadFileFromBlob(this.fileHitData.file.base.fileId, true);
             console.log('openDialogWithHit file', file);
             await this.showPdf(file);
 
@@ -438,7 +443,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      */
     getDocumentModalHtml() {
         console.log('getDocumentAddModalHtml');
-        const hit = this.hitData;
+        const hit = this.fileHitData;
         console.log('getDocumentModalHtml hit', hit);
 
         let file = this.documentFile;
