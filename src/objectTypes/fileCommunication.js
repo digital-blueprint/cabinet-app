@@ -57,7 +57,6 @@ class CabinetHitElement extends BaseHitElement {
         return css`
             ${super.styles}
 
-            
             .ais-com-Hits-header{
                 border-bottom: 1px solid rgb(34, 33, 32);
                 margin-bottom: calc(7px + 1vh);
@@ -71,7 +70,18 @@ class CabinetHitElement extends BaseHitElement {
             }
             .ais-com-Hits-content {
                 margin-bottom:calc(150px + 5vh);
+                display: grid;
+                grid-template-rows: repeat(3, 1fr);
             }
+            .hit-content-item1 {
+                grid-row: 1/2; 
+            }     
+            .hit-content-item2 {
+                grid-row: 2/3; 
+            }     
+            .hit-content-item3 {
+                grid-row: 3/3; 
+            }    
             .com-item1 {
                 grid-column: 1 / 2;
                 color:#1ace38;
@@ -91,7 +101,7 @@ class CabinetHitElement extends BaseHitElement {
             .com-item5 {
                 grid-column: 3 / 4;
                 
-            }    
+            }   
         `;
     }
 
@@ -110,11 +120,13 @@ class CabinetHitElement extends BaseHitElement {
                 <div class="ais-com-Hits-header-items com-item5">stPersonNr</div>
                 </header>
                 <main class="ais-com-Hits-content">
-                Some special information here<br />
                 lang: ${this.lang}<br />
-                filename: ${this.data.file.base.fileName}<br />
+                <header class="ais-com-Hits-content-items hit-content-item1">document Type</header>
+                <div class="ais-com-Hits-content-items hit-content-item2">filename: ${this.data.file.base.fileName}</div>
+                <div class="ais-com-Hits-content-items hit-content-item3">
                 dateCreated: ${this.data.file['file-cabinet-communication'].dateCreated}<br />
                 lastModified: ${lastModified}<br />
+                </div>
                 </main>
         `;
     }
