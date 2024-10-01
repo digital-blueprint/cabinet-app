@@ -129,10 +129,10 @@ export function getPaginationCSS() {
     .ais-Pagination-list {
         list-style: none;
         display: flex;
-        width: 100%;
         justify-content: center;
         gap: 1.5em;
         margin-bottom: 0;
+        overflow: hidden;
     }
 
     .ais-Pagination-item {
