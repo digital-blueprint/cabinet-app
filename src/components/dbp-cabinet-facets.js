@@ -202,7 +202,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 month: 'short',
                                 year: 'numeric'
                             });
-                            let operatorLabel = refinement.operator === '>=' ? i18n.t('cabinet-search.refinement-date-before-text') : i18n.t('cabinet-search.refinement-date-before-text');
+                            let operatorLabel = refinement.operator === '>=' ? i18n.t('cabinet-search.refinement-date-after-text') : i18n.t('cabinet-search.refinement-date-before-text');
                             label = `${operatorLabel} ${date}`;
                         }
                         break;
