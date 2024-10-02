@@ -372,6 +372,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 list-style-type: none;
                 overflow: hidden;
                 min-height: calc(300px + 5vh);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;.hits-doc-footer
             }
             .hits-person-footer{
                 display: grid;
@@ -380,11 +383,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 grid-template-columns: auto auto auto;
             }
             .hits-doc-footer{
-                display: grid;
-                justify-content: end;
-                gap: 10px;
-                grid-template-columns: auto;
+                position: relative;
+                display: flex;
+                justify-content: flex-end;
             }
+                
         `;
     }
 
@@ -506,7 +509,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </footer>
                     ` : html`
                     <footer class="hits-doc-footer">
-                        <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>view</button>
+                        <button class="button is-primary button-view" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>view</button>
                     </footer>
                     `;
 
