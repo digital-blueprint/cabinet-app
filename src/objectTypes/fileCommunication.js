@@ -69,7 +69,7 @@ class CabinetHitElement extends BaseHitElement {
                 display: flex;
             }
             .ais-com-Hits-content {
-                margin-bottom:calc(150px + 5vh);
+                gap: 10px;
                 display: grid;
                 grid-template-rows: repeat(3, 1fr);
             }
@@ -80,7 +80,8 @@ class CabinetHitElement extends BaseHitElement {
                 grid-row: 2/3; 
             }     
             .hit-content-item3 {
-                grid-row: 3/3; 
+                grid-row: 3/3;
+                padding-top:30px; 
             }    
             .com-item1 {
                 grid-column: 1 / 2;
@@ -121,13 +122,14 @@ class CabinetHitElement extends BaseHitElement {
                 </header>
                 <main class="ais-com-Hits-content">
                 lang: ${this.lang}<br />
-                <header class="ais-com-Hits-content-items hit-content-item1">document Type</header>
+                <div class="ais-com-Hits-content-items hit-content-item1">document Type</div>
                 <div class="ais-com-Hits-content-items hit-content-item2">filename: ${this.data.file.base.fileName}</div>
                 <div class="ais-com-Hits-content-items hit-content-item3">
                 dateCreated: ${this.data.file['file-cabinet-communication'].dateCreated}<br />
                 lastModified: ${lastModified}<br />
                 </div>
                 </main>
+            </form>    
         `;
     }
 }
