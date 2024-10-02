@@ -17,7 +17,7 @@ term-run:
 # Kill the cabinet-app session
 [group('dev')]
 term-kill:
-    zellij delete-session {{ zellijSession }} -f
+    -zellij delete-session {{ zellijSession }} -f
 
 # Kill and run a terminal with the cabinet-app session
 [group('dev')]
