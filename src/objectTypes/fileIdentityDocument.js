@@ -70,9 +70,9 @@ class CabinetHitElement extends BaseHitElement {
                 display: flex;
             }
             .ais-id-Hits-content {
-                margin-bottom:calc(150px + 5vh);
                 display: grid;
                 grid-template-rows: repeat(3, 1fr);
+                gap: 10px;
             }
             .hit-content-item1 {
                 grid-row: 1/2; 
@@ -81,7 +81,8 @@ class CabinetHitElement extends BaseHitElement {
                 grid-row: 2/3; 
             }     
             .hit-content-item3 {
-                grid-row: 3/3; 
+                grid-row: 3/3;
+                padding-top: 30px;  
             }
             .id-item1 {
                 grid-column: 1 / 2;
