@@ -374,7 +374,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 min-height: calc(300px + 5vh);
                 display: flex;
                 flex-direction: column;
-                justify-content: space-between;.hits-doc-footer
+                justify-content: space-between;
             }
             .hits-person-footer{
                 display: grid;
