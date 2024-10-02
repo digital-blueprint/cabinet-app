@@ -284,7 +284,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
              id="edit-form"
              subscribe="auth,lang,entry-point-url"
              .fileHitData=${this.fileHitData}
-             person-id="${this.personHitData.base.identNrObfuscated || this.personHitData.base.studId || this.personHitData.base.objectID}"
+             person-id="${this.personHitData ? (this.personHitData.base.identNrObfuscated ||
+                                                this.personHitData.base.studId ||
+                                                this.personHitData.base.objectID) : ''}"
              object-type=></${unsafeStatic(tagName)}>
         `;
     }
