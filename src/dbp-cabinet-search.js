@@ -553,7 +553,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     getDocumentEditModalHtml() {
         // TODO: In production it maybe would be better to fetch the typesense document again to get the latest data
         const hit = this.hitData;
-        console.log('hit', hit);
+        console.log('getDocumentEditModalHtml this.hitData', this.hitData);
         const objectType = hit.objectType;
 
         if (objectType === '') {
@@ -602,7 +602,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     getDocumentViewModalHtml() {
         // TODO: In production it maybe would be better to fetch the typesense document again to get the latest data
         const hit = this.hitData;
-        console.log('hit', hit);
+        console.log('getDocumentViewModalHtml this.hitData', this.hitData);
         const objectType = hit.objectType;
         console.log('objectType', objectType);
 

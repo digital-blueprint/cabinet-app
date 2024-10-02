@@ -277,8 +277,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             customElements.define(tagName, this.objectTypeFormComponents[objectType]);
         }
 
+        console.log('getDocumentEditFormHtml this.fileHitData', this.fileHitData);
+
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
-        // a variable and need to set the "data" property from a variable too!
+        // a variable and need to set the "fileHitData" property from a variable too!
         return staticHtml`
             <${unsafeStatic(tagName)}
              id="edit-form"
@@ -444,12 +446,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      * in the file source
      */
     getDocumentModalHtml() {
-        console.log('getDocumentAddModalHtml');
         const hit = this.fileHitData;
-        console.log('getDocumentModalHtml hit', hit);
+        console.log('getDocumentModalHtml this.fileHitData', this.fileHitData);
 
         let file = this.documentFile;
-        console.log('getDocumentModalHtml file', file);
+        console.log('getDocumentModalHtml this.documentFile', this.documentFile);
 
         // if (hit.objectType !== 'person' || file === null) {
         //     return html`<dbp-modal ${ref(this.documentModalRef)} id="document-modal" modal-id="document-modal"></dbp-modal>`;
