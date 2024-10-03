@@ -35,19 +35,24 @@ class CabinetFormElement extends BaseFormElement {
         console.log('-- Render CabinetFormElement --');
         console.log('render this.data', this.data);
 
+        // const fileData = this.data.file ? this.data.file : null;
+        const fileData = this.data?.file || {};
+        const baseData = fileData.base || {};
+        const minimalSchema = fileData["file-cabinet-minimalSchema"] || {};
+        const dateCreated = minimalSchema.dateCreated || '';
+
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/minimalSchema.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/minimalSchema_example.json
         return html`
             <form>
                 <h2>fileMinimalSchema Form</h2>
                 lang: ${this.lang}<br />
-                studyField: ${this.data.file ? this.data.file.base.studyField : ''}<br />
-                ${formElements.stringElement('studyField', 'Study field', this.data.file ? this.data.file.base.studyField : '', true)}
-                ${formElements.stringElement('semester', 'Semester', '', true)}
-                ${formElements.enumElement('additionalType', 'Additional type', '', getAdditionalTypes(), false)}
-                ${formElements.dateElement('dateCreated', 'Date created', '', true)}
-                ${formElements.stringElement('subjectOf', 'Subject of', '')}
-                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
+                ${formElements.stringElement('studyField', 'Study field', baseData.studyField || '', true)}
+                ${formElements.stringElement('semester', 'Semester', baseData.semester || '', true)}
+                ${formElements.enumElement('additionalType', 'Additional type', baseData.additionalType?.key || '', getAdditionalTypes(), false)}
+                ${formElements.dateElement('dateCreated', 'Date created', dateCreated, true)}
+                ${formElements.stringElement('subjectOf', 'Subject of', baseData.subjectOf || '')}
+                ${formElements.stringElement('comment', 'Comment', baseData.comment || '', false, 5)}
                 ${this.getButtonRowHtml()}
             </form>
         `;

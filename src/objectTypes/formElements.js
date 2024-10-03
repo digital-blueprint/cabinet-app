@@ -8,6 +8,26 @@ const sanitizeForHtmlId = (str) => {
         .toLowerCase();               // Convert to lowercase
 };
 
+const formatDateValue = (val) => {
+    if (!val) return "";
+
+    // Check if the value is a number (timestamp)
+    const timestamp = Number(val);
+    if (!isNaN(timestamp)) {
+        // Convert timestamp to Date object
+        const date = new Date(timestamp);
+
+        // Check if it's a valid date
+        if (!isNaN(date.getTime())) {
+            // Format date as YYYY-MM-DD (required format for input type="date")
+            return date.toISOString().split('T')[0];
+        }
+    }
+
+    // If it's not a timestamp or invalid, return the original value
+    return val;
+};
+
 export const getNationalityItems = () => {
     return {
         ALB: "Albanian",
@@ -100,6 +120,8 @@ export const stringElement = (name, label, value = "", isRequired = false, rows 
  */
 export const dateElement = (name, label, value = "", isRequired = false) => {
     const id = sanitizeForHtmlId(name);
+    const formattedValue = formatDateValue(value);
+
     return html`
         <fieldset>
             <legend>${label}</legend>
@@ -107,7 +129,7 @@ export const dateElement = (name, label, value = "", isRequired = false) => {
                 type="date"
                 id="form-input-${id}"
                 name="${name}"
-                value="${value}"
+                value="${formattedValue}"
                 ?required=${isRequired} />
             <label for="form-input-${name}">${label}</label>
         </fieldset>
