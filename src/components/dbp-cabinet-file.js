@@ -152,7 +152,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         apiUrl.search = new URLSearchParams(params).toString();
 
         let response = await fetch(apiUrl.toString(), {
-            // TODO: Will be GET in the future
             method: 'GET',
             headers: {
                 'Content-Type': 'application/ld+json',
