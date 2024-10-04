@@ -22,10 +22,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.objectTypeFormComponents = {};
         this.objectTypeHitComponents = {};
         this.objectTypeViewComponents = {};
-        this.personHitData = this.fileHitData = {
-            "id": "",
-            "objectType": "",
-        };
+        this.personId = '';
         this.documentModalRef = createRef();
         this.documentPdfViewerRef = createRef();
         this.documentFile = null;
@@ -71,7 +68,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            personHitData: { type: Object, attribute: false },
+            personId: { type: String, attribute: false },
             fileHitData: { type: Object, attribute: false },
             documentFile: { type: File, attribute: false },
             objectType: { type: String, attribute: false },
@@ -305,9 +302,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
              id="edit-form"
              subscribe="auth,lang,entry-point-url"
              .data=${this.fileHitData}
-             person-id="${this.personHitData ? (this.personHitData.base.identNrObfuscated ||
-                                                this.personHitData.base.studId ||
-                                                this.personHitData.base.objectID) : ''}"
+             person-id="${this.personId}"
              object-type=></${unsafeStatic(tagName)}>
         `;
     }
@@ -343,7 +338,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async openDocumentAddDialogWithPersonHit(hit = null) {
         this.mode = CabinetFile.Modes.ADD;
-        this.personHitData = hit;
+        this.personId = hit.base.identNrObfuscated ||
+            hit.base.studId ||
+            hit.base.objectID;
         await this.openDocumentAddDialog();
     }
 
@@ -361,6 +358,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.mode = CabinetFile.Modes.VIEW;
         this.fileHitData = hit;
         console.log('openDialogWithHit hit', hit);
+        // Set personId from hit
+        this.personId = hit.base.identNrObfuscated;
         this.objectType = hit.objectType;
 
         // Wait until hit data is set and rendering is complete
