@@ -96,10 +96,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async storeDocumentToBlob(formData) {
-        const uploadUrl = await this.createBlobUploadUrl();
-        console.log('storeDocumentToBlob uploadUrl', uploadUrl);
-
-        const fileData = await this.uploadDocumentToBlob(uploadUrl, formData);
+        const fileData = await this.storeDocumentInBlob(formData);
         console.log('storeDocumentToBlob fileData', fileData);
 
         if (fileData.identifier) {
@@ -134,20 +131,29 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         setTimeout(() => { this.fetchFileDocumentFromTypesense(fileId, ++increment); }, 1000);
     }
 
+    /**
+     * Creates a Blob POST or PATCH URL for uploading a document
+     * @returns {Promise<string>}
+     */
     async createBlobUploadUrl() {
         if (this.entryPointUrl === '') {
             return '';
         }
 
+        const identifier = this.getFileHitDataBlobId();
         const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/signature`);
         const apiUrl = new URL(baseUrl);
         const params = {
-            'method': 'POST',
+            'method': identifier === '' ? 'POST' : 'PATCH',
             'prefix': this.blobDocumentPrefix,
             'fileName': this.documentFile.name,
             // TODO: Does this replacing always work?
             'type': this.objectType.replace('file-cabinet-', '')
         };
+
+        if (identifier !== '') {
+            params['identifier'] = identifier;
+        }
 
         apiUrl.search = new URLSearchParams(params).toString();
 
@@ -165,6 +171,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('Upload url', url);
 
         return url;
+    }
+
+    getFileHitDataBlobId() {
+        return this.fileHitData?.file?.base?.fileId || '';
     }
 
     /**
@@ -226,7 +236,16 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         return json;
     }
 
-    async uploadDocumentToBlob(uploadUrl, metaData) {
+    /**
+     * Creates or updates a document in the blob storage
+     * @param metaData
+     * @returns {Promise<any>}
+     */
+    async storeDocumentInBlob(metaData) {
+        const blobId = this.getFileHitDataBlobId();
+        console.log('storeDocumentInBlob', 'blobId', blobId);
+        const uploadUrl = await this.createBlobUploadUrl();
+
         metaData['@type'] = 'DocumentFile';
         metaData['fileSource'] = 'blob-cabinetBucket';
         metaData['objectType'] = this.objectType;
@@ -235,12 +254,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         let formData = new FormData();
         formData.append('metadata', JSON.stringify(metaData));
+        // TODO: Check if we really need to upload the file again
         formData.append('file', this.documentFile);
         formData.append('fileName', this.documentFile.name);
         formData.append('prefix', this.blobDocumentPrefix);
 
         const options = {
-            method: 'POST',
+            method: blobId === '' ? 'POST' : 'PATCH',
             headers: {
                 Authorization: 'Bearer ' + this.auth.token,
             },
