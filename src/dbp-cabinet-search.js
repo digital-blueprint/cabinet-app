@@ -158,7 +158,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             const component = this.documentFileComponentRef.value;
             component.setObjectTypeViewComponents(this.objectTypeViewComponents);
             component.setTypesenseService(this.typesenseService);
-            await component.openDialogWithFileHit(hit);
+            await component.openViewDialogWithFileHit(hit);
         }
     }
 
