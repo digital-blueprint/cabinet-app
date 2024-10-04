@@ -532,7 +532,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .filter-header {
                 padding: 0.5em;
-                border-bottom: 3px solid var(--dbp-override-accent);
+                border-bottom: 5px solid var(--dbp-override-accent);
             }
 
             .filter-header__title {
@@ -542,6 +542,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .filters-container {
                 padding: 1em;
+                margin-top:3em;
             }
 
             .filter-group {
@@ -553,6 +554,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .filter-title {
                 margin: 0;
+                text-decoration: underline 2px solid var(--dbp-override-content);
             }
 
             .filter:has(> [hidden]) {
@@ -614,7 +616,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 display: flex;
                 gap: 1em;
                 align-items: center;
-                border: 1px solid var(--dbp-content);
                 padding: 0.5em;
                 justify-content: space-between;
             }
@@ -625,7 +626,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             .ais-Panel-body {
-                border: 1px solid var(--dbp-content);
                 border-top: none 0;
                 padding: 0 0.5em;
             }
