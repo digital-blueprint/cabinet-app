@@ -42,7 +42,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         };
         this.documentEditModalRef = createRef();
         this.documentViewPersonModalRef = createRef();
-        this.documentViewFileModalRef = createRef();
         this.documentFileComponentRef = createRef();
         this.cabinetFacetsRef = createRef();
         this.documentFile = null;
@@ -156,7 +155,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             /**
              * @type {CabinetFile}
              */
-            const component = this.documentViewFileModalRef.value;
+            const component = this.documentFileComponentRef.value;
             component.setObjectTypeViewComponents(this.objectTypeViewComponents);
             component.setTypesenseService(this.typesenseService);
             await component.openDialogWithFileHit(hit);
@@ -431,15 +430,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         /**
          * @type {CabinetFile}
          */
-        const viewFileComponent = this.documentViewFileModalRef.value;
-        if (viewFileComponent) {
-            viewFileComponent.setTypesenseService(this.typesenseService);
-        }
-
-        // Update the Typesense service with the new bearer token
-        /**
-         * @type {CabinetFile}
-         */
         const fileComponent = this.documentFileComponentRef.value;
         if (fileComponent) {
             fileComponent.setTypesenseService(this.typesenseService);
@@ -619,14 +609,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     subscribe="lang,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
                     .data=${hit}
                 ></dbp-cabinet-view-person>
-            `;
-        } else {
-            return staticHtml`
-                <dbp-cabinet-file
-                    mode="${CabinetFile.Modes.VIEW}"
-                    ${ref(this.documentViewFileModalRef)}
-                    subscribe="lang,auth,entry-point-url,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
-                ></dbp-cabinet-file>
             `;
         }
     }

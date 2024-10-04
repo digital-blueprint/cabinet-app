@@ -342,6 +342,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async openDocumentAddDialogWithPersonHit(hit = null) {
+        this.mode = CabinetFile.Modes.ADD;
         this.personHitData = hit;
         await this.openDocumentAddDialog();
     }
@@ -357,6 +358,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async openDialogWithFileHit(hit = null) {
+        this.mode = CabinetFile.Modes.VIEW;
         this.fileHitData = hit;
         console.log('openDialogWithHit hit', hit);
         this.objectType = hit.objectType;
