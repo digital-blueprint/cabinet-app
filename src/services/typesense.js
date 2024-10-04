@@ -8,6 +8,11 @@ export class TypesenseService {
         this.collectionName = collectionsName;
     }
 
+    /**
+     * Fetch an item by its Typesense ID
+     * @param itemId
+     * @returns {Promise<object>}
+     */
     async fetchItem(itemId) {
         try {
             return await this.client.collections(this.collectionName).documents(itemId).retrieve();
@@ -16,8 +21,12 @@ export class TypesenseService {
         }
     }
 
-    // Fetch a file document by fileId
-    async fetchFileDocument(fileId) {
+    /**
+     * Fetch a file document by Blob fileId
+     * @param fileId
+     * @returns {Promise<null|*>}
+     */
+    async fetchFileDocumentByBlobId(fileId) {
         if (!fileId) {
             throw new Error('fileId is required');
         }
@@ -25,7 +34,7 @@ export class TypesenseService {
         try {
             return await this.client.collections(this.collectionName).documents('file.' + fileId).retrieve();
         } catch (error) {
-            // If the document is not found, return null
+            // If the document is not found, return null, because we want to try to fetch it again later
             if (error.name === 'ObjectNotFound') {
                 return null;
             }

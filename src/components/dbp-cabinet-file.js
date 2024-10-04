@@ -115,7 +115,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             return;
         }
 
-        const item = await this.typesenseService.fetchFileDocument(fileId);
+        const item = await this.typesenseService.fetchFileDocumentByBlobId(fileId);
 
         // IF the document was found, set the hit data and switch to view mode
         if (item !== null) {
@@ -338,6 +338,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async openDocumentAddDialogWithPersonHit(hit = null) {
         this.mode = CabinetFile.Modes.ADD;
+        // We don't need to fetch the hit data from Typesense again, because the identNrObfuscated wouldn't change
         this.personId = hit.base.identNrObfuscated;
         await this.openDocumentAddDialog();
     }
@@ -354,6 +355,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async openViewDialogWithFileHit(hit = null) {
         this.mode = CabinetFile.Modes.VIEW;
+
+        // Fetch the hit data from Typesense again in case it changed
+        hit = await this.typesenseService.fetchItem(hit.id);
+
         this.fileHitData = hit;
         console.log('openDialogWithHit hit', hit);
         // Set personId from hit
