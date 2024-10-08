@@ -17,7 +17,6 @@ import {configure} from 'instantsearch.js/es/widgets';
 import {pascalToKebab} from './utils';
 import {CabinetFile} from './components/dbp-cabinet-file.js';
 import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
-import {CabinetViewFile} from './components/dbp-cabinet-view-file.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
 import {TypesenseService} from './services/typesense.js';
 import {updateDatePickersForExternalRefinementChange} from './components/dbp-cabinet-date-facet.js';
@@ -59,7 +58,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-modal': Modal,
             'dbp-cabinet-file': CabinetFile,
             'dbp-cabinet-view-person': CabinetViewPerson,
-            'dbp-cabinet-view-file': CabinetViewFile,
             'dbp-inline-notification': InlineNotification,
             'dbp-cabinet-facets': CabinetFacets,
         };
