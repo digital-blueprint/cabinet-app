@@ -310,6 +310,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             .sort-widget .ais-SortBy-select {
                 height: 2em;
                 padding: 1px .5em;
+                padding-right: 2em;
                 /* override toolkit select style */
                 background-size: 16px;
                 background-position: right .5em center;
@@ -384,7 +385,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 display: flex;
                 justify-content: flex-end;
             }
-                
+
         `;
     }
 
@@ -394,7 +395,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     getSearchParameters() {
         // https://typesense.org/docs/0.25.1/api/search.html#ranking-and-sorting-parameters
         let searchParameters = {
-            query_by: "base.familyName,base.givenName,file.base.fileName,objectType",
+            query_by: "base.familyName,base.givenName,file.base.fileName,objectType,base.stPersonNr,base.studId,base.identNrObfuscated,base.birthDate",
+            // @TODO we should set typo tolerance by field. ex.: birthdate or identNrObfuscated dont need typo tolerance
             sort_by: "@type:desc,_text_match:desc,base.familyName:asc"
         };
 
