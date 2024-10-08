@@ -38,6 +38,8 @@ class Address {
     postCode;
     /** @type {KeyedText} */
     country;
+    /** @type {string} */
+    telephoneNumber;
 }
 
 class BaseHit {
@@ -60,6 +62,8 @@ class BaseHit {
 }
 
 class Study {
+    /** @type {string} */
+    id;
     /** @type {string} */
     coUrl;
     /** @type {?string} */
@@ -90,15 +94,29 @@ class Study {
     status;
     /** @type {string} */
     type;
+    /** @type {KeyedText[]} */
+    additionalCertificates;
 }
 
 class Application {
+    /** @type {string} */
+    id;
+    /** @type {?string} */
+    studyId;
     /** @type {string} */
     studyKey;
     /** @type {string} */
     studyName;
     /** @type {string} */
     studyType;
+    /** @type {string} */
+    startSemester;
+    /** @type {?string} */
+    qualificationCertificateDate;
+    /** @type {?KeyedText} */
+    qualificationIssuingCountry;
+    /** @type {?KeyedText} */
+    qualificationType;
 }
 
 class Person {
@@ -158,6 +176,18 @@ class Person {
         studies;
         /** @type {Application[]} */
         applications;
+        /** @type {?string} */
+        telephoneNumber;
+        /** @type {?string} */
+        tuitionStatus;
+        /** @type {?string} */
+        tuitionExemptionType;
+        /** @type {?string} */
+        note;
+        /** @type {?string} */
+        studyLimitStartSemester;
+        /** @type {?string} */
+        studyLimitEndSemester;
 }
 
 class PersonHit {
@@ -314,6 +344,12 @@ class CabinetViewElement extends BaseViewElement {
                 <li><b>nationalities:</b> ${hit.person.nationalities.map(n => n.text).join(', ')}</li>
                 <li><b>admissionQualificationType:</b> ${hit.person.admissionQualificationType?.text}</li>
                 <li><b>schoolCertificateDate:</b> ${hit.person.schoolCertificateDate}</li>
+                <li><b>telephoneNumber:</b> ${hit.person.telephoneNumber}</li>
+                <li><b>tuitionStatus:</b> ${hit.person.tuitionStatus}</li>
+                <li><b>tuitionExemptionType:</b> ${hit.person.tuitionExemptionType}</li>
+                <li><b>note:</b> ${hit.person.note}</li>
+                <li><b>studyLimitStartSemester:</b> ${hit.person.studyLimitStartSemester}</li>
+                <li><b>studyLimitEndSemester:</b> ${hit.person.studyLimitEndSemester}</li>
                 <li><b>homeAddress:</b>
                     <ul>
                         <li><b>note:</b> ${hit.person.homeAddress?.note}</li>
@@ -322,6 +358,7 @@ class CabinetViewElement extends BaseViewElement {
                         <li><b>region:</b> ${hit.person.homeAddress?.region}</li>
                         <li><b>postCode:</b> ${hit.person.homeAddress?.postCode}</li>
                         <li><b>country:</b> ${hit.person.homeAddress?.country?.text}</li>
+                        <li><b>telephoneNumber:</b> ${hit.person.homeAddress?.telephoneNumber}</li>
                     </ul>
                 </li>
                 <li><b>studyAddress:</b>
@@ -332,6 +369,7 @@ class CabinetViewElement extends BaseViewElement {
                         <li><b>region:</b> ${hit.person.studyAddress?.region}</li>
                         <li><b>postCode:</b> ${hit.person.studyAddress?.postCode}</li>
                         <li><b>country:</b> ${hit.person.studyAddress?.country?.text}</li>
+                        <li><b>telephoneNumber:</b> ${hit.person.studyAddress?.telephoneNumber}</li>
                     </ul>
                 </li>
                 <li><b>emailAddressUniversity:</b> ${hit.person.emailAddressUniversity}</li>
@@ -360,6 +398,7 @@ class CabinetViewElement extends BaseViewElement {
                 <li>
                     <ul>
                         <li><b>coUrl:</b> <a href="${study.coUrl}">${study.coUrl}</a></li>
+                        <li><b>id:</b> ${study.id}</li>
                         <li><b>curriculumVersion:</b> ${study.curriculumVersion}</li>
                         <li><b>exmatriculationSemester:</b> ${study.exmatriculationSemester}</li>
                         <li><b>exmatriculationDate:</b> ${study.exmatriculationDate}</li>
@@ -374,6 +413,7 @@ class CabinetViewElement extends BaseViewElement {
                         <li><b>semester:</b> ${study.semester}</li>
                         <li><b>status:</b> ${study.status?.text}</li>
                         <li><b>type:</b> ${study.type}</li>
+                        <li><b>additionalCertificates:</b> ${study.additionalCertificates.map(c => c.text).join(', ')}</li>
                     </ul>
                 </li>
                 `)}
@@ -383,9 +423,15 @@ class CabinetViewElement extends BaseViewElement {
                 ${hit.person.applications.map(application => html`
                 <li>
                     <ul>
+                        <li><b>id:</b> ${application.id}</li>
+                        <li><b>studyId:</b> ${application.studyId}</li>
                         <li><b>studyKey:</b> ${application.studyKey}</li>
                         <li><b>studyName:</b> ${application.studyName}</li>
                         <li><b>studyType:</b> ${application.studyType}</li>
+                        <li><b>startSemester:</b> ${application.startSemester}</li>
+                        <li><b>qualificationCertificateDate:</b> ${application.qualificationCertificateDate}</li>
+                        <li><b>qualificationIssuingCountry:</b> ${application.qualificationIssuingCountry?.text}</li>
+                        <li><b>qualificationType:</b> ${application.qualificationType?.text}</li>
                     </ul>
                 </li>
                 `)}
