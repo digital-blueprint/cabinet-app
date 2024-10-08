@@ -175,7 +175,7 @@
         "entryPointURL": "https://api.tugraz.at",
         "keyCloakBaseURL": "https://auth.tugraz.at/auth",
         "keyCloakRealm": "tugraz",
-        "keyCloakClientId": "cabinet_tugraz_at",
+        "keyCloakClientId": "studakt_tugraz_at",
         "matomoUrl": "https://analytics.tugraz.at/",
         "matomoSiteId": 131,
         "nextcloudBaseURL": "https://cloud.tugraz.at",
@@ -183,7 +183,7 @@
         "pdfAsQualifiedlySigningServer": "https://sig.tugraz.at",
         "hiddenActivities": [],
         "shortName": "TU Graz",
-        "appDomain": "https://cabinet.tugraz.at/",
+        "appDomain": "https://studakt.tugraz.at/",
         "enableAnnotations": true,
         "typesense": {
             "host": "api.tugraz.at",
