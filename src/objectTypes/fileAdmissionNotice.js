@@ -24,12 +24,27 @@ export default class extends BaseObject {
 
 class CabinetFormElement extends BaseFormElement {
     getSemester = () => {
+        const currentDate = new Date();
+        let currentYear = currentDate.getFullYear();
+        currentYear = currentYear % 100;
+
+        const semesters = {};
+
+        for(let year = currentYear; year >= 20; year--) {
+            console.log('year', year);
+        };
+        console.log('currentYear ', currentYear);
+        console.log('semesters ', semesters['2024']);
         return {
-            '25W': '25W',
+            '25S': '25S',
             '24W': '24W',
+            '24S': '24S',
             '23W': '23W',
+            '23S': '23S',
             '22W': '22W',
+            '22S': '22S',
             '21W': '21W',
+            '21S': '21S',
             '20W': '20W',
         };
     };
