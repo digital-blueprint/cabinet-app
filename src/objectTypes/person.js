@@ -218,8 +218,13 @@ class CabinetHitElement extends BaseHitElement {
                 padding: 5px;
             }
             .ais-Hits-content {
-                margin-bottom:calc(150px + 5vh);
+                gap: 10px;
+                display: grid;
+                grid-template-rows: repeat(3, 1fr);
             }
+            .hit-person-content-item3{
+                grid-row: 3/3;
+            } 
             .right-column {
                 text-align: right;
 
@@ -270,6 +275,15 @@ class CabinetHitElement extends BaseHitElement {
             givenName: ${renderFieldWithHighlight(hit, 'base.givenName')}<br />
             <!-- familyName: ${hit.base.familyName}<br /> -->
             familyName: ${renderFieldWithHighlight(hit, 'base.familyName')}<br />
+            <!-- birthDate: ${hit.base.birthDate}<br /> -->
+            ${renderFieldWithHighlight(hit, 'base.birthDate')}<br />
+            </div>
+            <div><b>study:</b>
+            <b>semester:</b> 
+            </div>
+            <div class="hit-person-content-item3">
+            <b>syncTimestamp:</b> ${new Date(hit.person.syncTimestamp * 1000)}
+            </div>
             </main>
         `;
     }
