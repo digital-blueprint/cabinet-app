@@ -23,6 +23,17 @@ export default class extends BaseObject {
 }
 
 class CabinetFormElement extends BaseFormElement {
+    getSemester = () => {
+        return {
+            '25W': '25W',
+            '24W': '24W',
+            '23W': '23W',
+            '22W': '22W',
+            '21W': '21W',
+            '20W': '20W',
+        };
+    };
+
     getAdditionalTypes = () => {
         return {
             'AdmissionNotice': 'Admission Notice',
@@ -48,7 +59,7 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>admissionNotice Form</h2>
                 ${formElements.stringElement('studyField', 'Study field', '', true)}
-                ${formElements.stringElement('semester', 'Semester', '', true)}
+                ${formElements.enumElement('semester', 'Semester', '', this.getSemester(), false)}
                 ${formElements.stringElement('subjectOf', 'Subject of', '')}
                 ${formElements.enumElement('additionalType', 'Additional type', '', this.getAdditionalTypes(), false)}
                 ${formElements.dateElement('dateCreated', 'Date created', '', true)}
