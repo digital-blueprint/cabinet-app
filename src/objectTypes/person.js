@@ -380,12 +380,12 @@ class CabinetViewElement extends BaseViewElement {
             </ul>
             <h4>Applications</h4>
             <ul>
-                ${hit.person.applications.map(study => html`
+                ${hit.person.applications.map(application => html`
                 <li>
                     <ul>
-                        <li><b>studyKey:</b> ${study.studyKey}</li>
-                        <li><b>studyName:</b> ${study.studyName}</li>
-                        <li><b>studyType:</b> ${study.studyType}</li>
+                        <li><b>studyKey:</b> ${application.studyKey}</li>
+                        <li><b>studyName:</b> ${application.studyName}</li>
+                        <li><b>studyType:</b> ${application.studyType}</li>
                     </ul>
                 </li>
                 `)}
