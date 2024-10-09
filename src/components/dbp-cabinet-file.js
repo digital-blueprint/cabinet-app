@@ -141,7 +141,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         const identifier = this.getFileHitDataBlobId();
-        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/signature`);
+        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/blob-urls`);
         const apiUrl = new URL(baseUrl);
         const params = {
             'method': identifier === '' ? 'POST' : 'PATCH',
@@ -158,19 +158,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         apiUrl.search = new URLSearchParams(params).toString();
 
         let response = await fetch(apiUrl.toString(), {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this.auth.token
-            }
+                Authorization: 'Bearer ' + this.auth.token,
+            },
+            body: '{}',
         });
         if (!response.ok) {
             throw response;
         }
-        const url = await response.text();
-        console.log('Upload url', url);
+        const url = await response.json();
+        console.log('Upload url', url['blobUrl']);
 
-        return url;
+        return url['blobUrl'];
     }
 
     getFileHitDataBlobId() {
@@ -187,7 +188,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             return '';
         }
 
-        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/signature`);
+        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/blob-urls`);
         const apiUrl = new URL(baseUrl);
         const params = {
             'method': 'GET',
@@ -204,19 +205,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         apiUrl.search = new URLSearchParams(params).toString();
 
         let response = await fetch(apiUrl.toString(), {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/ld+json',
                 Authorization: 'Bearer ' + this.auth.token
-            }
+            },
+            body: '{}',
         });
         if (!response.ok) {
             throw response;
         }
-        const url = await response.text();
-        console.log('Download url', url);
+        const url = await response.json();
+        console.log('Download url', url['blobUrl']);
 
-        return url;
+        return url['blobUrl'];
     }
 
     async loadBlobItem(url) {
