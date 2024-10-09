@@ -257,8 +257,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         let formData = new FormData();
         formData.append('metadata', JSON.stringify(metaData));
         // TODO: Check if we really need to upload the file again
-        formData.append('file', this.documentFile);
-        formData.append('fileName', this.documentFile.name);
+        this.isFileDirty = true;
+        if (this.isFileDirty) {
+            formData.append('file', this.documentFile);
+            formData.append('fileName', this.documentFile.name);
+        }
         formData.append('prefix', this.blobDocumentPrefix);
 
         const options = {
@@ -638,6 +641,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 lang="${this.lang}"
                 text="${i18n.t('cabinet-search.upload-area-text')}"
                 button-label="${i18n.t('cabinet-search.upload-button-label')}"
+                @dbp-file-source-dialog-closed="${this.onFileSelectDialogClosed}"
                 @dbp-file-source-file-selected="${this.onDocumentFileSelected}"></dbp-file-source>
         `;
     }
@@ -647,6 +651,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${this.getDocumentModalHtml()}
             ${this.getFileSourceHtmlHtml()}
         `;
+    }
+
+    async onFileSelectDialogClosed() {
+        console.log('onFileSelectDialogClosed');
+
+        // We can set isFileDirty to false here, because the dbp-file-source-dialog-closed event
+        // will be received before the dbp-file-source-file-selected event
+        this.isFileDirty = false;
     }
 
     /**
