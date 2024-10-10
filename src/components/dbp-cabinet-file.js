@@ -694,7 +694,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Opens the modal dialog for adding a document to a person after the document was
         // selected in the file source
-        // Note: Modal is checking if the dialog is already open, because it was opened by onFileSelectDialogClosed()
+        // Note: Modal is checking if the dialog is already open, if it was opened by onFileSelectDialogClosed()
         modal.open();
     }
 
