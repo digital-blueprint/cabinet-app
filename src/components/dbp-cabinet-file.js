@@ -617,7 +617,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
     }
 
-    getFileSourceHtmlHtml() {
+    getFileSourceHtml() {
         if (this.mode === CabinetFile.Modes.VIEW) {
             return html``;
         }
@@ -649,7 +649,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     getHtml() {
         return html`
             ${this.getDocumentModalHtml()}
-            ${this.getFileSourceHtmlHtml()}
+            ${this.getFileSourceHtml()}
         `;
     }
 
