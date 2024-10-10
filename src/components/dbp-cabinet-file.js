@@ -661,6 +661,18 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      */
     async onFileSelectDialogClosed() {
         console.log('file-source onFileSelectDialogClosed');
+
+        // Open the document modal dialog after the file source dialog was closed if we were in edit mode
+        // Unfortunately, if Escape was pressed, all dialogs will be closed, so this only works with the "X" button
+        if (this.mode === CabinetFile.Modes.EDIT) {
+            /**
+             * @type {Modal}
+             */
+            const modal = this.documentModalRef.value;
+
+            // Note: Modal is checking if the dialog is already open
+            modal.open();
+        }
     }
 
     /**
@@ -675,9 +687,15 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.mode = CabinetFile.Modes.EDIT;
         }
 
+        /**
+         * @type {Modal}
+         */
+        const modal = this.documentModalRef.value;
+
         // Opens the modal dialog for adding a document to a person after the document was
         // selected in the file source
-        this.documentModalRef.value.open();
+        // Note: Modal is checking if the dialog is already open, because it was opened by onFileSelectDialogClosed()
+        modal.open();
     }
 
     /**
