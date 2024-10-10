@@ -579,7 +579,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     `;
                 }
             case CabinetFile.Modes.EDIT:
+                // TODO: Implement object type selection in edit mode
                 return html`
+                    <p>
+                        ${this.getObjectTypeSelector()}
+                        <dbp-button @click="${this.onObjectTypeSelected}">Select</dbp-button>
+                    </p>
                     ${this.getDocumentEditFormHtml()}
                 `;
         }
