@@ -347,7 +347,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     async openDocumentAddDialogWithPersonHit(hit = null) {
         this.mode = CabinetFile.Modes.ADD;
         // We don't need to fetch the hit data from Typesense again, because the identNrObfuscated wouldn't change
-        this.personId = hit.base.identNrObfuscated;
+        this.personId = hit.person.identNrObfuscated;
         await this.openDocumentAddDialog();
     }
 
@@ -373,7 +373,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.fileHitData = hit;
         console.log('openDialogWithHit hit', hit);
         // Set personId from hit
-        this.personId = hit.base.identNrObfuscated;
+        this.personId = hit.person.identNrObfuscated;
         this.objectType = hit.objectType;
 
         // Wait until hit data is set and rendering is complete

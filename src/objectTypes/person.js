@@ -42,25 +42,6 @@ class Address {
     telephoneNumber;
 }
 
-class BaseHit {
-    /** @type {string} */
-    birthDate;
-    /** @type {string} */
-    familyName;
-    /** @type {string} */
-    givenName;
-    /** @type {string} */
-    identNrObfuscated;
-    /** @type {string} */
-    person;
-    /** @type {string} */
-    stPersonNr;
-    /** @type {string} */
-    studId;
-    /** @type {string} */
-    fullName;
-}
-
 class Study {
     /** @type {string} */
     id;
@@ -120,6 +101,22 @@ class Application {
 }
 
 class Person {
+        /** @type {string} */
+        birthDate;
+        /** @type {string} */
+        familyName;
+        /** @type {string} */
+        givenName;
+        /** @type {string} */
+        identNrObfuscated;
+        /** @type {string} */
+        person;
+        /** @type {string} */
+        stPersonNr;
+        /** @type {string} */
+        studId;
+        /** @type {string} */
+        fullName;
         /** @type {KeyedText} */
         nationality;
         /** @type {?KeyedText} */
@@ -195,8 +192,6 @@ class PersonHit {
     id;
     /** @type {string} */
     objectType;
-    /** @type {BaseHit} */
-    base;
     /** @type {Person} */
     person;
 }
@@ -213,13 +208,13 @@ class CabinetFormElement extends BaseFormElement {
                 user-id: ${this.userId}<br />
                 <fieldset>
                     <legend>Firstname</legend>
-                    <input type="text" id="firstname" name="firstname" value="${data.base.givenName}" required>
+                    <input type="text" id="firstname" name="firstname" value="${data.person.givenName}" required>
                     <label for="firstname">Firstname</label>
                 </fieldset>
 
                 <fieldset>
                     <legend>Lastname</legend>
-                    <input type="text" id="lastname" name="lastname" value="${data.base.familyName}" required>
+                    <input type="text" id="lastname" name="lastname" value="${data.person.familyName}" required>
                     <label for="lastname">Lastname</label>
                 </fieldset>
 
@@ -301,12 +296,12 @@ class CabinetHitElement extends BaseHitElement {
             </header>
             <main class="ais-Hits-content">
             lang: ${this.lang}<br />
-            <!-- givenName: ${hit.base.givenName}<br /> -->
-            givenName: ${renderFieldWithHighlight(hit, 'base.givenName')}<br />
-            <!-- familyName: ${hit.base.familyName}<br /> -->
-            familyName: ${renderFieldWithHighlight(hit, 'base.familyName')}<br />
-            <!-- birthDate: ${hit.base.birthDate}<br /> -->
-            ${renderFieldWithHighlight(hit, 'base.birthDate')}<br />
+            <!-- givenName: ${hit.person.givenName}<br /> -->
+            givenName: ${renderFieldWithHighlight(hit, 'person.givenName')}<br />
+            <!-- familyName: ${hit.person.familyName}<br /> -->
+            familyName: ${renderFieldWithHighlight(hit, 'person.familyName')}<br />
+            <!-- birthDate: ${hit.person.birthDate}<br /> -->
+            ${renderFieldWithHighlight(hit, 'person.birthDate')}<br />
             </div>
             <div><b>study:</b>
             <b>semester:</b> 
@@ -326,19 +321,16 @@ class CabinetViewElement extends BaseViewElement {
             <h2>Person</h2>
             lang: ${this.lang}<br />
             <br>
-            <h4>Base</h4>
-            <ul>
-                <li><b>stPersonNr:</b> ${hit.base.stPersonNr}</li>
-                <li><b>studId:</b> ${hit.base.studId}</li>
-                <li><b>givenName:</b> ${hit.base.givenName}</li>
-                <li><b>familyName:</b> ${hit.base.familyName}</li>
-                <li><b>fullName:</b> ${hit.base.fullName}</li>
-                <li><b>person:</b> ${hit.base.person}</li>
-                <li><b>birthDate:</b> ${hit.base.birthDate}</li>
-                <li><b>identNrObfuscated:</b> ${hit.base.identNrObfuscated}</li>
-            </ul>
             <h4>Person</h4>
             <ul>
+                <li><b>stPersonNr:</b> ${hit.person.stPersonNr}</li>
+                <li><b>studId:</b> ${hit.person.studId}</li>
+                <li><b>givenName:</b> ${hit.person.givenName}</li>
+                <li><b>familyName:</b> ${hit.person.familyName}</li>
+                <li><b>fullName:</b> ${hit.person.fullName}</li>
+                <li><b>person:</b> ${hit.person.person}</li>
+                <li><b>birthDate:</b> ${hit.person.birthDate}</li>
+                <li><b>identNrObfuscated:</b> ${hit.person.identNrObfuscated}</li>
                 <li><b>nationality:</b> ${hit.person.nationality?.text}</li>
                 <li><b>nationalitySecondary:</b> ${hit.person.nationalitySecondary?.text}</li>
                 <li><b>nationalities:</b> ${hit.person.nationalities.map(n => n.text).join(', ')}</li>

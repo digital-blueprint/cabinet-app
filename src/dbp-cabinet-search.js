@@ -395,9 +395,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     getSearchParameters() {
         // https://typesense.org/docs/0.25.1/api/search.html#ranking-and-sorting-parameters
         let searchParameters = {
-            query_by: "base.familyName,base.givenName,file.base.fileName,objectType,base.stPersonNr,base.studId,base.identNrObfuscated,base.birthDate",
+            query_by: "person.familyName,person.givenName,file.base.fileName,objectType,person.stPersonNr,person.studId,person.identNrObfuscated,person.birthDate",
             // @TODO we should set typo tolerance by field. ex.: birthdate or identNrObfuscated dont need typo tolerance
-            sort_by: "@type:desc,_text_match:desc,base.familyName:asc"
+            sort_by: "@type:desc,_text_match:desc,person.familyName:asc"
         };
 
         if (!this.fuzzySearch) {
@@ -492,7 +492,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentAdd', {detail: {hit: hit}, bubbles: true, composed: true}));}}>Add Document</button>
                         <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>View</button>
                         <button class="button select-person-button"
-                            onclick="${(event) => { this.dispatchEvent(new CustomEvent('DbpCabinetFilterPerson', {detail: {person: hit.base.person}, bubbles: true, composed: true}));
+                            onclick="${(event) => { this.dispatchEvent(new CustomEvent('DbpCabinetFilterPerson', {detail: {person: hit.person.person}, bubbles: true, composed: true}));
                             }}">
                             ${ /*@TODO: find something to test here */ hit ? 'Select' : 'Unselect' }
                         </button>
