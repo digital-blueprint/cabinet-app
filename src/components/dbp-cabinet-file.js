@@ -256,8 +256,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         let formData = new FormData();
         formData.append('metadata', JSON.stringify(metaData));
-        // TODO: Check if we really need to upload the file again
-        this.isFileDirty = true;
+        // Check if we really need to upload the file again
         if (this.isFileDirty) {
             formData.append('file', this.documentFile);
             formData.append('fileName', this.documentFile.name);
@@ -278,6 +277,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
         const data = await response.json();
         console.log('File data', JSON.stringify(data));
+        this.isFileDirty = false;
 
         return data;
     }
@@ -362,6 +362,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async openViewDialogWithFileHit(hit) {
+        this.isFileDirty = false;
         this.mode = CabinetFile.Modes.VIEW;
         // Make sure the file source dialog is closed
         this.fileSourceRef.value.removeAttribute('dialog-open');
@@ -653,19 +654,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         `;
     }
 
+    /**
+     * Note: It seems like that the dbp-file-source-dialog-closed event is fired multiple times
+     *       when the file-source dialog is closed!
+     * @returns {Promise<void>}
+     */
     async onFileSelectDialogClosed() {
-        console.log('onFileSelectDialogClosed');
-
-        // We can set isFileDirty to false here, because the dbp-file-source-dialog-closed event
-        // will be received before the dbp-file-source-file-selected event
-        this.isFileDirty = false;
+        console.log('file-source onFileSelectDialogClosed');
     }
 
     /**
      * @param ev
      */
     async onDocumentFileSelected(ev) {
-        console.log('ev.detail.file', ev.detail.file);
+        console.log('file-source onDocumentFileSelected ev.detail.file', ev.detail.file);
         this.isFileDirty = true;
         await this.showPdf(ev.detail.file);
 
