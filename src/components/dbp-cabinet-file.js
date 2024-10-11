@@ -364,8 +364,15 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     async openViewDialogWithFileHit(hit) {
         this.isFileDirty = false;
         this.mode = CabinetFile.Modes.VIEW;
+
+        /**
+         * @type {FileSource}
+         */
+        const fileSource = this.fileSourceRef.value;
         // Make sure the file source dialog is closed
-        this.fileSourceRef.value.removeAttribute('dialog-open');
+        if (fileSource) {
+            fileSource.removeAttribute('dialog-open');
+        }
 
         // Fetch the hit data from Typesense again in case it changed
         hit = await this.typesenseService.fetchItem(hit.id);
@@ -450,7 +457,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
          */
         const fileSource = this.fileSourceRef.value;
         // Open the file source dialog to select a file
-        fileSource.setAttribute('dialog-open', '');
+        if (fileSource) {
+            fileSource.setAttribute('dialog-open', '');
+        }
     }
 
     static get styles() {
