@@ -456,10 +456,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
          * @type {FileSource}
          */
         const fileSource = this.fileSourceRef.value;
-        // Open the file source dialog to select a file
-        if (fileSource) {
-            fileSource.setAttribute('dialog-open', '');
+
+        // Wait until the file source dialog is ready
+        if (!fileSource) {
+            await this.updateComplete;
         }
+
+        // Open the file source dialog to select a file
+        fileSource.setAttribute('dialog-open', '');
     }
 
     static get styles() {
