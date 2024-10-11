@@ -587,7 +587,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         </p>
                         <p>
                             ${this.getObjectTypeSelector()}
-                            <dbp-button @click="${this.onObjectTypeSelected}">Select</dbp-button>
                         </p>
                     `;
                 } else {
@@ -596,11 +595,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     `;
                 }
             case CabinetFile.Modes.EDIT:
-                // TODO: Implement object type selection in edit mode
                 return html`
                     <p>
                         ${this.getObjectTypeSelector()}
-                        <dbp-button @click="${this.onObjectTypeSelected}">Select</dbp-button>
                     </p>
                     ${this.getDocumentEditFormHtml()}
                 `;
@@ -616,11 +613,15 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     getObjectTypeSelector() {
         const fileObjectTypeNames = this.fileObjectTypeNames;
         const options = Object.keys(fileObjectTypeNames).map((key) => {
-            return html`<option value="${key}">${fileObjectTypeNames[key]}</option>`;
+            return html`<option value="${key}" ?selected=${key === this.fileHitData.objectType}>${fileObjectTypeNames[key]}</option>`;
         });
 
+        if (!this.fileHitData.objectType) {
+            options.unshift(html`<option value="" selected>- Select object type- </option>`);
+        }
+
         return html`
-            <select id="object-type" class="select" name="object-type" required>
+            <select id="object-type" class="select" name="object-type" required @change="${this.onObjectTypeSelected}">
                 ${options}
             </select>
         `;
