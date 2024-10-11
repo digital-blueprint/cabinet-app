@@ -136,13 +136,41 @@ export const dateElement = (name, label, value = "", isRequired = false) => {
     `;
 };
 
-const updateDateTimeElementDataValue = (input) => {
-    const date = new Date(input.value);
-    if (isNaN(date.getTime())) return; // Invalid date
+const fixDateTimeValue = (val) => {
+    if (!val) return '';
 
+    const date = new Date(val);
+    if (isNaN(date.getTime())) return ''; // Invalid date
+
+    // Return ISO 8601 string including a timezone, because we want also store the timezone in Blob metadata
+    return date.toISOString();
+}
+
+const updateDateTimeElementDataValue = (input) => {
     // Set the data-value attribute to the ISO 8601 string including a timezone, because we want also store the timezone in Blob metadata
-    input.setAttribute('data-value', date.toISOString());
+    input.setAttribute('data-value', fixDateTimeValue(input.value));
 };
+
+function isoToDatetimeLocal(isoString) {
+    try {
+        const date = new Date(isoString);
+
+        // Check if the date is valid
+        if (isNaN(date.getTime())) {
+            throw new Error('Invalid date');
+        }
+
+        // Adjust for local timezone
+        const offset = date.getTimezoneOffset();
+        const localDate = new Date(date.getTime() - (offset * 60 * 1000));
+
+        // Format to YYYY-MM-DDTHH:mm
+        return localDate.toISOString().slice(0, 16);
+    } catch (error) {
+        console.error('Error converting date:', error);
+        return '';
+    }
+}
 
 /**
  *
@@ -161,7 +189,7 @@ export const dateTimeElement = (name, label, value = "", isRequired = false) => 
                 id="form-input-${id}"
                 @change=${e => updateDateTimeElementDataValue(e.target)}
                 name="${name}"
-                value="${value}"
+                value="${isoToDatetimeLocal(value)}"
                 ?required=${isRequired} />
             <label for="form-input-${name}">${label}</label>
         </fieldset>
