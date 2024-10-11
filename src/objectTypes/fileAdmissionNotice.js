@@ -28,6 +28,7 @@ class CabinetFormElement extends BaseFormElement {
         let currentYear = currentDate.getFullYear();
         currentYear = currentYear % 100;
         let nextYear = currentYear + 1;
+        let previousYear = currentYear - 1;
         let currentMonth = currentDate.getMonth();
         let currentSeason;
         if(currentMonth >= 2 && currentMonth <= 8) {
@@ -41,20 +42,26 @@ class CabinetFormElement extends BaseFormElement {
 
         let nextSemester;
 
+        const semesters = {};
+
         if(currentSeason === 'S') {
             nextSemester = currentYear.toString() + 'W';
+            semesters[nextSemester] = nextSemester;
+            semesters[currentSemester] = currentSemester;
         }
         else {
             nextSemester = nextYear.toString() + 'S';
+            semesters[nextSemester] = nextSemester;
+            semesters[currentSemester] = currentSemester;
+            let previousSemester = currentYear.toString() + 'S';
+            semesters[previousSemester] = previousSemester;
         }
 
-        const semesters = {};
-
-        semesters[nextSemester] = nextSemester;
-        semesters[currentSemester] = currentSemester;
-
-        for(let year = currentYear; year >= 20; year--) {
-            console.log('year', year);
+        for(let year = previousYear; year >= 20; year--) {
+            let winterSemester = year + 'W';
+            semesters[winterSemester] = winterSemester;
+            let summerSemester = year + 'S';
+            semesters[summerSemester] = summerSemester;
         };
         console.log('currentYear ', currentYear);
         console.log('semesters ', semesters);
