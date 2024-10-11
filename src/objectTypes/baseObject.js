@@ -60,7 +60,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             ${formElements.stringElement('comment', 'Comment', baseData.comment || '', false, 5)}
             ${this.getButtonRowHtml()}
         `;
-    }
+    };
 
     validateForm() {
         // Select all input elements with the 'required' attribute
