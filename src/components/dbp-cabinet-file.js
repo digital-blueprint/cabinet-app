@@ -445,8 +445,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Make sure the document-add dialog is closed
         documentAddModal.close();
 
+        /**
+         * @type {FileSource}
+         */
+        const fileSource = this.fileSourceRef.value;
         // Open the file source dialog to select a file
-        this.fileSourceRef.value.setAttribute('dialog-open', '');
+        fileSource.setAttribute('dialog-open', '');
     }
 
     static get styles() {
