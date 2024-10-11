@@ -56,7 +56,7 @@ export const getNationalityItems = () => {
         LUX: "Luxembourgish",
         MLT: "Maltese",
         MDA: "Moldovan",
-        MCO: "Mon�gasque",
+        MCO: "Monégasque",
         MNE: "Montenegrin",
         NLD: "Dutch",
         MKD: "North Macedonian",
