@@ -397,11 +397,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         let searchParameters = {
             query_by: "person.familyName,person.givenName,file.base.fileName,objectType,person.stPersonNr,person.studId,person.identNrObfuscated,person.birthDate",
             // @TODO we should set typo tolerance by field. ex.: birthdate or identNrObfuscated dont need typo tolerance
-            sort_by: "@type:desc,_text_match:desc,person.familyName:asc"
+            sort_by: "@type:desc,_text_match:desc,person.familyName:asc",
+            num_typos: "2,2,0,0,0,0,0,0"
         };
 
         if (!this.fuzzySearch) {
-            searchParameters.num_typos = 0;
+            searchParameters.num_typos = "0";
             searchParameters.typo_tokens_threshold = 0;
         }
 
