@@ -522,6 +522,12 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS(false)}
 
+            /* @TODO: remove this once we have a better solution for hiding facets (from configuration?) */
+            .filter--person-person {
+                visibility: hidden;
+                height: 0;
+            }
+
             .display-none {
                 display: none !important;
             }
