@@ -144,7 +144,7 @@ const fixDateTimeValue = (val) => {
 
     // Return ISO 8601 string including a timezone, because we want also store the timezone in Blob metadata
     return date.toISOString();
-}
+};
 
 const updateDateTimeElementDataValue = (input) => {
     // Set the data-value attribute to the ISO 8601 string including a timezone, because we want also store the timezone in Blob metadata
