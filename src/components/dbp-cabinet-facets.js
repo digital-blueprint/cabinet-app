@@ -87,7 +87,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     filterOnSelectedPerson(event) {
         if (event.detail.person) {
             // @TODO: don't hardcode facet name?
-            const facetName = 'base.person';
+            const facetName = 'person.person';
             const value = event.detail.person;
 
             // Get the InstantSearch helper
