@@ -22,7 +22,7 @@ export default class extends BaseObject {
 }
 
 class CabinetFormElement extends BaseFormElement {
-    getAdditionalTypes = () => {
+    static getAdditionalTypes = () => {
         return {
             'Communication': 'Communication',
         };
@@ -30,6 +30,11 @@ class CabinetFormElement extends BaseFormElement {
 
     render() {
         console.log('-- Render CabinetFormElement --');
+        console.log('render this.data', this.data);
+
+        const fileData = this.data?.file || {};
+        const data = fileData["file-cabinet-communication"] || {};
+        const agent = data.agent || {};
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/communication.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/communication_example.json
@@ -37,15 +42,11 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>Communication Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.stringElement('agent[givenName]', 'Given name', '')}
-                ${formElements.stringElement('agent[familyName]', 'Family name', '')}
-                ${formElements.stringElement('abstract', 'Abstract', '', false, 10)}
-                ${formElements.stringElement('studyField', 'Study field', '', true)}
-                ${formElements.stringElement('semester', 'Semester', '', true)}
-                ${formElements.enumElement('additionalType', 'Additional types', '', this.getAdditionalTypes(), false)}
-                ${formElements.dateTimeElement('dateCreated', 'Date created', '', true)}
-                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
-                ${this.getButtonRowHtml()}
+                ${formElements.stringElement('agent[givenName]', 'Given name', agent.givenName || '')}
+                ${formElements.stringElement('agent[familyName]', 'Family name', agent.familyName || '')}
+                ${formElements.stringElement('abstract', 'Abstract', data.abstract || '', false, 10)}
+                ${formElements.dateTimeElement('dateCreated', 'Date created', data.dateCreated || '', true)}
+                ${this.getCommonFormElements(CabinetFormElement.getAdditionalTypes())}
             </form>
         `;
     }
