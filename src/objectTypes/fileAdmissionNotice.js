@@ -23,7 +23,7 @@ export default class extends BaseObject {
 }
 
 class CabinetFormElement extends BaseFormElement {
-    getAdditionalTypes = () => {
+    static getAdditionalTypes = () => {
         return {
             'AdmissionNotice': 'Admission Notice',
         };
@@ -40,22 +40,19 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
         console.log('this.data', this.data);
-        // const data = this.data;
 
-        // Schema:  https://gitlab.tugraz.at/dbp/madmissiondleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/admissionNotice.schema.json
-        // Example: https://gitlab.tugraz.at/dbp/madmissiondleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/admissionNotice_example.json
+        const fileData = this.data?.file || {};
+        const data = fileData["file-cabinet-admissionNotice"] || {};
+
+        // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/admissionNotice.schema.json
+        // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/admissionNotice_example.json
         return html`
             <form>
                 <h2>admissionNotice Form</h2>
-                ${formElements.stringElement('studyField', 'Study field', '', true)}
-                ${formElements.stringElement('semester', 'Semester', '', true)}
-                ${formElements.stringElement('subjectOf', 'Subject of', '')}
-                ${formElements.enumElement('additionalType', 'Additional type', '', this.getAdditionalTypes(), false)}
-                ${formElements.dateElement('dateCreated', 'Date created', '', true)}
-                ${formElements.stringElement('previousStudy', 'Previous study', '')}
-                ${formElements.enumElement('decision', 'Decision', '', this.getDecisions(), false)}
-                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
-                ${this.getButtonRowHtml()}
+                ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
+                ${formElements.stringElement('previousStudy', 'Previous study', data.previousStudy || '')}
+                ${formElements.enumElement('decision', 'Decision', data.decision || '', this.getDecisions(), false)}
+                ${this.getCommonFormElements(CabinetFormElement.getAdditionalTypes())}
             </form>
         `;
     }
