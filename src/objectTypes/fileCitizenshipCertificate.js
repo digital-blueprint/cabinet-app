@@ -133,10 +133,13 @@ class CabinetHitElement extends BaseHitElement {
 
 class CabinetViewElement extends BaseViewElement {
     render() {
+        const fileData = this.data?.file || {};
+        const baseData = fileData.base || {};
+
         return html`
             <h2>Citizenship Certificate</h2>
             lang: ${this.lang}<br />
-            filename: ${this.data.file.base.fileName}<br />
+            filename: ${baseData.fileName}<br />
         `;
     }
 }
