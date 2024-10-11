@@ -152,24 +152,19 @@ const updateDateTimeElementDataValue = (input) => {
 };
 
 function isoToDatetimeLocal(isoString) {
-    try {
-        const date = new Date(isoString);
+    const date = new Date(isoString);
 
-        // Check if the date is valid
-        if (isNaN(date.getTime())) {
-            throw new Error('Invalid date');
-        }
-
-        // Adjust for local timezone
-        const offset = date.getTimezoneOffset();
-        const localDate = new Date(date.getTime() - (offset * 60 * 1000));
-
-        // Format to YYYY-MM-DDTHH:mm
-        return localDate.toISOString().slice(0, 16);
-    } catch (error) {
-        console.error('Error converting date:', error);
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
         return '';
     }
+
+    // Adjust for local timezone
+    const offset = date.getTimezoneOffset();
+    const localDate = new Date(date.getTime() - (offset * 60 * 1000));
+
+    // Format to YYYY-MM-DDTHH:mm
+    return localDate.toISOString().slice(0, 16);
 }
 
 /**
