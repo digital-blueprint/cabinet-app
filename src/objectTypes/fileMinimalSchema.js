@@ -22,24 +22,22 @@ export default class extends BaseObject {
     }
 }
 
-export const getAdditionalTypes = () => {
-    return {
-        'BirthCertificate': 'Birth Certificate',
-        'MaritalStatusCertificate': 'Marital Status Certificate',
-        'SupervisionAcceptance': 'Supervision Acceptance',
-    };
-};
 
 class CabinetFormElement extends BaseFormElement {
+    static getAdditionalTypes() {
+        return {
+            'BirthCertificate': 'Birth Certificate',
+            'MaritalStatusCertificate': 'Marital Status Certificate',
+            'SupervisionAcceptance': 'Supervision Acceptance',
+        };
+    }
+
     render() {
         console.log('-- Render CabinetFormElement --');
         console.log('render this.data', this.data);
 
-        // const fileData = this.data.file ? this.data.file : null;
         const fileData = this.data?.file || {};
-        const baseData = fileData.base || {};
-        const minimalSchema = fileData["file-cabinet-minimalSchema"] || {};
-        const dateCreated = minimalSchema.dateCreated || '';
+        const data = fileData["file-cabinet-minimalSchema"] || {};
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/minimalSchema.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/minimalSchema_example.json
@@ -47,13 +45,8 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>fileMinimalSchema Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.stringElement('studyField', 'Study field', baseData.studyField || '', true)}
-                ${formElements.stringElement('semester', 'Semester', baseData.semester || '', true)}
-                ${formElements.enumElement('additionalType', 'Additional type', baseData.additionalType?.key || '', getAdditionalTypes(), false)}
-                ${formElements.dateElement('dateCreated', 'Date created', dateCreated, true)}
-                ${formElements.stringElement('subjectOf', 'Subject of', baseData.subjectOf || '')}
-                ${formElements.stringElement('comment', 'Comment', baseData.comment || '', false, 5)}
-                ${this.getButtonRowHtml()}
+                ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
+                ${this.getCommonFormElements(CabinetFormElement.getAdditionalTypes())}
             </form>
         `;
     }
@@ -151,7 +144,7 @@ class CabinetViewElement extends BaseViewElement {
             filename: ${this.data.file.base.fileName}<br />
             ${viewElements.stringElement('Study field', this.data.file.base.studyField)}
             ${viewElements.stringElement('Semester', this.data.file.base.semester)}
-            ${viewElements.enumElement('Additional type', this.data.file.base.additionalType.key, getAdditionalTypes())}
+            ${viewElements.enumElement('Additional type', this.data.file.base.additionalType.key, CabinetFormElement.getAdditionalTypes())}
             ${viewElements.dateElement('Date created', (new Date(this.data.file.base.createdTimestamp * 1000)).toISOString())}
             ${viewElements.dateElement('Date modified', (new Date(this.data.file.base.modifiedTimestamp * 1000)).toISOString())}
             ${viewElements.stringElement('Mime type', this.data.file.base.mimeType)}

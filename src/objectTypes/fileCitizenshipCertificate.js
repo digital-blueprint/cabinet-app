@@ -31,19 +31,18 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
 
+        const fileData = this.data?.file || {};
+        const data = fileData["file-cabinet-citizenshipCertificate"] || {};
+
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/citizenshipCertificate.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/citizenshipCertificate_example.json
         return html`
             <form>
                 <h2>fileCitizenshipCertificate Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.stringElement('studyField', 'Study field', '', true)}
-                ${formElements.stringElement('semester', 'Semester', '', true)}
-                ${formElements.enumElement('additionalType', 'Additional types', '', this.getAdditionalTypes(), false)}
-                ${formElements.enumElement('nationality', 'Nationality', '', formElements.getNationalityItems(), false)}
-                ${formElements.dateElement('dateCreated', 'Date created', '', true)}
-                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
-                ${this.getButtonRowHtml()}
+                ${formElements.enumElement('nationality', 'Nationality', data.nationality || '', formElements.getNationalityItems(), false)}
+                ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
+                ${this.getCommonFormElements(this.getAdditionalTypes())}
             </form>
         `;
     }

@@ -48,6 +48,20 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         };
     }
 
+    getCommonFormElements = (additionalTypes = {}) => {
+        const fileData = this.data?.file || {};
+        const baseData = fileData.base || {};
+
+        return html`
+            ${formElements.stringElement('subjectOf', 'Subject of', baseData.subjectOf || '')}
+            ${formElements.stringElement('studyField', 'Study field', baseData.studyField || '', true)}
+            ${formElements.stringElement('semester', 'Semester', baseData.semester || '', true)}
+            ${formElements.enumElement('additionalType', 'Additional type', baseData.additionalType?.key || '', additionalTypes, false)}
+            ${formElements.stringElement('comment', 'Comment', baseData.comment || '', false, 5)}
+            ${this.getButtonRowHtml()}
+        `;
+    }
+
     validateForm() {
         // Select all input elements with the 'required' attribute
         const formElement = this.shadowRoot.querySelector('form');
