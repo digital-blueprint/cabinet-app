@@ -141,6 +141,7 @@ class CabinetViewElement extends BaseViewElement {
             <h2>Personal License</h2>
             lang: ${this.lang}<br />
             filename: ${baseData.fileName}<br />
+            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }
 }

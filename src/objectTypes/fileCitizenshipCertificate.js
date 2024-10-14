@@ -140,6 +140,7 @@ class CabinetViewElement extends BaseViewElement {
             <h2>Citizenship Certificate</h2>
             lang: ${this.lang}<br />
             filename: ${baseData.fileName}<br />
+            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }
 }

@@ -149,6 +149,7 @@ class CabinetViewElement extends BaseViewElement {
             <h2>admissionNotice</h2>
             lang: ${this.lang}<br />
             filename: ${baseData.fileName}<br />
+            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }
 }

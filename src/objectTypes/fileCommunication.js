@@ -144,7 +144,8 @@ class CabinetViewElement extends BaseViewElement {
             <h2>Communication</h2>
             lang: ${this.lang}<br />
             filename: ${baseData.fileName}<br />
-            dateCreated: ${this.data.file['file-cabinet-communication'].dateCreated}<br />
+            dateCreated: ${fileData['file-cabinet-communication'].dateCreated}<br />
+            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }
 }

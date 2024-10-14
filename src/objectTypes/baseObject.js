@@ -4,6 +4,7 @@ import {css, html} from 'lit';
 import {createInstance} from '../i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './formElements';
+import * as viewElements from './viewElements.js';
 
 export class BaseObject {
     name = 'baseObject';
@@ -293,6 +294,22 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getButtonCSS()}
         `;
     }
+
+    getCommonViewElements = (additionalTypes = {}) => {
+        const fileData = this.data?.file || {};
+        const baseData = fileData.base || {};
+
+        return html`
+            ${viewElements.stringElement('Mime type', baseData.mimeType)}
+            ${viewElements.dateElement('Date created', (new Date(baseData.createdTimestamp * 1000)).toISOString())}
+            ${viewElements.dateElement('Date modified', (new Date(baseData.modifiedTimestamp * 1000)).toISOString())}
+            ${viewElements.stringElement('Subject of', baseData.subjectOf || '')}
+            ${viewElements.stringElement('Study field', baseData.studyField || '')}
+            ${viewElements.stringElement('Semester', baseData.semester || '')}
+            ${viewElements.enumElement('Additional type', baseData.additionalType?.key || '', additionalTypes)}
+            ${viewElements.stringElement('Comment', baseData.comment || '')}
+        `;
+    };
 
     render() {
         return html`
