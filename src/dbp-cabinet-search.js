@@ -215,6 +215,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     initInstantsearch() {
+        if (!this.auth.token || this.facetConfigs.length === 0) {
+            return;
+        }
+
         this.search = this.createInstantsearch();
         const search = this.search;
 
@@ -716,6 +720,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             const instantSearchModule = await import(data["instantSearch"]);
             this.instantSearch = new instantSearchModule.default();
             this.facetConfigs = this.instantSearch.getFacetsConfig();
+
+            this.initInstantsearch();
 
             /**
              * @type {CabinetFile}
