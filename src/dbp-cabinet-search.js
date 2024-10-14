@@ -45,7 +45,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.cabinetFacetsRef = createRef();
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
-        this.instantSearch = {};
+        this.instantSearchModule = {};
         this.facetConfigs = [];
         this.typesenseInstantsearchAdapter = null;
         this.typesenseService = null;
@@ -718,8 +718,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             console.log('fileDocumentTypeNames', this.fileDocumentTypeNames);
 
             const instantSearchModule = await import(data["instantSearch"]);
-            this.instantSearch = new instantSearchModule.default();
-            this.facetConfigs = this.instantSearch.getFacetsConfig();
+            this.instantSearchModule = new instantSearchModule.default();
+            this.facetConfigs = this.instantSearchModule.getFacetsConfig();
 
             this.initInstantsearch();
 
