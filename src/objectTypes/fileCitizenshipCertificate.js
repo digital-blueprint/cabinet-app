@@ -1,6 +1,7 @@
 import {css, html} from 'lit';
 import {BaseFormElement, BaseHitElement, BaseObject, BaseViewElement} from './baseObject';
 import * as formElements from './formElements.js';
+import * as viewElements from './viewElements.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-citizenshipCertificate';
@@ -22,7 +23,7 @@ export default class extends BaseObject {
 }
 
 class CabinetFormElement extends BaseFormElement {
-    getAdditionalTypes = () => {
+    static getAdditionalTypes = () => {
         return {
             'CitizenshipCertificate': 'Citizenship Certificate',
         };
@@ -42,7 +43,7 @@ class CabinetFormElement extends BaseFormElement {
                 lang: ${this.lang}<br />
                 ${formElements.enumElement('nationality', 'Nationality', data.nationality || '', formElements.getNationalityItems(), false)}
                 ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
-                ${this.getCommonFormElements(this.getAdditionalTypes())}
+                ${this.getCommonFormElements(CabinetFormElement.getAdditionalTypes())}
             </form>
         `;
     }
@@ -135,11 +136,14 @@ class CabinetViewElement extends BaseViewElement {
     render() {
         const fileData = this.data?.file || {};
         const baseData = fileData.base || {};
+        const data = fileData["file-cabinet-citizenshipCertificate"] || {};
 
         return html`
             <h2>Citizenship Certificate</h2>
             lang: ${this.lang}<br />
             filename: ${baseData.fileName}<br />
+            ${viewElements.enumElement('Nationality', data.nationality || '', formElements.getNationalityItems())}
+            ${viewElements.dateElement('Date created', data.dateCreated || '')}
             ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }

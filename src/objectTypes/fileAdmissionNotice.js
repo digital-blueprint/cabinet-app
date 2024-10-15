@@ -2,6 +2,7 @@ import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 import * as formElements from './formElements.js';
 import {renderFieldWithHighlight} from '../utils';
+import * as viewElements from './viewElements.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-admissionNotice';
@@ -29,7 +30,7 @@ class CabinetFormElement extends BaseFormElement {
         };
     };
 
-    getDecisions = () => {
+    static getDecisions = () => {
         return {
             'rejected': 'Rejected',
             'refused': 'Refused',
@@ -51,7 +52,7 @@ class CabinetFormElement extends BaseFormElement {
                 <h2>admissionNotice Form</h2>
                 ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
                 ${formElements.stringElement('previousStudy', 'Previous study', data.previousStudy || '')}
-                ${formElements.enumElement('decision', 'Decision', data.decision || '', this.getDecisions(), false)}
+                ${formElements.enumElement('decision', 'Decision', data.decision || '', CabinetFormElement.getDecisions(), false)}
                 ${this.getCommonFormElements(CabinetFormElement.getAdditionalTypes())}
             </form>
         `;
@@ -144,11 +145,15 @@ class CabinetViewElement extends BaseViewElement {
     render() {
         const fileData = this.data?.file || {};
         const baseData = fileData.base || {};
+        const data = fileData["file-cabinet-admissionNotice"] || {};
 
         return html`
             <h2>admissionNotice</h2>
             lang: ${this.lang}<br />
             filename: ${baseData.fileName}<br />
+            ${viewElements.dateElement('Date created', data.dateCreated || '')}
+            ${viewElements.stringElement('Previous study', data.previousStudy || '')}
+            ${viewElements.enumElement('Decision', data.decision || '', CabinetFormElement.getDecisions())}
             ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }

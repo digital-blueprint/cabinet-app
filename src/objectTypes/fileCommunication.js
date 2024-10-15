@@ -1,6 +1,7 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 import * as formElements from './formElements.js';
+import * as viewElements from './viewElements.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-communication';
@@ -139,12 +140,17 @@ class CabinetViewElement extends BaseViewElement {
     render() {
         const fileData = this.data?.file || {};
         const baseData = fileData.base || {};
+        const data = fileData["file-cabinet-communication"] || {};
+        const agent = data.agent || {};
 
         return html`
             <h2>Communication</h2>
             lang: ${this.lang}<br />
             filename: ${baseData.fileName}<br />
-            dateCreated: ${fileData['file-cabinet-communication'].dateCreated}<br />
+            ${viewElements.stringElement('Given name', agent.givenName || '')}
+            ${viewElements.stringElement('Family name', agent.familyName || '')}
+            ${viewElements.stringElement('Abstract', data.abstract || '')}
+            ${viewElements.dateTimeElement('Date created', data.dateCreated || '')}
             ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }

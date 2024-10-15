@@ -1,6 +1,7 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 import * as formElements from './formElements.js';
+import * as viewElements from './viewElements.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-identityDocument';
@@ -136,11 +137,15 @@ class CabinetViewElement extends BaseViewElement {
     render() {
         const fileData = this.data?.file || {};
         const baseData = fileData.base || {};
+        const data = fileData["file-cabinet-identityDocument"] || {};
 
         return html`
             <h2>Personal License</h2>
             lang: ${this.lang}<br />
             filename: ${baseData.fileName}<br />
+            ${viewElements.stringElement('Identifier', data.identifier || '')}
+            ${viewElements.enumElement('Nationality', data.nationality || '', formElements.getNationalityItems())}
+            ${viewElements.dateElement('Date created', data.dateCreated || '')}
             ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }
