@@ -35,6 +35,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.fileSourceRef = createRef();
         this.typesenseService = null;
         this.fileHitData = {};
+        this.fileHitDataCache = {};
         this.isFileDirty = false;
     }
 
@@ -282,7 +283,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         return data;
     }
 
-    getDocumentEditFormHtml() {
+    getDocumentEditFormHtml(useFileHitDataCache = false) {
         const objectType = this.objectType;
 
         if (objectType === '') {
@@ -301,7 +302,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             customElements.define(tagName, this.objectTypeFormComponents[objectType]);
         }
 
-        console.log('getDocumentEditFormHtml this.fileHitData', this.fileHitData);
+        let fileHitData = this.fileHitData;
+
+        // In edit mode we want to use the fileHitDataCache to keep the data when switching between object types
+        if (useFileHitDataCache && this.fileHitDataCache[objectType]) {
+            fileHitData = this.fileHitDataCache[objectType];
+        }
+
+        console.log('getDocumentEditFormHtml fileHitData', fileHitData);
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "fileHitData" property from a variable too!
@@ -309,7 +317,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             <${unsafeStatic(tagName)}
              id="edit-form"
              subscribe="auth,lang,entry-point-url"
-             .data=${this.fileHitData}
+             .data=${fileHitData}
              person-id="${this.personId}"
              object-type=></${unsafeStatic(tagName)}>
         `;
@@ -377,6 +385,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Fetch the hit data from Typesense again in case it changed
         hit = await this.typesenseService.fetchItem(hit.id);
 
+        this.fileHitDataCache = {};
         this.fileHitData = hit;
         console.log('openDialogWithHit hit', hit);
         // Set personId from hit
@@ -599,12 +608,16 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <p>
                         ${this.getObjectTypeSelector()}
                     </p>
-                    ${this.getDocumentEditFormHtml()}
+                    ${this.getDocumentEditFormHtml(true)}
                 `;
         }
     }
 
     onObjectTypeSelected() {
+        // Save the current fileHitData to the cache to keep the data when switching between object types in edit mode
+        // In the future there could also be an event on every form element change to save the data to the cache when it changes
+        this.fileHitDataCache[this.objectType] = this.fileHitData;
+
         const objectType = this._('#object-type').value;
         console.log('objectType', objectType);
         this.objectType = objectType;
