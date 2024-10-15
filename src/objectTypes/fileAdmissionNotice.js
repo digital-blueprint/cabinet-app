@@ -24,7 +24,7 @@ export default class extends BaseObject {
 
 class CabinetFormElement extends BaseFormElement {
     getSemester = () => {
-        const currentDate = new Date();
+        let currentDate = new Date();
         let currentYear = currentDate.getFullYear();
         currentYear = currentYear % 100;
         let nextYear = currentYear + 1;
@@ -63,8 +63,6 @@ class CabinetFormElement extends BaseFormElement {
             let summerSemester = year + 'S';
             semesters[summerSemester] = summerSemester;
         };
-        console.log('currentYear ', currentYear);
-        console.log('semesters ', semesters);
         return semesters;
     };
 
@@ -89,11 +87,24 @@ class CabinetFormElement extends BaseFormElement {
 
         // Schema:  https://gitlab.tugraz.at/dbp/madmissiondleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/admissionNotice.schema.json
         // Example: https://gitlab.tugraz.at/dbp/madmissiondleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/admissionNotice_example.json
+        let currentDate = new Date();
+        let currentYear = currentDate.getFullYear();
+        currentYear = currentYear % 100;
+        let currentMonth = currentDate.getMonth();
+        let currentSeason;
+        if(currentMonth >= 2 && currentMonth <= 8) {
+            currentSeason = 'S';
+        }
+        else {
+            currentSeason = 'W';
+        }
+        let currentSemester = currentYear.toString() + currentSeason;
+        console.log('currentYear ', currentYear);
         return html`
             <form>
                 <h2>admissionNotice Form</h2>
                 ${formElements.stringElement('studyField', 'Study field', '', true)}
-                ${formElements.enumElement('semester', 'Semester', '24W', this.getSemester(), false)}
+                ${formElements.enumElement('semester', 'Semester', currentSemester, this.getSemester(), false)}
                 ${formElements.stringElement('subjectOf', 'Subject of', '')}
                 ${formElements.enumElement('additionalType', 'Additional type', '', this.getAdditionalTypes(), false)}
                 ${formElements.dateElement('dateCreated', 'Date created', '', true)}
