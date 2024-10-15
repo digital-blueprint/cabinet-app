@@ -53,6 +53,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 if (this.mode === CabinetFile.Modes.ADD) {
                     this.objectType = '';
                 } else {
+                    // Reset this.objectType if it was changed by the objectType selector
+                    this.objectType = this.fileHitData.objectType;
+
+                    // Switch back to view mode
                     this.mode = CabinetFile.Modes.VIEW;
                 }
             });
