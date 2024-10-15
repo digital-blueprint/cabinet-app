@@ -205,7 +205,6 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>Person Form</h2>
                 lang: ${this.lang}<br />
-                user-id: ${this.userId}<br />
                 <fieldset>
                     <legend>Firstname</legend>
                     <input type="text" id="firstname" name="firstname" value="${data.person.givenName}" required>

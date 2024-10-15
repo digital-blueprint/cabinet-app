@@ -36,7 +36,6 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
-        this.userId = '';
         this.data = {};
         this.personId = '';
         this.entryPointUrl = '';
@@ -161,7 +160,6 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
-            userId: {type: String, attribute: 'user-id'},
             personId: {type: String, attribute: 'person-id'},
             data: {type: Object},
             auth: { type: Object },
@@ -219,7 +217,6 @@ export class BaseHitElement extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
-        this.userId = '';
         this.data = {};
     }
 
@@ -232,7 +229,6 @@ export class BaseHitElement extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
-            userId: {type: String, attribute: 'user-id'},
             data: {type: Object},
         };
     }
@@ -264,7 +260,6 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
-        this.userId = '';
         this.data = {};
     }
 
@@ -277,7 +272,6 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
-            userId: {type: String, attribute: 'user-id'},
             data: {type: Object},
         };
     }

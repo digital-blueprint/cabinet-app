@@ -138,7 +138,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
                 <div slot="content">
                     Document ID: ${id}<br />
                     ObjectType: ${objectType}<br />
-                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
+                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" .data=${hit}></${unsafeStatic(tagName)}>
                 </div>
                 <div slot="footer" class="modal-footer">
                     View Footer

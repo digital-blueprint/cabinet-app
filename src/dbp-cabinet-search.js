@@ -585,7 +585,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     Document ID: ${id}<br />
                     ObjectType: ${objectType}<br />
                     Size: ${hit.filesize}<br />
-                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-edit-form-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
+                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-edit-form-${id}" subscribe="lang" .data=${hit}></${unsafeStatic(tagName)}>
                 </div>
                 <div slot="footer" class="modal-footer">
                     Footer
