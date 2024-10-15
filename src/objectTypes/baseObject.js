@@ -295,8 +295,8 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
 
         return html`
             ${viewElements.stringElement('Mime type', baseData.mimeType)}
-            ${viewElements.dateElement('Date created', (new Date(baseData.createdTimestamp * 1000)).toISOString())}
-            ${viewElements.dateElement('Date modified', (new Date(baseData.modifiedTimestamp * 1000)).toISOString())}
+            ${viewElements.dateElement('Date created (metadata)', (new Date(baseData.createdTimestamp * 1000)).toISOString())}
+            ${viewElements.dateElement('Date modified (metadata)', (new Date(baseData.modifiedTimestamp * 1000)).toISOString())}
             ${viewElements.stringElement('Subject of', baseData.subjectOf || '')}
             ${viewElements.stringElement('Study field', baseData.studyField || '')}
             ${viewElements.stringElement('Semester', baseData.semester || '')}
