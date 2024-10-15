@@ -279,13 +279,18 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
     static get styles() {
         // language=css
         return css`
+            ${commonStyles.getGeneralCSS(false)}
+            ${commonStyles.getButtonCSS()}
+
             h2 {
                 margin: 0;
                 font-size: 1.2em;
             }
 
-            ${commonStyles.getGeneralCSS(false)}
-            ${commonStyles.getButtonCSS()}
+            h3 {
+                margin: 1em 0;
+                font-size: 1.1em;
+            }
         `;
     }
 
@@ -294,6 +299,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         const baseData = fileData.base || {};
 
         return html`
+            <h3>Base data</h3>
             ${viewElements.stringElement('Mime type', baseData.mimeType)}
             ${viewElements.dateElement('Date created (metadata)', (new Date(baseData.createdTimestamp * 1000)).toISOString())}
             ${viewElements.dateElement('Date modified (metadata)', (new Date(baseData.modifiedTimestamp * 1000)).toISOString())}
