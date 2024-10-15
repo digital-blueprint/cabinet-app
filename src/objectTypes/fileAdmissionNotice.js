@@ -24,13 +24,57 @@ export default class extends BaseObject {
 }
 
 class CabinetFormElement extends BaseFormElement {
-    static getAdditionalTypes = () => {
+
+    getSemester = () => {
+        let currentDate = new Date();
+        let currentYear = currentDate.getFullYear();
+        currentYear = currentYear % 100;
+        let nextYear = currentYear + 1;
+        let previousYear = currentYear - 1;
+        let currentMonth = currentDate.getMonth();
+        let currentSeason;
+        if(currentMonth >= 2 && currentMonth <= 8) {
+            currentSeason = 'S';
+        }
+        else {
+            currentSeason = 'W';
+        }
+
+        let currentSemester = currentYear.toString() + currentSeason;
+
+        let nextSemester;
+
+        const semesters = {};
+
+        if(currentSeason === 'S') {
+            nextSemester = currentYear.toString() + 'W';
+            semesters[nextSemester] = nextSemester;
+            semesters[currentSemester] = currentSemester;
+        }
+        else {
+            nextSemester = nextYear.toString() + 'S';
+            semesters[nextSemester] = nextSemester;
+            semesters[currentSemester] = currentSemester;
+            let previousSemester = currentYear.toString() + 'S';
+            semesters[previousSemester] = previousSemester;
+        }
+
+        for(let year = previousYear; year >= 20; year--) {
+            let winterSemester = year + 'W';
+            semesters[winterSemester] = winterSemester;
+            let summerSemester = year + 'S';
+            semesters[summerSemester] = summerSemester;
+        };
+        return semesters;
+    };
+
+    getAdditionalTypes = () => {
         return {
             'AdmissionNotice': 'Admission Notice',
         };
     };
 
-    static getDecisions = () => {
+    getDecisions = () => {
         return {
             'rejected': 'Rejected',
             'refused': 'Refused',
@@ -42,18 +86,33 @@ class CabinetFormElement extends BaseFormElement {
         console.log('-- Render CabinetFormElement --');
         console.log('this.data', this.data);
 
-        const fileData = this.data?.file || {};
-        const data = fileData["file-cabinet-admissionNotice"] || {};
-
-        // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/admissionNotice.schema.json
-        // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/admissionNotice_example.json
+        // Schema:  https://gitlab.tugraz.at/dbp/madmissiondleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/admissionNotice.schema.json
+        // Example: https://gitlab.tugraz.at/dbp/madmissiondleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/admissionNotice_example.json
+        let currentDate = new Date();
+        let currentYear = currentDate.getFullYear();
+        currentYear = currentYear % 100;
+        let currentMonth = currentDate.getMonth();
+        let currentSeason;
+        if(currentMonth >= 2 && currentMonth <= 8) {
+            currentSeason = 'S';
+        }
+        else {
+            currentSeason = 'W';
+        }
+        let currentSemester = currentYear.toString() + currentSeason;
+        console.log('currentYear ', currentYear);
         return html`
             <form>
                 <h2>admissionNotice Form</h2>
-                ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
-                ${formElements.stringElement('previousStudy', 'Previous study', data.previousStudy || '')}
-                ${formElements.enumElement('decision', 'Decision', data.decision || '', CabinetFormElement.getDecisions(), false)}
-                ${this.getCommonFormElements(CabinetFormElement.getAdditionalTypes())}
+                ${formElements.stringElement('studyField', 'Study field', '', true)}
+                ${formElements.enumElement('semester', 'Semester', currentSemester, this.getSemester(), false)}
+                ${formElements.stringElement('subjectOf', 'Subject of', '')}
+                ${formElements.enumElement('additionalType', 'Additional type', '', this.getAdditionalTypes(), false)}
+                ${formElements.dateElement('dateCreated', 'Date created', '', true)}
+                ${formElements.stringElement('previousStudy', 'Previous study', '')}
+                ${formElements.enumElement('decision', 'Decision', '', this.getDecisions(), false)}
+                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
+                ${this.getButtonRowHtml()}
             </form>
         `;
     }
