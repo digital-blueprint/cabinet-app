@@ -4,6 +4,7 @@ import {css, html} from 'lit';
 import {createInstance} from '../i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './formElements';
+import * as viewElements from './viewElements.js';
 
 export class BaseObject {
     name = 'baseObject';
@@ -35,7 +36,6 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
-        this.userId = '';
         this.data = {};
         this.personId = '';
         this.entryPointUrl = '';
@@ -47,6 +47,20 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         return {
         };
     }
+
+    getCommonFormElements = (additionalTypes = {}) => {
+        const fileData = this.data?.file || {};
+        const baseData = fileData.base || {};
+
+        return html`
+            ${formElements.stringElement('subjectOf', 'Subject of', baseData.subjectOf || '')}
+            ${formElements.stringElement('studyField', 'Study field', baseData.studyField || '', true)}
+            ${formElements.stringElement('semester', 'Semester', baseData.semester || '', true)}
+            ${formElements.enumElement('additionalType', 'Additional type', baseData.additionalType?.key || '', additionalTypes, false)}
+            ${formElements.stringElement('comment', 'Comment', baseData.comment || '', false, 5)}
+            ${this.getButtonRowHtml()}
+        `;
+    };
 
     validateForm() {
         // Select all input elements with the 'required' attribute
@@ -146,7 +160,6 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
-            userId: {type: String, attribute: 'user-id'},
             personId: {type: String, attribute: 'person-id'},
             data: {type: Object},
             auth: { type: Object },
@@ -204,7 +217,6 @@ export class BaseHitElement extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
-        this.userId = '';
         this.data = {};
     }
 
@@ -217,7 +229,6 @@ export class BaseHitElement extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
-            userId: {type: String, attribute: 'user-id'},
             data: {type: Object},
         };
     }
@@ -249,7 +260,6 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
-        this.userId = '';
         this.data = {};
     }
 
@@ -262,7 +272,6 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
-            userId: {type: String, attribute: 'user-id'},
             data: {type: Object},
         };
     }
@@ -270,15 +279,37 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
     static get styles() {
         // language=css
         return css`
+            ${commonStyles.getGeneralCSS(false)}
+            ${commonStyles.getButtonCSS()}
+
             h2 {
                 margin: 0;
                 font-size: 1.2em;
             }
 
-            ${commonStyles.getGeneralCSS(false)}
-            ${commonStyles.getButtonCSS()}
+            h3 {
+                margin: 1em 0;
+                font-size: 1.1em;
+            }
         `;
     }
+
+    getCommonViewElements = (additionalTypes = {}) => {
+        const fileData = this.data?.file || {};
+        const baseData = fileData.base || {};
+
+        return html`
+            <h3>Base data</h3>
+            ${viewElements.stringElement('Mime type', baseData.mimeType)}
+            ${viewElements.dateElement('Date created (metadata)', (new Date(baseData.createdTimestamp * 1000)).toISOString())}
+            ${viewElements.dateElement('Date modified (metadata)', (new Date(baseData.modifiedTimestamp * 1000)).toISOString())}
+            ${viewElements.stringElement('Subject of', baseData.subjectOf || '')}
+            ${viewElements.stringElement('Study field', baseData.studyField || '')}
+            ${viewElements.stringElement('Semester', baseData.semester || '')}
+            ${viewElements.enumElement('Additional type', baseData.additionalType?.key || '', additionalTypes)}
+            ${viewElements.stringElement('Comment', baseData.comment || '')}
+        `;
+    };
 
     render() {
         return html`

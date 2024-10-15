@@ -215,6 +215,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     initInstantsearch() {
+        if (!this.auth.token || this.facetConfigs.length === 0) {
+            return;
+        }
+
         this.search = this.createInstantsearch();
         const search = this.search;
 
@@ -310,6 +314,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             .sort-widget .ais-SortBy-select {
                 height: 2em;
                 padding: 1px .5em;
+                padding-right: 2em;
                 /* override toolkit select style */
                 background-size: 16px;
                 background-position: right .5em center;
@@ -384,7 +389,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 display: flex;
                 justify-content: flex-end;
             }
-                
+
         `;
     }
 
@@ -394,12 +399,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     getSearchParameters() {
         // https://typesense.org/docs/0.25.1/api/search.html#ranking-and-sorting-parameters
         let searchParameters = {
-            query_by: "base.familyName,base.givenName,file.base.fileName,objectType",
-            sort_by: "@type:desc,_text_match:desc,base.familyName:asc"
+            query_by: "person.familyName,person.givenName,file.base.fileName,objectType,person.stPersonNr,person.studId,person.identNrObfuscated,person.birthDate",
+            // @TODO we should set typo tolerance by field. ex.: birthdate or identNrObfuscated dont need typo tolerance
+            sort_by: "@type:desc,_text_match:desc,person.familyName:asc",
+            num_typos: "2,2,0,0,0,0,0,0"
         };
 
         if (!this.fuzzySearch) {
-            searchParameters.num_typos = 0;
+            searchParameters.num_typos = "0";
             searchParameters.typo_tokens_threshold = 0;
         }
 
@@ -490,7 +497,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentAdd', {detail: {hit: hit}, bubbles: true, composed: true}));}}>Add Document</button>
                         <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>View</button>
                         <button class="button select-person-button"
-                            onclick="${(event) => { this.dispatchEvent(new CustomEvent('DbpCabinetFilterPerson', {detail: {person: hit.base.person}, bubbles: true, composed: true}));
+                            onclick="${(event) => { this.dispatchEvent(new CustomEvent('DbpCabinetFilterPerson', {detail: {person: hit.person.person}, bubbles: true, composed: true}));
                             }}">
                             ${ /*@TODO: find something to test here */ hit ? 'Select' : 'Unselect' }
                         </button>
@@ -515,8 +522,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         return sortBy({
             container: this._('#sort-by'),
             items: [
-                { label: 'Best Match', value: `${this.typesenseCollection}` }, /* default sorting "@type:desc,_text_match:desc,base.familyName:asc" */
-                { label: 'Family name', value: `${this.typesenseCollection}/sort/@type:desc,base.familyName:asc,_text_match:desc` },
+                { label: 'Best Match', value: `${this.typesenseCollection}` }, /* default sorting "@type:desc,_text_match:desc,person.familyName:asc" */
+                { label: 'Family name', value: `${this.typesenseCollection}/sort/@type:desc,person.familyName:asc,_text_match:desc` },
                 { label: 'Last modified Documents', value: `${this.typesenseCollection}/sort/@type:asc,file.base.modifiedTimestamp:desc,_text_match:desc` }
             ],
         });
@@ -578,7 +585,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     Document ID: ${id}<br />
                     ObjectType: ${objectType}<br />
                     Size: ${hit.filesize}<br />
-                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-edit-form-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
+                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-edit-form-${id}" subscribe="lang" .data=${hit}></${unsafeStatic(tagName)}>
                 </div>
                 <div slot="footer" class="modal-footer">
                     Footer
@@ -713,6 +720,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             const instantSearchModule = await import(data["instantSearch"]);
             this.instantSearch = new instantSearchModule.default();
             this.facetConfigs = this.instantSearch.getFacetsConfig();
+
+            this.initInstantsearch();
 
             /**
              * @type {CabinetFile}

@@ -1,6 +1,7 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 import * as formElements from './formElements.js';
+import * as viewElements from './viewElements.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-identityDocument';
@@ -22,16 +23,20 @@ export default class extends BaseObject {
 }
 
 class CabinetFormElement extends BaseFormElement {
-    getAdditionalTypes = () => {
+    static getAdditionalTypes() {
         return {
             'DriversLicence': 'Drivers Licence',
             'Passport': 'Passport',
             'PersonalLicence': 'Personal Licence',
         };
-    };
+    }
 
     render() {
         console.log('-- Render CabinetFormElement --');
+        console.log('render this.data', this.data);
+
+        const fileData = this.data?.file || {};
+        const data = fileData["file-cabinet-identityDocument"] || {};
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/identityDocument.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/identityDocument_example.json
@@ -39,14 +44,10 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>fileIdentityDocument Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.stringElement('studyField', 'Study field', '', true)}
-                ${formElements.stringElement('semester', 'Semester', '', true)}
-                ${formElements.stringElement('identifier', 'Identifier', '', true)}
-                ${formElements.enumElement('nationality', 'Nationality', '', formElements.getNationalityItems(), true)}
-                ${formElements.enumElement('additionalType', 'Additional type', '', this.getAdditionalTypes(), true)}
-                ${formElements.dateElement('dateCreated', 'Date created', '', true)}
-                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
-                ${this.getButtonRowHtml()}
+                ${formElements.stringElement('identifier', 'Identifier', data.identifier || '', true)}
+                ${formElements.enumElement('nationality', 'Nationality', data.nationality || '', formElements.getNationalityItems(), true)}
+                ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
+                ${this.getCommonFormElements(CabinetFormElement.getAdditionalTypes())}
             </form>
         `;
     }
@@ -134,10 +135,18 @@ class CabinetHitElement extends BaseHitElement {
 
 class CabinetViewElement extends BaseViewElement {
     render() {
+        const fileData = this.data?.file || {};
+        const baseData = fileData.base || {};
+        const data = fileData["file-cabinet-identityDocument"] || {};
+
         return html`
             <h2>Personal License</h2>
             lang: ${this.lang}<br />
-            filename: ${this.data.file.base.fileName}<br />
+            filename: ${baseData.fileName}<br />
+            ${viewElements.stringElement('Identifier', data.identifier || '')}
+            ${viewElements.enumElement('Nationality', data.nationality || '', formElements.getNationalityItems())}
+            ${viewElements.dateElement('Date created', data.dateCreated || '')}
+            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }
 }

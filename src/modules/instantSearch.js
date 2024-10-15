@@ -29,10 +29,10 @@ export default class {
         const showMoreLimitValue = 30;
         return [
             { "filter-group": { "id": "category", "name": "cabinet-search.type-filter-group-title"}},
-            { "groupId": "category", "schemaField": "@type", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-base-person', searchable: false, sortBy: ['alpha:asc']}}, "usePanel": false},
+            { "groupId": "category", "schemaField": "@type", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-person', searchable: false, sortBy: ['alpha:asc']}}, "usePanel": false},
             { "filter-group": { "id": "person", "name": "cabinet-search.person-filter-group-title"}},
-            { "groupId": "person", "schemaField": "base.person", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-base-person',  showMore: true, showMoreLimit: showMoreLimitValue}}},
-            { "groupId": "person", "schemaField": "base.birthDateTimestamp", "schemaFieldType": "datepicker"},
+            { "groupId": "person", "schemaField": "person.person", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-person',  showMore: true, showMoreLimit: showMoreLimitValue}}},
+            { "groupId": "person", "schemaField": "person.birthDateTimestamp", "schemaFieldType": "datepicker"},
             { "groupId": "person", "schemaField": "person.studies.name", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-studies-name', showMore: true, showMoreLimit: showMoreLimitValue}}},
             { "groupId": "person", "schemaField": "person.studies.type", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-studies-type', showMore: true, showMoreLimit: showMoreLimitValue}}},
             { "groupId": "person", "schemaField": "person.personalStatus.text", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-personal-status-text', searchable: false, showMoreLimit: showMoreLimitValue}}},

@@ -1,6 +1,7 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 import * as formElements from './formElements.js';
+import * as viewElements from './viewElements.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-communication';
@@ -22,7 +23,7 @@ export default class extends BaseObject {
 }
 
 class CabinetFormElement extends BaseFormElement {
-    getAdditionalTypes = () => {
+    static getAdditionalTypes = () => {
         return {
             'Communication': 'Communication',
         };
@@ -30,6 +31,11 @@ class CabinetFormElement extends BaseFormElement {
 
     render() {
         console.log('-- Render CabinetFormElement --');
+        console.log('render this.data', this.data);
+
+        const fileData = this.data?.file || {};
+        const data = fileData["file-cabinet-communication"] || {};
+        const agent = data.agent || {};
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/communication.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/communication_example.json
@@ -37,15 +43,11 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 <h2>Communication Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.stringElement('agent[givenName]', 'Given name', '')}
-                ${formElements.stringElement('agent[familyName]', 'Family name', '')}
-                ${formElements.stringElement('abstract', 'Abstract', '', false, 10)}
-                ${formElements.stringElement('studyField', 'Study field', '', true)}
-                ${formElements.stringElement('semester', 'Semester', '', true)}
-                ${formElements.enumElement('additionalType', 'Additional types', '', this.getAdditionalTypes(), false)}
-                ${formElements.dateTimeElement('dateCreated', 'Date created', '', true)}
-                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
-                ${this.getButtonRowHtml()}
+                ${formElements.stringElement('agent[givenName]', 'Given name', agent.givenName || '')}
+                ${formElements.stringElement('agent[familyName]', 'Family name', agent.familyName || '')}
+                ${formElements.stringElement('abstract', 'Abstract', data.abstract || '', false, 10)}
+                ${formElements.dateTimeElement('dateCreated', 'Date created', data.dateCreated || '', true)}
+                ${this.getCommonFormElements(CabinetFormElement.getAdditionalTypes())}
             </form>
         `;
     }
@@ -136,12 +138,20 @@ class CabinetHitElement extends BaseHitElement {
 
 class CabinetViewElement extends BaseViewElement {
     render() {
+        const fileData = this.data?.file || {};
+        const baseData = fileData.base || {};
+        const data = fileData["file-cabinet-communication"] || {};
+        const agent = data.agent || {};
+
         return html`
             <h2>Communication</h2>
-            <h2>Communication</h2>
             lang: ${this.lang}<br />
-            filename: ${this.data.file.base.fileName}<br />
-            dateCreated: ${this.data.file['file-cabinet-communication'].dateCreated}<br />
+            filename: ${baseData.fileName}<br />
+            ${viewElements.stringElement('Given name', agent.givenName || '')}
+            ${viewElements.stringElement('Family name', agent.familyName || '')}
+            ${viewElements.stringElement('Abstract', data.abstract || '')}
+            ${viewElements.dateTimeElement('Date created', data.dateCreated || '')}
+            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }
 }

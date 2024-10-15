@@ -87,7 +87,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     filterOnSelectedPerson(event) {
         if (event.detail.person) {
             // @TODO: don't hardcode facet name?
-            const facetName = 'base.person';
+            const facetName = 'person.person';
             const value = event.detail.person;
 
             // Get the InstantSearch helper
@@ -521,6 +521,12 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         return css`
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS(false)}
+
+            /* @TODO: remove this once we have a better solution for hiding facets (from configuration?) */
+            .filter--person-person {
+                visibility: hidden;
+                height: 0;
+            }
 
             .display-none {
                 display: none !important;

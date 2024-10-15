@@ -1,6 +1,7 @@
 import {css, html} from 'lit';
 import {BaseFormElement, BaseHitElement, BaseObject, BaseViewElement} from './baseObject';
 import * as formElements from './formElements.js';
+import * as viewElements from './viewElements.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-citizenshipCertificate';
@@ -22,7 +23,7 @@ export default class extends BaseObject {
 }
 
 class CabinetFormElement extends BaseFormElement {
-    getAdditionalTypes = () => {
+    static getAdditionalTypes = () => {
         return {
             'CitizenshipCertificate': 'Citizenship Certificate',
         };
@@ -31,19 +32,18 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
 
+        const fileData = this.data?.file || {};
+        const data = fileData["file-cabinet-citizenshipCertificate"] || {};
+
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/citizenshipCertificate.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/citizenshipCertificate_example.json
         return html`
             <form>
                 <h2>fileCitizenshipCertificate Form</h2>
                 lang: ${this.lang}<br />
-                ${formElements.stringElement('studyField', 'Study field', '', true)}
-                ${formElements.stringElement('semester', 'Semester', '', true)}
-                ${formElements.enumElement('additionalType', 'Additional types', '', this.getAdditionalTypes(), false)}
-                ${formElements.enumElement('nationality', 'Nationality', '', formElements.getNationalityItems(), false)}
-                ${formElements.dateElement('dateCreated', 'Date created', '', true)}
-                ${formElements.stringElement('comment', 'Comment', '', false, 5)}
-                ${this.getButtonRowHtml()}
+                ${formElements.enumElement('nationality', 'Nationality', data.nationality || '', formElements.getNationalityItems(), false)}
+                ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
+                ${this.getCommonFormElements(CabinetFormElement.getAdditionalTypes())}
             </form>
         `;
     }
@@ -134,10 +134,17 @@ class CabinetHitElement extends BaseHitElement {
 
 class CabinetViewElement extends BaseViewElement {
     render() {
+        const fileData = this.data?.file || {};
+        const baseData = fileData.base || {};
+        const data = fileData["file-cabinet-citizenshipCertificate"] || {};
+
         return html`
             <h2>Citizenship Certificate</h2>
             lang: ${this.lang}<br />
-            filename: ${this.data.file.base.fileName}<br />
+            filename: ${baseData.fileName}<br />
+            ${viewElements.enumElement('Nationality', data.nationality || '', formElements.getNationalityItems())}
+            ${viewElements.dateElement('Date created', data.dateCreated || '')}
+            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }
 }

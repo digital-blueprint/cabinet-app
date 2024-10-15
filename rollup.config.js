@@ -30,6 +30,7 @@ const buildFull = (!watch && appEnv !== 'test') || process.env.FORCE_FULL !== un
 let useTerser = buildFull;
 let useBabel = buildFull;
 let checkLicenses = buildFull;
+let treeshake = buildFull;
 
 // if true, app assets and configs are whitelabel
 let whitelabel;
@@ -201,8 +202,7 @@ export default (async () => {
             format: 'esm',
             sourcemap: true,
         },
-        //preserveEntrySignatures: false,
-        // external: ['zlib', 'http', 'fs', 'https', 'url'],
+        treeshake: treeshake,
         onwarn: function (warning, warn) {
             // more eval
             if (warning.code === 'EVAL' && warning.id.includes('pdfAnnotate.js')) {
@@ -319,8 +319,8 @@ Dependencies:
                     thirdParty: {
                         allow(dependency) {
                             let licenses = [
-                                'MIT', '(MIT OR GPL-3.0-or-later)', 'Apache-2.0', '(Apache-2.0)',
-                                'LGPL-2.1-or-later', 'BSD-3-Clause', 'BSD-2-Clause', 'BSD'
+                                'MIT', '(MIT OR GPL-3.0-or-later)', 'Apache-2.0', '(Apache-2.0)', 'MIT OR SEE LICENSE IN FEEL-FREE.md',
+                                'LGPL-2.1-or-later', 'BSD-3-Clause', 'BSD-2-Clause', 'BSD', '(MPL-2.0 OR Apache-2.0)'
                             ];
                             if (!licenses.includes(dependency.license)) {
                                 throw new Error(`Unknown license for ${dependency.name}: ${dependency.license}`);
@@ -331,6 +331,7 @@ Dependencies:
                 }),
             commonjs({
                 include: 'node_modules/**',
+                strictRequires: 'auto',
             }),
             json(),
             urlPlugin({

@@ -32,7 +32,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.blobDocumentPrefix = 'document-';
         this.mode = CabinetFile.Modes.VIEW;
         this.modalRef = createRef();
+        this.fileSourceRef = createRef();
         this.typesenseService = null;
+        this.fileHitData = {};
+        this.fileHitDataCache = {};
+        this.isFileDirty = false;
     }
 
     connectedCallback() {
@@ -49,6 +53,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 if (this.mode === CabinetFile.Modes.ADD) {
                     this.objectType = '';
                 } else {
+                    // Reset this.objectType if it was changed by the objectType selector
+                    this.objectType = this.fileHitData.objectType;
+
+                    // Switch back to view mode
                     this.mode = CabinetFile.Modes.VIEW;
                 }
             });
@@ -117,7 +125,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         const item = await this.typesenseService.fetchFileDocumentByBlobId(fileId);
 
-        // IF the document was found, set the hit data and switch to view mode
+        // If the document was found, set the hit data and switch to view mode
         if (item !== null) {
             this.fileHitData = item;
             this.mode = CabinetFile.Modes.VIEW;
@@ -138,7 +146,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         const identifier = this.getFileHitDataBlobId();
-        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/signature`);
+        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/blob-urls`);
         const apiUrl = new URL(baseUrl);
         const params = {
             'method': identifier === '' ? 'POST' : 'PATCH',
@@ -155,19 +163,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         apiUrl.search = new URLSearchParams(params).toString();
 
         let response = await fetch(apiUrl.toString(), {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this.auth.token
-            }
+                Authorization: 'Bearer ' + this.auth.token,
+            },
+            body: '{}',
         });
         if (!response.ok) {
             throw response;
         }
-        const url = await response.text();
-        console.log('Upload url', url);
+        const url = await response.json();
+        console.log('Upload url', url['blobUrl']);
 
-        return url;
+        return url['blobUrl'];
     }
 
     getFileHitDataBlobId() {
@@ -184,7 +193,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             return '';
         }
 
-        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/signature`);
+        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/blob-urls`);
         const apiUrl = new URL(baseUrl);
         const params = {
             'method': 'GET',
@@ -201,19 +210,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         apiUrl.search = new URLSearchParams(params).toString();
 
         let response = await fetch(apiUrl.toString(), {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/ld+json',
                 Authorization: 'Bearer ' + this.auth.token
-            }
+            },
+            body: '{}',
         });
         if (!response.ok) {
             throw response;
         }
-        const url = await response.text();
-        console.log('Download url', url);
+        const url = await response.json();
+        console.log('Download url', url['blobUrl']);
 
-        return url;
+        return url['blobUrl'];
     }
 
     async loadBlobItem(url) {
@@ -251,9 +261,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         let formData = new FormData();
         formData.append('metadata', JSON.stringify(metaData));
-        // TODO: Check if we really need to upload the file again
-        formData.append('file', this.documentFile);
-        formData.append('fileName', this.documentFile.name);
+        // Check if we really need to upload the file again
+        if (this.isFileDirty) {
+            formData.append('file', this.documentFile);
+            formData.append('fileName', this.documentFile.name);
+        }
         formData.append('prefix', this.blobDocumentPrefix);
 
         const options = {
@@ -270,11 +282,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
         const data = await response.json();
         console.log('File data', JSON.stringify(data));
+        this.isFileDirty = false;
 
         return data;
     }
 
-    getDocumentEditFormHtml() {
+    getDocumentEditFormHtml(useFileHitDataCache = false) {
         const objectType = this.objectType;
 
         if (objectType === '') {
@@ -285,15 +298,22 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const tagPart = pascalToKebab(objectType);
         const tagName = 'dbp-cabinet-object-type-edit-form-' + tagPart;
 
-        console.log('objectType', objectType);
-        console.log('tagName', tagName);
-        console.log('this.objectTypeFormComponents[objectType]', this.objectTypeFormComponents[objectType]);
+        console.log('getDocumentEditFormHtml objectType', objectType);
+        console.log('getDocumentEditFormHtml tagName', tagName);
+        console.log('getDocumentEditFormHtml this.objectTypeFormComponents[objectType]', this.objectTypeFormComponents[objectType]);
 
         if (!customElements.get(tagName)) {
             customElements.define(tagName, this.objectTypeFormComponents[objectType]);
         }
 
-        console.log('getDocumentEditFormHtml this.fileHitData', this.fileHitData);
+        let fileHitData = this.fileHitData;
+
+        // In edit mode we want to use the fileHitDataCache to keep the data when switching between object types
+        if (useFileHitDataCache && this.fileHitDataCache[objectType]) {
+            fileHitData = this.fileHitDataCache[objectType];
+        }
+
+        console.log('getDocumentEditFormHtml fileHitData', fileHitData);
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "fileHitData" property from a variable too!
@@ -301,7 +321,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             <${unsafeStatic(tagName)}
              id="edit-form"
              subscribe="auth,lang,entry-point-url"
-             .data=${this.fileHitData}
+             .data=${fileHitData}
              person-id="${this.personId}"
              object-type=></${unsafeStatic(tagName)}>
         `;
@@ -332,14 +352,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
-            <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" user-id="123" .data=${hit}></${unsafeStatic(tagName)}>
+            <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" .data=${hit}></${unsafeStatic(tagName)}>
         `;
     }
 
     async openDocumentAddDialogWithPersonHit(hit = null) {
         this.mode = CabinetFile.Modes.ADD;
         // We don't need to fetch the hit data from Typesense again, because the identNrObfuscated wouldn't change
-        this.personId = hit.base.identNrObfuscated;
+        this.personId = hit.person.identNrObfuscated;
         await this.openDocumentAddDialog();
     }
 
@@ -353,16 +373,27 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         return dataURLtoFile(blobFile.contentUrl, blobFile.fileName);
     }
 
-    async openViewDialogWithFileHit(hit = null) {
+    async openViewDialogWithFileHit(hit) {
+        this.isFileDirty = false;
         this.mode = CabinetFile.Modes.VIEW;
+
+        /**
+         * @type {FileSource}
+         */
+        const fileSource = this.fileSourceRef.value;
+        // Make sure the file source dialog is closed
+        if (fileSource) {
+            fileSource.removeAttribute('dialog-open');
+        }
 
         // Fetch the hit data from Typesense again in case it changed
         hit = await this.typesenseService.fetchItem(hit.id);
 
+        this.fileHitDataCache = {};
         this.fileHitData = hit;
         console.log('openDialogWithHit hit', hit);
         // Set personId from hit
-        this.personId = hit.base.identNrObfuscated;
+        this.personId = hit.person.identNrObfuscated;
         this.objectType = hit.objectType;
 
         // Wait until hit data is set and rendering is complete
@@ -413,8 +444,19 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }, 1000);
     }
 
-    async openDocumentAddDialog() {
-        this.objectType = '';
+    async openReplacePdfDialog() {
+        this.mode = CabinetFile.Modes.EDIT;
+        await this.updateComplete;
+
+        await this.openDocumentAddDialog(false);
+    }
+
+    async openDocumentAddDialog(resetObjectType = true) {
+        if (resetObjectType) {
+            this.objectType = '';
+            this.fileHitData = {};
+        }
+        this.isFileDirty = false;
 
         /**
          * @type {Modal}
@@ -423,8 +465,18 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Make sure the document-add dialog is closed
         documentAddModal.close();
 
+        /**
+         * @type {FileSource}
+         */
+        const fileSource = this.fileSourceRef.value;
+
+        // Wait until the file source dialog is ready
+        if (!fileSource) {
+            await this.updateComplete;
+        }
+
         // Open the file source dialog to select a file
-        this._('#file-source').setAttribute('dialog-open', '');
+        fileSource.setAttribute('dialog-open', '');
     }
 
     static get styles() {
@@ -507,7 +559,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="pdf-preview">
                         <div class="fileButtons">
                             <button class="button" @click="${this.downloadFile}">Download</button>
-                            <button class="button" @click="${this.openDocumentAddDialog}">Replace PDF</button>
+                            <button class="button" @click="${this.openReplacePdfDialog}">Replace PDF</button>
                         </div>
                         <dbp-pdf-viewer ${ref(this.documentPdfViewerRef)} id="document-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
                     </div>
@@ -528,6 +580,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     getObjectTypeFormPartHtml() {
+        console.log('getObjectTypeFormPartHtml this.mode', this.mode);
         switch (this.mode) {
             case CabinetFile.Modes.VIEW:
                 return html`
@@ -547,7 +600,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         </p>
                         <p>
                             ${this.getObjectTypeSelector()}
-                            <dbp-button @click="${this.onObjectTypeSelected}">Select</dbp-button>
                         </p>
                     `;
                 } else {
@@ -557,12 +609,19 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
             case CabinetFile.Modes.EDIT:
                 return html`
-                    ${this.getDocumentEditFormHtml()}
+                    <p>
+                        ${this.getObjectTypeSelector()}
+                    </p>
+                    ${this.getDocumentEditFormHtml(true)}
                 `;
         }
     }
 
     onObjectTypeSelected() {
+        // Save the current fileHitData to the cache to keep the data when switching between object types in edit mode
+        // In the future there could also be an event on every form element change to save the data to the cache when it changes
+        this.fileHitDataCache[this.objectType] = this.fileHitData;
+
         const objectType = this._('#object-type').value;
         console.log('objectType', objectType);
         this.objectType = objectType;
@@ -571,11 +630,15 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     getObjectTypeSelector() {
         const fileObjectTypeNames = this.fileObjectTypeNames;
         const options = Object.keys(fileObjectTypeNames).map((key) => {
-            return html`<option value="${key}">${fileObjectTypeNames[key]}</option>`;
+            return html`<option value="${key}" ?selected=${key === this.fileHitData.objectType}>${fileObjectTypeNames[key]}</option>`;
         });
 
+        if (!this.fileHitData.objectType) {
+            options.unshift(html`<option value="" selected>- Select object type- </option>`);
+        }
+
         return html`
-            <select id="object-type" class="select" name="object-type" required>
+            <select id="object-type" class="select" name="object-type" required @change="${this.onObjectTypeSelected}">
                 ${options}
             </select>
         `;
@@ -595,13 +658,16 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
     }
 
-    getHtml() {
+    getFileSourceHtml() {
+        if (this.mode === CabinetFile.Modes.VIEW) {
+            return html``;
+        }
+
         const i18n = this._i18n;
 
         return html`
-            ${this.getDocumentModalHtml()}
             <dbp-file-source
-                id="file-source"
+                ${ref(this.fileSourceRef)}
                 context="${i18n.t('cabinet-search.file-picker-context')}"
                 subscribe="nextcloud-store-session:nextcloud-store-session"
                 allowed-mime-types="application/pdf"
@@ -616,20 +682,60 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 lang="${this.lang}"
                 text="${i18n.t('cabinet-search.upload-area-text')}"
                 button-label="${i18n.t('cabinet-search.upload-button-label')}"
+                @dbp-file-source-dialog-closed="${this.onFileSelectDialogClosed}"
                 @dbp-file-source-file-selected="${this.onDocumentFileSelected}"></dbp-file-source>
-            `;
+        `;
+    }
+
+    getHtml() {
+        return html`
+            ${this.getDocumentModalHtml()}
+            ${this.getFileSourceHtml()}
+        `;
+    }
+
+    /**
+     * Note: It seems like that the dbp-file-source-dialog-closed event is fired multiple times
+     *       when the file-source dialog is closed!
+     * @returns {Promise<void>}
+     */
+    async onFileSelectDialogClosed() {
+        console.log('file-source onFileSelectDialogClosed');
+
+        // Open the document modal dialog after the file source dialog was closed if we were in edit mode
+        // Unfortunately, if Escape was pressed, all dialogs will be closed, so this only works with the "X" button
+        if (this.mode === CabinetFile.Modes.EDIT) {
+            /**
+             * @type {Modal}
+             */
+            const modal = this.documentModalRef.value;
+
+            // Note: Modal is checking if the dialog is already open
+            modal.open();
+        }
     }
 
     /**
      * @param ev
      */
     async onDocumentFileSelected(ev) {
-        console.log('ev.detail.file', ev.detail.file);
+        console.log('file-source onDocumentFileSelected ev.detail.file', ev.detail.file);
+        this.isFileDirty = true;
         await this.showPdf(ev.detail.file);
+
+        if (this.mode === CabinetFile.Modes.VIEW) {
+            this.mode = CabinetFile.Modes.EDIT;
+        }
+
+        /**
+         * @type {Modal}
+         */
+        const modal = this.documentModalRef.value;
 
         // Opens the modal dialog for adding a document to a person after the document was
         // selected in the file source
-        this.documentModalRef.value.open();
+        // Note: Modal is checking if the dialog is already open, if it was opened by onFileSelectDialogClosed()
+        modal.open();
     }
 
     /**
@@ -650,5 +756,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Load the PDF in the PDF viewer
         await pdfViewer.showPDF(this.documentFile);
+    }
+
+    update(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+            switch (propName) {
+                case "mode":
+                    console.log('this.mode changed from', oldValue, 'to', this.mode);
+                    break;
+                case "fileHitData":
+                    console.log('this.fileHitData changed from', oldValue, 'to', this.fileHitData);
+                    break;
+            }
+        });
+
+        super.update(changedProperties);
     }
 }

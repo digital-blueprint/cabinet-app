@@ -5,8 +5,8 @@
         "person-filter-group-title": "Personeigenschaften",
         "document-filter-group-title": "Dokumenteigenschaften",
 
-        "filter-base-person-title": "Person",
-        "filter-base-birth-date-timestamp-title": "Geburtsdatum",
+        "filter-person-person-title": "Person",
+        "filter-person-birth-date-timestamp-title": "Geburtsdatum",
         "filter-person-studies-name-title": "Studium",
         "filter-person-studies-type-title": "Abschlussziel",
         "filter-person-personal-status-text-title": "Personenstatus",
@@ -37,8 +37,8 @@
         "filter-file-file-cabinet-citizenship-certificate-nationality-title": "Nationalität auf Staatsbürgerschaftsnachweis",
         "filter-file-file-cabinet-identity-document-nationality-title": "Staatsbürgerschaft laut Dokument",
 
-        "search-placeholder-base-person": "Person suchen",
-        "search-placeholder-base-birth-date": "Search birth date",
+        "search-placeholder-person-person": "Person suchen",
+        "search-placeholder-person-birth-date": "Search birth date",
         "search-placeholder-person-home-address-region": "Städte suchen",
         "search-placeholder-person-home-address-place": "Städte suchen",
         "search-placeholder-person-nationalities-text": "Land suchen",

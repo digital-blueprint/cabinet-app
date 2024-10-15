@@ -2,6 +2,7 @@ import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
 import * as formElements from './formElements.js';
 import {renderFieldWithHighlight} from '../utils';
+import * as viewElements from './viewElements.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-admissionNotice';
@@ -23,6 +24,7 @@ export default class extends BaseObject {
 }
 
 class CabinetFormElement extends BaseFormElement {
+
     getSemester = () => {
         let currentDate = new Date();
         let currentYear = currentDate.getFullYear();
@@ -83,7 +85,6 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
         console.log('this.data', this.data);
-        // const data = this.data;
 
         // Schema:  https://gitlab.tugraz.at/dbp/madmissiondleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/admissionNotice.schema.json
         // Example: https://gitlab.tugraz.at/dbp/madmissiondleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/admissionNotice_example.json
@@ -200,10 +201,18 @@ class CabinetHitElement extends BaseHitElement {
 
 class CabinetViewElement extends BaseViewElement {
     render() {
+        const fileData = this.data?.file || {};
+        const baseData = fileData.base || {};
+        const data = fileData["file-cabinet-admissionNotice"] || {};
+
         return html`
             <h2>admissionNotice</h2>
             lang: ${this.lang}<br />
-            filename: ${this.data.file.base.fileName}<br />
+            filename: ${baseData.fileName}<br />
+            ${viewElements.dateElement('Date created', data.dateCreated || '')}
+            ${viewElements.stringElement('Previous study', data.previousStudy || '')}
+            ${viewElements.enumElement('Decision', data.decision || '', CabinetFormElement.getDecisions())}
+            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }
 }
