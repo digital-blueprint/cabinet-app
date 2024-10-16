@@ -257,7 +257,6 @@ class CabinetHitElement extends BaseHitElement {
                 display: grid;
                 grid-template-rows: repeat(3, 1fr);
                 word-break: normal;
-                min-height:100%;
             }
             .hit-person-content-item1{
                 grid-row: 1/2;
