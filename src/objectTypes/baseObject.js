@@ -254,7 +254,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     getButtonRowHtml() {
         return html`
             <div class="button-row">
-                <button class="button is-secondary" type="submit" @click=${this.cancelForm}>Cancel</button>
+                <button class="button is-secondary" type="button" @click=${this.cancelForm}>Cancel</button>
                 <button class="button is-primary" type="submit" ?disabled=${!this.saveButtonEnabled} @click=${this.storeBlobItem}>Save</button>
             </div>
         `;
