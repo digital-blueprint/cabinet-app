@@ -55,7 +55,7 @@ class CabinetHitElement extends BaseHitElement {
         return css`
             ${super.styles}
 
-            
+
             .ais-cit-Hits-header{
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
@@ -66,43 +66,43 @@ class CabinetHitElement extends BaseHitElement {
             }
             .ais-cit-Hits-header-items{
                 display: flex;
-    
-            }    
+
+            }
             .ais-cit-Hits-content {
                 display: grid;
                 grid-template-rows: repeat(3, 1fr);
                 gap: 10px;
-                
+
             }
             .hit-content-item1 {
-                grid-row: 1/2; 
-            }     
+                grid-row: 1/2;
+            }
             .hit-content-item2 {
-                grid-row: 2/3; 
-            }     
+                grid-row: 2/3;
+            }
             .hit-content-item3 {
                 grid-row: 3/4;
                 padding-top: 30px;
-            } 
+            }
             .cit-item1 {
                 grid-column: 1 / 2;
                 color:#d55e6b;
             }
             .cit-item2 {
                 grid-column: 3 / 4;
-                justify-self: end; 
+                justify-self: end;
             }
             .cit-item3 {
                 grid-column: 1 / 2;
-                 
+
             }
             .cit-item4 {
                 grid-column: 2 / 3;
-                
+
             }
             .cit-item5 {
                 grid-column: 3 / 4;
-                
+
             }
         `;
     }
@@ -125,9 +125,9 @@ class CabinetHitElement extends BaseHitElement {
                 <footer class="ais-cit-Hits-content-items hit-content-item3">
                 dateCreated: <br />
                 lastModified: <br />
-                </footer> 
+                </footer>
                 </main>
-            </form>        
+            </form>
         `;
     }
 }

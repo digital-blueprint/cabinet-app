@@ -78,14 +78,14 @@ class CabinetHitElement extends BaseHitElement {
                 gap: 10px;
             }
             .hit-content-item1 {
-                grid-row: 1/2; 
-            }     
+                grid-row: 1/2;
+            }
             .hit-content-item2 {
-                grid-row: 2/3; 
-            }     
+                grid-row: 2/3;
+            }
             .hit-content-item3 {
                 grid-row: 3/3;
-                padding-top: 30px;  
+                padding-top: 30px;
             }
             .mini-item1 {
                 grid-column: 1 / 2;
@@ -93,20 +93,20 @@ class CabinetHitElement extends BaseHitElement {
             }
             .mini-item2 {
                 grid-column: 3 / 4;
-                justify-self: end; 
+                justify-self: end;
             }
             .mini-item3 {
                 grid-column: 1 / 2;
-                 
+
             }
             .mini-item4 {
                 grid-column: 2 / 3;
-                
+
             }
             .mini-item5 {
                 grid-column: 3 / 4;
-                
-            }     
+
+            }
         `;
     }
 
@@ -128,10 +128,10 @@ class CabinetHitElement extends BaseHitElement {
                 <div class="ais-mini-Hits-content-items hit-content-item2">filename: ${this.data.file.base.fileName}</div>
                 <div class="ais-mini-Hits-content-items hit-content-item3">
                 dateCreated: <br/>
-                lastModified: 
+                lastModified:
                 </div>
                 </main>
-            </form>    
+            </form>
         `;
     }
 }

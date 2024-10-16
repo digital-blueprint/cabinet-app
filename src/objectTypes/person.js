@@ -252,11 +252,11 @@ class CabinetHitElement extends BaseHitElement {
             }
             .hit-person-content-item2{
                 grid-row: 2/3;
-            }         
+            }
             .hit-person-content-item3{
                 grid-row: 3/3;
                 margin-top: 1em;
-            }     
+            }
             .right-column {
                 text-align: right;
 
@@ -312,12 +312,12 @@ class CabinetHitElement extends BaseHitElement {
                     <!-- birthDate: ${hit.person.birthDate}-->
                     ${renderFieldWithHighlight(hit, 'person.birthDate')}
                 </div><br />
-                <div class="hit-person-content-item2">${hit.person.studies.map(study => html`${study.name} (${study.status.text})<br />`)}</div> 
+                <div class="hit-person-content-item2">${hit.person.studies.map(study => html`${study.name} (${study.status.text})<br />`)}</div>
                 <br />
                 <div class="hit-person-content-item3">
                      ${new Date(hit.person.syncTimestamp * 1000)}
                 </div>
-                
+
             </main>
         `;
     }

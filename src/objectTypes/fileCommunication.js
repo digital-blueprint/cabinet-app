@@ -76,35 +76,35 @@ class CabinetHitElement extends BaseHitElement {
                 grid-template-rows: repeat(3, 1fr);
             }
             .hit-content-item1 {
-                grid-row: 1/2; 
-            }     
+                grid-row: 1/2;
+            }
             .hit-content-item2 {
-                grid-row: 2/3; 
-            }     
+                grid-row: 2/3;
+            }
             .hit-content-item3 {
                 grid-row: 3/3;
-                padding-top:30px; 
-            }    
+                padding-top:30px;
+            }
             .com-item1 {
                 grid-column: 1 / 2;
                 color:#1ace38;
             }
             .com-item2 {
                 grid-column: 3 / 4;
-                justify-self: end; 
+                justify-self: end;
             }
             .com-item3 {
                 grid-column: 1 / 2;
-                 
+
             }
             .com-item4 {
                 grid-column: 2 / 3;
-                
+
             }
             .com-item5 {
                 grid-column: 3 / 4;
-                
-            }   
+
+            }
         `;
     }
 
@@ -131,7 +131,7 @@ class CabinetHitElement extends BaseHitElement {
                 lastModified: ${lastModified}<br />
                 </div>
                 </main>
-            </form>    
+            </form>
         `;
     }
 }
