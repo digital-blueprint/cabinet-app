@@ -22,6 +22,7 @@ export default [
         },
         rules: {
             "no-unused-vars": ["error", { "args": "none" }],
+            "no-trailing-spaces": ["error"],
             "semi": [2, "always"],
             "jsdoc/require-jsdoc": 0,
             "jsdoc/require-param-description": 0,
