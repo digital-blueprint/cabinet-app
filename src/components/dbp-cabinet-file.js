@@ -111,7 +111,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             // Try to fetch the document from Typesense again and again until it is found
             // TODO: Setup some kind of spinner or loading indicator
-            this.fetchFileDocumentFromTypesense(fileData.identifier);
+            await this.fetchFileDocumentFromTypesense(fileData.identifier);
         }
     }
 
