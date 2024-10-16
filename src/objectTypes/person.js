@@ -244,14 +244,14 @@ class CabinetHitElement extends BaseHitElement {
             .person-id {
                 display: flex;
                 text-align: left;
-                align-items: center;  
+                align-items: center;
             }
             .person-num{
                 display: flex;
-                justify-content: center; 
-                align-items: center; 
-                text-align: center; 
-            }            
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
             .ais-Hits-content {
                 gap: 10px;
                 display: grid;
@@ -271,7 +271,7 @@ class CabinetHitElement extends BaseHitElement {
             .right-column {
                 display: flex;
                 text-align: right;
-                justify-content: right; 
+                justify-content: right;
             }
         `;
     }
@@ -330,7 +330,7 @@ class CabinetHitElement extends BaseHitElement {
                 </div><br />
                 <div class="hit-person-content-item2">
                     ${hit.person.studies.map(study => html`${study.name} (${study.status.text})<br />`)}
-                </div> 
+                </div>
                 <br />
                 <div class="hit-person-content-item3">
                      ${new Date(hit.person.syncTimestamp * 1000)}
