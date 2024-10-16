@@ -239,8 +239,19 @@ class CabinetHitElement extends BaseHitElement {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
                 gap:10px;
-                padding: 5px;
+                padding: 10px;
             }
+            .person-id {
+                display: flex;
+                text-align: left;
+                align-items: center;  
+            }
+            .person-num{
+                display: flex;
+                justify-content: center; 
+                align-items: center; 
+                text-align: center; 
+            }            
             .ais-Hits-content {
                 gap: 10px;
                 display: grid;
@@ -258,8 +269,9 @@ class CabinetHitElement extends BaseHitElement {
                 margin-top: 1em;
             }
             .right-column {
+                display: flex;
                 text-align: right;
-
+                justify-content: right; 
             }
         `;
     }
@@ -268,8 +280,12 @@ class CabinetHitElement extends BaseHitElement {
         let hit = /** @type {PersonHit} */(this.data);
         return html`
             <header class="ais-Hits-header">
-                <h2>studId</h2>
-                <h2>stPersonNr</h2>
+                <div class="person-id"><!-- studId: ${hit.person.studId}-->
+                    ${renderFieldWithHighlight(hit, 'person.studId')}
+                </div>
+                <div class="person-num"><!-- stPersonNr: ${hit.person.stPersonNr}-->
+                    ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
+                </div>
                 <div class="right-column">
                     <svg width="1.4em" height="1.4em" viewBox="0 0 30 30"
                         version="1.1"
@@ -312,7 +328,9 @@ class CabinetHitElement extends BaseHitElement {
                     <!-- birthDate: ${hit.person.birthDate}-->
                     ${renderFieldWithHighlight(hit, 'person.birthDate')}
                 </div><br />
-                <div class="hit-person-content-item2">${hit.person.studies.map(study => html`${study.name} (${study.status.text})<br />`)}</div>
+                <div class="hit-person-content-item2">
+                    ${hit.person.studies.map(study => html`${study.name} (${study.status.text})<br />`)}
+                </div> 
                 <br />
                 <div class="hit-person-content-item3">
                      ${new Date(hit.person.syncTimestamp * 1000)}
