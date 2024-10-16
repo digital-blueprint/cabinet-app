@@ -48,13 +48,12 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         };
     }
 
-    getCommonFormElements = (additionalTypes = {}) => {
-        const fileData = this.data?.file || {};
-        const baseData = fileData.base || {};
-
+    getSemesters = () => {
         let currentDate = new Date();
         let currentYear = currentDate.getFullYear();
         currentYear = currentYear % 100;
+        let nextYear = currentYear + 1;
+        let previousYear = currentYear - 1;
         let currentMonth = currentDate.getMonth();
         let currentSeason;
         if(currentMonth >= 2 && currentMonth <= 8) {
@@ -63,13 +62,62 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         else {
             currentSeason = 'W';
         }
+
         let currentSemester = currentYear.toString() + currentSeason;
-        console.log('baseData.semester ', baseData.semester);
+
+        let nextSemester;
+
+        const semesters = {};
+
+        if(currentSeason === 'S') {
+            nextSemester = currentYear.toString() + 'W';
+            semesters[nextSemester] = nextSemester;
+            semesters[currentSemester] = currentSemester;
+        }
+        else {
+            nextSemester = nextYear.toString() + 'S';
+            semesters[nextSemester] = nextSemester;
+            semesters[currentSemester] = currentSemester;
+            let previousSemester = currentYear.toString() + 'S';
+            semesters[previousSemester] = previousSemester;
+        }
+
+        for(let year = previousYear; year >= 20; year--) {
+            let winterSemester = year + 'W';
+            semesters[winterSemester] = winterSemester;
+            let summerSemester = year + 'S';
+            semesters[summerSemester] = summerSemester;
+        };
+        return semesters;
+    };
+
+    getCommonFormElements = (additionalTypes = {}) => {
+        const fileData = this.data?.file || {};
+        const baseData = fileData.base || {};
+
+        let defaultSemester;
+        if(baseData.semester) {
+            defaultSemester = baseData.semester;
+        }
+        else {
+            let currentDate = new Date();
+            let currentYear = currentDate.getFullYear();
+            currentYear = currentYear % 100;
+            let currentMonth = currentDate.getMonth();
+            let currentSeason;
+            if(currentMonth >= 2 && currentMonth <= 8) {
+                currentSeason = 'S';
+            }
+            else {
+                currentSeason = 'W';
+            }
+            defaultSemester = currentYear.toString() + currentSeason;
+        }
 
         return html`
             ${formElements.stringElement('subjectOf', 'Subject of', baseData.subjectOf || '')}
             ${formElements.stringElement('studyField', 'Study field', baseData.studyField || '', true)}
-            ${formElements.stringElement('semester', 'Semester', baseData.semester || '', true)}
+            ${formElements.enumElement('semester', 'Semester', defaultSemester, this.getSemesters(), true)}
             ${formElements.enumElement('additionalType', 'Additional type', baseData.additionalType?.key || '', additionalTypes, false)}
             ${formElements.stringElement('comment', 'Comment', baseData.comment || '', false, 5)}
             ${this.getButtonRowHtml()}
