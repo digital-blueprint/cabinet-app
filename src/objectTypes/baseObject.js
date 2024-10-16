@@ -52,6 +52,20 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         const fileData = this.data?.file || {};
         const baseData = fileData.base || {};
 
+        let currentDate = new Date();
+        let currentYear = currentDate.getFullYear();
+        currentYear = currentYear % 100;
+        let currentMonth = currentDate.getMonth();
+        let currentSeason;
+        if(currentMonth >= 2 && currentMonth <= 8) {
+            currentSeason = 'S';
+        }
+        else {
+            currentSeason = 'W';
+        }
+        let currentSemester = currentYear.toString() + currentSeason;
+        console.log('baseData.semester ', baseData.semester);
+
         return html`
             ${formElements.stringElement('subjectOf', 'Subject of', baseData.subjectOf || '')}
             ${formElements.stringElement('studyField', 'Study field', baseData.studyField || '', true)}
