@@ -100,6 +100,7 @@ class CabinetFormElement extends BaseFormElement {
             currentSeason = 'W';
         }
         let currentSemester = currentYear.toString() + currentSeason;
+        console.log('baseData.semester ', baseData.semester);
         return html`
             <form>
                 <h2>admissionNotice Form</h2>
