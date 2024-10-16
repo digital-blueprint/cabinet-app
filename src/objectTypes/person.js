@@ -257,16 +257,19 @@ class CabinetHitElement extends BaseHitElement {
                 display: grid;
                 grid-template-rows: repeat(3, 1fr);
                 word-break: normal;
+                min-height:100%;
             }
             .hit-person-content-item1{
                 grid-row: 1/2;
+                align-self: start;
             }
             .hit-person-content-item2{
                 grid-row: 2/3;
+                align-self: center;
             }
             .hit-person-content-item3{
                 grid-row: 3/3;
-                margin-top: 1em;
+                align-self: end;
             }
             .right-column {
                 display: flex;
