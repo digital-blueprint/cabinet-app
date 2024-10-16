@@ -25,9 +25,7 @@ const getRefinedState = function getRefinedState(helper, attribute, value) {
  * @param {Array} facets - array of facets config objects
  */
 export function updateDatePickersForExternalRefinementChange(res, facets) {
-
     Object.entries(res.state.numericRefinements).forEach(([facetField, numRefinement]) => {
-
         const dateFacet = facets.find(facet => facet.attribute === facetField);
 
         // Clear start dates if refinement is removed
@@ -45,7 +43,6 @@ export function updateDatePickersForExternalRefinementChange(res, facets) {
                 endDate.value = '';
             }
         }
-
     });
 }
 
@@ -145,7 +142,6 @@ function connectComplexDateRangeRefinement(renderFn, unmountFn = noop) {
 const noop = () => {};
 
 export function createDateRefinement(widgetParams) {
-
     const datePicker = connectComplexDateRangeRefinement(
         (options, isFirstRendering) => {
             if (!isFirstRendering) return;
@@ -198,8 +194,6 @@ export function createDateRefinement(widgetParams) {
     return datePicker(widgetParams);
 }
 
-
-
 /**
  * Convert a Date object to a timestamp in seconds.
  * @param {Date} date - The Date object to be processed.
@@ -212,7 +206,6 @@ export function createDateRefinement(widgetParams) {
 //     }
 //     return Math.floor(milli / 1000.0);
 // }
-
 
 /**
  * Convert schema name to kebabCase for css classes and translation keys

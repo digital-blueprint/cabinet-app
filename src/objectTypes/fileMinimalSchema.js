@@ -22,7 +22,6 @@ export default class extends BaseObject {
     }
 }
 
-
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {

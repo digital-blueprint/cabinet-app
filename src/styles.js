@@ -117,8 +117,6 @@ export function getCurrentRefinementCSS() {
         }
     `;
 }
-
-
 export function getPaginationCSS() {
     // language=css
     return css`

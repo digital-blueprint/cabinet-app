@@ -28,7 +28,13 @@ export default [
             "jsdoc/require-param-description": 0,
             "jsdoc/require-returns": 0,
             "jsdoc/require-param-type": 0,
-            "jsdoc/require-returns-description": 0
+            "jsdoc/require-returns-description": 0,
+            "no-multiple-empty-lines": ["error", { "max": 1 }],
+            "padded-blocks": ["error", "never"],
+            "padding-line-between-statements": [
+                "error",
+                { "blankLine": "any", "prev": "*", "next": "*" }
+            ]
         },
     },
 ];

@@ -83,7 +83,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
     }
 
-
     filterOnSelectedPerson(event) {
         if (event.detail.person) {
             // @TODO: don't hardcode facet name?
@@ -295,7 +294,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             usePanel = true
           } = facetConfig;
 
-
         // Remove special characters from schema field name to use as css class and translation key.
         const schemaFieldSafe = schemaField.replace(/[@#]/g, '');
 
@@ -328,9 +326,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 ...(facetOptions.panel || {}),
             };
 
-
             if (schemaFieldType === 'checkbox') {
-
                 const defaultRefinementListOptions = {
                     fieldType: schemaFieldType,
                     container: that._(`#${cssClass}`),
@@ -381,7 +377,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             if (schemaFieldType === 'datepicker') {
-
                 const defaultDateRefinementOptions = {
                     fieldType: schemaFieldType,
                     attribute: schemaField,
@@ -429,7 +424,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         if (facetWidgets) {
             facetWidgets.forEach(facetWidget => {
-
                 const widget = /** @type {HTMLElement} */ (facetWidget);
 
                 const COLLAPSED_COUNT = 12;

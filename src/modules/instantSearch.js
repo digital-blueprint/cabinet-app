@@ -1,7 +1,6 @@
 import {createInstance} from '../i18n.js';
 
 export default class {
-
     constructor() {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
