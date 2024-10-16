@@ -206,7 +206,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         protocol: this.typesenseProtocol
                     }
                 ],
-                additionalHeaders: {'Authorization': 'Bearer ' + this.auth.token}
+                additionalHeaders: {'Authorization': 'Bearer ' + this.auth.token},
+                sendApiKeyAsQueryParam: true
             };
             console.log('serverConfig', this.serverConfig);
 
