@@ -383,7 +383,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 display: grid;
                 justify-content: end;
                 gap: 10px;
-                grid-template-columns: auto auto auto;
+                grid-template-columns: repeat(3, 1fr);
             }
             .hits-doc-footer{
                 position: relative;
