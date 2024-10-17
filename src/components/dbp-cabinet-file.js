@@ -603,23 +603,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 if (this.objectType === '') {
                     return html`
                         <h2>Document details</h2>
-                        <fieldset>
-                            <label>Document type</label>
-                            ${this.getObjectTypeSelector()}
-                        </fieldset>
+                        ${this.getObjectTypeSelector()}
                     `;
                 } else {
+                    // TODO: Make the selection work
                     return html`
+                        <h2>Document details</h2>
+                        ${this.getObjectTypeSelector()}
                         ${this.getDocumentEditFormHtml()}
                     `;
                 }
             case CabinetFile.Modes.EDIT:
                 return html`
                     <h2>Document details</h2>
-                    <fieldset>
-                        <label>Document type</label>
-                        ${this.getObjectTypeSelector()}
-                    </fieldset>
+                    ${this.getObjectTypeSelector()}
                     ${this.getDocumentEditFormHtml(true)}
                 `;
         }
@@ -646,9 +643,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         return html`
-            <select id="object-type" class="select" name="object-type" required @change="${this.onObjectTypeSelected}">
-                ${options}
-            </select>
+            <fieldset>
+                <label>Document type</label>
+                <select id="object-type" class="select" name="object-type" required @change="${this.onObjectTypeSelected}">
+                    ${options}
+                </select>
+            </fieldset>
         `;
     }
 
