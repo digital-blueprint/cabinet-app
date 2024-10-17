@@ -337,6 +337,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 color: var(--dbp-content);
                 border: var(--dbp-border);
                 padding-inline: .5em;
+                margin-right: 5px;
             }
 
             .ais-SearchBox-submit {
@@ -347,6 +348,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 /* prevent double borders */
                 border-left: 0 none;
                 border-right: 0 none;
+                border:1px solid;
+                margin-right: 5px;
             }
 
             .ais-SearchBox-submit svg path {
