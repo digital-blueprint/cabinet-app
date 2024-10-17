@@ -42,8 +42,6 @@ class CabinetFormElement extends BaseFormElement {
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/identityDocument_example.json
         return html`
             <form>
-                <h2>fileIdentityDocument Form</h2>
-                lang: ${this.lang}<br />
                 ${formElements.stringElement('identifier', 'Identifier', data.identifier || '', true)}
                 ${formElements.enumElement('nationality', 'Nationality', data.nationality || '', formElements.getNationalityItems(), true)}
                 ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
@@ -136,13 +134,9 @@ class CabinetHitElement extends BaseHitElement {
 class CabinetViewElement extends BaseViewElement {
     render() {
         const fileData = this.data?.file || {};
-        const baseData = fileData.base || {};
         const data = fileData["file-cabinet-identityDocument"] || {};
 
         return html`
-            <h2>Personal License</h2>
-            lang: ${this.lang}<br />
-            filename: ${baseData.fileName}<br />
             ${viewElements.stringElement('Identifier', data.identifier || '')}
             ${viewElements.enumElement('Nationality', data.nationality || '', formElements.getNationalityItems())}
             ${viewElements.dateElement('Date created', data.dateCreated || '')}

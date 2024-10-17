@@ -42,8 +42,6 @@ class CabinetFormElement extends BaseFormElement {
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/minimalSchema_example.json
         return html`
             <form>
-                <h2>fileMinimalSchema Form</h2>
-                lang: ${this.lang}<br />
                 ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
                 ${this.getCommonFormElements(CabinetFormElement.getAdditionalTypes())}
             </form>
@@ -137,11 +135,11 @@ class CabinetHitElement extends BaseHitElement {
 
 class CabinetViewElement extends BaseViewElement {
     render() {
+        const fileData = this.data?.file || {};
+        const data = fileData["file-cabinet-minimalSchema"] || {};
+
         return html`
-            <h2>Minimal Schema</h2>
-            lang: ${this.lang}<br />
-            filename: ${this.data.file.base.fileName}<br />
-            ${viewElements.dateElement('Date created', this.data.file["file-cabinet-minimalSchema"].dateCreated)}
+            ${viewElements.dateElement('Date created', data.dateCreated || '')}
             ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }

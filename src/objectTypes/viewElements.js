@@ -8,7 +8,7 @@ import {html} from 'lit';
 export const stringElement = (label, value = "") => {
     return html`
         <fieldset>
-            <label>${label}:</label>
+            <label>${label}</label>
             ${value}
         </fieldset>
     `;
@@ -22,7 +22,7 @@ export const stringElement = (label, value = "") => {
 export const dateElement = (label, value = "") => {
     return html`
         <fieldset>
-            <label>${label}:</label>
+            <label>${label}</label>
             ${value}
         </fieldset>
     `;
@@ -36,7 +36,7 @@ export const dateElement = (label, value = "") => {
 export const dateTimeElement = (label, value = "") => {
     return html`
         <fieldset>
-            <label>${label}:</label>
+            <label>${label}</label>
             ${value}
         </fieldset>
     `;
@@ -45,7 +45,7 @@ export const dateTimeElement = (label, value = "") => {
 export const enumElement = (label, value = "", items = {}) => {
     return html`
         <fieldset>
-            <label>${label}:</label>
+            <label>${label}</label>
             ${items[value]}
     `;
 };

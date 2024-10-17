@@ -47,10 +47,8 @@ class CabinetFormElement extends BaseFormElement {
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/admissionNotice.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/admissionNotice_example.json
-
         return html`
             <form>
-                <h2>admissionNotice Form</h2>
                 ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
                 ${formElements.stringElement('previousStudy', 'Previous study', data.previousStudy || '')}
                 ${formElements.enumElement('decision', 'Decision', data.decision || '', CabinetFormElement.getDecisions(), false)}
@@ -65,7 +63,6 @@ class CabinetHitElement extends BaseHitElement {
         // language=css
         return css`
             ${super.styles}
-
 
             .ais-admission-Hits-header{
                 border-bottom: 1px solid rgb(34, 33, 32);
@@ -145,13 +142,9 @@ class CabinetHitElement extends BaseHitElement {
 class CabinetViewElement extends BaseViewElement {
     render() {
         const fileData = this.data?.file || {};
-        const baseData = fileData.base || {};
         const data = fileData["file-cabinet-admissionNotice"] || {};
 
         return html`
-            <h2>admissionNotice</h2>
-            lang: ${this.lang}<br />
-            filename: ${baseData.fileName}<br />
             ${viewElements.dateElement('Date created', data.dateCreated || '')}
             ${viewElements.stringElement('Previous study', data.previousStudy || '')}
             ${viewElements.enumElement('Decision', data.decision || '', CabinetFormElement.getDecisions())}

@@ -235,6 +235,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         return css`
             ${commonStyles.getGeneralCSS(false)}
             ${commonStyles.getButtonCSS()}
+            ${formElements.getFieldsetCSS()}
 
             .button-row {
                 margin-top: 1em;
@@ -343,6 +344,17 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         return css`
             ${commonStyles.getGeneralCSS(false)}
             ${commonStyles.getButtonCSS()}
+
+            fieldset {
+                border: none;
+                margin: 15px 0;
+                padding: 0;
+            }
+
+            fieldset label {
+                font-weight: bold;
+                display: block;
+            }
 
             h2 {
                 margin: 0;

@@ -9,6 +9,8 @@ import {FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {dataURLtoFile, pascalToKebab} from '../utils';
 import {classMap} from 'lit/directives/class-map.js';
+import * as viewElements from '../objectTypes/viewElements.js';
+import * as formElements from '../objectTypes/formElements.js';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static Modes = {
@@ -355,9 +357,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             customElements.define(tagName, this.objectTypeViewComponents[objectType]);
         }
 
+        const fileObjectTypeNames = this.fileObjectTypeNames;
+
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
+            <h2>Document details</h2>
+            ${viewElements.stringElement('Document type', fileObjectTypeNames[objectType])}
             <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" .data=${hit}></${unsafeStatic(tagName)}>
         `;
     }
@@ -492,6 +498,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${commonStyles.getGeneralCSS(false)}
             ${commonStyles.getButtonCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
+            ${formElements.getFieldsetCSS()}
 
             #document-modal {
                 --dbp-modal-min-width: 85vw;
@@ -594,19 +601,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 `;
             case CabinetFile.Modes.ADD:
                 if (this.objectType === '') {
-                    const file = this.documentFile;
-
                     return html`
-                        <p>
-                            You are about to upload the following document:<br />
-                            ${file.name}
-                        </p>
-                        <p>
-                            Please select a document type to continue.
-                        </p>
-                        <p>
+                        <h2>Document details</h2>
+                        <fieldset>
+                            <label>Document type</label>
                             ${this.getObjectTypeSelector()}
-                        </p>
+                        </fieldset>
                     `;
                 } else {
                     return html`
@@ -615,9 +615,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
             case CabinetFile.Modes.EDIT:
                 return html`
-                    <p>
+                    <h2>Document details</h2>
+                    <fieldset>
+                        <label>Document type</label>
                         ${this.getObjectTypeSelector()}
-                    </p>
+                    </fieldset>
                     ${this.getDocumentEditFormHtml(true)}
                 `;
         }

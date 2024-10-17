@@ -41,8 +41,6 @@ class CabinetFormElement extends BaseFormElement {
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/communication_example.json
         return html`
             <form>
-                <h2>Communication Form</h2>
-                lang: ${this.lang}<br />
                 ${formElements.stringElement('agent[givenName]', 'Given name', agent.givenName || '')}
                 ${formElements.stringElement('agent[familyName]', 'Family name', agent.familyName || '')}
                 ${formElements.stringElement('abstract', 'Abstract', data.abstract || '', false, 10)}
@@ -139,14 +137,10 @@ class CabinetHitElement extends BaseHitElement {
 class CabinetViewElement extends BaseViewElement {
     render() {
         const fileData = this.data?.file || {};
-        const baseData = fileData.base || {};
         const data = fileData["file-cabinet-communication"] || {};
         const agent = data.agent || {};
 
         return html`
-            <h2>Communication</h2>
-            lang: ${this.lang}<br />
-            filename: ${baseData.fileName}<br />
             ${viewElements.stringElement('Given name', agent.givenName || '')}
             ${viewElements.stringElement('Family name', agent.familyName || '')}
             ${viewElements.stringElement('Abstract', data.abstract || '')}

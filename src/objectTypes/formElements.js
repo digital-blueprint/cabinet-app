@@ -1,4 +1,4 @@
-import {html} from 'lit';
+import {css, html} from 'lit';
 
 const sanitizeForHtmlId = (str) => {
     return str
@@ -78,6 +78,26 @@ export const getNationalityItems = () => {
     };
 };
 
+export const getFieldsetCSS = () => {
+    // language=css
+    return css`
+        fieldset {
+            border: none;
+            margin: 15px 0;
+            padding: 0;
+        }
+
+        fieldset label {
+            font-weight: bold;
+            display: block;
+        }
+
+        fieldset input, fieldset select, fieldset textarea {
+            width: 95%;
+        }
+    `;
+};
+
 /**
  *
  * @param name
@@ -90,7 +110,7 @@ export const stringElement = (name, label, value = "", isRequired = false, rows 
     const id = sanitizeForHtmlId(name);
     return html`
         <fieldset>
-            <legend>${label}</legend>
+            <label for="form-input-${name}">${label}</label>
             ${rows > 1
                 ? html`<textarea
                     id="form-input-${id}"
@@ -106,7 +126,6 @@ export const stringElement = (name, label, value = "", isRequired = false, rows 
                     ?required=${isRequired}
                   >`
             }
-            <label for="form-input-${name}">${label}</label>
         </fieldset>
     `;
 };
@@ -124,14 +143,13 @@ export const dateElement = (name, label, value = "", isRequired = false) => {
 
     return html`
         <fieldset>
-            <legend>${label}</legend>
+            <label for="form-input-${name}">${label}</label>
             <input
                 type="date"
                 id="form-input-${id}"
                 name="${name}"
                 value="${formattedValue}"
                 ?required=${isRequired} />
-            <label for="form-input-${name}">${label}</label>
         </fieldset>
     `;
 };
@@ -178,7 +196,7 @@ export const dateTimeElement = (name, label, value = "", isRequired = false) => 
     const id = sanitizeForHtmlId(name);
     return html`
         <fieldset>
-            <legend>${label}</legend>
+            <label for="form-input-${name}">${label}</label>
             <input
                 type="datetime-local"
                 id="form-input-${id}"
@@ -186,7 +204,6 @@ export const dateTimeElement = (name, label, value = "", isRequired = false) => 
                 name="${name}"
                 value="${isoToDatetimeLocal(value)}"
                 ?required=${isRequired} />
-            <label for="form-input-${name}">${label}</label>
         </fieldset>
     `;
 };
@@ -195,7 +212,7 @@ export const enumElement = (name, label, value = "", items = {}, isRequired = fa
     const id = sanitizeForHtmlId(name);
     return html`
         <fieldset>
-            <legend>${label}</legend>
+            <label for="form-input-${name}">${label}</label>
             <select
                 id="form-input-${id}"
                 name="${name}"
@@ -204,7 +221,6 @@ export const enumElement = (name, label, value = "", items = {}, isRequired = fa
                     <option value="${key}" ?selected=${key === value}>${items[key]}</option>
                 `)}
             </select>
-            <label for="form-input-${name}">${label}</label>
         </fieldset>
     `;
 };
