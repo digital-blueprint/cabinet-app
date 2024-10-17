@@ -635,7 +635,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             </dbp-inline-notification>
 
             <div class="${classMap({hidden: !this.isLoggedIn() || this.isLoading() || this.loadingTranslations})}">
-                <h1>Search</h1>
+
                 <div class="search-box-container">
                     <div id="searchbox" class="search-box-widget"></div>
                     <div id="sort-by" class="sort-widget"></div>
