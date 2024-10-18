@@ -50,10 +50,9 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         let previousYear = currentYear - 1;
         let currentMonth = currentDate.getMonth();
         let currentSeason;
-        if(currentMonth >= 2 && currentMonth <= 8) {
+        if (currentMonth >= 2 && currentMonth <= 8) {
             currentSeason = 'S';
-        }
-        else {
+        } else {
             currentSeason = 'W';
         }
 
@@ -76,12 +75,13 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             semesters[previousSemester] = previousSemester;
         }
 
-        for(let year = previousYear; year >= 20; year--) {
+        for (let year = previousYear; year >= 20; year--) {
             let winterSemester = year + 'W';
             semesters[winterSemester] = winterSemester;
             let summerSemester = year + 'S';
             semesters[summerSemester] = summerSemester;
-        };
+        }
+
         return semesters;
     };
 
@@ -90,19 +90,17 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         const baseData = fileData.base || {};
 
         let defaultSemester;
-        if(baseData.semester) {
+        if (baseData.semester) {
             defaultSemester = baseData.semester;
-        }
-        else {
+        } else {
             let currentDate = new Date();
             let currentYear = currentDate.getFullYear();
             currentYear = currentYear % 100;
             let currentMonth = currentDate.getMonth();
             let currentSeason;
-            if(currentMonth >= 2 && currentMonth <= 8) {
+            if (currentMonth >= 2 && currentMonth <= 8) {
                 currentSeason = 'S';
-            }
-            else {
+            } else {
                 currentSeason = 'W';
             }
             defaultSemester = currentYear.toString() + currentSeason;
