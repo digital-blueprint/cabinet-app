@@ -638,7 +638,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
 
         if (!this.fileHitData.objectType) {
-            options.unshift(html`<option value="" selected>- Select object type- </option>`);
+            options.unshift(html`<option value="" selected>- Select document type- </option>`);
         }
 
         return html`
