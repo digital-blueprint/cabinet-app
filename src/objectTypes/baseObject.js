@@ -23,12 +23,6 @@ export class BaseObject {
     getViewComponent() {
         return BaseViewElement;
     }
-
-    getInstantSearchConfig() {
-        return {
-            "data": "Generic settings for instantsearch"
-        };
-    }
 }
 
 export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {

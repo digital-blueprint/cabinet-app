@@ -708,9 +708,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 if (object.getViewComponent) {
                     viewComponents[object.name] = object.getViewComponent();
                 }
-                if (object.getInstantSearchConfig) {
-                    console.log(object.getInstantSearchConfig());
-                }
             }
 
             this.objectTypeFormComponents = formComponents;
