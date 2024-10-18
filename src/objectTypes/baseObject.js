@@ -62,12 +62,11 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
 
         const semesters = {};
 
-        if(currentSeason === 'S') {
+        if (currentSeason === 'S') {
             nextSemester = currentYear.toString() + 'W';
             semesters[nextSemester] = nextSemester;
             semesters[currentSemester] = currentSemester;
-        }
-        else {
+        } else {
             nextSemester = nextYear.toString() + 'S';
             semesters[nextSemester] = nextSemester;
             semesters[currentSemester] = currentSemester;
