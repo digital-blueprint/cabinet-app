@@ -133,6 +133,18 @@ export const stringElement = (name, label, value = "", isRequired = false, rows 
 /**
  *
  * @param name
+ * @param value
+ */
+export const hiddenElement = (name, value = "") => {
+    const id = sanitizeForHtmlId(name);
+    return html`
+        <input type="hidden" id="form-input-${id}" name="${name}" value="${value}">
+    `;
+};
+
+/**
+ *
+ * @param name
  * @param label
  * @param value - YYYY-MM-DD (iso8601)
  * @param isRequired

@@ -21,6 +21,10 @@ export default class extends BaseObject {
     getViewComponent() {
         return CabinetViewElement;
     }
+
+    getAdditionalTypes() {
+        return CabinetFormElement.getAdditionalTypes();
+    }
 }
 
 class CabinetFormElement extends BaseFormElement {
@@ -52,7 +56,7 @@ class CabinetFormElement extends BaseFormElement {
                 ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
                 ${formElements.stringElement('previousStudy', 'Previous study', data.previousStudy || '')}
                 ${formElements.enumElement('decision', 'Decision', data.decision || '', CabinetFormElement.getDecisions(), false)}
-                ${this.getCommonFormElements(CabinetFormElement.getAdditionalTypes())}
+                ${this.getCommonFormElements()}
             </form>
         `;
     }
@@ -145,10 +149,10 @@ class CabinetViewElement extends BaseViewElement {
         const data = fileData["file-cabinet-admissionNotice"] || {};
 
         return html`
+            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
             ${viewElements.dateElement('Date created', data.dateCreated || '')}
             ${viewElements.stringElement('Previous study', data.previousStudy || '')}
             ${viewElements.enumElement('Decision', data.decision || '', CabinetFormElement.getDecisions())}
-            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }
 }

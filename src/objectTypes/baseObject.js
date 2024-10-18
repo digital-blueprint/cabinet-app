@@ -23,6 +23,10 @@ export class BaseObject {
     getViewComponent() {
         return BaseViewElement;
     }
+
+    getAdditionalTypes() {
+        return BaseFormElement.getAdditionalTypes();
+    }
 }
 
 export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
@@ -32,9 +36,14 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         this.lang = this._i18n.language;
         this.data = {};
         this.personId = '';
+        this.additionalType = '';
         this.entryPointUrl = '';
         this.auth = {};
         this.saveButtonEnabled = true;
+    }
+
+    static getAdditionalTypes() {
+        return {};
     }
 
     static get scopedElements() {
@@ -84,7 +93,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         return semesters;
     };
 
-    getCommonFormElements = (additionalTypes = {}) => {
+    getCommonFormElements = () => {
         const fileData = this.data?.file || {};
         const baseData = fileData.base || {};
 
@@ -105,11 +114,13 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             defaultSemester = currentYear.toString() + currentSeason;
         }
 
+        const additionalType = this.additionalType || baseData.additionalType?.key || '';
+
         return html`
             ${formElements.stringElement('subjectOf', 'Subject of', baseData.subjectOf || '')}
             ${formElements.stringElement('studyField', 'Study field', baseData.studyField || '', true)}
             ${formElements.enumElement('semester', 'Semester', defaultSemester, this.getSemesters(), true)}
-            ${formElements.enumElement('additionalType', 'Additional type', baseData.additionalType?.key || '', additionalTypes, false)}
+            ${formElements.hiddenElement('additionalType', additionalType)}
             ${formElements.stringElement('comment', 'Comment', baseData.comment || '', false, 5)}
             ${this.getButtonRowHtml()}
         `;
@@ -214,6 +225,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             ...super.properties,
             lang: {type: String},
             personId: {type: String, attribute: 'person-id'},
+            additionalType: {type: String, attribute: 'additional-type'},
             data: {type: Object},
             auth: { type: Object },
             entryPointUrl: { type: String, attribute: 'entry-point-url' },
@@ -364,14 +376,13 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         const baseData = fileData.base || {};
 
         return html`
-            <h3>Base data</h3>
+            ${viewElements.enumElement('Document type', baseData.additionalType?.key || '', additionalTypes)}
             ${viewElements.stringElement('Mime type', baseData.mimeType)}
             ${viewElements.dateElement('Date created (metadata)', (new Date(baseData.createdTimestamp * 1000)).toISOString())}
             ${viewElements.dateElement('Date modified (metadata)', (new Date(baseData.modifiedTimestamp * 1000)).toISOString())}
             ${viewElements.stringElement('Subject of', baseData.subjectOf || '')}
             ${viewElements.stringElement('Study field', baseData.studyField || '')}
             ${viewElements.stringElement('Semester', baseData.semester || '')}
-            ${viewElements.enumElement('Additional type', baseData.additionalType?.key || '', additionalTypes)}
             ${viewElements.stringElement('Comment', baseData.comment || '')}
         `;
     };

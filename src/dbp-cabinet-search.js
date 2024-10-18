@@ -20,6 +20,7 @@ import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
 import {TypesenseService} from './services/typesense.js';
 import {updateDatePickersForExternalRefinementChange} from './components/dbp-cabinet-date-facet.js';
+import {BaseObject} from './objectTypes/baseObject.js';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -687,15 +688,20 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 console.log('schemaKey', schemaKey);
                 console.log('path', path);
                 console.log('module', module);
+
+                /**
+                 * @type {BaseObject}
+                 */
                 const object = new module.default();
 
                 if (object.name) {
                     const name = object.name;
                     console.log(name);
                     // If the name starts with "file", add it to the list of file document types
-                    if (name.startsWith('file')) {
-                        // TODO: We might need some kind of translation here
-                        this.fileDocumentTypeNames[name] = name;
+                    if (name.startsWith('file') && object.getAdditionalTypes) {
+                        for (const [key, value] of Object.entries(object.getAdditionalTypes())) {
+                            this.fileDocumentTypeNames[name + '---' + key] = value;
+                        }
                     }
                 }
 
@@ -728,7 +734,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
              * @type {CabinetFile}
              */
             const addDocumentComponent = this.documentFileComponentRef.value;
-            addDocumentComponent.setFileObjectTypeNames(this.fileDocumentTypeNames);
+            addDocumentComponent.setFileDocumentTypeNames(this.fileDocumentTypeNames);
             addDocumentComponent.setObjectTypeViewComponents(this.objectTypeViewComponents);
             addDocumentComponent.setFileDocumentFormComponents(formComponents);
         } catch (error) {

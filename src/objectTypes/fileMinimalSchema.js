@@ -20,6 +20,10 @@ export default class extends BaseObject {
     getViewComponent() {
         return CabinetViewElement;
     }
+
+    getAdditionalTypes() {
+        return CabinetFormElement.getAdditionalTypes();
+    }
 }
 
 class CabinetFormElement extends BaseFormElement {
@@ -43,7 +47,7 @@ class CabinetFormElement extends BaseFormElement {
         return html`
             <form>
                 ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
-                ${this.getCommonFormElements(CabinetFormElement.getAdditionalTypes())}
+                ${this.getCommonFormElements()}
             </form>
         `;
     }
@@ -139,8 +143,8 @@ class CabinetViewElement extends BaseViewElement {
         const data = fileData["file-cabinet-minimalSchema"] || {};
 
         return html`
-            ${viewElements.dateElement('Date created', data.dateCreated || '')}
             ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
+            ${viewElements.dateElement('Date created', data.dateCreated || '')}
         `;
     }
 }

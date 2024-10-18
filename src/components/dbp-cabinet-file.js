@@ -9,7 +9,6 @@ import {FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {dataURLtoFile, pascalToKebab} from '../utils';
 import {classMap} from 'lit/directives/class-map.js';
-import * as viewElements from '../objectTypes/viewElements.js';
 import * as formElements from '../objectTypes/formElements.js';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
@@ -28,8 +27,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.documentModalRef = createRef();
         this.documentPdfViewerRef = createRef();
         this.documentFile = null;
-        this.fileObjectTypeNames = {};
+        this.fileDocumentTypeNames = {};
         this.objectType = '';
+        this.additionalType = '';
         // TODO: Do we need a prefix?
         this.blobDocumentPrefix = 'document-';
         this.mode = CabinetFile.Modes.VIEW;
@@ -82,12 +82,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             fileHitData: { type: Object, attribute: false },
             documentFile: { type: File, attribute: false },
             objectType: { type: String, attribute: false },
+            additionalType: { type: String, attribute: false },
             mode: { type: String },
         };
     }
 
-    setFileObjectTypeNames(fileObjectTypeNames) {
-        this.fileObjectTypeNames = fileObjectTypeNames;
+    setFileDocumentTypeNames(fileDocumentTypeNames) {
+        this.fileDocumentTypeNames = fileDocumentTypeNames;
     }
 
     setFileDocumentFormComponents(fileDocumentFormComponents) {
@@ -322,6 +323,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         console.log('getDocumentEditFormHtml fileHitData', fileHitData);
+        console.log('getDocumentEditFormHtml this.additionalType', this.additionalType);
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "fileHitData" property from a variable too!
@@ -331,6 +333,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
              subscribe="auth,lang,entry-point-url"
              .data=${fileHitData}
              person-id="${this.personId}"
+             additional-type="${this.additionalType}"
              object-type=></${unsafeStatic(tagName)}>
         `;
     }
@@ -357,13 +360,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             customElements.define(tagName, this.objectTypeViewComponents[objectType]);
         }
 
-        const fileObjectTypeNames = this.fileObjectTypeNames;
-
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
             <h2>Document details</h2>
-            ${viewElements.stringElement('Document type', fileObjectTypeNames[objectType])}
             <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" .data=${hit}></${unsafeStatic(tagName)}>
         `;
     }
@@ -603,48 +603,56 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 if (this.objectType === '') {
                     return html`
                         <h2>Document details</h2>
-                        ${this.getObjectTypeSelector()}
+                        ${this.getDocumentTypeSelector()}
                     `;
                 } else {
                     return html`
                         <h2>Document details</h2>
-                        ${this.getObjectTypeSelector()}
+                        ${this.getDocumentTypeSelector()}
                         ${this.getDocumentEditFormHtml()}
                     `;
                 }
             case CabinetFile.Modes.EDIT:
                 return html`
                     <h2>Document details</h2>
-                    ${this.getObjectTypeSelector()}
+                    ${this.getDocumentTypeSelector()}
                     ${this.getDocumentEditFormHtml(true)}
                 `;
         }
     }
 
-    onObjectTypeSelected() {
+    onDocumentTypeSelected(event) {
         // Save the current fileHitData to the cache to keep the data when switching between object types in edit mode
         // In the future there could also be an event on every form element change to save the data to the cache when it changes
         this.fileHitDataCache[this.objectType] = this.fileHitData;
 
-        const objectType = this._('#object-type').value;
-        console.log('objectType', objectType);
+        // Split document type into object type and additional type
+        const documentType = this._('#document-type').value;
+        console.log('onDocumentTypeSelected documentType', documentType);
+        const [objectType, additionalType] = documentType.split("---");
+        console.log('onDocumentTypeSelected objectType', objectType);
+        console.log('onDocumentTypeSelected additionalType', additionalType);
         this.objectType = objectType;
+        this.additionalType = additionalType;
     }
 
-    getObjectTypeSelector() {
-        const fileObjectTypeNames = this.fileObjectTypeNames;
-        const options = Object.keys(fileObjectTypeNames).map((key) => {
-            return html`<option value="${key}" ?selected=${key === this.fileHitData.objectType}>${fileObjectTypeNames[key]}</option>`;
+    getDocumentTypeSelector() {
+        const fileDocumentTypeNames = this.fileDocumentTypeNames;
+        const additionalType = this.fileHitData?.file?.base?.additionalType?.key || this.additionalType || '';
+        const objectType = this.fileHitData.objectType || this.objectType || '';
+        const fileDocumentType = additionalType !== '' && objectType !== '' ? objectType + '---' + additionalType : '';
+        const options = Object.keys(fileDocumentTypeNames).map((key) => {
+            return html`<option value="${key}" ?selected=${key === fileDocumentType}>${fileDocumentTypeNames[key]}</option>`;
         });
 
-        if (!this.fileHitData.objectType) {
-            options.unshift(html`<option value="" selected>- Select document type- </option>`);
+        if (fileDocumentType === '') {
+            options.unshift(html`<option value="" selected> -Select document type- </option>`);
         }
 
         return html`
             <fieldset>
                 <label>Document type</label>
-                <select id="object-type" class="select" name="object-type" required @change="${this.onObjectTypeSelected}">
+                <select id="document-type" class="select" name="object-type" required @change="${this.onDocumentTypeSelected}">
                     ${options}
                 </select>
             </fieldset>

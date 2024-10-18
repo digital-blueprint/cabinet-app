@@ -20,6 +20,10 @@ export default class extends BaseObject {
     getViewComponent() {
         return CabinetViewElement;
     }
+
+    getAdditionalTypes() {
+        return CabinetFormElement.getAdditionalTypes();
+    }
 }
 
 class CabinetFormElement extends BaseFormElement {
@@ -41,7 +45,7 @@ class CabinetFormElement extends BaseFormElement {
             <form>
                 ${formElements.enumElement('nationality', 'Nationality', data.nationality || '', formElements.getNationalityItems(), false)}
                 ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
-                ${this.getCommonFormElements(CabinetFormElement.getAdditionalTypes())}
+                ${this.getCommonFormElements()}
             </form>
         `;
     }
@@ -136,9 +140,9 @@ class CabinetViewElement extends BaseViewElement {
         const data = fileData["file-cabinet-citizenshipCertificate"] || {};
 
         return html`
+            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
             ${viewElements.enumElement('Nationality', data.nationality || '', formElements.getNationalityItems())}
             ${viewElements.dateElement('Date created', data.dateCreated || '')}
-            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }
 }

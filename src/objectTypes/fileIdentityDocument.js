@@ -20,6 +20,10 @@ export default class extends BaseObject {
     getViewComponent() {
         return CabinetViewElement;
     }
+
+    getAdditionalTypes() {
+        return CabinetFormElement.getAdditionalTypes();
+    }
 }
 
 class CabinetFormElement extends BaseFormElement {
@@ -45,7 +49,7 @@ class CabinetFormElement extends BaseFormElement {
                 ${formElements.stringElement('identifier', 'Identifier', data.identifier || '', true)}
                 ${formElements.enumElement('nationality', 'Nationality', data.nationality || '', formElements.getNationalityItems(), true)}
                 ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
-                ${this.getCommonFormElements(CabinetFormElement.getAdditionalTypes())}
+                ${this.getCommonFormElements()}
             </form>
         `;
     }
@@ -137,10 +141,10 @@ class CabinetViewElement extends BaseViewElement {
         const data = fileData["file-cabinet-identityDocument"] || {};
 
         return html`
+            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
             ${viewElements.stringElement('Identifier', data.identifier || '')}
             ${viewElements.enumElement('Nationality', data.nationality || '', formElements.getNationalityItems())}
             ${viewElements.dateElement('Date created', data.dateCreated || '')}
-            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }
 }
