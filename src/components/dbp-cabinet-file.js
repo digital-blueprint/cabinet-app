@@ -606,7 +606,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         ${this.getObjectTypeSelector()}
                     `;
                 } else {
-                    // TODO: Make the selection work
                     return html`
                         <h2>Document details</h2>
                         ${this.getObjectTypeSelector()}
