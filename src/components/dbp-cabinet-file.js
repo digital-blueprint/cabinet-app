@@ -237,7 +237,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      */
     async createBlobDownloadUrl(identifier, includeData = false) {
         return this.createBlobUrl(CabinetFile.BlobUrlTypes.DOWNLOAD, identifier, includeData);
-
     }
 
     async loadBlobItem(url) {
