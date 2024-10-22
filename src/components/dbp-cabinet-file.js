@@ -239,6 +239,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         return this.createBlobUrl(CabinetFile.BlobUrlTypes.DOWNLOAD, identifier, includeData);
     }
 
+    /**
+     * @param identifier
+     * @returns {Promise<string>}
+     */
+    async createBlobDeleteUrl(identifier) {
+        return this.createBlobUrl(CabinetFile.BlobUrlTypes.DELETE, identifier);
+    }
+
     async loadBlobItem(url) {
         let response = await fetch(url.toString(), {
             method: 'GET',
@@ -438,6 +446,33 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.mode = CabinetFile.Modes.EDIT;
     }
 
+    async deleteFile() {
+        // Ask for confirmation
+        if (!confirm('Delete file?')) {
+            return;
+        }
+
+        const fileId = this.fileHitData.file.base.fileId;
+        console.log('deleteFile fileId', fileId);
+
+        const deleteUrl = await this.createBlobDeleteUrl(fileId);
+        console.log('downloadFileFromBlob deleteUrl', deleteUrl);
+
+        const options = {
+            method: 'DELETE',
+            headers: {
+                Authorization: 'Bearer ' + this.auth.token,
+            },
+        };
+
+        let response = await fetch(deleteUrl, options);
+        if (!response.ok) {
+            throw response;
+        }
+
+        return true;
+    }
+
     async downloadFile() {
         console.log('downloadFile this.documentFile', this.documentFile);
         const fileUrl = URL.createObjectURL(this.documentFile);
@@ -585,6 +620,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             <button @click="${this.editFile}" class="${classMap({
                                 hidden: this.mode !== CabinetFile.Modes.VIEW,
                             })} button is-primary">Edit</button>
+                            <button @click="${this.deleteFile}" class="${classMap({
+                                hidden: this.mode === CabinetFile.Modes.ADD,
+                            })} button is-primary">Delete</button>
                         </div>
                         ${this.getObjectTypeFormPartHtml()}
                     </div>
