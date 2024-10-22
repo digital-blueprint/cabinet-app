@@ -18,6 +18,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         ADD: 'add',
     };
 
+    static BlobUrlTypes = {
+        UPLOAD: 'upload',
+        DOWNLOAD: 'download',
+        DELETE: 'delete',
+    };
+
     constructor() {
         super();
         this.objectTypeFormComponents = {};
@@ -150,17 +156,41 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @returns {Promise<string>}
      */
     async createBlobUploadUrl() {
+        return this.createBlobUrl(CabinetFile.BlobUrlTypes.UPLOAD);
+    }
+
+    /**
+     * @param blobUrlType
+     * @param identifier
+     * @param includeData Whether to include file data in the response
+     * @returns {Promise<string>}
+     */
+    async createBlobUrl(blobUrlType, identifier = '', includeData = false) {
         if (this.entryPointUrl === '') {
             return '';
         }
 
-        const identifier = this.getFileHitDataBlobId();
+        let method;
+        let fileName = '';
+        switch (blobUrlType) {
+            case CabinetFile.BlobUrlTypes.UPLOAD:
+                identifier = this.getFileHitDataBlobId();
+                method = identifier === '' ? 'POST' : 'PATCH';
+                fileName = this.documentFile.name;
+                break;
+            case CabinetFile.BlobUrlTypes.DOWNLOAD:
+                method = 'GET';
+                break;
+            case CabinetFile.BlobUrlTypes.DELETE:
+                method = 'DELETE';
+                break;
+        }
+
         const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/blob-urls`);
         const apiUrl = new URL(baseUrl);
         const params = {
-            'method': identifier === '' ? 'POST' : 'PATCH',
+            'method': method,
             'prefix': this.blobDocumentPrefix,
-            'fileName': this.documentFile.name,
             // TODO: Does this replacing always work?
             'type': this.objectType.replace('file-cabinet-', '')
         };
@@ -169,48 +199,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             params['identifier'] = identifier;
         }
 
-        apiUrl.search = new URLSearchParams(params).toString();
-
-        let response = await fetch(apiUrl.toString(), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-            body: '{}',
-        });
-        if (!response.ok) {
-            throw response;
+        if (fileName !== '') {
+            params['fileName'] = fileName;
         }
-        const url = await response.json();
-        console.log('Upload url', url['blobUrl']);
-
-        return url['blobUrl'];
-    }
-
-    getFileHitDataBlobId() {
-        return this.fileHitData?.file?.base?.fileId || '';
-    }
-
-    /**
-     * @param identifier
-     * @param includeData Whether to include file data in the response
-     * @returns {Promise<string>}
-     */
-    async createBlobDownloadUrl(identifier, includeData = false) {
-        if (this.entryPointUrl === '') {
-            return '';
-        }
-
-        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/blob-urls`);
-        const apiUrl = new URL(baseUrl);
-        const params = {
-            'method': 'GET',
-            'identifier': identifier,
-            'prefix': this.blobDocumentPrefix,
-            // TODO: Does this replacing always work?
-            'type': this.objectType.replace('file-cabinet-', '')
-        };
 
         if (includeData) {
             params['includeData'] = '1';
@@ -230,9 +221,23 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             throw response;
         }
         const url = await response.json();
-        console.log('Download url', url['blobUrl']);
+        console.log(blobUrlType, 'url', url['blobUrl']);
 
         return url['blobUrl'];
+    }
+
+    getFileHitDataBlobId() {
+        return this.fileHitData?.file?.base?.fileId || '';
+    }
+
+    /**
+     * @param identifier
+     * @param includeData Whether to include file data in the response
+     * @returns {Promise<string>}
+     */
+    async createBlobDownloadUrl(identifier, includeData = false) {
+        return this.createBlobUrl(CabinetFile.BlobUrlTypes.DOWNLOAD, identifier, includeData);
+
     }
 
     async loadBlobItem(url) {
