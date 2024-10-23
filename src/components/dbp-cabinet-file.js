@@ -467,8 +467,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         let response = await fetch(deleteUrl, options);
         if (!response.ok) {
+            // TODO: Error handling
             throw response;
         }
+
+        alert('Document was successfully deleted!');
 
         return true;
     }
