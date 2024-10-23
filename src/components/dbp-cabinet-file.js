@@ -448,7 +448,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async deleteFile() {
         // Ask for confirmation
-        if (!confirm('Delete file?')) {
+        if (!confirm('Delete document?')) {
             return;
         }
 
