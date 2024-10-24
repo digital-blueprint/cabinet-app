@@ -475,7 +475,15 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         alert('Document was successfully deleted!');
 
-        return true;
+        // Send DbpCabinetDocumentDeleted event to parent component to refresh the search results
+        this.dispatchEvent(new CustomEvent('DbpCabinetDocumentDeleted', {detail: {hit: this.fileHitData}, bubbles: true, composed: true}));
+
+        /**
+         * @type {Modal}
+         */
+        const documentModal = this.documentModalRef.value;
+        // Close the dialog, because the document was deleted
+        documentModal.close();
     }
 
     async downloadFile() {

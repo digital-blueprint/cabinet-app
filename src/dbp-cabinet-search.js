@@ -183,6 +183,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             that.openDocumentViewDialog(event.detail.hit);
         });
 
+        // Listen to DbpCabinetDocumentDeleted events to refresh the search
+        this.addEventListener('DbpCabinetDocumentDeleted', function(event) {
+            this.search.refresh();
+        });
+
         // Listen to DbpCabinetFilterPerson events to filter to a specific person
         this.addEventListener('DbpCabinetFilterPerson', function(event) {
             that.cabinetFacetsRef.value.filterOnSelectedPerson(event);
