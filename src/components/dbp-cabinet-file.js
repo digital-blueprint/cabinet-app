@@ -515,9 +515,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         /**
          * @type {Modal}
          */
-        const documentAddModal = this.documentModalRef.value;
-        // Make sure the document-add dialog is closed
-        documentAddModal.close();
+        const documentModal = this.documentModalRef.value;
+        // Make sure the document dialog is closed
+        documentModal.close();
 
         /**
          * @type {FileSource}
