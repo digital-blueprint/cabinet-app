@@ -42,7 +42,7 @@ class Address {
     telephoneNumber;
 }
 
-class Study {
+export class Study {
     /** @type {string} */
     id;
     /** @type {string} */
@@ -100,7 +100,7 @@ class Application {
     qualificationType;
 }
 
-class Person {
+export class Person {
         /** @type {string} */
         birthDate;
         /** @type {string} */
@@ -187,7 +187,7 @@ class Person {
         studyLimitEndSemester;
 }
 
-class PersonHit {
+export class PersonHit {
     /** @type {string} */
     id;
     /** @type {string} */
