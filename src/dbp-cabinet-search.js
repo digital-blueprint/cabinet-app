@@ -167,12 +167,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this._loginStatus = '';
         this._loginState = [];
 
-        // Listen to DbpCabinetDocumentEdit events, to open the file edit dialog
-        this.addEventListener('DbpCabinetDocumentEdit', function(event) {
-            that.openDocumentEditDialog(event.detail.hit);
-        });
-
-        // Listen to DbpCabinetDocumentEdit events, to open the file edit dialog
+        // Listen to DbpCabinetDocumentAdd events, to open the file dialog in add mode
         this.addEventListener('DbpCabinetDocumentAdd', function(event) {
             /**
              * @type {CabinetFile}
@@ -183,7 +178,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             component.openDocumentAddDialogWithPersonHit(event.detail.hit);
         });
 
-        // Listen to DbpCabinetDocumentView events, to open the file edit dialog
+        // Listen to DbpCabinetDocumentView events, to open the file dialog in view mode
         this.addEventListener('DbpCabinetDocumentView', function(event) {
             that.openDocumentViewDialog(event.detail.hit);
         });
