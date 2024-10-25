@@ -5,6 +5,7 @@ import {createInstance} from '../i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './formElements';
 import * as viewElements from './viewElements.js';
+import {classMap} from 'lit/directives/class-map.js';
 
 export class BaseObject {
     name = 'baseObject';
@@ -259,7 +260,10 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         return html`
             <div class="button-row">
                 <button class="button is-secondary" type="button" @click=${this.cancelForm}>Cancel</button>
-                <button class="button is-primary" type="submit" ?disabled=${!this.saveButtonEnabled} @click=${this.storeBlobItem}>Save</button>
+                <button class="button is-primary" type="submit" ?disabled=${!this.saveButtonEnabled} @click=${this.storeBlobItem}>
+                    Save
+                    <dbp-mini-spinner class="${classMap({hidden: this.saveButtonEnabled})}"></dbp-mini-spinner>
+                </button>
             </div>
         `;
     }
