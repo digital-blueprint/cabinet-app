@@ -188,8 +188,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             that.openDocumentViewDialog(event.detail.hit);
         });
 
-        // Listen to DbpCabinetDocumentDeleted events to refresh the search
-        this.addEventListener('DbpCabinetDocumentDeleted', function(event) {
+        // Listen to DbpCabinetDocumentChanged events to refresh the search
+        this.addEventListener('DbpCabinetDocumentChanged', function() {
+            console.log('Refresh after document changed');
             this.search.refresh();
         });
 

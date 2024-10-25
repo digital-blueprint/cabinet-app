@@ -45,6 +45,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.fileHitData = {};
         this.fileHitDataCache = {};
         this.isFileDirty = false;
+        this.dataWasChanged = false;
     }
 
     connectedCallback() {
@@ -304,6 +305,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const data = await response.json();
         console.log('File data', JSON.stringify(data));
         this.isFileDirty = false;
+        this.dataWasChanged = true;
 
         return data;
     }
@@ -399,6 +401,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async openViewDialogWithFileHit(hit) {
         this.isFileDirty = false;
+        this.dataWasChanged = false;
         this.mode = CabinetFile.Modes.VIEW;
 
         /**
@@ -473,10 +476,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             throw response;
         }
 
+        this.dataWasChanged = true;
         alert('Document was successfully deleted!');
-
-        // Send DbpCabinetDocumentDeleted event to parent component to refresh the search results
-        this.dispatchEvent(new CustomEvent('DbpCabinetDocumentDeleted', {detail: {hit: this.fileHitData}, bubbles: true, composed: true}));
 
         /**
          * @type {Modal}
@@ -520,7 +521,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.objectType = '';
             this.fileHitData = {};
         }
+
         this.isFileDirty = false;
+        this.dataWasChanged = false;
 
         /**
          * @type {Modal}
@@ -611,6 +614,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         return html`
             <dbp-modal
                 ${ref(this.documentModalRef)}
+                @dbp-modal-closed="${this.onCloseDocumentModal}"
                 id="document-modal"
                 modal-id="document-modal"
                 subscribe="lang">
@@ -645,6 +649,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 </div>
             </dbp-modal>
         `;
+    }
+
+    onCloseDocumentModal() {
+        // If the file was created, updated or deleted, we need to inform the parent component to refresh the search results
+        if (this.dataWasChanged) {
+            this.dispatchEvent(new CustomEvent('DbpCabinetDocumentChanged', {
+                detail: {hit: this.fileHitData},
+                bubbles: true,
+                composed: true
+            }));
+        }
     }
 
     getObjectTypeFormPartHtml() {
