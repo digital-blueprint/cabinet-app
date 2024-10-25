@@ -133,19 +133,22 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             return;
         }
 
-        const item = await this.typesenseService.fetchFileDocumentByBlobId(fileId);
+        // We had a case that the service was not there, even if it should, we will just try again in 1 second
+        if (this.typesenseService) {
+            const item = await this.typesenseService.fetchFileDocumentByBlobId(fileId);
 
-        // If the document was found, and we were in ADD mode or the item was already updated in Typesense
-        // set the hit data and switch to view mode
-        if (item !== null &&
-            (this.mode === CabinetFile.Modes.ADD ||
-                this.fileHitData.file.base.modifiedTimestamp < item.file.base.modifiedTimestamp)) {
-            console.log('fetchFileDocumentFromTypesense this.fileHitData', this.fileHitData);
-            console.log('fetchFileDocumentFromTypesense item', item);
+            // If the document was found, and we were in ADD mode or the item was already updated in Typesense
+            // set the hit data and switch to view mode
+            if (item !== null &&
+                (this.mode === CabinetFile.Modes.ADD ||
+                    this.fileHitData.file.base.modifiedTimestamp < item.file.base.modifiedTimestamp)) {
+                console.log('fetchFileDocumentFromTypesense this.fileHitData', this.fileHitData);
+                console.log('fetchFileDocumentFromTypesense item', item);
 
-            this.fileHitData = item;
-            this.mode = CabinetFile.Modes.VIEW;
-            return;
+                this.fileHitData = item;
+                this.mode = CabinetFile.Modes.VIEW;
+                return;
+            }
         }
 
         // Try again in 1 second
