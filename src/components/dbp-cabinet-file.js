@@ -41,6 +41,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.mode = CabinetFile.Modes.VIEW;
         this.modalRef = createRef();
         this.fileSourceRef = createRef();
+        this.formRef = createRef();
         this.typesenseService = null;
         this.fileHitData = {};
         this.fileHitDataCache = {};
@@ -115,7 +116,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('storeDocumentToBlob fileData', fileData);
 
         if (fileData.identifier) {
-            alert('Document stored successfully with id ' + fileData.identifier + '!');
+            alert('Document stored successfully with id ' + fileData.identifier + '! ' +
+                'Document will now be fetched from Typesense.');
 
             console.log('storeDocumentToBlob this.typesenseService', this.typesenseService);
 
@@ -129,7 +131,15 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Stop after 10 attempts
         if (increment >= 10) {
             // TODO: Setup some kind of error message and decide what to do
-            console.error('Could not fetch file document from Typesense after 10 attempts!');
+            alert('Could not fetch file document from Typesense after 10 attempts!');
+
+            /**
+             * @type {CabinetFormElement}
+             */
+            const form = this.formRef.value;
+            // Enable the save button again in the form
+            form.enableSaveButton();
+
             return;
         }
 
@@ -346,6 +356,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // a variable and need to set the "fileHitData" property from a variable too!
         return staticHtml`
             <${unsafeStatic(tagName)}
+             ${ref(this.formRef)}
              id="edit-form"
              subscribe="auth,lang,entry-point-url"
              .data=${fileHitData}

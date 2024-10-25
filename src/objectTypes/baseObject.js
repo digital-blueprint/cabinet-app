@@ -43,6 +43,10 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         this.saveButtonEnabled = true;
     }
 
+    enableSaveButton() {
+        this.saveButtonEnabled = true;
+    }
+
     static getAdditionalTypes() {
         return {};
     }
