@@ -122,7 +122,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             console.log('storeDocumentToBlob this.typesenseService', this.typesenseService);
 
             // Try to fetch the document from Typesense again and again until it is found
-            // TODO: Setup some kind of spinner or loading indicator
             await this.fetchFileDocumentFromTypesense(fileData.identifier);
         }
     }
