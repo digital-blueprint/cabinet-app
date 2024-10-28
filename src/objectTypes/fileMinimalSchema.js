@@ -1,5 +1,5 @@
 import {css, html} from 'lit';
-import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
+import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement,getCommonStyles} from './baseObject';
 import * as formElements from './formElements.js';
 import * as viewElements from './viewElements.js';
 import { PersonHit } from './person.js';
@@ -57,57 +57,15 @@ class CabinetHitElement extends BaseHitElement {
     static get styles() {
         // language=css
         return css`
-            ${super.styles}
+        ${super.styles}
+        ${getCommonStyles()}
 
-            .ais-doc-Hits-header{
-                border-bottom: 1px solid rgb(34, 33, 32);
-                margin-bottom: calc(7px + 1vh);
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-                padding: 5px;
-            }
-            .ais-doc-Hits-header-items{
-                display: flex;
-            }
-            .ais-doc-Hits-content {
-                display: grid;
-                grid-template-rows: repeat(3, 1fr);
-                gap: 10px;
-            }
-            .hit-content-item1 {
-                grid-row: 1/2;
-            }
-            .hit-content-item2 {
-                grid-row: 2/3;
-            }
-            .hit-content-item3 {
-                grid-row: 3/3;
-                padding-top: 30px;
-            }
-            .header-item1 {
-                grid-column: 1 / 2;
-                color: red;
-            }
-            .header-item2 {
-                grid-column: 3 / 4;
-                justify-self: end;
-            }
-            .header-item3 {
-                grid-column: 1 / 2;
+        .header-item1 {
+        color: purple;
+        }
 
-            }
-            .header-item4 {
-                grid-column: 2 / 3;
-
-            }
-            .header-item5 {
-                grid-column: 3 / 4;
-
-            }
         `;
     }
-
     render() {
         const lastModified = new Date(this.data.file.base.modifiedTimestamp * 1000).toLocaleString();
         let hit = /** @type {PersonHit} */(this.data);
