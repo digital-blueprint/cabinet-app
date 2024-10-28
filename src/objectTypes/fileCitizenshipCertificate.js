@@ -93,8 +93,6 @@ class CabinetHitElement extends BaseHitElement {
         `;
     }
 }
-
-
 class CabinetViewElement extends BaseViewElement {
     render() {
         const fileData = this.data?.file || {};
