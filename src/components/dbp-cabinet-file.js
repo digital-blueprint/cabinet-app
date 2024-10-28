@@ -10,6 +10,7 @@ import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {dataURLtoFile, pascalToKebab} from '../utils';
 import {classMap} from 'lit/directives/class-map.js';
 import * as formElements from '../objectTypes/formElements.js';
+import {BaseFormElement} from '../objectTypes/baseObject.js';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static Modes = {
@@ -133,7 +134,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             alert('Could not fetch file document from Typesense after 10 attempts!');
 
             /**
-             * @type {CabinetFormElement}
+             * @type {BaseFormElement}
              */
             const form = this.formRef.value;
             // Enable the save button again in the form
