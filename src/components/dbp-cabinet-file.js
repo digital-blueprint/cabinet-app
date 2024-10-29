@@ -177,9 +177,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @param blobUrlType
      * @param identifier
      * @param includeData Whether to include file data in the response
+     * @param extraParams
      * @returns {Promise<string>}
      */
-    async createBlobUrl(blobUrlType, identifier = '', includeData = false) {
+    async createBlobUrl(blobUrlType, identifier = '', includeData = false, extraParams = {}) {
         if (this.entryPointUrl === '') {
             return '';
         }
@@ -202,7 +203,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/blob-urls`);
         const apiUrl = new URL(baseUrl);
-        const params = {
+        let params = {
             'method': method,
             'prefix': this.blobDocumentPrefix,
             // TODO: Does this replacing always work?
@@ -221,6 +222,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             params['includeData'] = '1';
         }
 
+        params = { ...params, ...extraParams };
         apiUrl.search = new URLSearchParams(params).toString();
 
         let response = await fetch(apiUrl.toString(), {
@@ -254,11 +256,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     /**
-     * @param identifier
      * @returns {Promise<string>}
      */
-    async createBlobDeleteUrl(identifier) {
-        return this.createBlobUrl(CabinetFile.BlobUrlTypes.DELETE, identifier);
+    async createBlobDeleteUrl() {
+        return this.createBlobUrl(CabinetFile.BlobUrlTypes.UPLOAD, '', false, { 'retentionDuration': '7D' });
     }
 
     async loadBlobItem(url) {
@@ -464,22 +465,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async deleteFile() {
-        // Ask for confirmation
-        if (!confirm('Delete document?')) {
-            return;
-        }
-
         const fileId = this.fileHitData.file.base.fileId;
         console.log('deleteFile fileId', fileId);
 
-        const deleteUrl = await this.createBlobDeleteUrl(fileId);
+        const deleteUrl = await this.createBlobDeleteUrl();
         console.log('downloadFileFromBlob deleteUrl', deleteUrl);
 
         const options = {
-            method: 'DELETE',
+            // We are doing soft-delete here, so we need to use PATCH
+            method: 'PATCH',
             headers: {
                 Authorization: 'Bearer ' + this.auth.token,
             },
+            // The API demands a multipart form data, so we need to send an empty body
+            body: new FormData(),
         };
 
         let response = await fetch(deleteUrl, options);
@@ -492,13 +491,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         this.dataWasChanged = true;
         alert('Document was successfully deleted!');
-
-        /**
-         * @type {Modal}
-         */
-        const documentModal = this.documentModalRef.value;
-        // Close the dialog, because the document was deleted
-        documentModal.close();
     }
 
     async downloadFile() {
