@@ -59,12 +59,9 @@ class CabinetHitElement extends BaseHitElement {
         ${super.styles}
         ${getCommonStyles()}
 
-        .header-item1 {
-        color: purple;
-        }
-
         `;
     }
+
     render() {
         const lastModified = new Date(this.data.file.base.modifiedTimestamp * 1000).toLocaleString();
         let hit = /** @type {PersonHit} */(this.data);
@@ -82,7 +79,7 @@ class CabinetHitElement extends BaseHitElement {
                 <main class="ais-doc-Hits-content">
                 lang: ${this.lang}
                 <header class="hit-content-item1">document Type:</header>
-                <div class="hit-content-item2">filename: ${this.data.file.base.fileName}</div><br />
+                <div class="hit-content-item2"></div><br />
                 <div class="hit-content-item3">
                 dateCreated: <br />
                 Added: <br />
