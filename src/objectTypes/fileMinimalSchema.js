@@ -60,10 +60,6 @@ class CabinetHitElement extends BaseHitElement {
         ${super.styles}
         ${getCommonStyles()}
 
-        .header-item1 {
-        color: purple;
-        }
-
         `;
     }
     render() {
@@ -83,7 +79,7 @@ class CabinetHitElement extends BaseHitElement {
                 <main class="ais-doc-Hits-content">
                 <header class="ais-doc-Hits-content-items hit-content-item1">documentType: ${this.data.additionalType}</header>
                 lang: ${this.lang}<br />
-                <div class="ais-doc-Hits-content-items hit-content-item2">filename: ${this.data.file.base.fileName}</div>
+                <div class="ais-doc-Hits-content-items hit-content-item2"></div>
                 <div class="ais-mdoc-Hits-content-items hit-content-item3">
                 dateCreated: <br/>
                 Added: <br />
