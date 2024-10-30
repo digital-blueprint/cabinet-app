@@ -260,6 +260,8 @@ class CabinetHitElement extends BaseHitElement {
             }
             .hit-person-content-item1{
                 align-self: start;
+                font-size:24px;
+                font-weight:bold;
             }
             .hit-person-content-item2{
                 align-self: start;
@@ -283,10 +285,10 @@ class CabinetHitElement extends BaseHitElement {
         return html`
             <header class="ais-Hits-header">
                 <div class="person-id"><!-- studId: ${hit.person.studId}-->
-                    ${renderFieldWithHighlight(hit, 'person.studId')}
+                    ${renderFieldWithHighlight(hit, 'person.studId')}|${renderFieldWithHighlight(hit, 'person.stPersonNr')}
                 </div>
                 <div class="person-num"><!-- stPersonNr: ${hit.person.stPersonNr}-->
-                    ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
+
                 </div>
                 <div class="right-column">
                     <svg width="1.4em" height="1.4em" viewBox="0 0 30 30"
@@ -334,7 +336,7 @@ class CabinetHitElement extends BaseHitElement {
                     ${hit.person.studies.map(study => html`${study.name} (${study.status.text})<br />`)}
                 </div>
                 <div class="hit-person-content-item3">
-                <b>syncTimestamp:</b> ${new Date(hit.person.syncTimestamp * 1000)}
+                last synchronized:${new Date(hit.person.syncTimestamp * 1000)}
                 <br />
                 lang: ${this.lang}
                 </div>
