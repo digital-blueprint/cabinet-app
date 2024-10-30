@@ -248,9 +248,6 @@ class CabinetHitElement extends BaseHitElement {
             }
             .person-num{
                 display: flex;
-                justify-content: center;
-                align-items: center;
-                text-align: center;
             }
             .ais-Hits-content {
                 gap: 10px;
