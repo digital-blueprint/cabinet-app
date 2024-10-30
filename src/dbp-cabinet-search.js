@@ -373,7 +373,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .ais-Hits-list {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(410px, 1fr));
                 gap: 2em;
                 padding: 0;
                 margin-top: 0;
@@ -510,7 +510,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <button class="button select-person-button"
                             onclick="${(event) => { this.dispatchEvent(new CustomEvent('DbpCabinetFilterPerson', {detail: {person: hit.person.person}, bubbles: true, composed: true}));
                             }}">
-                            ${ /*@TODO: find something to test here */ hit ? 'Select' : 'Unselect' }
+                            ${ /*@TODO: find something to test here */ hit ? 'See document' : 'Unselect' }
                         </button>
                     </footer>
                     ` : html`
