@@ -84,9 +84,9 @@ class CabinetHitElement extends BaseHitElement {
                 lang: ${this.lang}<br />
                 <div class="hit-content-item2"></div>
                 <div class="hit-content-item3">
-                dateCreated: <br/>
+                Document issue date: <br/>
                 Added: <br />
-                lastModified:${lastModified}<br />
+                Last modified:${lastModified}<br />
                 </div>
                 </main>
         `;

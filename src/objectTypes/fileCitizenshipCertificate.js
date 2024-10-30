@@ -81,9 +81,9 @@ class CabinetHitElement extends BaseHitElement {
                 <header class="hit-content-item1">document Type:</header>
                 <div class="hit-content-item2"></div><br />
                 <div class="hit-content-item3">
-                dateCreated: <br />
+                Document issue date: <br />
                 Added: <br />
-                lastModified: ${lastModified}<br />
+                Last modified: ${lastModified}<br />
                 </div>
                 </main>
             </form>
