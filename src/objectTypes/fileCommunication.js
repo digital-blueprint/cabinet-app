@@ -86,9 +86,9 @@ class CabinetHitElement extends BaseHitElement {
                 <div class="hit-content-item1">document Type</div>
                 <div class="hit-content-item2"></div>
                 <div class="hit-content-item3">
-                dateCreated: ${this.data.file['file-cabinet-communication'].dateCreated}<br />
+                Document issue date: ${this.data.file['file-cabinet-communication'].dateCreated}<br />
                 Added: <br />
-                lastModified: ${lastModified}<br />
+                Last modified: ${lastModified}<br />
                 </div>
                 </main>
             </form>
