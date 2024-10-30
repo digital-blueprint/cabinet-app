@@ -1,7 +1,6 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement, getCommonStyles} from './baseObject';
 import * as formElements from './formElements.js';
-import {renderFieldWithHighlight} from '../utils';
 import * as viewElements from './viewElements.js';
 import { PersonHit } from './person.js';
 export default class extends BaseObject {
