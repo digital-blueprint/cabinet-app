@@ -81,9 +81,9 @@ class CabinetHitElement extends BaseHitElement {
                 lang: ${this.lang}<br />
                 <div class="ais-doc-Hits-content-items hit-content-item2"></div>
                 <div class="ais-mdoc-Hits-content-items hit-content-item3">
-                dateCreated: <br/>
+                Document issue date: <br/>
                 Added: <br />
-                lastModified:${lastModified}<br />
+                Last modified:${lastModified}<br />
                 </div>
                 </main>
             </form>
