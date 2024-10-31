@@ -646,6 +646,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             <button @click="${this.deleteFile}" class="${classMap({
                                 hidden: this.mode === CabinetFile.Modes.ADD,
                             })} button is-primary">Delete</button>
+                            <button @click="${this.undeleteFile}" class="${classMap({
+                                hidden: this.mode === CabinetFile.Modes.ADD || true,
+                            })} button is-primary">Undelete</button>
                         </div>
                         ${this.getObjectTypeFormPartHtml()}
                     </div>
