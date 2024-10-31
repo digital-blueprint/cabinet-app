@@ -508,6 +508,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         let success = false;
 
         if (undelete) {
+            // Check if the document was marked as undeleted in the response
             if (data.deleteAt === null) {
                 alert('Document was successfully undeleted!');
                 success = true;
@@ -515,6 +516,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 alert('Document was not marked as undeleted!');
             }
         } else {
+            // Check if the document was marked as deleted in the response
             if (data.deleteAt !== null) {
                 alert('Document was successfully deleted!');
                 success = true;
@@ -523,6 +525,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
         }
 
+        // Switch delete/undelete buttons if the operation was successful
         if (success) {
             this.dataWasChanged = true;
 
