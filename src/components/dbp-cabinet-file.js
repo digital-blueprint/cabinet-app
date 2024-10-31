@@ -5,7 +5,7 @@ import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, combineURLs, Icon, Modal} from '@dbp-toolkit/common';
-import {FileSource} from '@dbp-toolkit/file-handling';
+import {FileSource, FileSink} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {dataURLtoFile, pascalToKebab} from '../utils';
 import {classMap} from 'lit/directives/class-map.js';
@@ -42,6 +42,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.mode = CabinetFile.Modes.VIEW;
         this.modalRef = createRef();
         this.fileSourceRef = createRef();
+        this.fileSinkRef = createRef();
         this.formRef = createRef();
         this.typesenseService = null;
         this.fileHitData = {};
@@ -78,6 +79,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         return {
             'dbp-icon': Icon,
             'dbp-file-source': FileSource,
+            'dbp-file-sink': FileSink,
             'dbp-pdf-viewer': PdfViewer,
             'dbp-modal': Modal,
             'dbp-button': Button,
@@ -489,24 +491,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async downloadFile() {
         console.log('downloadFile this.documentFile', this.documentFile);
-        const fileUrl = URL.createObjectURL(this.documentFile);
+        this.fileSinkRef.value.files = [this.documentFile];
 
-        // Open a new tab/window with the file URL
-        const newWindow = window.open(fileUrl, '_blank');
+        /** @type {Modal} */
+        const documentModal = this.documentModalRef.value;
 
-        // Check if the new window was successfully opened
-        if (newWindow) {
-            // If opened successfully, focus on the new window
-            newWindow.focus();
-        } else {
-            // If the pop-up was blocked, inform the user
-            alert('Please allow pop-ups to download the file.');
-        }
-
-        // Set up cleanup after a short delay
-        setTimeout(() => {
-            URL.revokeObjectURL(fileUrl);
-        }, 1000);
+        // Make sure the document dialog is closed, so we can see the file sink dialog
+        documentModal.close();
     }
 
     async openReplacePdfDialog() {
@@ -776,6 +767,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         return html`
             ${this.getDocumentModalHtml()}
             ${this.getFileSourceHtml()}
+            <dbp-file-sink
+                ${ref(this.fileSinkRef)}
+                subscribe="nextcloud-store-session:nextcloud-store-session"
+                lang="${this.lang}"
+                enabled-targets="${this.fileHandlingEnabledTargets}"
+                nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
+                nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
+                nextcloud-name="${this.nextcloudName}"
+                nextcloud-auth-info="${this.nextcloudAuthInfo}"
+                nextcloud-file-url="${this.nextcloudFileURL}"
+            ></dbp-file-sink>
         `;
     }
 
