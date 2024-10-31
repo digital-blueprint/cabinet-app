@@ -133,9 +133,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             // TODO: Setup some kind of error message and decide what to do
             alert('Could not fetch file document from Typesense after 10 attempts!');
 
-            /**
-             * @type {BaseFormElement}
-             */
+            /** @type {BaseFormElement} */
             const form = this.formRef.value;
             // Enable the save button again in the form
             form.enableSaveButton();
@@ -419,9 +417,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.dataWasChanged = false;
         this.mode = CabinetFile.Modes.VIEW;
 
-        /**
-         * @type {FileSource}
-         */
+        /** @type {FileSource} */
         const fileSource = this.fileSourceRef.value;
         // Make sure the file source dialog is closed
         if (fileSource) {
@@ -452,9 +448,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             await this.updateComplete;
         }
 
-        /**
-         * @type {Modal}
-         */
+        /** @type {Modal} */
         const modal = this.documentModalRef.value;
         console.log('openDialogWithHit modal', modal);
         modal.open();
@@ -531,16 +525,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.isFileDirty = false;
         this.dataWasChanged = false;
 
-        /**
-         * @type {Modal}
-         */
+        /** @type {Modal} */
         const documentModal = this.documentModalRef.value;
+
         // Make sure the document dialog is closed
         documentModal.close();
 
-        /**
-         * @type {FileSource}
-         */
+        /** @type {FileSource} */
         const fileSource = this.fileSourceRef.value;
 
         // Wait until the file source dialog is ready
@@ -799,9 +790,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Open the document modal dialog after the file source dialog was closed if we were in edit mode
         // Unfortunately, if Escape was pressed, all dialogs will be closed, so this only works with the "X" button
         if (this.mode === CabinetFile.Modes.EDIT) {
-            /**
-             * @type {Modal}
-             */
+            /** @type {Modal} */
             const modal = this.documentModalRef.value;
 
             // Note: Modal is checking if the dialog is already open
@@ -821,9 +810,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.mode = CabinetFile.Modes.EDIT;
         }
 
-        /**
-         * @type {Modal}
-         */
+        /** @type {Modal} */
         const modal = this.documentModalRef.value;
 
         // Opens the modal dialog for adding a document to a person after the document was
@@ -842,9 +829,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // We need to wait until rendering is complete after this.documentFile has changed
         await this.updateComplete;
 
-        /**
-         * @type {PdfViewer}
-         */
+        /** @type {PdfViewer} */
         const pdfViewer = this.documentPdfViewerRef.value;
         // const pdfViewer = this._('#document-pdf-viewer');
 
