@@ -259,7 +259,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @returns {Promise<string>}
      */
     async createBlobDeleteUrl() {
-        return this.createBlobUrl(CabinetFile.BlobUrlTypes.UPLOAD, '', false, { 'retentionDuration': '7D' });
+        return this.createBlobUrl(CabinetFile.BlobUrlTypes.UPLOAD, '', false, { 'deleteIn': 'P7D' });
     }
 
     async loadBlobItem(url) {
