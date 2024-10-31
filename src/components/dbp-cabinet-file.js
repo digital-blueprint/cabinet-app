@@ -256,10 +256,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     /**
+     * @param undelete Whether to undelete the file
      * @returns {Promise<string>}
      */
-    async createBlobDeleteUrl() {
-        return this.createBlobUrl(CabinetFile.BlobUrlTypes.UPLOAD, '', false, { 'deleteIn': 'P7D' });
+    async createBlobDeleteUrl(undelete = false) {
+        // TODO: Undeleting does not work yet, because the API does not support sending an empty deleteIn value
+        return this.createBlobUrl(CabinetFile.BlobUrlTypes.UPLOAD, '', false, { 'deleteIn': undelete ? '' : 'P7D' });
     }
 
     async loadBlobItem(url) {
@@ -461,10 +463,23 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async deleteFile() {
+        await this.handleFileDeletion(false);
+    }
+
+    async undeleteFile() {
+        await this.handleFileDeletion(true);
+    }
+
+    /**
+     * Deletes/Undeletes a file from the blob storage
+     * @param undelete Whether to undelete the file
+     * @returns {Promise<void>}
+     */
+    async handleFileDeletion(undelete = false) {
         const fileId = this.fileHitData.file.base.fileId;
         console.log('deleteFile fileId', fileId);
 
-        const deleteUrl = await this.createBlobDeleteUrl();
+        const deleteUrl = await this.createBlobDeleteUrl(undelete);
         console.log('downloadFileFromBlob deleteUrl', deleteUrl);
 
         const options = {
@@ -480,19 +495,43 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         let response = await fetch(deleteUrl, options);
         if (!response.ok) {
             // TODO: Error handling
-            alert('Document deleting failed!');
+            if (undelete) {
+                alert('Document undeleting failed!');
+            } else {
+                alert('Document deleting failed!');
+            }
 
             throw response;
         }
 
-        this.dataWasChanged = true;
+        const data = await response.json();
+        let success = false;
 
-        // Mark the file as deleted in the fileHitData
-        this.fileHitData.file.base.isScheduledForDeletion = true;
-        // We need to request an update to re-render the view, because we only changed a property
-        await this.requestUpdate();
+        if (undelete) {
+            if (data.deleteAt === null) {
+                alert('Document was successfully undeleted!');
+                success = true;
+            } else {
+                alert('Document was not marked as undeleted!');
+            }
+        } else {
+            if (data.deleteAt !== null) {
+                alert('Document was successfully deleted!');
+                success = true;
+            } else {
+                alert('Document was not marked as deleted!');
+            }
+        }
 
-        alert('Document was successfully deleted!');
+        if (success) {
+            this.dataWasChanged = true;
+
+            // Mark the file as deleted/undeleted in the fileHitData
+            this.fileHitData.file.base.isScheduledForDeletion = !undelete;
+
+            // We need to request an update to re-render the view, because we only changed a property
+            await this.requestUpdate();
+        }
     }
 
     async downloadFile() {
