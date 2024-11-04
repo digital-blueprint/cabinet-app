@@ -35,7 +35,7 @@ export const getCommonStyles = () => css`
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
-        padding: 5px;
+        padding: 0 5px;
         border-bottom: 1px solid rgb(34, 33, 32);
         margin-bottom: calc(7px + 1vh);
     }
@@ -65,14 +65,9 @@ export const getCommonStyles = () => css`
         justify-self: end;
     }
     .header-item3 {
-        grid-column: 1 / 2;
+        grid-column: 1 / 3;
     }
-    .header-item4 {
-        grid-column: 2 / 3;
-    }
-    .header-item5 {
-        grid-column: 3 / 4;
-    }
+
 `;
 export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
