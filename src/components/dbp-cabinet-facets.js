@@ -314,6 +314,23 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     header(options, {html}) {
                         return i18n.t(`cabinet-search.filter-${translationKey}-title`);
                     },
+                    collapseButtonText(options, { html }) {
+                        return html`
+                        <span>
+                          ${options.collapsed
+                            ? html`<svg width="16" height="16" version="1.1" id="Layer_2_1_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                            viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+                            <path d="M2.4,29.6l44.4,44.2c0.9,0.9,2.1,1.3,3.3,1.3c1.2,0,2.4-0.5,3.3-1.3l44.2-44.2c1.1-1.1,1.1-2.8,0-3.9
+                            c-0.5-0.5-1.2-0.8-1.9-0.8c-0.7,0-1.4,0.3-1.9,0.8L50.1,69.3L6.3,25.7c-1.1-1.1-2.8-1.1-3.9,0C1.3,26.8,1.3,28.5,2.4,29.6z"/>
+                            </svg>`
+                            : html`<svg width="16" height="16" version="1.1" id="Layer_2_1_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	                        viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+                            <path d="M97.6,70.4L53.2,26.2c-0.9-0.9-2.1-1.3-3.3-1.3c-1.2,0-2.4,0.5-3.3,1.3L2.4,70.4c-1.1,1.1-1.1,2.8,0,3.9
+	                        c0.5,0.5,1.2,0.8,1.9,0.8c0.7,0,1.4-0.3,1.9-0.8l43.6-43.6l43.8,43.6c1.1,1.1,2.8,1.1,3.9,0C98.7,73.2,98.7,71.5,97.6,70.4z"/>
+                            </svg>`}
+                        </span>
+                      `;
+                    },
                 },
                 collapsed: () => true,
                 hidden(options) {
@@ -566,8 +583,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                cursor: pointer !important;
             }
-
             .ais-SearchBox-form {
                 display: flex;
                 gap: 0.25em;
