@@ -32,15 +32,21 @@ export class BaseObject {
 
 export const getCommonStyles = () => css`
     .ais-doc-Hits-header {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         padding: 0 5px;
         border-bottom: 1px solid rgb(34, 33, 32);
         margin-bottom: calc(7px + 1vh);
     }
-    .ais-doc-Hits-header-items {
+    .text-container {
         display: flex;
+        flex-direction: column;
+    }
+    .icon-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .ais-doc-Hits-content {
         display: grid;
@@ -57,17 +63,6 @@ export const getCommonStyles = () => css`
         grid-row: 3 / 4;
         padding-top: 30px;
     }
-    .header-item1 {
-        grid-column: 1 / 2;
-    }
-    .header-item2 {
-        grid-column: 3 / 4;
-        justify-self: end;
-    }
-    .header-item3 {
-        grid-column: 1 / 3;
-    }
-
 `;
 export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
