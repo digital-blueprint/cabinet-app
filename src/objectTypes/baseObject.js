@@ -140,7 +140,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
 
         return html`
             ${formElements.stringElement('subjectOf', 'Subject of', baseData.subjectOf || '')}
-            ${formElements.stringElement('studyField', 'Study field', baseData.studyField || '', true)}
+            ${formElements.enumElement('studyField', 'Study field', baseData.studyField || '', this.getStudyFields(), true)}
             ${formElements.enumElement('semester', 'Semester', defaultSemester, this.getSemesters(), true)}
             ${formElements.hiddenElement('additionalType', additionalType)}
             ${formElements.stringElement('comment', 'Comment', baseData.comment || '', false, 5)}
@@ -318,6 +318,20 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
                 ${this.getButtonRowHtml()}
             </form>
         `;
+    }
+
+    getStudyFields() {
+        // TODO: Add proper study fields
+        return {
+            '' : 'Unspecified',
+            'Architecture': 'Architecture',
+            'ComputerScience': 'Computer Science',
+            'Mathematics': 'Mathematics',
+            'Physics': 'Physics',
+            'Chemistry': 'Chemistry',
+            'Biology': 'Biology',
+            'Geology': 'Geology',
+        };
     }
 }
 
