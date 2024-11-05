@@ -135,24 +135,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     getCommonFormElements = () => {
         const fileData = this.data?.file || {};
         const baseData = fileData.base || {};
-
-        let defaultSemester;
-        if (baseData.semester) {
-            defaultSemester = baseData.semester;
-        } else {
-            let currentDate = new Date();
-            let currentYear = currentDate.getFullYear();
-            currentYear = currentYear % 100;
-            let currentMonth = currentDate.getMonth();
-            let currentSeason;
-            if (currentMonth >= 2 && currentMonth <= 8) {
-                currentSeason = 'S';
-            } else {
-                currentSeason = 'W';
-            }
-            defaultSemester = currentYear.toString() + currentSeason;
-        }
-
+        const defaultSemester = this.getDefaultSemester(baseData);
         const additionalType = this.additionalType || baseData.additionalType?.key || '';
 
         return html`
@@ -164,6 +147,24 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             ${this.getButtonRowHtml()}
         `;
     };
+
+    getDefaultSemester(baseData) {
+        if (baseData.semester) {
+            return baseData.semester;
+        } else {
+            let currentDate = new Date();
+            let currentYear = currentDate.getFullYear();
+            currentYear = currentYear % 100;
+            let currentMonth = currentDate.getMonth();
+            let currentSeason;
+            if (currentMonth >= 2 && currentMonth <= 8) {
+                currentSeason = 'S';
+            } else {
+                currentSeason = 'W';
+            }
+            return currentYear.toString() + currentSeason;
+        }
+    }
 
     validateForm() {
         // Select all input elements with the 'required' attribute
