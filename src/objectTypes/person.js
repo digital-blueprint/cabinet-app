@@ -235,11 +235,10 @@ class CabinetHitElement extends BaseHitElement {
             .ais-Hits-header {
                 border-bottom: 1px solid #222120;
                 margin-bottom: calc(7px + 1vh);
-                padding-bottom:15px;
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
                 gap:10px;
-                padding: 10px;
+                padding: 15px 5px;
             }
             .person-id {
                 display: flex;
