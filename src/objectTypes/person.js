@@ -363,16 +363,29 @@ class CabinetViewElement extends BaseViewElement {
                 .modal-Gi-header-title h4 {
                     margin: 0;
                 }
+                .info-container {
+                    display: flex;
+                    justify-content: space-between;
+                }
+                .info-list {
+                    columns: 2;
+                    -webkit-columns: 2;
+                    -moz-columns: 2;
+                    list-style-type: none;
+                    padding: 0;
+                }
+                .info-list li {
+                    break-inside: avoid;
+                    padding: 5px 0;
+                }
                 .modal-Si-header-container {
                     display: flex;
                     align-items: center;
                     margin-bottom: 1rem;
                 }
-
                 .modal-Si-header-svg {
                     margin-right: 0.5rem;
                 }
-
                 .modal-Si-header-title h4 {
                     margin: 0;
                 }
@@ -381,11 +394,9 @@ class CabinetViewElement extends BaseViewElement {
                     align-items: center;
                     margin-bottom: 1rem;
                 }
-
                 .modal-Ci-header-svg {
                     margin-right: 0.5rem;
                 }
-
                 .modal-Ci-header-title h4 {
                     margin: 0;
                 }
@@ -407,7 +418,8 @@ class CabinetViewElement extends BaseViewElement {
             <div class="modal-Gi-header-title"><h4>General information</h4></div>
             </div>
             <hr/>
-            <ul>
+            <div class="info-container">
+            <ul class="info-list">
                 <li><b>academic Titles:</b> ${hit.person.academicTitles.join(', ')}</li>
                 <li><b>given Name:</b> ${hit.person.givenName}</li>
                 <li><b>family Name:</b> ${hit.person.familyName}</li>
@@ -441,6 +453,7 @@ class CabinetViewElement extends BaseViewElement {
                 <!-- <li><b>studyLimitStartSemester:</b> hit.person.studyLimitStartSemester </li> -->
                 <!--<li><b>studyLimitEndSemester:</b> {hit.person.studyLimitEndSemester}</li>-->
             </ul>
+            </div>
             <br />
             <div class="modal-Si-header-container">
             <div class="modal-Si-header-svg">
