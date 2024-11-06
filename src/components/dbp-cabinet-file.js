@@ -260,7 +260,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @returns {Promise<string>}
      */
     async createBlobDeleteUrl(undelete = false) {
-        // TODO: Undeleting does not work yet, because the API does not support sending an empty deleteIn value
         return this.createBlobUrl(CabinetFile.BlobUrlTypes.UPLOAD, '', false, { 'deleteIn': undelete ? 'null' : 'P7D' });
     }
 
