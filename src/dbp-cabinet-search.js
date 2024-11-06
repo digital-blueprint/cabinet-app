@@ -413,6 +413,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             query_by: "person.familyName,person.givenName,file.base.fileName,objectType,person.stPersonNr,person.studId,person.identNrObfuscated,person.birthDate",
             // @TODO we should set typo tolerance by field. ex.: birthdate or identNrObfuscated dont need typo tolerance
             sort_by: "@type:desc,_text_match:desc,person.familyName:asc",
+            // TODO: Only show not-deleted files by default
+            // filter_by: "file.base.deleteAtTimestamp:>0",
             num_typos: "2,2,0,0,0,0,0,0"
         };
 
