@@ -332,7 +332,7 @@ class CabinetHitElement extends BaseHitElement {
                     ${hit.person.studies.map(study => html`${study.name} (${study.status.text})<br />`)}
                 </div>
                 <div class="hit-person-content-item3">
-                last synchronized:${new Date(hit.person.syncTimestamp * 1000)}
+                last synchronized:&nbsp;${Intl.DateTimeFormat('de').format(new Date())}
                 <br />
                 lang: ${this.lang}
                 </div>
