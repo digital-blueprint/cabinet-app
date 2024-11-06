@@ -61,5 +61,7 @@
         "refinement-date-before-text": "vorher",
         "refinement-date-after-text": "nach"
     },
-    "error-login-message": "Sie müssen angemeldet sein um diese Funktion nutzen zu können!"
+    "error-login-message": "Sie müssen angemeldet sein um diese Funktion nutzen zu können!",
+    "focus-button-name":"Eingrenzen",
+    "unselect-button-name":"unselect"
 }
