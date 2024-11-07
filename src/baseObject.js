@@ -325,8 +325,10 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         const studies = personData.studies;
         let studyFields = {'none' : 'Unspecified'};
 
-        for (const study of studies) {
-            studyFields[study.key] = study.key + ' ' + study.name;
+        if (studies) {
+            for (const study of studies) {
+                studyFields[study.key] = study.key + ' ' + study.name;
+            }
         }
 
         return studyFields;
