@@ -321,17 +321,15 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     }
 
     getStudyFields() {
-        // TODO: Add proper study fields
-        return {
-            '' : 'Unspecified',
-            'Architecture': 'Architecture',
-            'ComputerScience': 'Computer Science',
-            'Mathematics': 'Mathematics',
-            'Physics': 'Physics',
-            'Chemistry': 'Chemistry',
-            'Biology': 'Biology',
-            'Geology': 'Geology',
-        };
+        const personData = this.data?.person || {};
+        const studies = personData.studies;
+        let studyFields = {'' : 'Unspecified'};
+
+        for (const study of studies) {
+            studyFields[study.key] = study.key + ' ' + study.name;
+        }
+
+        return studyFields;
     }
 }
 
@@ -438,10 +436,23 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
             ${viewElements.dateElement('Date created (metadata)', (new Date(baseData.createdTimestamp * 1000)).toISOString())}
             ${viewElements.dateElement('Date modified (metadata)', (new Date(baseData.modifiedTimestamp * 1000)).toISOString())}
             ${viewElements.stringElement('Subject of', baseData.subjectOf || '')}
-            ${viewElements.stringElement('Study field', baseData.studyField || '')}
+            ${viewElements.stringElement('Study field', this.getStudyFieldNameForKey(baseData.studyField))}
             ${viewElements.stringElement('Semester', baseData.semester || '')}
             ${viewElements.stringElement('Comment', baseData.comment || '')}
         `;
+    };
+
+    getStudyFieldNameForKey = (key) => {
+        const personData = this.data?.person || {};
+        const studies = personData.studies;
+
+        for (const study of studies) {
+            if (study.key === key) {
+                return study.key + ' ' + study.name;
+            }
+        }
+
+        return `Unknown study field (${key})`;
     };
 
     render() {
