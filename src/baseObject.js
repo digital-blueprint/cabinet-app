@@ -70,7 +70,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.data = {};
-        this.personId = '';
+        this.person = {};
         this.additionalType = '';
         this.entryPointUrl = '';
         this.auth = {};
@@ -244,7 +244,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         const data = {
             "about": {
                 "@type": "Person",
-                "persId": this.personId,
+                "persId": this.person.identNrObfuscated,
             },
         };
 
@@ -264,7 +264,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
-            personId: {type: String, attribute: 'person-id'},
+            person: {type: Object},
             additionalType: {type: String, attribute: 'additional-type'},
             data: {type: Object},
             auth: { type: Object },
@@ -321,7 +321,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     }
 
     getStudyFields() {
-        const personData = this.data?.person || {};
+        const personData = this.data?.person || this.person || {};
         const studies = personData.studies;
         let studyFields = {'none' : 'Unspecified'};
 

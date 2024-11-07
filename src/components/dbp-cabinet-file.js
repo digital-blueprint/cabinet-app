@@ -30,7 +30,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.objectTypeFormComponents = {};
         this.objectTypeHitComponents = {};
         this.objectTypeViewComponents = {};
-        this.personId = '';
+        this.person = {};
         this.documentModalRef = createRef();
         this.documentPdfViewerRef = createRef();
         this.documentFile = null;
@@ -89,7 +89,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            personId: { type: String, attribute: false },
+            person: { type: Object, attribute: false },
             fileHitData: { type: Object, attribute: false },
             documentFile: { type: File, attribute: false },
             objectType: { type: String, attribute: false },
@@ -362,7 +362,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
              id="edit-form"
              subscribe="auth,lang,entry-point-url"
              .data=${fileHitData}
-             person-id="${this.personId}"
+             .person=${this.person}
              additional-type="${this.additionalType}"
              object-type=></${unsafeStatic(tagName)}>
         `;
@@ -401,7 +401,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     async openDocumentAddDialogWithPersonHit(hit = null) {
         this.mode = CabinetFile.Modes.ADD;
         // We don't need to fetch the hit data from Typesense again, because the identNrObfuscated wouldn't change
-        this.personId = hit.person.identNrObfuscated;
+        this.person = hit.person;
+        await this.updateComplete;
         await this.openDocumentAddDialog();
     }
 
@@ -433,8 +434,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.fileHitDataCache = {};
         this.fileHitData = hit;
         console.log('openDialogWithHit hit', hit);
-        // Set personId from hit
-        this.personId = hit.person.identNrObfuscated;
+        // Set person from hit
+        this.person = hit.person;
         this.objectType = hit.objectType;
 
         // Wait until hit data is set and rendering is complete
