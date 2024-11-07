@@ -323,7 +323,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     getStudyFields() {
         const personData = this.data?.person || {};
         const studies = personData.studies;
-        let studyFields = {'' : 'Unspecified'};
+        let studyFields = {'none' : 'Unspecified'};
 
         for (const study of studies) {
             studyFields[study.key] = study.key + ' ' + study.name;
@@ -444,11 +444,14 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
 
     getStudyFieldNameForKey = (key) => {
         const personData = this.data?.person || {};
-        const studies = personData.studies;
+        const studies = [
+            { key: 'none', name: 'Unspecified' },
+            ...personData.studies
+        ];
 
         for (const study of studies) {
             if (study.key === key) {
-                return study.key + ' ' + study.name;
+                return key === 'none' ? study.name : study.key + ' ' + study.name;
             }
         }
 
