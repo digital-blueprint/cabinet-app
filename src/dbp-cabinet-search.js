@@ -20,7 +20,7 @@ import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
 import {TypesenseService} from './services/typesense.js';
 import {updateDatePickersForExternalRefinementChange} from './components/dbp-cabinet-date-facet.js';
-import {BaseObject} from './objectTypes/baseObject.js';
+import {BaseObject} from './baseObject.js';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {

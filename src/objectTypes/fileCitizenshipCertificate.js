@@ -1,5 +1,5 @@
 import {css, html} from 'lit';
-import {BaseFormElement, BaseHitElement, BaseObject, BaseViewElement, getCommonStyles} from './baseObject';
+import {BaseFormElement, BaseHitElement, BaseObject, BaseViewElement, getCommonStyles} from '../baseObject.js';
 import * as formElements from './formElements.js';
 import * as viewElements from './viewElements.js';
 import { PersonHit } from './person.js';

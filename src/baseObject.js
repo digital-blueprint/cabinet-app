@@ -1,10 +1,10 @@
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import {css, html} from 'lit';
-import {createInstance} from '../i18n';
+import {createInstance} from './i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import * as formElements from './formElements';
-import * as viewElements from './viewElements.js';
+import * as formElements from './objectTypes/formElements';
+import * as viewElements from './objectTypes/viewElements';
 import {classMap} from 'lit/directives/class-map.js';
 
 export class BaseObject {

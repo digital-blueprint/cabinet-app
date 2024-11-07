@@ -1,5 +1,5 @@
 import {css, html} from 'lit';
-import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from './baseObject';
+import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from '../baseObject.js';
 import {renderFieldWithHighlight} from '../utils';
 
 export default class extends BaseObject {

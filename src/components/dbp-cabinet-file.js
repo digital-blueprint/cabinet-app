@@ -10,7 +10,7 @@ import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {dataURLtoFile, pascalToKebab} from '../utils';
 import {classMap} from 'lit/directives/class-map.js';
 import * as formElements from '../objectTypes/formElements.js';
-import {BaseFormElement} from '../objectTypes/baseObject.js';
+import {BaseFormElement} from '../baseObject.js';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static Modes = {
