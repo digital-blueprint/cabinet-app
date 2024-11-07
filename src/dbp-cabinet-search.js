@@ -416,7 +416,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             // TODO: Only show not-deleted files by default
             // filter_by: "file.base.deleteAtTimestamp:>0",
             // filter_by: "file.base.isScheduledForDeletion:false",
-            num_typos: "2,2,0,0,0,0,0,0"
+            num_typos: "2,2,0,0,0,0,0,0",
+            group_by: "base.personGroupId",
+            group_limit: 1,
+            group_missing_values: false,
         };
 
         if (!this.fuzzySearch) {

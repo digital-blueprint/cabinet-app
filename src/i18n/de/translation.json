@@ -4,14 +4,12 @@
         "type-filter-group-title": "Kategorie",
         "person-filter-group-title": "Personeigenschaften",
         "document-filter-group-title": "Dokumenteigenschaften",
+        "study-filter-group-title": "Studiumseigenschaften",
 
         "filter-person-person-title": "Person",
         "filter-person-birth-date-timestamp-title": "Geburtsdatum",
-        "filter-person-studies-name-title": "Studium",
-        "filter-person-studies-type-title": "Abschlussziel",
         "filter-person-personal-status-text-title": "Personenstatus",
         "filter-person-student-status-text-title": "Hörerstatus",
-        "filter-person-studies-status-text-title": "Studienstatus",
         "filter-person-admission-qualification-type-text-title": "Hochschulzugangsform",
         "filter-person-nationalities-text-title": "Staatsbürgerschaft",
         "filter-person-gender-key-title": "Geschlecht",
@@ -25,6 +23,10 @@
         "filter-person-applications-study-type-title": "Studienart (?)",
         "filter-person-exmatriculation-semester-title": "Abmeldesemester",
         "filter-person-exmatriculation-status-text-title": "Exmatrikulationsstatus",
+
+        "filter-study-name-title": "Studium",
+        "filter-study-type-title": "Abschlussziel",
+        "filter-study-status-text-title": "Studienstatus",
 
         "filter-file-base-additional-type-text-title": "Dokumenttyp",
         "filter-file-base-mime-type-title": "MIME typ",
@@ -51,8 +53,8 @@
         "search-placeholder-person-exmatriculation-status": "vSearch status",
         "search-placeholder-person-home-address-country-text": "Search home country",
         "search-placeholder-person-gender": "[de] Search gender",
-        "search-placeholder-person-studies-name": "[de] Search study",
-        "search-placeholder-person-studies-type": "[de] Search study type",
+        "search-placeholder-study-name": "[de] Search study",
+        "search-placeholder-study-type": "[de] Search study type",
         "search-placeholder-person-applications-study-type": "[de] Search study type",
         "search-placeholder-person-personal-status-text": "Search personal status",
 

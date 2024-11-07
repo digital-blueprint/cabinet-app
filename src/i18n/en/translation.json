@@ -4,14 +4,12 @@
         "type-filter-group-title": "Category",
         "person-filter-group-title": "Person properties",
         "document-filter-group-title": "Document properties",
+        "study-filter-group-title": "Study properties",
 
         "filter-person-person-title": "Person",
         "filter-person-birth-date-timestamp-title": "Birth date",
-        "filter-person-studies-name-title": "Study field",
-        "filter-person-studies-type-title": "Degree",
         "filter-person-personal-status-text-title": "Personal status",
         "filter-person-student-status-text-title": "Student status",
-        "filter-person-studies-status-text-title": "Study status",
         "filter-person-admission-qualification-type-text-title": "Higher education entrance qualification",
         "filter-person-nationalities-text-title": "Citizenship",
         "filter-person-gender-text-title": "Gender",
@@ -25,6 +23,11 @@
         "filter-person-applications-study-type-title": "Application study type (?)",
         "filter-person-exmatriculation-semester-title": "Semester of last exmatriculation",
         "filter-person-exmatriculation-status-text-title": "Exmatriculation status",
+
+        "filter-study-name-title": "Study field",
+        "filter-study-type-title": "Degree",
+        "filter-study-status-text-title": "Study status",
+
         "filter-file-base-additional-type-text-title": "Document type",
         "filter-file-base-mime-type-title": "MIME type",
         "filter-file-base-file-source-title": "Digital document source",
