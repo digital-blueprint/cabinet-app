@@ -415,6 +415,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             sort_by: "@type:desc,_text_match:desc,person.familyName:asc",
             // TODO: Only show not-deleted files by default
             // filter_by: "file.base.deleteAtTimestamp:>0",
+            // filter_by: "file.base.isScheduledForDeletion:false",
             num_typos: "2,2,0,0,0,0,0,0"
         };
 
