@@ -46,11 +46,11 @@ class CabinetFormElement extends BaseFormElement {
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/communication_example.json
         return html`
             <form>
-                ${this.getCommonFormElements()}
                 ${formElements.stringElement('agent[givenName]', 'Given name', agent.givenName || '')}
                 ${formElements.stringElement('agent[familyName]', 'Family name', agent.familyName || '')}
                 ${formElements.stringElement('abstract', 'Abstract', data.abstract || '', false, 10)}
                 ${formElements.dateTimeElement('dateCreated', 'Date created', data.dateCreated || '', true)}
+                ${this.getCommonFormElements()}
             </form>
         `;
     }
