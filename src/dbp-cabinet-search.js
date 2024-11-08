@@ -521,7 +521,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </footer>
                     ` : html`
                     <footer class="hits-doc-footer">
-                        <button class="button is-primary button-view" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>view</button>
+                        <button class="button is-primary button-view" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>${i18n.t('buttons.view')}</button>
                     </footer>
                     `;
 
