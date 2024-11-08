@@ -51,6 +51,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.typesenseInstantsearchAdapter = null;
         this.typesenseService = null;
         this.serverConfig = null;
+        // Only show not-deleted documents by default
+        this.showScheduledForDeletion = false;
     }
 
     static get scopedElements() {
@@ -75,6 +77,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             typesenseCollection: { type: String, attribute: 'typesense-collection' },
             hitData: { type: Object, attribute: false },
             documentFile: { type: File, attribute: false },
+            showScheduledForDeletion: { type: Boolean, attribute: false },
         };
     }
 
@@ -110,6 +113,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // This needs to happen after the Typesense Instantsearch adapter has been initialized,
                     // not before, or Instantsearch will break! Maybe there is some leaked stated between the two?
                     this.initTypesenseService();
+                    break;
+                case "showScheduledForDeletion":
+                    if (!this.typesenseInstantsearchAdapter) {
+                        return;
+                    }
+
+                    this.typesenseInstantsearchAdapter.updateConfiguration(this.getTypesenseInstantsearchAdapterConfig());
+                    this.search.refresh();
                     break;
             }
         });
@@ -413,9 +424,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             query_by: "person.familyName,person.givenName,file.base.fileName,objectType,person.stPersonNr,person.studId,person.identNrObfuscated,person.birthDate",
             // @TODO we should set typo tolerance by field. ex.: birthdate or identNrObfuscated dont need typo tolerance
             sort_by: "@type:desc,_text_match:desc,person.familyName:asc",
-            // TODO: Only show not-deleted files by default
+            // Show not-deleted documents / Show only deleted documents
+            filter_by: "base.isScheduledForDeletion:" + (this.showScheduledForDeletion ? "true" : "false"),
             // filter_by: "file.base.deleteAtTimestamp:>0",
-            // filter_by: "file.base.isScheduledForDeletion:false",
+            // filter_by: "@type:=Person || file.base.isSchedulerForDeletion:=false",
             num_typos: "2,2,0,0,0,0,0,0",
             group_by: "base.personGroupId",
             group_limit: 1,
@@ -635,6 +647,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
     }
 
+    toggleShowDeleted(event) {
+        this.showScheduledForDeletion = event.target.checked;
+    }
+
     render() {
         const i18n = this._i18n;
         console.log('-- Render --');
@@ -655,6 +671,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div class="search-box-container">
                     <div id="searchbox" class="search-box-widget"></div>
                     <div id="sort-by" class="sort-widget"></div>
+                </div>
+                <div>
+                    <input type="checkbox" id="deleted-checkbox" @click="${this.toggleShowDeleted}"/>
+                    <label for="deleted-checkbox">Show deleted only</label>
                 </div>
                 <div class="result-container">
                     <div id="result-count"></div>
