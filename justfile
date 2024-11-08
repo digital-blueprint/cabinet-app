@@ -26,7 +26,7 @@ term: term-kill term-run
 # Open a browser with the application
 [group('dev')]
 open-browser:
-    open http://localhost:8001
+    xdg-open http://localhost:8001
 
 # Format all justfiles
 [group('linter')]
