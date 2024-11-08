@@ -66,5 +66,6 @@
     "error-login-message": "Sie müssen angemeldet sein um diese Funktion nutzen zu können!",
     "focus-button-name":"Eingrenzen",
     "unselect-button-name":"unselect",
-    "buttons.view": "anzeigen"
+    "buttons.view": "Anzeigen",
+    "buttons.scope": "Einbeziehen"
 }
