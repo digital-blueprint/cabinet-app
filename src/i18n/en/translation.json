@@ -65,5 +65,6 @@
     },
     "error-login-message": "You need to be logged in to use this function!",
     "focus-button-name":"focus",
-    "unselect-button-name":"unselect"
+    "unselect-button-name":"unselect",
+    "buttons.view": "View"
 }
