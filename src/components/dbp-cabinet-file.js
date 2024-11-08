@@ -605,7 +605,24 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 grid-auto-flow: row;
             }
 
-            #document-modal .description { grid-area: 1 / 1 / 2 / 3; }
+            #document-modal .description {
+                grid-area: 1 / 1 / 2 / 2;
+            }
+
+            #document-modal .status {
+                grid-area: 1 / 2 / 2 / 3;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                align-items: flex-end;
+            }
+
+            #document-modal .status .status-badge {
+                padding: 5px 10px;
+                margin-top: auto;
+                /*margin-right: 10px;*/
+                border: 1px solid black;
+            }
 
             #document-modal .pdf-preview { grid-area: 2 / 1 / 3 / 2; }
 
@@ -660,6 +677,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         Document ID: ${id}<br />
                         File name: ${file.name}<br />
                         File size: ${file.size}<br />
+                    </div>
+                    <div class="status">
+                        <div class="status-badge">info on document status</div>
                     </div>
                     <div class="pdf-preview">
                         <div class="fileButtons">
