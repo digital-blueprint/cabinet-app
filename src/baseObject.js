@@ -448,7 +448,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         const personData = this.data?.person || {};
         const studies = [
             { key: 'none', name: 'Unspecified' },
-            ...personData.studies
+            ...personData.studies || []
         ];
 
         for (const study of studies) {
