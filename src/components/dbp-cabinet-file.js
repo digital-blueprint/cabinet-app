@@ -530,7 +530,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.dataWasChanged = true;
 
             // Mark the file as deleted/undeleted in the fileHitData
-            this.fileHitData.file.base.isScheduledForDeletion = !undelete;
+            this.fileHitData.base.isScheduledForDeletion = !undelete;
 
             // We need to request an update to re-render the view, because we only changed a property
             await this.requestUpdate();
@@ -674,10 +674,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 hidden: this.mode !== CabinetFile.Modes.VIEW,
                             })} button is-primary">Edit</button>
                             <button @click="${this.deleteFile}" class="${classMap({
-                                hidden: this.mode === CabinetFile.Modes.ADD || this.fileHitData.file.base.isScheduledForDeletion,
+                                hidden: this.mode === CabinetFile.Modes.ADD || this.fileHitData.base.isScheduledForDeletion,
                             })} button is-primary">Delete</button>
                             <button @click="${this.undeleteFile}" class="${classMap({
-                                hidden: this.mode === CabinetFile.Modes.ADD || !this.fileHitData.file.base.isScheduledForDeletion,
+                                hidden: this.mode === CabinetFile.Modes.ADD || !this.fileHitData.base.isScheduledForDeletion,
                             })} button is-primary">Undelete</button>
                         </div>
                         ${this.getObjectTypeFormPartHtml()}
