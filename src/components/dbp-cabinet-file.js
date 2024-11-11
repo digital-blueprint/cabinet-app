@@ -50,6 +50,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.isFileDirty = false;
         this.dataWasChanged = false;
         this.documentStatus = 'success';
+        this.documentStatusDescription = '';
     }
 
     connectedCallback() {
@@ -694,7 +695,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         File size: ${file.size}<br />
                     </div>
                     <div class="status">
-                        <div class="status-badge ${this.documentStatus}">info on document status</div>
+                        <div class="status-badge ${this.documentStatus}">
+                            ${this.documentStatus}<br />
+                            ${this.documentStatusDescription}
+                        </div>
                     </div>
                     <div class="pdf-preview">
                         <div class="fileButtons">
@@ -930,10 +934,21 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     break;
                 case "fileHitData":
                     console.log('this.fileHitData changed from', oldValue, 'to', this.fileHitData);
+                    this.updateStatus();
                     break;
             }
         });
 
         super.update(changedProperties);
+    }
+
+    updateStatus() {
+        if (this.fileHitData.base.isScheduledForDeletion) {
+            this.documentStatus = 'danger';
+            this.documentStatusDescription = 'Document is marked for deletion!';
+        } else {
+            this.documentStatus = 'success';
+            this.documentStatusDescription = 'Document is not marked for deletion!';
+        }
     }
 }
