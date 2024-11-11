@@ -49,6 +49,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.fileHitDataCache = {};
         this.isFileDirty = false;
         this.dataWasChanged = false;
+        this.documentStatus = 'success';
     }
 
     connectedCallback() {
@@ -94,6 +95,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             documentFile: { type: File, attribute: false },
             objectType: { type: String, attribute: false },
             additionalType: { type: String, attribute: false },
+            documentStatus: { type: String, attribute: false },
             mode: { type: String },
         };
     }
@@ -621,7 +623,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 padding: 5px 10px;
                 margin-top: auto;
                 /*margin-right: 10px;*/
-                border: 1px solid black;
+                border: 2px solid black;
+                border-left: 10px solid black;
+            }
+
+            #document-modal .status .status-badge.success {
+                border-color: var(--dbp-override-success-surface);
+            }
+
+            #document-modal .status .status-badge.warning {
+                border-color: var(--dbp-override-warning-surface);
+            }
+
+            #document-modal .status .status-badge.danger {
+                border-color: var(--dbp-override-danger);
             }
 
             #document-modal .pdf-preview { grid-area: 2 / 1 / 3 / 2; }
@@ -679,7 +694,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         File size: ${file.size}<br />
                     </div>
                     <div class="status">
-                        <div class="status-badge">info on document status</div>
+                        <div class="status-badge ${this.documentStatus}">info on document status</div>
                     </div>
                     <div class="pdf-preview">
                         <div class="fileButtons">
