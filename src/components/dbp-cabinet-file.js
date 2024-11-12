@@ -630,6 +630,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 border-left: 10px solid black;
             }
 
+            #document-modal .status .status-badge .status-text {
+                text-transform: capitalize;
+                font-weight: bold;
+            }
+
             #document-modal .status .status-badge.success {
                 border-color: var(--dbp-override-success-surface);
             }
@@ -698,8 +703,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </div>
                     <div class="status">
                         <div class="status-badge ${this.documentStatus}">
-                            ${this.documentStatus}<br />
-                            ${this.documentStatusDescription}
+                            <div class="status-text">${this.documentStatus}</div>
+                            <div class="status-description">${this.documentStatusDescription}</div>
                         </div>
                     </div>
                     <div class="pdf-preview">
@@ -945,12 +950,22 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     updateStatus() {
+        if (!this.fileHitData.base) {
+            return;
+        }
+
         if (this.fileHitData.base.isScheduledForDeletion) {
             this.documentStatus = 'danger';
-            this.documentStatusDescription = 'Document is marked for deletion!';
+            this.documentStatusDescription = 'Scheduled for deletion';
+        } else if (this.fileHitData.file.base.deleteAtTimestamp < (Math.floor(Date.now() / 1000))) { // TODO: Is this "Deletion date reached" check correct?
+            this.documentStatus = 'warning';
+            this.documentStatusDescription = 'Deletion date reached';
+
+            // TODO: How to check for archival date reached?
+            // this.documentStatusDescription = 'Archival date reached';
         } else {
             this.documentStatus = 'success';
-            this.documentStatusDescription = 'Document is not marked for deletion!';
+            this.documentStatusDescription = 'No problems detected';
         }
     }
 }
