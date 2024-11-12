@@ -534,6 +534,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             // Mark the file as deleted/undeleted in the fileHitData
             this.fileHitData.base.isScheduledForDeletion = !undelete;
+            // Update status manually, because we didn't trigger a this.fileHitData change
+            this.updateStatus();
 
             // We need to request an update to re-render the view, because we only changed a property
             await this.requestUpdate();
