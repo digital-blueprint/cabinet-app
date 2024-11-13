@@ -530,12 +530,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     const buttonRowHtml = objectType === 'person' ? html`
                     <footer class="hits-person-footer">
                         <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentAdd', {detail: {hit: hit}, bubbles: true, composed: true}));}}>${i18n.t('buttons.add.documents')}</button>
-                        <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}> ${i18n.t('buttons.view')}</button>
                         <button class="button select-person-button"
                             onclick="${(event) => { this.dispatchEvent(new CustomEvent('DbpCabinetFilterPerson', {detail: {person: hit.person.person}, bubbles: true, composed: true}));
                             }}">
                             ${ /*@TODO: find something to test here */ hit ?  i18n.t('focus-button-name') : i18n.t('unselect-button-name') }
                         </button>
+                        <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}> ${i18n.t('buttons.view')}</button>
                     </footer>
                     ` : html`
                     <footer class="hits-doc-footer">
