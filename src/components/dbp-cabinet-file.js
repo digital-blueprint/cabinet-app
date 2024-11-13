@@ -957,7 +957,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (this.fileHitData.base.isScheduledForDeletion) {
             this.documentStatus = 'danger';
             this.documentStatusDescription = 'Scheduled for deletion';
-        } else if (this.fileHitData.file.base.deleteAtTimestamp < (Math.floor(Date.now() / 1000))) { // TODO: Is this "Deletion date reached" check correct?
+        } else if (this.fileHitData.file.base.recommendedDeletionTimestamp < (Math.floor(Date.now() / 1000))) {
             this.documentStatus = 'warning';
             this.documentStatusDescription = 'Deletion date reached';
 
