@@ -77,7 +77,7 @@ class CabinetHitElement extends BaseHitElement {
                 </div>
                 </header>
                 <main class="ais-doc-Hits-content">
-                <header class="ais-doc-Hits-content-items hit-content-item1">documentType: ${this.data.additionalType}</header>
+                <header class="ais-doc-Hits-content-items hit-content-item1">documentType: </header>
                 lang: ${this.lang}<br />
                 <div class="ais-doc-Hits-content-items hit-content-item2"></div>
                 <div class="ais-mdoc-Hits-content-items hit-content-item3">
@@ -90,7 +90,6 @@ class CabinetHitElement extends BaseHitElement {
         `;
     }
 }
-
 class CabinetViewElement extends BaseViewElement {
     render() {
         const fileData = this.data?.file || {};
