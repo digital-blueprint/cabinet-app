@@ -83,7 +83,7 @@ class CabinetHitElement extends BaseHitElement {
                 </header>
                 <main class="ais-doc-Hits-content">
                 lang: ${this.lang}<br />
-                <div class="hit-content-item1">document Type</div>
+                <div class="hit-content-item1">documentType:</div>
                 <div class="hit-content-item2"></div>
                 <div class="hit-content-item3">
                 Document issue date: ${this.data.file['file-cabinet-communication'].dateCreated}<br />
