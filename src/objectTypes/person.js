@@ -399,6 +399,10 @@ class CabinetViewElement extends BaseViewElement {
                 .modal-Ci-header-title h4 {
                     margin: 0;
                 }
+                .note{
+                    border: solid 1px black;
+                    padding-bottom: 2.5em;
+                }
 
         `;
     }
@@ -441,7 +445,8 @@ class CabinetViewElement extends BaseViewElement {
                 <li><b>exmatriculation Date:</b> ${hit.person.exmatriculationDate}</li>
                 <li><b>admission Qualification Type:</b> ${hit.person.admissionQualificationType?.text}</li>
                 <li><b>school Certificate Date:</b> ${hit.person.schoolCertificateDate}</li>
-                <li><b>note:</b> ${hit.person.note}</li>
+                <li><b><div class="note">note:</b> ${hit.person.note}</div></li>
+
 
                 <!--<li><b>nationalities:</b> {hit.person.nationalities.map(n => n.text).join(', ')}</li>-->
                 <!--<li><b>fullName:</b> {hit.person.fullName}</li>-->
