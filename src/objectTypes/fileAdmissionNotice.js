@@ -86,7 +86,7 @@ class CabinetHitElement extends BaseHitElement {
                 </div>
                 </header>
                 <main class="ais-doc-Hits-content">
-                <header class="hit-content-item1">documentType: </header>
+                <header class="hit-content-item1">documentType:&nbsp;${this.data.file.base.additionalType.text}</header>
                 lang: ${this.lang}<br />
                 <div class="hit-content-item2"></div>
                 <div class="hit-content-item3">
