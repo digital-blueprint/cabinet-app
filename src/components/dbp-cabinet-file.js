@@ -11,6 +11,7 @@ import {dataURLtoFile, pascalToKebab} from '../utils';
 import {classMap} from 'lit/directives/class-map.js';
 import * as formElements from '../objectTypes/formElements.js';
 import {BaseFormElement} from '../baseObject.js';
+import {send} from '@dbp-toolkit/common/notification';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static Modes = {
@@ -513,7 +514,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (undelete) {
             // Check if the document was marked as undeleted in the response
             if (data.deleteAt === null) {
-                alert('Document was successfully undeleted!');
+                send({
+                    "summary": "Document undeleted",
+                    "body": "Document was successfully undeleted!",
+                    "type": "info",
+                    "timeout": 5,
+                    "targetNotificationId": "document-modal-notification",
+                });
                 success = true;
             } else {
                 alert('Document was not marked as undeleted!');
@@ -521,7 +528,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         } else {
             // Check if the document was marked as deleted in the response
             if (data.deleteAt !== null) {
-                alert('Document was successfully deleted!');
+                send({
+                    "summary": "Document deleted",
+                    "body": "Document was successfully deleted!",
+                    "type": "info",
+                    "timeout": 5,
+                    "targetNotificationId": "document-modal-notification",
+                });
                 success = true;
             } else {
                 alert('Document was not marked as deleted!');
@@ -694,6 +707,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 id="document-modal"
                 modal-id="document-modal"
                 subscribe="lang">
+                <div slot="header" class="header">
+                    <div class="modal-notification">
+                        <dbp-notification id="document-modal-notification" inline lang="${this.lang}"></dbp-notification>
+                    </div>
+                </div>
                 <div slot="content" class="content">
                     <div class="description">
                         <h1>Document ${this.mode}</h1>
