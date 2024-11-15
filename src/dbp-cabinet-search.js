@@ -120,13 +120,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     }
 
                     // Update the additional search parameters to show only deleted documents or not
-                    this.typesenseInstantsearchAdapter.updateConfiguration(this.getTypesenseInstantsearchAdapterConfig());
+                    // this.typesenseInstantsearchAdapter.updateConfiguration(this.getTypesenseInstantsearchAdapterConfig());
 
                     // Clear all refinements so the search hits really represent the new state
-                    this.search.helper.clearRefinements();
+                    // this.search.helper.clearRefinements();
 
                     // Refresh the search to update the hits
-                    this.search.refresh();
+                    // this.search.refresh();
+
+                    // We need to reinitialize the search, because we need the "configure" widget to update the filters
+                    // TODO: This produces another "Clear filters" button, which is not ideal
+                    this.initInstantsearch();
                     break;
             }
         });
@@ -244,12 +248,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             return;
         }
 
+        console.log('initInstantsearch this.showScheduledForDeletion', this.showScheduledForDeletion);
+
         this.search = this.createInstantsearch();
         const search = this.search;
 
         search.addWidgets([
             configure({
-                hitsPerPage: 24
+                hitsPerPage: 24,
+                // Show not-deleted documents / Show only deleted documents
+                filters: "base.isScheduledForDeletion:" + (this.showScheduledForDeletion ? "true" : "false"),
             }),
             this.createSearchBox(),
             this.createHits(),
@@ -431,7 +439,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             // @TODO we should set typo tolerance by field. ex.: birthdate or identNrObfuscated dont need typo tolerance
             sort_by: "@type:desc,_text_match:desc,person.familyName:asc",
             // Show not-deleted documents / Show only deleted documents
-            filter_by: "base.isScheduledForDeletion:" + (this.showScheduledForDeletion ? "true" : "false"),
+            // filter_by: "base.isScheduledForDeletion:" + (this.showScheduledForDeletion ? "true" : "false"),
             // filter_by: "file.base.deleteAtTimestamp:>0",
             // filter_by: "@type:=Person || file.base.isSchedulerForDeletion:=false",
             num_typos: "2,2,0,0,0,0,0,0",
