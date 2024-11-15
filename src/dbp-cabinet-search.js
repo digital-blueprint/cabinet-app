@@ -120,15 +120,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         return;
                     }
 
-                    // Update the additional search parameters to show only deleted documents or not
-                    // this.typesenseInstantsearchAdapter.updateConfiguration(this.getTypesenseInstantsearchAdapterConfig());
-
-                    // Clear all refinements so the search hits really represent the new state
-                    // this.search.helper.clearRefinements();
-
-                    // Refresh the search to update the hits
-                    // this.search.refresh();
-
                     // We need to remove the "configure" widget and add it again, because it seems we can't update the filters directly
                     this.search.removeWidgets([this.configureWidget]);
                     this.search.addWidgets([
