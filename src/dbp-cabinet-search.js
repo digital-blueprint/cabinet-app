@@ -53,6 +53,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.serverConfig = null;
         // Only show not-deleted documents by default
         this.showScheduledForDeletion = false;
+        this.configureWidget = null;
     }
 
     static get scopedElements() {
@@ -128,9 +129,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // Refresh the search to update the hits
                     // this.search.refresh();
 
-                    // We need to reinitialize the search, because we need the "configure" widget to update the filters
-                    // TODO: This produces another "Clear filters" button, which is not ideal
-                    this.initInstantsearch();
+                    // We need to remove the "configure" widget and add it again, because it seems we can't update the filters directly
+                    this.search.removeWidgets([this.configureWidget]);
+                    this.search.addWidgets([
+                        this.createConfigureWidget(),
+                    ]);
                     break;
             }
         });
@@ -248,17 +251,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             return;
         }
 
-        console.log('initInstantsearch this.showScheduledForDeletion', this.showScheduledForDeletion);
-
         this.search = this.createInstantsearch();
         const search = this.search;
 
         search.addWidgets([
-            configure({
-                hitsPerPage: 24,
-                // Show not-deleted documents / Show only deleted documents
-                filters: "base.isScheduledForDeletion:" + (this.showScheduledForDeletion ? "true" : "false"),
-            }),
+            this.createConfigureWidget(),
             this.createSearchBox(),
             this.createHits(),
             this.createSortBy(),
@@ -295,6 +292,18 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this._('input.ais-SearchBox-input').value = ' ';
             search.refresh();
         }, 1000);
+    }
+
+    createConfigureWidget() {
+        console.log('createConfigureWidget this.showScheduledForDeletion', this.showScheduledForDeletion);
+
+        this.configureWidget = configure({
+            hitsPerPage: 24,
+            // Show not-deleted documents / Show only deleted documents
+            filters: 'base.isScheduledForDeletion:' + (this.showScheduledForDeletion ? 'true' : 'false')
+        });
+
+        return this.configureWidget;
     }
 
     static get styles() {
