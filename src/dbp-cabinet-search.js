@@ -53,6 +53,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.serverConfig = null;
         // Only show not-deleted documents by default
         this.showScheduledForDeletion = false;
+        this.search = null;
         this.configureWidget = null;
     }
 
@@ -116,7 +117,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     this.initTypesenseService();
                     break;
                 case "showScheduledForDeletion":
-                    if (!this.typesenseInstantsearchAdapter) {
+                    if (!this.search) {
                         return;
                     }
 
