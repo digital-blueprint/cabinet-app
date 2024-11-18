@@ -62,10 +62,13 @@
         "refinement-delete-filter-button-text": "Delete filter",
         "refinement-date-before-text": "before",
         "refinement-date-after-text": "after"
+
     },
     "error-login-message": "You need to be logged in to use this function!",
     "focus-button-name":"Focus",
     "unselect-button-name":"unselect",
     "buttons.view": "View",
-    "buttons.add.documents": "Add document"
+    "buttons.add.documents": "Add document",
+    "sync-hit": "last synchronized",
+    "document-type": "Document type"
 }

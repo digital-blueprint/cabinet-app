@@ -278,6 +278,7 @@ class CabinetHitElement extends BaseHitElement {
 
     render() {
         let hit = /** @type {PersonHit} */(this.data);
+        const i18n = this._i18n;
         return html`
             <header class="ais-Hits-header">
                 <div class="person-id"><!-- studId: ${hit.person.studId}-->
@@ -332,7 +333,7 @@ class CabinetHitElement extends BaseHitElement {
                     ${hit.person.studies.map(study => html`${study.name} (${study.status.text})<br />`)}
                 </div>
                 <div class="hit-person-content-item3">
-                last synchronized:&nbsp;${Intl.DateTimeFormat('de').format(new Date())}
+                ${i18n.t('sync-hit')}:&nbsp;${Intl.DateTimeFormat('de').format(new Date())}
                 <br />
                 lang: ${this.lang}
                 </div>

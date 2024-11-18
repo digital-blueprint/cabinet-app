@@ -67,5 +67,7 @@
     "focus-button-name":"Eingrenzen",
     "unselect-button-name":"unselect",
     "buttons.view": "Anzeigen",
-    "buttons.add.documents": "Dokument hinzufügen"
+    "buttons.add.documents": "Dokument hinzufügen",
+    "sync-hit": "Zuletzt synchronisiert",
+    "document-type": "Dokumenttyp"
 }
