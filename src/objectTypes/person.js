@@ -409,6 +409,7 @@ class CabinetViewElement extends BaseViewElement {
     }
     render() {
         let hit = /** @type {PersonHit} */ (this.data);
+        const i18n = this._i18n;
         return html`
             <h2>${hit.person.fullName}</h2>
             lang: ${this.lang}<br />
@@ -424,11 +425,12 @@ class CabinetViewElement extends BaseViewElement {
             <hr/>
             <div class="info-container">
             <ul class="info-list">
-                <li><b>academic Titles:</b> ${hit.person.academicTitles.join(', ')}</li>
-                <li><b>given Name:</b> ${hit.person.givenName}</li>
-                <li><b>family Name:</b> ${hit.person.familyName}</li>
-                <li><b>formerFamilyName:</b> ${hit.person.formerFamilyName}</li>
-                <li><b>academicTitleFollowing:</b> ${hit.person.academicTitleFollowing}</li>
+
+                <li><b>${i18n.t('academic-titles')}:</b> ${hit.person.academicTitles.join(', ')}</li>
+                <li><b>${i18n.t('given-name')}:</b> ${hit.person.givenName}</li>
+                <li><b>${i18n.t('family-name')}:</b> ${hit.person.familyName}</li>
+                <li><b>${i18n.t('former-family-name')}:</b> ${hit.person.formerFamilyName}</li>
+                <li><b>${i18n.t('academic-title-following')}:</b> ${hit.person.academicTitleFollowing}</li>
                 <li><b>studId:</b> ${hit.person.studId}</li>
                 <li><b>stPersonNr:</b> ${hit.person.stPersonNr}</li>
                 <li><b>birthDate:</b> ${hit.person.birthDate}</li>

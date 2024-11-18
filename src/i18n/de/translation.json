@@ -69,5 +69,10 @@
     "buttons.view": "Anzeigen",
     "buttons.add.documents": "Dokument hinzufügen",
     "sync-hit": "Zuletzt synchronisiert",
-    "document-type": "Dokumenttyp"
+    "document-type": "Dokumenttyp",
+    "academic-titles":"Akad. Grad vor dem Namen",
+    "given-name":"Vorname",
+    "family-name":"Nachname",
+    "former-family-name":"Früherer Nachname",
+    "academic-title-following":"Akad. Grad nach dem Namen"
 }

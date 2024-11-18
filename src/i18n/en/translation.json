@@ -70,5 +70,10 @@
     "buttons.view": "View",
     "buttons.add.documents": "Add document",
     "sync-hit": "last synchronized",
-    "document-type": "Document type"
+    "document-type": "Document type",
+    "academic-titles":"Preceding academic title",
+    "given-name":"First name",
+    "family-name":"Surname",
+    "former-family-name":"Former family name",
+    "academic-title-following":"Following academic title"
 }
