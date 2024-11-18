@@ -123,8 +123,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('storeDocumentToBlob fileData', fileData);
 
         if (fileData.identifier) {
-            alert('Document stored successfully with id ' + fileData.identifier + '! ' +
-                'Document will now be fetched from Typesense.');
+            this.documentModalNotification('Document stored successfully',
+                'Document stored successfully with id ' + fileData.identifier + '! ' +
+                'Document will now be fetched from Typesense.', 'success');
 
             console.log('storeDocumentToBlob this.typesenseService', this.typesenseService);
 
@@ -137,7 +138,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Stop after 10 attempts
         if (increment >= 10) {
             // TODO: Setup some kind of error message and decide what to do
-            alert('Could not fetch file document from Typesense after 10 attempts!');
+            this.documentModalNotification('Error', 'Could not fetch file document from Typesense after 10 attempts!', 'danger');
 
             /** @type {BaseFormElement} */
             const form = this.formRef.value;
@@ -500,9 +501,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (!response.ok) {
             // TODO: Error handling
             if (undelete) {
-                alert('Document undeleting failed!');
+                this.documentModalNotification('Failure', 'Document undeleting failed!', 'danger');
             } else {
-                alert('Document deleting failed!');
+                this.documentModalNotification('Failure', 'Document deleting failed!', 'danger');
             }
 
             throw response;
@@ -514,18 +515,18 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (undelete) {
             // Check if the document was marked as undeleted in the response
             if (data.deleteAt === null) {
-                this.documentModalNotification("Document undeleted", "Document was successfully undeleted!");
+                this.documentModalNotification('Document undeleted', 'Document was successfully undeleted!', 'success');
                 success = true;
             } else {
-                this.documentModalNotification("Error", "Document was not marked as undeleted!", "danger", 0);
+                this.documentModalNotification('Error', 'Document was not marked as undeleted!', 'danger');
             }
         } else {
             // Check if the document was marked as deleted in the response
             if (data.deleteAt !== null) {
-                this.documentModalNotification("Document deleted", "Document was successfully deleted!");
+                this.documentModalNotification('Document deleted', 'Document was successfully deleted!', 'success');
                 success = true;
             } else {
-                this.documentModalNotification("Error", "Document was not marked as deleted!", "danger", 0);
+                this.documentModalNotification('Error', 'Document was not marked as deleted!', 'danger');
             }
         }
 
@@ -543,7 +544,31 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
     }
 
-    documentModalNotification(summary, body, type = 'info', timeout = 5) {
+    /**
+     * Sends a notification to the document modal
+     * See https://github.com/digital-blueprint/toolkit/blob/main/packages/common/notification.js
+     * @param summary Summary of the notification
+     * @param body Body of the notification
+     * @param type Type can be info/success/warning/danger
+     * @param timeout Timeout in seconds, 0 means no timeout
+     */
+    documentModalNotification(summary, body, type = 'info', timeout = null) {
+        if (timeout === null) {
+            switch (type) {
+                case 'info':
+                case 'success':
+                    timeout = 5;
+                    break;
+                case 'warning':
+                    timeout = 10;
+                    break;
+                case 'danger':
+                    timeout = 15;
+                    // delete options.timeout;
+                    break;
+            }
+        }
+
         let options = {
             'summary': summary,
             'body': body,
