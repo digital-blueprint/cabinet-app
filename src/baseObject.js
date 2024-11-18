@@ -479,4 +479,15 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
                 lang: ${this.lang}<br />
         `;
     }
+    update(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+            switch (propName) {
+                case 'lang':
+                    this._i18n.changeLanguage(this.lang);
+                    break;
+            }
+        });
+
+        super.update(changedProperties);
+    }
 }
