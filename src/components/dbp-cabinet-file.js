@@ -514,30 +514,18 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (undelete) {
             // Check if the document was marked as undeleted in the response
             if (data.deleteAt === null) {
-                send({
-                    "summary": "Document undeleted",
-                    "body": "Document was successfully undeleted!",
-                    "type": "info",
-                    "timeout": 5,
-                    "targetNotificationId": "document-modal-notification",
-                });
+                this.documentModalNotification("Document undeleted", "Document was successfully undeleted!");
                 success = true;
             } else {
-                alert('Document was not marked as undeleted!');
+                this.documentModalNotification("Error", "Document was not marked as undeleted!", "danger", 0);
             }
         } else {
             // Check if the document was marked as deleted in the response
             if (data.deleteAt !== null) {
-                send({
-                    "summary": "Document deleted",
-                    "body": "Document was successfully deleted!",
-                    "type": "info",
-                    "timeout": 5,
-                    "targetNotificationId": "document-modal-notification",
-                });
+                this.documentModalNotification("Document deleted", "Document was successfully deleted!");
                 success = true;
             } else {
-                alert('Document was not marked as deleted!');
+                this.documentModalNotification("Error", "Document was not marked as deleted!", "danger", 0);
             }
         }
 
@@ -553,6 +541,22 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             // We need to request an update to re-render the view, because we only changed a property
             await this.requestUpdate();
         }
+    }
+
+    documentModalNotification(summary, body, type = 'info', timeout = 5) {
+        let options = {
+            'summary': summary,
+            'body': body,
+            'type': type,
+            'timeout': timeout,
+            'targetNotificationId': 'document-modal-notification'
+        };
+
+        if (timeout <= 0) {
+            delete options.timeout;
+        }
+
+        send(options);
     }
 
     async downloadFile() {
