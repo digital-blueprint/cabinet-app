@@ -404,6 +404,11 @@ class CabinetViewElement extends BaseViewElement {
                     border: solid 1px black;
                     padding-bottom: 2.5em;
                 }
+                .address-info{
+                    list-style-type: none;
+                    padding-left: 4rem;
+                    margin-left: 3rem;
+                }
 
         `;
     }
@@ -443,8 +448,7 @@ class CabinetViewElement extends BaseViewElement {
                 <li><b>${i18n.t('tuitionStatus')}:</b> ${hit.person.tuitionStatus}</li>
                 <li><b>${i18n.t('immatriculation-Date')}:</b> ${hit.person.immatriculationDate}</li>
                 <li><b>${i18n.t('immatriculationSemester')}:</b> ${hit.person.immatriculationSemester}</li>
-                <li><b>${i18n.t('exmatriculation-Status')}:</b> ${hit.person.exmatriculationStatus?.text}</li>
-                <li><b>${i18n.t('exmatriculation-Date')}:</b> ${hit.person.exmatriculationDate}</li>
+                <li><b>${i18n.t('exmatriculation-GI')}:</b> ${hit.person.exmatriculationStatus?.text} ${hit.person.exmatriculationDate}</li>
                 <li><b>${i18n.t('admission-Qualification-Type')}:</b> ${hit.person.admissionQualificationType?.text}</li>
                 <li><b>${i18n.t('school-Certificate-Date')}:</b> ${hit.person.schoolCertificateDate}</li>
                 <li><b><div class="note">${i18n.t('note')}:</b> ${hit.person.note}</div></li>
@@ -475,29 +479,26 @@ class CabinetViewElement extends BaseViewElement {
                 </g>
                 </svg>
             </div>
-            <div class="modal-Si-header-title"><h4>Study information</h4></div>
+            <div class="modal-Si-header-title"><h4>${i18n.t('Study-information')}</h4></div>
             </div>
             <hr/>
 
                 ${hit.person.studies.map(study => html`
                 <li>
                     <ul>
-                        <li><b>key:</b> ${study.key}</li>
-                        <li><b>name:</b> ${study.name}</li>
-                        <li><b>semester:</b> ${study.semester}</li>
-                        <li><b>immatriculationDate:</b> ${study.immatriculationDate}</li>
-                        <li><b>qualificationType:</b> ${study.qualificationType?.text}</li>
-                        <li><b>qualificationDate:</b> ${study.qualificationDate}</li>
-                        <li><b>qualificationState:</b> ${study.qualificationState?.text}</li>
-                        <li><b>exmatriculationType:</b> ${study.exmatriculationType?.text}</li>
-                        <li><b>exmatriculationDate:</b> ${study.exmatriculationDate}</li>
-                        <li><b>curriculumVersion:</b> ${study.curriculumVersion}</li>
+                        <li><b>${i18n.t(' key')}:</b> ${study.key}</li>
+                        <li><b>${i18n.t('name')}:</b> ${study.name}</li>
+                        <li><b>${i18n.t('semester')}:</b> ${study.semester}</li>
+                        <li><b>${i18n.t('status')}:</b> ${study.status?.text}</li>
+                        <li><b>${i18n.t('immatriculation-date')}:</b> ${study.immatriculationDate}</li>
+                        <li><b>${i18n.t('qualification-study')}:</b> ${study.qualificationType?.text} ${study.qualificationDate} ${study.qualificationState?.text}</li>
+                        <li><b>${i18n.t('exmatriculation')}:</b> ${study.exmatriculationType?.text} ${study.exmatriculationDate}</li>
+                        <li><b>${i18n.t('curriculum-version')}:</b> ${study.curriculumVersion}</li>
 
                         <!--<li><b>coUrl:</b> <a href="${study.coUrl}">${study.coUrl}</a></li>
                         <li><b>id:</b> ${study.id}</li>
                         <li><b>exmatriculationSemester:</b> ${study.exmatriculationSemester}</li>
                         <li><b>immatriculationSemester:</b> ${study.immatriculationSemester}</li>
-                        <li><b>status:</b> ${study.status?.text}</li>
                         <li><b>type:</b> ${study.type}</li>
                         <li><b>additionalCertificates:</b> ${study.additionalCertificates.map(c => c.text).join(', ')}</li>-->
                     </ul>
@@ -529,32 +530,32 @@ class CabinetViewElement extends BaseViewElement {
                 </g>
                 </svg>
             </div>
-                <div class="modal-Ci-header-title"><h4>Contact information</h4></div>
+                <div class="modal-Ci-header-title"><h4>${i18n.t('Contact-information')}</h4></div>
             </div>
             <hr/>
-                <li><b>emailAddressUniversity:</b> ${hit.person.emailAddressUniversity}</li>
-                <li><b>emailAddressConfirmed:</b> ${hit.person.emailAddressConfirmed}</li>
-                <li><b>emailAddressTemporary:</b> ${hit.person.emailAddressTemporary}</li></br/>
-            <li><b>homeAddress:</b>
-                    <ul>
-                        <li><b>note:</b> ${hit.person.homeAddress?.note}</li>
-                        <li><b>street:</b> ${hit.person.homeAddress?.street}</li>
-                        <li><b>place:</b> ${hit.person.homeAddress?.place}</li>
-                        <li><b>region:</b> ${hit.person.homeAddress?.region}</li>
-                        <li><b>postCode:</b> ${hit.person.homeAddress?.postCode}</li>
-                        <li><b>country:</b> ${hit.person.homeAddress?.country?.text}</li>
-                        <li><b>telephoneNumber:</b> ${hit.person.homeAddress?.telephoneNumber}</li>
+                <li><b>${i18n.t('emailAddressUniversity')}:</b>${hit.person.emailAddressUniversity}</li>
+                <li><b>${i18n.t('emailAddressConfirmed')}:</b>${hit.person.emailAddressConfirmed}</li>
+                <li><b>${i18n.t('emailAddressTemporary')}:</b>${hit.person.emailAddressTemporary}</li></br/>
+            <li><b>${i18n.t('homeAddress')}:</b>
+                    <ul class="address-info">
+                        <li><b></b> ${hit.person.homeAddress?.note}</li>
+                        <li><b></b> ${hit.person.homeAddress?.street}</li>
+                        <li><b></b> ${hit.person.homeAddress?.place}</li>
+                        <li><b></b> ${hit.person.homeAddress?.region}</li>
+                        <li><b></b> ${hit.person.homeAddress?.postCode}</li>
+                        <li><b></b> ${hit.person.homeAddress?.country?.text}</li>
+                        <li><b></b> ${hit.person.homeAddress?.telephoneNumber}</li>
                     </ul>
                 </li>
-                <li><b>studyAddress:</b>
-                    <ul>
-                        <li><b>note:</b> ${hit.person.studyAddress?.note}</li>
-                        <li><b>street:</b> ${hit.person.studyAddress?.street}</li>
-                        <li><b>place:</b> ${hit.person.studyAddress?.place}</li>
-                        <li><b>region:</b> ${hit.person.studyAddress?.region}</li>
-                        <li><b>postCode:</b> ${hit.person.studyAddress?.postCode}</li>
-                        <li><b>country:</b> ${hit.person.studyAddress?.country?.text}</li>
-                        <li><b>telephoneNumber:</b> ${hit.person.studyAddress?.telephoneNumber}</li>
+                <li><b>${i18n.t('studyAddress')}:</b>
+                    <ul class="address-info">
+                        <li><b></b> ${hit.person.studyAddress?.note}</li>
+                        <li><b></b> ${hit.person.studyAddress?.street}</li>
+                        <li><b></b> ${hit.person.studyAddress?.place}</li>
+                        <li><b></b> ${hit.person.studyAddress?.region}</li>
+                        <li><b></b> ${hit.person.studyAddress?.postCode}</li>
+                        <li><b></b> ${hit.person.studyAddress?.country?.text}</li>
+                        <li><b></b> ${hit.person.studyAddress?.telephoneNumber}</li>
                     </ul>
                 </li>
 
