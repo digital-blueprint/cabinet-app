@@ -322,6 +322,15 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (!response.ok) {
             throw response;
         }
+
+        // Check if the documentModalRef modal is still open
+        /** @type {Modal} */
+        const modal = this.documentModalRef.value;
+        if (!modal.isOpen()) {
+            console.log('storeDocumentInBlob modal is not open any more');
+            return {};
+        }
+
         const data = await response.json();
         console.log('File data', JSON.stringify(data));
         this.isFileDirty = false;
@@ -425,6 +434,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.isFileDirty = false;
         this.dataWasChanged = false;
         this.mode = CabinetFile.Modes.VIEW;
+        this.documentFile = null;
 
         /** @type {FileSource} */
         const fileSource = this.fileSourceRef.value;
@@ -446,6 +456,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Wait until hit data is set and rendering is complete
         await this.updateComplete;
 
+        /** @type {Modal} */
+        const modal = this.documentModalRef.value;
+        console.log('openDialogWithHit modal', modal);
+        modal.open();
+
         if (this.fileHitData.file) {
             const file = await this.downloadFileFromBlob(this.fileHitData.file.base.fileId, true);
             console.log('openDialogWithHit file', file);
@@ -456,11 +471,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             // We need to wait until rendering is complete after this.documentFile has changed
             await this.updateComplete;
         }
-
-        /** @type {Modal} */
-        const modal = this.documentModalRef.value;
-        console.log('openDialogWithHit modal', modal);
-        modal.open();
     }
 
     async editFile() {
@@ -710,19 +720,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const hit = this.fileHitData;
         console.log('getDocumentModalHtml this.fileHitData', this.fileHitData);
 
+        // Keep in mind that this.documentFile will be null until the file is loaded by openViewDialogWithFileHit
         let file = this.documentFile;
         console.log('getDocumentModalHtml this.documentFile', this.documentFile);
-
-        // if (hit.objectType !== 'person' || file === null) {
-        //     return html`<dbp-modal ${ref(this.documentModalRef)} id="document-modal" modal-id="document-modal"></dbp-modal>`;
-        // }
-        if (file === null) {
-            return html`
-                <dbp-modal ${ref(this.documentModalRef)} id="document-modal" modal-id="document-modal"></dbp-modal>
-                <dbp-pdf-viewer ${ref(this.documentPdfViewerRef)} id="document-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
-            `;
-        }
-
         console.log('this.mode', this.mode);
 
         const id = hit.id;
@@ -745,8 +745,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="description">
                         <h1>Document ${this.mode}</h1>
                         Document ID: ${id}<br />
-                        File name: ${file.name}<br />
-                        File size: ${file.size}<br />
+                        File name: ${file?.name}<br />
+                        File size: ${file?.size}<br />
                     </div>
                     <div class="status">
                         <div class="status-badge ${this.documentStatus}">
@@ -756,21 +756,21 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </div>
                     <div class="pdf-preview">
                         <div class="fileButtons">
-                            <button class="button" @click="${this.downloadFile}">Download</button>
+                            <button class="button" @click="${this.downloadFile}" ?disabled="${!file}">Download</button>
                             <button class="button" @click="${this.openReplacePdfDialog}">Replace PDF</button>
                         </div>
                         <dbp-pdf-viewer ${ref(this.documentPdfViewerRef)} id="document-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
                     </div>
                     <div class="form">
                         <div class="fileButtons">
-                            <button @click="${this.editFile}" class="${classMap({
+                            <button @click="${this.editFile}" ?disabled="${!file}" class="${classMap({
                                 hidden: this.mode !== CabinetFile.Modes.VIEW,
                             })} button is-primary">Edit</button>
-                            <button @click="${this.deleteFile}" class="${classMap({
-                                hidden: this.mode === CabinetFile.Modes.ADD || this.fileHitData.base.isScheduledForDeletion,
+                            <button @click="${this.deleteFile}" ?disabled="${!file}" class="${classMap({
+                                hidden: this.mode === CabinetFile.Modes.ADD || hit.base?.isScheduledForDeletion,
                             })} button is-primary">Delete</button>
-                            <button @click="${this.undeleteFile}" class="${classMap({
-                                hidden: this.mode === CabinetFile.Modes.ADD || !this.fileHitData.base.isScheduledForDeletion,
+                            <button @click="${this.undeleteFile}" ?disabled="${!file}" class="${classMap({
+                                hidden: this.mode === CabinetFile.Modes.ADD || !hit.base?.isScheduledForDeletion,
                             })} button is-primary">Undelete</button>
                         </div>
                         ${this.getObjectTypeFormPartHtml()}
