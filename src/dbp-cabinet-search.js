@@ -533,6 +533,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         customElements.define(tagName, objectTypeHitComponent);
                     }
 
+                    const documentViewButtonClick = (hit) => {
+                        this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));
+                    };
+
                     // Note: We can't access local functions, nor can we use a script tag, so we are using a custom event to open the file edit dialog (is this still the case with preact?)
                     // Note: "html" is preact html, not lit-html!
                     const i18n = this._i18n;
@@ -548,7 +552,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </footer>
                     ` : html`
                     <footer class="hits-doc-footer">
-                        <button class="button is-primary button-view" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}>${i18n.t('buttons.view')}</button>
+                        <button class="button is-primary button-view" onclick=${() => { documentViewButtonClick(hit); }}>
+                            ${i18n.t('buttons.view')}
+                        </button>
                     </footer>
                     `;
 
