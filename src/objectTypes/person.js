@@ -335,7 +335,7 @@ class CabinetHitElement extends BaseHitElement {
                 <div class="hit-person-content-item3">
                 ${i18n.t('sync-hit')}:&nbsp;${Intl.DateTimeFormat('de').format(new Date())}
                 <br />
-                lang: ${this.lang}
+
                 </div>
             </main>
 
