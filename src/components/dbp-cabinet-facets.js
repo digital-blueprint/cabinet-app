@@ -568,10 +568,27 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 flex-direction: column;
                 gap: 1em;
             }
-
+            .filter-group--category{
+                margin-left:6px;
+            }
+            .filter-group--person{
+                background-image:url(/assets/icon/user.svg);
+                background-repeat: no-repeat;
+                background-size: 22px 22px;
+                background-position-y:5px;
+                padding-left: 5px;
+            }
+            .filter-group--file{
+                background-image:url(/assets/icon/docs.svg);
+                background-repeat: no-repeat;
+                background-size: 22px 22px;
+                background-position-y:5px;
+                padding-left: 5px;
+            }
             .filter-title {
                 margin: 0;
                 text-decoration: underline 2px solid var(--dbp-override-content);
+                padding-left:20px;
             }
 
             .filter:has(> [hidden]) {
