@@ -106,5 +106,9 @@
     "emailAddressConfirmed":"Bestätigte E-Mailadresse",
     "emailAddressTemporary":"Temporäre E-Mailadresse",
     "homeAddress":"Heimatsadresse",
-    "studyAddress":"Studiumadresse"
+    "studyAddress":"Studiumadresse",
+    "document-issue-date":"Ausgabedatum" ,
+    "Added":"Hinzugefügt am" ,
+    "last-modified":"Letzte Änderung",
+    "document-type":"Dokumenttyp"
 }

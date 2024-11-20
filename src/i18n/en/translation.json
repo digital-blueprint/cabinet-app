@@ -107,5 +107,9 @@
     "emailAddressConfirmed":"Confirmed email address",
     "emailAddressTemporary":"Temporary email address",
     "homeAddress":"Home address",
-    "studyAddress":"Study address"
+    "studyAddress":"Study address",
+    "document-issue-date":"Document issue date" ,
+    "Added":"Added" ,
+    "last-modified":"Last modified",
+    "document-type":"Document type"
 }

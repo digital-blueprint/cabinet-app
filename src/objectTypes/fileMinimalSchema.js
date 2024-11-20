@@ -64,6 +64,7 @@ class CabinetHitElement extends BaseHitElement {
     }
     render() {
         const lastModified = new Date(this.data.file.base.modifiedTimestamp * 1000).toLocaleString();
+        const i18n = this._i18n;
         let hit = /** @type {PersonHit} */(this.data);
         return html`
             <form>
@@ -77,13 +78,13 @@ class CabinetHitElement extends BaseHitElement {
                 </div>
                 </header>
                 <main class="ais-doc-Hits-content">
-                <header class="ais-doc-Hits-content-items hit-content-item1">documentType:&nbsp;${this.data.file.base.additionalType.text} </header>
+                <header class="ais-doc-Hits-content-items hit-content-item1">${i18n.t('document-type')}:&nbsp;${this.data.file.base.additionalType.text} </header>
                 lang: ${this.lang}<br />
                 <div class="ais-doc-Hits-content-items hit-content-item2"></div>
                 <div class="ais-mdoc-Hits-content-items hit-content-item3">
-                Document issue date: <br/>
-                Added: <br />
-                Last modified:${lastModified}<br />
+                ${i18n.t('document-issue-date')}: <br/>
+                ${i18n.t('Added')}: <br />
+                ${i18n.t('last-modified')}:${lastModified}<br />
                 </div>
                 </main>
             </form>
