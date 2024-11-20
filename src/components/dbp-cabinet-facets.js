@@ -562,15 +562,21 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 margin-top:3em;
             }
 
+            .refinement-list-item-checkbox {
+                padding-left:15px;
+            }
+
             .filter-group {
                 margin-bottom: 2em;
                 display: flex;
                 flex-direction: column;
                 gap: 1em;
             }
+
             .filter-group--category{
                 margin-left:6px;
             }
+
             .filter-group--person{
                 background-image:url(/assets/icon/user.svg);
                 background-repeat: no-repeat;
@@ -578,6 +584,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 background-position-y:5px;
                 padding-left: 5px;
             }
+
             .filter-group--file{
                 background-image:url(/assets/icon/docs.svg);
                 background-repeat: no-repeat;
@@ -585,6 +592,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 background-position-y:5px;
                 padding-left: 5px;
             }
+
             .filter-title {
                 margin: 0;
                 text-decoration: underline 2px solid var(--dbp-override-content);
@@ -656,7 +664,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 display: flex;
                 gap: 1em;
                 align-items: center;
-                padding: 0.5em;
+                padding: 0.5em 0.5em 0.5em 1em;
                 justify-content: space-between;
             }
 
