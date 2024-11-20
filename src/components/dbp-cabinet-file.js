@@ -31,21 +31,33 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.objectTypeFormComponents = {};
         this.objectTypeHitComponents = {};
         this.objectTypeViewComponents = {};
-        this.person = {};
         this.documentModalRef = createRef();
         this.documentPdfViewerRef = createRef();
-        this.documentFile = null;
         this.fileDocumentTypeNames = {};
-        this.objectType = '';
-        this.additionalType = '';
         // TODO: Do we need a prefix?
         this.blobDocumentPrefix = 'document-';
-        this.mode = CabinetFile.Modes.VIEW;
         this.modalRef = createRef();
         this.fileSourceRef = createRef();
         this.fileSinkRef = createRef();
         this.formRef = createRef();
         this.typesenseService = null;
+
+        // Initialize the state in the beginning
+        this.initializeState();
+    }
+
+    /**
+     * Initializes the state of the component, so less stuff can go on in the background
+     * when the modal is closed
+     * This is important so when the dialog is opened again, the state is clean and not
+     * old data is shown by accident
+     */
+    initializeState() {
+        this.person = {};
+        this.documentFile = null;
+        this.objectType = '';
+        this.additionalType = '';
+        this.mode = CabinetFile.Modes.VIEW;
         this.fileHitData = {};
         this.fileHitDataCache = {};
         this.isFileDirty = false;
@@ -464,9 +476,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (this.fileHitData.file) {
             const file = await this.downloadFileFromBlob(this.fileHitData.file.base.fileId, true);
             console.log('openDialogWithHit file', file);
-            await this.showPdf(file);
 
+            // We need to set the documentFile, so that the PDF viewer will be rendered again
             this.documentFile = file;
+            await this.updateComplete;
+
+            // Show the PDF in the PDF viewer after it was rendered
+            await this.showPdf(file);
 
             // We need to wait until rendering is complete after this.documentFile has changed
             await this.updateComplete;
@@ -712,6 +728,25 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         `;
     }
 
+    getPdfViewerHtml() {
+        // If there is no document file anymore, show a spinner
+        // This prevents that the PDF viewer still has an old file when the modal was closed
+        // before the PDF was loaded or rendered
+        if (!this.documentFile) {
+            return html`<dbp-mini-spinner></dbp-mini-spinner>`;
+        }
+
+        return html`
+            <dbp-pdf-viewer
+                ${ref(this.documentPdfViewerRef)}
+                id="document-pdf-viewer"
+                lang="${this.lang}"
+                style="width: 100%"
+                auto-resize="cover"
+            ></dbp-pdf-viewer>
+        `;
+    }
+
     /**
      * Returns the modal dialog for adding a document to a person after the document was selected
      * in the file source
@@ -762,7 +797,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             </button>
                             <button class="button" @click="${this.openReplacePdfDialog}">Replace PDF</button>
                         </div>
-                        <dbp-pdf-viewer ${ref(this.documentPdfViewerRef)} id="document-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
+                        ${this.getPdfViewerHtml()}
                     </div>
                     <div class="form">
                         <div class="fileButtons">
@@ -804,6 +839,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 composed: true
             }));
         }
+
+        // Reset the state of the component when the modal is closed
+        this.initializeState();
     }
 
     getObjectTypeFormPartHtml() {
