@@ -745,8 +745,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="description">
                         <h1>Document ${this.mode}</h1>
                         Document ID: ${id}<br />
-                        File name: ${file?.name}<br />
-                        File size: ${file?.size}<br />
+                        File name: ${file?.name}<dbp-mini-spinner ?hidden="${file}"></dbp-mini-spinner><br />
+                        File size: ${file?.size}<dbp-mini-spinner ?hidden="${file}"></dbp-mini-spinner><br />
                     </div>
                     <div class="status">
                         <div class="status-badge ${this.documentStatus}">
@@ -756,7 +756,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </div>
                     <div class="pdf-preview">
                         <div class="fileButtons">
-                            <button class="button" @click="${this.downloadFile}" ?disabled="${!file}">Download</button>
+                            <button class="button" @click="${this.downloadFile}" ?disabled="${!file}">
+                                Download
+                                <dbp-mini-spinner ?hidden="${file}"></dbp-mini-spinner>
+                            </button>
                             <button class="button" @click="${this.openReplacePdfDialog}">Replace PDF</button>
                         </div>
                         <dbp-pdf-viewer ${ref(this.documentPdfViewerRef)} id="document-pdf-viewer" lang="${this.lang}" style="width: 100%" auto-resize="cover"></dbp-pdf-viewer>
@@ -765,13 +768,22 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <div class="fileButtons">
                             <button @click="${this.editFile}" ?disabled="${!file}" class="${classMap({
                                 hidden: this.mode !== CabinetFile.Modes.VIEW,
-                            })} button is-primary">Edit</button>
+                            })} button is-primary">
+                                Edit
+                                <dbp-mini-spinner ?hidden="${file}"></dbp-mini-spinner>
+                            </button>
                             <button @click="${this.deleteFile}" ?disabled="${!file}" class="${classMap({
                                 hidden: this.mode === CabinetFile.Modes.ADD || hit.base?.isScheduledForDeletion,
-                            })} button is-primary">Delete</button>
+                            })} button is-primary">
+                                Delete
+                                <dbp-mini-spinner ?hidden="${file}"></dbp-mini-spinner>
+                            </button>
                             <button @click="${this.undeleteFile}" ?disabled="${!file}" class="${classMap({
                                 hidden: this.mode === CabinetFile.Modes.ADD || !hit.base?.isScheduledForDeletion,
-                            })} button is-primary">Undelete</button>
+                            })} button is-primary">
+                                Undelete
+                                <dbp-mini-spinner ?hidden="${file}"></dbp-mini-spinner>
+                            </button>
                         </div>
                         ${this.getObjectTypeFormPartHtml()}
                     </div>
