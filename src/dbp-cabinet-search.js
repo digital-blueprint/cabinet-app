@@ -782,6 +782,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.facetConfigs = this.instantSearchModule.getFacetsConfig();
 
             this.initInstantsearch();
+            this.initTypesenseService();
 
             /**
              * @type {CabinetFile}
