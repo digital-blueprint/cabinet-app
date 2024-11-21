@@ -691,6 +691,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 align-items: flex-end;
             }
 
+            #document-modal .status.hidden {
+                display: none;
+            }
+
             #document-modal .status .status-badge {
                 padding: 5px 10px;
                 margin-top: auto;
@@ -788,7 +792,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         File name: ${file?.name}${this.getMiniSpinnerHtml(file)}<br />
                         File size: ${file?.size}${this.getMiniSpinnerHtml(file)}<br />
                     </div>
-                    <div class="status">
+                    <div class="status ${classMap({hidden: this.mode === CabinetFile.Modes.ADD})}">
                         <div class="status-badge ${this.documentStatus}">
                             <div class="status-text">${this.documentStatus}</div>
                             <div class="status-description">${this.documentStatusDescription}</div>
