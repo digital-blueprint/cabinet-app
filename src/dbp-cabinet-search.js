@@ -40,7 +40,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             "id": "",
             "objectType": "",
         };
-        this.documentEditModalRef = createRef();
         this.documentViewPersonModalRef = createRef();
         this.documentFileComponentRef = createRef();
         this.cabinetFacetsRef = createRef();
@@ -135,17 +134,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     disconnectedCallback() {
         super.disconnectedCallback();
-    }
-
-    async openDocumentEditDialog(hit) {
-        this.hitData = hit;
-
-        // We need to wait until rendering is complete after this.hitData has changed,
-        // or the dialog will not open on the first click
-        // https://lit.dev/docs/components/lifecycle/#updatecomplete
-        await this.updateComplete;
-
-        this.documentEditModalRef.value.open();
     }
 
     async openDocumentAddDialog(hit) {
@@ -595,55 +583,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         return this.cabinetFacetsRef.value.createFacetsFromConfig(this.facetConfigs);
     }
 
-    getDocumentEditModalHtml() {
-        // TODO: In production it maybe would be better to fetch the typesense document again to get the latest data
-        const hit = this.hitData;
-        console.log('getDocumentEditModalHtml this.hitData', this.hitData);
-        const objectType = hit.objectType;
-
-        if (objectType === '') {
-            console.log('objectType empty', objectType);
-            return html`<dbp-modal ${ref(this.documentEditModalRef)} modal-id="document-edit-modal"></dbp-modal>`;
-        }
-
-        const id = hit.id;
-        const i18n = this._i18n;
-        const tagPart = pascalToKebab(objectType);
-        const tagName = 'dbp-cabinet-object-type-edit-form-' + tagPart;
-
-        console.log('objectType', objectType);
-        console.log('tagName', tagName);
-        console.log('this.objectTypeFormComponents[objectType]', this.objectTypeFormComponents[objectType]);
-
-        if (!customElements.get(tagName)) {
-            customElements.define(tagName, this.objectTypeFormComponents[objectType]);
-        }
-
-        // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
-        // a variable and need to set the "data" property from a variable too!
-        return staticHtml`
-            <dbp-modal
-                ${ref(this.documentEditModalRef)}
-                modal-id="document-edit-modal"
-                title="${i18n.t('document-edit-modal-title')}"
-                width="80%"
-                height="80%"
-                min-width="80%"
-                min-height="80%"
-                subscribe="lang">
-                <div slot="content">
-                    Document ID: ${id}<br />
-                    ObjectType: ${objectType}<br />
-                    Size: ${hit.filesize}<br />
-                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-edit-form-${id}" subscribe="lang" .data=${hit}></${unsafeStatic(tagName)}>
-                </div>
-                <div slot="footer" class="modal-footer">
-                    Footer
-                </div>
-            </dbp-modal>
-        `;
-    }
-
     getDocumentViewModalHtml() {
         // TODO: In production it maybe would be better to fetch the typesense document again to get the latest data
         const hit = this.hitData;
@@ -710,7 +649,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </div>
                 </div>
 
-                ${this.getDocumentEditModalHtml()}
                 ${this.getDocumentViewModalHtml()}
 
                 <dbp-cabinet-file
