@@ -676,6 +676,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 grid-template-columns: 1fr 1fr;
                 gap: 10px 10px;
                 grid-auto-flow: row;
+                padding: 0 25px;
             }
 
             #document-modal .description {
