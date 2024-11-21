@@ -443,10 +443,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async openViewDialogWithFileHit(hit) {
-        this.isFileDirty = false;
-        this.dataWasChanged = false;
+        this.initializeState();
         this.mode = CabinetFile.Modes.VIEW;
-        this.documentFile = null;
 
         /** @type {FileSource} */
         const fileSource = this.fileSourceRef.value;
@@ -454,16 +452,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (fileSource) {
             fileSource.removeAttribute('dialog-open');
         }
-
-        // Fetch the hit data from Typesense again in case it changed
-        hit = await this.typesenseService.fetchItem(hit.id);
-
-        this.fileHitDataCache = {};
-        this.fileHitData = hit;
-        console.log('openDialogWithHit hit', hit);
-        // Set person from hit
-        this.person = hit.person;
-        this.objectType = hit.objectType;
 
         // Wait until hit data is set and rendering is complete
         await this.updateComplete;
@@ -473,7 +461,19 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('openDialogWithHit modal', modal);
         modal.open();
 
-        if (this.fileHitData.file) {
+        // Fetch the hit data from Typesense again in case it changed
+        hit = await this.typesenseService.fetchItem(hit.id);
+
+        this.fileHitData = hit;
+        console.log('openDialogWithHit hit', hit);
+        // Set person from hit
+        this.person = hit.person;
+        this.objectType = hit.objectType;
+
+        // Wait until hit data is set and rendering is complete
+        await this.updateComplete;
+
+        if (hit.file) {
             const file = await this.downloadFileFromBlob(this.fileHitData.file.base.fileId, true);
             console.log('openDialogWithHit file', file);
 
@@ -747,6 +747,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         `;
     }
 
+    getMiniSpinnerHtml($hide) {
+        return $hide ? '' : html`<dbp-mini-spinner></dbp-mini-spinner>`;
+    }
+
     /**
      * Returns the modal dialog for adding a document to a person after the document was selected
      * in the file source
@@ -779,9 +783,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div slot="content" class="content">
                     <div class="description">
                         <h1>Document ${this.mode}</h1>
-                        Document ID: ${id}<br />
-                        File name: ${file?.name}<dbp-mini-spinner ?hidden="${file}"></dbp-mini-spinner><br />
-                        File size: ${file?.size}<dbp-mini-spinner ?hidden="${file}"></dbp-mini-spinner><br />
+                        Document ID: ${id}${this.getMiniSpinnerHtml(id)}<br />
+                        File name: ${file?.name}${this.getMiniSpinnerHtml(file)}<br />
+                        File size: ${file?.size}${this.getMiniSpinnerHtml(file)}<br />
                     </div>
                     <div class="status">
                         <div class="status-badge ${this.documentStatus}">
@@ -793,7 +797,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <div class="fileButtons">
                             <button class="button" @click="${this.downloadFile}" ?disabled="${!file}">
                                 Download
-                                <dbp-mini-spinner ?hidden="${file}"></dbp-mini-spinner>
+                                ${this.getMiniSpinnerHtml(file)}
                             </button>
                             <button class="button" @click="${this.openReplacePdfDialog}">Replace PDF</button>
                         </div>
@@ -805,19 +809,19 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 hidden: this.mode !== CabinetFile.Modes.VIEW,
                             })} button is-primary">
                                 Edit
-                                <dbp-mini-spinner ?hidden="${file}"></dbp-mini-spinner>
+                                ${this.getMiniSpinnerHtml(file)}
                             </button>
                             <button @click="${this.deleteFile}" ?disabled="${!file}" class="${classMap({
                                 hidden: this.mode === CabinetFile.Modes.ADD || hit.base?.isScheduledForDeletion,
                             })} button is-primary">
                                 Delete
-                                <dbp-mini-spinner ?hidden="${file}"></dbp-mini-spinner>
+                                ${this.getMiniSpinnerHtml(file)}
                             </button>
                             <button @click="${this.undeleteFile}" ?disabled="${!file}" class="${classMap({
                                 hidden: this.mode === CabinetFile.Modes.ADD || !hit.base?.isScheduledForDeletion,
                             })} button is-primary">
                                 Undelete
-                                <dbp-mini-spinner ?hidden="${file}"></dbp-mini-spinner>
+                                ${this.getMiniSpinnerHtml(file)}
                             </button>
                         </div>
                         ${this.getObjectTypeFormPartHtml()}
