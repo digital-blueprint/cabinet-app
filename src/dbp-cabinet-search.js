@@ -1,5 +1,5 @@
 import {css, html} from 'lit';
-import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
+import {html as staticHtml} from 'lit/static-html.js';
 import {ref, createRef} from 'lit/directives/ref.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
 import DBPCabinetLitElement from "./dbp-cabinet-lit-element";
