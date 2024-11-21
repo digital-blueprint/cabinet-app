@@ -400,7 +400,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         if (objectType === '') {
             console.log('objectType empty', objectType);
-            return html``;
+            return this.getMiniSpinnerHtml();
         }
 
         const hit = this.fileHitData;
@@ -799,7 +799,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 Download
                                 ${this.getMiniSpinnerHtml(file)}
                             </button>
-                            <button class="button" @click="${this.openReplacePdfDialog}">Replace PDF</button>
+                            <button class="button" @click="${this.openReplacePdfDialog}" ?disabled="${!id}">
+                                Replace PDF
+                                ${this.getMiniSpinnerHtml(id)}
+                            </button>
                         </div>
                         ${this.getPdfViewerHtml()}
                     </div>
