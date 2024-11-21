@@ -800,19 +800,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </div>
                     <div class="pdf-preview">
                         <div class="fileButtons">
-                            <button class="button" @click="${this.downloadFile}" ?disabled="${!file}">
-                                Download
-                                ${this.getMiniSpinnerHtml(file)}
-                            </button>
-                            <button class="button" @click="${this.openReplacePdfDialog}" ?disabled="${!id}">
-                                Replace PDF
-                                ${this.getMiniSpinnerHtml(id)}
-                            </button>
                         </div>
                         ${this.getPdfViewerHtml()}
                     </div>
                     <div class="form">
                         <div class="fileButtons">
+                            <button class="button ${classMap({hidden: this.mode !== CabinetFile.Modes.EDIT})}"
+                                    @click="${this.openReplacePdfDialog}" ?disabled="${!id}">
+                                Replace Document
+                                ${this.getMiniSpinnerHtml(id)}
+                            </button>
+                            <button class="button" @click="${this.downloadFile}" ?disabled="${!file}">
+                                Download Document
+                                ${this.getMiniSpinnerHtml(file)}
+                            </button>
                             <button @click="${this.editFile}" ?disabled="${!file}" class="${classMap({
                                 hidden: this.mode !== CabinetFile.Modes.VIEW,
                             })} button is-primary">
