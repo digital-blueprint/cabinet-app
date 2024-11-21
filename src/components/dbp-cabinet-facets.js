@@ -563,7 +563,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             .refinement-list-item-checkbox {
-                padding-left:15px;
+                padding-left:19px;
             }
 
             .filter-group {
@@ -580,17 +580,25 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             .filter-group--person{
                 background-image:url(/assets/icon/user.svg);
                 background-repeat: no-repeat;
-                background-size: 22px 22px;
+                background-size: 26px 26px;
                 background-position-y:5px;
-                padding-left: 5px;
+                padding-left: 7px;
+            }
+
+            .filter-group--study{
+                background-image:url(/assets/icon/book.svg);
+                background-repeat: no-repeat;
+                background-size: 26px 26px;
+                background-position-y:5px;
+                padding-left: 7px;
             }
 
             .filter-group--file{
                 background-image:url(/assets/icon/docs.svg);
                 background-repeat: no-repeat;
-                background-size: 22px 22px;
+                background-size: 26px 26px;
                 background-position-y:5px;
-                padding-left: 5px;
+                padding-left: 7px;
             }
 
             .filter-title {
