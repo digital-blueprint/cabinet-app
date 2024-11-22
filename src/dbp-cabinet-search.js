@@ -501,7 +501,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     createSearchBox() {
         return searchBox({
             container: this._("#searchbox"),
-            showReset: false,
             showLoadingIndicator: false,
         });
     }
