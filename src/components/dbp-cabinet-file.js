@@ -788,7 +788,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div slot="content" class="content">
                     <div class="description">
                         <h1>Document ${this.mode}</h1>
-                        Document ID: ${id}${this.getMiniSpinnerHtml(id)}<br />
+                        <div class="${classMap({hidden: this.mode === CabinetFile.Modes.ADD})}"">
+                            Document ID: ${id}${this.getMiniSpinnerHtml(id)}
+                        </div>
                         File name: ${file?.name}${this.getMiniSpinnerHtml(file)}<br />
                         File size: ${file?.size}${this.getMiniSpinnerHtml(file)}<br />
                     </div>
