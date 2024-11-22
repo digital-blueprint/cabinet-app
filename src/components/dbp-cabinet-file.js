@@ -53,6 +53,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      * old data is shown by accident
      */
     initializeState() {
+        console.log('initializeState');
+
         this.person = {};
         this.documentFile = null;
         this.objectType = '';
@@ -64,6 +66,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.dataWasChanged = false;
         this.documentStatus = 'success';
         this.documentStatusDescription = '';
+        this.allowStateReset = true;
     }
 
     connectedCallback() {
@@ -622,8 +625,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async openReplacePdfDialog() {
-        this.mode = CabinetFile.Modes.EDIT;
-        await this.updateComplete;
+        // Don't allow the reset the state of the component when the document modal is closed
+        this.allowStateReset = false;
 
         await this.openDocumentAddDialog(false);
     }
@@ -650,6 +653,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (!fileSource) {
             await this.updateComplete;
         }
+
+        console.log('openDocumentAddDialog fileSource', fileSource);
 
         // Open the file source dialog to select a file
         fileSource.setAttribute('dialog-open', '');
@@ -855,8 +860,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             }));
         }
 
-        // Reset the state of the component when the modal is closed
-        this.initializeState();
+        // Prevent the state reset when the document modal is closed if it was closed by
+        // the "Replace Document" button
+        if (this.allowStateReset) {
+            // Reset the state of the component when the modal is closed
+            this.initializeState();
+        }
     }
 
     getObjectTypeFormPartHtml() {
@@ -1004,6 +1013,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             // Note: Modal is checking if the dialog is already open
             modal.open();
         }
+
+        // In case we can here via the "Replace Document" button, allow the state to be reset
+        // after the document dialog was closed again
+        this.allowStateReset = true;
     }
 
     /**
@@ -1025,6 +1038,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // selected in the file source
         // Note: Modal is checking if the dialog is already open, if it was opened by onFileSelectDialogClosed()
         modal.open();
+
+        // In case we can here via the "Replace Document" button, allow the state to be reset
+        // after the document dialog was closed again
+        this.allowStateReset = true;
     }
 
     /**
