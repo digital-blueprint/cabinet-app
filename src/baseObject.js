@@ -42,6 +42,7 @@ export const getCommonStyles = () => css`
     .text-container {
         display: flex;
         flex-direction: column;
+        color:var(--dbp-override-content);
     }
     .icon-container {
         display: flex;
@@ -55,13 +56,16 @@ export const getCommonStyles = () => css`
     }
     .hit-content-item1 {
         grid-row: 1 / 2;
+        color:var(--dbp-override-content);
     }
     .hit-content-item2 {
         grid-row: 2 / 3;
+        color:var(--dbp-override-content);
     }
     .hit-content-item3 {
         grid-row: 3 / 4;
         padding-top: 30px;
+        color:var(--dbp-override-content);
     }
 `;
 export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
