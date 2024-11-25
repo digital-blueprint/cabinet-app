@@ -117,6 +117,62 @@ export function getCurrentRefinementCSS() {
         }
     `;
 }
+
+/**
+ * Currently we don't need this
+ */
+export function getAlgoliaMinCSS() {
+    // language=css
+    return css`
+        .ais-SearchBox-reset {
+            padding: 0;
+            overflow: visible;
+            font: inherit;
+            line-height: normal;
+            color: inherit;
+            background: none;
+            border: 0;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            position: absolute;
+            z-index: 1;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            /*top: 1em;*/
+            right: 0.3rem;
+            transform: translateY(-50%);
+        }
+
+        .ais-SearchBox-reset::-moz-focus-inner {
+            padding: 0;
+            border: 0;
+        }
+
+        .ais-SearchBox-reset[disabled] {
+            cursor: default;
+        }
+
+        .ais-SearchBox-resetIcon {
+            width: 12px;
+            height: 12px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
+
+        .ais-SearchBox-resetIcon path {
+            fill: rgb(73, 85, 136);
+        }
+    `;
+}
+
 export function getPaginationCSS() {
     // language=css
     return css`
