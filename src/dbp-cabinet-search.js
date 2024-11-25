@@ -370,7 +370,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 border-left: 0 none;
                 border-right: 0 none;
                 border:1px solid;
-                margin-right: 5px;
+                margin-right: 4px;
             }
 
             .ais-SearchBox-submit svg path {
@@ -403,16 +403,30 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 flex-direction: column;
                 justify-content: space-between;
             }
+
             .hits-person-footer{
                 display: grid;
                 justify-content: end;
                 gap: 10px;
                 grid-template-columns: repeat(3, 1fr);
             }
+
             .hits-doc-footer{
                 position: relative;
                 display: flex;
                 justify-content: flex-end;
+            }
+
+            .ais-SearchBox-resetIcon{
+                width: 12px;
+                height: 12px;
+            }
+
+            .ais-SearchBox-reset{
+                position: relative;
+                background-color: transparent;
+                right: 4.5em;
+                border:none;
             }
 
         `;
@@ -499,10 +513,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     createSearchBox() {
+        const i18n = this._i18n;
+        const placeholderText = i18n.t('search-cabinet');
         return searchBox({
             container: this._("#searchbox"),
             showLoadingIndicator: false,
-            placeholder: "Search cabinet",
+            placeholder: placeholderText,
         });
     }
 

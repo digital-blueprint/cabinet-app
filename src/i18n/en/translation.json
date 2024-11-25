@@ -111,5 +111,6 @@
     "document-issue-date":"Document issue date" ,
     "Added":"Added" ,
     "last-modified":"Last modified",
-    "document-type":"Document type"
+    "document-type":"Document type",
+    "search-cabinet":"Search cabinet"
 }

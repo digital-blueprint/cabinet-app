@@ -110,5 +110,6 @@
     "document-issue-date":"Ausgabedatum" ,
     "Added":"Hinzugefügt am" ,
     "last-modified":"Letzte Änderung",
-    "document-type":"Dokumenttyp"
+    "document-type":"Dokumenttyp",
+    "search-cabinet":"suchen cabinet"
 }
