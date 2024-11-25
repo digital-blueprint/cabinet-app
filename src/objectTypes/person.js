@@ -244,6 +244,7 @@ class CabinetHitElement extends BaseHitElement {
                 display: flex;
                 text-align: left;
                 align-items: center;
+                color:var(--dbp-override-content);
             }
             .person-num{
                 display: flex;
@@ -258,12 +259,15 @@ class CabinetHitElement extends BaseHitElement {
                 align-self: start;
                 font-size:24px;
                 font-weight:bold;
+                color:var(--dbp-override-content);
             }
             .hit-person-content-item2{
                 align-self: start;
+                color:var(--dbp-override-content);
             }
             .hit-person-content-item3{
                 align-self: start;
+                color:var(--dbp-override-content);
             }
             .SyncStatus{
                 align-self: flex-end;
