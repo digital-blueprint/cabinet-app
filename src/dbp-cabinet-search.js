@@ -21,6 +21,7 @@ import {CabinetFacets} from './components/dbp-cabinet-facets.js';
 import {TypesenseService} from './services/typesense.js';
 import {updateDatePickersForExternalRefinementChange} from './components/dbp-cabinet-date-facet.js';
 import {BaseObject} from './baseObject.js';
+import {name as pkgName} from '../package.json';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -359,30 +360,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 border: var(--dbp-border);
                 padding-inline: .5em;
                 margin-right: 5px;
+                padding: 0 1.2em 0 2.2em;
             }
 
             .ais-SearchBox-submit {
                 width: 2em;
                 background-color: var(--dbp-background);
                 color: var(--dbp-content);
-                border: var(--dbp-border);
-                /* prevent double borders */
-                border-left: 0 none;
-                border-right: 0 none;
-                border:1px solid;
-                margin-right: 4px;
-            }
-
-            .ais-SearchBox-submit svg path {
-                fill: var(--dbp-content);
-            }
-
-            .ais-SearchBox-submit svg {
-                transition: transform 0.15s ease-in-out;
-            }
-
-            .ais-SearchBox-submit:hover svg {
-                transform: scale(1.5);
+                margin-right: 5px;
             }
 
             .ais-Hits-list {
@@ -417,18 +402,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 justify-content: flex-end;
             }
 
-            .ais-SearchBox-resetIcon{
-                width: 12px;
-                height: 12px;
+            .ais-Hits-item {
+                width: inherit;
             }
-
-            .ais-SearchBox-reset{
-                position: relative;
-                background-color: transparent;
-                right: 4.5em;
-                border:none;
-            }
-
         `;
     }
 
@@ -629,9 +605,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     render() {
         const i18n = this._i18n;
+        const algoliaCss = commonUtils.getAssetURL(
+            pkgName,
+            'algolia-min.css'
+        );
+
         console.log('-- Render --');
 
         return html`
+            <link rel="stylesheet" href="${algoliaCss}"/>
             <div class="control ${classMap({hidden: this.isLoggedIn() || !this.isLoading() || !this.loadingTranslations })}">
                 <span class="loading">
                     <dbp-mini-spinner text=${i18n.t('loading-message')}></dbp-mini-spinner>
