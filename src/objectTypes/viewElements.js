@@ -17,13 +17,19 @@ export const stringElement = (label, value = "") => {
 /**
  *
  * @param label
- * @param value - YYYY-MM-DD (iso8601)
+ * @param date - a date object or an empty string
  */
-export const dateElement = (label, value = "") => {
+export const dateElement = (label, date) => {
+    const dateString = !date || date === '' ? '-' : date.toLocaleDateString('de-DE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+
     return html`
         <fieldset>
             <label>${label}</label>
-            ${value}
+            ${dateString}
         </fieldset>
     `;
 };

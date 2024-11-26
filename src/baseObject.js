@@ -457,7 +457,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
             ${viewElements.stringElement('Study field', this.getStudyFieldNameForKey(baseData.studyField))}
             ${viewElements.stringElement('Semester', baseData.semester || '')}
             ${viewElements.stringElement('Comment', baseData.comment || '')}
-            ${viewElements.dateElement('Recommended deletion', (new Date(baseData.recommendedDeletionTimestamp * 1000)).toISOString())}
+            ${viewElements.dateElement('Recommended deletion', baseData.recommendedDeletionTimestamp === 0 ? '' : new Date(baseData.recommendedDeletionTimestamp * 1000))}
         `;
     };
 

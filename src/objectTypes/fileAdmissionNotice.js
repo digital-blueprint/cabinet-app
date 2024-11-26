@@ -109,7 +109,7 @@ class CabinetViewElement extends BaseViewElement {
 
         return html`
             ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
-            ${viewElements.dateElement('Date created', data.dateCreated || '')}
+            ${viewElements.dateElement('Date created', data.dateCreated ? new Date(data.dateCreated) : '')}
             ${viewElements.stringElement('Previous study', data.previousStudy || '')}
             ${viewElements.enumElement('Decision', data.decision || '', CabinetFormElement.getDecisions())}
         `;

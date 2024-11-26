@@ -102,7 +102,7 @@ class CabinetViewElement extends BaseViewElement {
             ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
             ${viewElements.stringElement('Identifier', data.identifier || '')}
             ${viewElements.enumElement('Nationality', data.nationality || '', formElements.getNationalityItems())}
-            ${viewElements.dateElement('Date created', data.dateCreated || '')}
+            ${viewElements.dateElement('Date created', data.dateCreated ? new Date(data.dateCreated) : '')}
         `;
     }
 }

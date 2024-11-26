@@ -106,7 +106,7 @@ class CabinetViewElement extends BaseViewElement {
             ${viewElements.stringElement('Given name', agent.givenName || '')}
             ${viewElements.stringElement('Family name', agent.familyName || '')}
             ${viewElements.stringElement('Abstract', data.abstract || '')}
-            ${viewElements.dateTimeElement('Date created', data.dateCreated || '')}
+            ${viewElements.dateTimeElement('Date created', data.dateCreated ? new Date(data.dateCreated) : '')}
             ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }
