@@ -775,6 +775,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('this.mode', this.mode);
 
         const id = hit.id;
+        const headline = this.mode === CabinetFile.Modes.ADD ? 'Upload Document' : hit?.file?.base.additionalType.text;
 
         // TODO: Check if PDF was uploaded
 
@@ -792,7 +793,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 </div>
                 <div slot="content" class="content">
                     <div class="description">
-                        <h1>Document ${this.mode}</h1>
+                        <h1>${headline}</h1>
                         <div class="${classMap({hidden: this.mode === CabinetFile.Modes.ADD})}"">
                             Document ID: ${id}${this.getMiniSpinnerHtml(id)}
                         </div>
