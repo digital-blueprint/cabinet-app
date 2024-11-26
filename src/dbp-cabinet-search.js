@@ -328,10 +328,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .search-box-container {
                 display: flex;
+                gap:5px;
             }
 
             .search-box-widget {
-                flex-grow: 1;
+                 flex: 4 1 auto;
             }
 
             .sort-widget .ais-SortBy-select {
@@ -359,16 +360,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 color: var(--dbp-content);
                 border: var(--dbp-border);
                 padding-inline: .5em;
-                margin-right: 5px;
                 padding: 0 1.2em 0 2.2em;
                 border-radius: 0px !important;
             }
-
-            .ais-SearchBox-submit {
-                width: 2em;
+            .help-container{
+                flex: 0.5;
                 background-color: var(--dbp-background);
                 color: var(--dbp-content);
-                margin-right: 5px;
+                border: var(--dbp-border);
             }
 
             .ais-Hits-list {
@@ -629,7 +628,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 <div class="search-box-container">
                     <div id="searchbox" class="search-box-widget"></div>
+                    <div class="help-container"></div>
                     <div id="sort-by" class="sort-widget"></div>
+
                 </div>
                 <div>
                     <input type="checkbox" id="deleted-checkbox" @click="${this.toggleShowDeleted}"/>
