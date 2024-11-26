@@ -363,11 +363,20 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 padding: 0 1.2em 0 2.2em;
                 border-radius: 0px !important;
             }
+
             .help-container{
                 flex: 0.5;
                 background-color: var(--dbp-background);
                 color: var(--dbp-content);
                 border: var(--dbp-border);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .help-icon{
+                width:2em;
+                height:1.7em;
             }
 
             .ais-Hits-list {
@@ -628,7 +637,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 <div class="search-box-container">
                     <div id="searchbox" class="search-box-widget"></div>
-                    <div class="help-container"></div>
+                    <div class="help-container">
+                    <img class="help-icon" src="/assets/icon/question.svg" alt="">
+                    </div>
                     <div id="sort-by" class="sort-widget"></div>
 
                 </div>
