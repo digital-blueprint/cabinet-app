@@ -768,6 +768,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     getDocumentModalHtml() {
         const hit = this.fileHitData;
         console.log('getDocumentModalHtml this.fileHitData', this.fileHitData);
+        const person = this.person;
+        console.log('getDocumentModalHtml this.person', this.person);
 
         // Keep in mind that this.documentFile will be null until the file is loaded by openViewDialogWithFileHit
         let file = this.documentFile;
@@ -794,11 +796,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div slot="content" class="content">
                     <div class="description">
                         <h1>${headline}</h1>
-                        <div class="${classMap({hidden: this.mode === CabinetFile.Modes.ADD})}"">
-                            Document ID: ${id}${this.getMiniSpinnerHtml(id)}
-                        </div>
-                        File name: ${file?.name}${this.getMiniSpinnerHtml(file)}<br />
-                        File size: ${file?.size}${this.getMiniSpinnerHtml(file)}<br />
+                        ${person.fullName}<br />
+                        ${person.birthDate}(${person.studId} | ${person.stPersonNr})<br />
                     </div>
                     <div class="status ${classMap({hidden: this.mode === CabinetFile.Modes.ADD})}">
                         <div class="status-badge ${this.documentStatus}">
