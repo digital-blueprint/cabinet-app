@@ -361,6 +361,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 padding-inline: .5em;
                 margin-right: 5px;
                 padding: 0 1.2em 0 2.2em;
+                border-radius: 0px !important;
             }
 
             .ais-SearchBox-submit {
