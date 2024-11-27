@@ -112,5 +112,7 @@
     "Added":"Added" ,
     "last-modified":"Last modified",
     "document-type":"Document type",
-    "search-cabinet":"Search cabinet"
+    "search-cabinet":"Search cabinet",
+    "last-modified-documents":"Last modified documents",
+    "default-sort":"sort by: default"
 }

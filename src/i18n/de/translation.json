@@ -111,5 +111,7 @@
     "Added":"Hinzugefügt am" ,
     "last-modified":"Letzte Änderung",
     "document-type":"Dokumenttyp",
-    "search-cabinet":"suchen cabinet"
+    "search-cabinet":"suchen cabinet",
+    "last-modified-documents":"Letzte Änderung dokument",
+    "default-sort":"Sortieren nach: Standard"
 }

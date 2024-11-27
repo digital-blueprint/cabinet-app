@@ -558,12 +558,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     createSortBy() {
+        const i18n = this._i18n;
         return sortBy({
             container: this._('#sort-by'),
             items: [
-                { label: 'sort by : default', value: `${this.typesenseCollection}` }, /* default sorting "@type:desc,_text_match:desc,person.familyName:asc" */
-                { label: 'Family name', value: `${this.typesenseCollection}/sort/@type:desc,person.familyName:asc,_text_match:desc` },
-                { label: 'Last modified Documents', value: `${this.typesenseCollection}/sort/@type:asc,file.base.modifiedTimestamp:desc,_text_match:desc` }
+                { label: i18n.t('default-sort'), value: `${this.typesenseCollection}` }, /* default sorting "@type:desc,_text_match:desc,person.familyName:asc" */
+                { label: i18n.t('family-name'), value: `${this.typesenseCollection}/sort/@type:desc,person.familyName:asc,_text_match:desc` },
+                { label: i18n.t('last-modified-documents'), value: `${this.typesenseCollection}/sort/@type:asc,file.base.modifiedTimestamp:desc,_text_match:desc` }
             ],
         });
     }
