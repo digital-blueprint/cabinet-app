@@ -451,8 +451,8 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         return html`
             ${viewElements.enumElement('Document type', baseData.additionalType?.key || '', additionalTypes)}
             ${viewElements.stringElement('Mime type', baseData.mimeType)}
-            ${viewElements.dateTimeElement('Date created (metadata)', (new Date(baseData.createdTimestamp * 1000)).toISOString())}
-            ${viewElements.dateTimeElement('Date modified (metadata)', (new Date(baseData.modifiedTimestamp * 1000)).toISOString())}
+            ${viewElements.dateTimeElement('Date created (metadata)', baseData.createdTimestamp === 0 ? '' : new Date(baseData.createdTimestamp * 1000))}
+            ${viewElements.dateTimeElement('Date modified (metadata)', baseData.modifiedTimestamp === 0 ? '' : new Date(baseData.modifiedTimestamp * 1000))}
             ${viewElements.stringElement('Subject of', baseData.subjectOf || '')}
             ${viewElements.stringElement('Study field', this.getStudyFieldNameForKey(baseData.studyField))}
             ${viewElements.stringElement('Semester', baseData.semester || '')}
