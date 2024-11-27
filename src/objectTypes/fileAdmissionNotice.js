@@ -90,7 +90,7 @@ class CabinetHitElement extends BaseHitElement {
                 <header class="hit-content-item1">${i18n.t('document-type')}:&nbsp;${this.data.file.base.additionalType.text}</header>
                 <div class="hit-content-item2"></div>
                 <div class="hit-content-item3">
-                ${i18n.t('document-issue-date')}: <br/>
+                ${i18n.t('document-issue-date')}: ${this.data.file['file-cabinet-admissionNotice'].dateCreated}<br/>
                 ${i18n.t('Added')}: <br />
                 ${i18n.t('last-modified')}: ${lastModified}<br />
                 </div>
