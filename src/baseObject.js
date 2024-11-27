@@ -6,6 +6,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './objectTypes/formElements';
 import * as viewElements from './objectTypes/viewElements';
 import {classMap} from 'lit/directives/class-map.js';
+import {getSelectorFixCSS} from './styles.js';
 
 export class BaseObject {
     name = 'baseObject';
@@ -283,6 +284,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             ${commonStyles.getGeneralCSS(false)}
             ${commonStyles.getButtonCSS()}
             ${formElements.getFieldsetCSS()}
+            ${getSelectorFixCSS()}
 
             .button-row {
                 margin-top: 1em;

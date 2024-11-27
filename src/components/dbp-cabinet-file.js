@@ -12,6 +12,7 @@ import {classMap} from 'lit/directives/class-map.js';
 import * as formElements from '../objectTypes/formElements.js';
 import {BaseFormElement} from '../baseObject.js';
 import {send} from '@dbp-toolkit/common/notification';
+import {getSelectorFixCSS} from '../styles.js';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static Modes = {
@@ -668,6 +669,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${commonStyles.getButtonCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
             ${formElements.getFieldsetCSS()}
+            ${getSelectorFixCSS()}
 
             #document-modal {
                 --dbp-modal-min-width: 85vw;
@@ -928,7 +930,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         return html`
             <fieldset>
                 <label>Document type</label>
-                <select id="document-type" class="select" name="object-type" required @change="${this.onDocumentTypeSelected}">
+                <select id="document-type" name="object-type" required @change="${this.onDocumentTypeSelected}">
                     ${options}
                 </select>
             </fieldset>

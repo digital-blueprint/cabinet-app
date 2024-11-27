@@ -215,3 +215,13 @@ export function getPaginationCSS() {
         }
     `;
 }
+
+export function getSelectorFixCSS() {
+    // language=css
+    return css`
+        /* For some reasons the selector chevron was very large */
+        select:not(.select), .dropdown-menu {
+            background-size: 1em;
+        }
+    `;
+}
