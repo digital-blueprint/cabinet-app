@@ -49,6 +49,7 @@ export const getCommonStyles = () => css`
         display: flex;
         align-items: center;
         justify-content: center;
+        background-image: url(assets/icon/docs.svg);
     }
     .ais-doc-Hits-content {
         display: grid;
