@@ -111,8 +111,8 @@
     "document-issue-date":"Document issue date" ,
     "Added":"Added" ,
     "last-modified":"Last modified",
-    "document-type":"Document type",
     "search-cabinet":"Search cabinet",
     "last-modified-documents":"Last modified documents",
-    "default-sort":"sort by: default"
+    "default-sort":"sort by: default",
+    "show-deleted-only":"Show deleted only"
 }

@@ -646,7 +646,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 </div>
                 <div>
                     <input type="checkbox" id="deleted-checkbox" @click="${this.toggleShowDeleted}"/>
-                    <label for="deleted-checkbox">Show deleted only</label>
+                    <label for="deleted-checkbox">${i18n.t('show-deleted-only')}</label>
                 </div>
                 <div class="result-container">
                     <div id="result-count"></div>

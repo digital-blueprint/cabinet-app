@@ -110,8 +110,8 @@
     "document-issue-date":"Ausgabedatum" ,
     "Added":"Hinzugefügt am" ,
     "last-modified":"Letzte Änderung",
-    "document-type":"Dokumenttyp",
     "search-cabinet":"suchen cabinet",
     "last-modified-documents":"Letzte Änderung dokument",
-    "default-sort":"Sortieren nach: Standard"
+    "default-sort":"Sortieren nach: Standard",
+    "show-deleted-only":"Nur gelöschte anzeigen"
 }
