@@ -47,9 +47,14 @@ export const getCommonStyles = () => css`
     }
     .icon-container {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        background-image: url(assets/icon/docs.svg);
+        align-items: right;
+        justify-content: right;
+        background-image: url('/assets/icon/docs.svg');
+        background-repeat: no-repeat;
+        background-size:30px;
+        background-position-x: right;
+        width: 50px;
+        height: 50px;
     }
     .ais-doc-Hits-content {
         display: grid;
