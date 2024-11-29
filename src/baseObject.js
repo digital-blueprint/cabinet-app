@@ -345,6 +345,18 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
 
         return studyFields;
     }
+
+    update(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+            switch (propName) {
+                case 'lang':
+                    this._i18n.changeLanguage(this.lang);
+                    break;
+            }
+        });
+
+        super.update(changedProperties);
+    }
 }
 
 export class BaseHitElement extends ScopedElementsMixin(DBPLitElement) {
