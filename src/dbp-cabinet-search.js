@@ -653,7 +653,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <dbp-cabinet-facets
                         ${ref(this.cabinetFacetsRef)}
                         .search="${this.search}"
-                        subscribe="lang">
+                        subscribe="lang,base-path">
                     </dbp-cabinet-facets>
                     <div class="results">
                         <div id="hits"></div>

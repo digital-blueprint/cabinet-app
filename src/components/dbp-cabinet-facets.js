@@ -318,8 +318,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         return html`
                         <span>
                           ${options.collapsed
-                            ? html`<img src="/assets/icon/chevron-down.svg" width="16" height="16" alt="chevron-down" />`
-                            : html`<img src="/assets/icon/chevron-up.svg" width="16" height="16" alt="chevron-up" />`}
+                            ? html`<img src="${that.basePath}local/@digital-blueprint/cabinet-app/icon/chevron-down.svg" width="16" height="16" alt="chevron-down" />`
+                            : html`<img src="${that.basePath}local/@digital-blueprint/cabinet-app/icon/chevron-up.svg" width="16" height="16" alt="chevron-up" />`}
                         </span>
                       `;
                     },
