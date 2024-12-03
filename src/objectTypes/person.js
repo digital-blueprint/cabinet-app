@@ -334,13 +334,30 @@ class CabinetViewElement extends BaseViewElement {
                     align-items: center;
                     margin-bottom: 1rem;
                 }
-
                 .modal-Gi-header-svg {
                     margin-right: 0.5rem;
                 }
-
                 .modal-Gi-header-title h4 {
                     margin: 0;
+                }
+                .person-modal-header{
+                    font-size: 24px;
+                    font-weight: bold;
+                    color: var(--dbp-override-content);
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding-bottom: 25px;
+                }
+                .person-modal-header::before {
+                    content: "";
+                    display: inline-block;
+                    width: 30px;
+                    height: 30px;
+                    background-image: url("${unsafeCSS(getIconSVGURL('user'))}");
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    background-position: center;
                 }
                 .info-container {
                     display: flex;
@@ -395,8 +412,7 @@ class CabinetViewElement extends BaseViewElement {
         let hit = /** @type {PersonHit} */ (this.data);
         const i18n = this._i18n;
         return html`
-            <h2>${hit.person.fullName}</h2>
-            lang: ${this.lang}<br />
+            <h2 class="person-modal-header">${hit.person.fullName}</h2>
             <br>
             <div class="modal-Gi-header-container">
             <div class="modal-Gi-header-svg">
