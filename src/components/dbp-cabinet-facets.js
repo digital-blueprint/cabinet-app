@@ -575,24 +575,24 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             .filter-group--person {
                 background-image:url("${unsafeCSS(getIconSVGURL('user'))}");
                 background-repeat: no-repeat;
-                background-size: 26px 26px;
-                background-position-y:5px;
+                background-size: 22px 22px;
+                background-position-y:3px;
                 padding-left: 7px;
             }
 
             .filter-group--study {
                 background-image: url("${unsafeCSS(getIconSVGURL('book'))}");
                 background-repeat: no-repeat;
-                background-size: 26px 26px;
-                background-position-y:5px;
+                background-size: 22px 22px;
+                background-position-y:3px;
                 padding-left: 7px;
             }
 
             .filter-group--file {
                 background-image:url("${unsafeCSS(getIconSVGURL('docs'))}");
                 background-repeat: no-repeat;
-                background-size: 26px 26px;
-                background-position-y:5px;
+                background-size: 22px 22px;
+                background-position-y:3px;
                 padding-left: 7px;
             }
 
