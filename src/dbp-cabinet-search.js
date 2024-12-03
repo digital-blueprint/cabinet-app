@@ -1,4 +1,4 @@
-import {css, html} from 'lit';
+import {css, html, unsafeCSS} from 'lit';
 import {html as staticHtml} from 'lit/static-html.js';
 import {ref, createRef} from 'lit/directives/ref.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
@@ -14,7 +14,7 @@ import instantsearch from 'instantsearch.js';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import {hits, searchBox, sortBy, stats, pagination} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
-import {pascalToKebab} from './utils';
+import {pascalToKebab, getIconSVGURL} from './utils';
 import {CabinetFile} from './components/dbp-cabinet-file.js';
 import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
@@ -639,7 +639,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div class="search-box-container">
                     <div id="searchbox" class="search-box-widget"></div>
                     <div class="help-container">
-                    <img class="help-icon" src="/assets/icon/question.svg" alt="">
+                    <img class="help-icon" src="${unsafeCSS(getIconSVGURL('question'))}" alt="">
                     </div>
                     <div id="sort-by" class="sort-widget"></div>
 
