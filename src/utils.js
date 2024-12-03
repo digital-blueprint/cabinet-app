@@ -1,3 +1,6 @@
+import * as commonUtils from '@dbp-toolkit/common/utils';
+import {name as pkgName} from './../package.json';
+
 export const pascalToKebab = (str) => {
     // Replace capital letters with hyphen followed by the lowercase equivalent
     return str.replace(/([A-Z])/g, '-$1').toLowerCase();
@@ -43,4 +46,8 @@ export function renderFieldWithHighlight(hit, fieldName) {
  */
 export function getNestedProperty(obj, path) {
     return path.split('.').reduce((current, key) => current && current[key], obj);
+}
+
+export function getIconSVGURL(name) {
+    return commonUtils.getAssetURL(pkgName, '../../@digital-blueprint/cabinet-app/icon/' + encodeURI(name) + '.svg');
 }

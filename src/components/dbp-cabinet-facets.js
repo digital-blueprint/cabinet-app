@@ -1,12 +1,13 @@
 // noinspection CssUnusedSymbol,JSUnresolvedReference
 
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
-import {css, html, render} from 'lit';
+import {css, html, render, unsafeCSS} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
 import {panel, refinementList } from 'instantsearch.js/es/widgets/index.js';
 import {connectCurrentRefinements, connectClearRefinements} from 'instantsearch.js/es/connectors';
 import {createDateRefinement} from './dbp-cabinet-date-facet.js';
+import {getIconSVGURL} from '../utils.js';
 
 export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -16,6 +17,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.searchResultsElement = null;
         this.search = null;
         this.facets = [];
+        this.basePath = '';
     }
 
     connectedCallback() {
@@ -50,6 +52,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         return {
             ...super.properties,
             search: {type: Object, attribute: 'search'},
+            basePath: {type: String, attribute: 'base-path'},
         };
     }
 
@@ -565,28 +568,28 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 gap: 1em;
             }
 
-            .filter-group--category{
+            .filter-group--category {
                 margin-left:6px;
             }
 
-            .filter-group--person{
-                background-image:url(/assets/icon/user.svg);
+            .filter-group--person {
+                background-image:url("${unsafeCSS(getIconSVGURL('user'))}");
                 background-repeat: no-repeat;
                 background-size: 26px 26px;
                 background-position-y:5px;
                 padding-left: 7px;
             }
 
-            .filter-group--study{
-                background-image:url(/assets/icon/book.svg);
+            .filter-group--study {
+                background-image: url("${unsafeCSS(getIconSVGURL('book'))}");
                 background-repeat: no-repeat;
                 background-size: 26px 26px;
                 background-position-y:5px;
                 padding-left: 7px;
             }
 
-            .filter-group--file{
-                background-image:url(/assets/icon/docs.svg);
+            .filter-group--file {
+                background-image:url("${unsafeCSS(getIconSVGURL('docs'))}");
                 background-repeat: no-repeat;
                 background-size: 26px 26px;
                 background-position-y:5px;
