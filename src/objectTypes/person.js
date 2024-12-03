@@ -1,6 +1,7 @@
-import {css, html} from 'lit';
+import {css, html,unsafeCSS} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from '../baseObject.js';
 import {renderFieldWithHighlight} from '../utils';
+import {getIconSVGURL} from '../utils.js';
 
 export default class extends BaseObject {
     name = 'person';
@@ -276,7 +277,7 @@ class CabinetHitElement extends BaseHitElement {
                 display: flex;
                 text-align: right;
                 justify-content: right;
-                background-image: url('/assets/icon/user.svg');
+                background-image: url("${unsafeCSS(getIconSVGURL('user'))}");
                 background-repeat: no-repeat;
                 background-size:30px;
                 background-position-x: right;
