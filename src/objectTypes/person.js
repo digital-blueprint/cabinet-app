@@ -1,4 +1,4 @@
-import {css, html,unsafeCSS} from 'lit';
+import {css, html, unsafeCSS} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from '../baseObject.js';
 import {renderFieldWithHighlight} from '../utils';
 import {getIconSVGURL} from '../utils.js';
