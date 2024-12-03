@@ -3,12 +3,12 @@
     "module_src": "dbp-cabinet-search.js",
     "routing_name": "cabinet-search",
     "name": {
-        "de": "Akten suchen",
-        "en": "Search cabinets"
+        "de": "Studierendenakten verwalten",
+        "en": "Manage student records"
     },
     "short_name": {
-      "de": "Akten suchen",
-      "en": "Search cabinets"
+      "de": "Studierendenakten verwalten",
+      "en": "Manage student records"
     },
     "description": {
         "de": "Erlaubt das Suchen von Akten.",
