@@ -291,7 +291,7 @@ class CabinetHitElement extends BaseHitElement {
         return html`
             <header class="ais-Hits-header">
                 <div class="person-id"><!-- studId: ${hit.person.studId}-->
-                    ${renderFieldWithHighlight(hit, 'person.studId')}|${renderFieldWithHighlight(hit, 'person.stPersonNr')}
+                   ${renderFieldWithHighlight(hit, 'person.studId')} | ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
                 </div>
                 <div class="person-num"><!-- stPersonNr: ${hit.person.stPersonNr}-->
 
