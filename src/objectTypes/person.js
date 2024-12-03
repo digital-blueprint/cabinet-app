@@ -279,7 +279,7 @@ class CabinetHitElement extends BaseHitElement {
                 justify-content: right;
                 background-image: url("${unsafeCSS(getIconSVGURL('user'))}");
                 background-repeat: no-repeat;
-                background-size:30px;
+                background-size:25px;
                 background-position-x: right;
             }
         `;
