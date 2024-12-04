@@ -291,7 +291,7 @@ class CabinetHitElement extends BaseHitElement {
         return html`
             <header class="ais-Hits-header">
                 <div class="person-id"><!-- studId: ${hit.person.studId}-->
-                   ${renderFieldWithHighlight(hit, 'person.studId')} | ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
+                   ${renderFieldWithHighlight(hit, 'person.studId')}|${renderFieldWithHighlight(hit, 'person.stPersonNr')}
                 </div>
                 <div class="person-num"><!-- stPersonNr: ${hit.person.stPersonNr}-->
 
@@ -373,6 +373,7 @@ class CabinetViewElement extends BaseViewElement {
                 .info-list li {
                     break-inside: avoid;
                     padding: 5px 0;
+                    list-style-type: none;
                 }
                 .modal-Si-header-container {
                     display: flex;
@@ -396,14 +397,25 @@ class CabinetViewElement extends BaseViewElement {
                 .modal-Ci-header-title h4 {
                     margin: 0;
                 }
-                .note{
-                    border: solid 1px black;
-                    padding-bottom: 2.5em;
-                }
                 .address-info{
                     list-style-type: none;
-                    padding-left: 4rem;
-                    margin-left: 3rem;
+                    padding: 0;
+                    margin: 0;
+                }
+                .study-info{
+                    list-style-type: none;
+                }
+                .flex-item {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 20px;
+                }
+                .flex-item > b {
+                    min-width: 150px;
+                    margin-right: 20px;
+                }
+                .address-info li {
+                    margin-bottom: 5px;
                 }
 
         `;
@@ -426,27 +438,27 @@ class CabinetViewElement extends BaseViewElement {
             <div class="info-container">
             <ul class="info-list">
 
-                <li><b>${i18n.t('academic-titles')}:</b> ${hit.person.academicTitles.join(', ')}</li>
-                <li><b>${i18n.t('given-name')}:</b> ${hit.person.givenName}</li>
-                <li><b>${i18n.t('family-name')}:</b> ${hit.person.familyName}</li>
-                <li><b>${i18n.t('former-family-name')}:</b> ${hit.person.formerFamilyName}</li>
-                <li><b>${i18n.t('academic-title-following')}:</b> ${hit.person.academicTitleFollowing}</li>
-                <li><b>${i18n.t('stud-id')}:</b> ${hit.person.studId}</li>
-                <li><b>${i18n.t('st-PersonNr')}:</b> ${hit.person.stPersonNr}</li>
-                <li><b>${i18n.t('birth-date')}:</b> ${hit.person.birthDate}</li>
-                <li><b>${i18n.t('nationalities')}:</b> ${hit.person.nationalities.map(n => n.text).join(', ')}</li>
-                <li><b>${i18n.t('gender')}:</b> ${hit.person.gender?.text}</li>
-                <li><b>${i18n.t('social-SecurityNr')}:</b> ${hit.person.socialSecurityNr}</li>
-                <li><b>${i18n.t('ssPIN')}:</b> ${hit.person.bpk}</li>
-                <li><b>${i18n.t('personal-Status')}:</b> ${hit.person.personalStatus?.text}</li>
-                <li><b>${i18n.t('student-Status')}:</b> ${hit.person.studentStatus?.text}</li>
-                <li><b>${i18n.t('tuitionStatus')}:</b> ${hit.person.tuitionStatus}</li>
-                <li><b>${i18n.t('immatriculation-Date')}:</b> ${hit.person.immatriculationDate}</li>
-                <li><b>${i18n.t('immatriculationSemester')}:</b> ${hit.person.immatriculationSemester}</li>
-                <li><b>${i18n.t('exmatriculation-GI')}:</b> ${hit.person.exmatriculationStatus?.text} ${hit.person.exmatriculationDate}</li>
-                <li><b>${i18n.t('admission-Qualification-Type')}:</b> ${hit.person.admissionQualificationType?.text}</li>
-                <li><b>${i18n.t('school-Certificate-Date')}:</b> ${hit.person.schoolCertificateDate}</li>
-                <li><b><div class="note">${i18n.t('note')}:</b> ${hit.person.note}</div></li>
+                <li><b>${i18n.t('academic-titles')}</b> ${hit.person.academicTitles.join(', ')}</li>
+                <li><b>${i18n.t('given-name')}</b> ${hit.person.givenName}</li>
+                <li><b>${i18n.t('family-name')}</b> ${hit.person.familyName}</li>
+                <li><b>${i18n.t('former-family-name')}</b> ${hit.person.formerFamilyName}</li>
+                <li><b>${i18n.t('academic-title-following')}</b> ${hit.person.academicTitleFollowing}</li>
+                <li><b>${i18n.t('stud-id')}</b> ${hit.person.studId}</li>
+                <li><b>${i18n.t('st-PersonNr')}</b> ${hit.person.stPersonNr}</li>
+                <li><b>${i18n.t('birth-date')}</b> ${hit.person.birthDate}</li>
+                <li><b>${i18n.t('nationalities')}</b> ${hit.person.nationalities.map(n => n.text).join(', ')}</li>
+                <li><b>${i18n.t('gender')}</b> ${hit.person.gender?.text}</li>
+                <li><b>${i18n.t('social-SecurityNr')}</b> ${hit.person.socialSecurityNr}</li>
+                <li><b>${i18n.t('ssPIN')}</b> ${hit.person.bpk}</li>
+                <li><b>${i18n.t('personal-Status')}</b> ${hit.person.personalStatus?.text}</li>
+                <li><b>${i18n.t('student-Status')}</b> ${hit.person.studentStatus?.text}</li>
+                <li><b>${i18n.t('tuitionStatus')}</b> ${hit.person.tuitionStatus}</li>
+                <li><b>${i18n.t('immatriculation-Date')}</b> ${hit.person.immatriculationDate}</li>
+                <li><b>${i18n.t('immatriculationSemester')}</b> ${hit.person.immatriculationSemester}</li>
+                <li><b>${i18n.t('exmatriculation-GI')}</b> ${hit.person.exmatriculationStatus?.text} ${hit.person.exmatriculationDate}</li>
+                <li><b>${i18n.t('admission-Qualification-Type')}</b> ${hit.person.admissionQualificationType?.text}</li>
+                <li><b>${i18n.t('school-Certificate-Date')}</b> ${hit.person.schoolCertificateDate}</li>
+                <li><b><div class="note">${i18n.t('note')}</b> ${hit.person.note}</div></li>
 
 
                 <!--<li><b>nationality:</b> ${hit.person.nationality?.text}</li>-->
@@ -480,22 +492,22 @@ class CabinetViewElement extends BaseViewElement {
 
                 ${hit.person.studies.map(study => html`
                 <li>
-                    <ul>
-                        <li><b>${i18n.t(' key')}:</b> ${study.key}</li>
-                        <li><b>${i18n.t('name')}:</b> ${study.name}</li>
-                        <li><b>${i18n.t('semester')}:</b> ${study.semester}</li>
-                        <li><b>${i18n.t('status')}:</b> ${study.status?.text}</li>
-                        <li><b>${i18n.t('immatriculation-date')}:</b> ${study.immatriculationDate}</li>
-                        <li><b>${i18n.t('qualification-study')}:</b> ${study.qualificationType?.text} ${study.qualificationDate} ${study.qualificationState?.text}</li>
-                        <li><b>${i18n.t('exmatriculation')}:</b> ${study.exmatriculationType?.text} ${study.exmatriculationDate}</li>
-                        <li><b>${i18n.t('curriculum-version')}:</b> ${study.curriculumVersion}</li>
+                    <ul class="study-info">
+                        <li><b>${i18n.t(' key')}</b> ${study.key}</li>
+                        <li><b>${i18n.t('name')}</b> ${study.name}</li>
+                        <li><b>${i18n.t('semester')}</b> ${study.semester}</li>
+                        <li><b>${i18n.t('status')}</b> ${study.status?.text}</li>
+                        <li><b>${i18n.t('immatriculation-date')}</b> ${study.immatriculationDate}</li>
+                        <li><b>${i18n.t('qualification-study')}</b> ${study.qualificationType?.text} ${study.qualificationDate} ${study.qualificationState?.text}</li>
+                        <li><b>${i18n.t('exmatriculation')}</b> ${study.exmatriculationType?.text} ${study.exmatriculationDate}</li>
+                        <li><b>${i18n.t('curriculum-version')}</b> ${study.curriculumVersion}</li>
 
                         <!--<li><b>coUrl:</b> <a href="${study.coUrl}">${study.coUrl}</a></li>
                         <li><b>id:</b> ${study.id}</li>
-                        <li><b>exmatriculationSemester:</b> ${study.exmatriculationSemester}</li>
-                        <li><b>immatriculationSemester:</b> ${study.immatriculationSemester}</li>
-                        <li><b>type:</b> ${study.type}</li>
-                        <li><b>additionalCertificates:</b> ${study.additionalCertificates.map(c => c.text).join(', ')}</li>-->
+                        <li><b>exmatriculationSemester</b> ${study.exmatriculationSemester}</li>
+                        <li><b>immatriculationSemester</b> ${study.immatriculationSemester}</li>
+                        <li><b>type</b> ${study.type}</li>
+                        <li><b>additionalCertificates</b> ${study.additionalCertificates.map(c => c.text).join(', ')}</li>-->
                     </ul>
                 </li>
                 `)}
@@ -528,10 +540,10 @@ class CabinetViewElement extends BaseViewElement {
                 <div class="modal-Ci-header-title"><h4>${i18n.t('Contact-information')}</h4></div>
             </div>
             <hr/>
-                <li><b>${i18n.t('emailAddressUniversity')}:</b>${hit.person.emailAddressUniversity}</li>
-                <li><b>${i18n.t('emailAddressConfirmed')}:</b>${hit.person.emailAddressConfirmed}</li>
-                <li><b>${i18n.t('emailAddressTemporary')}:</b>${hit.person.emailAddressTemporary}</li></br/>
-            <li><b>${i18n.t('homeAddress')}:</b>
+                <li><b>${i18n.t('emailAddressUniversity')}</b>${hit.person.emailAddressUniversity}</li>
+                <li><b>${i18n.t('emailAddressConfirmed')}</b>${hit.person.emailAddressConfirmed}</li>
+                <li><b>${i18n.t('emailAddressTemporary')}</b>${hit.person.emailAddressTemporary}</li></br/>
+            <li class="flex-item"><b>${i18n.t('homeAddress')}</b>
                     <ul class="address-info">
                         <li><b></b> ${hit.person.homeAddress?.note}</li>
                         <li><b></b> ${hit.person.homeAddress?.street}</li>
@@ -542,7 +554,8 @@ class CabinetViewElement extends BaseViewElement {
                         <li><b></b> ${hit.person.homeAddress?.telephoneNumber}</li>
                     </ul>
                 </li>
-                <li><b>${i18n.t('studyAddress')}:</b>
+                </br>
+                <li class="flex-item"><b>${i18n.t('studyAddress')}</b>
                     <ul class="address-info">
                         <li><b></b> ${hit.person.studyAddress?.note}</li>
                         <li><b></b> ${hit.person.studyAddress?.street}</li>
@@ -555,24 +568,24 @@ class CabinetViewElement extends BaseViewElement {
                 </li>
 
                 <!--<li><b>exmatriculationSemester:</b> ${hit.person.exmatriculationSemester}</li>
-                <li><b>academicTitlePreceding:</b> ${hit.person.academicTitlePreceding}</li>
-                <li><b>coUrl:</b> <a href="${hit.person.coUrl}">${hit.person.coUrl}</a></li>
-                <li><b>syncTimestamp:</b> ${new Date(hit.person.syncTimestamp * 1000)}</li>-->
+                <li><b>academicTitlePreceding</b> ${hit.person.academicTitlePreceding}</li>
+                <li><b>coUrl</b> <a href="${hit.person.coUrl}">${hit.person.coUrl}</a></li>
+                <li><b>syncTimestamp</b> ${new Date(hit.person.syncTimestamp * 1000)}</li>-->
             </ul>
             <!--<h4>Applications</h4>-->
             <!--<ul>
                 ${hit.person.applications.map(application => html`
                 <li>
                     <ul>
-                        <li><b>id:</b> ${application.id}</li>
-                        <li><b>studyId:</b> ${application.studyId}</li>
-                        <li><b>studyKey:</b> ${application.studyKey}</li>
-                        <li><b>studyName:</b> ${application.studyName}</li>
-                        <li><b>studyType:</b> ${application.studyType}</li>
-                        <li><b>startSemester:</b> ${application.startSemester}</li>
-                        <li><b>qualificationCertificateDate:</b> ${application.qualificationCertificateDate}</li>
-                        <li><b>qualificationIssuingCountry:</b> ${application.qualificationIssuingCountry?.text}</li>
-                        <li><b>qualificationType:</b> ${application.qualificationType?.text}</li>
+                        <li><b>id</b> ${application.id}</li>
+                        <li><b>studyId</b> ${application.studyId}</li>
+                        <li><b>studyKey</b> ${application.studyKey}</li>
+                        <li><b>studyName</b> ${application.studyName}</li>
+                        <li><b>studyType</b> ${application.studyType}</li>
+                        <li><b>startSemester</b> ${application.startSemester}</li>
+                        <li><b>qualificationCertificateDate</b> ${application.qualificationCertificateDate}</li>
+                        <li><b>qualificationIssuingCountry</b> ${application.qualificationIssuingCountry?.text}</li>
+                        <li><b>qualificationType</b> ${application.qualificationType?.text}</li>
                     </ul>
                 </li>
                 `)}
