@@ -180,10 +180,10 @@ export function getPaginationCSS() {
             list-style: none;
             display: flex;
             justify-content: right;
-            gap: 1.5em;
+            gap: 0;
             margin-bottom: 0;
             overflow: hidden;
-            padding-top:15px;
+            padding-top:20px;
         }
 
         .ais-Pagination-item {
@@ -198,15 +198,12 @@ export function getPaginationCSS() {
             display: block;
             text-align: center;
             line-height: 2em;
-            padding: 0 .5em;
+            padding: 0 .7em;
             border:none;
         }
+
         .ais-Pagination-link:hover{
             color: var(--dbp-accent);
-        }
-
-        .ais-Pagination-item--selected {
-
         }
 
         .ais-Pagination-link {
