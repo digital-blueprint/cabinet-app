@@ -233,6 +233,7 @@ class CabinetHitElement extends BaseHitElement {
             h2 {
                 color: #222120;
             }
+
             .ais-Hits-header {
                 border-bottom: 1px solid #222120;
                 margin-bottom: calc(7px + 1vh);
@@ -241,38 +242,46 @@ class CabinetHitElement extends BaseHitElement {
                 gap:10px;
                 padding: 15px 5px;
             }
+
             .person-id {
                 display: flex;
                 text-align: left;
                 align-items: center;
                 color:var(--dbp-override-content);
             }
+
             .person-num{
                 display: flex;
             }
+
             .ais-Hits-content {
                 gap: 10px;
                 display: flex;
                 flex-direction: column;
                 word-break: normal;
             }
+
             .hit-person-content-item1{
                 align-self: start;
                 font-size:24px;
                 font-weight:bold;
                 color:var(--dbp-override-content);
             }
+
             .hit-person-content-item2{
                 align-self: start;
                 color:var(--dbp-override-content);
             }
+
             .hit-person-content-item3{
                 align-self: start;
                 color:var(--dbp-override-content);
             }
+
             .SyncStatus{
                 align-self: flex-end;
             }
+
             .right-column {
                 display: flex;
                 text-align: right;
@@ -329,17 +338,20 @@ class CabinetViewElement extends BaseViewElement {
         return css`
             ${super.styles}
 
-            .modal-Gi-header-container {
+                .modal-Gi-header-container {
                     display: flex;
                     align-items: center;
                     margin-bottom: 1rem;
                 }
+
                 .modal-Gi-header-svg {
                     margin-right: 0.5rem;
                 }
+
                 .modal-Gi-header-title h4 {
                     margin: 0;
                 }
+
                 .person-modal-header{
                     font-size: 24px;
                     font-weight: bold;
@@ -349,6 +361,7 @@ class CabinetViewElement extends BaseViewElement {
                     gap: 10px;
                     padding-bottom: 25px;
                 }
+
                 .person-modal-header::before {
                     content: "";
                     display: inline-block;
@@ -359,10 +372,12 @@ class CabinetViewElement extends BaseViewElement {
                     background-size: contain;
                     background-position: center;
                 }
+
                 .info-container {
                     display: flex;
                     justify-content: space-between;
                 }
+
                 .info-list {
                     columns: 2;
                     -webkit-columns: 2;
@@ -370,50 +385,80 @@ class CabinetViewElement extends BaseViewElement {
                     list-style-type: none;
                     padding: 0;
                 }
+
                 .info-list li {
                     break-inside: avoid;
                     padding: 5px 0;
                     list-style-type: none;
                 }
+
                 .modal-Si-header-container {
                     display: flex;
                     align-items: center;
                     margin-bottom: 1rem;
                 }
+
                 .modal-Si-header-svg {
                     margin-right: 0.5rem;
                 }
+
                 .modal-Si-header-title h4 {
                     margin: 0;
                 }
+
                 .modal-Ci-header-container {
                     display: flex;
                     align-items: center;
                     margin-bottom: 1rem;
                 }
+
                 .modal-Ci-header-svg {
                     margin-right: 0.5rem;
                 }
+
                 .modal-Ci-header-title h4 {
                     margin: 0;
                 }
+
                 .address-info{
                     list-style-type: none;
                     padding: 0;
                     margin: 0;
                 }
+
                 .study-info{
                     list-style-type: none;
+                    padding: 0;
+                    margin: 0;
                 }
+
+                .study-row {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 8px;
+                }
+
+                .study-row b {
+                    flex: 1;
+                    text-align: left;
+                }
+
+                .study-row span {
+                    flex: 1;
+                    text-align: start;
+                }
+
                 .flex-item {
                     display: flex;
                     align-items: flex-start;
                     gap: 20px;
                 }
+
                 .flex-item > b {
                     min-width: 150px;
                     margin-right: 20px;
                 }
+
                 .address-info li {
                     margin-bottom: 5px;
                 }
@@ -493,14 +538,14 @@ class CabinetViewElement extends BaseViewElement {
                 ${hit.person.studies.map(study => html`
                 <li>
                     <ul class="study-info">
-                        <li><b>${i18n.t(' key')}</b> ${study.key}</li>
-                        <li><b>${i18n.t('name')}</b> ${study.name}</li>
-                        <li><b>${i18n.t('semester')}</b> ${study.semester}</li>
-                        <li><b>${i18n.t('status')}</b> ${study.status?.text}</li>
-                        <li><b>${i18n.t('immatriculation-date')}</b> ${study.immatriculationDate}</li>
-                        <li><b>${i18n.t('qualification-study')}</b> ${study.qualificationType?.text} ${study.qualificationDate} ${study.qualificationState?.text}</li>
-                        <li><b>${i18n.t('exmatriculation')}</b> ${study.exmatriculationType?.text} ${study.exmatriculationDate}</li>
-                        <li><b>${i18n.t('curriculum-version')}</b> ${study.curriculumVersion}</li>
+                        <li class="study-row"><b>${i18n.t(' key')}</b><span> ${study.key}</span></li>
+                        <li class="study-row"><b>${i18n.t('name')}</b><span> ${study.name}</span></li>
+                        <li class="study-row"><b>${i18n.t('semester')}</b><span>${study.semester}</span></li>
+                        <li class="study-row"><b>${i18n.t('status')}</b><span> ${study.status?.text}</span></li>
+                        <li class="study-row"><b>${i18n.t('immatriculation-date')}</b><span> ${study.immatriculationDate}</span></li>
+                        <li class="study-row"><b>${i18n.t('qualification-study')}</b><span> ${study.qualificationType?.text} ${study.qualificationDate} ${study.qualificationState?.text}</span></li>
+                        <li class="study-row"><b>${i18n.t('exmatriculation')}</b><span> ${study.exmatriculationType?.text} ${study.exmatriculationDate}</span></li>
+                        <li class="study-row"><b>${i18n.t('curriculum-version')}</b><span> ${study.curriculumVersion}</span></li>
 
                         <!--<li><b>coUrl:</b> <a href="${study.coUrl}">${study.coUrl}</a></li>
                         <li><b>id:</b> ${study.id}</li>
