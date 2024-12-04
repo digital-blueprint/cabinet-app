@@ -179,10 +179,11 @@ export function getPaginationCSS() {
         .ais-Pagination-list {
             list-style: none;
             display: flex;
-            justify-content: center;
+            justify-content: right;
             gap: 1.5em;
             margin-bottom: 0;
             overflow: hidden;
+            padding-top:15px;
         }
 
         .ais-Pagination-item {
@@ -198,16 +199,28 @@ export function getPaginationCSS() {
             text-align: center;
             line-height: 2em;
             padding: 0 .5em;
+            border:none;
+        }
+        .ais-Pagination-link:hover{
+            color: var(--dbp-accent);
         }
 
         .ais-Pagination-item--selected {
-            filter: invert(1);
+
         }
+
+        .ais-Pagination-link {
+            color:var(--dbp-content);
+            border:none;
+            border-radius:0;
+        }
+
 
         .ais-Pagination-item--selected .ais-Pagination-link {
             font-weight: bold;
+            background-color: var(--dbp-muted);
         }
-    
+
         .ais-Pagination-item--disabled {
             cursor: not-allowed;
             border: 1px solid var(--dbp-muted);
