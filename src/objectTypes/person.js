@@ -375,21 +375,39 @@ class CabinetViewElement extends BaseViewElement {
 
                 .info-container {
                     display: flex;
-                    justify-content: space-between;
+                    justify-content: flex-start;
+                    gap: 20px;
+                    width: 100%;
+                }
+
+                .info-column {
+                    flex: 1;
                 }
 
                 .info-list {
-                    columns: 2;
-                    -webkit-columns: 2;
-                    -moz-columns: 2;
                     list-style-type: none;
                     padding: 0;
+                    margin: 0;
                 }
 
-                .info-list li {
-                    break-inside: avoid;
-                    padding: 5px 0;
-                    list-style-type: none;
+                .info-row {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 8px 0;
+                }
+
+                .info-row b {
+                    text-align: left;
+                    font-weight: bold;
+                    flex: 0 0 40%;
+                }
+
+                .info-row span {
+                    flex: 1;
+                    text-align: left;
+                    word-wrap: break-word;
+                    word-break: break-word;
+                    white-space: normal;
                 }
 
                 .modal-Si-header-container {
@@ -481,29 +499,33 @@ class CabinetViewElement extends BaseViewElement {
             </div>
             <hr/>
             <div class="info-container">
+            <div class="info-column">
             <ul class="info-list">
-
-                <li><b>${i18n.t('academic-titles')}</b> ${hit.person.academicTitles.join(', ')}</li>
-                <li><b>${i18n.t('given-name')}</b> ${hit.person.givenName}</li>
-                <li><b>${i18n.t('family-name')}</b> ${hit.person.familyName}</li>
-                <li><b>${i18n.t('former-family-name')}</b> ${hit.person.formerFamilyName}</li>
-                <li><b>${i18n.t('academic-title-following')}</b> ${hit.person.academicTitleFollowing}</li>
-                <li><b>${i18n.t('stud-id')}</b> ${hit.person.studId}</li>
-                <li><b>${i18n.t('st-PersonNr')}</b> ${hit.person.stPersonNr}</li>
-                <li><b>${i18n.t('birth-date')}</b> ${hit.person.birthDate}</li>
-                <li><b>${i18n.t('nationalities')}</b> ${hit.person.nationalities.map(n => n.text).join(', ')}</li>
-                <li><b>${i18n.t('gender')}</b> ${hit.person.gender?.text}</li>
-                <li><b>${i18n.t('social-SecurityNr')}</b> ${hit.person.socialSecurityNr}</li>
-                <li><b>${i18n.t('ssPIN')}</b> ${hit.person.bpk}</li>
-                <li><b>${i18n.t('personal-Status')}</b> ${hit.person.personalStatus?.text}</li>
-                <li><b>${i18n.t('student-Status')}</b> ${hit.person.studentStatus?.text}</li>
-                <li><b>${i18n.t('tuitionStatus')}</b> ${hit.person.tuitionStatus}</li>
-                <li><b>${i18n.t('immatriculation-Date')}</b> ${hit.person.immatriculationDate}</li>
-                <li><b>${i18n.t('immatriculationSemester')}</b> ${hit.person.immatriculationSemester}</li>
-                <li><b>${i18n.t('exmatriculation-GI')}</b> ${hit.person.exmatriculationStatus?.text} ${hit.person.exmatriculationDate}</li>
-                <li><b>${i18n.t('admission-Qualification-Type')}</b> ${hit.person.admissionQualificationType?.text}</li>
-                <li><b>${i18n.t('school-Certificate-Date')}</b> ${hit.person.schoolCertificateDate}</li>
-                <li><b><div class="note">${i18n.t('note')}</b> ${hit.person.note}</div></li>
+                <li class="info-row"><b>${i18n.t('academic-titles')}</b><span> ${hit.person.academicTitles.join(', ')}</span></li>
+                <li class="info-row"><b>${i18n.t('given-name')}</b><span> ${hit.person.givenName}</span></li>
+                <li class="info-row"><b>${i18n.t('family-name')}</b><span> ${hit.person.familyName}</span></li>
+                <li class="info-row"><b>${i18n.t('former-family-name')}</b><span> ${hit.person.formerFamilyName}</span></li>
+                <li class="info-row"><b>${i18n.t('academic-title-following')}</b><span> ${hit.person.academicTitleFollowing}</span></li>
+                <li class="info-row"><b>${i18n.t('stud-id')}</b><span> ${hit.person.studId}</span></li>
+                <li class="info-row"><b>${i18n.t('st-PersonNr')}</b><span> ${hit.person.stPersonNr} </span></li>
+                <li class="info-row"><b>${i18n.t('birth-date')}</b><span> ${hit.person.birthDate}</span></li>
+                <li class="info-row"><b>${i18n.t('nationalities')}</b><span> ${hit.person.nationalities.map(n => n.text).join(', ')}</span></li>
+                <li class="info-row"><b>${i18n.t('gender')}</b><span> ${hit.person.gender?.text}</span></li>
+                <li class="info-row"><b>${i18n.t('social-SecurityNr')}</b><span> ${hit.person.socialSecurityNr}</span></li>
+            </ul>
+            </div>
+            <div class="info-column">
+            <ul class="info-list">
+                <li class="info-row"><b>${i18n.t('ssPIN')}</b><span> ${hit.person.bpk}</span></li>
+                <li class="info-row"><b>${i18n.t('personal-Status')}</b><span> ${hit.person.personalStatus?.text}</span></li>
+                <li class="info-row"><b>${i18n.t('student-Status')}</b><span> ${hit.person.studentStatus?.text}</span></li>
+                <li class="info-row"><b>${i18n.t('tuitionStatus')}</b><span> ${hit.person.tuitionStatus}</span></li>
+                <li class="info-row"><b>${i18n.t('immatriculation-Date')}</b><span> ${hit.person.immatriculationDate}</span></li>
+                <li class="info-row"><b>${i18n.t('immatriculationSemester')}</b><span> ${hit.person.immatriculationSemester}</span></li>
+                <li class="info-row"><b>${i18n.t('exmatriculation-GI')}</b><span> ${hit.person.exmatriculationStatus?.text} ${hit.person.exmatriculationDate}</span></li>
+                <li class="info-row"><b>${i18n.t('admission-Qualification-Type')}</b><span> ${hit.person.admissionQualificationType?.text}</span></li>
+                <li class="info-row"><b>${i18n.t('school-Certificate-Date')}</b><span> ${hit.person.schoolCertificateDate}</span></li>
+                <li class="info-row"><b>${i18n.t('note')}</b><span> ${hit.person.note}</span></li>
 
 
                 <!--<li><b>nationality:</b> ${hit.person.nationality?.text}</li>-->
@@ -516,6 +538,7 @@ class CabinetViewElement extends BaseViewElement {
                 <!-- <li><b>studyLimitStartSemester:</b> hit.person.studyLimitStartSemester </li> -->
                 <!--<li><b>studyLimitEndSemester:</b> {hit.person.studyLimitEndSemester}</li>-->
             </ul>
+            </div>
             </div>
             <br />
             <div class="modal-Si-header-container">
