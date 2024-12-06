@@ -203,7 +203,7 @@ export function getPaginationCSS() {
         }
 
         .ais-Pagination-link:hover{
-            color: var(--dbp-accent);
+            color: var(--dbp-content);
         }
 
         .ais-Pagination-link {
