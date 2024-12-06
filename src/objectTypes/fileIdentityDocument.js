@@ -74,7 +74,7 @@ class CabinetHitElement extends BaseHitElement {
                 <header class="ais-doc-Hits-header">
                 <div class="text-container">
                 <div class="ais-doc-Hits-header-items header-item1">${hit.person.fullName}</div>
-                <div class="ais-doc-Hits-header-items header-item2">${hit.person.birthDate}(${hit.person.studId}|${hit.person.stPersonNr})</div>
+                <div class="ais-doc-Hits-header-items header-item2">${hit.person.birthDate}&nbsp(${hit.person.studId}&nbsp|&nbsp${hit.person.stPersonNr})</div>
                 </div>
                 <div class="icon-container">
                 </div>
