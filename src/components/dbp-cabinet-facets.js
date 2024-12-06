@@ -598,8 +598,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .filter-title {
                 margin: 0;
-                text-decoration: underline 2px solid var(--dbp-override-content);
                 padding-left:20px;
+                font-weight: bold;
             }
 
             .filter:has(> [hidden]) {
