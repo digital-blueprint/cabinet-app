@@ -414,6 +414,20 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             .ais-Hits-item {
                 width: inherit;
             }
+            .button-view {
+                padding: 0.5em 3em;
+                font-size: 18px;
+                background-color: var(--dbp-primary-surface);
+                color: var(--dbp-on-primary-surface);
+                text-align: center;
+                white-space: nowrap;
+                font-size: inherit;
+                font-weight: bolder;
+                font-family: inherit;
+                transition: 0.15s, color 0.15s;
+                border:none;
+            }
+
         `;
     }
 
@@ -541,7 +555,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </footer>
                     ` : html`
                     <footer class="hits-doc-footer">
-                        <button class="button is-primary button-view" onclick=${() => { documentViewButtonClick(hit); }}>
+                        <button class=" button-view" onclick=${() => { documentViewButtonClick(hit); }}>
                             ${i18n.t('buttons.view')}
                         </button>
                     </footer>
