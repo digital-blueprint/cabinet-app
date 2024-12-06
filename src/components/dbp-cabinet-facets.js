@@ -543,7 +543,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             .filter-header {
-                padding: 0.5em;
+                padding-bottom: 0.5em;
                 border-bottom: 5px solid var(--dbp-override-accent);
             }
 
@@ -553,7 +553,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             .filters-container {
-                padding: 1em;
                 margin-top:3em;
             }
 
@@ -570,6 +569,10 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .filter-group--category {
                 margin-left:6px;
+            }
+
+            .refinement-list-item-inner > refinement-list-item-count {
+                padding-left::1em;
             }
 
             .filter-group--person {
