@@ -1,4 +1,4 @@
-import {css, html} from 'lit';
+import {css, html, unsafeCSS} from 'lit';
 import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
 import {ref, createRef} from 'lit/directives/ref.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
@@ -8,6 +8,7 @@ import {Button, Icon, Modal} from '@dbp-toolkit/common';
 import {FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {pascalToKebab} from '../utils';
+import {getIconSVGURL} from '../utils.js';
 
 export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -94,6 +95,13 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
             #view-modal .pdf-preview { grid-area: 2 / 1 / 3 / 2; }
 
             #view-modal .form { grid-area: 2 / 2 / 3 / 3; }
+
+            #view-modal {
+                --dbp-modal-title-font-size: 24px;
+                --dbp-modal-title-font-weight: bold;
+                --dbp-modal-title-padding: 0 0 0 40px;
+                --dbp-modal-title-background: url("${unsafeCSS(getIconSVGURL('user'))}") left center / 28px 28px no-repeat;
+            }
         `;
     }
 
@@ -134,7 +142,8 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
                 height="80%"
                 min-width="80%"
                 min-height="80%"
-                subscribe="lang">
+                subscribe="lang"
+                title="${hit.person.fullName}">
                 <div slot="content">
                     <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" .data=${hit}></${unsafeStatic(tagName)}>
                 </div>
