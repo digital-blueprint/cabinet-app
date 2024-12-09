@@ -180,7 +180,7 @@ export function getPaginationCSS() {
             list-style: none;
             display: flex;
             justify-content: right;
-            gap: 0;
+            gap: 3px;
             margin-bottom: 0;
             overflow: hidden;
             padding-top:20px;
