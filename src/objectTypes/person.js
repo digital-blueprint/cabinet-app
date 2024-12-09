@@ -238,8 +238,7 @@ class CabinetHitElement extends BaseHitElement {
                 border-bottom: 1px solid #222120;
                 margin-bottom: calc(7px + 1vh);
                 display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap:10px;
+                grid-template-columns: 2fr 1fr;
                 padding: 15px 5px;
             }
 
@@ -248,10 +247,6 @@ class CabinetHitElement extends BaseHitElement {
                 text-align: left;
                 align-items: center;
                 color:var(--dbp-override-content);
-            }
-
-            .person-num{
-                display: flex;
             }
 
             .ais-Hits-content {
@@ -282,13 +277,18 @@ class CabinetHitElement extends BaseHitElement {
                 align-self: flex-end;
             }
 
-            .right-column {
+            .right-column{
                 display: flex;
-                text-align: right;
-                justify-content: right;
+                justify-content: flex-end;
+                align-items:center;
+            }
+
+            .right-column-icon {
+                width: 25px;
+                height: 25px;
                 background-image: url("${unsafeCSS(getIconSVGURL('user'))}");
                 background-repeat: no-repeat;
-                background-size:25px;
+                background-size:contain;
                 background-position-x: right;
             }
         `;
@@ -300,12 +300,10 @@ class CabinetHitElement extends BaseHitElement {
         return html`
             <header class="ais-Hits-header">
                 <div class="person-id"><!-- studId: ${hit.person.studId}-->
-                   ${renderFieldWithHighlight(hit, 'person.studId')}|${renderFieldWithHighlight(hit, 'person.stPersonNr')}
-                </div>
-                <div class="person-num"><!-- stPersonNr: ${hit.person.stPersonNr}-->
-
+                   ${renderFieldWithHighlight(hit, 'person.studId')} | ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
                 </div>
                 <div class="right-column">
+                    <div class="right-column-icon"></div>
                 </div>
             </header>
             <main class="ais-Hits-content">
