@@ -38,7 +38,7 @@ export const getCommonStyles = () => css`
         justify-content: space-between;
         align-items: center;
         padding: 0 5px;
-        border-bottom: 1px solid rgb(34, 33, 32);
+        border-bottom: 1px solid var(--dbp-override-content);
         margin-bottom: calc(7px + 1vh);
     }
     .text-container {

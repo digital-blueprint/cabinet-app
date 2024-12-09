@@ -235,7 +235,7 @@ class CabinetHitElement extends BaseHitElement {
             }
 
             .ais-Hits-header {
-                border-bottom: 1px solid #222120;
+                border-bottom: 1px solid var(--dbp-override-content);
                 margin-bottom: calc(7px + 1vh);
                 display: grid;
                 grid-template-columns: 2fr 1fr;
