@@ -346,6 +346,10 @@ class CabinetViewElement extends BaseViewElement {
                     margin-right: 0.5rem;
                 }
 
+                .modal-Gi-header-svg svg {
+                   fill:var(--dbp-override-content);
+                }
+
                 .modal-Gi-header-title h4 {
                     margin: 0;
                 }
@@ -397,6 +401,10 @@ class CabinetViewElement extends BaseViewElement {
                     margin-right: 0.5rem;
                 }
 
+                .modal-Si-header-svg svg{
+                    fill:var(--dbp-override-content);
+                }
+
                 .modal-Si-header-title h4 {
                     margin: 0;
                 }
@@ -409,6 +417,10 @@ class CabinetViewElement extends BaseViewElement {
 
                 .modal-Ci-header-svg {
                     margin-right: 0.5rem;
+                }
+
+                .modal-Ci-header-svg svg{
+                    fill:var(--dbp-override-content);
                 }
 
                 .modal-Ci-header-title h4 {
