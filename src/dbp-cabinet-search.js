@@ -427,6 +427,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 transition: 0.15s, color 0.15s;
                 border:none;
             }
+            .dropdown-title{
+                padding: 5px;
+                align-items: center;
+            }
 
         `;
     }
@@ -573,8 +577,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     createSortBy() {
         const i18n = this._i18n;
+        const container = this._('#sort-by');
+        const titleElement = document.createElement('div');
+        titleElement.textContent = i18n.t('sorting :');
+        titleElement.className = 'dropdown-title';
+        container.insertAdjacentElement('beforebegin', titleElement);
         return sortBy({
-            container: this._('#sort-by'),
+            container: container,
             items: [
                 { label: i18n.t('default-sort'), value: `${this.typesenseCollection}` }, /* default sorting "@type:desc,_text_match:desc,person.familyName:asc" */
                 { label: i18n.t('family-name'), value: `${this.typesenseCollection}/sort/@type:desc,person.familyName:asc,_text_match:desc` },

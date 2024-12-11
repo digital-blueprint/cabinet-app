@@ -113,5 +113,6 @@
     "search-cabinet":"Suchen",
     "last-modified-documents":"Letzte Änderung dokument",
     "default-sort":"Standard",
-    "show-deleted-only":"Nur gelöschte anzeigen"
+    "show-deleted-only":"Nur gelöschte anzeigen",
+    "sorting :":"Sortierung :"
 }
