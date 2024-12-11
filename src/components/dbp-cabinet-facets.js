@@ -543,13 +543,14 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             .filter-header {
-                padding-bottom: 0.5em;
+                padding-bottom: 1.6em;
                 border-bottom: 5px solid var(--dbp-override-accent);
             }
 
             .filter-header__title {
                 margin: 0;
                 font-weight: bold;
+                padding-top:0.6em;
             }
 
             .filters-container {
