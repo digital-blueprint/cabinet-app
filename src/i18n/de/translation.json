@@ -2,7 +2,7 @@
     "cabinet-search": {
         "filters": "Filter",
         "type-filter-group-title": "Kategorie",
-        "person-filter-group-title": "Personeigenschaften",
+        "person-filter-group-title": "Personeneigenschaften",
         "document-filter-group-title": "Dokumenteigenschaften",
         "study-filter-group-title": "Studiumseigenschaften",
 
@@ -24,7 +24,7 @@
         "filter-person-exmatriculation-semester-title": "Abmeldesemester",
         "filter-person-exmatriculation-status-text-title": "Exmatrikulationsstatus",
 
-        "filter-study-name-title": "Studium",
+        "filter-study-name-title": "Studienfach",
         "filter-study-type-title": "Abschlussziel",
         "filter-study-status-text-title": "Studienstatus",
 
