@@ -568,11 +568,15 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             .filter-group--category {
-                margin-left:6px;
+                background-image:url("${unsafeCSS(getIconSVGURL('category'))}");
+                background-repeat: no-repeat;
+                background-size: 22px 22px;
+                background-position: right 3px;
+                padding-right: 7px;
             }
 
             .refinement-list-item-inner > refinement-list-item-count {
-                padding-left::1em;
+                padding-left:1em;
             }
 
             .filter-group--person {
