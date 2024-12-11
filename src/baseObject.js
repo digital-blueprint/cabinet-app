@@ -53,7 +53,8 @@ export const getCommonStyles = () => css`
         background-image: url("${unsafeCSS(getIconSVGURL('docs'))}");
         background-repeat: no-repeat;
         background-size:30px;
-        background-position-x: right;
+        background-position-x: right 2px;
+        background-position-y:center;
         width: 50px;
         height: 50px;
     }
