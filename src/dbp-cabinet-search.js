@@ -365,7 +365,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             .help-container{
-                flex: 0.5;
+                flex: 0.5 auto 0%;
                 background-color: var(--dbp-background);
                 color: var(--dbp-content);
                 border: var(--dbp-border);
