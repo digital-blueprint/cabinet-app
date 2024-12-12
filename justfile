@@ -52,6 +52,14 @@ watch:
 
     # Check if a script was selected
     if [[ -n "$selected_script" ]]; then
+        # Get the full line for the selected script
+        full_text=$(printf '%s\n' "${watch_scripts[@]}" | grep "^$selected_script:")
+
+        # Set Zellij pane name
+        if command -v zellij &> /dev/null; then
+            zellij action rename-pane "$full_text"
+        fi
+
         echo "Running: npm run $selected_script"
         npm run "$selected_script"
     else
