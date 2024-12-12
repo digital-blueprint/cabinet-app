@@ -389,6 +389,7 @@ class CabinetViewElement extends BaseViewElement {
                     word-wrap: break-word;
                     word-break: break-word;
                     white-space: normal;
+                    padding-left:3em;
                 }
 
                 .modal-Si-header-container {
