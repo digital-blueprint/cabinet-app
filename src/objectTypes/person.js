@@ -381,6 +381,9 @@ class CabinetViewElement extends BaseViewElement {
                     text-align: left;
                     font-weight: bold;
                     flex: 0 0 40%;
+                    hyphens: auto;
+                    word-break: break-word;
+                    white-space: normal;
                 }
 
                 .info-row span {
