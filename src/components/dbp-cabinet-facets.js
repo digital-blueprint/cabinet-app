@@ -555,8 +555,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 margin-top:3em;
             }
 
-            .refinement-list-item-checkbox {
-                padding-left:-3px;
+            .custom-checkbox{
+                transform: translateY(-10%);
             }
 
             .filter-group {
