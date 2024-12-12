@@ -28,6 +28,37 @@ term: term-kill term-run
 open-browser:
     xdg-open http://localhost:8001
 
+# Interactive npm watch script selector
+[group('dev')]
+watch:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    # Define the watch scripts with descriptions
+    watch_scripts=(
+        "watch: Whitelabel app"
+        "watch-custom: TU Graz app"
+    )
+
+    # Use fzf to select a script
+    selected_script=$(printf '%s\n' "${watch_scripts[@]}" | fzf \
+        --height 40% \
+        --layout=reverse \
+        --border \
+        --prompt='Select NPM watch script > ' \
+        --preview='echo "Will run: npm run $(echo {} | cut -d: -f1)"' \
+        --preview-window=up:1 \
+        | cut -d: -f1)
+
+    # Check if a script was selected
+    if [[ -n "$selected_script" ]]; then
+        echo "Running: npm run $selected_script"
+        npm run "$selected_script"
+    else
+        echo "No script selected. Exiting."
+        exit 1
+    fi
+
 # Format all justfiles
 [group('linter')]
 just-format:
