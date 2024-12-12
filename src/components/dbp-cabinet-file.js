@@ -803,7 +803,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </div>
                     <div class="status ${classMap({hidden: this.mode === CabinetFile.Modes.ADD})}">
                         <div class="status-badge ${this.documentStatus}">
-                            <div class="status-text">${this.documentStatus}</div>
                             <div class="status-description">${this.documentStatusDescription}</div>
                         </div>
                     </div>
