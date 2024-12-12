@@ -716,11 +716,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             #document-modal .status .status-badge.success {
-                border-color: var(--dbp-override-success-surface);
+                border-color: var(--dbp-override-success);
             }
 
             #document-modal .status .status-badge.warning {
-                border-color: var(--dbp-override-warning-surface);
+                border-color: var(--dbp-override-warning);
             }
 
             #document-modal .status .status-badge.danger {
