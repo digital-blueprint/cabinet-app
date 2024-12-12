@@ -319,11 +319,9 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     },
                     collapseButtonText(options, { html }) {
                         return html`
-                        <span>
                           ${options.collapsed
                             ? html`<img src="${that.basePath}local/@digital-blueprint/cabinet-app/icon/chevron-down.svg" width="16" height="16" alt="chevron-down" />`
                             : html`<img src="${that.basePath}local/@digital-blueprint/cabinet-app/icon/chevron-up.svg" width="16" height="16" alt="chevron-up" />`}
-                        </span>
                       `;
                     },
                 },
@@ -558,7 +556,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             .refinement-list-item-checkbox {
-                padding-left:19px;
+                padding-left:-3px;
             }
 
             .filter-group {
@@ -573,7 +571,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 background-repeat: no-repeat;
                 background-size: 22px 22px;
                 background-position: right 3px;
-                padding-right: 7px;
             }
 
             .refinement-list-item-inner > refinement-list-item-count {
@@ -584,29 +581,26 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 background-image:url("${unsafeCSS(getIconSVGURL('user'))}");
                 background-repeat: no-repeat;
                 background-size: 22px 22px;
-                background-position-y:3px;
-                padding-left: 7px;
+                background-position: right 3px;
             }
 
             .filter-group--study {
                 background-image: url("${unsafeCSS(getIconSVGURL('book'))}");
                 background-repeat: no-repeat;
                 background-size: 22px 22px;
-                background-position-y:3px;
-                padding-left: 7px;
+                background-position: right 3px;
             }
 
             .filter-group--file {
                 background-image:url("${unsafeCSS(getIconSVGURL('docs'))}");
                 background-repeat: no-repeat;
                 background-size: 22px 22px;
-                background-position-y:3px;
-                padding-left: 7px;
+                background-position: right 3px;
             }
 
             .filter-title {
                 margin: 0;
-                padding-left:20px;
+                padding-left:1px;
                 font-weight: bold;
             }
 
@@ -618,13 +612,13 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             .ais-Panel-collapseButton  {
                 background: none !important;
                 border: none !important;
+                position: relative;
             }
 
             .ais-Panel-collapseButton span {
                 display: flex;
-                justify-content: center;
-                align-items: center;
-                cursor: pointer;
+                position: absolute;
+                right:-8px;
             }
 
             .ais-SearchBox-form {
