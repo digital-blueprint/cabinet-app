@@ -618,7 +618,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             .ais-Panel-collapseButton span {
                 display: flex;
                 position: absolute;
-                right:-8px;
+                right:2px;
             }
 
             .ais-SearchBox-form {
@@ -669,7 +669,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 display: flex;
                 gap: 1em;
                 align-items: center;
-                padding: 0.5em 0.5em 0.5em 1em;
+                padding: 0.5em auto 0.5em;
                 justify-content: space-between;
             }
 
