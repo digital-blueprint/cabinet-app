@@ -464,13 +464,13 @@ class CabinetViewElement extends BaseViewElement {
                     text-align: start;
                 }
 
-                .flex-item {
+                .Address-flex-item {
                     display: flex;
                     align-items: flex-start;
                     gap: 20px;
                 }
 
-                .flex-item > b {
+                .Address-flex-item > b {
                     min-width: 150px;
                     margin-right: 20px;
                 }
@@ -478,9 +478,29 @@ class CabinetViewElement extends BaseViewElement {
                 .address-info li {
                     margin-bottom: 5px;
                 }
-                .Ci-item{
-                    padding-left: 10px;
+
+                .Ci-flex-info {
+                    list-style-type: none;
+                    padding: 0;
+                    margin: 0;
                 }
+
+                .Ci-item {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 8px;
+                }
+
+                .Ci-item b {
+                    flex: 1;
+                    text-align: left;
+                }
+
+                .Ci-item span {
+                    flex: 2;
+                    text-align: start;
+                }
+
 
         `;
     }
@@ -610,11 +630,13 @@ class CabinetViewElement extends BaseViewElement {
                 <div class="modal-Ci-header-title"><h4>${i18n.t('Contact-information')}</h4></div>
             </div>
             <hr/>
-                <li><b>${i18n.t('emailAddressUniversity')}</b><span class="Ci-item">${hit.person.emailAddressUniversity}</span></li>
-                <li><b>${i18n.t('emailAddressConfirmed')}</b>${hit.person.emailAddressConfirmed}</li>
-                <li><b>${i18n.t('emailAddressTemporary')}</b>${hit.person.emailAddressTemporary}</li>
+            <ul class="Ci-flex-info">
+                <li class="Ci-item"><b>${i18n.t('emailAddressUniversity')}</b><span>${hit.person.emailAddressUniversity}</span></li>
+                <li class="Ci-item"><b>${i18n.t('emailAddressConfirmed')}</b><span>${hit.person.emailAddressConfirmed}</span></li>
+                <li class="Ci-item"><b>${i18n.t('emailAddressTemporary')}</b><span>${hit.person.emailAddressTemporary}</span></li>
+            </ul>
                 </br/>
-                <li class="flex-item"><b>${i18n.t('homeAddress')}</b>
+                <li class="Address-flex-item"><b>${i18n.t('homeAddress')}</b>
                     <ul class="address-info">
                         <li><b></b> ${hit.person.homeAddress?.note}</li>
                         <li><b></b> ${hit.person.homeAddress?.street}</li>
@@ -626,7 +648,7 @@ class CabinetViewElement extends BaseViewElement {
                     </ul>
                 </li>
                 </br>
-                <li class="flex-item"><b>${i18n.t('studyAddress')}</b>
+                <li class="Address-flex-item"><b>${i18n.t('studyAddress')}</b>
                     <ul class="address-info">
                         <li><b></b> ${hit.person.studyAddress?.note}</li>
                         <li><b></b> ${hit.person.studyAddress?.street}</li>
