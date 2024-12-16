@@ -383,9 +383,13 @@ class CabinetViewElement extends BaseViewElement {
                     flex: 0 0 40%;
                     hyphens: auto;
                     word-break: break-word;
+                    overflow-wrap: break-word;
                     white-space: normal;
+                    text-decoration: none;
                 }
-
+                .info-row abbr {
+                    text-decoration: none;
+                }
                 .info-row span {
                     flex: 1;
                     text-align: left;
@@ -393,6 +397,7 @@ class CabinetViewElement extends BaseViewElement {
                     word-break: break-word;
                     white-space: normal;
                     padding-left:3em;
+                    hyphens: auto;
                 }
 
                 .modal-Si-header-container {
@@ -455,7 +460,7 @@ class CabinetViewElement extends BaseViewElement {
                 }
 
                 .study-row span {
-                    flex: 1;
+                    flex: 2;
                     text-align: start;
                 }
 
@@ -472,6 +477,9 @@ class CabinetViewElement extends BaseViewElement {
 
                 .address-info li {
                     margin-bottom: 5px;
+                }
+                .Ci-item{
+                    padding-left: 10px;
                 }
 
         `;
@@ -602,7 +610,7 @@ class CabinetViewElement extends BaseViewElement {
                 <div class="modal-Ci-header-title"><h4>${i18n.t('Contact-information')}</h4></div>
             </div>
             <hr/>
-                <li><b>${i18n.t('emailAddressUniversity')}</b>${hit.person.emailAddressUniversity}</li>
+                <li><b>${i18n.t('emailAddressUniversity')}</b><span class="Ci-item">${hit.person.emailAddressUniversity}</span></li>
                 <li><b>${i18n.t('emailAddressConfirmed')}</b>${hit.person.emailAddressConfirmed}</li>
                 <li><b>${i18n.t('emailAddressTemporary')}</b>${hit.person.emailAddressTemporary}</li>
                 </br/>
