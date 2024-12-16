@@ -67,8 +67,11 @@ class CabinetHitElement extends BaseHitElement {
         const i18n = this._i18n;
         let hit = /** @type {PersonHit} */(this.data);
         const issueDate = this.data.file['file-cabinet-citizenshipCertificate'].dateCreated;
-        const dateObject = new Date(issueDate);
-        const formattedDate = new Intl.DateTimeFormat('de').format(dateObject);
+        let formattedDate = '';
+        if(issueDate !== undefined) {
+            formattedDate = new Intl.DateTimeFormat('de').format(new Date(issueDate));
+        }
+
         return html`
             <form>
                 <header class="ais-doc-Hits-header">
