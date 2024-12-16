@@ -204,6 +204,7 @@ export function getPaginationCSS() {
 
         .ais-Pagination-link:hover{
             color: var(--dbp-content);
+            background-color: #e4154b;
         }
 
         .ais-Pagination-link {
@@ -212,10 +213,10 @@ export function getPaginationCSS() {
             border-radius:0;
         }
 
-
         .ais-Pagination-item--selected .ais-Pagination-link {
             font-weight: bold;
             background-color: var(--dbp-muted);
+            color: var(--dbp-override-secondary-surface);
         }
 
         .ais-Pagination-item--disabled {
