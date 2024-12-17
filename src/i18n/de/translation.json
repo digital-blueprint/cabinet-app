@@ -4,7 +4,7 @@
         "type-filter-group-title": "Kategorie",
         "person-filter-group-title": "Personeneigenschaften",
         "document-filter-group-title": "Dokumenteigenschaften",
-        "study-filter-group-title": "Studiumseigenschaften",
+        "study-filter-group-title": "Studienfacheigenschaften",
 
         "filter-person-person-title": "Person",
         "filter-person-birth-date-timestamp-title": "Geburtsdatum",
@@ -106,7 +106,7 @@
     "emailAddressConfirmed":"Bestätigte E-Mailadresse",
     "emailAddressTemporary":"Temporäre E-Mailadresse",
     "homeAddress":"Heimatadresse",
-    "studyAddress":"Studiumadresse",
+    "studyAddress":"Studienadresse",
     "document-issue-date":"Ausgabedatum" ,
     "Added":"Hinzugefügt am" ,
     "last-modified":"Letzte Änderung",
