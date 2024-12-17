@@ -266,11 +266,14 @@ class CabinetHitElement extends BaseHitElement {
             .hit-person-content-item2{
                 align-self: start;
                 color:var(--dbp-override-content);
+                padding-top: 4em;
             }
 
             .hit-person-content-item3{
                 align-self: start;
                 color:var(--dbp-override-content);
+                padding-top:6em;
+                margin-bottom:0.5em;
             }
 
             .SyncStatus{
@@ -316,7 +319,9 @@ class CabinetHitElement extends BaseHitElement {
                     ${renderFieldWithHighlight(hit, 'person.birthDate')}
                 </div><br />
                 <div class="hit-person-content-item2">
-                    ${hit.person.studies.map(study => html`${study.name} (${study.status.text})<br />`)}
+                ${hit.person.studies && hit.person.studies.length > 0
+                    ? hit.person.studies.map(study => html`${study.name} (${study.status.text})<br />`)
+                    : html`—`}
                 </div>
                 <div class="hit-person-content-item3">
                 ${i18n.t('sync-hit')}:&nbsp;${Intl.DateTimeFormat('de').format(new Date())}
