@@ -67,7 +67,7 @@
     },
     "error-login-message": "You need to be logged in to use this function!",
     "focus-button-name":"Focus",
-    "unselect-button-name":"unselect",
+    "unselect-button-name":"Unselect",
     "buttons.view": "View",
     "buttons.add.documents": "Add document",
     "sync-hit": "last synchronized",
