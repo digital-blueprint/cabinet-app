@@ -512,6 +512,9 @@ class CabinetViewElement extends BaseViewElement {
     render() {
         let hit = /** @type {PersonHit} */ (this.data);
         const i18n = this._i18n;
+        const displayValue = (value) => {
+            return value === undefined || value === null || value === '' ? '-' : value;
+        };
         return html`
             <div class="modal-Gi-header-container">
                 <div class="modal-Gi-header-svg">
@@ -527,31 +530,31 @@ class CabinetViewElement extends BaseViewElement {
             <div class="info-container">
                 <div class="info-column">
                     <ul class="info-list">
-                        <li class="info-row"><b>${i18n.t('academic-titles')}</b><span> ${hit.person.academicTitles.join(', ')}</span></li>
-                        <li class="info-row"><b>${i18n.t('given-name')}</b><span> ${hit.person.givenName}</span></li>
-                        <li class="info-row"><b>${i18n.t('family-name')}</b><span> ${hit.person.familyName}</span></li>
-                        <li class="info-row"><b>${i18n.t('former-family-name')}</b><span> ${hit.person.formerFamilyName}</span></li>
-                        <li class="info-row"><b>${i18n.t('academic-title-following')}</b><span> ${hit.person.academicTitleFollowing}</span></li>
-                        <li class="info-row"><b>${i18n.t('stud-id')}</b><span> ${hit.person.studId}</span></li>
-                        <li class="info-row"><b>${i18n.t('st-PersonNr')}</b><span> ${hit.person.stPersonNr} </span></li>
-                        <li class="info-row"><b>${i18n.t('birth-date')}</b><span> ${hit.person.birthDate}</span></li>
-                        <li class="info-row"><b>${i18n.t('nationalities')}</b><span> ${hit.person.nationalities.map(n => n.text).join(', ')}</span></li>
-                        <li class="info-row"><b>${i18n.t('gender')}</b><span> ${hit.person.gender?.text}</span></li>
-                        <li class="info-row"><b>${i18n.t('social-SecurityNr')}</b><span> ${hit.person.socialSecurityNr}</span></li>
+                        <li class="info-row"><b>${i18n.t('academic-titles')}</b><span> ${displayValue(hit.person.academicTitles.join(', '))}</span></li>
+                        <li class="info-row"><b>${i18n.t('given-name')}</b><span> ${displayValue(hit.person.givenName)}</span></li>
+                        <li class="info-row"><b>${i18n.t('family-name')}</b><span> ${displayValue(hit.person.familyName)}</span></li>
+                        <li class="info-row"><b>${i18n.t('former-family-name')}</b><span> ${displayValue(hit.person.formerFamilyName)}</span></li>
+                        <li class="info-row"><b>${i18n.t('academic-title-following')}</b><span> ${displayValue(hit.person.academicTitleFollowing)}</span></li>
+                        <li class="info-row"><b>${i18n.t('stud-id')}</b><span> ${displayValue(hit.person.studId)}</span></li>
+                        <li class="info-row"><b>${i18n.t('st-PersonNr')}</b><span> ${displayValue(hit.person.stPersonNr)} </span></li>
+                        <li class="info-row"><b>${i18n.t('birth-date')}</b><span> ${displayValue(hit.person.birthDate)}</span></li>
+                        <li class="info-row"><b>${i18n.t('nationalities')}</b><span> ${displayValue(hit.person.nationalities.map(n => n.text).join(', '))}</span></li>
+                        <li class="info-row"><b>${i18n.t('gender')}</b><span> ${displayValue(hit.person.gender?.text)}</span></li>
+                        <li class="info-row"><b>${i18n.t('social-SecurityNr')}</b><span> ${displayValue(hit.person.socialSecurityNr)}</span></li>
                     </ul>
                 </div>
                 <div class="info-column">
                     <ul class="info-list">
-                        <li class="info-row"><b>${i18n.t('ssPIN')}</b><span> ${hit.person.bpk}</span></li>
-                        <li class="info-row"><b>${i18n.t('personal-Status')}</b><span> ${hit.person.personalStatus?.text}</span></li>
-                        <li class="info-row"><b>${i18n.t('student-Status')}</b><span> ${hit.person.studentStatus?.text}</span></li>
-                        <li class="info-row"><b>${i18n.t('tuitionStatus')}</b><span> ${hit.person.tuitionStatus}</span></li>
-                        <li class="info-row"><b>${i18n.t('immatriculation-Date')}</b><span> ${hit.person.immatriculationDate}</span></li>
-                        <li class="info-row"><b>${i18n.t('immatriculationSemester')}</b><span> ${hit.person.immatriculationSemester}</span></li>
-                        <li class="info-row"><b>${i18n.t('exmatriculation-GI')}</b><span> ${hit.person.exmatriculationStatus?.text} ${hit.person.exmatriculationDate}</span></li>
-                        <li class="info-row"><b>${i18n.t('admission-Qualification-Type')}</b><span> ${hit.person.admissionQualificationType?.text}</span></li>
-                        <li class="info-row"><b>${i18n.t('school-Certificate-Date')}</b><span> ${hit.person.schoolCertificateDate}</span></li>
-                        <li class="info-row"><b>${i18n.t('note')}</b><span> ${hit.person.note}</span></li>
+                        <li class="info-row"><b>${i18n.t('ssPIN')}</b><span> ${displayValue(hit.person.bpk)}</span></li>
+                        <li class="info-row"><b>${i18n.t('personal-Status')}</b><span> ${displayValue(hit.person.personalStatus?.text)}</span></li>
+                        <li class="info-row"><b>${i18n.t('student-Status')}</b><span> ${displayValue(hit.person.studentStatus?.text)}</span></li>
+                        <li class="info-row"><b>${i18n.t('tuitionStatus')}</b><span> ${displayValue(hit.person.tuitionStatus)}</span></li>
+                        <li class="info-row"><b>${i18n.t('immatriculation-Date')}</b><span> ${displayValue(hit.person.immatriculationDate)}</span></li>
+                        <li class="info-row"><b>${i18n.t('immatriculationSemester')}</b><span> ${displayValue(hit.person.immatriculationSemester)}</span></li>
+                        <li class="info-row"><b>${i18n.t('exmatriculation-GI')}</b><span> ${displayValue(hit.person.exmatriculationStatus?.text)} ${hit.person.exmatriculationDate}</span></li>
+                        <li class="info-row"><b>${i18n.t('admission-Qualification-Type')}</b><span> ${displayValue(hit.person.admissionQualificationType?.text)}</span></li>
+                        <li class="info-row"><b>${i18n.t('school-Certificate-Date')}</b><span> ${displayValue(hit.person.schoolCertificateDate)}</span></li>
+                        <li class="info-row"><b>${i18n.t('note')}</b><span> ${displayValue(hit.person.note)}</span></li>
 
 
                         <!--<li><b>nationality:</b> ${hit.person.nationality?.text}</li>-->
@@ -588,14 +591,14 @@ class CabinetViewElement extends BaseViewElement {
                 ${hit.person.studies.map(study => html`
                 <li>
                     <ul class="study-info">
-                        <li class="study-row"><b>${i18n.t(' key')}</b><span> ${study.key}</span></li>
-                        <li class="study-row"><b>${i18n.t('name')}</b><span> ${study.name}</span></li>
-                        <li class="study-row"><b>${i18n.t('semester')}</b><span>${study.semester}</span></li>
-                        <li class="study-row"><b>${i18n.t('status')}</b><span> ${study.status?.text}</span></li>
-                        <li class="study-row"><b>${i18n.t('immatriculation-date')}</b><span> ${study.immatriculationDate}</span></li>
-                        <li class="study-row"><b>${i18n.t('qualification-study')}</b><span> ${study.qualificationType?.text} ${study.qualificationDate} ${study.qualificationState?.text}</span></li>
-                        <li class="study-row"><b>${i18n.t('exmatriculation')}</b><span> ${study.exmatriculationType?.text} ${study.exmatriculationDate}</span></li>
-                        <li class="study-row"><b>${i18n.t('curriculum-version')}</b><span> ${study.curriculumVersion}</span></li>
+                        <li class="study-row"><b>${i18n.t(' key')}</b><span> ${displayValue(study.key)}</span></li>
+                        <li class="study-row"><b>${i18n.t('name')}</b><span> ${displayValue(study.name)}</span></li>
+                        <li class="study-row"><b>${i18n.t('semester')}</b><span>${displayValue(study.semester)}</span></li>
+                        <li class="study-row"><b>${i18n.t('status')}</b><span> ${displayValue(study.status?.text)}</span></li>
+                        <li class="study-row"><b>${i18n.t('immatriculation-date')}</b><span> ${displayValue(study.immatriculationDate)}</span></li>
+                        <li class="study-row"><b>${i18n.t('qualification-study')}</b><span> ${displayValue(study.qualificationType?.text)} ${study.qualificationDate} ${study.qualificationState?.text}</span></li>
+                        <li class="study-row"><b>${i18n.t('exmatriculation')}</b><span> ${displayValue(study.exmatriculationType?.text)} ${study.exmatriculationDate}</span></li>
+                        <li class="study-row"><b>${i18n.t('curriculum-version')}</b><span> ${displayValue(study.curriculumVersion)}</span></li>
 
                         <!--<li><b>coUrl:</b> <a href="${study.coUrl}">${study.coUrl}</a></li>
                         <li><b>id:</b> ${study.id}</li>
@@ -636,32 +639,32 @@ class CabinetViewElement extends BaseViewElement {
             </div>
             <hr/>
             <ul class="Ci-flex-info">
-                <li class="Ci-item"><b>${i18n.t('emailAddressUniversity')}</b><span>${hit.person.emailAddressUniversity}</span></li>
-                <li class="Ci-item"><b>${i18n.t('emailAddressConfirmed')}</b><span>${hit.person.emailAddressConfirmed}</span></li>
-                <li class="Ci-item"><b>${i18n.t('emailAddressTemporary')}</b><span>${hit.person.emailAddressTemporary}</span></li>
+                <li class="Ci-item"><b>${i18n.t('emailAddressUniversity')}</b><span>${displayValue(hit.person.emailAddressUniversity)}</span></li>
+                <li class="Ci-item"><b>${i18n.t('emailAddressConfirmed')}</b><span>${displayValue(hit.person.emailAddressConfirmed)}</span></li>
+                <li class="Ci-item"><b>${i18n.t('emailAddressTemporary')}</b><span>${displayValue(hit.person.emailAddressTemporary)}</span></li>
             </ul>
                 </br/>
                 <li class="Address-flex-item"><b>${i18n.t('homeAddress')}</b>
                     <ul class="address-info">
-                        <li><b></b> ${hit.person.homeAddress?.note}</li>
-                        <li><b></b> ${hit.person.homeAddress?.street}</li>
-                        <li><b></b> ${hit.person.homeAddress?.place}</li>
-                        <li><b></b> ${hit.person.homeAddress?.region}</li>
-                        <li><b></b> ${hit.person.homeAddress?.postCode}</li>
-                        <li><b></b> ${hit.person.homeAddress?.country?.text}</li>
-                        <li><b></b> ${hit.person.homeAddress?.telephoneNumber}</li>
+                        <li><b></b> ${displayValue(hit.person.homeAddress?.note)}</li>
+                        <li><b></b> ${displayValue(hit.person.homeAddress?.street)}</li>
+                        <li><b></b> ${displayValue(hit.person.homeAddress?.place)}</li>
+                        <li><b></b> ${displayValue(hit.person.homeAddress?.region)}</li>
+                        <li><b></b> ${displayValue(hit.person.homeAddress?.postCode)}</li>
+                        <li><b></b> ${displayValue(hit.person.homeAddress?.country?.text)}</li>
+                        <li><b></b> ${displayValue(hit.person.homeAddress?.telephoneNumber)}</li>
                     </ul>
                 </li>
                 </br>
                 <li class="Address-flex-item"><b>${i18n.t('studyAddress')}</b>
                     <ul class="address-info">
-                        <li><b></b> ${hit.person.studyAddress?.note}</li>
-                        <li><b></b> ${hit.person.studyAddress?.street}</li>
-                        <li><b></b> ${hit.person.studyAddress?.place}</li>
-                        <li><b></b> ${hit.person.studyAddress?.region}</li>
-                        <li><b></b> ${hit.person.studyAddress?.postCode}</li>
-                        <li><b></b> ${hit.person.studyAddress?.country?.text}</li>
-                        <li><b></b> ${hit.person.studyAddress?.telephoneNumber}</li>
+                        <li><b></b> ${displayValue(hit.person.studyAddress?.note)}</li>
+                        <li><b></b> ${displayValue(hit.person.studyAddress?.street)}</li>
+                        <li><b></b> ${displayValue(hit.person.studyAddress?.place)}</li>
+                        <li><b></b> ${displayValue(hit.person.studyAddress?.region)}</li>
+                        <li><b></b> ${displayValue(hit.person.studyAddress?.postCode)}</li>
+                        <li><b></b> ${displayValue(hit.person.studyAddress?.country?.text)}</li>
+                        <li><b></b> ${displayValue(hit.person.studyAddress?.telephoneNumber)}</li>
                     </ul>
                 </li>
 
