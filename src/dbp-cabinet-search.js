@@ -414,6 +414,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             .ais-Hits-item {
                 width: inherit;
             }
+
             .button-view {
                 padding: 0.3em 2em;
                 font-size: 18px;
@@ -427,9 +428,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 transition: 0.15s, color 0.15s;
                 border:none;
             }
+
             .dropdown-title{
                 padding: 5px;
                 align-items: center;
+            }
+
+            .ais-CurrentRefinements-categoryLabel {
+                color: var(--dbp-content);
             }
 
         `;
