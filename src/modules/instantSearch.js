@@ -25,7 +25,7 @@ export default class {
      * @returns {Array} - Array of search facets config
      */
     getFacetsConfig() {
-        const showMoreLimitValue = 30;
+        const showMoreLimitValue = 1000;
         return [
             { "filter-group": { "id": "category", "name": "cabinet-search.type-filter-group-title"}},
             { "groupId": "category", "schemaField": "@type", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-person', searchable: false, sortBy: ['alpha:asc']}}, "usePanel": false},
