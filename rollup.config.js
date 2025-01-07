@@ -451,6 +451,10 @@ Dependencies:
                     {src: customAssetsPath + 'icon/*', dest: 'dist/' + (await getDistPath(pkg.name, 'icon'))},
                     {src: customAssetsPath + 'site.webmanifest', dest: 'dist', rename: pkg.internalName + '.webmanifest'},
                     {src: customAssetsPath + 'silent-check-sso.html', dest: 'dist'},
+                    {
+                        src: await getPackagePath('instantsearch.css', 'themes/algolia-min.css'),
+                        dest: 'dist/'+ (await getDistPath(pkg.name)),
+                    },
                     // the pdfjs worker is needed for signature, dispatch, pdf-viewer and the annotation loading in cabinet!
                     {
                         src: await getPackagePath('pdfjs-dist', 'legacy/build/pdf.worker.mjs'),
