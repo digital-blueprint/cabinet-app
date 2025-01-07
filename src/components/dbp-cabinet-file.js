@@ -21,6 +21,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         ADD: 'add',
     };
 
+    static States = {
+        NONE: 'none',
+        LOADING_FILE: 'loading-file',
+        LOADING_FILE_FAILED: 'loading-file-failed',
+        FILE_LOADED: 'file-loaded',
+    };
+
     static BlobUrlTypes = {
         UPLOAD: 'upload',
         DOWNLOAD: 'download',
@@ -68,6 +75,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.documentStatus = 'success';
         this.documentStatusDescription = '';
         this.allowStateReset = true;
+        this.state = CabinetFile.States.NONE;
     }
 
     connectedCallback() {
@@ -114,6 +122,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             objectType: { type: String, attribute: false },
             additionalType: { type: String, attribute: false },
             documentStatus: { type: String, attribute: false },
+            state: { type: String, attribute: false },
             mode: { type: String },
         };
     }
@@ -465,6 +474,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('openDialogWithHit modal', modal);
         modal.open();
 
+        this.state = CabinetFile.States.LOADING_FILE;
+
         // Fetch the hit data from Typesense again in case it changed
         hit = await this.typesenseService.fetchItem(hit.id);
 
@@ -478,18 +489,25 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         await this.updateComplete;
 
         if (hit.file) {
-            const file = await this.downloadFileFromBlob(this.fileHitData.file.base.fileId, true);
-            console.log('openDialogWithHit file', file);
+            try {
+                // This could throw an exception if the file was deleted in the meantime
+                const file = await this.downloadFileFromBlob(this.fileHitData.file.base.fileId, true);
+                console.log('openDialogWithHit file', file);
+                this.state = CabinetFile.States.FILE_LOADED;
 
-            // We need to set the documentFile, so that the PDF viewer will be rendered again
-            this.documentFile = file;
-            await this.updateComplete;
+                // We need to set the documentFile, so that the PDF viewer will be rendered again
+                this.documentFile = file;
+                await this.updateComplete;
 
-            // Show the PDF in the PDF viewer after it was rendered
-            await this.showPdf(file);
+                // Show the PDF in the PDF viewer after it was rendered
+                await this.showPdf(file);
 
-            // We need to wait until rendering is complete after this.documentFile has changed
-            await this.updateComplete;
+                // We need to wait until rendering is complete after this.documentFile has changed
+                await this.updateComplete;
+            } catch {
+                this.documentModalNotification('Error', 'Could not load file from Blob!', 'danger');
+                this.state = CabinetFile.States.LOADING_FILE_FAILED;
+            }
         }
     }
 
@@ -741,6 +759,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     getPdfViewerHtml() {
+        if (this.state === CabinetFile.States.LOADING_FILE_FAILED) {
+            return html`No file found!`;
+        }
+
         // If there is no document file anymore, show a spinner
         // This prevents that the PDF viewer still has an old file when the modal was closed
         // before the PDF was loaded or rendered
@@ -820,25 +842,25 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             </button>
                             <button class="button" @click="${this.downloadFile}" ?disabled="${!file}">
                                 Download Document
-                                ${this.getMiniSpinnerHtml(file)}
+                                ${this.getMiniSpinnerHtml(this.state !== CabinetFile.States.LOADING_FILE)}
                             </button>
                             <button @click="${this.editFile}" ?disabled="${!file}" class="${classMap({
                                 hidden: this.mode !== CabinetFile.Modes.VIEW,
                             })} button is-primary">
                                 Edit
-                                ${this.getMiniSpinnerHtml(file)}
+                                ${this.getMiniSpinnerHtml(this.state !== CabinetFile.States.LOADING_FILE)}
                             </button>
                             <button @click="${this.deleteFile}" ?disabled="${!file}" class="${classMap({
                                 hidden: this.mode === CabinetFile.Modes.ADD || hit.base?.isScheduledForDeletion,
                             })} button is-primary">
                                 Delete
-                                ${this.getMiniSpinnerHtml(file)}
+                                ${this.getMiniSpinnerHtml(this.state !== CabinetFile.States.LOADING_FILE)}
                             </button>
                             <button @click="${this.undeleteFile}" ?disabled="${!file}" class="${classMap({
                                 hidden: this.mode === CabinetFile.Modes.ADD || !hit.base?.isScheduledForDeletion,
                             })} button is-primary">
                                 Undelete
-                                ${this.getMiniSpinnerHtml(file)}
+                                ${this.getMiniSpinnerHtml(this.state !== CabinetFile.States.LOADING_FILE)}
                             </button>
                         </div>
                         ${this.getObjectTypeFormPartHtml()}
