@@ -617,7 +617,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .ais-Panel-collapseButton span {
                 display: flex;
-                position: absolute;
                 right:2px;
             }
 
