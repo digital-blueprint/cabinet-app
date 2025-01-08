@@ -116,8 +116,8 @@ export function getCurrentRefinementCSS() {
             transform: rotate(360deg);
         }
 
-        .ais-SearchBox-resetIcon,
-        .ais-SearchBox-submitIcon  path{
+        .ais-SearchBox-resetIcon path,
+        .ais-SearchBox-submitIcon path{
             fill: var(--dbp-override-accent);
         }
 
