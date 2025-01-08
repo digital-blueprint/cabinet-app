@@ -115,6 +115,12 @@ export function getCurrentRefinementCSS() {
         .clear-refinements-button:hover:before {
             transform: rotate(360deg);
         }
+
+        .ais-SearchBox-resetIcon,
+        .ais-SearchBox-submitIcon  path{
+            fill: var(--dbp-override-accent);
+        }
+
     `;
 }
 
@@ -158,18 +164,6 @@ export function getAlgoliaMinCSS() {
             cursor: default;
         }
 
-        .ais-SearchBox-resetIcon {
-            width: 12px;
-            height: 12px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translateX(-50%) translateY(-50%);
-        }
-
-        .ais-SearchBox-resetIcon path {
-            fill: rgb(73, 85, 136);
-        }
     `;
 }
 
