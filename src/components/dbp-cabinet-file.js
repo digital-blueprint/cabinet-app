@@ -1,4 +1,4 @@
-import {css, html} from 'lit';
+import {css, html, unsafeCSS} from 'lit';
 import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
 import {createRef, ref} from 'lit/directives/ref.js';
 import {ScopedElementsMixin} from '@open-wc/scoped-elements';
@@ -13,6 +13,7 @@ import * as formElements from '../objectTypes/formElements.js';
 import {BaseFormElement} from '../baseObject.js';
 import {send} from '@dbp-toolkit/common/notification';
 import {getSelectorFixCSS} from '../styles.js';
+import {getIconSVGURL} from '../utils.js';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static Modes = {
@@ -708,6 +709,19 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 grid-area: 1 / 1 / 2 / 2;
             }
 
+            #document-modal .doc-title{
+                background-image: url("${unsafeCSS(getIconSVGURL('docs'))}");
+                background-repeat: no-repeat;
+                background-size: 30px 30px;
+                background-position: left;
+                padding-left: 2em;
+            }
+            #document-modal .student-info {
+                display: flex;
+                align-items: flex-start;
+                justify-content: flex-start;
+            }
+
             #document-modal .status {
                 grid-area: 1 / 2 / 2 / 3;
                 display: flex;
@@ -819,9 +833,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 </div>
                 <div slot="content" class="content">
                     <div class="description">
-                        <h1>${headline}</h1>
-                        ${person.fullName}<br />
-                        ${person.birthDate}(${person.studId} | ${person.stPersonNr})<br />
+                        <div class="doc-title"><h1>${headline}</h1></div>
+                        <div class="student-info">
+                            ${person.fullName}<br />
+                            ${person.birthDate}(${person.studId} | ${person.stPersonNr})<br />
+                        </div>
                     </div>
                     <div class="status ${classMap({hidden: this.mode === CabinetFile.Modes.ADD})}">
                         <div class="status-badge ${this.documentStatus}">
@@ -978,12 +994,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         const i18n = this._i18n;
-
+        console.log('Active language:', i18n.language);
+        console.log('Fallback languages:', i18n.options.fallbackLng);
+        console.log('Translation for file-picker-context:', i18n.t('cabinet-search.file-picker-context'));
         return html`
             <dbp-file-source
                 ${ref(this.fileSourceRef)}
                 context="${i18n.t('cabinet-search.file-picker-context')}"
-                subscribe="nextcloud-store-session:nextcloud-store-session"
+                subscribe="lang, "nextcloud-store-session:nextcloud-store-session"
                 allowed-mime-types="application/pdf"
                 enabled-targets="${this.fileHandlingEnabledTargets}"
                 nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
