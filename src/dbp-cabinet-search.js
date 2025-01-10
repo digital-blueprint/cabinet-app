@@ -87,8 +87,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-
                     // Refresh the search after switching the language to update hits with new language
                     if (this.search) {
                         this.search.refresh();

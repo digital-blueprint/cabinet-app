@@ -994,14 +994,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         const i18n = this._i18n;
-        console.log('Active language:', i18n.language);
-        console.log('Fallback languages:', i18n.options.fallbackLng);
-        console.log('Translation for file-picker-context:', i18n.t('cabinet-search.file-picker-context'));
         return html`
             <dbp-file-source
                 ${ref(this.fileSourceRef)}
                 context="${i18n.t('cabinet-search.file-picker-context')}"
-                subscribe="lang, "nextcloud-store-session:nextcloud-store-session"
+                subscribe="lang,nextcloud-store-session:nextcloud-store-session"
                 allowed-mime-types="application/pdf"
                 enabled-targets="${this.fileHandlingEnabledTargets}"
                 nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
@@ -1011,7 +1008,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 nextcloud-file-url="${this.nextcloudFileURL}"
                 decompress-zip
                 max-file-size="32000"
-                lang="${this.lang}"
                 text="${i18n.t('cabinet-search.upload-area-text')}"
                 button-label="${i18n.t('cabinet-search.upload-button-label')}"
                 @dbp-file-source-dialog-closed="${this.onFileSelectDialogClosed}"

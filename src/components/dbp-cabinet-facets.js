@@ -59,9 +59,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-                    break;
                 case 'search':
                     this.afterSearchInit();
                     break;

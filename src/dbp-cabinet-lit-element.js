@@ -58,6 +58,9 @@ export default class DBPCabinetLitElement extends DBPLitElement {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
+                case 'lang':
+                    this._i18n.changeLanguage(this.lang);
+                    break;
                 case "auth":
                     this._updateAuth();
                     break;
