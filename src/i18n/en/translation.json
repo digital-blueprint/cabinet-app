@@ -63,7 +63,10 @@
         "refinement-delete-filter-button-text": "Delete filter",
         "refinement-date-before-text": "before",
         "refinement-date-after-text": "after"
-
+    },
+    "cabinet-file" : {
+        "upload-button-label": "Upload document",
+        "file-picker-context": "Select a file"
     },
     "error-login-message": "You need to be logged in to use this function!",
     "focus-button-name":"Focus",
@@ -117,5 +120,4 @@
     "default-sort":"Standard",
     "show-deleted-only":"Show deleted only",
     "sorting :":"Sorting :"
-
 }

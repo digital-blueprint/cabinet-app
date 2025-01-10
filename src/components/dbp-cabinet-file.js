@@ -997,7 +997,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         return html`
             <dbp-file-source
                 ${ref(this.fileSourceRef)}
-                context="${i18n.t('cabinet-search.file-picker-context')}"
+                context="${i18n.t('cabinet-file.file-picker-context')}"
                 subscribe="lang,nextcloud-store-session:nextcloud-store-session"
                 allowed-mime-types="application/pdf"
                 enabled-targets="${this.fileHandlingEnabledTargets}"
@@ -1008,8 +1008,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 nextcloud-file-url="${this.nextcloudFileURL}"
                 decompress-zip
                 max-file-size="32000"
-                text="${i18n.t('cabinet-search.upload-area-text')}"
-                button-label="${i18n.t('cabinet-search.upload-button-label')}"
+                text="${i18n.t('cabinet-file.upload-area-text')}"
+                button-label="${i18n.t('cabinet-file.upload-button-label')}"
                 @dbp-file-source-dialog-closed="${this.onFileSelectDialogClosed}"
                 @dbp-file-source-file-selected="${this.onDocumentFileSelected}"></dbp-file-source>
         `;

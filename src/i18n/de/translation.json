@@ -63,6 +63,10 @@
         "refinement-date-before-text": "vorher",
         "refinement-date-after-text": "nach"
     },
+    "cabinet-file" : {
+        "upload-button-label": "Document hochladen",
+        "file-picker-context": "Datei auswählen"
+    },
     "error-login-message": "Sie müssen angemeldet sein um diese Funktion nutzen zu können!",
     "focus-button-name":"Eingrenzen",
     "unselect-button-name":"Unselect",
