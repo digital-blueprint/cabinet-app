@@ -507,6 +507,8 @@ class CabinetViewElement extends BaseViewElement {
                 }
 
 
+
+
         `;
     }
     render() {
@@ -599,7 +601,8 @@ class CabinetViewElement extends BaseViewElement {
                         <li class="study-row"><b>${i18n.t('qualification-study')}</b><span> ${displayValue(study.qualificationType?.text)} ${study.qualificationDate} ${study.qualificationState?.text}</span></li>
                         <li class="study-row"><b>${i18n.t('exmatriculation')}</b><span> ${displayValue(study.exmatriculationType?.text)} ${study.exmatriculationDate}</span></li>
                         <li class="study-row"><b>${i18n.t('curriculum-version')}</b><span> ${displayValue(study.curriculumVersion)}</span></li>
-
+                        </br>
+                        </br>
                         <!--<li><b>coUrl:</b> <a href="${study.coUrl}">${study.coUrl}</a></li>
                         <li><b>id:</b> ${study.id}</li>
                         <li><b>exmatriculationSemester</b> ${study.exmatriculationSemester}</li>
