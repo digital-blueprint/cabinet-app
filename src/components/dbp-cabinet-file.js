@@ -1095,8 +1095,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const pdfViewer = this.documentPdfViewerRef.value;
         // const pdfViewer = this._('#document-pdf-viewer');
 
-        // Load the PDF in the PDF viewer
-        await pdfViewer.showPDF(this.documentFile);
+        // Load the PDF in the PDF viewer with the double reloading workaround,
+        // because the page wasn't always shown
+        await pdfViewer.showPDF(this.documentFile, {}, true);
     }
 
     update(changedProperties) {

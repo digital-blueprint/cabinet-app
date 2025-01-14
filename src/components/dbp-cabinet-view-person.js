@@ -197,8 +197,9 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
 
         const pdfViewer = this._('#document-add-pdf-viewer');
 
-        // Load the PDF in the PDF viewer
-        await pdfViewer.showPDF(this.documentFile);
+        // Load the PDF in the PDF viewer with the double reloading workaround,
+        // because the page wasn't always shown
+        await pdfViewer.showPDF(this.documentFile, {}, true);
 
         // Workaround to trigger a resize after the PDF was loaded, so the PDF is shown correctly
         pdfViewer._onWindowResize();
