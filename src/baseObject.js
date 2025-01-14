@@ -64,7 +64,7 @@ export const getCommonStyles = () => css`
         gap: 10px;
     }
     .hit-content-item1 {
-        grid-row: 1 / 2;
+        grid-row: 1 / 3;
         color:var(--dbp-override-content);
         font-weight: bold;
         font-size:24px;
