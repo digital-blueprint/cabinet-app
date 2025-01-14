@@ -39,6 +39,9 @@ export class TypesenseService {
                 return null;
             }
 
+            console.log('fetchFileDocumentByBlobId error', error);
+            console.log('fetchFileDocumentByBlobId error.name', error.name);
+
             // We escalate other errors
             console.error('Error fetching file document:', error);
             throw error;
