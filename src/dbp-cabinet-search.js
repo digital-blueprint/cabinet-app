@@ -340,6 +340,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 /* override toolkit select style */
                 background-size: 16px;
                 background-position: right .5em center;
+                display: none;
             }
 
             .sort-widget .ais-SortBy-select option {
@@ -366,7 +367,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 flex: 0.5 auto 0%;
                 background-color: var(--dbp-background);
                 border: var(--dbp-border);
-                display: flex;
+                /*display:flex is none for now*/
+                display: none;
                 justify-content: center;
                 align-items: center;
             }
@@ -430,6 +432,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             .dropdown-title{
                 padding: 5px;
                 align-items: center;
+                display: none;
             }
 
             .ais-CurrentRefinements-categoryLabel {
