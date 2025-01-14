@@ -102,6 +102,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
                 --dbp-modal-title-padding: 0 0 0 40px;
                 --dbp-modal-title-background: url("${unsafeCSS(getIconSVGURL('user'))}") left center / 28px 28px no-repeat;
                 list-style-type: none;
+                width: var(--dbp-modal-max-width,60vw);
             }
         `;
     }
