@@ -193,7 +193,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                     return;
                 }
-                // esrlint-disable-next-line no-unused-vars
+                // eslint-disable-next-line no-unused-vars
             } catch (error) {
                 this.documentModalNotification('Error', 'Could not load file from Blob!', 'danger');
                 this.state = CabinetFile.States.LOADING_FILE_FAILED;
