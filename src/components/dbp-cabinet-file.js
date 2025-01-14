@@ -176,18 +176,32 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // We had a case that the service was not there, even if it should, we will just try again in 1 second
         if (this.typesenseService) {
-            const item = await this.typesenseService.fetchFileDocumentByBlobId(fileId);
+            try {
+                // Could throw an exception if there was another error than 404
+                const item = await this.typesenseService.fetchFileDocumentByBlobId(fileId);
 
-            // If the document was found, and we were in ADD mode or the item was already updated in Typesense
-            // set the hit data and switch to view mode
-            if (item !== null &&
-                (this.mode === CabinetFile.Modes.ADD ||
-                    this.fileHitData.file.base.modifiedTimestamp < item.file.base.modifiedTimestamp)) {
-                console.log('fetchFileDocumentFromTypesense this.fileHitData', this.fileHitData);
-                console.log('fetchFileDocumentFromTypesense item', item);
+                // If the document was found, and we were in ADD mode or the item was already updated in Typesense
+                // set the hit data and switch to view mode
+                if (item !== null &&
+                    (this.mode === CabinetFile.Modes.ADD ||
+                        this.fileHitData.file.base.modifiedTimestamp < item.file.base.modifiedTimestamp)) {
+                    console.log('fetchFileDocumentFromTypesense this.fileHitData', this.fileHitData);
+                    console.log('fetchFileDocumentFromTypesense item', item);
 
-                this.fileHitData = item;
-                this.mode = CabinetFile.Modes.VIEW;
+                    this.fileHitData = item;
+                    this.mode = CabinetFile.Modes.VIEW;
+
+                    return;
+                }
+                // esrlint-disable-next-line no-unused-vars
+            } catch (error) {
+                this.documentModalNotification('Error', 'Could not load file from Blob!', 'danger');
+                this.state = CabinetFile.States.LOADING_FILE_FAILED;
+
+                // The save button will still be disabled and has a spinner, enabling it again doesn't
+                // make a lot of sense, because because the document was already stored to Blob and
+                // we are in a failed state
+                // TODO: Is there something else we should do here?
                 return;
             }
         }
