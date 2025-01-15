@@ -506,6 +506,41 @@ class CabinetViewElement extends BaseViewElement {
                     text-align: start;
                 }
 
+                .header-button-container{
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding-bottom: 2.2em;
+                }
+
+                .sync-tu-button{
+                    display: flex;
+                    outline: none;
+                    cursor: pointer;
+                    overflow: hidden;
+                    background-color: var(--dbp-override-background);
+                    border: 2px solid var(--dbp-override-content);
+                }
+
+                .sync-tu-button .text-section {
+                    display: flex;
+                    align-items: center;
+                    padding: 10px 24px;
+                    color:var(--dbp-override-content);
+                }
+
+                .sync-tu-button .icon-section {
+                    display: flex;
+                    align-items: center;
+                    padding: 0 24px;
+                    background-color: var(--dbp-override-muted);
+                    font-size: 1em;
+                }
+
+                .sync-tu-button .icon-section img {
+                    width: 20px;
+                    height: 20px;
+                }
 
 
 
@@ -518,6 +553,17 @@ class CabinetViewElement extends BaseViewElement {
             return value === undefined || value === null || value === '' ? '-' : value;
         };
         return html`
+        <div class="header-button-container">
+        <div class="last-sync-info">
+        ${i18n.t('sync-hit')}:&nbsp;${Intl.DateTimeFormat('de').format(new Date())}
+        </div>
+        <div onclick="" class="sync-tu-button">
+            <span class="text-section">TUGO</span>
+            <span class="icon-section">
+                <img src="/assets/icon/link.svg" alt="link Icon" />
+            </span>
+        </div>
+        </div>
             <div class="modal-Gi-header-container">
                 <div class="modal-Gi-header-svg">
                     <svg fill="#000000" width="32px" height="32px" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg">
