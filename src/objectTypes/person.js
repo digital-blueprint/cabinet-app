@@ -519,7 +519,7 @@ class CabinetViewElement extends BaseViewElement {
                     cursor: pointer;
                     overflow: hidden;
                     background-color: var(--dbp-override-background);
-                    border: 2px solid var(--dbp-override-content);
+                    border: 1.1px solid var(--dbp-override-content);
                 }
 
                 .sync-tu-button .text-section {
@@ -535,12 +535,13 @@ class CabinetViewElement extends BaseViewElement {
                     padding: 0 24px;
                     background-color: var(--dbp-override-muted);
                     font-size: 1em;
+                    background-image: url("${unsafeCSS(getIconSVGURL('link'))}");
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: 20px 20px;
                 }
 
-                .sync-tu-button .icon-section img {
-                    width: 20px;
-                    height: 20px;
-                }
+
 
 
 
@@ -559,9 +560,7 @@ class CabinetViewElement extends BaseViewElement {
         </div>
         <div onclick="" class="sync-tu-button">
             <span class="text-section">TUGO</span>
-            <span class="icon-section">
-                <img src="/assets/icon/link.svg" alt="link Icon" />
-            </span>
+            <span class="icon-section"></span>
         </div>
         </div>
             <div class="modal-Gi-header-container">
