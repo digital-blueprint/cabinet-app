@@ -58,7 +58,7 @@ export default class {
             { "groupId": "file", "schemaField": "file.base.mimeType", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
             { "groupId": "file", "schemaField": "file.base.fileSource", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
             { "groupId": "file", "schemaField": "file.base.semester", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
-            { "groupId": "file", "schemaField": "file.base.studyField", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
+            { "groupId": "file", "schemaField": "file.base.studyFieldName", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
             { "groupId": "file", "schemaField": "file.base.isPartOf", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
             { "groupId": "file", "schemaField": "file.base.subjectOf", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
             { "groupId": "file", "schemaField": "file.file-cabinet-admissionNotice.decision", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
