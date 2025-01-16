@@ -3,11 +3,52 @@
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {css, html, render, unsafeCSS} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
 import {panel, refinementList } from 'instantsearch.js/es/widgets/index.js';
 import {connectCurrentRefinements, connectClearRefinements} from 'instantsearch.js/es/connectors';
 import {createDateRefinement} from './dbp-cabinet-date-facet.js';
 import {getIconSVGURL} from '../utils.js';
+import {createInstance} from '../i18n.js';
+
+class FacetLabel extends DBPLitElement {
+    constructor() {
+        super();
+        this._i18n = createInstance();
+        this.lang = this._i18n.language;
+        this.namespace = "";
+        this.value = "";
+    }
+
+    static get properties() {
+        return {
+            ...super.properties,
+            lang: {type: String},
+            namespace: {type: String},
+            value: {type: String},
+        };
+    }
+
+    render() {
+        let text = this._i18n.t(`typesense-schema.${this.namespace}.${this.value}`, this.value);
+        return html`${text}`;
+    }
+
+    update(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+            switch (propName) {
+                case 'lang':
+                    this._i18n.changeLanguage(this.lang);
+                    break;
+            }
+        });
+
+        super.update(changedProperties);
+    }
+}
+
+// FIXME: don't register globally
+customElements.define('dbp-cabinet-facet-label', FacetLabel);
 
 export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -355,9 +396,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                 value="${item.value}"
                                                 checked=${item.isRefined} />
                                         </label>
-                                        <span class="refinement-list-item-name" title="${item.label}">
-                                        ${item.label}
-                                    </span>
+                                        <dbp-cabinet-facet-label subscribe="lang" class="refinement-list-item-name" title="${item.label}" namespace="${schemaField}" value="${item.value}"></dbp-cabinet-facet-label>
                                     </div>
                                     <span class="refinement-list-item-count">(${item.count})</span>
                                 </div>
