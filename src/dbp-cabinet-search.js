@@ -385,6 +385,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 gap: 1em;
                 padding: 0;
                 margin-top: 0;
+                box-sizing: border-box;
             }
 
             .ais-Hits-item {
@@ -401,7 +402,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             .hits-person-footer{
                 display: grid;
                 justify-content: end;
-                gap: 10px;
+                gap: 5px;
                 grid-template-columns: repeat(3, 1fr);
             }
 
@@ -437,6 +438,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .ais-CurrentRefinements-categoryLabel {
                 color: var(--dbp-content);
+            }
+
+            @media (max-width: 1280px) {
+                .ais-Hits-list  {
+                    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+                }
             }
 
         `;
