@@ -519,32 +519,27 @@ class CabinetViewElement extends BaseViewElement {
                     cursor: pointer;
                     overflow: hidden;
                     background-color: var(--dbp-override-background);
-                    border: 1.1px solid var(--dbp-override-content);
+                    border: 1.3px solid var(--dbp-override-content);
                 }
 
                 .sync-tu-button .text-section {
                     display: flex;
                     align-items: center;
-                    padding: 10px 24px;
+                    padding: 5px 20px;
                     color:var(--dbp-override-content);
                 }
 
                 .sync-tu-button .icon-section {
                     display: flex;
                     align-items: center;
-                    padding: 0 24px;
-                    background-color: var(--dbp-override-muted);
+                    padding: 0 20px;
+                    background-color: #AEADAD;
                     font-size: 1em;
                     background-image: url("${unsafeCSS(getIconSVGURL('link'))}");
                     background-repeat: no-repeat;
                     background-position: center;
                     background-size: 20px 20px;
                 }
-
-
-
-
-
         `;
     }
     render() {
@@ -558,9 +553,9 @@ class CabinetViewElement extends BaseViewElement {
         <div class="last-sync-info">
         ${i18n.t('sync-hit')}:&nbsp;${Intl.DateTimeFormat('de').format(new Date())}
         </div>
-        <div onclick="" class="sync-tu-button">
-            <span class="text-section">TUGO</span>
-            <span class="icon-section"></span>
+        <div class="sync-tu-button">
+            <a href="${hit.person.coUrl}" class="text-section">TUGO</a>
+            <a href="${hit.person.coUrl}" class="icon-section"></a>
         </div>
         </div>
             <div class="modal-Gi-header-container">
