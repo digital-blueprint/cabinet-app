@@ -41,11 +41,13 @@ export const getCommonStyles = () => css`
         border-bottom: 1px solid var(--dbp-override-content);
         margin-bottom: calc(7px + 1vh);
     }
+
     .text-container {
         display: flex;
         flex-direction: column;
         color:var(--dbp-override-content);
     }
+
     .icon-container {
         display: flex;
         align-items: right;
@@ -58,26 +60,36 @@ export const getCommonStyles = () => css`
         width: 50px;
         height: 50px;
     }
+
     .ais-doc-Hits-content {
         display: grid;
         grid-template-rows: repeat(3, 1fr);
         gap: 10px;
     }
+
     .hit-content-item1 {
         grid-row: 1 / 3;
         color:var(--dbp-override-content);
         font-weight: bold;
         font-size:24px;
     }
+
     .hit-content-item2 {
         grid-row: 2 / 3;
         color:var(--dbp-override-content);
     }
+
     .hit-content-item3 {
         grid-row: 3 / 4;
         padding-top: 30px;
         color:var(--dbp-override-content);
     }
+
+    @media (max-width: 1280px) and (min-width: 768px) {
+            .icon-container  {
+                background-position-x: right;
+            }
+        }
 `;
 export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
