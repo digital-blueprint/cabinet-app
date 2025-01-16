@@ -1,7 +1,7 @@
 import {css, html} from 'lit';
 import {html as staticHtml} from 'lit/static-html.js';
 import {ref, createRef} from 'lit/directives/ref.js';
-import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from "./dbp-cabinet-lit-element";
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';

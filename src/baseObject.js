@@ -1,5 +1,5 @@
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {css, html, unsafeCSS} from 'lit';
 import {createInstance} from './i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';

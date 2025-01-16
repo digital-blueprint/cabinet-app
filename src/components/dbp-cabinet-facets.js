@@ -1,6 +1,6 @@
 // noinspection CssUnusedSymbol,JSUnresolvedReference
 
-import {ScopedElementsMixin} from '@open-wc/scoped-elements';
+import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {css, html, render, unsafeCSS} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
