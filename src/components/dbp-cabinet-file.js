@@ -726,7 +726,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             #document-modal .doc-title{
                 background-image: url("${unsafeCSS(getIconSVGURL('docs'))}");
                 background-repeat: no-repeat;
-                background-size: 30px 30px;
+                background-size: 24px 24px;
                 background-position: left;
                 padding-left: 2em;
             }
