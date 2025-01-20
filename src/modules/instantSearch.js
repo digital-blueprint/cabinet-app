@@ -29,6 +29,8 @@ export default class {
         return [
             { "filter-group": { "id": "category", "name": "cabinet-search.type-filter-group-title"}},
             { "groupId": "category", "schemaField": "@type", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-person', searchable: false, sortBy: ['alpha:asc']}}, "usePanel": false},
+
+            // Person properties
             { "filter-group": { "id": "person", "name": "cabinet-search.person-filter-group-title"}},
             { "groupId": "person", "schemaField": "person.person", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-person',  showMore: true, showMoreLimit: showMoreLimitValue}}},
             { "groupId": "person", "schemaField": "person.birthDateTimestamp", "schemaFieldType": "datepicker"},
@@ -47,17 +49,21 @@ export default class {
             { "groupId": "person", "schemaField": "person.studyAddress.region", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-student-address-region', showMore: true, showMoreLimit: showMoreLimitValue}}},
             { "groupId": "person", "schemaField": "person.studyAddress.place", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-student-address-place', showMore: true, showMoreLimit: showMoreLimitValue}}},
             { "groupId": "person", "schemaField": "person.studyAddress.country.text", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-person-student-address-country', showMore: true, showMoreLimit: showMoreLimitValue}}},
+
+            // Study field properties
             { "filter-group": { "id": "study", "name": "cabinet-search.study-filter-group-title"}},
             { "groupId": "study", "schemaField": "study.name", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-study-name', showMore: true, showMoreLimit: showMoreLimitValue}}},
             { "groupId": "study", "schemaField": "study.type", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-study-type', showMore: true, showMoreLimit: showMoreLimitValue}}},
             { "groupId": "study", "schemaField": "study.status.text", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchablePlaceholder: 'cabinet-search.search-placeholder-study-status-text', searchable: false,  showMoreLimit: showMoreLimitValue}}},
+
+            // Document properties
             { "filter-group": { "id": "file", "name": "cabinet-search.document-filter-group-title"}},
             { "groupId": "file", "schemaField": "file.base.additionalType.text", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
-            // file.uploadDate ==?
-            // file.recommended.deletionDate == ?
+            { "groupId": "file", "schemaField": "file.base.createdTimestamp", "schemaFieldType": "datepicker"},
+            { "groupId": "file", "schemaField": "file.base.recommendedDeletionTimestamp", "schemaFieldType": "datepicker"},
             { "groupId": "file", "schemaField": "file.base.fileSource", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
-            { "groupId": "file", "schemaField": "file.base.semester", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
             { "groupId": "file", "schemaField": "file.base.studyFieldName", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
+            { "groupId": "file", "schemaField": "file.base.semester", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
             { "groupId": "file", "schemaField": "file.base.isPartOf", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
             { "groupId": "file", "schemaField": "file.base.subjectOf", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
             { "groupId": "file", "schemaField": "file.file-cabinet-admissionNotice.decision", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},

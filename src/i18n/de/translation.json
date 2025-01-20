@@ -12,8 +12,8 @@
         },
         "file.file-cabinet-admissionNotice.decision": {
             "rejected": "Abgelehnt",
-            "refused": "Verweigert",
-            "granted": "Bewilligt"
+            "refused": "Abgewiesen",
+            "granted": "Genehmigt"
         },
         "file.file-cabinet-citizenshipCertificate.nationality": {
             "ALB": "Albanien",
@@ -137,10 +137,12 @@
         "filter-study-type-title": "Abschlussziel",
         "filter-study-status-text-title": "Studienstatus",
         "filter-file-base-additional-type-text-title": "Dokumenttyp",
-        "filter-file-base-file-source-title": "Dateiquelle",
+        "filter-file-base-created-timestamp-title": "Hinzugefügt am",
+        "filter-file-base-recommended-deletion-timestamp-title": "Empfohlene Löschfrist",
+        "filter-file-base-file-source-title": "Digitalisatsquelle",
         "filter-file-base-semester-title": "Semester",
-        "filter-file-base-study-field-name-title": "Studium",
-        "filter-file-base-is-part-of-title": "Zugeordneter Vorgang",
+        "filter-file-base-study-field-name-title": "Studienfach",
+        "filter-file-base-is-part-of-title": "Speicherzweck",
         "filter-file-base-subject-of-title": "Geschäftszahl",
         "filter-file-file-cabinet-admission-notice-decision-title": "Entscheidung",
         "filter-file-file-cabinet-citizenship-certificate-nationality-title": "Nationalität auf Staatsbürgerschaftsnachweis",
