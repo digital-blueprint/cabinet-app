@@ -15,9 +15,6 @@
             "refused": "Verweigert",
             "granted": "Bewilligt"
         },
-        "file.base.mimeType": {
-            "application/pdf": "PDF (.pdf)"
-        },
         "file.file-cabinet-citizenshipCertificate.nationality": {
             "ALB": "Albanien",
             "AND": "Andorra",
@@ -140,7 +137,6 @@
         "filter-study-type-title": "Abschlussziel",
         "filter-study-status-text-title": "Studienstatus",
         "filter-file-base-additional-type-text-title": "Dokumenttyp",
-        "filter-file-base-mime-type-title": "Dateiformat",
         "filter-file-base-file-source-title": "Dateiquelle",
         "filter-file-base-semester-title": "Semester",
         "filter-file-base-study-field-name-title": "Studium",

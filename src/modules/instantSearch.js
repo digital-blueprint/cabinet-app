@@ -55,7 +55,6 @@ export default class {
             { "groupId": "file", "schemaField": "file.base.additionalType.text", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
             // file.uploadDate ==?
             // file.recommended.deletionDate == ?
-            { "groupId": "file", "schemaField": "file.base.mimeType", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
             { "groupId": "file", "schemaField": "file.base.fileSource", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
             { "groupId": "file", "schemaField": "file.base.semester", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
             { "groupId": "file", "schemaField": "file.base.studyFieldName", "schemaFieldType": "checkbox", "facetOptions": { facet: { searchable: false}}},
