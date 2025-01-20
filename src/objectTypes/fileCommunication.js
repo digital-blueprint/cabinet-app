@@ -69,6 +69,7 @@ class CabinetHitElement extends BaseHitElement {
     render() {
         console.log('data from Communication: ', this.data);
         const lastModified = new Date(this.data.file.base.modifiedTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
+        const dateCreated = new Date(this.data.file.base.createdTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
         const i18n = this._i18n;
         let hit = /** @type {PersonHit} */(this.data);
         const issueDate = this.data.file['file-cabinet-communication'].dateCreated;
@@ -89,7 +90,7 @@ class CabinetHitElement extends BaseHitElement {
                 <div class="hit-content-item2"></div>
                 <div class="hit-content-item3">
                 ${i18n.t('document-issue-date')}: ${formattedDate}<br />
-                ${i18n.t('Added')}: <br />
+                ${i18n.t('Added')}: ${dateCreated}<br />
                 ${i18n.t('last-modified')}: ${lastModified}<br />
                 </div>
                 </main>
