@@ -172,7 +172,10 @@
     },
     "cabinet-file": {
         "upload-button-label": "Dokumente auswählen",
-        "file-picker-context": "Dokument zum Hochladen auswählen"
+        "file-picker-context": "Dokument zum Hochladen auswählen",
+        "at-time": " um",
+        "notification-title-set-for-deletion": "Zur Löschung vorgemerkt.",
+        "notification-body-set-for-deletion": "Das Dokument wurde erfolgreich zur Löschung vorgemerkt. Die endgültige Löschung des Dokumentes erfolgt automatisch am {{deleteTime}}"
     },
     "error-login-message": "Sie müssen angemeldet sein um diese Funktion nutzen zu können!",
     "focus-button-name": "Eingrenzen",

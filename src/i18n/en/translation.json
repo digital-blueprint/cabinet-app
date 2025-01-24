@@ -174,7 +174,10 @@
     },
     "cabinet-file": {
         "upload-button-label": "Select documents",
-        "file-picker-context": "select document for uploading"
+        "file-picker-context": "select document for uploading",
+        "at-time": " at",
+        "notification-title-set-for-deletion": "Set for deletion",
+        "notification-body-set-for-deletion": "The document was successfully set for deletion. The final deletion of the document takes place automatically on {{deleteTime}}"
     },
     "error-login-message": "You need to be logged in to use this function!",
     "focus-button-name": "Focus",

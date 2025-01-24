@@ -544,6 +544,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @returns {Promise<void>}
      */
     async handleFileDeletion(undelete = false) {
+        const i18n = this._i18n;
         const fileId = this.fileHitData.file.base.fileId;
         console.log('deleteFile fileId', fileId);
 
@@ -586,7 +587,21 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         } else {
             // Check if the document was marked as deleted in the response
             if (data.deleteAt !== null) {
-                this.documentModalNotification('Document deleted', 'Document was successfully deleted!', 'success');
+                // 31.01.2025, 09:52:54 MEZ
+                const deleteTime = new Date(data.deleteAt).toLocaleString('de-DE',{
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    // timeZoneName: 'short',
+                    hour12: false
+                }).replace(',', i18n.t('cabinet-file.at-time'));
+                this.documentModalNotification(
+                    i18n.t('cabinet-file.notification-title-set-for-deletion'),
+                    i18n.t('cabinet-file.notification-body-set-for-deletion', { deleteTime: deleteTime}),
+                    'success');
                 success = true;
             } else {
                 this.documentModalNotification('Error', 'Document was not marked as deleted!', 'danger');
