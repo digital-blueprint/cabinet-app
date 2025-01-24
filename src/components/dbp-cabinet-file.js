@@ -473,6 +473,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async openViewDialogWithFileHit(hit) {
+        const i18n = this._i18n;
         this.initializeState();
         this.mode = CabinetFile.Modes.VIEW;
 
@@ -513,7 +514,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 minute: '2-digit',
                 second: '2-digit',
                 hour12: false
-            });
+            }).replace(',', i18n.t('cabinet-file.at-time'));
         } else {
             this.deleteAtDateTime = '';
         }
