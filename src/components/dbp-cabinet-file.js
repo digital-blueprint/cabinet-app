@@ -75,6 +75,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.dataWasChanged = false;
         this.documentStatus = 'success';
         this.documentStatusDescription = '';
+        this.deleteAtDateTime = '';
         this.allowStateReset = true;
         this.state = CabinetFile.States.NONE;
     }
@@ -123,6 +124,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             objectType: { type: String, attribute: false },
             additionalType: { type: String, attribute: false },
             documentStatus: { type: String, attribute: false },
+            deleteAtDateTime: { type: String, attribute: false },
             state: { type: String, attribute: false },
             mode: { type: String },
         };
@@ -500,6 +502,22 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.person = hit.person;
         this.objectType = hit.objectType;
 
+        // Update deleteAtDateTime based on the fresh hit data
+        const deleteAtTimestamp = hit?.file?.base?.deleteAtTimestamp;
+        if (deleteAtTimestamp) {
+            this.deleteAtDateTime = new Date(deleteAtTimestamp * 1000).toLocaleString('de-DE', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+        } else {
+            this.deleteAtDateTime = '';
+        }
+
         // Wait until hit data is set and rendering is complete
         await this.updateComplete;
 
@@ -580,6 +598,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             // Check if the document was marked as undeleted in the response
             if (data.deleteAt === null) {
                 this.documentModalNotification('Document undeleted', 'Document was successfully undeleted!', 'success');
+                this.deleteAtDateTime = '';
                 success = true;
             } else {
                 this.documentModalNotification('Error', 'Document was not marked as undeleted!', 'danger');
@@ -588,7 +607,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             // Check if the document was marked as deleted in the response
             if (data.deleteAt !== null) {
                 // 31.01.2025, 09:52:54 MEZ
-                const deleteTime = new Date(data.deleteAt).toLocaleString('de-DE',{
+                this.deleteAtDateTime = new Date(data.deleteAt).toLocaleString('de-DE',{
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit',
@@ -600,7 +619,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }).replace(',', i18n.t('cabinet-file.at-time'));
                 this.documentModalNotification(
                     i18n.t('cabinet-file.notification-title-set-for-deletion'),
-                    i18n.t('cabinet-file.notification-body-set-for-deletion', { deleteTime: deleteTime}),
+                    i18n.t('cabinet-file.notification-body-set-for-deletion', { deleteTime: this.deleteAtDateTime}),
                     'success');
                 success = true;
             } else {
@@ -870,7 +889,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </div>
                     <div class="status ${classMap({hidden: this.mode === CabinetFile.Modes.ADD})}">
                         <div class="status-badge ${this.documentStatus}">
-                            <div class="status-description">${this.documentStatusDescription}</div>
+                            <div class="status-description">
+                                ${this.documentStatusDescription}
+                                <div class="deletion-at-time">
+                                    ${this.deleteAtDateTime}
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="pdf-preview">
