@@ -1,6 +1,7 @@
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {css, html, unsafeCSS} from 'lit';
+import {DbpStringElement, DbpDateElement, DbpDateTimeElement, DbpEnumElement, DbpCheckboxElement} from '@dbp-toolkit/form-elements';
 import {createInstance} from './i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './objectTypes/formElements';
@@ -114,6 +115,11 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
 
     static get scopedElements() {
         return {
+            'dbp-form-string-element': DbpStringElement,
+            'dbp-form-date-element': DbpDateElement,
+            'dbp-form-datetime-element': DbpDateTimeElement,
+            'dbp-form-enum-element': DbpEnumElement,
+            'dbp-form-checkbox-element': DbpCheckboxElement,
         };
     }
 
