@@ -230,6 +230,12 @@ class CabinetHitElement extends BaseHitElement {
         return css`
             ${super.styles}
 
+            :host {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+
             h2 {
                 color: #222120;
             }
@@ -250,10 +256,12 @@ class CabinetHitElement extends BaseHitElement {
             }
 
             .ais-Hits-content {
-                gap: 10px;
+                gap: 20px;
                 display: flex;
                 flex-direction: column;
                 word-break: normal;
+                flex-grow: 1;
+                justify-content: space-between;
             }
 
             .hit-person-content-item1{
@@ -266,13 +274,11 @@ class CabinetHitElement extends BaseHitElement {
             .hit-person-content-item2{
                 align-self: start;
                 color:var(--dbp-override-content);
-                padding-top: 4em;
             }
 
             .hit-person-content-item3{
                 align-self: start;
                 color:var(--dbp-override-content);
-                padding-top:6em;
                 margin-bottom:0.5em;
             }
 
@@ -317,7 +323,7 @@ class CabinetHitElement extends BaseHitElement {
                     ${renderFieldWithHighlight(hit, 'person.givenName')}<br />
                     <!-- birthDate: ${hit.person.birthDate}-->
                     ${renderFieldWithHighlight(hit, 'person.birthDate')}
-                </div><br />
+                </div>
                 <div class="hit-person-content-item2">
                 ${hit.person.studies && hit.person.studies.length > 0
                     ? hit.person.studies.map(study => html`${study.name} (${study.status.text})<br />`)
