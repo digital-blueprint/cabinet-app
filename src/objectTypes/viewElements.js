@@ -9,7 +9,7 @@ export const stringElement = (label, value = "") => {
     return html`
         <fieldset>
             <label>${label}</label>
-            ${value}
+            <div style="white-space: pre-line">${value}</div>
         </fieldset>
     `;
 };
