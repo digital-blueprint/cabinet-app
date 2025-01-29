@@ -9,6 +9,8 @@ import * as viewElements from './objectTypes/viewElements';
 import {classMap} from 'lit/directives/class-map.js';
 import {getSelectorFixCSS} from './styles.js';
 import {getIconSVGURL} from './utils.js';
+import {gatherFormDataFromElement, validateRequiredFields} from '@dbp-toolkit/form-elements/src/utils.js';
+import {createRef, ref} from 'lit/directives/ref.js';
 
 export class BaseObject {
     name = 'baseObject';
@@ -103,6 +105,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         this.entryPointUrl = '';
         this.auth = {};
         this.saveButtonEnabled = true;
+        this.studyFieldRef = createRef();
+        this.semesterRef = createRef();
     }
 
     enableSaveButton() {
@@ -121,6 +125,16 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             'dbp-form-enum-element': DbpEnumElement,
             'dbp-form-checkbox-element': DbpCheckboxElement,
         };
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+
+        this.updateComplete.then(() => {
+            // Set the items for the enum components
+            this.studyFieldRef.value.setItems(this.getStudyFields());
+            this.semesterRef.value.setItems(this.getSemesters());
+        });
     }
 
     getSemesters = () => {
@@ -172,11 +186,40 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         const additionalType = this.additionalType || baseData.additionalType?.key || '';
 
         return html`
-            ${formElements.stringElement('subjectOf', 'Subject of', baseData.subjectOf || '')}
-            ${formElements.enumElement('studyField', 'Study field', baseData.studyField || '', this.getStudyFields(), true)}
-            ${formElements.enumElement('semester', 'Semester', defaultSemester, this.getSemesters(), true)}
-            ${formElements.hiddenElement('additionalType', additionalType)}
-            ${formElements.stringElement('comment', 'Comment', baseData.comment || '', false, 5)}
+            <dbp-form-string-element
+                subscribe="lang"
+                name="subjectOf"
+                label="Subject of"
+                .value=${baseData.subjectOf || ''}>
+            </dbp-form-string-element>
+
+            <dbp-form-enum-element
+                ${ref(this.studyFieldRef)}
+                subscribe="lang"
+                name="studyField"
+                label="Study field"
+                .value=${baseData.studyField || ''}
+                required>
+            </dbp-form-enum-element>
+
+            <dbp-form-enum-element
+                ${ref(this.semesterRef)}
+                subscribe="lang"
+                name="semester"
+                label="Semester"
+                .value=${defaultSemester}
+                required>
+            </dbp-form-enum-element>
+
+            <dbp-form-string-element
+                subscribe="lang"
+                name="comment"
+                label="Comment"
+                rows="5"
+                .value=${baseData.comment || ''}>
+            </dbp-form-string-element>
+
+            <input type="hidden" name="additionalType" value="${additionalType}">
             ${this.getButtonRowHtml()}
         `;
     };
@@ -199,21 +242,15 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         }
     }
 
-    validateForm() {
-        // Select all input elements with the 'required' attribute
+    async validateForm() {
         const formElement = this.shadowRoot.querySelector('form');
-        const requiredFields = formElement.querySelectorAll('input[required], select[required], textarea[required]');
 
-        // Loop through each required field
-        for (let field of requiredFields) {
-            // Check if the field is empty
-            if (!field.value.trim()) {
-                // If empty, alert the user and return false to prevent form submission
-                // TODO: We will need to put those results into a div or something instead of using an alert for each single of them!
-                alert(`Please fill out the ${field.name || 'required'} field.`);
+        // Validate the form before proceeding
+        const validationResult = await validateRequiredFields(formElement);
 
-                return false;
-            }
+        console.log('validateAndSendSubmission validationResult', validationResult);
+        if (!validationResult) {
+            return false;
         }
 
         // If all required fields are filled, return true to allow form submission
@@ -231,7 +268,13 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         this.saveButtonEnabled = false;
         const formElement = this.shadowRoot.querySelector('form');
         const data = {
-            'formData': this.gatherFormDataFromElement(formElement),
+            formData: {
+                "about": {
+                    "@type": "Person",
+                    "persId": this.person.identNrObfuscated,
+                },
+                ...gatherFormDataFromElement(formElement),
+            },
         };
         console.log('data', data);
 
@@ -240,57 +283,6 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         const customEvent = new CustomEvent("DbpCabinetDocumentAddSave",
             {"detail": data, bubbles: true, composed: true});
         this.dispatchEvent(customEvent);
-    }
-
-    setNestedValue(obj, path, value) {
-        const keys = path.replace(/\]/g, '').split('[');
-        let current = obj;
-
-        for (let i = 0; i < keys.length; i++) {
-            const key = keys[i];
-            if (i === keys.length - 1) {
-                // Last key, set the value
-                current[key] = value;
-            } else {
-                // Not the last key, create nested object if it doesn't exist
-                if (!current[key] || typeof current[key] !== 'object') {
-                    current[key] = {};
-                }
-                current = current[key];
-            }
-        }
-    }
-
-    gatherFormDataFromElement(formElement) {
-        const formData = new FormData(formElement);
-
-        // Check if any elements have a "data-value" attribute, because we want to use that value instead of the form value
-        const elementsWithDataValue = formElement.querySelectorAll('[data-value]');
-        let dataValues = {};
-        elementsWithDataValue.forEach(element => {
-            const name = element.getAttribute('name') || element.id;
-            dataValues[name] = element.getAttribute('data-value');
-        });
-
-        console.log('this.data', this.data);
-
-        const data = {
-            "about": {
-                "@type": "Person",
-                "persId": this.person.identNrObfuscated,
-            },
-        };
-
-        for (let [key, value] of formData.entries()) {
-            // Check if we have a "data-value" attribute for this element
-            if (dataValues[key]) {
-                value = dataValues[key];
-            }
-
-            this.setNestedValue(data, key, value);
-        }
-
-        return data;
     }
 
     static get properties() {
