@@ -251,11 +251,11 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         return true;
     }
 
-    storeBlobItem(event) {
+    async storeBlobItem(event) {
         event.preventDefault();
 
         // Validate the form before proceeding
-        if (!this.validateForm()) {
+        if (!await this.validateForm()) {
             return;
         }
 
