@@ -48,7 +48,7 @@ export const getCommonStyles = () => css`
     .text-container {
         display: flex;
         flex-direction: column;
-        color:var(--dbp-override-content);
+        color: var(--dbp-override-content);
     }
 
     .icon-container {
@@ -57,9 +57,9 @@ export const getCommonStyles = () => css`
         justify-content: right;
         background-image: url("${unsafeCSS(getIconSVGURL('docs'))}");
         background-repeat: no-repeat;
-        background-size:30px;
-        background-position-x: right 2px;
-        background-position-y:center;
+        background-size: 30px;
+        background-position-x: right;
+        background-position-y: center;
         width: 50px;
         height: 50px;
     }
@@ -72,27 +72,21 @@ export const getCommonStyles = () => css`
 
     .hit-content-item1 {
         grid-row: 1 / 3;
-        color:var(--dbp-override-content);
+        color: var(--dbp-override-content);
         font-weight: bold;
-        font-size:24px;
+        font-size: 24px;
     }
 
     .hit-content-item2 {
         grid-row: 2 / 3;
-        color:var(--dbp-override-content);
+        color: var(--dbp-override-content);
     }
 
     .hit-content-item3 {
         grid-row: 3 / 4;
         padding-top: 30px;
-        color:var(--dbp-override-content);
+        color: var(--dbp-override-content);
     }
-
-    @media (max-width: 1280px) and (min-width: 768px) {
-            .icon-container  {
-                background-position-x: right;
-            }
-        }
 `;
 export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
