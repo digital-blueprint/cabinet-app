@@ -8,7 +8,15 @@
             "cabinet-bucket": "Manuell hochgeladen"
         },
         "file.base.isPartOf": {
-            "CostReimbursement": "Kostenerstattung"
+            "generalApplications-archive-3": "Allgemeine Anträge (Archivierung nach 3 Jahren)",
+            "vacation-archive-3": "Beurlaubung (Archivierung nach 3 Jahren)",
+            "other-archive-3": "Sonstige Dokumente (Archivierung nach 3 Jahren)",
+            "subordination-delete-3": "Unterstellung (Löschung nach 3 Jahren)",
+            "other-delete-3": "Sonstige Dokumente (Löschung nach 3 Jahren)",
+            "financial-archive-7": "Finanzielles (Archivierung nach 7 Jahren)",
+            "communication-archive-10": "Kommunikation (Archivierung nach 10 Jahren)",
+            "admission-archive-80": "Ansuchen um Zulassung (Archivierung nach 80 Jahren)",
+            "study-archive-80": "Student-Life-Cycle-Dokumente (Archivierung nach 80 Jahren)"
         },
         "file.file-cabinet-admissionNotice.decision": {
             "rejected": "Abgelehnt",
