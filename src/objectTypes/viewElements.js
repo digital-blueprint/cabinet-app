@@ -64,6 +64,9 @@ export const enumElement = (label, value = "", items = {}) => {
     return html`
         <fieldset>
             <label>${label}</label>
-            ${items[value]}
+            ${Array.isArray(value)
+                ? html`<ul>${value.map(v => html`<li>${items[v] || v}</li>`)}</ul>`
+                : items[value] || value}
+        </fieldset>
     `;
 };

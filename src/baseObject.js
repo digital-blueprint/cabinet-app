@@ -513,7 +513,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
             ${viewElements.stringElement('Subject of', baseData.subjectOf || '')}
             ${viewElements.stringElement('Study field', this.getStudyFieldNameForKey(baseData.studyField))}
             ${viewElements.stringElement('Semester', baseData.semester || '')}
-            ${viewElements.enumElement('Speicherzweck-Löschfristen', baseData.isPartOf?.key || '', BaseFormElement.getIsPartOfItems())}
+            ${viewElements.enumElement('Speicherzweck-Löschfristen', baseData.isPartOf, BaseFormElement.getIsPartOfItems())}
             ${viewElements.stringElement('Comment', baseData.comment || '')}
             ${baseData.deleteAtTimestamp ? '' :
                 viewElements.dateElement('Recommended deletion', baseData.recommendedDeletionTimestamp === 0 ? '' : new Date(baseData.recommendedDeletionTimestamp * 1000))}
