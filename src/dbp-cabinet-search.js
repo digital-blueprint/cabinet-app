@@ -382,7 +382,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             .ais-Hits-list {
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-                gap: 1em;
                 padding: 0;
                 margin-top: 0;
                 box-sizing: border-box;
