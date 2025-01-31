@@ -49,7 +49,15 @@ class CabinetFormElement extends BaseFormElement {
                 ${formElements.stringElement('agent[givenName]', 'Given name', agent.givenName || '')}
                 ${formElements.stringElement('agent[familyName]', 'Family name', agent.familyName || '')}
                 ${formElements.stringElement('abstract', 'Abstract', data.abstract || '', false, 10)}
-                ${formElements.dateTimeElement('dateCreated', 'Date created', data.dateCreated || '', true)}
+
+                <dbp-form-datetime-element
+                    subscribe="lang"
+                    name="dateCreated"
+                    label="Date created"
+                    value=${data.dateCreated || ''}
+                    required>
+                </dbp-form-datetime-element>
+
                 ${this.getCommonFormElements()}
             </form>
         `;
