@@ -67,7 +67,6 @@ export const getCommonStyles = () => css`
     .ais-doc-Hits-content {
         display: grid;
         grid-template-rows: repeat(3, 1fr);
-        gap: 10px;
     }
 
     .hit-content-item1 {
