@@ -14,7 +14,6 @@ import {BaseFormElement} from '../baseObject.js';
 import {send} from '@dbp-toolkit/common/notification';
 import {getSelectorFixCSS} from '../styles.js';
 import {getIconSVGURL} from '../utils.js';
-
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static Modes = {
         VIEW: 'view',
@@ -810,12 +809,18 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             #document-modal .pdf-preview { grid-area: 2 / 1 / 3 / 2; }
 
-            #document-modal .form { grid-area: 2 / 2 / 3 / 3; }
+            #document-modal .form {
+                grid-area: 2 / 2 / 3 / 3;
+                padding-left:10px;
+            }
+
+            #document-modal .form h2{
+                font-weight: bold;
+            }
 
             #document-modal .fileButtons {
                 display: flex;
                 justify-content: right;
-                margin-bottom: 10px;
                 gap: 5px;
             }
         `;
@@ -866,6 +871,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const id = hit.id;
         const headline = this.mode === CabinetFile.Modes.ADD ? 'Upload Document' : hit?.file?.base.additionalType.text;
 
+        const i18n = this._i18n;
         // TODO: Check if PDF was uploaded
 
         return html`
@@ -910,8 +916,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 Replace Document
                                 ${this.getMiniSpinnerHtml(id)}
                             </button>
-                            <button class="button" @click="${this.downloadFile}" ?disabled="${!file}">
-                                Download Document
+                            <button no-spinner-on-click class="button" @click="${this.downloadFile}" ?disabled="${!file}">
+                                <dbp-icon  title='${i18n.t('download-document')}'
+                                aria-label='${i18n.t('download-document')}'
+                                name='download'>
+                                </dbp-icon>
+                                ${i18n.t('download-document')}
                                 ${this.getMiniSpinnerHtml(this.state !== CabinetFile.States.LOADING_FILE)}
                             </button>
                             <button @click="${this.editFile}" ?disabled="${!file}" class="${classMap({
