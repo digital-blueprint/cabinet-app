@@ -1,7 +1,13 @@
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {css, html, unsafeCSS} from 'lit';
-import {DbpStringElement, DbpDateElement, DbpDateTimeElement, DbpEnumElement, DbpCheckboxElement} from '@dbp-toolkit/form-elements';
+import {
+    DbpCheckboxElement,
+    DbpDateElement,
+    DbpDateTimeElement,
+    DbpEnumElement,
+    DbpStringElement
+} from '@dbp-toolkit/form-elements';
 import {createInstance} from './i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './objectTypes/formElements';
@@ -100,6 +106,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         this.saveButtonEnabled = true;
         this.studyFieldRef = createRef();
         this.semesterRef = createRef();
+        this.isPartOfRef = createRef();
     }
 
     enableSaveButton() {
@@ -127,6 +134,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             // Set the items for the enum components
             this.studyFieldRef.value.setItems(this.getStudyFields());
             this.semesterRef.value.setItems(this.getSemesters());
+            this.isPartOfRef.value.setItems(BaseFormElement.getIsPartOfItems());
         });
     }
 
@@ -204,6 +212,16 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
                 required>
             </dbp-form-enum-element>
 
+            <dbp-form-enum-element
+                ${ref(this.isPartOfRef)}
+                subscribe="lang"
+                name="isPartOf"
+                label="Speicherzweck-Löschfristen"
+                .value=${baseData.isPartOf || ''}
+                multiple
+                required>
+            </dbp-form-enum-element>
+
             <dbp-form-string-element
                 subscribe="lang"
                 name="comment"
@@ -269,10 +287,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
                 ...gatherFormDataFromElement(formElement),
             },
         };
-        console.log('data', data);
 
-        // alert('TODO: Store item!\n' + JSON.stringify(data));
-
+        console.log('storeBlobItem data', data);
         const customEvent = new CustomEvent("DbpCabinetDocumentAddSave",
             {"detail": data, bubbles: true, composed: true});
         this.dispatchEvent(customEvent);
@@ -363,6 +379,20 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         });
 
         super.update(changedProperties);
+    }
+
+    static getIsPartOfItems() {
+        return {
+            'financial-archive-7': 'Finanzielles (Archivierung nach 7 Jahren)',
+            'vacation-archive-3': 'Beurlaubung (Archivierung nach 3 Jahren)',
+            'subordination-delete-3': 'Unterstellung (Löschung nach 3 Jahren)',
+            'admission-archive-80': 'Ansuchen um Zulassung (Archivierung nach 80 Jahren)',
+            'generalApplications-archive-3': 'Allgemeine Anträge (Archivierung nach 3 Jahren)',
+            'communication-archive-10': 'Kommunikation (Archivierung nach 10 Jahren)',
+            'other-delete-3': 'Sonstige Dokumente (Löschung nach 3 Jahren)',
+            'other-archive-3': 'Sonstige Dokumente (Archivierung nach 3 Jahren)',
+            'study-archive-80': 'Student-Life-Cycle-Dokumente (Archivierung nach 80 Jahren)'
+        };
     }
 }
 
@@ -483,6 +513,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
             ${viewElements.stringElement('Subject of', baseData.subjectOf || '')}
             ${viewElements.stringElement('Study field', this.getStudyFieldNameForKey(baseData.studyField))}
             ${viewElements.stringElement('Semester', baseData.semester || '')}
+            ${viewElements.enumElement('Speicherzweck-Löschfristen', baseData.isPartOf?.key || '', BaseFormElement.getIsPartOfItems())}
             ${viewElements.stringElement('Comment', baseData.comment || '')}
             ${baseData.deleteAtTimestamp ? '' :
                 viewElements.dateElement('Recommended deletion', baseData.recommendedDeletionTimestamp === 0 ? '' : new Date(baseData.recommendedDeletionTimestamp * 1000))}
