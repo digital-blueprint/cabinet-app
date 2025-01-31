@@ -538,13 +538,15 @@ class CabinetViewElement extends BaseViewElement {
         ${i18n.t('sync-hit')}:&nbsp;${Intl.DateTimeFormat('de').format(new Date())}
         </div>
         <div class="sync-tu-button">
-            <button no-spinner-on-click class="button" href="${hit.person.coUrl}">
+        <a href="${hit.person.coUrl}">
+            <button no-spinner-on-click class="button">
                 <dbp-icon  title='${i18n.t('TUGO')}'
                 aria-label='${i18n.t('TUGO')}'
                 name='link'>
                 </dbp-icon>
                 TUGO
             </button>
+        </a>
         </div>
         </div>
             <div class="modal-Gi-header-container">
