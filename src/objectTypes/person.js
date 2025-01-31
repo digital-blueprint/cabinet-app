@@ -520,31 +520,9 @@ class CabinetViewElement extends BaseViewElement {
                 }
 
                 .sync-tu-button{
-                    display: flex;
-                    outline: none;
                     cursor: pointer;
                     overflow: hidden;
                     background-color: var(--dbp-override-background);
-                    border: 1.3px solid var(--dbp-override-content);
-                }
-
-                .sync-tu-button .text-section {
-                    display: flex;
-                    align-items: center;
-                    padding: 5px 20px;
-                    color:var(--dbp-override-content);
-                }
-
-                .sync-tu-button .icon-section {
-                    display: flex;
-                    align-items: center;
-                    padding: 0 20px;
-                    background-color: #AEADAD;
-                    font-size: 1em;
-                    background-image: url("${unsafeCSS(getIconSVGURL('link'))}");
-                    background-repeat: no-repeat;
-                    background-position: center;
-                    background-size: 20px 20px;
                 }
         `;
     }
@@ -560,8 +538,13 @@ class CabinetViewElement extends BaseViewElement {
         ${i18n.t('sync-hit')}:&nbsp;${Intl.DateTimeFormat('de').format(new Date())}
         </div>
         <div class="sync-tu-button">
-            <a href="${hit.person.coUrl}" class="text-section">TUGO</a>
-            <a href="${hit.person.coUrl}" class="icon-section"></a>
+            <button no-spinner-on-click class="button" href="${hit.person.coUrl}">
+                <dbp-icon  title='${i18n.t('TUGO')}'
+                aria-label='${i18n.t('TUGO')}'
+                name='link'>
+                </dbp-icon>
+                TUGO
+            </button>
         </div>
         </div>
             <div class="modal-Gi-header-container">
