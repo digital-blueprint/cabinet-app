@@ -633,9 +633,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         if (objectType === 'person') {
-            // We need to use staticHtml here, because we want to set the tag name from
-            // a variable and need to set the "data" property from a variable too!
-            return staticHtml`
+            return html`
                 <dbp-cabinet-view-person
                     ${ref(this.documentViewPersonModalRef)}
                     subscribe="lang,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
