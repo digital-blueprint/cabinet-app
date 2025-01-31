@@ -1,5 +1,4 @@
 import {css, html} from 'lit';
-import {html as staticHtml} from 'lit/static-html.js';
 import {ref, createRef} from 'lit/directives/ref.js';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from "./dbp-cabinet-lit-element";
