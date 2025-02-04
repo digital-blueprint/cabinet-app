@@ -539,7 +539,7 @@ class CabinetViewElement extends BaseViewElement {
         </div>
         <div class="sync-tu-button">
         <a href="${hit.person.coUrl}">
-            <button no-spinner-on-click class="button">
+            <button no-spinner-on-click class="button" style="border:none; cursor:pointer;">
                 <dbp-icon  title='${i18n.t('TUGO')}'
                 aria-label='${i18n.t('TUGO')}'
                 name='link'>
