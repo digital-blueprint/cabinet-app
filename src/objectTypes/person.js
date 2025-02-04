@@ -447,12 +447,6 @@ class CabinetViewElement extends BaseViewElement {
                     margin: 0;
                 }
 
-                .address-info{
-                    list-style-type: none;
-                    padding: 0;
-                    margin: 0;
-                }
-
                 .study-info{
                     list-style-type: none;
                     padding: 0;
@@ -477,13 +471,19 @@ class CabinetViewElement extends BaseViewElement {
 
                 .Address-flex-item {
                     display: flex;
-                    align-items: flex-start;
                     gap: 20px;
+                    align-items: flex-start;
                 }
 
-                .Address-flex-item > b {
-                    min-width: 150px;
-                    margin-right: 20px;
+                .address-info{
+                    display:grid;
+                    grid-template-columns: 1fr 1fr 1fr;
+                    list-style-type: none;
+                    padding: 0;
+                }
+
+                .address-info-item {
+                    grid-column:2;
                 }
 
                 .address-info li {
@@ -678,27 +678,27 @@ class CabinetViewElement extends BaseViewElement {
                 <li class="Ci-item"><b>${i18n.t('emailAddressTemporary')}</b><span>${displayValue(hit.person.emailAddressTemporary)}</span></li>
             </ul>
                 </br/>
-                <li class="Address-flex-item"><b>${i18n.t('homeAddress')}</b>
+                <li class="Address-flex-item"><b>${i18n.t('homeAddress')}</li></b>
                     <ul class="address-info">
-                        <li><b></b> ${displayValue(hit.person.homeAddress?.note)}</li>
-                        <li><b></b> ${displayValue(hit.person.homeAddress?.street)}</li>
-                        <li><b></b> ${displayValue(hit.person.homeAddress?.place)}</li>
-                        <li><b></b> ${displayValue(hit.person.homeAddress?.region)}</li>
-                        <li><b></b> ${displayValue(hit.person.homeAddress?.postCode)}</li>
-                        <li><b></b> ${displayValue(hit.person.homeAddress?.country?.text)}</li>
-                        <li><b></b> ${displayValue(hit.person.homeAddress?.telephoneNumber)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.note)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.street)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.place)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.region)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.postCode)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.country?.text)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.telephoneNumber)}</li>
                     </ul>
-                </li>
+
                 </br>
-                <li class="Address-flex-item"><b>${i18n.t('studyAddress')}</b>
+                <li class="Address-flex-item"><b>${i18n.t('studyAddress')} </li></b>
                     <ul class="address-info">
-                        <li><b></b> ${displayValue(hit.person.studyAddress?.note)}</li>
-                        <li><b></b> ${displayValue(hit.person.studyAddress?.street)}</li>
-                        <li><b></b> ${displayValue(hit.person.studyAddress?.place)}</li>
-                        <li><b></b> ${displayValue(hit.person.studyAddress?.region)}</li>
-                        <li><b></b> ${displayValue(hit.person.studyAddress?.postCode)}</li>
-                        <li><b></b> ${displayValue(hit.person.studyAddress?.country?.text)}</li>
-                        <li><b></b> ${displayValue(hit.person.studyAddress?.telephoneNumber)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.note)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.street)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.place)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.region)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.postCode)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.country?.text)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.telephoneNumber)}</li>
                     </ul>
                 </li>
 
