@@ -946,9 +946,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         ${this.getObjectTypeFormPartHtml()}
                     </div>
                 </div>
-                <div slot="footer" class="modal-footer">
-                    Footer
-                </div>
             </dbp-modal>
         `;
     }
