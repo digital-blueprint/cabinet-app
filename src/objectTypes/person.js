@@ -520,9 +520,18 @@ class CabinetViewElement extends BaseViewElement {
                 }
 
                 .sync-tu-button{
-                    cursor: pointer;
                     overflow: hidden;
                     background-color: var(--dbp-override-background);
+                }
+
+                .links{
+                    border-bottom-style: solid;
+                    border-color: var(--dbp-content);
+                    padding: 0px;
+                    transition: background-color 0.15s, color 0.15s;
+                    color: var(--dbp-content);
+                    cursor: pointer;
+                    text-decoration: none;
                 }
         `;
     }
@@ -538,15 +547,13 @@ class CabinetViewElement extends BaseViewElement {
         ${i18n.t('sync-hit')}:&nbsp;${Intl.DateTimeFormat('de').format(new Date())}
         </div>
         <div class="sync-tu-button">
-        <a href="${hit.person.coUrl}">
-            <button no-spinner-on-click class="button" style="border:none; cursor:pointer;">
+            <a href="${hit.person.coUrl}" no-spinner-on-click class="links">
                 <dbp-icon  title='${i18n.t('TUGO')}'
                 aria-label='${i18n.t('TUGO')}'
                 name='link'>
                 </dbp-icon>
                 TUGO
-            </button>
-        </a>
+            </a>
         </div>
         </div>
             <div class="modal-Gi-header-container">
