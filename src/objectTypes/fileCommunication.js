@@ -46,9 +46,27 @@ class CabinetFormElement extends BaseFormElement {
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/communication_example.json
         return html`
             <form>
-                ${formElements.stringElement('agent[givenName]', 'Given name', agent.givenName || '')}
-                ${formElements.stringElement('agent[familyName]', 'Family name', agent.familyName || '')}
-                ${formElements.stringElement('abstract', 'Abstract', data.abstract || '', false, 10)}
+                <dbp-form-string-element
+                    subscribe="lang"
+                    name="agent[givenName]"
+                    label="Given name"
+                    .value=${agent.givenName || ''}>
+                </dbp-form-string-element>
+
+                <dbp-form-string-element
+                    subscribe="lang"
+                    name="agent[familyName]"
+                    label="Family name"
+                    .value=${agent.familyName || ''}>
+                </dbp-form-string-element>
+
+                <dbp-form-string-element
+                    subscribe="lang"
+                    name="abstract"
+                    label="Abstract"
+                    rows="10"
+                    .value=${data.abstract || ''}>
+                </dbp-form-string-element>
 
                 <dbp-form-datetime-element
                     subscribe="lang"
