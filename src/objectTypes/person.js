@@ -300,6 +300,7 @@ class CabinetHitElement extends BaseHitElement {
                 background-size:contain;
                 background-position-x: right;
             }
+
         `;
     }
 
@@ -312,7 +313,7 @@ class CabinetHitElement extends BaseHitElement {
                    ${renderFieldWithHighlight(hit, 'person.studId')} | ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
                 </div>
                 <div class="right-column">
-                    <div class="right-column-icon"></div>
+                    <div class="right-column-icon" aria-label="Person hit box symbol" title="Person hit box symbol"></div>
                 </div>
             </header>
             <main class="ais-Hits-content">
