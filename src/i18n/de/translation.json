@@ -236,5 +236,15 @@
     "last-modified-documents": "Letzte Änderung dokument",
     "default-sort": "Standard",
     "show-deleted-only": "Nur gelöschte anzeigen",
-    "sorting :": "Sortierung :"
+    "sorting :": "Sortierung :",
+    "doc-modal-document-details":"Dokumentinformationen",
+    "doc-modal-document-type":"Dokumenttyp",
+    "doc-modal-document-issue-date":"Datum der Ausstellung",
+    "doc-modal-modified":"Letzte Änderung",
+    "doc-modal-subject-of":"Geschäftszahl",
+    "doc-modal-study-field":"Studienfach",
+    "doc-modal-semester":"Semester",
+    "doc-modal-comment":"Kommentar",
+    "doc-modal-speicherzweck-löschfristen":"Speicherzweck",
+    "doc-modal-recommended-deletion":"Empfohlene Löschfrist"
 }
