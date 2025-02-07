@@ -513,7 +513,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
             ${viewElements.stringElement(this._i18n.t('doc-modal-subject-of'), baseData.subjectOf || '')}
             ${viewElements.stringElement(this._i18n.t('doc-modal-study-field'), this.getStudyFieldNameForKey(baseData.studyField))}
             ${viewElements.stringElement(this._i18n.t('doc-modal-semester'), baseData.semester || '')}
-            ${viewElements.enumElement(this._i18n.t('doc-modal-speicherzweck-löschfristen'), baseData.isPartOf, BaseFormElement.getIsPartOfItems())}
+            ${viewElements.enumElement(this._i18n.t('doc-modal-storage-purpose-deletion'), baseData.isPartOf, BaseFormElement.getIsPartOfItems())}
             ${viewElements.stringElement(this._i18n.t('doc-modal-comment'), baseData.comment || '')}
             ${baseData.deleteAtTimestamp ? '' :
                 viewElements.dateElement(this._i18n.t('doc-modal-recommended-deletion'), baseData.recommendedDeletionTimestamp === 0 ? '' : new Date(baseData.recommendedDeletionTimestamp * 1000))}
