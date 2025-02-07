@@ -544,7 +544,14 @@ class CabinetViewElement extends BaseViewElement {
         return html`
         <div class="header-button-container">
         <div class="last-sync-info">
-        ${i18n.t('sync-hit')}:&nbsp;${Intl.DateTimeFormat('de').format(new Date())}
+        ${i18n.t('sync-hit')}:&nbsp;${Intl.DateTimeFormat('de', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        }).format(new Date())}
         </div>
         <div class="sync-tu-button">
             <a href="${hit.person.coUrl}" no-spinner-on-click class="links">
