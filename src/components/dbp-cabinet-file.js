@@ -927,13 +927,15 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             <button @click="${this.editFile}" ?disabled="${!file}" class="${classMap({
                                 hidden: this.mode !== CabinetFile.Modes.VIEW,
                             })} button is-primary">
-                                Edit
+                                <dbp-icon  title='${i18n.t('edit-document')}' aria-label='${i18n.t('edit-document')}' name='edit-pencil'>
+                                </dbp-icon>
                                 ${this.getMiniSpinnerHtml(this.state !== CabinetFile.States.LOADING_FILE)}
                             </button>
                             <button @click="${this.deleteFile}" ?disabled="${!file}" class="${classMap({
                                 hidden: this.mode === CabinetFile.Modes.ADD || hit.base?.isScheduledForDeletion,
                             })} button is-primary">
-                                Delete
+                                <dbp-icon  title='${i18n.t('delete-document')}' aria-label='${i18n.t('delete-document')}' name='trash'>
+                                </dbp-icon>
                                 ${this.getMiniSpinnerHtml(this.state !== CabinetFile.States.LOADING_FILE)}
                             </button>
                             <button @click="${this.undeleteFile}" ?disabled="${!file}" class="${classMap({
