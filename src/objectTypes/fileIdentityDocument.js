@@ -3,6 +3,8 @@ import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement, getCommonS
 import * as formElements from './formElements.js';
 import * as viewElements from './viewElements.js';
 import { PersonHit } from './person.js';
+import {createRef, ref} from 'lit/directives/ref.js';
+
 export default class extends BaseObject {
     name = 'file-cabinet-identityDocument';
 
@@ -27,6 +29,20 @@ export default class extends BaseObject {
 }
 
 class CabinetFormElement extends BaseFormElement {
+    constructor() {
+        super();
+        this.nationalityRef = createRef();
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+
+        this.updateComplete.then(() => {
+            // Set the items for the enum component
+            this.nationalityRef.value.setItems(formElements.getNationalityItems());
+        });
+    }
+
     static getAdditionalTypes() {
         return {
             'DriversLicence': 'Drivers Licence',
@@ -46,9 +62,31 @@ class CabinetFormElement extends BaseFormElement {
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/identityDocument_example.json
         return html`
             <form>
-                ${formElements.stringElement('identifier', 'Identifier', data.identifier || '', true)}
-                ${formElements.enumElement('nationality', 'Nationality', data.nationality || '', formElements.getNationalityItems(), true)}
-                ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
+                <dbp-form-string-element
+                    subscribe="lang"
+                    name="identifier"
+                    label="Identifier"
+                    .value=${data.identifier || ''}
+                    required>
+                </dbp-form-string-element>
+
+                <dbp-form-enum-element
+                    ${ref(this.nationalityRef)}
+                    subscribe="lang"
+                    name="nationality"
+                    label="Nationality"
+                    .value=${data.nationality || ''}
+                    required>
+                </dbp-form-enum-element>
+
+                <dbp-form-date-element
+                    subscribe="lang"
+                    name="dateCreated"
+                    label="Date created"
+                    .value=${data.dateCreated || ''}
+                    required>
+                </dbp-form-date-element>
+
                 ${this.getCommonFormElements()}
             </form>
         `;
