@@ -46,7 +46,14 @@ class CabinetFormElement extends BaseFormElement {
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/minimalSchema_example.json
         return html`
             <form>
-                ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
+                <dbp-form-date-element
+                    subscribe="lang"
+                    name="dateCreated"
+                    label="Date created"
+                    .value=${data.dateCreated || ''}
+                    required>
+                </dbp-form-date-element>
+
                 ${this.getCommonFormElements()}
             </form>
         `;
