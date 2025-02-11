@@ -131,6 +131,7 @@
         "filter-person-admission-qualification-type-text-title": "Higher education entrance qualification",
         "filter-person-nationalities-text-title": "Citizenship",
         "filter-person-gender-text-title": "Gender",
+        "filter-person-gender-text-item": "male",
         "filter-person-immatriculation-semester-title": "Semester of first matriculaiton",
         "filter-person-home-address-country-text-title": "Home country",
         "filter-person-home-address-region-title": "Home region",
@@ -248,5 +249,7 @@
     "doc-modal-semester":"Semester",
     "doc-modal-comment":"Comment",
     "doc-modal-storage-purpose-deletion":"Purpose of storage",
-    "doc-modal-recommended-deletion":"Recommended deletion"
+    "doc-modal-recommended-deletion":"Recommended deletion",
+    "doc-modal-delete-document":"Delete",
+    "doc-modal-edit-document":"Edit document details"
 }
