@@ -533,6 +533,7 @@ class CabinetViewElement extends BaseViewElement {
                     color: var(--dbp-content);
                     cursor: pointer;
                     text-decoration: none;
+	                border-bottom: var(--dbp-border);
                 }
         `;
     }
@@ -556,11 +557,11 @@ class CabinetViewElement extends BaseViewElement {
         </div>
         <div class="sync-tu-button">
             <a href="${hit.person.coUrl}" no-spinner-on-click class="links">
-                <dbp-icon  title='${i18n.t('TUGO')}'
-                aria-label='${i18n.t('TUGO')}'
+                <dbp-icon  title='${i18n.t('Edit-student-data')}'
+                aria-label='${i18n.t('Edit-student-data')}'
                 name='link'>
                 </dbp-icon>
-                TUGO
+                ${i18n.t('Edit-student-data')}
             </a>
         </div>
         </div>

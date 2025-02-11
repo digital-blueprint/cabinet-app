@@ -251,5 +251,6 @@
     "doc-modal-storage-purpose-deletion":"Purpose of storage",
     "doc-modal-recommended-deletion":"Recommended deletion",
     "doc-modal-delete-document":"Delete",
-    "doc-modal-edit-document":"Edit document details"
+    "doc-modal-edit-document":"Edit document details",
+    "Edit-student-data":"Edit student data"
 }

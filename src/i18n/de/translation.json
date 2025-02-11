@@ -248,5 +248,6 @@
     "doc-modal-storage-purpose-deletion":"Speicherzweck",
     "doc-modal-recommended-deletion":"Empfohlene Löschfrist",
     "doc-modal-delete-document":"Löschen",
-    "doc-modal-edit-document":"Dokumentinformationen bearbeiten"
+    "doc-modal-edit-document":"Dokumentinformationen bearbeiten",
+    "Edit-student-data":"Daten bearbeiten"
 }
