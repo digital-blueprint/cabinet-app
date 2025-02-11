@@ -349,7 +349,6 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         return html`
             <form>
                 <h2>${data.objectType}</h2>
-                ${formElements.stringElement('objectType', data.objectType)}
                 ${this.getButtonRowHtml()}
             </form>
         `;
