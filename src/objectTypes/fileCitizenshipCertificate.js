@@ -125,6 +125,7 @@ class CabinetHitElement extends BaseHitElement {
         `;
     }
 }
+
 class CabinetViewElement extends BaseViewElement {
     constructor() {
         super();

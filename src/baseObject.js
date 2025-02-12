@@ -93,6 +93,7 @@ export const getCommonStyles = () => css`
         color: var(--dbp-override-content);
     }
 `;
+
 export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
