@@ -681,7 +681,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         send(options);
     }
 
-    async downloadFile() {
+    async downloadFile(e) {
+        console.log('downloadFile', e.target.value);
         console.log('downloadFile this.documentFile', this.documentFile);
         this.fileSinkRef.value.files = [this.documentFile];
 
@@ -916,14 +917,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 Replace Document
                                 ${this.getMiniSpinnerHtml(id)}
                             </button>
-                            <button no-spinner-on-click class="button" @click="${this.downloadFile}" ?disabled="${!file}">
-                                <dbp-icon  title='${i18n.t('download-document')}'
-                                aria-label='${i18n.t('download-document')}'
-                                name='download'>
-                                </dbp-icon>
-                                ${i18n.t('download-document')}
-                                ${this.getMiniSpinnerHtml(this.state !== CabinetFile.States.LOADING_FILE)}
-                            </button>
+                            <select id="export-select" class="dropdown-menu" @change="${this.downloadFile}" ?disabled="${!file}">
+                                <option value="-" disabled="" selected="">
+                                ${i18n.t('doc-modal-download-document')}
+                                </option>
+                                <option value="document-only">${i18n.t('doc-modal-document-only')}</option>
+                                <option value="only-data" disabled="">${i18n.t('doc-modal-only-data')}</option>
+                                <option value="all" disabled="">${i18n.t('doc-modal-all')}</option>
+                            </select>
                             <button @click="${this.editFile}" ?disabled="${!file}" class="${classMap({
                                 hidden: this.mode !== CabinetFile.Modes.VIEW,
                             })} button is-primary">

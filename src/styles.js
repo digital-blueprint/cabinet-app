@@ -226,6 +226,7 @@ export function getSelectorFixCSS() {
         /* For some reasons the selector chevron was very large */
         select:not(.select), .dropdown-menu {
             background-size: 1em;
+            padding: 0.14rem 1.3rem 0.14rem 1.3rem;
         }
     `;
 }
