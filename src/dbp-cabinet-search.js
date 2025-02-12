@@ -299,7 +299,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${getPaginationCSS()}
 
             .result-container {
-                margin-top: 1em;
+                margin-top: 0;
                 display: grid;
                 grid-template-columns: 24em minmax(0, 1fr);
                 grid-template-areas: "empty header" "sidebar main";
