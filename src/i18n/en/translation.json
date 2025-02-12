@@ -252,5 +252,9 @@
     "doc-modal-recommended-deletion":"Recommended deletion",
     "doc-modal-delete-document":"Delete",
     "doc-modal-edit-document":"Edit document details",
-    "Edit-student-data":"Edit student data"
+    "Edit-student-data":"Edit student data",
+    "doc-modal-download-document":"Download",
+    "doc-modal-document-only":"Only document",
+    "doc-modal-only-data":"Only data",
+    "doc-modal-all":"All"
 }

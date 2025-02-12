@@ -249,5 +249,9 @@
     "doc-modal-recommended-deletion":"Empfohlene Löschfrist",
     "doc-modal-delete-document":"Löschen",
     "doc-modal-edit-document":"Dokumentinformationen bearbeiten",
-    "Edit-student-data":"Daten bearbeiten"
+    "Edit-student-data":"Daten bearbeiten",
+    "doc-modal-download-document":"Herunterladen",
+    "doc-modal-document-only":"Nur Dokument",
+    "doc-modal-only-data":"Nur Daten",
+    "doc-modal-all":"Alles"
 }
