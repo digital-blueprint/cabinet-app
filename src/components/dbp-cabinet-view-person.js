@@ -155,28 +155,6 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
                 </div>
             </dbp-modal>
         `;
-
-        // return html`
-        //     <dbp-modal
-        //         ${ref(this.modalRef)}
-        //         id="view-modal"
-        //         modal-id="view-modal"
-        //         width="80%"
-        //         height="80%"
-        //         min-width="80%"
-        //         min-height="80%"
-        //         subscribe="lang">
-        //         <div slot="content" class="content">
-        //             <div class="description">
-        //                 <h1>Person View</h1>
-        //                 Document ID: ${id}<br />
-        //             </div>
-        //         </div>
-        //         <div slot="footer" class="modal-footer">
-        //             Footer
-        //         </div>
-        //     </dbp-modal>
-        // `;
     }
 
     render() {
