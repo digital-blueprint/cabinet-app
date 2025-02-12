@@ -135,12 +135,16 @@ class CabinetHitElement extends BaseHitElement {
 }
 
 class CabinetViewElement extends BaseViewElement {
-    render() {
+    constructor() {
+        super();
+        this.setAdditionalTypes(CabinetFormElement.getAdditionalTypes());
+    }
+
+    getCustomViewElements() {
         const fileData = this.data?.file || {};
         const data = fileData["file-cabinet-identityDocument"] || {};
 
         return html`
-            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
             ${viewElements.stringElement('Identifier', data.identifier || '')}
             ${viewElements.enumElement('Nationality', data.nationality || '', formElements.getNationalityItems())}
             ${viewElements.dateElement('Date created', data.dateCreated ? new Date(data.dateCreated) : '')}

@@ -125,7 +125,12 @@ class CabinetHitElement extends BaseHitElement {
 }
 
 class CabinetViewElement extends BaseViewElement {
-    render() {
+    constructor() {
+        super();
+        this.setAdditionalTypes(CabinetFormElement.getAdditionalTypes());
+    }
+
+    getCustomViewElements() {
         const fileData = this.data?.file || {};
         const data = fileData["file-cabinet-communication"] || {};
         const agent = data.agent || {};
@@ -135,7 +140,6 @@ class CabinetViewElement extends BaseViewElement {
             ${viewElements.stringElement('Family name', agent.familyName || '')}
             ${viewElements.stringElement('Abstract', data.abstract || '')}
             ${viewElements.dateTimeElement('Date created', data.dateCreated ? new Date(data.dateCreated) : '')}
-            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
         `;
     }
 }

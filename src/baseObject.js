@@ -456,6 +456,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.data = {};
+        this.additionalTypes = {};
     }
 
     static get scopedElements() {
@@ -500,12 +501,21 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         `;
     }
 
-    getCommonViewElements = (additionalTypes = {}) => {
+    // Needs to be implemented in the derived class
+    // For some reason, this method is not called in the derived class if it is implemented here
+    // getCustomViewElements = () => {
+    //     return html`Please implement getCustomViewElements() in your view element`;
+    // };
+
+    setAdditionalTypes = (types) => {
+        this.additionalTypes = types;
+    };
+
+    getCommonViewElements = () => {
         const fileData = this.data?.file || {};
         const baseData = fileData.base || {};
 
         return html`
-            ${viewElements.enumElement(this._i18n.t('doc-modal-document-type'), baseData.additionalType?.key || '', additionalTypes)}
             ${viewElements.stringElement('Mime type', baseData.mimeType)}
             ${viewElements.dateTimeElement(this._i18n.t('doc-modal-document-issue-date'), baseData.createdTimestamp === 0 ? '' : new Date(baseData.createdTimestamp * 1000))}
             ${viewElements.dateTimeElement(this._i18n.t('doc-modal-modified'), baseData.modifiedTimestamp === 0 ? '' : new Date(baseData.modifiedTimestamp * 1000))}
@@ -536,12 +546,16 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
     };
 
     render() {
+        const fileData = this.data?.file || {};
+        const baseData = fileData.base || {};
+
         return html`
-            <form>
-                <h2>BaseView</h2>
-                lang: ${this.lang}<br />
+            ${viewElements.enumElement(this._i18n.t('doc-modal-document-type'), baseData.additionalType?.key || '', this.additionalTypes)}
+            ${this.getCustomViewElements()}
+            ${this.getCommonViewElements()}
         `;
     }
+
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {

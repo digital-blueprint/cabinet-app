@@ -137,7 +137,12 @@ class CabinetHitElement extends BaseHitElement {
 }
 
 class CabinetViewElement extends BaseViewElement {
-    render() {
+    constructor() {
+        super();
+        this.setAdditionalTypes(CabinetFormElement.getAdditionalTypes());
+    }
+
+    getCustomViewElements() {
         const fileData = this.data?.file || {};
         const data = fileData["file-cabinet-admissionNotice"] || {};
         const baseData = fileData["base"];
@@ -145,7 +150,6 @@ class CabinetViewElement extends BaseViewElement {
         baseData["modifiedTimestamp"];
 
         return html`
-            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
             ${viewElements.dateElement('Date created', data.dateCreated ? new Date(data.dateCreated) : '')}
             ${viewElements.stringElement('Previous study', data.previousStudy || '')}
             ${viewElements.enumElement('Decision', data.decision || '', CabinetFormElement.getDecisions())}
