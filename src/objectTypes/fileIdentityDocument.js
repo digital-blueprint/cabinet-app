@@ -3,7 +3,6 @@ import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement, getCommonS
 import * as formElements from './formElements.js';
 import * as viewElements from './viewElements.js';
 import { PersonHit } from './person.js';
-import {createRef, ref} from 'lit/directives/ref.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-identityDocument';
@@ -29,20 +28,6 @@ export default class extends BaseObject {
 }
 
 class CabinetFormElement extends BaseFormElement {
-    constructor() {
-        super();
-        this.nationalityRef = createRef();
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-
-        this.updateComplete.then(() => {
-            // Set the items for the enum component
-            this.nationalityRef.value.setItems(formElements.getNationalityItems());
-        });
-    }
-
     static getAdditionalTypes() {
         return {
             'DriversLicence': 'Drivers Licence',
@@ -71,10 +56,10 @@ class CabinetFormElement extends BaseFormElement {
                 </dbp-form-string-element>
 
                 <dbp-form-enum-element
-                    ${ref(this.nationalityRef)}
                     subscribe="lang"
                     name="nationality"
                     label="Nationality"
+                    .items=${formElements.getNationalityItems()}
                     .value=${data.nationality || ''}
                     required>
                 </dbp-form-enum-element>

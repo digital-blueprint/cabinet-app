@@ -16,7 +16,6 @@ import {classMap} from 'lit/directives/class-map.js';
 import {getSelectorFixCSS} from './styles.js';
 import {getIconSVGURL} from './utils.js';
 import {gatherFormDataFromElement, validateRequiredFields} from '@dbp-toolkit/form-elements/src/utils.js';
-import {createRef, ref} from 'lit/directives/ref.js';
 
 export class BaseObject {
     name = 'baseObject';
@@ -105,9 +104,6 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         this.entryPointUrl = '';
         this.auth = {};
         this.saveButtonEnabled = true;
-        this.studyFieldRef = createRef();
-        this.semesterRef = createRef();
-        this.isPartOfRef = createRef();
     }
 
     enableSaveButton() {
@@ -126,17 +122,6 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             'dbp-form-enum-element': DbpEnumElement,
             'dbp-form-checkbox-element': DbpCheckboxElement,
         };
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-
-        this.updateComplete.then(() => {
-            // Set the items for the enum components
-            this.studyFieldRef.value.setItems(this.getStudyFields());
-            this.semesterRef.value.setItems(this.getSemesters());
-            this.isPartOfRef.value.setItems(BaseFormElement.getIsPartOfItems());
-        });
     }
 
     getSemesters = () => {
@@ -196,28 +181,28 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             </dbp-form-string-element>
 
             <dbp-form-enum-element
-                ${ref(this.studyFieldRef)}
                 subscribe="lang"
                 name="studyField"
                 label="Study field"
+                .items=${this.getStudyFields()}
                 .value=${baseData.studyField || ''}
                 required>
             </dbp-form-enum-element>
 
             <dbp-form-enum-element
-                ${ref(this.semesterRef)}
                 subscribe="lang"
                 name="semester"
                 label="Semester"
+                .items=${this.getSemesters()}
                 .value=${defaultSemester}
                 required>
             </dbp-form-enum-element>
 
             <dbp-form-enum-element
-                ${ref(this.isPartOfRef)}
                 subscribe="lang"
                 name="isPartOf"
                 label="Speicherzweck-Löschfristen"
+                .items=${BaseFormElement.getIsPartOfItems()}
                 .value=${baseData.isPartOf || ''}
                 multiple
                 required>

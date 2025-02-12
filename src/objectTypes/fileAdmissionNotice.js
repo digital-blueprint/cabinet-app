@@ -2,7 +2,7 @@ import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement, getCommonStyles} from '../baseObject.js';
 import * as viewElements from './viewElements.js';
 import { PersonHit } from './person.js';
-import {createRef, ref} from 'lit/directives/ref.js';
+
 export default class extends BaseObject {
     name = 'file-cabinet-admissionNotice';
 
@@ -27,20 +27,6 @@ export default class extends BaseObject {
 }
 
 class CabinetFormElement extends BaseFormElement {
-    constructor() {
-        super();
-        this.decisionRef = createRef();
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-
-        this.updateComplete.then(() => {
-            // Set the items for the enum component
-            this.decisionRef.value.setItems(CabinetFormElement.getDecisions());
-        });
-    }
-
     static getAdditionalTypes = () => {
         return {
             'AdmissionNotice': 'Admission Notice',
@@ -82,10 +68,10 @@ class CabinetFormElement extends BaseFormElement {
                 </dbp-form-string-element>
 
                 <dbp-form-enum-element
-                    ${ref(this.decisionRef)}
                     subscribe="lang"
                     name="decision"
                     label="Decision"
+                    .items=${CabinetFormElement.getDecisions()}
                     .value=${data.decision || ''}>
                 </dbp-form-enum-element>
 
