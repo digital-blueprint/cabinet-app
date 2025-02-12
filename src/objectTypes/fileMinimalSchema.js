@@ -74,10 +74,7 @@ class CabinetHitElement extends BaseHitElement {
         const i18n = this._i18n;
         let hit = /** @type {PersonHit} */(this.data);
         const issueDate = this.data.file['file-cabinet-minimalSchema'].dateCreated;
-        let formattedDate = '';
-        if(issueDate !== undefined) {
-            formattedDate = new Intl.DateTimeFormat('de').format(new Date(issueDate));
-        }
+        let formattedDate = issueDate ? new Intl.DateTimeFormat('de').format(new Date(issueDate)) : '-';
 
         return html`
             <form>
