@@ -202,7 +202,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
                 subscribe="lang"
                 name="isPartOf"
                 label="Speicherzweck-Löschfristen"
-                .items=${BaseFormElement.getIsPartOfItems()}
+                .items=${BaseFormElement.getIsPartOfItems(this._i18n)}
                 .value=${baseData.isPartOf || ''}
                 multiple
                 required>
@@ -366,18 +366,23 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         super.update(changedProperties);
     }
 
-    static getIsPartOfItems() {
-        return {
-            'financial-archive-7': 'Finanzielles (Archivierung nach 7 Jahren)',
-            'vacation-archive-3': 'Beurlaubung (Archivierung nach 3 Jahren)',
-            'subordination-delete-3': 'Unterstellung (Löschung nach 3 Jahren)',
-            'admission-archive-80': 'Ansuchen um Zulassung (Archivierung nach 80 Jahren)',
-            'generalApplications-archive-3': 'Allgemeine Anträge (Archivierung nach 3 Jahren)',
-            'communication-archive-10': 'Kommunikation (Archivierung nach 10 Jahren)',
-            'other-delete-3': 'Sonstige Dokumente (Löschung nach 3 Jahren)',
-            'other-archive-3': 'Sonstige Dokumente (Archivierung nach 3 Jahren)',
-            'study-archive-80': 'Student-Life-Cycle-Dokumente (Archivierung nach 80 Jahren)'
-        };
+    static getIsPartOfItems(i18n) {
+        const items = [
+            'financial-archive-7',
+            'vacation-archive-3',
+            'subordination-delete-3',
+            'admission-archive-80',
+            'generalApplications-archive-3',
+            'communication-archive-10',
+            'other-delete-3',
+            'other-archive-3',
+            'study-archive-80'
+        ];
+
+        return items.reduce((acc, item) => ({
+            ...acc,
+            [item]: i18n.t(`typesense-schema.file.base.isPartOf.${item}`)
+        }), {});
     }
 }
 
@@ -508,7 +513,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
             ${viewElements.stringElement(this._i18n.t('doc-modal-subject-of'), baseData.subjectOf || '')}
             ${viewElements.stringElement(this._i18n.t('doc-modal-study-field'), this.getStudyFieldNameForKey(baseData.studyField))}
             ${viewElements.stringElement(this._i18n.t('doc-modal-semester'), baseData.semester || '')}
-            ${viewElements.enumElement(this._i18n.t('doc-modal-storage-purpose-deletion'), baseData.isPartOf, BaseFormElement.getIsPartOfItems())}
+            ${viewElements.enumElement(this._i18n.t('doc-modal-storage-purpose-deletion'), baseData.isPartOf, BaseFormElement.getIsPartOfItems(this._i18n))}
             ${viewElements.stringElement(this._i18n.t('doc-modal-comment'), baseData.comment || '')}
             ${baseData.deleteAtTimestamp ? '' :
                 viewElements.dateElement(this._i18n.t('doc-modal-recommended-deletion'), baseData.recommendedDeletionTimestamp === 0 ? '' : new Date(baseData.recommendedDeletionTimestamp * 1000))}
