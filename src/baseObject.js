@@ -1,13 +1,7 @@
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {css, html, unsafeCSS} from 'lit';
-import {
-    DbpCheckboxElement,
-    DbpDateElement,
-    DbpDateTimeElement,
-    DbpEnumElement,
-    DbpStringElement
-} from '@dbp-toolkit/form-elements';
+import '@dbp-toolkit/form-elements';
 import {createInstance} from './i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './objectTypes/formElements';
@@ -112,16 +106,6 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
 
     static getAdditionalTypes() {
         return {};
-    }
-
-    static get scopedElements() {
-        return {
-            'dbp-form-string-element': DbpStringElement,
-            'dbp-form-date-element': DbpDateElement,
-            'dbp-form-datetime-element': DbpDateTimeElement,
-            'dbp-form-enum-element': DbpEnumElement,
-            'dbp-form-checkbox-element': DbpCheckboxElement,
-        };
     }
 
     getSemesters = () => {
@@ -507,16 +491,62 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         const baseData = fileData.base || {};
 
         return html`
-            ${viewElements.stringElement('Mime type', baseData.mimeType)}
-            ${viewElements.dateTimeElement(this._i18n.t('doc-modal-document-issue-date'), baseData.createdTimestamp === 0 ? '' : new Date(baseData.createdTimestamp * 1000))}
-            ${viewElements.dateTimeElement(this._i18n.t('doc-modal-modified'), baseData.modifiedTimestamp === 0 ? '' : new Date(baseData.modifiedTimestamp * 1000))}
-            ${viewElements.stringElement(this._i18n.t('doc-modal-subject-of'), baseData.subjectOf || '')}
-            ${viewElements.stringElement(this._i18n.t('doc-modal-study-field'), this.getStudyFieldNameForKey(baseData.studyField))}
-            ${viewElements.stringElement(this._i18n.t('doc-modal-semester'), baseData.semester || '')}
-            ${viewElements.enumElement(this._i18n.t('doc-modal-storage-purpose-deletion'), baseData.isPartOf, BaseFormElement.getIsPartOfItems(this._i18n))}
-            ${viewElements.stringElement(this._i18n.t('doc-modal-comment'), baseData.comment || '')}
-            ${baseData.deleteAtTimestamp ? '' :
-                viewElements.dateElement(this._i18n.t('doc-modal-recommended-deletion'), baseData.recommendedDeletionTimestamp === 0 ? '' : new Date(baseData.recommendedDeletionTimestamp * 1000))}
+            <dbp-form-string-view
+                subscribe="lang"
+                label="Mime type"
+                .value=${baseData.mimeType}>
+            </dbp-form-string-view>
+
+            <dbp-form-datetime-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-document-issue-date')}
+                .value=${baseData.createdTimestamp === 0 ? '' : new Date(baseData.createdTimestamp * 1000)}>
+            </dbp-form-datetime-view>
+
+            <dbp-form-datetime-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-modified')}
+                .value=${baseData.modifiedTimestamp === 0 ? '' : new Date(baseData.modifiedTimestamp * 1000)}>
+            </dbp-form-datetime-view>
+
+            <dbp-form-string-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-subject-of')}
+                .value=${baseData.subjectOf || ''}>
+            </dbp-form-string-view>
+
+            <dbp-form-string-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-study-field')}
+                .value=${this.getStudyFieldNameForKey(baseData.studyField)}>
+            </dbp-form-string-view>
+
+            <dbp-form-string-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-semester')}
+                .value=${baseData.semester || ''}>
+            </dbp-form-string-view>
+
+            <dbp-form-enum-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-storage-purpose-deletion')}
+                .value=${baseData.isPartOf}
+                .items=${BaseFormElement.getIsPartOfItems(this._i18n)}>
+            </dbp-form-enum-view>
+
+            <dbp-form-string-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-comment')}
+                .value=${baseData.comment || ''}>
+            </dbp-form-string-view>
+
+            ${baseData.deleteAtTimestamp ? '' : html`
+            <dbp-form-date-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-recommended-deletion')}
+                .value=${baseData.recommendedDeletionTimestamp === 0 ? '' : new Date(baseData.recommendedDeletionTimestamp * 1000)}>
+            </dbp-form-date-view>
+            `}
         `;
     };
 
