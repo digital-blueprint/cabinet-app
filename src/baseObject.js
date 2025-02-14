@@ -5,7 +5,6 @@ import '@dbp-toolkit/form-elements';
 import {createInstance} from './i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './objectTypes/formElements';
-import * as viewElements from './objectTypes/viewElements';
 import {classMap} from 'lit/directives/class-map.js';
 import {getIconSVGURL} from './utils.js';
 import {gatherFormDataFromElement, validateRequiredFields} from '@dbp-toolkit/form-elements/src/utils.js';
@@ -568,7 +567,12 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         const baseData = fileData.base || {};
 
         return html`
-            ${viewElements.enumElement(this._i18n.t('doc-modal-document-type'), baseData.additionalType?.key || '', this.additionalTypes)}
+            <dbp-form-enum-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-document-type')}
+                .value=${baseData.additionalType?.key || ''}
+                .items=${this.additionalTypes}>
+            </dbp-form-enum-view>
             ${this.getCustomViewElements()}
             ${this.getCommonViewElements()}
         `;
