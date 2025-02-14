@@ -87,7 +87,6 @@ class CabinetHitElement extends BaseHitElement {
         return css`
         ${super.styles}
         ${getCommonStyles()}
-
         `;
     }
 
