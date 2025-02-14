@@ -1,7 +1,6 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement, getCommonStyles} from '../baseObject.js';
 import * as formElements from './formElements.js';
-import * as viewElements from './viewElements.js';
 import { PersonHit } from './person.js';
 
 export default class extends BaseObject {
@@ -130,9 +129,24 @@ class CabinetViewElement extends BaseViewElement {
         const data = fileData["file-cabinet-identityDocument"] || {};
 
         return html`
-            ${viewElements.stringElement('Identifier', data.identifier || '')}
-            ${viewElements.enumElement('Nationality', data.nationality || '', formElements.getNationalityItems())}
-            ${viewElements.dateElement('Date created', data.dateCreated ? new Date(data.dateCreated) : '')}
+            <dbp-form-string-view
+                subscribe="lang"
+                label="Identifier"
+                .value=${data.identifier || ''}>
+            </dbp-form-string-view>
+
+            <dbp-form-enum-view
+                subscribe="lang"
+                label="Nationality"
+                .value=${data.nationality || ''}
+                .items=${formElements.getNationalityItems()}>
+            </dbp-form-enum-view>
+
+            <dbp-form-datetime-view
+                subscribe="lang"
+                label="Date created"
+                .value=${data.dateCreated ? new Date(data.dateCreated) : ''}>
+            </dbp-form-datetime-view>
         `;
     }
 }

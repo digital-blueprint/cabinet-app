@@ -1,6 +1,5 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement,getCommonStyles} from '../baseObject.js';
-import * as viewElements from './viewElements.js';
 import { PersonHit } from './person.js';
 
 export default class extends BaseObject {
@@ -136,10 +135,29 @@ class CabinetViewElement extends BaseViewElement {
         const agent = data.agent || {};
 
         return html`
-            ${viewElements.stringElement('Given name', agent.givenName || '')}
-            ${viewElements.stringElement('Family name', agent.familyName || '')}
-            ${viewElements.stringElement('Abstract', data.abstract || '')}
-            ${viewElements.dateTimeElement('Date created', data.dateCreated ? new Date(data.dateCreated) : '')}
+            <dbp-form-string-view
+                subscribe="lang"
+                label="Given name"
+                .value=${agent.givenName || ''}>
+            </dbp-form-string-view>
+
+            <dbp-form-string-view
+                subscribe="lang"
+                label="Family name"
+                .value=${agent.familyName || ''}>
+            </dbp-form-string-view>
+
+            <dbp-form-string-view
+                subscribe="lang"
+                label="Abstract"
+                .value=${data.abstract || ''}>
+            </dbp-form-string-view>
+
+            <dbp-form-datetime-view
+                subscribe="lang"
+                label="Date created"
+                .value=${data.dateCreated ? new Date(data.dateCreated) : ''}>
+            </dbp-form-datetime-view>
         `;
     }
 }

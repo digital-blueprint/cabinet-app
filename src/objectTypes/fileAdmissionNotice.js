@@ -1,6 +1,5 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement, getCommonStyles} from '../baseObject.js';
-import * as viewElements from './viewElements.js';
 import { PersonHit } from './person.js';
 
 export default class extends BaseObject {
@@ -135,9 +134,24 @@ class CabinetViewElement extends BaseViewElement {
         baseData["modifiedTimestamp"];
 
         return html`
-            ${viewElements.dateElement('Date created', data.dateCreated ? new Date(data.dateCreated) : '')}
-            ${viewElements.stringElement('Previous study', data.previousStudy || '')}
-            ${viewElements.enumElement('Decision', data.decision || '', CabinetFormElement.getDecisions())}
+            <dbp-form-datetime-view
+                subscribe="lang"
+                label="Date created"
+                .value=${data.dateCreated ? new Date(data.dateCreated) : ''}>
+            </dbp-form-datetime-view>
+
+            <dbp-form-string-view
+                subscribe="lang"
+                label="Previous study"
+                .value=${data.previousStudy || ''}>
+            </dbp-form-string-view>
+
+            <dbp-form-enum-view
+                subscribe="lang"
+                label="Decision"
+                .value=${data.decision || ''}
+                .items=${CabinetFormElement.getDecisions()}>
+            </dbp-form-enum-view>
         `;
     }
 }

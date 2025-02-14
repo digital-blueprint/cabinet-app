@@ -1,6 +1,5 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement,getCommonStyles} from '../baseObject.js';
-import * as viewElements from './viewElements.js';
 import { PersonHit } from './person.js';
 export default class extends BaseObject {
     name = 'file-cabinet-minimalSchema';
@@ -110,7 +109,11 @@ class CabinetViewElement extends BaseViewElement {
         const data = fileData["file-cabinet-minimalSchema"] || {};
 
         return html`
-            ${viewElements.dateElement('Date created', data.dateCreated ? new Date(data.dateCreated) : '')}
+            <dbp-form-datetime-view
+                subscribe="lang"
+                label="Date created"
+                .value=${data.dateCreated ? new Date(data.dateCreated) : ''}>
+            </dbp-form-datetime-view>
         `;
     }
 }
