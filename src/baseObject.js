@@ -538,13 +538,12 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
                 .value=${baseData.comment || ''}>
             </dbp-form-string-view>
 
-            ${baseData.deleteAtTimestamp ? '' : html`
             <dbp-form-date-view
+                .hidden=${baseData.deleteAtTimestamp === 0}
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-recommended-deletion')}
                 .value=${baseData.recommendedDeletionTimestamp === 0 ? '' : new Date(baseData.recommendedDeletionTimestamp * 1000)}>
             </dbp-form-date-view>
-            `}
         `;
     };
 
