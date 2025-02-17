@@ -917,11 +917,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 Replace Document
                                 ${this.getMiniSpinnerHtml(id)}
                             </button>
-                            <select id="export-select" class="dropdown-menu" @change="${this.downloadFile}" ?disabled="${!file}">
+                            <select id="export-select" class="dropdown-menu" ?disabled="${!file}">
                                 <option value="-" disabled="" selected="">
                                 ${i18n.t('doc-modal-download-document')}
                                 </option>
-                                <option value="document-only">${i18n.t('doc-modal-document-only')}</option>
+                                <option value="document-only" @click="${this.downloadFile}">${i18n.t('doc-modal-document-only')}</option>
                                 <option value="only-data" disabled="">${i18n.t('doc-modal-only-data')}</option>
                                 <option value="all" disabled="">${i18n.t('doc-modal-all')}</option>
                             </select>
