@@ -682,9 +682,25 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async downloadFile(e) {
-        console.log('downloadFile', e.target.value);
-        console.log('downloadFile this.documentFile', this.documentFile);
-        this.fileSinkRef.value.files = [this.documentFile];
+        const selectorValue = e.target.value;
+        console.log('downloadFile selectorValue', selectorValue);
+        let files = [];
+
+        if (selectorValue !== 'document-file-only') {
+            const file = new File(
+                [JSON.stringify(this.fileHitData)],
+                'metadata.json',
+                { type: 'application/json' }
+            );
+
+            files.push(file);
+        }
+
+        if (selectorValue !== 'metadata-only') {
+            files.push(this.documentFile);
+        }
+
+        this.fileSinkRef.value.files = files;
 
         /** @type {Modal} */
         const documentModal = this.documentModalRef.value;
@@ -921,9 +937,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 <option value="-" disabled="" selected="">
                                 ${i18n.t('doc-modal-download-document')}
                                 </option>
-                                <option value="document-only" @click="${this.downloadFile}">${i18n.t('doc-modal-document-only')}</option>
-                                <option value="only-data" disabled="">${i18n.t('doc-modal-only-data')}</option>
-                                <option value="all" disabled="">${i18n.t('doc-modal-all')}</option>
+                                <option value="document-file-only" @click="${this.downloadFile}">${i18n.t('doc-modal-document-only')}</option>
+                                <option value="metadata-only" @click="${this.downloadFile}"="">${i18n.t('doc-modal-only-data')}</option>
+                                <option value="all" @click="${this.downloadFile}">${i18n.t('doc-modal-all')}</option>
                             </select>
                             <button @click="${this.editFile}" ?disabled="${!file}" class="${classMap({
                                 hidden: this.mode !== CabinetFile.Modes.VIEW,
