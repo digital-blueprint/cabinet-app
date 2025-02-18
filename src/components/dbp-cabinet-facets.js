@@ -249,7 +249,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     }
                     default: {
                         // Set checkbox refinement filter labels
-                        label = refinement.label;
+                        label = i18n.t(`typesense-schema.${refinement.attribute}.${refinement.value}`, refinement.label);
                         break;
                     }
                 }
