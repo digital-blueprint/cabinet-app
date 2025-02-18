@@ -292,8 +292,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (isFirstRender) {
             const clearButton = document.createElement('button');
             const clearButtonText = document.createElement('span');
-
-            clearButtonText.textContent = i18n.t('cabinet-search.refinement-delete-all-filters');
+            clearButtonText.classList.add('clear-refinements-button-label');
             clearButton.appendChild(clearButtonText);
             clearButton.classList.add('clear-refinements-button');
 
@@ -304,6 +303,10 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .querySelector('.clear-refinement-container')
                 .appendChild(clearButton);
         }
+
+        this.searchResultsElement
+            .querySelector('.clear-refinements-button-label')
+            .textContent = i18n.t('cabinet-search.refinement-delete-all-filters');
 
         this.searchResultsElement
             .querySelector('.clear-refinement-container')
