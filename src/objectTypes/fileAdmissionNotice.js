@@ -137,7 +137,7 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <dbp-form-datetime-view
                 subscribe="lang"
-                label=${i18n.t('doc-modal-document-issue-date')}
+                label=${i18n.t('doc-modal-document-added')}
                 .value=${data.dateCreated ? new Date(data.dateCreated) : ''}>
             </dbp-form-datetime-view>
 
