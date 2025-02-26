@@ -119,18 +119,19 @@ class CabinetViewElement extends BaseViewElement {
     getCustomViewElements() {
         const fileData = this.data?.file || {};
         const data = fileData["file-cabinet-citizenshipCertificate"] || {};
+        const i18n = this._i18n;
 
         return html`
             <dbp-form-enum-view
                 subscribe="lang"
-                label="Nationality"
+                label=${i18n.t('doc-modal-nationality')}
                 .value=${data.nationality || ''}
                 .items=${formElements.getNationalityItems()}>
             </dbp-form-enum-view>
 
             <dbp-form-datetime-view
                 subscribe="lang"
-                label="Date created"
+                label=${i18n.t('doc-modal-document-added')}
                 .value=${data.dateCreated ? new Date(data.dateCreated) : ''}>
             </dbp-form-datetime-view>
         `;

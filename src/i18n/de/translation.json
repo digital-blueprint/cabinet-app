@@ -255,5 +255,7 @@
     "doc-modal-only-data":"Nur Daten",
     "doc-modal-all":"Alles",
     "doc-modal-decision":"Entscheidung",
-    "doc-modal-previousStudy":"Abgeschlossenes Studium"
+    "doc-modal-previousStudy":"Abgeschlossenes Studium",
+    "doc-modal-nationality":"Staatsbürgerschaft laut Dokument",
+    "doc-modal-document-added":"Hinzugefügt am"
 }

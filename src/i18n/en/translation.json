@@ -258,5 +258,7 @@
     "doc-modal-only-data":"Only data",
     "doc-modal-all":"All",
     "doc-modal-decision":"Decision",
-    "doc-modal-previousStudy":"Completed study"
+    "doc-modal-previousStudy":"Completed study",
+    "doc-modal-nationality":"Citizenship according to the document",
+    "doc-modal-document-added":"Added"
 }
