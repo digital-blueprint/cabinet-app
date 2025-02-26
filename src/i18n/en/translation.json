@@ -245,8 +245,8 @@
     "doc-modal-document-issue-date":"Document issue date",
     "doc-modal-modified":"Last modified",
     "doc-modal-subject-of":"Registry number",
-    "doc-modal-study-field":"Study field",
-    "doc-modal-semester":"Semester",
+    "doc-modal-study-field":"Assignment to study field",
+    "doc-modal-semester":"Assignment to semester",
     "doc-modal-comment":"Comment",
     "doc-modal-storage-purpose-deletion":"Purpose of storage",
     "doc-modal-recommended-deletion":"Recommended deletion",
@@ -256,5 +256,7 @@
     "doc-modal-download-document":"Download",
     "doc-modal-document-only":"Only document",
     "doc-modal-only-data":"Only data",
-    "doc-modal-all":"All"
+    "doc-modal-all":"All",
+    "doc-modal-decision":"Decision",
+    "doc-modal-previousStudy":"Completed study"
 }

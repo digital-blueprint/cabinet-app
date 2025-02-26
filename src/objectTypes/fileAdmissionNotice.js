@@ -130,25 +130,26 @@ class CabinetViewElement extends BaseViewElement {
         const fileData = this.data?.file || {};
         const data = fileData["file-cabinet-admissionNotice"] || {};
         const baseData = fileData["base"];
+        const i18n = this._i18n;
         baseData["createdTimestamp"];
         baseData["modifiedTimestamp"];
 
         return html`
             <dbp-form-datetime-view
                 subscribe="lang"
-                label="Date created"
+                label=${i18n.t('doc-modal-document-issue-date')}
                 .value=${data.dateCreated ? new Date(data.dateCreated) : ''}>
             </dbp-form-datetime-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label="Previous study"
+                label=${i18n.t('doc-modal-previousStudy')}
                 .value=${data.previousStudy || ''}>
             </dbp-form-string-view>
 
             <dbp-form-enum-view
                 subscribe="lang"
-                label="Decision"
+                label=${i18n.t('doc-modal-decision')}
                 .value=${data.decision || ''}
                 .items=${CabinetFormElement.getDecisions()}>
             </dbp-form-enum-view>

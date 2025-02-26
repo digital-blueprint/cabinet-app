@@ -488,22 +488,10 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         const baseData = fileData.base || {};
 
         return html`
-            <dbp-form-string-view
-                subscribe="lang"
-                label="Mime type"
-                .value=${baseData.mimeType}>
-            </dbp-form-string-view>
-
             <dbp-form-datetime-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-document-issue-date')}
                 .value=${baseData.createdTimestamp === 0 ? '' : new Date(baseData.createdTimestamp * 1000)}>
-            </dbp-form-datetime-view>
-
-            <dbp-form-datetime-view
-                subscribe="lang"
-                label=${this._i18n.t('doc-modal-modified')}
-                .value=${baseData.modifiedTimestamp === 0 ? '' : new Date(baseData.modifiedTimestamp * 1000)}>
             </dbp-form-datetime-view>
 
             <dbp-form-string-view
@@ -524,18 +512,18 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
                 .value=${baseData.semester || ''}>
             </dbp-form-string-view>
 
-            <dbp-form-enum-view
-                subscribe="lang"
-                label=${this._i18n.t('doc-modal-storage-purpose-deletion')}
-                .value=${baseData.isPartOf}
-                .items=${BaseFormElement.getIsPartOfItems(this._i18n)}>
-            </dbp-form-enum-view>
-
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-comment')}
                 .value=${baseData.comment || ''}>
             </dbp-form-string-view>
+
+             <dbp-form-enum-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-storage-purpose-deletion')}
+                .value=${baseData.isPartOf}
+                .items=${BaseFormElement.getIsPartOfItems(this._i18n)}>
+            </dbp-form-enum-view>
 
             <dbp-form-date-view
                 .hidden=${baseData.deleteAtTimestamp === 0}
@@ -543,6 +531,18 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
                 label=${this._i18n.t('doc-modal-recommended-deletion')}
                 .value=${baseData.recommendedDeletionTimestamp === 0 ? '' : new Date(baseData.recommendedDeletionTimestamp * 1000)}>
             </dbp-form-date-view>
+
+             <dbp-form-datetime-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-modified')}
+                .value=${baseData.modifiedTimestamp === 0 ? '' : new Date(baseData.modifiedTimestamp * 1000)}>
+            </dbp-form-datetime-view>
+
+            <dbp-form-string-view
+                subscribe="lang"
+                label="Mime type"
+                .value=${baseData.mimeType}>
+            </dbp-form-string-view>
         `;
     };
 
