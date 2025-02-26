@@ -260,5 +260,6 @@
     "doc-modal-decision":"Decision",
     "doc-modal-previousStudy":"Completed study",
     "doc-modal-nationality":"Citizenship according to the document",
-    "doc-modal-document-added":"Added"
+    "doc-modal-document-added":"Added",
+    "communication-abstract":"Summary"
 }

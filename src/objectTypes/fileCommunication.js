@@ -137,25 +137,25 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <dbp-form-string-view
                 subscribe="lang"
-                label="Given name"
+                label=${this._i18n.t('given-name')}
                 .value=${agent.givenName || ''}>
             </dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label="Family name"
+                label=${this._i18n.t('family-name')}
                 .value=${agent.familyName || ''}>
             </dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label="Abstract"
+                label=${this._i18n.t('communication-abstract')}
                 .value=${data.abstract || ''}>
             </dbp-form-string-view>
 
             <dbp-form-datetime-view
                 subscribe="lang"
-                label="Date created"
+                label=${this._i18n.t('doc-modal-document-added')}
                 .value=${data.dateCreated ? new Date(data.dateCreated) : ''}>
             </dbp-form-datetime-view>
         `;
