@@ -131,20 +131,20 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <dbp-form-string-view
                 subscribe="lang"
-                label="Identifier"
+                label=${this._i18n.t('doc-modal-Identifier')}
                 .value=${data.identifier || ''}>
             </dbp-form-string-view>
 
             <dbp-form-enum-view
                 subscribe="lang"
-                label="Nationality"
+                label=${this._i18n.t('doc-modal-nationality')}
                 .value=${data.nationality || ''}
                 .items=${formElements.getNationalityItems()}>
             </dbp-form-enum-view>
 
             <dbp-form-datetime-view
                 subscribe="lang"
-                label="Date created"
+                label=${this._i18n.t('doc-modal-document-added')}
                 .value=${data.dateCreated ? new Date(data.dateCreated) : ''}>
             </dbp-form-datetime-view>
         `;
