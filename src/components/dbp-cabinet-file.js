@@ -103,6 +103,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         } );
     }
 
+    onFileSinkDialogClosed() {
+        /** @type {Modal} */
+        const documentModal = this.documentModalRef.value;
+
+        // Open the document modal again, so the user can see the document
+        documentModal.open();
+
+        // Allow the state to be reset again
+        this.allowStateReset = true;
+    }
+
     static get scopedElements() {
         return {
             'dbp-icon': Icon,
@@ -708,6 +719,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Reset the selector to the default value, so there isn't a selected value after the download
         e.target.selectedIndex = 0;
 
+        // Don't allow the reset the state of the component when the document modal is closed
+        this.allowStateReset = false;
+
         /** @type {Modal} */
         const documentModal = this.documentModalRef.value;
 
@@ -1113,6 +1127,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 nextcloud-name="${this.nextcloudName}"
                 nextcloud-auth-info="${this.nextcloudAuthInfo}"
                 nextcloud-file-url="${this.nextcloudFileURL}"
+                @dbp-file-sink-dialog-closed="${this.onFileSinkDialogClosed}"
             ></dbp-file-sink>
         `;
     }
