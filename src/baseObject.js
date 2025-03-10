@@ -488,11 +488,11 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         const baseData = fileData.base || {};
 
         return html`
-            <dbp-form-datetime-view
+            <dbp-form-date-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-document-issue-date')}
                 .value=${baseData.createdTimestamp === 0 ? '' : new Date(baseData.createdTimestamp * 1000)}>
-            </dbp-form-datetime-view>
+            </dbp-form-date-view>
 
             <dbp-form-string-view
                 subscribe="lang"
