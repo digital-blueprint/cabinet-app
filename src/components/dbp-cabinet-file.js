@@ -1064,7 +1064,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         return html`
             <fieldset>
-                <label>Document type</label>
+                <label>${this._i18n.t('doc-modal-document-type')}</label>
                 <select id="document-type" name="object-type" required @change="${this.onDocumentTypeSelected}">
                     ${options}
                 </select>

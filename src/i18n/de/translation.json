@@ -259,5 +259,6 @@
     "doc-modal-nationality":"Staatsbürgerschaft laut Dokument",
     "doc-modal-document-added":"Hinzugefügt am",
     "communication-abstract":"Zusammenfassung",
-    "doc-modal-Identifier":"Identifikationsnummer des Dokuments"
+    "doc-modal-Identifier":"Identifikationsnummer des Dokuments",
+    "date-created": "Erstelldatum"
 }

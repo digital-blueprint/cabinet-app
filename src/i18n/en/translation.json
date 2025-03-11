@@ -262,5 +262,6 @@
     "doc-modal-nationality":"Citizenship according to the document",
     "doc-modal-document-added":"Added",
     "communication-abstract":"Summary",
-    "doc-modal-Identifier":"Document ID"
+    "doc-modal-Identifier":"Document ID",
+    "date-created":"Date created"
 }

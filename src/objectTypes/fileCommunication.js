@@ -69,7 +69,7 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-datetime-element
                     subscribe="lang"
                     name="dateCreated"
-                    label="Date created"
+                    label=${this._i18n.t('date-created')}
                     value=${data.dateCreated || ''}
                     required>
                 </dbp-form-datetime-element>
