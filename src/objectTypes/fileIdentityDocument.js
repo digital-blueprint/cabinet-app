@@ -49,7 +49,7 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-string-element
                     subscribe="lang"
                     name="identifier"
-                    label="Identifier"
+                    label=${this._i18n.t('doc-modal-Identifier')}
                     .value=${data.identifier || ''}
                     required>
                 </dbp-form-string-element>
@@ -57,7 +57,7 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-enum-element
                     subscribe="lang"
                     name="nationality"
-                    label="Nationality"
+                    label=${this._i18n.t('doc-modal-nationality')}
                     .items=${formElements.getNationalityItems()}
                     .value=${data.nationality || ''}
                     required>

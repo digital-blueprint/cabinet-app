@@ -46,7 +46,7 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-enum-element
                     subscribe="lang"
                     name="nationality"
-                    label="Nationality"
+                    label=${this._i18n.t('doc-modal-nationality')}
                     .items=${formElements.getNationalityItems()}
                     .value=${data.nationality || ''}>
                 </dbp-form-enum-element>

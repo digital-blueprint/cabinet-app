@@ -62,14 +62,14 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousStudy"
-                    label="Previous study"
+                    label=${this._i18n.t('doc-modal-previousStudy')}
                     .value=${data.previousStudy || ''}>
                 </dbp-form-string-element>
 
                 <dbp-form-enum-element
                     subscribe="lang"
                     name="decision"
-                    label="Decision"
+                    label=${this._i18n.t('doc-modal-decision')}
                     .items=${CabinetFormElement.getDecisions()}
                     .value=${data.decision || ''}>
                 </dbp-form-enum-element>
