@@ -537,12 +537,6 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
                 label=${this._i18n.t('doc-modal-modified')}
                 .value=${baseData.modifiedTimestamp === 0 ? '' : new Date(baseData.modifiedTimestamp * 1000)}>
             </dbp-form-datetime-view>
-
-            <dbp-form-string-view
-                subscribe="lang"
-                label="Mime type"
-                .value=${baseData.mimeType}>
-            </dbp-form-string-view>
         `;
     };
 
