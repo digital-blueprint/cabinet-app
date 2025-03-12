@@ -337,7 +337,7 @@ class CabinetHitElement extends BaseHitElement {
                           study => html`${study.name} (${study.status.text})<br />`
                         )}
                         ${extraCount > 0
-                          ? html`<span>${extraCount} more</span>`
+                          ? html`<span>${extraCount}${i18n.t('more')}</span>`
                           : ''}
                     `
                     : html`—`}

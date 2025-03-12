@@ -261,5 +261,6 @@
     "communication-abstract":"Zusammenfassung",
     "doc-modal-Identifier":"Identifikationsnummer des Dokuments",
     "date-created": "Erstelldatum",
-    "doc-modal-purpose-storage":"Speicherzweck"
+    "doc-modal-purpose-storage":"Speicherzweck",
+    "person-hit":"weitere"
 }
