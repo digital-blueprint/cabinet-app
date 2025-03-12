@@ -307,6 +307,11 @@ class CabinetHitElement extends BaseHitElement {
     render() {
         let hit = /** @type {PersonHit} */(this.data);
         const i18n = this._i18n;
+        const studies = hit.person.studies || [];
+        const maxStudies = 3;
+        const displayedStudies = studies.slice(0, maxStudies);
+        const extraCount = studies.length - maxStudies;
+
         return html`
             <header class="ais-Hits-header">
                 <div class="person-id"><!-- studId: ${hit.person.studId}-->
@@ -326,8 +331,15 @@ class CabinetHitElement extends BaseHitElement {
                     ${renderFieldWithHighlight(hit, 'person.birthDate')}
                 </div>
                 <div class="hit-person-content-item2">
-                ${hit.person.studies && hit.person.studies.length > 0
-                    ? hit.person.studies.map(study => html`${study.name} (${study.status.text})<br />`)
+                ${studies.length > 0
+                    ? html`
+                        ${displayedStudies.map(
+                          study => html`${study.name} (${study.status.text})<br />`
+                        )}
+                        ${extraCount > 0
+                          ? html`<span>${extraCount} more</span>`
+                          : ''}
+                    `
                     : html`—`}
                 </div>
                 <div class="hit-person-content-item3">
