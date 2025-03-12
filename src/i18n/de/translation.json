@@ -244,7 +244,7 @@
     "doc-modal-subject-of":"Geschäftszahl",
     "doc-modal-study-field":"Zuordnung zum Studienfach",
     "doc-modal-semester":"Zuordnung zum Semester",
-    "doc-modal-comment":"Kommentar",
+    "doc-modal-comment":"Notiz",
     "doc-modal-storage-purpose-deletion":"Speicherzweck",
     "doc-modal-recommended-deletion":"Empfohlene Löschfrist",
     "doc-modal-delete-document":"Löschen",
@@ -260,5 +260,6 @@
     "doc-modal-document-added":"Hinzugefügt am",
     "communication-abstract":"Zusammenfassung",
     "doc-modal-Identifier":"Identifikationsnummer des Dokuments",
-    "date-created": "Erstelldatum"
+    "date-created": "Erstelldatum",
+    "doc-modal-purpose-storage":"Speicherzweck"
 }

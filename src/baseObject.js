@@ -158,14 +158,14 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             <dbp-form-string-element
                 subscribe="lang"
                 name="subjectOf"
-                label="Subject of"
+                label=${this._i18n.t('doc-modal-subject-of')}
                 .value=${baseData.subjectOf || ''}>
             </dbp-form-string-element>
 
             <dbp-form-enum-element
                 subscribe="lang"
                 name="studyField"
-                label="Study field"
+                label=${this._i18n.t('doc-modal-study-field')}
                 .items=${this.getStudyFields()}
                 .value=${baseData.studyField || ''}
                 required>
@@ -174,7 +174,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             <dbp-form-enum-element
                 subscribe="lang"
                 name="semester"
-                label="Semester"
+                label=${this._i18n.t('doc-modal-semester')}
                 .items=${this.getSemesters()}
                 .value=${defaultSemester}
                 required>
@@ -183,7 +183,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             <dbp-form-enum-element
                 subscribe="lang"
                 name="isPartOf"
-                label="Speicherzweck-Löschfristen"
+                label=${this._i18n.t('doc-modal-purpose-storage')}
                 .items=${BaseFormElement.getIsPartOfItems(this._i18n)}
                 .value=${baseData.isPartOf || ''}
                 multiple
@@ -193,7 +193,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             <dbp-form-string-element
                 subscribe="lang"
                 name="comment"
-                label="Comment"
+                label=${this._i18n.t('doc-modal-comment')}
                 rows="5"
                 .value=${baseData.comment || ''}>
             </dbp-form-string-element>
@@ -483,7 +483,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         this.additionalTypes = types;
     };
 
-    getCommonViewElements = () => {
+    getCommonViewElements = (data) => {
         const fileData = this.data?.file || {};
         const baseData = fileData.base || {};
 
