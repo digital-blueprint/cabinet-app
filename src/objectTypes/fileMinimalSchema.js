@@ -73,7 +73,7 @@ class CabinetHitElement extends BaseHitElement {
         const i18n = this._i18n;
         let hit = /** @type {PersonHit} */(this.data);
         const issueDate = this.data.file['file-cabinet-minimalSchema'].dateCreated;
-        let formattedDate = issueDate ? new Intl.DateTimeFormat('de').format(new Date(issueDate)) : '-';
+        let formattedDate = issueDate ? new Intl.DateTimeFormat('de').format(new Date(issueDate)) : '';
 
         return html`
             <form>
@@ -86,10 +86,10 @@ class CabinetHitElement extends BaseHitElement {
                 </div>
                 </header>
                 <main class="ais-doc-Hits-content">
-                <header class="ais-doc-Hits-content-items hit-content-item1">${this.data.file.base.additionalType.text} </header>
-                <div class="ais-doc-Hits-content-items hit-content-item2"></div>
-                <div class="ais-mdoc-Hits-content-items hit-content-item3">
-                ${i18n.t('document-issue-date')}: ${formattedDate}<br/>
+                <header class="hit-content-item1">${this.data.file.base.additionalType.text} </header>
+                <div class="hit-content-item2"></div>
+                <div class="hit-content-item3">
+                ${issueDate ? html`${i18n.t('document-issue-date')}: ${formattedDate}` : ''}<br/>
                 ${i18n.t('Added')}: ${dateCreated}<br />
                 ${i18n.t('last-modified')}: ${lastModified}<br />
                 </div>

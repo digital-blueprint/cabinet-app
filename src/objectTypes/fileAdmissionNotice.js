@@ -96,7 +96,7 @@ class CabinetHitElement extends BaseHitElement {
         let hit = /** @type {PersonHit} */(this.data);
         const issueDate = this.data.file['file-cabinet-admissionNotice'].dateCreated;
         const dateObject = new Date(issueDate);
-        const formattedDate = new Intl.DateTimeFormat('de').format(dateObject);
+        let formattedDate = issueDate ? new Intl.DateTimeFormat('de').format(dateObject) :'';
         return html`
             <form>
                 <header class="ais-doc-Hits-header">
@@ -111,7 +111,7 @@ class CabinetHitElement extends BaseHitElement {
                 <header class="hit-content-item1">${this.data.file.base.additionalType.text}</header>
                 <div class="hit-content-item2"></div>
                 <div class="hit-content-item3">
-                ${i18n.t('document-issue-date')}: ${formattedDate}<br/>
+                ${issueDate ? html`${i18n.t('document-issue-date')}: ${formattedDate}` : ''}<br/>
                 ${i18n.t('Added')}: ${dateCreated}<br />
                 ${i18n.t('last-modified')}: ${lastModified}<br />
                 </div>
