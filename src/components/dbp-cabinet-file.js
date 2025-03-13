@@ -482,6 +482,18 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         return dataURLtoFile(blobFile.contentUrl, blobFile.fileName);
     }
 
+    /**
+     * Since we are loading the document from typesense we don't need a hit object
+     * @param id
+     * @returns {Promise<void>}
+     */
+    async openViewDialogWithFileId(id) {
+        const hit = {id: id};
+        console.log('openViewDialogWithFileId hit', hit);
+
+        return this.openViewDialogWithFileHit(hit);
+    }
+
     async openViewDialogWithFileHit(hit) {
         const i18n = this._i18n;
         this.initializeState();

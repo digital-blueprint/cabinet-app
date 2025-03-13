@@ -10,6 +10,7 @@ export default class DBPCabinetLitElement extends DBPLitElement {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.entryPointUrl = '';
+        this.routingUrl = '';
     }
 
     static get scopedElements() {
@@ -32,6 +33,7 @@ export default class DBPCabinetLitElement extends DBPLitElement {
             nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
             nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
             basePath: {type: String, attribute: 'base-path'},
+            routingUrl: {type: String, attribute: 'routing-url'},
         };
     }
 

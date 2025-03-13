@@ -54,6 +54,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.showScheduledForDeletion = false;
         this.search = null;
         this.configureWidget = null;
+        this.documentViewId = null;
     }
 
     static get scopedElements() {
@@ -112,6 +113,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // This needs to happen after the Typesense Instantsearch adapter has been initialized,
                     // not before, or Instantsearch will break! Maybe there is some leaked stated between the two?
                     this.initTypesenseService();
+
+                    this.handleAutomaticDocumentViewOpen();
+
                     break;
                 case "showScheduledForDeletion":
                     if (!this.search) {
@@ -124,10 +128,22 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         this.createConfigureWidget(),
                     ]);
                     break;
+                case 'routingUrl':
+                    this.handleRoutingUrlChange();
+                    break;
             }
         });
 
         super.update(changedProperties);
+    }
+
+    async handleAutomaticDocumentViewOpen() {
+        // The first process that fulfills all needs to open the document view dialog will do so
+        if (this.documentViewId) {
+            if (await this.openDocumentViewDialogWithId(this.documentViewId)) {
+                this.documentViewId = null;
+            }
+        }
     }
 
     disconnectedCallback() {
@@ -158,14 +174,26 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             component.setObjectTypeViewComponents(this.objectTypeViewComponents);
             await component.openDialogWithHit(hit);
         } else {
-            /**
-             * @type {CabinetFile}
-             */
-            const component = this.documentFileComponentRef.value;
-            component.setObjectTypeViewComponents(this.objectTypeViewComponents);
-            component.setTypesenseService(this.typesenseService);
-            await component.openViewDialogWithFileHit(hit);
+            this.openDocumentViewDialogWithId(hit.id);
         }
+    }
+
+    async openDocumentViewDialogWithId(id) {
+        /**
+         * @type {CabinetFile}
+         */
+        const component = this.documentFileComponentRef.value;
+
+        if (!component || !this.typesenseService) {
+            return false;
+        }
+
+        component.setObjectTypeViewComponents(this.objectTypeViewComponents);
+        component.setTypesenseService(this.typesenseService);
+
+        await component.openViewDialogWithFileId(id);
+
+        return true;
     }
 
     connectedCallback() {
@@ -201,7 +229,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             that.cabinetFacetsRef.value.filterOnSelectedPerson(event);
         });
 
-        this.updateComplete.then(() => {
+        this.updateComplete.then(async () => {
             console.log('-- updateComplete --');
 
             this.serverConfig = {
@@ -220,7 +248,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             };
             console.log('serverConfig', this.serverConfig);
 
-            this.loadModules();
+            await this.loadModules();
+            await this.handleAutomaticDocumentViewOpen();
         });
     }
 
@@ -800,6 +829,25 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             addDocumentComponent.setFileDocumentFormComponents(formComponents);
         } catch (error) {
             console.error('Error loading modules:', error);
+        }
+    }
+
+    async handleRoutingUrlChange() {
+        const routingData = this.getRoutingData();
+        const id = routingData.pathSegments[1];
+
+        console.log('handleRoutingUrlChange this.routingUrl', this.routingUrl);
+        console.log('handleRoutingUrlChange routingData', routingData);
+
+        switch (routingData.pathSegments[0]) {
+            case 'document':
+                this.documentViewId = id;
+                await this.handleAutomaticDocumentViewOpen();
+                break;
+            case 'person':
+                // Open the person view dialog
+                // this.openDocumentViewDialog({id: routingData.pathSegments[1], objectType: 'person'});
+                break;
         }
     }
 }
