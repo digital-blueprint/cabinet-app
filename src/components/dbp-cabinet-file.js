@@ -57,7 +57,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     /**
      * Initializes the state of the component, so less stuff can go on in the background
      * when the modal is closed
-     * This is important so when the dialog is opened again, the state is clean and not
+     * This is important so when the dialog is opened again, the state is clean and no
      * old data is shown by accident
      */
     initializeState() {
