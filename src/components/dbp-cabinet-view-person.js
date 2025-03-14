@@ -50,6 +50,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
     }
 
     async openDialogWithHit(hit = null) {
+        this.sendSetPropertyEvent('routing-url', `/person/${hit.id}`, true);
         this.hitData = hit;
 
         // Wait until hit data is set and rendering is complete
