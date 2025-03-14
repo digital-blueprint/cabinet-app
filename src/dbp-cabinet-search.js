@@ -55,6 +55,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.search = null;
         this.configureWidget = null;
         this.documentViewId = null;
+        this.personViewId = null;
         this.resetRoutingUrl = false;
     }
 
@@ -116,6 +117,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     this.initTypesenseService();
 
                     this.handleAutomaticDocumentViewOpen();
+                    this.handleAutomaticPersonViewOpen();
 
                     break;
                 case "showScheduledForDeletion":
@@ -143,6 +145,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (this.documentViewId) {
             if (await this.openDocumentViewDialogWithId(this.documentViewId)) {
                 this.documentViewId = null;
+            }
+        }
+    }
+
+    async handleAutomaticPersonViewOpen() {
+        console.log('handleAutomaticPersonViewOpen this.personViewId', this.personViewId)
+        // The first process that fulfills all needs to open the person view dialog will do so
+        if (this.personViewId) {
+            if (await this.openPersonViewDialogWithId(this.personViewId)) {
+                this.personViewId = null;
             }
         }
     }
@@ -179,13 +191,32 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
     }
 
+    async openPersonViewDialogWithId(id) {
+        /**
+         * @type {CabinetViewPerson}
+         */
+        const component = this.documentViewPersonModalRef.value;
+
+        if (!component || !this.typesenseService || this.objectTypeViewComponents.length === 0) {
+            return false;
+        }
+
+        component.setObjectTypeViewComponents(this.objectTypeViewComponents);
+
+        const hit = await this.typesenseService.fetchItem(id);
+        console.log('openPersonViewDialogWithId hit', hit)
+        await component.openDialogWithHit(hit);
+
+        return true;
+    }
+
     async openDocumentViewDialogWithId(id) {
         /**
          * @type {CabinetFile}
          */
         const component = this.documentFileComponentRef.value;
 
-        if (!component || !this.typesenseService) {
+        if (!component || !this.typesenseService || this.objectTypeViewComponents.length === 0) {
             return false;
         }
 
@@ -251,6 +282,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             await this.loadModules();
             await this.handleAutomaticDocumentViewOpen();
+            await this.handleAutomaticPersonViewOpen();
         });
     }
 
@@ -650,28 +682,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         return this.cabinetFacetsRef.value.createFacetsFromConfig(this.facetConfigs);
     }
 
-    getDocumentViewModalHtml() {
-        // TODO: In production it maybe would be better to fetch the typesense document again to get the latest data
-        const hit = this.hitData;
-        console.log('getDocumentViewModalHtml this.hitData', this.hitData);
-        const objectType = hit.objectType;
-        console.log('objectType', objectType);
-
-        if (objectType === '') {
-            return html``;
-        }
-
-        if (objectType === 'person') {
-            return html`
-                <dbp-cabinet-view-person
-                    ${ref(this.documentViewPersonModalRef)}
-                    subscribe="lang,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
-                    .data=${hit}
-                ></dbp-cabinet-view-person>
-            `;
-        }
-    }
-
     toggleShowDeleted(event) {
         this.showScheduledForDeletion = event.target.checked;
     }
@@ -748,7 +758,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </div>
                 </div>
 
-                ${this.getDocumentViewModalHtml()}
+                <dbp-cabinet-view-person
+                    ${ref(this.documentViewPersonModalRef)}
+                    subscribe="lang,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
+                ></dbp-cabinet-view-person>
 
                 <dbp-cabinet-file
                     mode="${CabinetFile.Modes.ADD}"
@@ -855,8 +868,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 await this.handleAutomaticDocumentViewOpen();
                 break;
             case 'person':
-                // Open the person view dialog
-                // this.openDocumentViewDialog({id: routingData.pathSegments[1], objectType: 'person'});
+                this.personViewId = id;
+                this.resetRoutingUrl = true;
+                await this.handleAutomaticPersonViewOpen();
                 break;
         }
     }
