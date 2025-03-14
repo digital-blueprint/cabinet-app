@@ -265,5 +265,7 @@
     "doc-modal-Identifier":"Document ID",
     "date-created":"Date created",
     "doc-modal-purpose-storage":"Purpose of storage",
-    "person-hit":"more"
+    "person-hit":"more",
+    "doc-modal-added":"Added",
+    "doc-modal-issue-date":"Document issue date"
 }

@@ -66,7 +66,7 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-date-element
                     subscribe="lang"
                     name="dateCreated"
-                    label=${this._i18n.t('date-created')}
+                    label=${this._i18n.t('doc-modal-issue-date')}
                     .value=${data.dateCreated || ''}
                     required>
                 </dbp-form-date-element>
@@ -143,7 +143,7 @@ class CabinetViewElement extends BaseViewElement {
 
             <dbp-form-datetime-view
                 subscribe="lang"
-                label=${this._i18n.t('doc-modal-document-added')}
+                label=${this._i18n.t('doc-modal-issue-date')}
                 .value=${data.dateCreated ? new Date(data.dateCreated) : ''}>
             </dbp-form-datetime-view>
         `;

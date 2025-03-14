@@ -262,5 +262,7 @@
     "doc-modal-Identifier":"Identifikationsnummer des Dokuments",
     "date-created": "Erstelldatum",
     "doc-modal-purpose-storage":"Speicherzweck",
-    "person-hit":"weitere"
+    "person-hit":"weitere",
+    "doc-modal-added":"Hinzugefügt am",
+    "doc-modal-issue-date":"Datum der Ausstellung"
 }

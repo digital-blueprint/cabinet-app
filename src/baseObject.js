@@ -490,7 +490,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         return html`
             <dbp-form-date-view
                 subscribe="lang"
-                label=${this._i18n.t('doc-modal-document-issue-date')}
+                label=${this._i18n.t('doc-modal-added')}
                 .value=${baseData.createdTimestamp === 0 ? '' : new Date(baseData.createdTimestamp * 1000)}>
             </dbp-form-date-view>
 
