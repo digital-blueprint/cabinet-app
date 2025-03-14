@@ -760,6 +760,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 <dbp-cabinet-view-person
                     ${ref(this.documentViewPersonModalRef)}
+                    @close="${this.resetRoutingUrlIfNeeded}"
                     subscribe="lang,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
                 ></dbp-cabinet-view-person>
 

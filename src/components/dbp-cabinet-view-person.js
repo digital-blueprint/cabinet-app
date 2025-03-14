@@ -146,6 +146,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
                 min-width="80%"
                 min-height="80%"
                 subscribe="lang"
+                @dbp-modal-closed="${this.onClosePersonModal}"
                 title="${hit.person.fullName}">
                 <div slot="content">
                     <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" .data=${hit}></${unsafeStatic(tagName)}>
@@ -155,6 +156,14 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
                 </div>
             </dbp-modal>
         `;
+    }
+
+    onClosePersonModal() {
+        // Send a close event to the parent component
+        this.dispatchEvent(new CustomEvent('close', {
+            bubbles: true,
+            composed: true
+        }));
     }
 
     render() {
