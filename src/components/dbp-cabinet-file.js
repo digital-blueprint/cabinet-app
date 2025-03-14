@@ -1015,6 +1015,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             // Reset the state of the component when the modal is closed
             this.initializeState();
         }
+
+        // Send a close event to the parent component
+        this.dispatchEvent(new CustomEvent('close', {
+            bubbles: true,
+            composed: true
+        }));
     }
 
     getObjectTypeFormPartHtml() {

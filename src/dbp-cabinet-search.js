@@ -55,6 +55,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.search = null;
         this.configureWidget = null;
         this.documentViewId = null;
+        this.resetRoutingUrl = false;
     }
 
     static get scopedElements() {
@@ -752,10 +753,18 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <dbp-cabinet-file
                     mode="${CabinetFile.Modes.ADD}"
                     ${ref(this.documentFileComponentRef)}
+                    @close="${this.resetRoutingUrlIfNeeded}"
                     subscribe="lang,auth,entry-point-url,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"
                 ></dbp-cabinet-file>
             </div>
         `;
+    }
+
+    resetRoutingUrlIfNeeded() {
+        if (this.resetRoutingUrl) {
+            this.sendSetPropertyEvent('routing-url', '/', true);
+            this.resetRoutingUrl = false;
+        }
     }
 
     async loadModules() {
@@ -842,6 +851,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         switch (routingData.pathSegments[0]) {
             case 'document':
                 this.documentViewId = id;
+                this.resetRoutingUrl = true;
                 await this.handleAutomaticDocumentViewOpen();
                 break;
             case 'person':
