@@ -150,7 +150,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async handleAutomaticPersonViewOpen() {
-        console.log('handleAutomaticPersonViewOpen this.personViewId', this.personViewId)
         // The first process that fulfills all needs to open the person view dialog will do so
         if (this.personViewId) {
             if (await this.openPersonViewDialogWithId(this.personViewId)) {
@@ -204,7 +203,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         component.setObjectTypeViewComponents(this.objectTypeViewComponents);
 
         const hit = await this.typesenseService.fetchItem(id);
-        console.log('openPersonViewDialogWithId hit', hit)
         await component.openDialogWithHit(hit);
 
         return true;
