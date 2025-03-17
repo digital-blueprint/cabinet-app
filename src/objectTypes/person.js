@@ -241,18 +241,49 @@ class CabinetHitElement extends BaseHitElement {
             }
 
             .ais-Hits-header {
-                border-bottom: 1px solid var(--dbp-override-content);
-                margin-bottom: calc(7px + 1vh);
                 display: grid;
                 grid-template-columns: 2fr 1fr;
+                align-items: center;
                 padding: 15px 5px;
+                border-bottom: 1px solid var(--dbp-override-content);
+                margin-bottom: calc(7px + 1vh);
+            }
+
+            .hit-person-info-header{
+                display: flex;
+                align-items: center;
+                font-size:24px;
+                font-weight:bold;
+                color:var(--dbp-override-content);
+            }
+
+            .hit-person-info-header .person-name {
+                margin-right: 10px;
+            }
+
+            .hit-right-wrapper {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
             }
 
             .person-id {
-                display: flex;
-                text-align: left;
-                align-items: center;
+                margin-right: 10px;
                 color:var(--dbp-override-content);
+            }
+
+             .right-column{
+                display: flex;
+                align-items:center;
+            }
+
+            .right-column-icon {
+                width: 25px;
+                height: 25px;
+                background-image: url("${unsafeCSS(getIconSVGURL('user'))}");
+                background-repeat: no-repeat;
+                background-size:contain;
+                background-position-x: right;
             }
 
             .ais-Hits-content {
@@ -266,39 +297,13 @@ class CabinetHitElement extends BaseHitElement {
 
             .hit-person-content-item1{
                 align-self: start;
-                font-size:24px;
-                font-weight:bold;
                 color:var(--dbp-override-content);
             }
 
             .hit-person-content-item2{
                 align-self: start;
                 color:var(--dbp-override-content);
-            }
-
-            .hit-person-content-item3{
-                align-self: start;
-                color:var(--dbp-override-content);
                 margin-bottom:0.5em;
-            }
-
-            .SyncStatus{
-                align-self: flex-end;
-            }
-
-            .right-column{
-                display: flex;
-                justify-content: flex-end;
-                align-items:center;
-            }
-
-            .right-column-icon {
-                width: 25px;
-                height: 25px;
-                background-image: url("${unsafeCSS(getIconSVGURL('user'))}");
-                background-repeat: no-repeat;
-                background-size:contain;
-                background-position-x: right;
             }
 
         `;
@@ -314,23 +319,29 @@ class CabinetHitElement extends BaseHitElement {
 
         return html`
             <header class="ais-Hits-header">
-                <div class="person-id"><!-- studId: ${hit.person.studId}-->
-                   ${renderFieldWithHighlight(hit, 'person.studId')} | ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
+                <div class="hit-person-info-header">
+                    <span class="person-name">
+                        <!-- familyName: ${hit.person.familyName}-->
+                        ${renderFieldWithHighlight(hit, 'person.familyName')},
+                        <!-- givenName: ${hit.person.givenName} -->
+                        ${renderFieldWithHighlight(hit, 'person.givenName')}
+                    </span>
+                    <span class="person-birthdate">
+                        <!-- birthDate: ${hit.person.birthDate}-->
+                        ${renderFieldWithHighlight(hit, 'person.birthDate')}
+                    </span>
                 </div>
-                <div class="right-column">
-                    <div class="right-column-icon" aria-label="Person hit box symbol" title="Person hit box symbol"></div>
+                    <div class="hit-right-wrapper">
+                        <div class="person-id"><!-- studId: ${hit.person.studId}-->
+                        ${renderFieldWithHighlight(hit, 'person.studId')} | ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
+                        </div>
+                    <div class="right-column">
+                        <div class="right-column-icon" aria-label="Person hit box symbol" title="Person hit box symbol"></div>
+                    </div>
                 </div>
             </header>
             <main class="ais-Hits-content">
                 <div class="hit-person-content-item1">
-                    <!-- familyName: ${hit.person.familyName}-->
-                    ${renderFieldWithHighlight(hit, 'person.familyName')},
-                    <!-- givenName: ${hit.person.givenName} -->
-                    ${renderFieldWithHighlight(hit, 'person.givenName')}<br />
-                    <!-- birthDate: ${hit.person.birthDate}-->
-                    ${renderFieldWithHighlight(hit, 'person.birthDate')}
-                </div>
-                <div class="hit-person-content-item2">
                 ${studies.length > 0
                     ? html`
                         ${displayedStudies.map(
@@ -342,7 +353,7 @@ class CabinetHitElement extends BaseHitElement {
                     `
                     : html`—`}
                 </div>
-                <div class="hit-person-content-item3">
+                <div class="hit-person-content-item2">
                 ${i18n.t('sync-hit')}:&nbsp;${Intl.DateTimeFormat('de', {
                     year: 'numeric',
                     month: '2-digit',
