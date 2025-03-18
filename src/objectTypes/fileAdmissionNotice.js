@@ -107,16 +107,16 @@ class CabinetHitElement extends BaseHitElement {
                         </div>
                     </div>
                     <div class="text-container">
-                        <div class="ais-doc-Hits-header-items header-item1">${hit.person.fullName}</div>
+                        <div class="ais-doc-Hits-header-items header-item1">${hit.person.fullName}</div> &nbsp
                         <div class="ais-doc-Hits-header-items header-item2">${hit.person.birthDate} &nbsp (${hit.person.studId}&nbsp|&nbsp${hit.person.stPersonNr})</div>
                     </div>
                 </header>
                 <main class="ais-doc-Hits-content">
                     <div class="hit-content-item2"></div>
                     <div class="hit-content-item3">
-                ${issueDate ? html`${i18n.t('document-issue-date')}: ${formattedDate}` : ''}<br/>
-                ${i18n.t('Added')}: ${dateCreated}<br />
-                ${i18n.t('last-modified')}: ${lastModified}<br />
+                        ${issueDate ? html`${i18n.t('document-issue-date')}: ${formattedDate}` : ''}<br/>
+                        ${i18n.t('Added')}: ${dateCreated}<br />
+                        ${i18n.t('last-modified')}: ${lastModified}<br />
                     </div>
                 </main>
         `;
