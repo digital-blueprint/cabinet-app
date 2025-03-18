@@ -252,7 +252,7 @@ class CabinetHitElement extends BaseHitElement {
             .hit-person-info-header{
                 display: flex;
                 align-items: center;
-                font-size:24px;
+                font-size:18px;
                 font-weight:bold;
                 color:var(--dbp-override-content);
             }
@@ -275,6 +275,7 @@ class CabinetHitElement extends BaseHitElement {
              .right-column{
                 display: flex;
                 align-items:center;
+                padding-right: 0.5em;
             }
 
             .right-column-icon {
@@ -298,12 +299,7 @@ class CabinetHitElement extends BaseHitElement {
             .hit-person-content-item1{
                 align-self: start;
                 color:var(--dbp-override-content);
-            }
-
-            .hit-person-content-item2{
-                align-self: start;
-                color:var(--dbp-override-content);
-                margin-bottom:0.5em;
+                padding-bottom:1em;
             }
 
         `;
@@ -320,6 +316,9 @@ class CabinetHitElement extends BaseHitElement {
         return html`
             <header class="ais-Hits-header">
                 <div class="hit-person-info-header">
+                    <div class="right-column">
+                        <div class="right-column-icon" aria-label="Person hit box symbol" title="Person hit box symbol"></div>
+                    </div>
                     <span class="person-name">
                         <!-- familyName: ${hit.person.familyName}-->
                         ${renderFieldWithHighlight(hit, 'person.familyName')},
@@ -328,16 +327,17 @@ class CabinetHitElement extends BaseHitElement {
                     </span>
                     <span class="person-birthdate">
                         <!-- birthDate: ${hit.person.birthDate}-->
-                        ${renderFieldWithHighlight(hit, 'person.birthDate')}
+                        ${Intl.DateTimeFormat('de',{
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit'
+                            }).format(new Date(hit.person.birthDate))}
                     </span>
                 </div>
                     <div class="hit-right-wrapper">
                         <div class="person-id"><!-- studId: ${hit.person.studId}-->
                         ${renderFieldWithHighlight(hit, 'person.studId')} | ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
                         </div>
-                    <div class="right-column">
-                        <div class="right-column-icon" aria-label="Person hit box symbol" title="Person hit box symbol"></div>
-                    </div>
                 </div>
             </header>
             <main class="ais-Hits-content">
@@ -353,21 +353,7 @@ class CabinetHitElement extends BaseHitElement {
                     `
                     : html`—`}
                 </div>
-                <div class="hit-person-content-item2">
-                ${i18n.t('sync-hit')}:&nbsp;${Intl.DateTimeFormat('de', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                }).format(new Date())}
-                <br />
-
-                </div>
             </main>
-
-
         `;
     }
 }

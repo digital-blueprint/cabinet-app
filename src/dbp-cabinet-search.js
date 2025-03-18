@@ -440,7 +440,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .ais-Hits-list {
                 display: grid;
-                grid-template-columns: repeat(2, minmax(300px, 1fr));
+                grid-template-columns: repeat(1, minmax(300px, 1fr));
                 padding: 0;
                 margin-top: 0;
                 box-sizing: border-box;
@@ -457,11 +457,22 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 justify-content: space-between;
             }
 
-            .hits-person-footer{
+           .hit-person-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .hit-person-last-modify-content {
+                flex: 1;
+                color: var(--dbp-override-content);
+            }
+
+            .hits-person-footer {
                 display: grid;
-                justify-content: end;
+                grid-template-columns: repeat(3, auto); /* auto adjusts to button widths */
                 gap: 5px;
-                grid-template-columns: repeat(3, 1fr);
+                justify-content: end;
             }
 
             .hits-doc-footer{
@@ -499,9 +510,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             @media (max-width: 1280px) and (min-width: 768px) {
-                .ais-Hits-list  {
-                    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-                }
+
             }
 
         `;
@@ -620,15 +629,28 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // Note: "html" is preact html, not lit-html!
                     const i18n = this._i18n;
                     const buttonRowHtml = objectType === 'person' ? html`
-                    <footer class="hits-person-footer">
-                        <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentAdd', {detail: {hit: hit}, bubbles: true, composed: true}));}}>${i18n.t('buttons.add.documents')}</button>
-                        <button class="button select-person-button"
-                            onclick="${(event) => { this.dispatchEvent(new CustomEvent('DbpCabinetFilterPerson', {detail: {person: hit.person.person}, bubbles: true, composed: true}));
-                            }}">
-                            ${ /*@TODO: find something to test here */ hit ?  i18n.t('focus-button-name') : i18n.t('unselect-button-name') }
-                        </button>
-                        <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}> ${i18n.t('buttons.view')}</button>
-                    </footer>
+                    <div class="hit-person-row">
+                        <div class="hit-person-last-modify-content">
+                            ${i18n.t('sync-hit')}:${'\u00A0'}${Intl.DateTimeFormat('de', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                            }).format(new Date())}
+                            <br />
+                        </div>
+                        <footer class="hits-person-footer">
+                            <button class="button" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentAdd', {detail: {hit: hit}, bubbles: true, composed: true}));}}>${i18n.t('buttons.add.documents')}</button>
+                            <button class="button select-person-button"
+                                onclick="${(event) => { this.dispatchEvent(new CustomEvent('DbpCabinetFilterPerson', {detail: {person: hit.person.person}, bubbles: true, composed: true}));
+                                }}">
+                                ${ /*@TODO: find something to test here */ hit ?  i18n.t('focus-button-name') : i18n.t('unselect-button-name') }
+                            </button>
+                            <button class="button is-primary" onclick=${() => { this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));}}> ${i18n.t('buttons.view')}</button>
+                        </footer>
+                    </div>
                     ` : html`
                     <footer class="hits-doc-footer">
                         <button class=" button-view" onclick=${() => { documentViewButtonClick(hit); }}>
