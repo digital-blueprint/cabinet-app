@@ -40,36 +40,45 @@ export const getCommonStyles = () => css`
         padding: 0 5px;
         border-bottom: 1px solid var(--dbp-override-content);
         margin-bottom: calc(7px + 1vh);
+        flex-wrap: wrap;
     }
 
     .text-container {
         display: flex;
-        flex-direction: column;
         color: var(--dbp-override-content);
+        flex-shrink: 1;
+    }
+
+    .ais-doc-title-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
     }
 
     .icon-container {
         display: flex;
-        align-items: right;
-        justify-content: right;
+        align-items: center;
+        justify-content: center;
         background-image: url("${unsafeCSS(getIconSVGURL('docs'))}");
         background-repeat: no-repeat;
         background-size: 30px;
-        background-position-x: right;
-        background-position-y: center;
+        background-position: center;
         width: 50px;
         height: 50px;
+        flex-shrink: 0;
+    }
+
+    .ais-doc-title {
+        color: var(--dbp-override-content);
+        font-size: 24px;
+        display: inline-block;
+        white-space: nowrap;
     }
 
     .ais-doc-Hits-content {
         display: grid;
         grid-template-rows: repeat(2, 1fr);
-    }
-
-    .hit-content-item1 {
-        color: var(--dbp-override-content);
-        font-weight: bold;
-        font-size: 24px;
     }
 
     .hit-content-item3 {
