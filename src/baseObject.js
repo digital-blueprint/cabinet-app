@@ -81,7 +81,7 @@ export const getCommonStyles = () => css`
         grid-template-rows: repeat(2, 1fr);
     }
 
-    .hit-content-item3 {
+    .hit-content-item {
         color: var(--dbp-override-content);
     }
 `;

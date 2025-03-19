@@ -113,8 +113,7 @@ class CabinetHitElement extends BaseHitElement {
                     </div>
                 </header>
                 <main class="ais-doc-Hits-content">
-                    <div class="hit-content-item2"></div>
-                    <div class="hit-content-item3">
+                    <div class="hit-content-item">
                         ${issueDate ? html`${i18n.t('document-issue-date')}: ${formattedDate}` : ''}<br />
                         ${i18n.t('Added')}: ${dateCreated}<br />
                         ${i18n.t('last-modified')}: ${lastModified}<br />
