@@ -82,6 +82,8 @@ try {
     }
 }
 
+let assetsPath = !whitelabel ? customAssetsPath : 'assets';
+
 console.log('APP_ENV: ' + appEnv);
 
 let config;
@@ -102,12 +104,6 @@ if ((devConfig != undefined && appEnv in devConfig)) {
         pdfAsQualifiedlySigningServer: 'https://test',
         hiddenActivities: [],
         enableAnnotations: true,
-        // typesense: {
-        //     host: 'toolbox-backend-dev.tugraz.at',
-        //     port: '443',
-        //     protocol: 'https',
-        //     key: '8NfxGOHntZ3Aat1fWByyoadCctmb7klF'
-        // },
         typesense: {
             host: 'typesense.localhost',
             port: '9100',
@@ -180,21 +176,15 @@ if (enableDispatch) {
     ];
 }
 
+if (!whitelabel) {
+    input = [...input, await getPackagePath('@tugraz/web-components', 'src/logo.js')];
+}
+
 export default (async () => {
     let privatePath = await getDistPath(pkg.name);
     return {
         input:
-            appEnv != 'test'
-                ? !whitelabel ?
-                    [
-                        ...input,
-                        await getPackagePath('@tugraz/web-components', 'src/logo.js'),
-                    ]
-                    :
-                    [
-                        ...input,
-                    ]
-                : globSync('test/**/*.js'),
+            appEnv != 'test' ? input: globSync('test/**/*.js'),
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
@@ -217,48 +207,8 @@ export default (async () => {
             del({
                 targets: 'dist/*',
             }),
-            whitelabel &&
             emitEJS({
-                src: 'assets',
-                include: ['**/*.ejs', '**/.*.ejs'],
-                data: {
-                    getUrl: (p) => {
-                        return url.resolve(config.basePath, p);
-                    },
-                    getPrivateUrl: (p) => {
-                        return url.resolve(`${config.basePath}${privatePath}/`, p);
-                    },
-                    isVisible: (name) => {
-                        return !config.hiddenActivities.includes(name);
-                    },
-                    name: pkg.internalName,
-                    entryPointURL: config.entryPointURL,
-                    nextcloudWebAppPasswordURL: config.nextcloudWebAppPasswordURL,
-                    nextcloudWebDavURL: config.nextcloudWebDavURL,
-                    nextcloudBaseURL: config.nextcloudBaseURL,
-                    nextcloudFileURL: config.nextcloudFileURL,
-                    nextcloudName: config.nextcloudName,
-                    keyCloakBaseURL: config.keyCloakBaseURL,
-                    keyCloakRealm: config.keyCloakRealm,
-                    keyCloakClientId: config.keyCloakClientId,
-                    CSP: config.CSP,
-                    matomoUrl: config.matomoUrl,
-                    matomoSiteId: config.matomoSiteId,
-                    buildInfo: getBuildInfo(appEnv),
-                    shortName: config.shortName,
-                    appDomain: config.appDomain,
-                    enableAnnotations: config.enableAnnotations,
-                    typesenseHost: config.typesense.host,
-                    typesensePort: config.typesense.port,
-                    typesensePath: config.typesense.path,
-                    typesenseProtocol: config.typesense.protocol,
-                    typesenseKey: config.typesense.key,
-                    typesenseCollection: config.typesense.collection,
-                },
-            }),
-            !whitelabel &&
-            emitEJS({
-                src: customAssetsPath,
+                src: assetsPath,
                 include: ['**/*.ejs', '**/.*.ejs'],
                 data: {
                     getUrl: (p) => {
@@ -343,7 +293,6 @@ Dependencies:
                 emitFiles: true,
                 fileName: 'shared/[name].[hash][extname]',
             }),
-            whitelabel &&
             copy({
                 targets: [
                     {
@@ -428,91 +377,6 @@ Dependencies:
                     }
                 ],
             }),
-            !whitelabel &&
-            copy({
-                targets: [
-                    {
-                        src: 'vendor/signature/assets/*-placeholder.png',
-                        dest: 'dist/' + (await getDistPath('@digital-blueprint/esign-app')),
-                    },
-                    {
-                        src: 'vendor/dispatch/assets/*-placeholder.png',
-                        dest: 'dist/' + (await getDistPath('@digital-blueprint/dispatch-app')),
-                    },
-                    {src: customAssetsPath + '*.css', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {src: customAssetsPath + '*.ico', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {src: customAssetsPath + 'translation_overrides', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {src: customAssetsPath + '*.metadata.json', dest: 'dist'},
-                    {src: customAssetsPath + 'modules.json', dest: 'dist'},
-                    {src: 'vendor/signature/src/*.metadata.json', dest: 'dist'},
-                    {src: 'vendor/dispatch/src/*.metadata.json', dest: 'dist'},
-                    {src: customAssetsPath + '*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {src: customAssetsPath + 'htaccess-shared', dest: 'dist/shared/', rename: '.htaccess'},
-                    {src: customAssetsPath + 'icon-*.png', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {src: customAssetsPath + 'apple-*.png', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {src: customAssetsPath + 'safari-*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},
-                    {src: customAssetsPath + 'images/*', dest: 'dist/images'},
-                    {src: customAssetsPath + 'icon/*', dest: 'dist/' + (await getDistPath(pkg.name, 'icon'))},
-                    {src: customAssetsPath + 'site.webmanifest', dest: 'dist', rename: pkg.internalName + '.webmanifest'},
-                    {src: customAssetsPath + 'silent-check-sso.html', dest: 'dist'},
-                    {
-                        src: await getPackagePath('instantsearch.css', 'themes/algolia-min.css'),
-                        dest: 'dist/'+ (await getDistPath(pkg.name)),
-                    },
-                    // the pdfjs worker is needed for signature, dispatch, pdf-viewer and the annotation loading in cabinet!
-                    {
-                        src: await getPackagePath('pdfjs-dist', 'legacy/build/pdf.worker.mjs'),
-                        dest: 'dist/local/@digital-blueprint/esign-app/pdfjs',
-                    },
-                    {
-                        src: await getPackagePath('pdfjs-dist', 'cmaps/*'),
-                        dest: 'dist/local/@digital-blueprint/esign-app/pdfjs',
-                    }, // do we want all map files?
-                    {
-                        src: await getPackagePath('pdfjs-dist', 'legacy/build/pdf.worker.mjs'),
-                        dest: 'dist/local/@dbp-toolkit/pdf-viewer/pdfjs',
-                    },
-                    {
-                        src: await getPackagePath('pdfjs-dist', 'cmaps/*'),
-                        dest: 'dist/local/@dbp-toolkit/pdf-viewer/pdfjs',
-                    }, // do we want all map files?
-                    {
-                        src: await getPackagePath('@tugraz/font-source-sans-pro', 'files/*'),
-                        dest: 'dist/' + (await getDistPath(pkg.name, 'fonts/source-sans-pro')),
-                    },
-                    {
-                        src: await getPackagePath('@tugraz/web-components', 'src/spinner.js'),
-                        dest: 'dist/' + (await getDistPath(pkg.name)), rename: 'tug_spinner.js'
-                    },
-                    {
-                        src: await getPackagePath('@dbp-toolkit/common', 'src/spinner.js'),
-                        dest: 'dist/' + (await getDistPath(pkg.name)),
-                    },
-                    {
-                        src: await getPackagePath('@dbp-toolkit/common', 'misc/browser-check.js'),
-                        dest: 'dist/' + (await getDistPath(pkg.name)),
-                    },
-                    {
-                        src: await getPackagePath('@dbp-toolkit/common', 'assets/icons/*.svg'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/common', 'icons')),
-                    },
-                    {
-                        src: await getPackagePath('tabulator-tables', 'dist/css'),
-                        dest:
-                            'dist/' + (await getDistPath('@digital-blueprint/dispatch-app', 'tabulator-tables')),
-                    },
-                    {
-                        src: await getPackagePath('tabulator-tables', 'dist/css'),
-                        dest:
-                            'dist/' + (await getDistPath('@dbp-toolkit/file-handling', 'tabulator-tables')),
-                    },
-                    {
-                        src: await getPackagePath('tabulator-tables', 'dist/css'),
-                        dest: 'dist/' + (await getDistPath('@dbp-toolkit/tabulator-table', 'tabulator-tables')),
-                    }
-                ],
-            }),
-
             useBabel &&
                 getBabelOutputPlugin({
                     compact: false,
