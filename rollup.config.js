@@ -41,9 +41,6 @@ let devPath = 'assets_custom/dbp-cabinet/assets/';
 // deployment path
 let deploymentPath = '../assets/';
 
-let enableEsign = true;
-let enableDispatch = true;
-
 let useHTTPS = false;
 
 // set whitelabel bool according to used environment
@@ -154,27 +151,47 @@ img-src * blob: data:`;
 
 let input = [
     'src/' + pkg.internalName + '.js',
-    'src/dbp-cabinet-search.js',
-    'src/objectTypes/fileAdmissionNotice.js',
-    'src/objectTypes/fileCommunication.js',
-    'src/objectTypes/fileIdentityDocument.js',
-    'src/objectTypes/fileMinimalSchema.js',
-    'src/objectTypes/fileCitizenshipCertificate.js',
-    'src/objectTypes/person.js',
-    'src/modules/instantSearch.js',
 ];
-if (enableEsign) {
-    input = [...input,
-        'vendor/signature/src/dbp-qualified-signature-pdf-upload.js',
-        'vendor/signature/src/dbp-official-signature-pdf-upload.js',
-    ];
+
+let activities = {
+    'dbp-cabinet-search': [
+        'src/dbp-cabinet-search.js',
+        'src/objectTypes/fileAdmissionNotice.js',
+        'src/objectTypes/fileCommunication.js',
+        'src/objectTypes/fileIdentityDocument.js',
+        'src/objectTypes/fileMinimalSchema.js',
+        'src/objectTypes/fileCitizenshipCertificate.js',
+        'src/objectTypes/person.js',
+        'src/modules/instantSearch.js',
+    ],
+    'dbp-create-request': [
+        'vendor/dispatch/src/dbp-create-request.js'
+    ],
+    'dbp-show-requests': [
+        'vendor/dispatch/src/dbp-show-requests.js'
+    ],
+    'dbp-qualified-signature-pdf-upload': [
+        'vendor/signature/src/dbp-qualified-signature-pdf-upload.js'
+    ],
+    'dbp-official-signature-pdf-upload': [
+        'vendor/signature/src/dbp-official-signature-pdf-upload.js'
+    ],
+};
+
+let APP_ACTIVITIES = process.env.APP_ACTIVITIES;
+const activitiesToInclude = (APP_ACTIVITIES === undefined) ? Object.keys(activities) : (APP_ACTIVITIES ? APP_ACTIVITIES.split(',').map(a => a.trim()) : []);
+
+for (let activity of activitiesToInclude) {
+    if (!(activity in activities)) {
+        console.error(`Unknown activity: '${activity}', use one of '${Object.keys(activities)}'`);
+        process.exit(1);
+    }
 }
-if (enableDispatch) {
-    input = [...input,
-        'vendor/dispatch/src/dbp-create-request.js',
-        'vendor/dispatch/src/dbp-show-requests.js',
-    ];
-}
+activities = Object.fromEntries(
+    Object.entries(activities).filter(([name]) => activitiesToInclude.includes(name))
+);
+
+input = [...input, ...Object.values(activities).flat()];
 
 if (!whitelabel) {
     input = [...input, await getPackagePath('@tugraz/web-components', 'src/logo.js')];
@@ -243,6 +260,7 @@ export default (async () => {
                     typesenseProtocol: config.typesense.protocol,
                     typesenseKey: config.typesense.key,
                     typesenseCollection: config.typesense.collection,
+                    activities: activities,
                 },
             }),
             replace({

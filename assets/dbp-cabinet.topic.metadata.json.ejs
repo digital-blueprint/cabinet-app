@@ -12,12 +12,19 @@
     "en": " This application enables you to manage electronic student records."
   },
   "routing_name": "cabinet",
-  "activities": [
-    {"path": "dbp-cabinet-search.metadata.json"},
-    {"path": "dbp-create-request.metadata.json"},
-    {"path": "dbp-show-requests.metadata.json"},
-    {"path": "dbp-qualified-signature-pdf-upload.metadata.json"},
-    {"path": "dbp-official-signature-pdf-upload.metadata.json"}
+  "activities": [<%
+      const allActivities = [
+        { name: 'dbp-cabinet-search', path: 'dbp-cabinet-search.metadata.json' },
+        { name: 'dbp-create-request', path: 'dbp-create-request.metadata.json' },
+        { name: 'dbp-show-requests', path: 'dbp-show-requests.metadata.json' },
+        { name: 'dbp-qualified-signature-pdf-upload', path: 'dbp-qualified-signature-pdf-upload.metadata.json' },
+        { name: 'dbp-official-signature-pdf-upload', path: 'dbp-official-signature-pdf-upload.metadata.json' }
+      ];
+      const includedActivities = allActivities
+        .filter(activity => activity.name in activities)
+        .map(activity => `{"path": "${activity.path}"}`);
+    %>
+    <%- includedActivities.join(',\n    ') %>
   ],
   "attributes": []
 }
