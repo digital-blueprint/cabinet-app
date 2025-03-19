@@ -82,7 +82,9 @@ class CabinetHitElement extends BaseHitElement {
         let hit = /** @type {PersonHit} */(this.data);
         const issueDate = this.data.file['file-cabinet-citizenshipCertificate'].dateCreated;
         let formattedDate = issueDate ? new Intl.DateTimeFormat('de').format(new Date(issueDate)) :'';
-
+        const documentViewButtonClick = (hit) => {
+            this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));
+        };
         return html`
             <form>
                 <header class="ais-doc-Hits-header">
@@ -106,6 +108,9 @@ class CabinetHitElement extends BaseHitElement {
                         ${i18n.t('Added')}: ${dateCreated}<br />
                         ${i18n.t('last-modified')}: ${lastModified}<br />
                     </div>
+                    <dbp-button type="is-primary" onclick=${() => { documentViewButtonClick(hit); }}>
+                        ${i18n.t('buttons.view')}
+                    </dbp-button>
                 </main>
             </form>
         `;
