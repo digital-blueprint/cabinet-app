@@ -77,8 +77,9 @@ export const getCommonStyles = () => css`
     }
 
     .ais-doc-Hits-content {
-        display: grid;
-        grid-template-rows: repeat(2, 1fr);
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
     }
 
     .hit-content-item {
