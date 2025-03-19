@@ -78,21 +78,24 @@ class CabinetHitElement extends BaseHitElement {
         return html`
             <form>
                 <header class="ais-doc-Hits-header">
-                <div class="text-container">
-                <div class="ais-doc-Hits-header-items header-item1">${hit.person.fullName}</div>
-                <div class="ais-doc-Hits-header-items header-item2">${hit.person.birthDate}&nbsp(${hit.person.studId}&nbsp|&nbsp${hit.person.stPersonNr})</div>
-                </div>
-                <div class="icon-container">
-                </div>
+                    <div class="ais-doc-title-wrapper">
+                        <div class="icon-container">
+                        </div>
+                        <div class="ais-doc-title">${this.data.file.base.additionalType.text}
+                        </div>
+                    </div>
+                    <div class="text-container">
+                        <div class="ais-doc-Hits-header-items header-item1">${hit.person.fullName}</div> &nbsp
+                        <div class="ais-doc-Hits-header-items header-item2">${hit.person.birthDate}&nbsp(${hit.person.studId}&nbsp|&nbsp${hit.person.stPersonNr})</div>
+                    </div>
                 </header>
                 <main class="ais-doc-Hits-content">
-                <header class="hit-content-item1">${this.data.file.base.additionalType.text} </header>
-                <div class="hit-content-item2"></div>
-                <div class="hit-content-item3">
-                ${issueDate ? html`${i18n.t('document-issue-date')}: ${formattedDate}` : ''}<br/>
-                ${i18n.t('Added')}: ${dateCreated}<br />
-                ${i18n.t('last-modified')}: ${lastModified}<br />
-                </div>
+                    <div class="hit-content-item2"></div>
+                    <div class="hit-content-item3">
+                        ${issueDate ? html`${i18n.t('document-issue-date')}: ${formattedDate}` : ''}<br/>
+                        ${i18n.t('Added')}: ${dateCreated}<br />
+                        ${i18n.t('last-modified')}: ${lastModified}<br />
+                    </div>
                 </main>
             </form>
         `;
