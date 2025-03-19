@@ -605,37 +605,37 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 gap: 1em;
             }
 
-            .filter-group--category {
+            /*.filter-group--category {
                 background-image:url("${unsafeCSS(getIconSVGURL('category'))}");
                 background-repeat: no-repeat;
                 background-size: 22px 22px;
                 background-position: right 3px;
-            }
+            }*/
 
             .refinement-list-item-inner > refinement-list-item-count {
                 padding-left:1em;
             }
 
-            .filter-group--person {
+            /*.filter-group--person {
                 background-image:url("${unsafeCSS(getIconSVGURL('user'))}");
                 background-repeat: no-repeat;
                 background-size: 22px 22px;
                 background-position: right 3px;
-            }
+            }*/
 
-            .filter-group--study {
+            /*.filter-group--study {
                 background-image: url("${unsafeCSS(getIconSVGURL('book'))}");
                 background-repeat: no-repeat;
                 background-size: 22px 22px;
                 background-position: right 3px;
-            }
+            }*/
 
-            .filter-group--file {
+            /*.filter-group--file {
                 background-image:url("${unsafeCSS(getIconSVGURL('docs'))}");
                 background-repeat: no-repeat;
                 background-size: 22px 22px;
                 background-position: right 3px;
-            }
+            }*/
 
             .filter-title {
                 margin: 0;
