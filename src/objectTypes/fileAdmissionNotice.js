@@ -119,6 +119,7 @@ class CabinetHitElement extends BaseHitElement {
                         ${i18n.t('last-modified')}: ${lastModified}<br />
                     </div>
                 </main>
+            </form>
         `;
     }
 }
