@@ -652,11 +652,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         </footer>
                     </div>
                     ` : html`
-                    <footer class="hits-doc-footer">
-                        <button class=" button-view" onclick=${() => { documentViewButtonClick(hit); }}>
-                            ${i18n.t('buttons.view')}
-                        </button>
-                    </footer>
                     `;
 
                     // TODO: Subscriber attribute "lang" doesn't work anymore, so we need to set the lang attribute manually, so it at least works when the hit is rendered initially
