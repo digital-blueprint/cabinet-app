@@ -105,7 +105,11 @@ class CabinetHitElement extends BaseHitElement {
                     </div>
                     <div class="text-container">
                         <div class="ais-doc-Hits-header-items header-item1">${hit.person.fullName}</div> &nbsp
-                        <div class="ais-doc-Hits-header-items header-item2">${hit.person.birthDate}&nbsp(${hit.person.studId}&nbsp|&nbsp${hit.person.stPersonNr})</div>
+                        <div class="ais-doc-Hits-header-items header-item2">${Intl.DateTimeFormat('de',{
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit'
+                            }).format(new Date(hit.person.birthDate))}&nbsp(${hit.person.studId}&nbsp|&nbsp${hit.person.stPersonNr})</div>
                     </div>
                 </header>
                 <main class="ais-doc-Hits-content">
