@@ -23,7 +23,7 @@ export default class extends BaseObject {
 class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
-        const data = this.data;
+        let hit = /** @type {PersonHit} */(this.data);
 
         return html`
             <form>
@@ -31,13 +31,13 @@ class CabinetFormElement extends BaseFormElement {
                 lang: ${this.lang}<br />
                 <fieldset>
                     <legend>Firstname</legend>
-                    <input type="text" id="firstname" name="firstname" value="${data.person.givenName}" required>
+                    <input type="text" id="firstname" name="firstname" value="${hit.person.givenName}" required>
                     <label for="firstname">Firstname</label>
                 </fieldset>
 
                 <fieldset>
                     <legend>Lastname</legend>
-                    <input type="text" id="lastname" name="lastname" value="${data.person.familyName}" required>
+                    <input type="text" id="lastname" name="lastname" value="${hit.person.familyName}" required>
                     <label for="lastname">Lastname</label>
                 </fieldset>
 

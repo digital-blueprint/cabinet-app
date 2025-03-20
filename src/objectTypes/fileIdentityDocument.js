@@ -1,14 +1,13 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement, getCommonStyles} from '../baseObject.js';
 import * as formElements from './formElements.js';
-import { PersonHit } from './schema.js';
+import {DocumentHit} from './schema.js';
+
+const OBJECT_TYPE = 'file-cabinet-identityDocument';
 
 export default class extends BaseObject {
-    name = 'file-cabinet-identityDocument';
+    name = OBJECT_TYPE;
 
-    /**
-     * @returns {string}
-     */
     getFormComponent() {
         return CabinetFormElement;
     }
@@ -39,8 +38,9 @@ class CabinetFormElement extends BaseFormElement {
         console.log('-- Render CabinetFormElement --');
         console.log('render this.data', this.data);
 
-        const fileData = this.data?.file || {};
-        const data = fileData["file-cabinet-identityDocument"] || {};
+        let hit = /** @type {DocumentHit} */ (this.data);
+        console.assert(hit.objectType === OBJECT_TYPE);
+        let identityDocument = hit.file[OBJECT_TYPE];
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/identityDocument.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/identityDocument_example.json
@@ -50,7 +50,7 @@ class CabinetFormElement extends BaseFormElement {
                     subscribe="lang"
                     name="identifier"
                     label=${this._i18n.t('doc-modal-Identifier')}
-                    .value=${data.identifier || ''}
+                    .value=${identityDocument.identifier || ''}
                     required>
                 </dbp-form-string-element>
 
@@ -59,7 +59,7 @@ class CabinetFormElement extends BaseFormElement {
                     name="nationality"
                     label=${this._i18n.t('doc-modal-nationality')}
                     .items=${formElements.getNationalityItems()}
-                    .value=${data.nationality || ''}
+                    .value=${identityDocument.nationality || ''}
                     required>
                 </dbp-form-enum-element>
 
@@ -67,7 +67,7 @@ class CabinetFormElement extends BaseFormElement {
                     subscribe="lang"
                     name="dateCreated"
                     label=${this._i18n.t('doc-modal-issue-date')}
-                    .value=${data.dateCreated || ''}
+                    .value=${identityDocument.dateCreated || ''}
                     required>
                 </dbp-form-date-element>
 
@@ -88,11 +88,15 @@ class CabinetHitElement extends BaseHitElement {
     }
 
     render() {
-        const lastModified = new Date(this.data.file.base.modifiedTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
-        const dateCreated = new Date(this.data.file.base.createdTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
+        let hit = /** @type {DocumentHit} */ (this.data);
+        console.assert(hit.objectType === OBJECT_TYPE);
+        let identityDocument = hit.file[OBJECT_TYPE];
+
+        const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
+        const dateCreated = new Date(hit.file.base.createdTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
         const i18n = this._i18n;
-        let hit = /** @type {PersonHit} */(this.data);
-        const issueDate = this.data.file['file-cabinet-identityDocument'].dateCreated;
+
+        const issueDate = identityDocument.dateCreated;
         let formattedDate = issueDate ? new Intl.DateTimeFormat('de').format(new Date(issueDate)): '';
         const documentViewButtonClick = (hit) => {
             this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));
@@ -103,7 +107,7 @@ class CabinetHitElement extends BaseHitElement {
                     <div class="ais-doc-title-wrapper">
                         <div class="icon-container">
                         </div>
-                        <div class="ais-doc-title">${this.data.file.base.additionalType.text}
+                        <div class="ais-doc-title">${hit.file.base.additionalType.text}
                         </div>
                     </div>
                     <div class="text-container">
@@ -137,27 +141,28 @@ class CabinetViewElement extends BaseViewElement {
     }
 
     getCustomViewElements() {
-        const fileData = this.data?.file || {};
-        const data = fileData["file-cabinet-identityDocument"] || {};
+        let hit = /** @type {DocumentHit} */ (this.data);
+        console.assert(hit.objectType === OBJECT_TYPE);
+        let identityDocument = hit.file[OBJECT_TYPE];
 
         return html`
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-Identifier')}
-                .value=${data.identifier || ''}>
+                .value=${identityDocument.identifier || ''}>
             </dbp-form-string-view>
 
             <dbp-form-enum-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-nationality')}
-                .value=${data.nationality || ''}
+                .value=${identityDocument.nationality || ''}
                 .items=${formElements.getNationalityItems()}>
             </dbp-form-enum-view>
 
             <dbp-form-datetime-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-issue-date')}
-                .value=${data.dateCreated ? new Date(data.dateCreated) : ''}>
+                .value=${identityDocument.dateCreated ? new Date(identityDocument.dateCreated) : ''}>
             </dbp-form-datetime-view>
         `;
     }

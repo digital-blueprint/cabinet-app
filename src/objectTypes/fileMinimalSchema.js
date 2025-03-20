@@ -1,13 +1,12 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement,getCommonStyles} from '../baseObject.js';
-import { PersonHit } from './schema.js';
+import {DocumentHit} from './schema.js';
+
+const OBJECT_TYPE = 'file-cabinet-minimalSchema';
 
 export default class extends BaseObject {
-    name = 'file-cabinet-minimalSchema';
+    name = OBJECT_TYPE;
 
-    /**
-     * @returns {string}
-     */
     getFormComponent() {
         return CabinetFormElement;
     }
@@ -37,9 +36,9 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
         console.log('render this.data', this.data);
-
-        const fileData = this.data?.file || {};
-        const data = fileData["file-cabinet-minimalSchema"] || {};
+        let hit = /** @type {DocumentHit} */ (this.data);
+        console.assert(hit.objectType === OBJECT_TYPE);
+        let minimalSchema = hit.file[OBJECT_TYPE];
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/minimalSchema.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/minimalSchema_example.json
@@ -49,7 +48,7 @@ class CabinetFormElement extends BaseFormElement {
                     subscribe="lang"
                     name="dateCreated"
                     label=${this._i18n.t('doc-modal-issue-date')}
-                    .value=${data.dateCreated || ''}
+                    .value=${minimalSchema.dateCreated || ''}
                     required>
                 </dbp-form-date-element>
 
@@ -69,11 +68,15 @@ class CabinetHitElement extends BaseHitElement {
         `;
     }
     render() {
-        const lastModified = new Date(this.data.file.base.modifiedTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
-        const dateCreated = new Date(this.data.file.base.createdTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
         const i18n = this._i18n;
-        let hit = /** @type {PersonHit} */(this.data);
-        const issueDate = this.data.file['file-cabinet-minimalSchema'].dateCreated;
+        let hit = /** @type {DocumentHit} */ (this.data);
+        console.assert(hit.objectType === OBJECT_TYPE);
+        let minimalSchema = hit.file[OBJECT_TYPE];
+
+        const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
+        const dateCreated = new Date(hit.file.base.createdTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
+
+        const issueDate = minimalSchema.dateCreated;
         let formattedDate = issueDate ? new Intl.DateTimeFormat('de').format(new Date(issueDate)) : '';
         const documentViewButtonClick = (hit) => {
             this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));
@@ -84,7 +87,7 @@ class CabinetHitElement extends BaseHitElement {
                     <div class="ais-doc-title-wrapper">
                         <div class="icon-container">
                         </div>
-                        <div class="ais-doc-title">${this.data.file.base.additionalType.text}
+                        <div class="ais-doc-title">${hit.file.base.additionalType.text}
                         </div>
                     </div>
                     <div class="text-container">
@@ -110,6 +113,7 @@ class CabinetHitElement extends BaseHitElement {
         `;
     }
 }
+
 class CabinetViewElement extends BaseViewElement {
     constructor() {
         super();
@@ -117,14 +121,15 @@ class CabinetViewElement extends BaseViewElement {
     }
 
     getCustomViewElements() {
-        const fileData = this.data?.file || {};
-        const data = fileData["file-cabinet-minimalSchema"] || {};
+        let hit = /** @type {DocumentHit} */ (this.data);
+        console.assert(hit.objectType === OBJECT_TYPE);
+        let minimalSchema = hit.file[OBJECT_TYPE];
 
         return html`
             <dbp-form-datetime-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-issue-date')}
-                .value=${data.dateCreated ? new Date(data.dateCreated) : ''}>
+                .value=${minimalSchema.dateCreated ? new Date(minimalSchema.dateCreated) : ''}>
             </dbp-form-datetime-view>
         `;
     }

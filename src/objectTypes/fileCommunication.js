@@ -1,13 +1,12 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement,getCommonStyles} from '../baseObject.js';
-import { PersonHit } from './schema.js';
+import {DocumentHit} from './schema.js';
+
+const OBJECT_TYPE = 'file-cabinet-communication';
 
 export default class extends BaseObject {
-    name = 'file-cabinet-communication';
+    name = OBJECT_TYPE;
 
-    /**
-     * @returns {string}
-     */
     getFormComponent() {
         return CabinetFormElement;
     }
@@ -36,9 +35,9 @@ class CabinetFormElement extends BaseFormElement {
         console.log('-- Render CabinetFormElement --');
         console.log('render this.data', this.data);
 
-        const fileData = this.data?.file || {};
-        const data = fileData["file-cabinet-communication"] || {};
-        const agent = data.agent || {};
+        let hit = /** @type {DocumentHit} */ (this.data);
+        console.assert(hit.objectType === OBJECT_TYPE);
+        let communication = hit.file[OBJECT_TYPE];
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/communication.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/communication_example.json
@@ -48,14 +47,14 @@ class CabinetFormElement extends BaseFormElement {
                     subscribe="lang"
                     name="agent[givenName]"
                     label=${this._i18n.t('given-name')}
-                    .value=${agent.givenName || ''}>
+                    .value=${communication.agent ? communication.agent.givenName : ''}>
                 </dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="agent[familyName]"
                     label=${this._i18n.t('family-name')}
-                    .value=${agent.familyName || ''}>
+                    .value=${communication.agent ? communication.agent.familyName : ''}>
                 </dbp-form-string-element>
 
                 <dbp-form-string-element
@@ -63,14 +62,14 @@ class CabinetFormElement extends BaseFormElement {
                     name="abstract"
                     label=${this._i18n.t('communication-abstract')}
                     rows="10"
-                    .value=${data.abstract || ''}>
+                    .value=${communication.abstract || ''}>
                 </dbp-form-string-element>
 
                 <dbp-form-datetime-element
                     subscribe="lang"
                     name="dateCreated"
                     label=${this._i18n.t('doc-modal-issue-date')}
-                    value=${data.dateCreated || ''}
+                    value=${communication.dateCreated || ''}
                     required>
                 </dbp-form-datetime-element>
 
@@ -92,11 +91,16 @@ class CabinetHitElement extends BaseHitElement {
 
     render() {
         console.log('data from Communication: ', this.data);
-        const lastModified = new Date(this.data.file.base.modifiedTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
-        const dateCreated = new Date(this.data.file.base.createdTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
+
+        let hit = /** @type {DocumentHit} */ (this.data);
+        console.assert(hit.objectType === OBJECT_TYPE);
+        let communication = hit.file[OBJECT_TYPE];
+
+        const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
+        const dateCreated = new Date(hit.file.base.createdTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
         const i18n = this._i18n;
-        let hit = /** @type {PersonHit} */(this.data);
-        const issueDate = this.data.file['file-cabinet-communication'].dateCreated;
+
+        const issueDate = communication.dateCreated;
         let formattedDate = new Intl.DateTimeFormat('de').format(new Date(issueDate));
         const documentViewButtonClick = (hit) => {
             this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));
@@ -107,7 +111,7 @@ class CabinetHitElement extends BaseHitElement {
                     <div class="ais-doc-title-wrapper">
                         <div class="icon-container">
                         </div>
-                        <div class="ais-doc-title">${this.data.file.base.additionalType.text}
+                        <div class="ais-doc-title">${hit.file.base.additionalType.text}
                         </div>
                     </div>
                     <div class="text-container">
@@ -141,33 +145,33 @@ class CabinetViewElement extends BaseViewElement {
     }
 
     getCustomViewElements() {
-        const fileData = this.data?.file || {};
-        const data = fileData["file-cabinet-communication"] || {};
-        const agent = data.agent || {};
+        let hit = /** @type {DocumentHit} */ (this.data);
+        console.assert(hit.objectType === OBJECT_TYPE);
+        let communication = hit.file[OBJECT_TYPE];
 
         return html`
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18n.t('given-name')}
-                .value=${agent.givenName || ''}>
+                .value=${communication.agent ? communication.agent.givenName : ''}>
             </dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18n.t('family-name')}
-                .value=${agent.familyName || ''}>
+                .value=${communication.agent ? communication.agent.familyName : ''}>
             </dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18n.t('communication-abstract')}
-                .value=${data.abstract || ''}>
+                .value=${communication.abstract || ''}>
             </dbp-form-string-view>
 
             <dbp-form-datetime-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-issue-date')}
-                .value=${data.dateCreated ? new Date(data.dateCreated) : ''}>
+                .value=${communication.dateCreated ? new Date(communication.dateCreated) : ''}>
             </dbp-form-datetime-view>
         `;
     }
