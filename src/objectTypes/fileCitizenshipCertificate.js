@@ -1,12 +1,10 @@
 import {css, html} from 'lit';
 import {BaseFormElement, BaseHitElement, BaseObject, BaseViewElement, getCommonStyles} from '../baseObject.js';
 import * as formElements from './formElements.js';
-import {DocumentHit} from './schema.js';
-
-const OBJECT_TYPE = 'file-cabinet-citizenshipCertificate';
+import {getDocumentHit, getCitizenshipCertificate} from './schema.js';
 
 export default class extends BaseObject {
-    name = OBJECT_TYPE;
+    name = 'file-cabinet-citizenshipCertificate';
 
     getFormComponent() {
         return CabinetFormElement;
@@ -35,9 +33,8 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
 
-        let hit = /** @type {DocumentHit} */ (this.data);
-        console.assert(hit.objectType === OBJECT_TYPE);
-        let citizenshipCertificate = hit.file[OBJECT_TYPE];
+        let hit = getDocumentHit(this.data);
+        let citizenshipCertificate = getCitizenshipCertificate(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/citizenshipCertificate.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/citizenshipCertificate_example.json
@@ -76,9 +73,8 @@ class CabinetHitElement extends BaseHitElement {
     }
 
     render() {
-        let hit = /** @type {DocumentHit} */ (this.data);
-        console.assert(hit.objectType === OBJECT_TYPE);
-        let citizenshipCertificate = hit.file[OBJECT_TYPE];
+        let hit = getDocumentHit(this.data);
+        let citizenshipCertificate = getCitizenshipCertificate(hit);
 
         const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
         const dateCreated = new Date(hit.file.base.createdTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
@@ -128,9 +124,8 @@ class CabinetViewElement extends BaseViewElement {
     }
 
     getCustomViewElements() {
-        let hit = /** @type {DocumentHit} */ (this.data);
-        console.assert(hit.objectType === OBJECT_TYPE);
-        let citizenshipCertificate = hit.file[OBJECT_TYPE];
+        let hit = getDocumentHit(this.data);
+        let citizenshipCertificate = getCitizenshipCertificate(hit);
 
         const i18n = this._i18n;
 

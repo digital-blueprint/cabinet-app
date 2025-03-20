@@ -1,11 +1,9 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement,getCommonStyles} from '../baseObject.js';
-import {DocumentHit} from './schema.js';
-
-const OBJECT_TYPE = 'file-cabinet-minimalSchema';
+import {getDocumentHit, getMinimalSchema} from './schema.js';
 
 export default class extends BaseObject {
-    name = OBJECT_TYPE;
+    name = 'file-cabinet-minimalSchema';
 
     getFormComponent() {
         return CabinetFormElement;
@@ -36,9 +34,8 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
         console.log('render this.data', this.data);
-        let hit = /** @type {DocumentHit} */ (this.data);
-        console.assert(hit.objectType === OBJECT_TYPE);
-        let minimalSchema = hit.file[OBJECT_TYPE];
+        let hit = getDocumentHit(this.data);
+        let minimalSchema = getMinimalSchema(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/minimalSchema.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/minimalSchema_example.json
@@ -69,9 +66,8 @@ class CabinetHitElement extends BaseHitElement {
     }
     render() {
         const i18n = this._i18n;
-        let hit = /** @type {DocumentHit} */ (this.data);
-        console.assert(hit.objectType === OBJECT_TYPE);
-        let minimalSchema = hit.file[OBJECT_TYPE];
+        let hit = getDocumentHit(this.data);
+        let minimalSchema = getMinimalSchema(hit);
 
         const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
         const dateCreated = new Date(hit.file.base.createdTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
@@ -121,9 +117,8 @@ class CabinetViewElement extends BaseViewElement {
     }
 
     getCustomViewElements() {
-        let hit = /** @type {DocumentHit} */ (this.data);
-        console.assert(hit.objectType === OBJECT_TYPE);
-        let minimalSchema = hit.file[OBJECT_TYPE];
+        let hit = getDocumentHit(this.data);
+        let minimalSchema = getMinimalSchema(hit);
 
         return html`
             <dbp-form-datetime-view

@@ -1,12 +1,10 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement, getCommonStyles} from '../baseObject.js';
 import * as formElements from './formElements.js';
-import {DocumentHit} from './schema.js';
-
-const OBJECT_TYPE = 'file-cabinet-identityDocument';
+import {getDocumentHit, getIdentityDocument} from './schema.js';
 
 export default class extends BaseObject {
-    name = OBJECT_TYPE;
+    name = 'file-cabinet-identityDocument';
 
     getFormComponent() {
         return CabinetFormElement;
@@ -38,9 +36,8 @@ class CabinetFormElement extends BaseFormElement {
         console.log('-- Render CabinetFormElement --');
         console.log('render this.data', this.data);
 
-        let hit = /** @type {DocumentHit} */ (this.data);
-        console.assert(hit.objectType === OBJECT_TYPE);
-        let identityDocument = hit.file[OBJECT_TYPE];
+        let hit = getDocumentHit(this.data);
+        let identityDocument = getIdentityDocument(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/identityDocument.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/identityDocument_example.json
@@ -88,9 +85,8 @@ class CabinetHitElement extends BaseHitElement {
     }
 
     render() {
-        let hit = /** @type {DocumentHit} */ (this.data);
-        console.assert(hit.objectType === OBJECT_TYPE);
-        let identityDocument = hit.file[OBJECT_TYPE];
+        let hit = getDocumentHit(this.data);
+        let identityDocument = getIdentityDocument(hit);
 
         const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
         const dateCreated = new Date(hit.file.base.createdTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
@@ -141,9 +137,8 @@ class CabinetViewElement extends BaseViewElement {
     }
 
     getCustomViewElements() {
-        let hit = /** @type {DocumentHit} */ (this.data);
-        console.assert(hit.objectType === OBJECT_TYPE);
-        let identityDocument = hit.file[OBJECT_TYPE];
+        let hit = getDocumentHit(this.data);
+        let identityDocument = getIdentityDocument(hit);
 
         return html`
             <dbp-form-string-view

@@ -770,3 +770,66 @@ export class DocumentHit extends PersonHit {
     /** @type {File} */
     file;
 }
+
+/**
+ * @param {object} hit
+ * @returns {PersonHit}
+ */
+export function getPersonHit(hit) {
+    console.assert(hit["@type"] === "Person");
+    return hit;
+}
+
+/**
+ * @param {object} hit
+ * @returns {DocumentHit}
+ */
+export function getDocumentHit(hit) {
+    console.assert(hit["@type"] === "DocumentFile");
+    return hit;
+}
+
+/**
+ * @param {DocumentHit} hit
+ * @returns {CitizenshipCertificate}
+ */
+export function getCitizenshipCertificate(hit) {
+    console.assert(hit.objectType === "file-cabinet-citizenshipCertificate");
+    return hit.file["file-cabinet-citizenshipCertificate"];
+}
+
+/**
+ * @param {DocumentHit} hit
+ * @returns {IdentityDocument}
+ */
+export function getIdentityDocument(hit) {
+    console.assert(hit.objectType === "file-cabinet-identityDocument");
+    return hit.file["file-cabinet-identityDocument"];
+}
+
+/**
+ * @param {DocumentHit} hit
+ * @returns {MinimalSchema}
+ */
+export function getMinimalSchema(hit) {
+    console.assert(hit.objectType === "file-cabinet-minimalSchema");
+    return hit.file["file-cabinet-minimalSchema"];
+}
+
+/**
+ * @param {DocumentHit} hit
+ * @returns {Communication}
+ */
+export function getCommunication(hit) {
+    console.assert(hit.objectType === "file-cabinet-communication");
+    return hit.file["file-cabinet-communication"];
+}
+
+/**
+ * @param {DocumentHit} hit
+ * @returns {AdmissionNotice}
+ */
+export function getAdmissionNotice(hit) {
+    console.assert(hit.objectType === "file-cabinet-admissionNotice");
+    return hit.file["file-cabinet-admissionNotice"];
+}

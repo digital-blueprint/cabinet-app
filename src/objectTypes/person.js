@@ -2,7 +2,7 @@ import {css, html, unsafeCSS} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from '../baseObject.js';
 import {renderFieldWithHighlight} from '../utils';
 import {getIconSVGURL} from '../utils.js';
-import {PersonHit} from './schema.js';
+import {getPersonHit} from './schema.js';
 
 export default class extends BaseObject {
     name = 'person';
@@ -23,7 +23,7 @@ export default class extends BaseObject {
 class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
-        let hit = /** @type {PersonHit} */(this.data);
+        let hit = getPersonHit(this.data);
 
         return html`
             <form>
@@ -129,7 +129,7 @@ class CabinetHitElement extends BaseHitElement {
     }
 
     render() {
-        let hit = /** @type {PersonHit} */(this.data);
+        let hit = getPersonHit(this.data);
         const i18n = this._i18n;
         const studies = hit.person.studies || [];
         const maxStudies = 3;
@@ -377,7 +377,7 @@ class CabinetViewElement extends BaseViewElement {
         `;
     }
     render() {
-        let hit = /** @type {PersonHit} */ (this.data);
+        let hit = getPersonHit(this.data);
         const i18n = this._i18n;
         const displayValue = (value) => {
             return value === undefined || value === null || value === '' ? '-' : value;

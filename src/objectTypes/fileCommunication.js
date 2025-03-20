@@ -1,11 +1,9 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement,getCommonStyles} from '../baseObject.js';
-import {DocumentHit} from './schema.js';
-
-const OBJECT_TYPE = 'file-cabinet-communication';
+import {getDocumentHit, getCommunication} from './schema.js';
 
 export default class extends BaseObject {
-    name = OBJECT_TYPE;
+    name = 'file-cabinet-communication';
 
     getFormComponent() {
         return CabinetFormElement;
@@ -35,9 +33,8 @@ class CabinetFormElement extends BaseFormElement {
         console.log('-- Render CabinetFormElement --');
         console.log('render this.data', this.data);
 
-        let hit = /** @type {DocumentHit} */ (this.data);
-        console.assert(hit.objectType === OBJECT_TYPE);
-        let communication = hit.file[OBJECT_TYPE];
+        let hit = getDocumentHit(this.data);
+        let communication = getCommunication(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/communication.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/communication_example.json
@@ -92,9 +89,8 @@ class CabinetHitElement extends BaseHitElement {
     render() {
         console.log('data from Communication: ', this.data);
 
-        let hit = /** @type {DocumentHit} */ (this.data);
-        console.assert(hit.objectType === OBJECT_TYPE);
-        let communication = hit.file[OBJECT_TYPE];
+        let hit = getDocumentHit(this.data);
+        let communication = getCommunication(hit);
 
         const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
         const dateCreated = new Date(hit.file.base.createdTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
@@ -145,9 +141,8 @@ class CabinetViewElement extends BaseViewElement {
     }
 
     getCustomViewElements() {
-        let hit = /** @type {DocumentHit} */ (this.data);
-        console.assert(hit.objectType === OBJECT_TYPE);
-        let communication = hit.file[OBJECT_TYPE];
+        let hit = getDocumentHit(this.data);
+        let communication = getCommunication(hit);
 
         return html`
             <dbp-form-string-view
