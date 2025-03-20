@@ -101,7 +101,7 @@ class CabinetHitElement extends BaseHitElement {
                         ${i18n.t('Added')}: ${dateCreated}<br />
                         ${i18n.t('last-modified')}: ${lastModified}<br />
                     </div>
-                    <dbp-button type="is-primary" onclick=${() => { documentViewButtonClick(hit); }}>
+                    <dbp-button type="is-primary" @click=${() => { documentViewButtonClick(hit); }}>
                         ${i18n.t('buttons.view')}
                     </dbp-button>
                 </main>
