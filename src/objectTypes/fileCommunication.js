@@ -1,6 +1,6 @@
 import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement,getCommonStyles} from '../baseObject.js';
-import { PersonHit } from './person.js';
+import { PersonHit } from './schema.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-communication';

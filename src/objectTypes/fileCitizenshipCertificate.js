@@ -1,7 +1,7 @@
 import {css, html} from 'lit';
 import {BaseFormElement, BaseHitElement, BaseObject, BaseViewElement, getCommonStyles} from '../baseObject.js';
 import * as formElements from './formElements.js';
-import { PersonHit } from './person.js';
+import { PersonHit } from './schema.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-citizenshipCertificate';
