@@ -29,7 +29,6 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
     static get scopedElements() {
         return {
             'dbp-icon': Icon,
-            'dbp-file-source': FileSource,
             'dbp-pdf-viewer': PdfViewer,
             'dbp-modal': Modal,
             'dbp-button': Button,
@@ -73,9 +72,6 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
         const modal = this.modalRef.value;
         // Make sure the document-add dialog is closed
         modal.close();
-
-        // Open the file source dialog to select a file
-        this._('#file-source').setAttribute('dialog-open', '');
     }
 
     static get styles() {
