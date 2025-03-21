@@ -11,6 +11,12 @@
             "options": {
                 "semi": true
             }
+        },
+        {
+            "files": ["*.yaml", "*.yml"],
+            "options": {
+                "tabWidth": 2
+            }
         }
     ]
 }
