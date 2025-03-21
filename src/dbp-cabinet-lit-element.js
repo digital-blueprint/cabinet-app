@@ -1,6 +1,6 @@
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {IconButton} from "@dbp-toolkit/common";
-import {Translated} from "@dbp-toolkit/common";
+import {IconButton} from '@dbp-toolkit/common';
+import {Translated} from '@dbp-toolkit/common';
 import {createInstance} from './i18n';
 
 export default class DBPCabinetLitElement extends DBPLitElement {
@@ -23,9 +23,9 @@ export default class DBPCabinetLitElement extends DBPLitElement {
     static get properties() {
         return {
             ...super.properties,
-            auth: { type: Object },
+            auth: {type: Object},
             lang: {type: String},
-            entryPointUrl: { type: String, attribute: 'entry-point-url' },
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
             fileHandlingEnabledTargets: {type: String, attribute: 'file-handling-enabled-targets'},
             nextcloudWebAppPasswordURL: {type: String, attribute: 'nextcloud-web-app-password-url'},
             nextcloudWebDavURL: {type: String, attribute: 'nextcloud-webdav-url'},
@@ -63,7 +63,7 @@ export default class DBPCabinetLitElement extends DBPLitElement {
                 case 'lang':
                     this._i18n.changeLanguage(this.lang);
                     break;
-                case "auth":
+                case 'auth':
                     this._updateAuth();
                     break;
             }
@@ -77,7 +77,7 @@ export default class DBPCabinetLitElement extends DBPLitElement {
      * @returns {boolean} true or false
      */
     isLoggedIn() {
-        return (this.auth.person !== undefined && this.auth.person !== null);
+        return this.auth.person !== undefined && this.auth.person !== null;
     }
 
     /**
@@ -85,9 +85,8 @@ export default class DBPCabinetLitElement extends DBPLitElement {
      * @returns {boolean} true or false
      */
     isLoading() {
-        if (this._loginStatus === "logged-out")
-            return false;
-        return (!this.isLoggedIn() && this.auth.token !== undefined);
+        if (this._loginStatus === 'logged-out') return false;
+        return !this.isLoggedIn() && this.auth.token !== undefined;
     }
 
     /**
@@ -97,12 +96,14 @@ export default class DBPCabinetLitElement extends DBPLitElement {
      * @returns {object} response (error or result)
      */
     async httpGetAsync(url, options) {
-        let response = await fetch(url, options).then(result => {
-            if (!result.ok) throw result;
-            return result;
-        }).catch(error => {
-            return error;
-        });
+        let response = await fetch(url, options)
+            .then((result) => {
+                if (!result.ok) throw result;
+                return result;
+            })
+            .catch((error) => {
+                return error;
+            });
 
         return response;
     }

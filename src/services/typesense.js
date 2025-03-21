@@ -32,7 +32,10 @@ export class TypesenseService {
         }
 
         try {
-            return await this.client.collections(this.collectionName).documents('file.' + fileId).retrieve();
+            return await this.client
+                .collections(this.collectionName)
+                .documents('file.' + fileId)
+                .retrieve();
         } catch (error) {
             console.log('fetchFileDocumentByBlobId error.name', error.name);
             console.log('fetchFileDocumentByBlobId error.httpStatus', error.httpStatus);

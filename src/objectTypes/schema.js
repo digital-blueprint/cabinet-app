@@ -1,4 +1,3 @@
-
 class KeyedText {
     /**
      * The unique key of the value
@@ -718,15 +717,15 @@ class CitizenshipCertificate {
 class File {
     constructor() {
         /** @type {?CitizenshipCertificate} */
-        this["file-cabinet-citizenshipCertificate"] = undefined;
+        this['file-cabinet-citizenshipCertificate'] = undefined;
         /** @type {?IdentityDocument} */
-        this["file-cabinet-identityDocument"] = undefined;
+        this['file-cabinet-identityDocument'] = undefined;
         /** @type {?MinimalSchema} */
-        this["file-cabinet-minimalSchema"] = undefined;
+        this['file-cabinet-minimalSchema'] = undefined;
         /** @type {?Communication} */
-        this["file-cabinet-communication"] = undefined;
+        this['file-cabinet-communication'] = undefined;
         /** @type {?AdmissionNotice} */
-        this["file-cabinet-admissionNotice"] = undefined;
+        this['file-cabinet-admissionNotice'] = undefined;
     }
 
     /** @type {FileCommon} */
@@ -742,7 +741,7 @@ class Hit {
          * Either "Person" or "DocumentFile"
          * @type {string}
          */
-        this["@type"] = undefined;
+        this['@type'] = undefined;
     }
 
     /**
@@ -776,7 +775,7 @@ export class DocumentHit extends PersonHit {
  * @returns {PersonHit}
  */
 export function getPersonHit(hit) {
-    console.assert(hit["@type"] === "Person");
+    console.assert(hit['@type'] === 'Person');
     return hit;
 }
 
@@ -785,7 +784,7 @@ export function getPersonHit(hit) {
  * @returns {DocumentHit}
  */
 export function getDocumentHit(hit) {
-    console.assert(hit["@type"] === "DocumentFile");
+    console.assert(hit['@type'] === 'DocumentFile');
     return hit;
 }
 
@@ -794,8 +793,8 @@ export function getDocumentHit(hit) {
  * @returns {CitizenshipCertificate}
  */
 export function getCitizenshipCertificate(hit) {
-    console.assert(hit.objectType === "file-cabinet-citizenshipCertificate");
-    return hit.file["file-cabinet-citizenshipCertificate"];
+    console.assert(hit.objectType === 'file-cabinet-citizenshipCertificate');
+    return hit.file['file-cabinet-citizenshipCertificate'];
 }
 
 /**
@@ -803,8 +802,8 @@ export function getCitizenshipCertificate(hit) {
  * @returns {IdentityDocument}
  */
 export function getIdentityDocument(hit) {
-    console.assert(hit.objectType === "file-cabinet-identityDocument");
-    return hit.file["file-cabinet-identityDocument"];
+    console.assert(hit.objectType === 'file-cabinet-identityDocument');
+    return hit.file['file-cabinet-identityDocument'];
 }
 
 /**
@@ -812,8 +811,8 @@ export function getIdentityDocument(hit) {
  * @returns {MinimalSchema}
  */
 export function getMinimalSchema(hit) {
-    console.assert(hit.objectType === "file-cabinet-minimalSchema");
-    return hit.file["file-cabinet-minimalSchema"];
+    console.assert(hit.objectType === 'file-cabinet-minimalSchema');
+    return hit.file['file-cabinet-minimalSchema'];
 }
 
 /**
@@ -821,8 +820,8 @@ export function getMinimalSchema(hit) {
  * @returns {Communication}
  */
 export function getCommunication(hit) {
-    console.assert(hit.objectType === "file-cabinet-communication");
-    return hit.file["file-cabinet-communication"];
+    console.assert(hit.objectType === 'file-cabinet-communication');
+    return hit.file['file-cabinet-communication'];
 }
 
 /**
@@ -830,6 +829,6 @@ export function getCommunication(hit) {
  * @returns {AdmissionNotice}
  */
 export function getAdmissionNotice(hit) {
-    console.assert(hit.objectType === "file-cabinet-admissionNotice");
-    return hit.file["file-cabinet-admissionNotice"];
+    console.assert(hit.objectType === 'file-cabinet-admissionNotice');
+    return hit.file['file-cabinet-admissionNotice'];
 }

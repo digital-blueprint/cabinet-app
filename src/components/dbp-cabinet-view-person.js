@@ -2,7 +2,7 @@ import {css, html, unsafeCSS} from 'lit';
 import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
 import {ref, createRef} from 'lit/directives/ref.js';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
-import DBPCabinetLitElement from "../dbp-cabinet-lit-element";
+import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal} from '@dbp-toolkit/common';
 import {FileSource} from '@dbp-toolkit/file-handling';
@@ -17,8 +17,8 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
         this.objectTypeHitComponents = {};
         this.objectTypeViewComponents = {};
         this.hitData = {
-            "id": "",
-            "objectType": "",
+            id: '',
+            objectType: '',
         };
         this.modalRef = createRef();
         this.documentFile = null;
@@ -39,9 +39,9 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
     static get properties() {
         return {
             ...super.properties,
-            hitData: { type: Object, attribute: false },
-            documentFile: { type: File, attribute: false },
-            documentType: { type: String, attribute: false },
+            hitData: {type: Object, attribute: false},
+            documentFile: {type: File, attribute: false},
+            documentType: {type: String, attribute: false},
         };
     }
 
@@ -91,21 +91,27 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
                 grid-auto-flow: row;
             }
 
-            #view-modal .description { grid-area: 1 / 1 / 2 / 3; }
+            #view-modal .description {
+                grid-area: 1 / 1 / 2 / 3;
+            }
 
-            #view-modal .pdf-preview { grid-area: 2 / 1 / 3 / 2; }
+            #view-modal .pdf-preview {
+                grid-area: 2 / 1 / 3 / 2;
+            }
 
-            #view-modal .form { grid-area: 2 / 2 / 3 / 3; }
+            #view-modal .form {
+                grid-area: 2 / 2 / 3 / 3;
+            }
 
             #view-modal {
                 --dbp-modal-title-font-size: 24px;
                 --dbp-modal-title-font-weight: bold;
                 --dbp-modal-title-padding: 0 0 0 40px;
-                --dbp-modal-title-background: url("${unsafeCSS(getIconSVGURL('user'))}") left center / 28px 28px no-repeat;
+                --dbp-modal-title-background: url('${unsafeCSS(getIconSVGURL('user'))}') left
+                    center / 28px 28px no-repeat;
                 list-style-type: none;
                 --dbp-modal-min-width: min(75vw, 85vw);
             }
-
         `;
     }
 
@@ -120,7 +126,9 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
 
         if (objectType === '') {
             console.log('objectType empty', objectType);
-            return html`<dbp-modal ${ref(this.modalRef)} modal-id="view-modal"></dbp-modal>`;
+            return html`
+                <dbp-modal ${ref(this.modalRef)} modal-id="view-modal"></dbp-modal>
+            `;
         }
 
         const id = hit.id;
@@ -129,7 +137,10 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
 
         console.log('objectType', objectType);
         console.log('tagName', tagName);
-        console.log('this.objectTypeViewComponents[objectType]', this.objectTypeViewComponents[objectType]);
+        console.log(
+            'this.objectTypeViewComponents[objectType]',
+            this.objectTypeViewComponents[objectType],
+        );
 
         if (!customElements.get(tagName)) {
             customElements.define(tagName, this.objectTypeViewComponents[objectType]);
@@ -161,10 +172,12 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
 
     onClosePersonModal() {
         // Send a close event to the parent component
-        this.dispatchEvent(new CustomEvent('close', {
-            bubbles: true,
-            composed: true
-        }));
+        this.dispatchEvent(
+            new CustomEvent('close', {
+                bubbles: true,
+                composed: true,
+            }),
+        );
     }
 
     render() {

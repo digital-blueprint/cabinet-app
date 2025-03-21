@@ -5,7 +5,7 @@ import {css, html, render, unsafeCSS} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
-import {panel, refinementList } from 'instantsearch.js/es/widgets/index.js';
+import {panel, refinementList} from 'instantsearch.js/es/widgets/index.js';
 import {connectCurrentRefinements, connectClearRefinements} from 'instantsearch.js/es/connectors';
 import {createDateRefinement} from './dbp-cabinet-date-facet.js';
 import {getIconSVGURL} from '../utils.js';
@@ -16,8 +16,8 @@ class FacetLabel extends DBPLitElement {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
-        this.namespace = "";
-        this.value = "";
+        this.namespace = '';
+        this.value = '';
     }
 
     static get properties() {
@@ -31,7 +31,9 @@ class FacetLabel extends DBPLitElement {
 
     render() {
         let text = this._i18n.t(`typesense-schema.${this.namespace}.${this.value}`, this.value);
-        return html`${text}`;
+        return html`
+            ${text}
+        `;
     }
 
     update(changedProperties) {
@@ -112,9 +114,12 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     afterSearchInit() {
         // Add event listeners to open filters by clicking panel headers
         this._a('.ais-Panel-header').forEach((panelHeader) => {
-            const header = /** @type {HTMLElement} */(panelHeader);
+            const header = /** @type {HTMLElement} */ (panelHeader);
             header.addEventListener('click', (event) => {
-                if (event.target instanceof HTMLElement && !event.target.closest('.ais-Panel-collapseButton')) {
+                if (
+                    event.target instanceof HTMLElement &&
+                    !event.target.closest('.ais-Panel-collapseButton')
+                ) {
                     const collapseButton = header.querySelector('.ais-Panel-collapseButton');
                     if (collapseButton instanceof HTMLElement) {
                         collapseButton.click();
@@ -199,20 +204,24 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     hideFilterGroupIfEmpty() {
         const filterGroups = this._a('#filters-container .filter-group');
-        filterGroups.forEach( filterGroup => {
-            const filterGroupElement = /** @type {HTMLElement} */(filterGroup);
-            const refinementLists = filterGroupElement.querySelectorAll('.filter .ais-RefinementList');
+        filterGroups.forEach((filterGroup) => {
+            const filterGroupElement = /** @type {HTMLElement} */ (filterGroup);
+            const refinementLists = filterGroupElement.querySelectorAll(
+                '.filter .ais-RefinementList',
+            );
             if (refinementLists.length === 0) {
                 return;
             }
-            const activeFilters = Array.from(refinementLists).filter((list) => !list.classList.contains('ais-RefinementList--noRefinement'));
+            const activeFilters = Array.from(refinementLists).filter(
+                (list) => !list.classList.contains('ais-RefinementList--noRefinement'),
+            );
             if (activeFilters.length === 0) {
                 filterGroupElement.classList.add('display-none');
             } else {
                 filterGroupElement.classList.remove('display-none');
             }
         });
-      }
+    }
 
     createCurrentRefinements = () => {
         const customCurrentRefinements = connectCurrentRefinements(this.renderCurrentRefinements);
@@ -235,21 +244,32 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 switch (refinement.type) {
                     case 'numeric': {
                         // Date picker refinement filter labels
-                        const activeFacet = this.facets.find(facet => facet.attribute === refinement.attribute);
+                        const activeFacet = this.facets.find(
+                            (facet) => facet.attribute === refinement.attribute,
+                        );
                         if (activeFacet && activeFacet.fieldType === 'datepicker') {
-                            let date = new Date(refinement.value * 1000).toLocaleDateString('de-AT', {
-                                day: '2-digit',
-                                month: 'short',
-                                year: 'numeric'
-                            });
-                            let operatorLabel = refinement.operator === '>=' ? i18n.t('cabinet-search.refinement-date-after-text') : i18n.t('cabinet-search.refinement-date-before-text');
+                            let date = new Date(refinement.value * 1000).toLocaleDateString(
+                                'de-AT',
+                                {
+                                    day: '2-digit',
+                                    month: 'short',
+                                    year: 'numeric',
+                                },
+                            );
+                            let operatorLabel =
+                                refinement.operator === '>='
+                                    ? i18n.t('cabinet-search.refinement-date-after-text')
+                                    : i18n.t('cabinet-search.refinement-date-before-text');
                             label = `${operatorLabel} ${date}`;
                         }
                         break;
                     }
                     default: {
                         // Set checkbox refinement filter labels
-                        label = i18n.t(`typesense-schema.${refinement.attribute}.${refinement.value}`, refinement.label);
+                        label = i18n.t(
+                            `typesense-schema.${refinement.attribute}.${refinement.value}`,
+                            refinement.label,
+                        );
                         break;
                     }
                 }
@@ -304,9 +324,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .appendChild(clearButton);
         }
 
-        this.searchResultsElement
-            .querySelector('.clear-refinements-button-label')
-            .textContent = i18n.t('cabinet-search.refinement-delete-all-filters');
+        this.searchResultsElement.querySelector('.clear-refinements-button-label').textContent =
+            i18n.t('cabinet-search.refinement-delete-all-filters');
 
         this.searchResultsElement
             .querySelector('.clear-refinement-container')
@@ -335,8 +354,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             schemaField,
             schemaFieldType = 'checkbox',
             facetOptions = {},
-            usePanel = true
-          } = facetConfig;
+            usePanel = true,
+        } = facetConfig;
 
         // Remove special characters from schema field name to use as css class and translation key.
         const schemaFieldSafe = schemaField.replace(/[@#]/g, '');
@@ -358,12 +377,24 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     header(options, {html}) {
                         return i18n.t(`cabinet-search.filter-${translationKey}-title`);
                     },
-                    collapseButtonText(options, { html }) {
+                    collapseButtonText(options, {html}) {
                         return html`
-                          ${options.collapsed
-                            ? html`<img src="${that.basePath}local/@digital-blueprint/cabinet-app/icon/chevron-down.svg" width="16" height="16" alt="chevron-down" />`
-                            : html`<img src="${that.basePath}local/@digital-blueprint/cabinet-app/icon/chevron-up.svg" width="16" height="16" alt="chevron-up" />`}
-                      `;
+                            ${options.collapsed
+                                ? html`
+                                      <img
+                                          src="${that.basePath}local/@digital-blueprint/cabinet-app/icon/chevron-down.svg"
+                                          width="16"
+                                          height="16"
+                                          alt="chevron-down" />
+                                  `
+                                : html`
+                                      <img
+                                          src="${that.basePath}local/@digital-blueprint/cabinet-app/icon/chevron-up.svg"
+                                          width="16"
+                                          height="16"
+                                          alt="chevron-up" />
+                                  `}
+                        `;
                     },
                 },
                 collapsed: () => true,
@@ -382,7 +413,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     fieldType: schemaFieldType,
                     container: that._(`#${cssClass}`),
                     attribute: schemaField,
-                    sortBy: ['isRefined:desc','count:desc', 'name:asc'],
+                    sortBy: ['isRefined:desc', 'count:desc', 'name:asc'],
                     limit: 12,
                     searchable: true,
                     searchableShowReset: false,
@@ -399,7 +430,12 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                 value="${item.value}"
                                                 checked=${item.isRefined} />
                                         </label>
-                                        <dbp-cabinet-facet-label subscribe="lang" class="refinement-list-item-name" title="${item.label}" namespace="${schemaField}" value="${item.value}"></dbp-cabinet-facet-label>
+                                        <dbp-cabinet-facet-label
+                                            subscribe="lang"
+                                            class="refinement-list-item-name"
+                                            title="${item.label}"
+                                            namespace="${schemaField}"
+                                            value="${item.value}"></dbp-cabinet-facet-label>
                                     </div>
                                     <span class="refinement-list-item-count">(${item.count})</span>
                                 </div>
@@ -472,12 +508,12 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         const facetWidgets = this._a('#filters-container .filter');
 
         if (facetWidgets) {
-            facetWidgets.forEach(facetWidget => {
+            facetWidgets.forEach((facetWidget) => {
                 const widget = /** @type {HTMLElement} */ (facetWidget);
 
                 const COLLAPSED_COUNT = 12;
                 const EXPANDED_COUNT = 30;
-                const showMoreButton  = widget.querySelector('.ais-RefinementList-showMore');
+                const showMoreButton = widget.querySelector('.ais-RefinementList-showMore');
                 const searchBox = widget.querySelector('.ais-SearchBox-input');
                 const resetButton = widget.querySelector('.ais-SearchBox-reset');
                 const facetList = widget.querySelector('.ais-RefinementList-list');
@@ -487,7 +523,9 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 // Toggle is-expanded class on showMoreButton click
                 if (showMoreButton && showMoreButton.getAttribute('data-event-added') === null) {
                     showMoreButton.addEventListener('click', () => {
-                        widget.querySelector('.ais-RefinementList-list').classList.toggle('is-expanded');
+                        widget
+                            .querySelector('.ais-RefinementList-list')
+                            .classList.toggle('is-expanded');
                     });
                     showMoreButton.setAttribute('data-event-added', 'true');
                 }
@@ -538,7 +576,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         const EXPANDED_COUNT = 30;
         const facetItems = facetWidget.querySelectorAll('.refinement-list-item');
         const facetCount = facetItems.length;
-        const isShowMoreButtonPresent  = facetWidget.querySelector('.ais-RefinementList-showMore');
+        const isShowMoreButtonPresent = facetWidget.querySelector('.ais-RefinementList-showMore');
 
         if (!isShowMoreButtonPresent && facetCount < EXPANDED_COUNT) {
             facetWidget.classList.add('no-gradient');
@@ -587,14 +625,14 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             .filter-header__title {
                 margin: 0;
                 font-weight: bold;
-                padding-top:0.6em;
+                padding-top: 0.6em;
             }
 
             .filters-container {
-                margin-top:3em;
+                margin-top: 3em;
             }
 
-            .custom-checkbox{
+            .custom-checkbox {
                 transform: translateY(-10%);
             }
 
@@ -613,7 +651,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             }*/
 
             .refinement-list-item-inner > refinement-list-item-count {
-                padding-left:1em;
+                padding-left: 1em;
             }
 
             /*.filter-group--person {
@@ -639,7 +677,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .filter-title {
                 margin: 0;
-                padding-left:1px;
+                padding-left: 1px;
                 font-weight: bold;
             }
 
@@ -648,7 +686,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             /* panel search */
-            .ais-Panel-collapseButton  {
+            .ais-Panel-collapseButton {
                 background: none !important;
                 border: none !important;
                 position: relative;
@@ -656,7 +694,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .ais-Panel-collapseButton span {
                 display: flex;
-                right:2px;
+                right: 2px;
             }
 
             .ais-SearchBox-form {
@@ -726,8 +764,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 justify-content: center;
             }
 
-            .filter input[type="date"] {
-                padding: .5em;
+            .filter input[type='date'] {
+                padding: 0.5em;
             }
 
             /* input[type="date"]:invalid::after {
@@ -736,24 +774,33 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             } */
 
             /* input wrapper */
-            ::-internal-datetime-container {position: relative}
+            ::-internal-datetime-container {
+                position: relative;
+            }
             /* date field wrappers */
             ::-webkit-datetime-edit {
                 max-width: max-content;
-                padding-right: .5em;
+                padding-right: 0.5em;
             }
-            ::-webkit-datetime-edit-fields-wrapper {}
+            ::-webkit-datetime-edit-fields-wrapper {
+            }
             /* date separator */
-            ::-webkit-datetime-edit-text {}
+            ::-webkit-datetime-edit-text {
+            }
             /* date fields */
-            ::-webkit-datetime-edit-month-field {}
-            ::-webkit-datetime-edit-day-field {}
-            ::-webkit-datetime-edit-year-field {}
+            ::-webkit-datetime-edit-month-field {
+            }
+            ::-webkit-datetime-edit-day-field {
+            }
+            ::-webkit-datetime-edit-year-field {
+            }
             /* calendar button */
-            ::-webkit-calendar-picker-indicator { cursor: pointer; }
+            ::-webkit-calendar-picker-indicator {
+                cursor: pointer;
+            }
             /* ??? */
-            ::-webkit-inner-spin-button {}
-
+            ::-webkit-inner-spin-button {
+            }
 
             .refinement-list-item {
                 display: flex;

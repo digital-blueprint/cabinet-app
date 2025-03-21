@@ -1,5 +1,11 @@
 import {css, html} from 'lit';
-import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement, getCommonStyles} from '../baseObject.js';
+import {
+    BaseObject,
+    BaseFormElement,
+    BaseHitElement,
+    BaseViewElement,
+    getCommonStyles,
+} from '../baseObject.js';
 import * as formElements from './formElements.js';
 import {getDocumentHit, getIdentityDocument} from './schema.js';
 
@@ -26,9 +32,9 @@ export default class extends BaseObject {
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
-            'DriversLicence': 'Drivers Licence',
-            'Passport': 'Passport',
-            'PersonalLicence': 'Personal Licence',
+            DriversLicence: 'Drivers Licence',
+            Passport: 'Passport',
+            PersonalLicence: 'Personal Licence',
         };
     }
 
@@ -48,8 +54,7 @@ class CabinetFormElement extends BaseFormElement {
                     name="identifier"
                     label=${this._i18n.t('doc-modal-Identifier')}
                     .value=${identityDocument.identifier || ''}
-                    required>
-                </dbp-form-string-element>
+                    required></dbp-form-string-element>
 
                 <dbp-form-enum-element
                     subscribe="lang"
@@ -57,16 +62,14 @@ class CabinetFormElement extends BaseFormElement {
                     label=${this._i18n.t('doc-modal-nationality')}
                     .items=${formElements.getNationalityItems()}
                     .value=${identityDocument.nationality || ''}
-                    required>
-                </dbp-form-enum-element>
+                    required></dbp-form-enum-element>
 
                 <dbp-form-date-element
                     subscribe="lang"
                     name="dateCreated"
                     label=${this._i18n.t('doc-modal-issue-date')}
                     .value=${identityDocument.dateCreated || ''}
-                    required>
-                </dbp-form-date-element>
+                    required></dbp-form-date-element>
 
                 ${this.getCommonFormElements()}
             </form>
@@ -78,9 +81,8 @@ class CabinetHitElement extends BaseHitElement {
     static get styles() {
         // language=css
         return css`
-        ${super.styles}
-        ${getCommonStyles()}
-
+            ${super.styles}
+            ${getCommonStyles()}
         `;
     }
 
@@ -88,40 +90,69 @@ class CabinetHitElement extends BaseHitElement {
         let hit = getDocumentHit(this.data);
         let identityDocument = getIdentityDocument(hit);
 
-        const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
-        const dateCreated = new Date(hit.file.base.createdTimestamp * 1000).toLocaleString('de-DE',{ dateStyle: 'short'});
+        const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString(
+            'de-DE',
+            {dateStyle: 'short'},
+        );
+        const dateCreated = new Date(hit.file.base.createdTimestamp * 1000).toLocaleString(
+            'de-DE',
+            {dateStyle: 'short'},
+        );
         const i18n = this._i18n;
 
         const issueDate = identityDocument.dateCreated;
-        let formattedDate = issueDate ? new Intl.DateTimeFormat('de').format(new Date(issueDate)): '';
+        let formattedDate = issueDate
+            ? new Intl.DateTimeFormat('de').format(new Date(issueDate))
+            : '';
         const documentViewButtonClick = (hit) => {
-            this.dispatchEvent(new CustomEvent('DbpCabinetDocumentView', {detail: {hit: hit}, bubbles: true, composed: true}));
+            this.dispatchEvent(
+                new CustomEvent('DbpCabinetDocumentView', {
+                    detail: {hit: hit},
+                    bubbles: true,
+                    composed: true,
+                }),
+            );
         };
         return html`
             <form>
                 <header class="ais-doc-Hits-header">
                     <div class="ais-doc-title-wrapper">
-                        <div class="icon-container">
-                        </div>
-                        <div class="ais-doc-title">${hit.file.base.additionalType.text}
-                        </div>
+                        <div class="icon-container"></div>
+                        <div class="ais-doc-title">${hit.file.base.additionalType.text}</div>
                     </div>
                     <div class="text-container">
-                        <div class="ais-doc-Hits-header-items header-item1">${hit.person.fullName}</div> &nbsp
-                        <div class="ais-doc-Hits-header-items header-item2">${Intl.DateTimeFormat('de',{
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit'
-                            }).format(new Date(hit.person.birthDate))}&nbsp(${hit.person.studId}&nbsp|&nbsp${hit.person.stPersonNr})</div>
+                        <div class="ais-doc-Hits-header-items header-item1">
+                            ${hit.person.fullName}
+                        </div>
+                        &nbsp
+                        <div class="ais-doc-Hits-header-items header-item2">
+                            ${Intl.DateTimeFormat('de', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                            }).format(new Date(hit.person.birthDate))}&nbsp(${hit.person
+                                .studId}&nbsp|&nbsp${hit.person.stPersonNr})
+                        </div>
                     </div>
                 </header>
                 <main class="ais-doc-Hits-content">
                     <div class="hit-content-item">
-                        ${issueDate ? html`${i18n.t('document-issue-date')}: ${formattedDate}` : ''}<br/>
-                        ${i18n.t('Added')}: ${dateCreated}<br />
-                        ${i18n.t('last-modified')}: ${lastModified}<br />
+                        ${issueDate
+                            ? html`
+                                  ${i18n.t('document-issue-date')}: ${formattedDate}
+                              `
+                            : ''}
+                        <br />
+                        ${i18n.t('Added')}: ${dateCreated}
+                        <br />
+                        ${i18n.t('last-modified')}: ${lastModified}
+                        <br />
                     </div>
-                    <dbp-button type="is-primary" @click=${() => { documentViewButtonClick(hit); }}>
+                    <dbp-button
+                        type="is-primary"
+                        @click=${() => {
+                            documentViewButtonClick(hit);
+                        }}>
                         ${i18n.t('buttons.view')}
                     </dbp-button>
                 </main>
@@ -144,21 +175,20 @@ class CabinetViewElement extends BaseViewElement {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-Identifier')}
-                .value=${identityDocument.identifier || ''}>
-            </dbp-form-string-view>
+                .value=${identityDocument.identifier || ''}></dbp-form-string-view>
 
             <dbp-form-enum-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-nationality')}
                 .value=${identityDocument.nationality || ''}
-                .items=${formElements.getNationalityItems()}>
-            </dbp-form-enum-view>
+                .items=${formElements.getNationalityItems()}></dbp-form-enum-view>
 
             <dbp-form-datetime-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-issue-date')}
-                .value=${identityDocument.dateCreated ? new Date(identityDocument.dateCreated) : ''}>
-            </dbp-form-datetime-view>
+                .value=${identityDocument.dateCreated
+                    ? new Date(identityDocument.dateCreated)
+                    : ''}></dbp-form-datetime-view>
         `;
     }
 }

@@ -7,13 +7,15 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './objectTypes/formElements';
 import {classMap} from 'lit/directives/class-map.js';
 import {getIconSVGURL} from './utils.js';
-import {gatherFormDataFromElement, validateRequiredFields} from '@dbp-toolkit/form-elements/src/utils.js';
+import {
+    gatherFormDataFromElement,
+    validateRequiredFields,
+} from '@dbp-toolkit/form-elements/src/utils.js';
 
 export class BaseObject {
     name = 'baseObject';
 
-    constructor() {
-    }
+    constructor() {}
 
     getFormComponent() {
         return BaseFormElement;
@@ -60,7 +62,7 @@ export const getCommonStyles = () => css`
         display: flex;
         align-items: center;
         justify-content: center;
-        background-image: url("${unsafeCSS(getIconSVGURL('docs'))}");
+        background-image: url('${unsafeCSS(getIconSVGURL('docs'))}');
         background-repeat: no-repeat;
         background-size: 30px;
         background-position: center;
@@ -161,8 +163,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
                 subscribe="lang"
                 name="subjectOf"
                 label=${this._i18n.t('doc-modal-subject-of')}
-                .value=${baseData.subjectOf || ''}>
-            </dbp-form-string-element>
+                .value=${baseData.subjectOf || ''}></dbp-form-string-element>
 
             <dbp-form-enum-element
                 subscribe="lang"
@@ -170,8 +171,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
                 label=${this._i18n.t('doc-modal-study-field')}
                 .items=${this.getStudyFields()}
                 .value=${baseData.studyField || ''}
-                required>
-            </dbp-form-enum-element>
+                required></dbp-form-enum-element>
 
             <dbp-form-enum-element
                 subscribe="lang"
@@ -179,8 +179,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
                 label=${this._i18n.t('doc-modal-semester')}
                 .items=${this.getSemesters()}
                 .value=${defaultSemester}
-                required>
-            </dbp-form-enum-element>
+                required></dbp-form-enum-element>
 
             <dbp-form-enum-element
                 subscribe="lang"
@@ -189,18 +188,16 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
                 .items=${BaseFormElement.getIsPartOfItems(this._i18n)}
                 .value=${baseData.isPartOf || ''}
                 multiple
-                required>
-            </dbp-form-enum-element>
+                required></dbp-form-enum-element>
 
             <dbp-form-string-element
                 subscribe="lang"
                 name="comment"
                 label=${this._i18n.t('doc-modal-comment')}
                 rows="5"
-                .value=${baseData.comment || ''}>
-            </dbp-form-string-element>
+                .value=${baseData.comment || ''}></dbp-form-string-element>
 
-            <input type="hidden" name="additionalType" value="${additionalType}">
+            <input type="hidden" name="additionalType" value="${additionalType}" />
             ${this.getButtonRowHtml()}
         `;
     };
@@ -242,7 +239,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         event.preventDefault();
 
         // Validate the form before proceeding
-        if (!await this.validateForm()) {
+        if (!(await this.validateForm())) {
             return;
         }
 
@@ -250,17 +247,20 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         const formElement = this.shadowRoot.querySelector('form');
         const data = {
             formData: {
-                "about": {
-                    "@type": "Person",
-                    "persId": this.person.identNrObfuscated,
+                about: {
+                    '@type': 'Person',
+                    persId: this.person.identNrObfuscated,
                 },
                 ...gatherFormDataFromElement(formElement),
             },
         };
 
         console.log('storeBlobItem data', data);
-        const customEvent = new CustomEvent("DbpCabinetDocumentAddSave",
-            {"detail": data, bubbles: true, composed: true});
+        const customEvent = new CustomEvent('DbpCabinetDocumentAddSave', {
+            detail: data,
+            bubbles: true,
+            composed: true,
+        });
         this.dispatchEvent(customEvent);
     }
 
@@ -271,9 +271,9 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             person: {type: Object},
             additionalType: {type: String, attribute: 'additional-type'},
             data: {type: Object},
-            auth: { type: Object },
-            entryPointUrl: { type: String, attribute: 'entry-point-url' },
-            saveButtonEnabled: { type: Boolean, attribute: false },
+            auth: {type: Object},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            saveButtonEnabled: {type: Boolean, attribute: false},
         };
     }
 
@@ -294,18 +294,27 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     cancelForm(event) {
         event.preventDefault();
 
-        const customEvent = new CustomEvent("DbpCabinetDocumentFormCancel",
-            {bubbles: true, composed: true});
+        const customEvent = new CustomEvent('DbpCabinetDocumentFormCancel', {
+            bubbles: true,
+            composed: true,
+        });
         this.dispatchEvent(customEvent);
     }
 
     getButtonRowHtml() {
         return html`
             <div class="button-row">
-                <button class="button is-secondary" type="button" @click=${this.cancelForm}>Cancel</button>
-                <button class="button is-primary" type="submit" ?disabled=${!this.saveButtonEnabled} @click=${this.storeBlobItem}>
+                <button class="button is-secondary" type="button" @click=${this.cancelForm}>
+                    Cancel
+                </button>
+                <button
+                    class="button is-primary"
+                    type="submit"
+                    ?disabled=${!this.saveButtonEnabled}
+                    @click=${this.storeBlobItem}>
                     Save
-                    <dbp-mini-spinner class="${classMap({hidden: this.saveButtonEnabled})}"></dbp-mini-spinner>
+                    <dbp-mini-spinner
+                        class="${classMap({hidden: this.saveButtonEnabled})}"></dbp-mini-spinner>
                 </button>
             </div>
         `;
@@ -326,7 +335,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     getStudyFields() {
         const personData = this.data?.person || this.person || {};
         const studies = personData.studies;
-        let studyFields = {'none' : 'Unspecified'};
+        let studyFields = {none: 'Unspecified'};
 
         if (studies) {
             for (const study of studies) {
@@ -359,13 +368,16 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
             'communication-archive-10',
             'other-delete-3',
             'other-archive-3',
-            'study-archive-80'
+            'study-archive-80',
         ];
 
-        return items.reduce((acc, item) => ({
-            ...acc,
-            [item]: i18n.t(`typesense-schema.file.base.isPartOf.${item}`)
-        }), {});
+        return items.reduce(
+            (acc, item) => ({
+                ...acc,
+                [item]: i18n.t(`typesense-schema.file.base.isPartOf.${item}`),
+            }),
+            {},
+        );
     }
 }
 
@@ -378,8 +390,7 @@ export class BaseHitElement extends ScopedElementsMixin(DBPLitElement) {
     }
 
     static get scopedElements() {
-        return {
-        };
+        return {};
     }
 
     static get properties() {
@@ -407,7 +418,9 @@ export class BaseHitElement extends ScopedElementsMixin(DBPLitElement) {
         return html`
             <form>
                 <h2>BaseHit</h2>
-                lang: ${this.lang}<br />
+                lang: ${this.lang}
+                <br />
+            </form>
         `;
     }
 
@@ -434,8 +447,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
     }
 
     static get scopedElements() {
-        return {
-        };
+        return {};
     }
 
     static get properties() {
@@ -493,61 +505,56 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
             <dbp-form-date-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-added')}
-                .value=${baseData.createdTimestamp === 0 ? '' : new Date(baseData.createdTimestamp * 1000)}>
-            </dbp-form-date-view>
+                .value=${baseData.createdTimestamp === 0
+                    ? ''
+                    : new Date(baseData.createdTimestamp * 1000)}></dbp-form-date-view>
 
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-subject-of')}
-                .value=${baseData.subjectOf || ''}>
-            </dbp-form-string-view>
+                .value=${baseData.subjectOf || ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-study-field')}
-                .value=${this.getStudyFieldNameForKey(baseData.studyField)}>
-            </dbp-form-string-view>
+                .value=${this.getStudyFieldNameForKey(baseData.studyField)}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-semester')}
-                .value=${baseData.semester || ''}>
-            </dbp-form-string-view>
+                .value=${baseData.semester || ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-comment')}
-                .value=${baseData.comment || ''}>
-            </dbp-form-string-view>
+                .value=${baseData.comment || ''}></dbp-form-string-view>
 
-             <dbp-form-enum-view
+            <dbp-form-enum-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-storage-purpose-deletion')}
                 .value=${baseData.isPartOf}
-                .items=${BaseFormElement.getIsPartOfItems(this._i18n)}>
-            </dbp-form-enum-view>
+                .items=${BaseFormElement.getIsPartOfItems(this._i18n)}></dbp-form-enum-view>
 
             <dbp-form-date-view
                 .hidden=${baseData.deleteAtTimestamp === 0}
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-recommended-deletion')}
-                .value=${baseData.recommendedDeletionTimestamp === 0 ? '' : new Date(baseData.recommendedDeletionTimestamp * 1000)}>
-            </dbp-form-date-view>
+                .value=${baseData.recommendedDeletionTimestamp === 0
+                    ? ''
+                    : new Date(baseData.recommendedDeletionTimestamp * 1000)}></dbp-form-date-view>
 
-             <dbp-form-datetime-view
+            <dbp-form-datetime-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-modified')}
-                .value=${baseData.modifiedTimestamp === 0 ? '' : new Date(baseData.modifiedTimestamp * 1000)}>
-            </dbp-form-datetime-view>
+                .value=${baseData.modifiedTimestamp === 0
+                    ? ''
+                    : new Date(baseData.modifiedTimestamp * 1000)}></dbp-form-datetime-view>
         `;
     };
 
     getStudyFieldNameForKey = (key) => {
         const personData = this.data?.person || {};
-        const studies = [
-            { key: 'none', name: 'Unspecified' },
-            ...personData.studies || []
-        ];
+        const studies = [{key: 'none', name: 'Unspecified'}, ...(personData.studies || [])];
 
         for (const study of studies) {
             if (study.key === key) {
@@ -567,10 +574,8 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-document-type')}
                 .value=${baseData.additionalType?.key || ''}
-                .items=${this.additionalTypes}>
-            </dbp-form-enum-view>
-            ${this.getCustomViewElements()}
-            ${this.getCommonViewElements()}
+                .items=${this.additionalTypes}></dbp-form-enum-view>
+            ${this.getCustomViewElements()} ${this.getCommonViewElements()}
         `;
     }
 

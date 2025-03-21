@@ -28,16 +28,27 @@ class CabinetFormElement extends BaseFormElement {
         return html`
             <form>
                 <h2>Person Form</h2>
-                lang: ${this.lang}<br />
+                lang: ${this.lang}
+                <br />
                 <fieldset>
                     <legend>Firstname</legend>
-                    <input type="text" id="firstname" name="firstname" value="${hit.person.givenName}" required>
+                    <input
+                        type="text"
+                        id="firstname"
+                        name="firstname"
+                        value="${hit.person.givenName}"
+                        required />
                     <label for="firstname">Firstname</label>
                 </fieldset>
 
                 <fieldset>
                     <legend>Lastname</legend>
-                    <input type="text" id="lastname" name="lastname" value="${hit.person.familyName}" required>
+                    <input
+                        type="text"
+                        id="lastname"
+                        name="lastname"
+                        value="${hit.person.familyName}"
+                        required />
                     <label for="lastname">Lastname</label>
                 </fieldset>
 
@@ -72,12 +83,12 @@ class CabinetHitElement extends BaseHitElement {
                 margin-bottom: calc(7px + 1vh);
             }
 
-            .hit-person-info-header{
+            .hit-person-info-header {
                 display: flex;
                 align-items: center;
-                font-size:18px;
-                font-weight:bold;
-                color:var(--dbp-override-content);
+                font-size: 18px;
+                font-weight: bold;
+                color: var(--dbp-override-content);
             }
 
             .hit-person-info-header .person-name {
@@ -92,21 +103,21 @@ class CabinetHitElement extends BaseHitElement {
 
             .person-id {
                 margin-right: 10px;
-                color:var(--dbp-override-content);
+                color: var(--dbp-override-content);
             }
 
-             .right-column{
+            .right-column {
                 display: flex;
-                align-items:center;
+                align-items: center;
                 padding-right: 0.5em;
             }
 
             .right-column-icon {
                 width: 25px;
                 height: 25px;
-                background-image: url("${unsafeCSS(getIconSVGURL('user'))}");
+                background-image: url('${unsafeCSS(getIconSVGURL('user'))}');
                 background-repeat: no-repeat;
-                background-size:contain;
+                background-size: contain;
                 background-position-x: right;
             }
 
@@ -119,12 +130,11 @@ class CabinetHitElement extends BaseHitElement {
                 justify-content: space-between;
             }
 
-            .hit-person-content-item1{
+            .hit-person-content-item1 {
                 align-self: start;
-                color:var(--dbp-override-content);
-                padding-bottom:1em;
+                color: var(--dbp-override-content);
+                padding-bottom: 1em;
             }
-
         `;
     }
 
@@ -140,7 +150,10 @@ class CabinetHitElement extends BaseHitElement {
             <header class="ais-Hits-header">
                 <div class="hit-person-info-header">
                     <div class="right-column">
-                        <div class="right-column-icon" aria-label="Person hit box symbol" title="Person hit box symbol"></div>
+                        <div
+                            class="right-column-icon"
+                            aria-label="Person hit box symbol"
+                            title="Person hit box symbol"></div>
                     </div>
                     <span class="person-name">
                         <!-- familyName: ${hit.person.familyName}-->
@@ -150,31 +163,40 @@ class CabinetHitElement extends BaseHitElement {
                     </span>
                     <span class="person-birthdate">
                         <!-- birthDate: ${hit.person.birthDate}-->
-                        ${Intl.DateTimeFormat('de',{
+                        ${Intl.DateTimeFormat('de', {
                             year: 'numeric',
                             month: '2-digit',
-                            day: '2-digit'
-                            }).format(new Date(hit.person.birthDate))}
+                            day: '2-digit',
+                        }).format(new Date(hit.person.birthDate))}
                     </span>
                 </div>
-                    <div class="hit-right-wrapper">
-                        <div class="person-id"><!-- studId: ${hit.person.studId}-->
-                        ${renderFieldWithHighlight(hit, 'person.studId')} | ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
-                        </div>
+                <div class="hit-right-wrapper">
+                    <div class="person-id">
+                        <!-- studId: ${hit.person.studId}-->
+                        ${renderFieldWithHighlight(hit, 'person.studId')} |
+                        ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
+                    </div>
                 </div>
             </header>
             <main class="ais-Hits-content">
                 <div class="hit-person-content-item1">
-                ${studies.length > 0
-                    ? html`
-                        ${displayedStudies.map(
-                          study => html`${study.name} (${study.status.text})<br />`
-                        )}
-                        ${extraCount > 0
-                          ? html`<span>${extraCount}&nbsp;${i18n.t('person-hit')}</span>`
-                          : ''}
-                    `
-                    : html`—`}
+                    ${studies.length > 0
+                        ? html`
+                              ${displayedStudies.map(
+                                  (study) => html`
+                                      ${study.name} (${study.status.text})
+                                      <br />
+                                  `,
+                              )}
+                              ${extraCount > 0
+                                  ? html`
+                                        <span>${extraCount}&nbsp;${i18n.t('person-hit')}</span>
+                                    `
+                                  : ''}
+                          `
+                        : html`
+                              —
+                          `}
                 </div>
             </main>
         `;
@@ -187,193 +209,195 @@ class CabinetViewElement extends BaseViewElement {
         return css`
             ${super.styles}
 
-                .modal-Gi-header-container {
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 1rem;
-                }
+            .modal-Gi-header-container {
+                display: flex;
+                align-items: center;
+                margin-bottom: 1rem;
+            }
 
-                .modal-Gi-header-svg {
-                    margin-right: 0.5rem;
-                }
+            .modal-Gi-header-svg {
+                margin-right: 0.5rem;
+            }
 
-                .modal-Gi-header-svg svg {
-                   fill:var(--dbp-override-content);
-                }
+            .modal-Gi-header-svg svg {
+                fill: var(--dbp-override-content);
+            }
 
-                .modal-Gi-header-title h4 {
-                    margin: 0;
-                }
+            .modal-Gi-header-title h4 {
+                margin: 0;
+            }
 
-                .info-container {
-                    display: flex;
-                    justify-content: flex-start;
-                    gap: 20px;
-                    width: 100%;
-                }
+            .info-container {
+                display: flex;
+                justify-content: flex-start;
+                gap: 20px;
+                width: 100%;
+            }
 
-                .info-column {
-                    flex: 1;
-                }
+            .info-column {
+                flex: 1;
+            }
 
-                .info-list {
-                    list-style-type: none;
-                    padding: 0;
-                    margin: 0;
-                }
+            .info-list {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+            }
 
-                .info-row {
-                    display: flex;
-                    justify-content: space-between;
-                    padding: 8px 0;
-                }
+            .info-row {
+                display: flex;
+                justify-content: space-between;
+                padding: 8px 0;
+            }
 
-                .info-row b {
-                    text-align: left;
-                    font-weight: bold;
-                    flex: 0 0 40%;
-                    hyphens: auto;
-                    word-break: break-word;
-                    overflow-wrap: break-word;
-                    white-space: normal;
-                    text-decoration: none;
-                }
-                .info-row abbr {
-                    text-decoration: none;
-                }
-                .info-row span {
-                    flex: 1;
-                    text-align: left;
-                    word-wrap: break-word;
-                    word-break: break-word;
-                    white-space: normal;
-                    padding-left:3em;
-                    hyphens: auto;
-                }
+            .info-row b {
+                text-align: left;
+                font-weight: bold;
+                flex: 0 0 40%;
+                hyphens: auto;
+                word-break: break-word;
+                overflow-wrap: break-word;
+                white-space: normal;
+                text-decoration: none;
+            }
+            .info-row abbr {
+                text-decoration: none;
+            }
+            .info-row span {
+                flex: 1;
+                text-align: left;
+                word-wrap: break-word;
+                word-break: break-word;
+                white-space: normal;
+                padding-left: 3em;
+                hyphens: auto;
+            }
 
-                .modal-Si-header-container {
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 1rem;
-                }
+            .modal-Si-header-container {
+                display: flex;
+                align-items: center;
+                margin-bottom: 1rem;
+            }
 
-                .modal-Si-header-svg {
-                    margin-right: 0.5rem;
-                }
+            .modal-Si-header-svg {
+                margin-right: 0.5rem;
+            }
 
-                .modal-Si-header-svg svg{
-                    fill:var(--dbp-override-content);
-                }
+            .modal-Si-header-svg svg {
+                fill: var(--dbp-override-content);
+            }
 
-                .modal-Si-header-title h4 {
-                    margin: 0;
-                }
+            .modal-Si-header-title h4 {
+                margin: 0;
+            }
 
-                .modal-Ci-header-container {
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 1rem;
-                }
+            .modal-Ci-header-container {
+                display: flex;
+                align-items: center;
+                margin-bottom: 1rem;
+            }
 
-                .modal-Ci-header-svg {
-                    margin-right: 0.5rem;
-                }
+            .modal-Ci-header-svg {
+                margin-right: 0.5rem;
+            }
 
-                .modal-Ci-header-svg svg{
-                    fill:var(--dbp-override-content);
-                }
+            .modal-Ci-header-svg svg {
+                fill: var(--dbp-override-content);
+            }
 
-                .modal-Ci-header-title h4 {
-                    margin: 0;
-                }
+            .modal-Ci-header-title h4 {
+                margin: 0;
+            }
 
-                .study-info{
-                    list-style-type: none;
-                    padding: 0;
-                    margin: 0;
-                }
+            .study-info {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+            }
 
-                .study-row {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 8px;
-                }
+            .study-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+            }
 
-                .study-row b {
-                    flex: 1;
-                    text-align: left;
-                }
+            .study-row b {
+                flex: 1;
+                text-align: left;
+            }
 
-                .study-row span {
-                    flex: 2;
-                    text-align: start;
-                }
+            .study-row span {
+                flex: 2;
+                text-align: start;
+            }
 
-                .Address-flex-item {
-                    display: flex;
-                    gap: 20px;
-                    align-items: flex-start;
-                }
+            .Address-flex-item {
+                display: flex;
+                gap: 20px;
+                align-items: flex-start;
+            }
 
-                .address-info{
-                    display:grid;
-                    grid-template-columns: 1fr 1fr 1fr;
-                    list-style-type: none;
-                    padding: 0;
-                }
+            .address-info {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                list-style-type: none;
+                padding: 0;
+            }
 
-                .address-info-item {
-                    grid-column:2;
-                }
+            .address-info-item {
+                grid-column: 2;
+            }
 
-                .address-info li {
-                    margin-bottom: 5px;
-                }
+            .address-info li {
+                margin-bottom: 5px;
+            }
 
-                .Ci-flex-info {
-                    list-style-type: none;
-                    padding: 0;
-                    margin: 0;
-                }
+            .Ci-flex-info {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+            }
 
-                .Ci-item {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 8px;
-                }
+            .Ci-item {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+            }
 
-                .Ci-item b {
-                    flex: 1;
-                    text-align: left;
-                }
+            .Ci-item b {
+                flex: 1;
+                text-align: left;
+            }
 
-                .Ci-item span {
-                    flex: 2;
-                    text-align: start;
-                }
+            .Ci-item span {
+                flex: 2;
+                text-align: start;
+            }
 
-                .header-button-container{
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                    padding-bottom: 2.2em;
-                }
+            .header-button-container {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding-bottom: 2.2em;
+            }
 
-                .sync-tu-button{
-                    overflow: hidden;
-                    background-color: var(--dbp-override-background);
-                }
+            .sync-tu-button {
+                overflow: hidden;
+                background-color: var(--dbp-override-background);
+            }
 
-                .links{
-                    border-bottom-style: solid;
-                    border-color: var(--dbp-content);
-                    padding: 0px;
-                    transition: background-color 0.15s, color 0.15s;
-                    color: var(--dbp-content);
-                    cursor: pointer;
-                    text-decoration: none;
-	                border-bottom: var(--dbp-border);
-                }
+            .links {
+                border-bottom-style: solid;
+                border-color: var(--dbp-content);
+                padding: 0px;
+                transition:
+                    background-color 0.15s,
+                    color 0.15s;
+                color: var(--dbp-content);
+                cursor: pointer;
+                text-decoration: none;
+                border-bottom: var(--dbp-border);
+            }
         `;
     }
     render() {
@@ -391,7 +415,7 @@ class CabinetViewElement extends BaseViewElement {
             day: '2-digit',
             hour: '2-digit',
             minute: '2-digit',
-            second: '2-digit'
+            second: '2-digit',
         }).format(new Date())}
         </div>
         <div class="sync-tu-button">
@@ -426,7 +450,7 @@ class CabinetViewElement extends BaseViewElement {
                         <li class="info-row"><b>${i18n.t('stud-id')}</b><span> ${displayValue(hit.person.studId)}</span></li>
                         <li class="info-row"><b>${i18n.t('st-PersonNr')}</b><span> ${displayValue(hit.person.stPersonNr)} </span></li>
                         <li class="info-row"><b>${i18n.t('birth-date')}</b><span> ${displayValue(hit.person.birthDate)}</span></li>
-                        <li class="info-row"><b>${i18n.t('nationalities')}</b><span> ${displayValue(hit.person.nationalities.map(n => n.text).join(', '))}</span></li>
+                        <li class="info-row"><b>${i18n.t('nationalities')}</b><span> ${displayValue(hit.person.nationalities.map((n) => n.text).join(', '))}</span></li>
                         <li class="info-row"><b>${i18n.t('gender')}</b><span> ${displayValue(hit.person.gender?.text)}</span></li>
                         <li class="info-row"><b>${i18n.t('social-SecurityNr')}</b><span> ${displayValue(hit.person.socialSecurityNr)}</span></li>
                     </ul>
@@ -476,7 +500,8 @@ class CabinetViewElement extends BaseViewElement {
                 </div>
             </div>
             <hr/>
-                ${hit.person.studies.map(study => html`
+                ${hit.person.studies.map(
+                    (study) => html`
                 <li>
                     <ul class="study-info">
                         <li class="study-row"><b>${i18n.t(' key')}</b><span> ${displayValue(study.key)}</span></li>
@@ -494,10 +519,11 @@ class CabinetViewElement extends BaseViewElement {
                         <li><b>exmatriculationSemester</b> ${study.exmatriculationSemester}</li>
                         <li><b>immatriculationSemester</b> ${study.immatriculationSemester}</li>
                         <li><b>type</b> ${study.type}</li>
-                        <li><b>additionalCertificates</b> ${study.additionalCertificates.map(c => c.text).join(', ')}</li>-->
+                        <li><b>additionalCertificates</b> ${study.additionalCertificates.map((c) => c.text).join(', ')}</li>-->
                     </ul>
                 </li>
-                `)}
+                `,
+                )}
             </br>
             <div class="modal-Ci-header-container">
                 <div class="modal-Ci-header-svg">
@@ -564,21 +590,50 @@ class CabinetViewElement extends BaseViewElement {
             </ul>
             <!--<h4>Applications</h4>-->
             <!--<ul>
-                ${hit.person.applications.map(application => html`
-                <li>
-                    <ul>
-                        <li><b>id</b> ${application.id}</li>
-                        <li><b>studyId</b> ${application.studyId}</li>
-                        <li><b>studyKey</b> ${application.studyKey}</li>
-                        <li><b>studyName</b> ${application.studyName}</li>
-                        <li><b>studyType</b> ${application.studyType}</li>
-                        <li><b>startSemester</b> ${application.startSemester}</li>
-                        <li><b>qualificationCertificateDate</b> ${application.qualificationCertificateDate}</li>
-                        <li><b>qualificationIssuingCountry</b> ${application.qualificationIssuingCountry?.text}</li>
-                        <li><b>qualificationType</b> ${application.qualificationType?.text}</li>
-                    </ul>
-                </li>
-                `)}
+                ${hit.person.applications.map(
+                    (application) => html`
+                        <li>
+                            <ul>
+                                <li>
+                                    <b>id</b>
+                                    ${application.id}
+                                </li>
+                                <li>
+                                    <b>studyId</b>
+                                    ${application.studyId}
+                                </li>
+                                <li>
+                                    <b>studyKey</b>
+                                    ${application.studyKey}
+                                </li>
+                                <li>
+                                    <b>studyName</b>
+                                    ${application.studyName}
+                                </li>
+                                <li>
+                                    <b>studyType</b>
+                                    ${application.studyType}
+                                </li>
+                                <li>
+                                    <b>startSemester</b>
+                                    ${application.startSemester}
+                                </li>
+                                <li>
+                                    <b>qualificationCertificateDate</b>
+                                    ${application.qualificationCertificateDate}
+                                </li>
+                                <li>
+                                    <b>qualificationIssuingCountry</b>
+                                    ${application.qualificationIssuingCountry?.text}
+                                </li>
+                                <li>
+                                    <b>qualificationType</b>
+                                    ${application.qualificationType?.text}
+                                </li>
+                            </ul>
+                        </li>
+                    `,
+                )}
             </ul>-->
         `;
     }
