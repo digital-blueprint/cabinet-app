@@ -1095,6 +1095,22 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         `;
     }
 
+    close() {
+        /** @type {FileSource} */
+        const fileSource = this.fileSourceRef.value;
+
+        if (fileSource) {
+            fileSource.removeAttribute('dialog-open');
+        }
+
+        /** @type {Modal} */
+        const documentModal = this.documentModalRef.value;
+
+        if (documentModal) {
+            documentModal.close();
+        }
+    }
+
     onCloseDocumentModal() {
         // If the file was created, updated or deleted, we need to inform the parent component to refresh the search results
         if (this.dataWasChanged) {

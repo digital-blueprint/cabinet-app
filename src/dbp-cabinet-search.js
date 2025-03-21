@@ -928,21 +928,47 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         const routingData = this.getRoutingData();
         const id = routingData.pathSegments[1];
 
-        console.log('handleRoutingUrlChange this.routingUrl', this.routingUrl);
-        console.log('handleRoutingUrlChange routingData', routingData);
-
-        switch (routingData.pathSegments[0]) {
-            case 'document':
-                this.documentViewId = id;
-                this.resetRoutingUrl = true;
-                await this.handleAutomaticDocumentViewOpen();
-                break;
-            case 'person':
-                this.personViewId = id;
-                this.resetRoutingUrl = true;
-                await this.handleAutomaticPersonViewOpen();
-                break;
+        if (routingData.pathSegments.length === 0) {
+            this.closeDialogs();
+        } else {
+            switch (routingData.pathSegments[0]) {
+                case 'document':
+                    this.documentViewId = id;
+                    this.resetRoutingUrl = true;
+                    await this.handleAutomaticDocumentViewOpen();
+                    break;
+                case 'person':
+                    this.personViewId = id;
+                    this.resetRoutingUrl = true;
+                    await this.handleAutomaticPersonViewOpen();
+                    break;
+            }
         }
+    }
+
+    closeDialogs() {
+        this.documentViewId = null;
+        this.personViewId = null;
+
+        /**
+         * @type {CabinetFile}
+         */
+        const fileComponent = this.documentFileComponentRef.value;
+
+        if (fileComponent) {
+            fileComponent.close();
+        }
+
+        /**
+         * @type {CabinetViewPerson}
+         */
+        const personComponent = this.documentViewPersonModalRef.value;
+
+        if (personComponent) {
+            personComponent.close();
+        }
+
+        console.log('handleRoutingUrlChange reset');
     }
 }
 

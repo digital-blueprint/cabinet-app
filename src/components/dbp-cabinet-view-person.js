@@ -66,11 +66,15 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
     async openDocumentAddDialog() {
         this.documentType = '';
 
+        // Make sure the dialog is closed
+        this.close();
+    }
+
+    close() {
         /**
          * @type {Modal}
          */
         const modal = this.modalRef.value;
-        // Make sure the document-add dialog is closed
         modal.close();
     }
 
