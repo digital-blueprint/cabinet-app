@@ -1,15 +1,17 @@
 import {css, html} from 'lit';
-import {BaseFormElement, BaseHitElement, BaseObject, BaseViewElement, getCommonStyles} from './baseObject';
+import {
+    BaseFormElement,
+    BaseHitElement,
+    BaseObject,
+    BaseViewElement,
+    getCommonStyles,
+} from '../baseObject.js';
 import * as formElements from './formElements.js';
-import * as viewElements from './viewElements.js';
-import { PersonHit } from './person.js';
+import {getDocumentHit, getCitizenshipCertificate} from './schema.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-citizenshipCertificate';
 
-    /**
-     * @returns {string}
-     */
     getFormComponent() {
         return CabinetFormElement;
     }
@@ -30,22 +32,34 @@ export default class extends BaseObject {
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes = () => {
         return {
-            'CitizenshipCertificate': 'Citizenship Certificate',
+            CitizenshipCertificate: 'Citizenship Certificate',
         };
     };
 
     render() {
         console.log('-- Render CabinetFormElement --');
 
-        const fileData = this.data?.file || {};
-        const data = fileData["file-cabinet-citizenshipCertificate"] || {};
+        let hit = getDocumentHit(this.data);
+        let citizenshipCertificate = getCitizenshipCertificate(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/citizenshipCertificate.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/citizenshipCertificate_example.json
         return html`
             <form>
-                ${formElements.enumElement('nationality', 'Nationality', data.nationality || '', formElements.getNationalityItems(), false)}
-                ${formElements.dateElement('dateCreated', 'Date created', data.dateCreated || '', true)}
+                <dbp-form-enum-element
+                    subscribe="lang"
+                    name="nationality"
+                    label=${this._i18n.t('doc-modal-nationality')}
+                    .items=${formElements.getNationalityItems()}
+                    .value=${citizenshipCertificate.nationality || ''}></dbp-form-enum-element>
+
+                <dbp-form-date-element
+                    subscribe="lang"
+                    name="dateCreated"
+                    label=${this._i18n.t('doc-modal-issue-date')}
+                    .value=${citizenshipCertificate.dateCreated || ''}
+                    required></dbp-form-date-element>
+
                 ${this.getCommonFormElements()}
             </form>
         `;
@@ -56,49 +70,111 @@ class CabinetHitElement extends BaseHitElement {
     static get styles() {
         // language=css
         return css`
-        ${super.styles}
-        ${getCommonStyles()}
-
+            ${super.styles}
+            ${getCommonStyles()}
         `;
     }
 
     render() {
-        const lastModified = new Date(this.data.file.base.modifiedTimestamp * 1000).toLocaleString();
-        let hit = /** @type {PersonHit} */(this.data);
+        let hit = getDocumentHit(this.data);
+        let citizenshipCertificate = getCitizenshipCertificate(hit);
+
+        const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString(
+            'de-DE',
+            {dateStyle: 'short'},
+        );
+        const dateCreated = new Date(hit.file.base.createdTimestamp * 1000).toLocaleString(
+            'de-DE',
+            {dateStyle: 'short'},
+        );
+        const i18n = this._i18n;
+
+        const issueDate = citizenshipCertificate.dateCreated;
+        let formattedDate = issueDate
+            ? new Intl.DateTimeFormat('de').format(new Date(issueDate))
+            : '';
+        const documentViewButtonClick = (hit) => {
+            this.dispatchEvent(
+                new CustomEvent('DbpCabinetDocumentView', {
+                    detail: {hit: hit},
+                    bubbles: true,
+                    composed: true,
+                }),
+            );
+        };
         return html`
             <form>
-               <header class="ais-doc-Hits-header">
-                <div class="ais-doc-Hits-header-items header-item1">${hit.person.fullName}</div>
-                <div class="ais-doc-Hits-header-items header-item2">
-                <svg width="1.4em" xmlns="http://www.w3.org/2000/svg" height="1.4em" viewBox="1714.544 1153.736 30.853 30.496" fill="none"><path d="M1744.208 1153.736h-15.296a1.25 1.25 0 0 0-1.248 1.248v5.792h-11.872a1.25 1.25 0 0 0-1.248 1.248v14.24c0 .096.032.16.096.224l7.68 7.648a.29.29 0 0 0 .224.096h8.448a1.25 1.25 0 0 0 1.248-1.248v-9.056l3.2 3.168a.29.29 0 0 0 .224.096h8.512c.672 0 1.216-.544 1.216-1.216v-20.992c.064-.672-.512-1.248-1.184-1.248Zm-22.272 27.52-4.352-4.352h4.352v4.352Zm8.544 1.248h-6.784v-6.112c0-.672-.576-1.216-1.248-1.216h-6.112v-12.64h14.176l-.032 19.968Zm1.76-12.608h2.784v4.288l-2.784-2.72v-1.568Zm11.456 5.504h-6.88v-6.016c0-.672-.544-1.248-1.216-1.248h-3.36v-6.112c0-.672-.576-1.248-1.216-1.248h-1.6v-5.28h14.24l.032 19.904Z" style="fill: rgb(158, 30, 77); fill-opacity: 1;" class="fills" data-testid="svg-path"/></svg>
-                </div>
-                <div class="ais-doc-Hits-header-items header-item3">${hit.person.birthDate}</div>
-                <div class="ais-doc-Hits-header-items header-item4">${hit.person.studId}</div>
-                <div class="ais-doc-Hits-header-items header-item5">${hit.person.stPersonNr}</div>
+                <header class="ais-doc-Hits-header">
+                    <div class="ais-doc-title-wrapper">
+                        <div class="icon-container"></div>
+                        <div class="ais-doc-title">${hit.file.base.additionalType.text}</div>
+                    </div>
+                    <div class="text-container">
+                        <div class="ais-doc-Hits-header-items header-item1">
+                            ${hit.person.fullName}
+                        </div>
+                        &nbsp
+                        <div class="ais-doc-Hits-header-items header-item2">
+                            ${Intl.DateTimeFormat('de', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                            }).format(new Date(hit.person.birthDate))}&nbsp(${hit.person
+                                .studId}&nbsp|&nbsp${hit.person.stPersonNr})
+                        </div>
+                    </div>
                 </header>
                 <main class="ais-doc-Hits-content">
-                lang: ${this.lang}
-                <header class="hit-content-item1">document Type:</header>
-                <div class="hit-content-item2"></div><br />
-                <div class="hit-content-item3">
-                Document issue date: <br />
-                Added: <br />
-                Last modified: ${lastModified}<br />
-                </div>
+                    <div class="hit-content-item">
+                        ${issueDate
+                            ? html`
+                                  ${i18n.t('document-issue-date')}: ${formattedDate}
+                              `
+                            : ''}
+                        <br />
+                        ${i18n.t('Added')}: ${dateCreated}
+                        <br />
+                        ${i18n.t('last-modified')}: ${lastModified}
+                        <br />
+                    </div>
+                    <dbp-button
+                        type="is-primary"
+                        @click=${() => {
+                            documentViewButtonClick(hit);
+                        }}>
+                        ${i18n.t('buttons.view')}
+                    </dbp-button>
                 </main>
             </form>
         `;
     }
 }
+
 class CabinetViewElement extends BaseViewElement {
-    render() {
-        const fileData = this.data?.file || {};
-        const data = fileData["file-cabinet-citizenshipCertificate"] || {};
+    constructor() {
+        super();
+        this.setAdditionalTypes(CabinetFormElement.getAdditionalTypes());
+    }
+
+    getCustomViewElements() {
+        let hit = getDocumentHit(this.data);
+        let citizenshipCertificate = getCitizenshipCertificate(hit);
+
+        const i18n = this._i18n;
 
         return html`
-            ${this.getCommonViewElements(CabinetFormElement.getAdditionalTypes())}
-            ${viewElements.enumElement('Nationality', data.nationality || '', formElements.getNationalityItems())}
-            ${viewElements.dateElement('Date created', data.dateCreated || '')}
+            <dbp-form-enum-view
+                subscribe="lang"
+                label=${i18n.t('doc-modal-nationality')}
+                .value=${citizenshipCertificate.nationality || ''}
+                .items=${formElements.getNationalityItems()}></dbp-form-enum-view>
+
+            <dbp-form-datetime-view
+                subscribe="lang"
+                label=${i18n.t('doc-modal-issue-date')}
+                .value=${citizenshipCertificate.dateCreated
+                    ? new Date(citizenshipCertificate.dateCreated)
+                    : ''}></dbp-form-datetime-view>
         `;
     }
 }

@@ -32,10 +32,18 @@ export class TypesenseService {
         }
 
         try {
-            return await this.client.collections(this.collectionName).documents('file.' + fileId).retrieve();
+            return await this.client
+                .collections(this.collectionName)
+                .documents('file.' + fileId)
+                .retrieve();
         } catch (error) {
+            console.log('fetchFileDocumentByBlobId error.name', error.name);
+            console.log('fetchFileDocumentByBlobId error.httpStatus', error.httpStatus);
+            console.log('fetchFileDocumentByBlobId error prototype', Object.getPrototypeOf(error));
+
+            // Check httpStatus of TypesenseError
             // If the document is not found, return null, because we want to try to fetch it again later
-            if (error.name === 'ObjectNotFound') {
+            if (error.httpStatus === 404) {
                 return null;
             }
 

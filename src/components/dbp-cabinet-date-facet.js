@@ -1,4 +1,3 @@
-
 const getRefinedState = function getRefinedState(helper, attribute, value) {
     const startDate = value[0];
     const endDate = value[1];
@@ -26,7 +25,7 @@ const getRefinedState = function getRefinedState(helper, attribute, value) {
  */
 export function updateDatePickersForExternalRefinementChange(res, facets) {
     Object.entries(res.state.numericRefinements).forEach(([facetField, numRefinement]) => {
-        const dateFacet = facets.find(facet => facet.attribute === facetField);
+        const dateFacet = facets.find((facet) => facet.attribute === facetField);
 
         // Clear start dates if refinement is removed
         if ('>=' in numRefinement && numRefinement['>='].length === 0) {
@@ -49,11 +48,11 @@ export function updateDatePickersForExternalRefinementChange(res, facets) {
 function connectComplexDateRangeRefinement(renderFn, unmountFn = noop) {
     return function complexDateRangeRefinement(widgetParams) {
         const connectorState = {};
-        const { attribute } = widgetParams;
+        const {attribute} = widgetParams;
 
-        const dateFacet =  {
+        const dateFacet = {
             $$type: 'cabinet.complexDateRangeRefinement',
-            getWidgetRenderState({ results, helper }) {
+            getWidgetRenderState({results, helper}) {
                 if (!connectorState.refine) {
                     connectorState.refine = (value) => {
                         let refinedState = getRefinedState(helper, attribute, value);
@@ -64,7 +63,7 @@ function connectComplexDateRangeRefinement(renderFn, unmountFn = noop) {
                     };
                 }
                 if (!results) {
-                    return { items: [], refine: connectorState.refine, widgetParams };
+                    return {items: [], refine: connectorState.refine, widgetParams};
                 }
                 return {
                     items: results.hits,
@@ -94,7 +93,7 @@ function connectComplexDateRangeRefinement(renderFn, unmountFn = noop) {
                 };
             },
             init(initOptions) {
-                const { instantSearchInstance } = initOptions;
+                const {instantSearchInstance} = initOptions;
 
                 renderFn(
                     // The render state is the data provided to the render function,
@@ -105,11 +104,11 @@ function connectComplexDateRangeRefinement(renderFn, unmountFn = noop) {
                     },
                     // Calling the function with `isFirstRender=true` lets you perform
                     // conditional logic in the render function.
-                    true
+                    true,
                 );
             },
             render(renderOptions) {
-                const { instantSearchInstance } = renderOptions;
+                const {instantSearchInstance} = renderOptions;
 
                 renderFn(
                     // The render state is the data provided to the render function,
@@ -120,13 +119,13 @@ function connectComplexDateRangeRefinement(renderFn, unmountFn = noop) {
                     },
                     // Calling the function with `isFirstRender=false` lets you perform
                     // conditional logic in the render function.
-                    false
+                    false,
                 );
             },
             dispose(disposeOptions) {
                 unmountFn();
             },
-            getWidgetSearchParameters(searchParameters, { uiState }) {
+            getWidgetSearchParameters(searchParameters, {uiState}) {
                 // return searchParameters.addDisjunctiveFacetRefinement(
                 //     'myAttribute',
                 //     uiState.myWidgetName.myAttribute
@@ -142,55 +141,66 @@ function connectComplexDateRangeRefinement(renderFn, unmountFn = noop) {
 const noop = () => {};
 
 export function createDateRefinement(widgetParams) {
-    const datePicker = connectComplexDateRangeRefinement(
-        (options, isFirstRendering) => {
-            if (!isFirstRendering) return;
+    const datePicker = connectComplexDateRangeRefinement((options, isFirstRendering) => {
+        if (!isFirstRendering) return;
 
-            const { widgetParams, refine } = options;
+        const {widgetParams, refine} = options;
 
-            let updateRefinement = () => {
-                // Convert date to timestamp in seconds (UTC)
-                let startDate, endDate = null;
-                // Don't allow end date to be before start date
-                if (startDateSelector.value !== "") {
-                    startDate = startDateSelector.value + 'T00:00:00.000Z';
-                    const minDate = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date(startDate));
-                    endDateSelector.setAttribute('min', minDate);
-                }
-                // Don't allow start date to be before end date
-                if (endDateSelector.value !== "") {
-                    endDate = endDateSelector.value + 'T23:59:59.000Z';
-                    const maxDate = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date(startDate));
-                    startDateSelector.setAttribute('max', maxDate);
-                }
-                const startTimestamp = Date.parse(startDate) || null;
-                const endTimestamp = Date.parse(endDate) || null;
-
-                refine([startTimestamp, endTimestamp]);
-            };
-
-            function createDateSelector(type, attribute) {
-                const dateSelector = document.createElement('input');
-                dateSelector.type = 'date';
-                const kebabAttribute = schemaNameToKebabCase(attribute);
-                const id = `${type}-date-${kebabAttribute}`;
-                dateSelector.setAttribute('id', id);
-                dateSelector.classList.add(`${type}-date`);
-                // Set max date to today as a iso date string in local time
-                const maxDate = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
-                dateSelector.setAttribute('max', maxDate);
-                dateSelector.addEventListener('change', updateRefinement);
-
-                return dateSelector;
+        let updateRefinement = () => {
+            // Convert date to timestamp in seconds (UTC)
+            let startDate,
+                endDate = null;
+            // Don't allow end date to be before start date
+            if (startDateSelector.value !== '') {
+                startDate = startDateSelector.value + 'T00:00:00.000Z';
+                const minDate = new Intl.DateTimeFormat('en-CA', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                }).format(new Date(startDate));
+                endDateSelector.setAttribute('min', minDate);
             }
+            // Don't allow start date to be before end date
+            if (endDateSelector.value !== '') {
+                endDate = endDateSelector.value + 'T23:59:59.000Z';
+                const maxDate = new Intl.DateTimeFormat('en-CA', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                }).format(new Date(startDate));
+                startDateSelector.setAttribute('max', maxDate);
+            }
+            const startTimestamp = Date.parse(startDate) || null;
+            const endTimestamp = Date.parse(endDate) || null;
 
-            const startDateSelector = createDateSelector('start', widgetParams.attribute);
-            widgetParams.container.appendChild(startDateSelector);
+            refine([startTimestamp, endTimestamp]);
+        };
 
-            const endDateSelector = createDateSelector('end', widgetParams.attribute);
-            widgetParams.container.appendChild(endDateSelector);
+        function createDateSelector(type, attribute) {
+            const dateSelector = document.createElement('input');
+            dateSelector.type = 'date';
+            const kebabAttribute = schemaNameToKebabCase(attribute);
+            const id = `${type}-date-${kebabAttribute}`;
+            dateSelector.setAttribute('id', id);
+            dateSelector.classList.add(`${type}-date`);
+            // Set max date to today as a iso date string in local time
+            const maxDate = new Intl.DateTimeFormat('en-CA', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+            }).format(new Date());
+            dateSelector.setAttribute('max', maxDate);
+            dateSelector.addEventListener('change', updateRefinement);
+
+            return dateSelector;
         }
-    );
+
+        const startDateSelector = createDateSelector('start', widgetParams.attribute);
+        widgetParams.container.appendChild(startDateSelector);
+
+        const endDateSelector = createDateSelector('end', widgetParams.attribute);
+        widgetParams.container.appendChild(endDateSelector);
+    });
     return datePicker(widgetParams);
 }
 

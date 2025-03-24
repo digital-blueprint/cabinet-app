@@ -1,11 +1,11 @@
 {
-  "objectTypes": {
-    "file-admission-notice": "./fileAdmissionNotice.js",
-    "file-cabinet-communication": "./fileCommunication.js",
-    "file-cabinet-identityDocument": "./fileIdentityDocument.js",
-    "file-cabinet-minimalSchema": "./fileMinimalSchema.js",
-    "file-cabinet-citizenshipCertificate": "./fileCitizenshipCertificate.js",
-    "person": "./person.js"
-  },
-  "instantSearch": "./instantSearch.js"
+    "objectTypes": {
+        "file-admission-notice": "./fileAdmissionNotice.js",
+        "file-cabinet-communication": "./fileCommunication.js",
+        "file-cabinet-identityDocument": "./fileIdentityDocument.js",
+        "file-cabinet-minimalSchema": "./fileMinimalSchema.js",
+        "file-cabinet-citizenshipCertificate": "./fileCitizenshipCertificate.js",
+        "person": "./person.js"
+    },
+    "instantSearch": "./instantSearch.js"
 }
