@@ -1,0 +1,27 @@
+name: ⤴️ Update flake.lock
+on:
+  workflow_dispatch: # Allows manual triggering
+  schedule:
+    - cron: "0 3 1 * *" # Run once per month
+
+jobs:
+  create-pr:
+    name: Create Pull Request
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+      - name: Update flake.lock
+        uses: DeterminateSystems/update-flake-lock@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-msg: "flake: update" # Commit message to be used
+          pr-title: "Update flake.lock" # Title of PR to be created
+          pr-labels: | # Labels to be set on the PR
+            dependencies
+            automated
