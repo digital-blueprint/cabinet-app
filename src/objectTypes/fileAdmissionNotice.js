@@ -167,7 +167,8 @@ class CabinetHitElement extends BaseHitElement {
                         <br />
                     </div>
                     <button
-                        class="button-view" type="is-primary"
+                        class="button-view"
+                        type="is-primary"
                         @click=${() => {
                             documentViewButtonClick(hit);
                         }}>
