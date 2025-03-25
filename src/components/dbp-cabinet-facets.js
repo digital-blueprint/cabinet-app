@@ -1,6 +1,7 @@
 // noinspection CssUnusedSymbol,JSUnresolvedReference
 
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import * as commonUtils from '@dbp-toolkit/common/utils';
 import {css, html, render, unsafeCSS} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
@@ -60,7 +61,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.searchResultsElement = null;
         this.search = null;
         this.facets = [];
-        this.basePath = '';
     }
 
     connectedCallback() {
@@ -95,7 +95,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         return {
             ...super.properties,
             search: {type: Object, attribute: 'search'},
-            basePath: {type: String, attribute: 'base-path'},
         };
     }
 
@@ -382,14 +381,14 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                             ${options.collapsed
                                 ? html`
                                       <img
-                                          src="${that.basePath}local/@digital-blueprint/cabinet-app/icon/chevron-down.svg"
+                                          src="${commonUtils.getAssetURL('@digital-blueprint/cabinet-app', 'icon/chevron-down.svg')}"
                                           width="16"
                                           height="16"
                                           alt="chevron-down" />
                                   `
                                 : html`
                                       <img
-                                          src="${that.basePath}local/@digital-blueprint/cabinet-app/icon/chevron-up.svg"
+                                          src="${commonUtils.getAssetURL('@digital-blueprint/cabinet-app', 'icon/chevron-up.svg')}"
                                           width="16"
                                           height="16"
                                           alt="chevron-up" />

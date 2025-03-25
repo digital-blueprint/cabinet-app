@@ -335,7 +335,7 @@ Dependencies:
                     },
                     {src: 'assets/*.metadata.json', dest: 'dist'},
                     {src: 'src/*.metadata.json', dest: 'dist'},
-                    {src: 'assets/modules.json', dest: 'dist'},
+                    {src: 'assets/modules.json', dest: 'dist/' + (await getDistPath(pkg.name))},
                     {src: 'vendor/signature/src/*.metadata.json', dest: 'dist'},
                     {src: 'vendor/dispatch/src/*.metadata.json', dest: 'dist'},
                     {src: 'assets/*.svg', dest: 'dist/' + (await getDistPath(pkg.name))},

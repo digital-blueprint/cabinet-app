@@ -823,7 +823,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <dbp-cabinet-facets
                         ${ref(this.cabinetFacetsRef)}
                         .search="${this.search}"
-                        subscribe="lang,base-path"></dbp-cabinet-facets>
+                        subscribe="lang"></dbp-cabinet-facets>
                     <div class="results">
                         <div id="hits"></div>
                         <div id="pagination-bottom"></div>
@@ -833,13 +833,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <dbp-cabinet-view-person
                     ${ref(this.documentViewPersonModalRef)}
                     @close="${this.resetRoutingUrlIfNeeded}"
-                    subscribe="lang,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"></dbp-cabinet-view-person>
+                    subscribe="lang,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info"></dbp-cabinet-view-person>
 
                 <dbp-cabinet-file
                     mode="${CabinetFile.Modes.ADD}"
                     ${ref(this.documentFileComponentRef)}
                     @close="${this.resetRoutingUrlIfNeeded}"
-                    subscribe="lang,auth,entry-point-url,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info,base-path"></dbp-cabinet-file>
+                    subscribe="lang,auth,entry-point-url,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info"></dbp-cabinet-file>
             </div>
         `;
     }
@@ -854,7 +854,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     async loadModules() {
         try {
             // Fetch the JSON file containing module paths
-            const response = await fetch(this.basePath + 'modules.json');
+            const response = await fetch(commonUtils.getAssetURL(pkgName, 'modules.json'));
             const data = await response.json();
 
             console.log('data', data);

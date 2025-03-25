@@ -30,8 +30,7 @@ export default class DBPCabinetLitElement extends DBPLitElement {
             nextcloudWebDavURL: {type: String, attribute: 'nextcloud-webdav-url'},
             nextcloudName: {type: String, attribute: 'nextcloud-name'},
             nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
-            nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
-            basePath: {type: String, attribute: 'base-path'},
+            nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'}
         };
     }
 

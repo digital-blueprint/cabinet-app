@@ -14,5 +14,5 @@
         "de": "Erlaubt das Suchen von Akten.",
         "en": "Allows searching for cabinets."
     },
-    "subscribe": "lang,lang-dir,entry-point-url,auth,html-overrides,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,file-handling-enabled-targets,typesense-host,typesense-key,typesense-collection,typesense-protocol,typesense-port,typesense-path,base-path,routing-url"
+    "subscribe": "lang,lang-dir,entry-point-url,auth,html-overrides,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,file-handling-enabled-targets,typesense-host,typesense-key,typesense-collection,typesense-protocol,typesense-port,typesense-path,routing-url"
 }
