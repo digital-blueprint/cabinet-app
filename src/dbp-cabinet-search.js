@@ -770,10 +770,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 </span>
             </div>
             <div
-                    class="notification is-warning ${classMap({
-                        hidden: this.isLoggedIn() || this.isLoading() || this.loadingTranslations,
-                    })}">
-                ${i18n.t('error-login-message')} <a href="#" @click="${this._onLoginClicked}">${i18n.t('error-login-link')}</a>
+                class="notification is-warning ${classMap({
+                    hidden: this.isLoggedIn() || this.isLoading() || this.loadingTranslations,
+                })}">
+                ${i18n.t('error-login-message')}
+                <a href="#" @click="${this._onLoginClicked}">${i18n.t('error-login-link')}</a>
             </div>
 
             <div
