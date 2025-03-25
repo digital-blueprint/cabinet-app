@@ -188,7 +188,8 @@
         "notification-title-set-for-deletion": "Set for deletion",
         "notification-body-set-for-deletion": "The document was successfully set for deletion. The final deletion of the document takes place automatically on {{deleteTime}}"
     },
-    "error-login-message": "You need to be logged in to use this function!",
+    "error-login-message": "Please log in to use this functionality",
+    "error-login-link": "Log in",
     "focus-button-name": "Focus",
     "unselect-button-name": "Unselect",
     "buttons.view": "View",

@@ -769,12 +769,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <dbp-mini-spinner text=${i18n.t('loading-message')}></dbp-mini-spinner>
                 </span>
             </div>
-            <dbp-inline-notification
-                class=" ${classMap({
-                    hidden: this.isLoggedIn() || this.isLoading() || this.loadingTranslations,
-                })}"
-                type="warning"
-                body="${i18n.t('error-login-message')}"></dbp-inline-notification>
+            <div
+                    class="notification is-warning ${classMap({
+                        hidden: this.isLoggedIn() || this.isLoading(),
+                    })}">
+                ${i18n.t('error-login-message')} <a href="#" @click="${this._onLoginClicked}">${i18n.t('error-login-link')}</a>
+            </div>
 
             <div
                 class="${classMap({
