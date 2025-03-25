@@ -77,6 +77,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.deleteAtDateTime = '';
         this.allowStateReset = true;
         this.state = CabinetFile.States.NONE;
+        this.showLineWhenDelete = '';
     }
 
     connectedCallback() {
@@ -137,6 +138,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             deleteAtDateTime: {type: String, attribute: false},
             state: {type: String, attribute: false},
             mode: {type: String},
+            showLineWhenDelete: {type: String},
         };
     }
 
@@ -868,7 +870,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             #document-modal .status {
                 grid-area: 1 / 2 / 2 / 3;
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
                 justify-content: flex-end;
                 align-items: flex-end;
             }
@@ -878,11 +880,15 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             #document-modal .status .status-badge {
-                padding: 5px 10px;
-                margin-top: auto;
-                /*margin-right: 10px;*/
-                border: 2px solid black;
-                border-left: 10px solid black;
+                display: flex;
+                flex-direction: row;
+            }
+
+            #document-modal .status .status-badge::before {
+                content: '\\2022';
+                padding-right: 10px;
+                margin-top: -1px;
+                font-size: 20px;
             }
 
             #document-modal .status .status-badge .status-text {
@@ -891,15 +897,23 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             #document-modal .status .status-badge.success {
-                border-color: var(--dbp-override-success);
+                color: var(--dbp-override-success);
+                font-weight: bold;
             }
 
             #document-modal .status .status-badge.warning {
-                border-color: var(--dbp-override-warning);
+                color: var(--dbp-override-warning);
+                font-weight: bold;
             }
 
             #document-modal .status .status-badge.danger {
-                border-color: var(--dbp-override-danger);
+                color: var(--dbp-override-danger);
+                font-weight: bold;
+            }
+
+            #document-modal .status .status-badge .delete-text {
+                color: var(--dbp-override-content);
+                font-weight: normal;
             }
 
             #document-modal .pdf-preview {
@@ -979,8 +993,15 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 : hit?.file?.base.additionalType.text;
 
         const i18n = this._i18n;
-        // TODO: Check if PDF was uploaded
 
+        if (this.deleteAtDateTime) {
+            this.showLineWhenDelete = ' | ';
+        }
+        if (!this.deleteAtDateTime) {
+            this.showLineWhenDelete = '';
+        }
+
+        // TODO: Check if PDF was uploaded
         return html`
             <dbp-modal
                 ${ref(this.documentModalRef)}
@@ -1010,7 +1031,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <div class="status-badge ${this.documentStatus}">
                             <div class="status-description">
                                 ${this.documentStatusDescription}
-                                <div class="deletion-at-time">${this.deleteAtDateTime}</div>
+                                <span class="delete-text">
+                                    ${this.showLineWhenDelete}${this.deleteAtDateTime}
+                                </span>
                             </div>
                         </div>
                     </div>
