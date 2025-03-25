@@ -381,14 +381,20 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                             ${options.collapsed
                                 ? html`
                                       <img
-                                          src="${commonUtils.getAssetURL('@digital-blueprint/cabinet-app', 'icon/chevron-down.svg')}"
+                                          src="${commonUtils.getAssetURL(
+                                              '@digital-blueprint/cabinet-app',
+                                              'icon/chevron-down.svg',
+                                          )}"
                                           width="16"
                                           height="16"
                                           alt="chevron-down" />
                                   `
                                 : html`
                                       <img
-                                          src="${commonUtils.getAssetURL('@digital-blueprint/cabinet-app', 'icon/chevron-up.svg')}"
+                                          src="${commonUtils.getAssetURL(
+                                              '@digital-blueprint/cabinet-app',
+                                              'icon/chevron-up.svg',
+                                          )}"
                                           width="16"
                                           height="16"
                                           alt="chevron-up" />
