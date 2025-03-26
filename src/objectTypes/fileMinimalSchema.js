@@ -172,12 +172,12 @@ class CabinetViewElement extends BaseViewElement {
         let minimalSchema = getMinimalSchema(hit);
 
         return html`
-            <dbp-form-datetime-view
+            <dbp-form-date-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-issue-date')}
                 .value=${minimalSchema.dateCreated
                     ? new Date(minimalSchema.dateCreated)
-                    : ''}></dbp-form-datetime-view>
+                    : ''}></dbp-form-date-view>
         `;
     }
 }

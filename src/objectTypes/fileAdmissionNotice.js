@@ -193,12 +193,12 @@ class CabinetViewElement extends BaseViewElement {
         const i18n = this._i18n;
 
         return html`
-            <dbp-form-datetime-view
+            <dbp-form-date-view
                 subscribe="lang"
                 label=${i18n.t('doc-modal-issue-date')}
                 .value=${admissionNotice.dateCreated
                     ? new Date(admissionNotice.dateCreated)
-                    : ''}></dbp-form-datetime-view>
+                    : ''}></dbp-form-date-view>
 
             <dbp-form-string-view
                 subscribe="lang"

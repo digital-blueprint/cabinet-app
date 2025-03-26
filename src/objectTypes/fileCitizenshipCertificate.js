@@ -186,12 +186,12 @@ class CabinetViewElement extends BaseViewElement {
                 .value=${citizenshipCertificate.nationality || ''}
                 .items=${formElements.getNationalityItems()}></dbp-form-enum-view>
 
-            <dbp-form-datetime-view
+            <dbp-form-date-view
                 subscribe="lang"
                 label=${i18n.t('doc-modal-issue-date')}
                 .value=${citizenshipCertificate.dateCreated
                     ? new Date(citizenshipCertificate.dateCreated)
-                    : ''}></dbp-form-datetime-view>
+                    : ''}></dbp-form-date-view>
         `;
     }
 }

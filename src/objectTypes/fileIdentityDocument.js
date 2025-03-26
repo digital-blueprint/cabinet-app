@@ -200,12 +200,12 @@ class CabinetViewElement extends BaseViewElement {
                 .value=${identityDocument.nationality || ''}
                 .items=${formElements.getNationalityItems()}></dbp-form-enum-view>
 
-            <dbp-form-datetime-view
+            <dbp-form-date-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-issue-date')}
                 .value=${identityDocument.dateCreated
                     ? new Date(identityDocument.dateCreated)
-                    : ''}></dbp-form-datetime-view>
+                    : ''}></dbp-form-date-view>
         `;
     }
 }
