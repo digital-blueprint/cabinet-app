@@ -213,12 +213,12 @@ class CabinetViewElement extends BaseViewElement {
                 label=${this._i18n.t('communication-abstract')}
                 .value=${communication.abstract || ''}></dbp-form-string-view>
 
-            <dbp-form-date-view
+            <dbp-form-datetime-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-issue-date')}
                 .value=${communication.dateCreated
                     ? new Date(communication.dateCreated)
-                    : ''}></dbp-form-date-view>
+                    : ''}></dbp-form-datetime-view>
         `;
     }
 }
