@@ -142,10 +142,14 @@ class CabinetHitElement extends BaseHitElement {
         let hit = getPersonHit(this.data);
         const i18n = this._i18n;
         const studies = hit.person.studies || [];
+        const sortedStudies = studies.sort((a, b) => {
+            const dateA = a.immatriculationDate ? new Date(a.immatriculationDate).getTime() : 0;
+            const dateB = b.immatriculationDate ? new Date(b.immatriculationDate).getTime() : 0;
+            return dateB - dateA;
+        });
         const maxStudies = 3;
         const displayedStudies = studies.slice(0, maxStudies);
-        const extraCount = studies.length - maxStudies;
-
+        const extraCount = sortedStudies.length - maxStudies;
         return html`
             <header class="ais-Hits-header">
                 <div class="hit-person-info-header">
