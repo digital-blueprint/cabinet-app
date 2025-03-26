@@ -994,12 +994,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         const i18n = this._i18n;
 
-        if (this.deleteAtDateTime) {
-            this.showLineWhenDelete = ' | ';
-        }
-        if (!this.deleteAtDateTime) {
-            this.showLineWhenDelete = '';
-        }
+        this.showLineWhenDelete = this.deleteAtDateTime ? ' | ' : '';
 
         // TODO: Check if PDF was uploaded
         return html`
