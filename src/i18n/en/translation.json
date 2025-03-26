@@ -268,5 +268,8 @@
     "doc-modal-purpose-storage": "Purpose of storage",
     "person-hit": "more",
     "doc-modal-added": "Added",
-    "doc-modal-issue-date": "Document issue date"
+    "doc-modal-issue-date": "Document issue date",
+    "status-badge-success": "No problems detected",
+    "status-badge-warning": "Deletion date reached",
+    "status-badge-danger": "Scheduled for deletation"
 }

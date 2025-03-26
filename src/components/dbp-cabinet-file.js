@@ -1025,7 +1025,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="status ${classMap({hidden: this.mode === CabinetFile.Modes.ADD})}">
                         <div class="status-badge ${this.documentStatus}">
                             <div class="status-description">
-                                ${this.documentStatusDescription}
+                                ${i18n.t(this.documentStatusDescription)}
                                 <span class="delete-text">
                                     ${this.showLineWhenDelete}${this.deleteAtDateTime}
                                 </span>
@@ -1378,24 +1378,25 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     updateStatus() {
+        const i18n = this._i18n;
         if (!this.fileHitData.base) {
             return;
         }
 
         if (this.fileHitData.base.isScheduledForDeletion) {
             this.documentStatus = 'danger';
-            this.documentStatusDescription = 'Scheduled for deletion';
+            this.documentStatusDescription = `${i18n.t('status-badge-danger')}`;
         } else if (
             this.fileHitData.file.base.recommendedDeletionTimestamp < Math.floor(Date.now() / 1000)
         ) {
             this.documentStatus = 'warning';
-            this.documentStatusDescription = 'Deletion date reached';
+            this.documentStatusDescription = `${i18n.t('status-badge-warning')}`;
 
             // TODO: How to check for archival date reached?
             // this.documentStatusDescription = 'Archival date reached';
         } else {
             this.documentStatus = 'success';
-            this.documentStatusDescription = 'No problems detected';
+            this.documentStatusDescription = `${i18n.t('status-badge-success')}`;
         }
     }
 }

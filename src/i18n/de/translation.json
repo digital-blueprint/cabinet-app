@@ -265,5 +265,8 @@
     "doc-modal-purpose-storage": "Speicherzweck",
     "person-hit": "weitere",
     "doc-modal-added": "Hinzugefügt am",
-    "doc-modal-issue-date": "Datum der Ausstellung"
+    "doc-modal-issue-date": "Datum der Ausstellung",
+    "status-badge-success": "Keine Probleme festgestellt",
+    "status-badge-warning": "Löschdatum erreicht",
+    "status-badge-danger": "Geplante Löschung"
 }
