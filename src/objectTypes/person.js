@@ -143,8 +143,12 @@ class CabinetHitElement extends BaseHitElement {
         const i18n = this._i18n;
         const studies = hit.person.studies || [];
         const sortedStudies = studies.sort((a, b) => {
-            const dateA = a.immatriculationDate ? new Date(a.immatriculationDate).getTime() : 0;
-            const dateB = b.immatriculationDate ? new Date(b.immatriculationDate).getTime() : 0;
+            const dateA = a.immatriculationDate
+                ? new Date(a.immatriculationDate).getTime()
+                : Infinity;
+            const dateB = b.immatriculationDate
+                ? new Date(b.immatriculationDate).getTime()
+                : Infinity;
             return dateB - dateA;
         });
         const maxStudies = 3;
@@ -504,8 +508,19 @@ class CabinetViewElement extends BaseViewElement {
                 </div>
             </div>
             <hr/>
-                ${hit.person.studies.map(
-                    (study) => html`
+                ${hit.person.studies
+                    .slice()
+                    .sort((a, b) => {
+                        const dateA = a.immatriculationDate
+                            ? new Date(a.immatriculationDate).getTime()
+                            : Infinity;
+                        const dateB = b.immatriculationDate
+                            ? new Date(b.immatriculationDate).getTime()
+                            : Infinity;
+                        return dateB - dateA;
+                    })
+                    .map(
+                        (study) => html`
                 <li>
                     <ul class="study-info">
                         <li class="study-row"><b>${i18n.t(' key')}</b><span> ${displayValue(study.key)}</span></li>
@@ -527,7 +542,7 @@ class CabinetViewElement extends BaseViewElement {
                     </ul>
                 </li>
                 `,
-                )}
+                    )}
             </br>
             <div class="modal-Ci-header-container">
                 <div class="modal-Ci-header-svg">
