@@ -22,17 +22,13 @@ import {updateDatePickersForExternalRefinementChange} from './components/dbp-cab
 import {BaseObject} from './baseObject.js';
 import {name as pkgName} from '../package.json';
 
+const TYPESENSE_COLLECTION = 'cabinet';
+
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
         this.activity = new Activity(metadata);
         this.fuzzySearch = true;
-        this.typesenseHost = '';
-        this.typesensePort = '';
-        this.typesensePath = '';
-        this.typesenseProtocol = '';
-        this.typesenseKey = '';
-        this.typesenseCollection = '';
         this.objectTypeFormComponents = {};
         this.objectTypeHitComponents = {};
         this.objectTypeViewComponents = {};
@@ -73,12 +69,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            typesenseHost: {type: String, attribute: 'typesense-host'},
-            typesensePort: {type: String, attribute: 'typesense-port'},
-            typesensePath: {type: String, attribute: 'typesense-path'},
-            typesenseProtocol: {type: String, attribute: 'typesense-protocol'},
-            typesenseKey: {type: String, attribute: 'typesense-key'},
-            typesenseCollection: {type: String, attribute: 'typesense-collection'},
             hitData: {type: Object, attribute: false},
             documentFile: {type: File, attribute: false},
             showScheduledForDeletion: {type: Boolean, attribute: false},
@@ -264,15 +254,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.updateComplete.then(async () => {
             console.log('-- updateComplete --');
 
+            let typesenseUrl = new URL(this.entryPointUrl + "/cabinet/typesense");
+
             this.serverConfig = {
-                // Be sure to use an API key that only allows searches, in production
-                apiKey: this.typesenseKey,
+                apiKey: '', // unused
                 nodes: [
                     {
-                        host: this.typesenseHost,
-                        port: this.typesensePort,
-                        path: this.typesensePath,
-                        protocol: this.typesenseProtocol,
+                        host: typesenseUrl.hostname,
+                        port: typesenseUrl.port || (typesenseUrl.protocol === 'https:' ? '443' : typesenseUrl.protocol === 'http:' ? '80' : ''),
+                        path: typesenseUrl.pathname,
+                        protocol: typesenseUrl.protocol.replace(':', ''),
                     },
                 ],
                 additionalHeaders: {Authorization: 'Bearer ' + this.auth.token},
@@ -559,11 +550,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     initTypesenseService() {
-        if (!this.serverConfig || !this.typesenseCollection || !this.auth.token) {
+        if (!this.serverConfig || !this.auth.token) {
             return;
         }
 
-        this.typesenseService = new TypesenseService(this.serverConfig, this.typesenseCollection);
+        this.typesenseService = new TypesenseService(this.serverConfig, TYPESENSE_COLLECTION);
         console.log('initTypesenseService this.typesenseService', this.typesenseService);
 
         // Update the Typesense service with the new bearer token
@@ -591,11 +582,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // typesenseInstantsearchAdapter.typesenseClient is no Typesense.Client instance, it's a Typesense.SearchClient instance!
         const searchClient = typesenseInstantsearchAdapter.searchClient;
 
-        let searchIndexName = this.typesenseCollection;
-
         return instantsearch({
             searchClient,
-            indexName: searchIndexName,
+            indexName: TYPESENSE_COLLECTION,
             future: {
                 preserveSharedStateOnUnmount: true,
             },
@@ -719,15 +708,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             items: [
                 {
                     label: i18n.t('default-sort'),
-                    value: `${this.typesenseCollection}`,
+                    value: `${TYPESENSE_COLLECTION}`,
                 } /* default sorting "@type:desc,_text_match:desc,person.familyName:asc" */,
                 {
                     label: i18n.t('family-name'),
-                    value: `${this.typesenseCollection}/sort/@type:desc,person.familyName:asc,_text_match:desc`,
+                    value: `${TYPESENSE_COLLECTION}/sort/@type:desc,person.familyName:asc,_text_match:desc`,
                 },
                 {
                     label: i18n.t('last-modified-documents'),
-                    value: `${this.typesenseCollection}/sort/@type:asc,file.base.modifiedTimestamp:desc,_text_match:desc`,
+                    value: `${TYPESENSE_COLLECTION}/sort/@type:asc,file.base.modifiedTimestamp:desc,_text_match:desc`,
                 },
             ],
         });

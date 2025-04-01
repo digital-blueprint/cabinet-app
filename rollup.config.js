@@ -98,14 +98,6 @@ if (devConfig != undefined && appEnv in devConfig) {
         pdfAsQualifiedlySigningServer: 'https://test',
         hiddenActivities: [],
         enableAnnotations: true,
-        typesense: {
-            host: 'typesense.localhost',
-            port: '9100',
-            path: '/',
-            protocol: 'http',
-            key: 'xyz',
-            collection: 'cabinet',
-        },
     };
 } else {
     console.error(`Unknown build environment: '${appEnv}', use one of '${Object.keys(devConfig)}'`);
@@ -142,7 +134,6 @@ ${getOrigin(config.matomoUrl)} ${getOrigin(config.keyCloakBaseURL)} ${getOrigin(
     config.entryPointURL,
 )} \
 ${getOrigin(config.nextcloudBaseURL)} ${atrustHosts.map((h) => getOrigin(h)).join(' ')} \
-${config.typesense.protocol + '://' + config.typesense.host + ':' + config.typesense.port} \
 ${getOrigin(config.pdfAsQualifiedlySigningServer)}; \
 img-src * blob: data:`;
 
@@ -249,12 +240,6 @@ export default (async () => {
                     shortName: config.shortName,
                     appDomain: config.appDomain,
                     enableAnnotations: config.enableAnnotations,
-                    typesenseHost: config.typesense.host,
-                    typesensePort: config.typesense.port,
-                    typesensePath: config.typesense.path,
-                    typesenseProtocol: config.typesense.protocol,
-                    typesenseKey: config.typesense.key,
-                    typesenseCollection: config.typesense.collection,
                     activities: activities,
                 },
             }),

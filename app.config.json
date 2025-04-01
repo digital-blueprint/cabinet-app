@@ -12,15 +12,7 @@
         "pdfAsQualifiedlySigningServer": "",
         "hiddenActivities": [],
         "shortName": "dbp",
-        "appDomain": "",
-        "typesense": {
-            "host": "127.0.0.1",
-            "path": "/cabinet/typesense/",
-            "port": "8000",
-            "protocol": "http",
-            "key": "",
-            "collection": "cabinet"
-        }
+        "appDomain": ""
     },
     "localCustom": {
         "basePath": "/dist/",
@@ -35,15 +27,7 @@
         "pdfAsQualifiedlySigningServer": "",
         "hiddenActivities": [],
         "shortName": "dbp",
-        "appDomain": "",
-        "typesense": {
-            "host": "127.0.0.1",
-            "path": "/cabinet/typesense/",
-            "port": "8000",
-            "protocol": "http",
-            "key": "",
-            "collection": "cabinet"
-        }
+        "appDomain": ""
     },
     "development": {
         "basePath": "/apps/cabinet/",
@@ -58,14 +42,6 @@
         "pdfAsQualifiedlySigningServer": "https://sig-dev.tugraz.at",
         "hiddenActivities": [],
         "shortName": "dbp",
-        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/",
-        "typesense": {
-            "host": "api-dev.tugraz.at",
-            "port": "443",
-            "path": "/cabinet/typesense/",
-            "protocol": "https",
-            "key": "",
-            "collection": "cabinet"
-        }
+        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/"
     }
 }

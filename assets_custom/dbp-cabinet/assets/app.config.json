@@ -12,22 +12,7 @@
         "pdfAsQualifiedlySigningServer": "https://sig-dev.tugraz.at",
         "hiddenActivities": [],
         "shortName": "dbp",
-        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/",
-        "typesense-local": {
-            "host": "typesense.localhost",
-            "port": "9100",
-            "protocol": "http",
-            "key": "xyz",
-            "collection": "cabinet"
-        },
-        "typesense": {
-            "host": "127.0.0.1",
-            "path": "/cabinet/typesense/",
-            "port": "8000",
-            "protocol": "http",
-            "key": "",
-            "collection": "cabinet"
-        }
+        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/"
     },
     "localCustom": {
         "basePath": "/dist/",
@@ -43,22 +28,7 @@
         "hiddenActivities": [],
         "shortName": "TU Graz",
         "appDomain": "https://cabinet.tugraz.at/",
-        "enableAnnotations": true,
-        "typesense-local": {
-            "host": "typesense.localhost",
-            "port": "9100",
-            "protocol": "http",
-            "key": "xyz",
-            "collection": "cabinet"
-        },
-        "typesense": {
-            "host": "127.0.0.1",
-            "path": "/cabinet/typesense/",
-            "port": "8000",
-            "protocol": "http",
-            "key": "",
-            "collection": "cabinet"
-        }
+        "enableAnnotations": true
     },
     "bs": {
         "basePath": "/dist/",
@@ -89,15 +59,7 @@
         "pdfAsQualifiedlySigningServer": "https://sig-dev.tugraz.at",
         "hiddenActivities": [],
         "shortName": "dbp",
-        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/",
-        "typesense": {
-            "host": "api-dev.tugraz.at",
-            "port": "443",
-            "path": "/cabinet/typesense/",
-            "protocol": "https",
-            "key": "",
-            "collection": "cabinet"
-        }
+        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/"
     },
     "developmentCustom": {
         "basePath": "/tugapps/cabinet/",
@@ -113,15 +75,7 @@
         "hiddenActivities": [],
         "shortName": "TU Graz",
         "appDomain": "https://cabinet.tugraz.at/",
-        "enableAnnotations": true,
-        "typesense": {
-            "host": "api-dev.tugraz.at",
-            "port": "443",
-            "path": "/cabinet/typesense/",
-            "protocol": "https",
-            "key": "",
-            "collection": "cabinet"
-        }
+        "enableAnnotations": true
     },
     "demo": {
         "basePath": "/apps/cabinet/",
@@ -136,15 +90,7 @@
         "pdfAsQualifiedlySigningServer": "https://sig-test.tugraz.at",
         "hiddenActivities": [],
         "shortName": "dbp",
-        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/",
-        "typesense": {
-            "host": "api-demo.tugraz.at",
-            "port": "443",
-            "path": "/cabinet/typesense/",
-            "protocol": "https",
-            "key": "",
-            "collection": "cabinet"
-        }
+        "appDomain": "https://dbp-demo.tugraz.at/apps/cabinet/"
     },
     "demoCustom": {
         "basePath": "/tugapps/cabinet/",
@@ -160,15 +106,7 @@
         "hiddenActivities": [],
         "shortName": "TU Graz",
         "appDomain": "https://cabinet.tugraz.at/",
-        "enableAnnotations": true,
-        "typesense": {
-            "host": "api-demo.tugraz.at",
-            "port": "443",
-            "path": "/cabinet/typesense/",
-            "protocol": "https",
-            "key": "",
-            "collection": "cabinet"
-        }
+        "enableAnnotations": true
     },
     "production": {
         "basePath": "/",
@@ -184,14 +122,6 @@
         "hiddenActivities": [],
         "shortName": "TU Graz",
         "appDomain": "https://studakt.tugraz.at/",
-        "enableAnnotations": true,
-        "typesense": {
-            "host": "api.tugraz.at",
-            "port": "443",
-            "path": "/cabinet/typesense/",
-            "protocol": "https",
-            "key": "",
-            "collection": "cabinet"
-        }
+        "enableAnnotations": true
     }
 }
