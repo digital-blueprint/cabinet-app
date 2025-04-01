@@ -122,15 +122,7 @@ class CabinetHitElement extends BaseHitElement {
         const issueDate = admissionNotice.dateCreated;
         const dateObject = new Date(issueDate);
         let formattedDate = issueDate ? new Intl.DateTimeFormat('de').format(dateObject) : '';
-        const documentViewButtonClick = (hit) => {
-            this.dispatchEvent(
-                new CustomEvent('DbpCabinetDocumentView', {
-                    detail: {hit: hit},
-                    bubbles: true,
-                    composed: true,
-                }),
-            );
-        };
+
         return html`
             <form>
                 <header class="ais-doc-Hits-header">
@@ -166,14 +158,7 @@ class CabinetHitElement extends BaseHitElement {
                         ${i18n.t('last-modified')}: ${lastModified}
                         <br />
                     </div>
-                    <button
-                        class="button-view"
-                        type="is-primary"
-                        @click=${() => {
-                            documentViewButtonClick(hit);
-                        }}>
-                        ${i18n.t('buttons.view')}
-                    </button>
+                    ${this.renderViewButton(hit)}
                 </main>
             </form>
         `;

@@ -435,6 +435,33 @@ export class BaseHitElement extends ScopedElementsMixin(DBPLitElement) {
 
         super.update(changedProperties);
     }
+
+    documentViewButtonClick(hit, e) {
+        e.preventDefault();
+
+        this.dispatchEvent(
+            new CustomEvent('DbpCabinetDocumentView', {
+                detail: {hit: hit},
+                bubbles: true,
+                composed: true,
+            }),
+        );
+    }
+
+    renderViewButton(hit) {
+        const i18n = this._i18n;
+
+        return html`
+            <button
+                class="button-view"
+                type="is-primary"
+                @click=${(e) => {
+                    this.documentViewButtonClick(hit, e);
+                }}>
+                ${i18n.t('buttons.view')}
+            </button>
+        `;
+    }
 }
 
 export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
