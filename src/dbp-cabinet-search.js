@@ -254,14 +254,20 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.updateComplete.then(async () => {
             console.log('-- updateComplete --');
 
-            let typesenseUrl = new URL(this.entryPointUrl + "/cabinet/typesense");
+            let typesenseUrl = new URL(this.entryPointUrl + '/cabinet/typesense');
 
             this.serverConfig = {
                 apiKey: '', // unused
                 nodes: [
                     {
                         host: typesenseUrl.hostname,
-                        port: typesenseUrl.port || (typesenseUrl.protocol === 'https:' ? '443' : typesenseUrl.protocol === 'http:' ? '80' : ''),
+                        port:
+                            typesenseUrl.port ||
+                            (typesenseUrl.protocol === 'https:'
+                                ? '443'
+                                : typesenseUrl.protocol === 'http:'
+                                  ? '80'
+                                  : ''),
                         path: typesenseUrl.pathname,
                         protocol: typesenseUrl.protocol.replace(':', ''),
                     },
