@@ -108,6 +108,7 @@ class CabinetHitElement extends BaseHitElement {
     render() {
         let hit = getDocumentHit(this.data);
         let admissionNotice = getAdmissionNotice(hit);
+        const i18n = this._i18n;
 
         const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString(
             'de-DE',
@@ -117,12 +118,15 @@ class CabinetHitElement extends BaseHitElement {
             'de-DE',
             {dateStyle: 'short'},
         );
-        const i18n = this._i18n;
-
         const issueDate = admissionNotice.dateCreated;
         const dateObject = new Date(issueDate);
-        let formattedDate = issueDate ? new Intl.DateTimeFormat('de').format(dateObject) : '';
-
+        let formattedDate = issueDate
+            ? new Intl.DateTimeFormat('de', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+              }).format(dateObject)
+            : '';
         return html`
             <form>
                 <header class="ais-doc-Hits-header">
