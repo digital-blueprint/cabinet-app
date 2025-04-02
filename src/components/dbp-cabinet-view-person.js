@@ -141,8 +141,8 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
             this.objectTypeViewComponents[objectType],
         );
 
-        if (!customElements.get(tagName)) {
-            customElements.define(tagName, this.objectTypeViewComponents[objectType]);
+        if (!this.registry.get(tagName)) {
+            this.registry.define(tagName, this.objectTypeViewComponents[objectType]);
         }
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from

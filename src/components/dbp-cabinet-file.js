@@ -432,8 +432,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.objectTypeFormComponents[objectType],
         );
 
-        if (!customElements.get(tagName)) {
-            customElements.define(tagName, this.objectTypeFormComponents[objectType]);
+        if (!this.registry.get(tagName)) {
+            this.registry.define(tagName, this.objectTypeFormComponents[objectType]);
         }
 
         let fileHitData = this.fileHitData;
@@ -481,8 +481,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.objectTypeViewComponents[objectType],
         );
 
-        if (!customElements.get(tagName)) {
-            customElements.define(tagName, this.objectTypeViewComponents[objectType]);
+        if (!this.registry.get(tagName)) {
+            this.registry.define(tagName, this.objectTypeViewComponents[objectType]);
         }
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
