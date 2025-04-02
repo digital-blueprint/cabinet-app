@@ -14,6 +14,7 @@ import {BaseFormElement} from '../baseObject.js';
 import {send} from '@dbp-toolkit/common/notification';
 import {getSelectorFixCSS} from '../styles.js';
 import {getIconSVGURL} from '../utils.js';
+import {Notification} from '@dbp-toolkit/notification';
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static Modes = {
         VIEW: 'view',
@@ -123,6 +124,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-pdf-viewer': PdfViewer,
             'dbp-modal': Modal,
             'dbp-button': Button,
+            'dbp-notification': Notification,
         };
     }
 
