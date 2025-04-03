@@ -8,6 +8,7 @@ import {
 } from '../baseObject.js';
 import * as formElements from './formElements.js';
 import {getDocumentHit, getIdentityDocument} from './schema.js';
+import {formatDate} from '../utils.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-identityDocument';
@@ -137,11 +138,7 @@ class CabinetHitElement extends BaseHitElement {
                         </div>
                         &nbsp
                         <div class="ais-doc-Hits-header-items header-item2">
-                            ${Intl.DateTimeFormat('de', {
-                                year: 'numeric',
-                                month: '2-digit',
-                                day: '2-digit',
-                            }).format(new Date(hit.person.birthDate))}&nbsp(${hit.person
+                            ${formatDate(hit.person.birthDate)}&nbsp(${hit.person
                                 .studId}&nbsp|&nbsp${hit.person.stPersonNr})
                         </div>
                     </div>
