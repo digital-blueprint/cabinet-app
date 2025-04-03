@@ -706,7 +706,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         const i18n = this._i18n;
         const container = this._('#sort-by');
         const titleElement = document.createElement('div');
-        titleElement.textContent = i18n.t('sorting :');
+        titleElement.textContent = i18n.t('sorting') + ' :';
         titleElement.className = 'dropdown-title';
         container.insertAdjacentElement('beforebegin', titleElement);
         return sortBy({
