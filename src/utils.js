@@ -56,3 +56,15 @@ export function getIconSVGURL(name) {
         '../../@digital-blueprint/cabinet-app/icon/' + encodeURI(name) + '.svg',
     );
 }
+
+export function formatDate(value) {
+    if (!value) return '-';
+    const date = new Date(value);
+    return isNaN(date.getTime())
+        ? value
+        : date.toLocaleDateString('de-DE', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+          });
+}
