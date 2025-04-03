@@ -394,6 +394,11 @@ class CabinetViewElement extends BaseViewElement {
             .sync-tu-button {
                 overflow: hidden;
                 background-color: var(--dbp-override-background);
+                text-decoration: none;
+            }
+
+            .sync-tu-button:hover {
+                text-decoration: underline;
             }
 
             .links {
@@ -443,7 +448,7 @@ class CabinetViewElement extends BaseViewElement {
         }).format(new Date())}
         </div>
         <div class="sync-tu-button">
-            <a href="${hit.person.coUrl}" no-spinner-on-click class="links">
+            <a href="${hit.person.coUrl}" no-spinner-on-click target="_blank">
                 <dbp-icon  title='${i18n.t('Edit-student-data')}'
                 aria-label='${i18n.t('Edit-student-data')}'
                 name='link'>
