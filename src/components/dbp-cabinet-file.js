@@ -15,6 +15,7 @@ import {send} from '@dbp-toolkit/common/notification';
 import {getSelectorFixCSS} from '../styles.js';
 import {getIconSVGURL} from '../utils.js';
 import {Notification} from '@dbp-toolkit/notification';
+import {formatDate} from '../utils.js';
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static Modes = {
         VIEW: 'view',
@@ -1020,7 +1021,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <div class="student-info">
                             ${person.fullName}
                             <br />
-                            ${person.birthDate}(${person.studId} | ${person.stPersonNr})
+                            ${formatDate(person.birthDate)}(${person.studId} | ${person.stPersonNr})
                             <br />
                         </div>
                     </div>
