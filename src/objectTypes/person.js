@@ -476,7 +476,7 @@ class CabinetViewElement extends BaseViewElement {
                         <li class="info-row"><b>${i18n.t('tuitionStatus')}</b><span> ${displayValue(hit.person.tuitionStatus)}</span></li>
                         <li class="info-row"><b>${i18n.t('immatriculation-Date')}</b><span> ${formatDate(hit.person.immatriculationDate)}</span></li>
                         <li class="info-row"><b>${i18n.t('immatriculationSemester')}</b><span> ${displayValue(hit.person.immatriculationSemester)}</span></li>
-                        <li class="info-row"><b>${i18n.t('exmatriculation-GI')}</b><span> ${displayValue(hit.person.exmatriculationStatus?.text)} ${hit.person.exmatriculationDate}</span></li>
+                        <li class="info-row"><b>${i18n.t('exmatriculation-GI')}</b><span> ${displayValue(hit.person.exmatriculationStatus?.text)} ${formatDate(hit.person.exmatriculationDate)}</span></li>
                         <li class="info-row"><b>${i18n.t('admission-Qualification-Type')}</b><span> ${displayValue(hit.person.admissionQualificationType?.text)}</span></li>
                         <li class="info-row"><b>${i18n.t('school-Certificate-Date')}</b><span> ${formatDate(hit.person.schoolCertificateDate)}</span></li>
                         <li class="info-row"><b>${i18n.t('note')}</b><span> ${displayValue(hit.person.note)}</span></li>
@@ -533,8 +533,8 @@ class CabinetViewElement extends BaseViewElement {
                         <li class="study-row"><b>${i18n.t('semester')}</b><span>${displayValue(study.semester)}</span></li>
                         <li class="study-row"><b>${i18n.t('status')}</b><span> ${displayValue(study.status?.text)}</span></li>
                         <li class="study-row"><b>${i18n.t('immatriculation-date')}</b><span> ${formatDate(study.immatriculationDate)}</span></li>
-                        <li class="study-row"><b>${i18n.t('qualification-study')}</b><span> ${displayValue(study.qualificationType?.text)} ${study.qualificationDate} ${study.qualificationState?.text}</span></li>
-                        <li class="study-row"><b>${i18n.t('exmatriculation')}</b><span> ${displayValue(study.exmatriculationType?.text)} ${study.exmatriculationDate}</span></li>
+                        <li class="study-row"><b>${i18n.t('qualification-study')}</b><span> ${displayValue(study.qualificationType?.text)} ${formatDate(study.qualificationDate)} ${study.qualificationState?.text}</span></li>
+                        <li class="study-row"><b>${i18n.t('exmatriculation')}</b><span> ${displayValue(study.exmatriculationType?.text)} ${formatDate(study.exmatriculationDate)}</span></li>
                         <li class="study-row"><b>${i18n.t('curriculum-version')}</b><span> ${displayValue(study.curriculumVersion)}</span></li>
                         </br>
                         </br>
