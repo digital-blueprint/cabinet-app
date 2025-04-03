@@ -410,23 +410,26 @@ class CabinetViewElement extends BaseViewElement {
             }
         `;
     }
+
+    formatDate(value) {
+        if (!value) return '-';
+        const date = new Date(value);
+        return isNaN(date.getTime())
+            ? value
+            : date.toLocaleDateString('de-DE', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+              });
+    }
+
     render() {
         let hit = getPersonHit(this.data);
         const i18n = this._i18n;
         const displayValue = (value) => {
             return value === undefined || value === null || value === '' ? '-' : value;
         };
-        const formatDate = (value) => {
-            if (!value) return '-';
-            const date = new Date(value);
-            return isNaN(date.getTime())
-                ? value
-                : date.toLocaleDateString('de-DE', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
-                  });
-        };
+
         return html`
         <div class="header-button-container">
         <div class="last-sync-info">
@@ -470,7 +473,7 @@ class CabinetViewElement extends BaseViewElement {
                         <li class="info-row"><b>${i18n.t('academic-title-following')}</b><span> ${displayValue(hit.person.academicTitleFollowing)}</span></li>
                         <li class="info-row"><b>${i18n.t('stud-id')}</b><span> ${displayValue(hit.person.studId)}</span></li>
                         <li class="info-row"><b>${i18n.t('st-PersonNr')}</b><span> ${displayValue(hit.person.stPersonNr)} </span></li>
-                        <li class="info-row"><b>${i18n.t('birth-date')}</b><span> ${formatDate(hit.person.birthDate)}</span></li>
+                        <li class="info-row"><b>${i18n.t('birth-date')}</b><span> ${this.formatDate(hit.person.birthDate)}</span></li>
                         <li class="info-row"><b>${i18n.t('nationalities')}</b><span> ${displayValue(hit.person.nationalities.map((n) => n.text).join(', '))}</span></li>
                         <li class="info-row"><b>${i18n.t('gender')}</b><span> ${displayValue(hit.person.gender?.text)}</span></li>
                         <li class="info-row"><b>${i18n.t('social-SecurityNr')}</b><span> ${displayValue(hit.person.socialSecurityNr)}</span></li>
@@ -482,11 +485,11 @@ class CabinetViewElement extends BaseViewElement {
                         <li class="info-row"><b>${i18n.t('personal-Status')}</b><span> ${displayValue(hit.person.personalStatus?.text)}</span></li>
                         <li class="info-row"><b>${i18n.t('student-Status')}</b><span> ${displayValue(hit.person.studentStatus?.text)}</span></li>
                         <li class="info-row"><b>${i18n.t('tuitionStatus')}</b><span> ${displayValue(hit.person.tuitionStatus)}</span></li>
-                        <li class="info-row"><b>${i18n.t('immatriculation-Date')}</b><span> ${formatDate(hit.person.immatriculationDate)}</span></li>
+                        <li class="info-row"><b>${i18n.t('immatriculation-Date')}</b><span> ${this.formatDate(hit.person.immatriculationDate)}</span></li>
                         <li class="info-row"><b>${i18n.t('immatriculationSemester')}</b><span> ${displayValue(hit.person.immatriculationSemester)}</span></li>
                         <li class="info-row"><b>${i18n.t('exmatriculation-GI')}</b><span> ${displayValue(hit.person.exmatriculationStatus?.text)} ${hit.person.exmatriculationDate}</span></li>
                         <li class="info-row"><b>${i18n.t('admission-Qualification-Type')}</b><span> ${displayValue(hit.person.admissionQualificationType?.text)}</span></li>
-                        <li class="info-row"><b>${i18n.t('school-Certificate-Date')}</b><span> ${formatDate(hit.person.schoolCertificateDate)}</span></li>
+                        <li class="info-row"><b>${i18n.t('school-Certificate-Date')}</b><span> ${this.formatDate(hit.person.schoolCertificateDate)}</span></li>
                         <li class="info-row"><b>${i18n.t('note')}</b><span> ${displayValue(hit.person.note)}</span></li>
 
 
@@ -540,7 +543,7 @@ class CabinetViewElement extends BaseViewElement {
                         <li class="study-row"><b>${i18n.t('name')}</b><span> ${displayValue(study.name)}</span></li>
                         <li class="study-row"><b>${i18n.t('semester')}</b><span>${displayValue(study.semester)}</span></li>
                         <li class="study-row"><b>${i18n.t('status')}</b><span> ${displayValue(study.status?.text)}</span></li>
-                        <li class="study-row"><b>${i18n.t('immatriculation-date')}</b><span> ${formatDate(study.immatriculationDate)}</span></li>
+                        <li class="study-row"><b>${i18n.t('immatriculation-date')}</b><span> ${this.formatDate(study.immatriculationDate)}</span></li>
                         <li class="study-row"><b>${i18n.t('qualification-study')}</b><span> ${displayValue(study.qualificationType?.text)} ${study.qualificationDate} ${study.qualificationState?.text}</span></li>
                         <li class="study-row"><b>${i18n.t('exmatriculation')}</b><span> ${displayValue(study.exmatriculationType?.text)} ${study.exmatriculationDate}</span></li>
                         <li class="study-row"><b>${i18n.t('curriculum-version')}</b><span> ${displayValue(study.curriculumVersion)}</span></li>
