@@ -41,7 +41,7 @@ export function renderFieldWithHighlight(hit, fieldName) {
 }
 
 /**
- * Search trough an object and returns the value of a nested property given by a path string.
+ * Search through an object and returns the value of a nested property given by a path string.
  * @param {object} obj - the object to seach in
  * @param {string} path - the path to the property, separated by dots
  * @returns {string|null} - the value of the property or null if not found
