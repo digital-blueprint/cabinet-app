@@ -36,7 +36,7 @@ export default class {
                     facet: {
                         searchablePlaceholder: 'cabinet-search.search-placeholder-person-person',
                         searchable: false,
-                        sortBy: ['alpha:asc'],
+                        sortBy: ['name:asc'],
                     },
                 },
                 usePanel: false,
