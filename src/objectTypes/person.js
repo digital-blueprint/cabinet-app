@@ -429,7 +429,7 @@ class CabinetViewElement extends BaseViewElement {
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit',
-        }).format(new Date())}
+        }).format(new Date(hit.person.syncTimestamp * 1000))}
         </div>
         <div class="sync-tu-button">
             <a href="${hit.person.coUrl}" no-spinner-on-click target="_blank">
@@ -609,8 +609,7 @@ class CabinetViewElement extends BaseViewElement {
 
                 <!--<li><b>exmatriculationSemester:</b> ${hit.person.exmatriculationSemester}</li>
                 <li><b>academicTitlePreceding</b> ${hit.person.academicTitlePreceding}</li>
-                <li><b>coUrl</b> <a href="${hit.person.coUrl}">${hit.person.coUrl}</a></li>
-                <li><b>syncTimestamp</b> ${new Date(hit.person.syncTimestamp * 1000)}</li>-->
+                <li><b>coUrl</b> <a href="${hit.person.coUrl}">${hit.person.coUrl}</a></li>-->
             </ul>
             <!--<h4>Applications</h4>-->
             <!--<ul>
