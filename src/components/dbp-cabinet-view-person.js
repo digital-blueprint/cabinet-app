@@ -8,6 +8,7 @@ import {Button, Icon, Modal} from '@dbp-toolkit/common';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {pascalToKebab} from '../utils';
 import {getIconSVGURL} from '../utils.js';
+import {send} from '@dbp-toolkit/common/notification';
 
 export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -48,6 +49,18 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
     }
 
     async openDialogWithHit(hit = null) {
+        if (!hit) {
+            send({
+                summary: this._i18n.t('person.person-not-found-summary'),
+                body: this._i18n.t('person.person-not-found-body'),
+                type: 'danger',
+                replaceId: 'person-not-found',
+                timeout: 5,
+            });
+
+            return;
+        }
+
         this.sendSetPropertyEvent('routing-url', `/person/${hit.id}`, true);
         this.hitData = hit;
 

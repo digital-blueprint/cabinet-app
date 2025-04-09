@@ -188,6 +188,10 @@
         "notification-title-set-for-deletion": "Set for deletion",
         "notification-body-set-for-deletion": "The document was successfully set for deletion. The final deletion of the document takes place automatically on {{deleteTime}}"
     },
+    "person": {
+        "person-not-found-body": "The requested person could not be found!",
+        "person-not-found-summary": "Person not found"
+    },
     "error-login-message": "Please log in to use this functionality",
     "error-login-link": "Log in",
     "focus-button-name": "Focus",

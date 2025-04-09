@@ -185,6 +185,10 @@
         "notification-title-set-for-deletion": "Zur Löschung vorgemerkt.",
         "notification-body-set-for-deletion": "Das Dokument wurde erfolgreich zur Löschung vorgemerkt. Die endgültige Löschung des Dokumentes erfolgt automatisch am {{deleteTime}}"
     },
+    "person": {
+        "person-not-found-body": "Die angeforderte Person konnte nicht gefunden werden!",
+        "person-not-found-summary": "Person nicht gefunden"
+    },
     "error-login-message": "Bitte melden Sie sich an, um diese Funktion nutzen zu können.",
     "error-login-link": "Zur Anmeldung",
     "focus-button-name": "Eingrenzen",
