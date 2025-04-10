@@ -1,12 +1,11 @@
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
-import {css, html, unsafeCSS} from 'lit';
+import {css, html} from 'lit';
 import '@dbp-toolkit/form-elements';
 import {createInstance} from './i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './objectTypes/formElements';
 import {classMap} from 'lit/directives/class-map.js';
-import {getIconSVGURL} from './utils.js';
 import {
     gatherFormDataFromElement,
     validateRequiredFields,
@@ -39,7 +38,7 @@ export const getCommonStyles = () => css`
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 5px;
+        padding: 15px 5px;
         border-bottom: 1px solid var(--dbp-override-content);
         margin-bottom: calc(7px + 1vh);
         flex-wrap: wrap;
@@ -62,12 +61,12 @@ export const getCommonStyles = () => css`
         display: flex;
         align-items: center;
         justify-content: center;
-        background-image: url('${unsafeCSS(getIconSVGURL('docs'))}');
+        color: var(--dbp-override-accent);
         background-repeat: no-repeat;
-        background-size: 30px;
+        background-size: 50px;
         background-position: center;
-        width: 50px;
-        height: 50px;
+        width: 25px;
+        height: 25px;
         flex-shrink: 0;
     }
 
