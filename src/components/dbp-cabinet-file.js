@@ -1028,7 +1028,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="status ${classMap({hidden: this.mode === CabinetFile.Modes.ADD})}">
                         <div class="status-badge ${this.documentStatus}">
                             <div class="status-description">
-                                ${i18n.t(this.documentStatusDescription)}
+                                ${this.documentStatusDescription}
                                 <span class="delete-text">
                                     ${this.showLineWhenDelete}${this.deleteAtDateTime}
                                 </span>

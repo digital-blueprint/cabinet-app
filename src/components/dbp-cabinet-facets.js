@@ -353,6 +353,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             schemaField,
             schemaFieldType = 'checkbox',
             facetOptions = {},
+            name = null,
             usePanel = true,
         } = facetConfig;
 
@@ -361,7 +362,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         const cssClass = this.schemaNameToKebabCase(schemaFieldSafe);
         const cssTypeClass = this.schemaNameToKebabCase(schemaFieldType);
-        const translationKey = this.schemaNameToKebabCase(schemaFieldSafe);
 
         const filterItem = document.createElement('div');
         filterItem.classList.add('filter');
@@ -374,7 +374,9 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             const defaultPanelOptions = {
                 templates: {
                     header(options, {html}) {
-                        return i18n.t(`cabinet-search.filter-${translationKey}-title`);
+                        if (name !== null) {
+                            return i18n.t(name);
+                        }
                     },
                     collapseButtonText(options, {html}) {
                         return html`
