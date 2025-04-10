@@ -79,7 +79,7 @@ class CabinetHitElement extends BaseHitElement {
                 display: grid;
                 grid-template-columns: 2fr 1fr;
                 align-items: center;
-                padding: 15px 5px;
+                padding: 10px 5px;
                 border-bottom: 1px solid var(--dbp-override-content);
                 margin-bottom: calc(7px + 1vh);
             }
@@ -111,6 +111,7 @@ class CabinetHitElement extends BaseHitElement {
                 display: flex;
                 align-items: center;
                 padding-right: 0.5em;
+                padding-bottom: 0.5em;
             }
 
             .column-icon {
