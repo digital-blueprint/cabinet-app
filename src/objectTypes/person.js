@@ -321,6 +321,12 @@ class CabinetViewElement extends BaseViewElement {
                 margin: 0;
             }
 
+            .study-key-group {
+                display: flex;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
             .study-row {
                 display: flex;
                 justify-content: space-between;
@@ -528,8 +534,10 @@ class CabinetViewElement extends BaseViewElement {
                         (study) => html`
                 <li>
                     <ul class="study-info">
-                        <li class="study-row"><b>${i18n.t(' key')}</b><span> ${displayValue(study.key)}</span></li>
-                        <li class="study-row"><b>${i18n.t('name')}</b><span> ${displayValue(study.name)}</span></li>
+                        <div class="study-key-group">
+                            <li class="study-row"><b><span> ${displayValue(study.key)}</span></b></li>
+                            <li class="study-row"><b><span> ${displayValue(study.name)}</span></b></li>
+                        </div>
                         <li class="study-row"><b>${i18n.t('semester')}</b><span>${displayValue(study.semester)}</span></li>
                         <li class="study-row"><b>${i18n.t('status')}</b><span> ${displayValue(study.status?.text)}</span></li>
                         <li class="study-row"><b>${i18n.t('immatriculation-date')}</b><span> ${formatDate(study.immatriculationDate)}</span></li>
