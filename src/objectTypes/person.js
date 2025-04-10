@@ -1,7 +1,6 @@
-import {css, html, unsafeCSS} from 'lit';
+import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from '../baseObject.js';
 import {renderFieldWithHighlight} from '../utils';
-import {getIconSVGURL} from '../utils.js';
 import {formatDate} from '../utils.js';
 
 import {getPersonHit} from './schema.js';
@@ -117,10 +116,10 @@ class CabinetHitElement extends BaseHitElement {
             .column-icon {
                 width: 25px;
                 height: 25px;
-                background-image: url('${unsafeCSS(getIconSVGURL('user'))}');
                 background-repeat: no-repeat;
                 background-size: contain;
                 background-position-x: right;
+                color: var(--dbp-override-accent);
             }
 
             .ais-Hits-content {
@@ -160,10 +159,11 @@ class CabinetHitElement extends BaseHitElement {
             <header class="ais-Hits-header">
                 <div class="hit-person-info-header">
                     <div class="right-column">
-                        <div
+                        <dbp-icon
                             class="column-icon"
+                            name="user"
                             aria-label="Person hit box symbol"
-                            title="Person hit box symbol"></div>
+                            title="Person hit box symbol"></dbp-icon>
                     </div>
                     <span class="person-name">
                         <!-- familyName: ${hit.person.familyName}-->
