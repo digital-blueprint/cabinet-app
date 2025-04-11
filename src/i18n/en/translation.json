@@ -100,6 +100,10 @@
     "doc-modal-storage-purpose-deletion": "Purpose of storage",
     "doc-modal-study-field": "Assignment to study field",
     "doc-modal-subject-of": "Registry number",
+    "document": {
+        "document-not-found-body": "The requested document could not be found!",
+        "document-not-found-summary": "Document not found"
+    },
     "document-issue-date": "Document issue date",
     "Edit-student-data": "Edit student data",
     "emailAddressConfirmed": "Confirmed email address",

@@ -550,6 +550,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Fetch the hit data from Typesense again in case it changed
         hit = await this.typesenseService.fetchItem(hit.id);
 
+        if (!hit) {
+            modal.close();
+
+            send({
+                summary: this._i18n.t('document.document-not-found-summary'),
+                body: this._i18n.t('document.document-not-found-body'),
+                type: 'danger',
+                replaceId: 'document-not-found',
+                timeout: 5,
+            });
+
+            return;
+        }
+
         this.fileHitData = hit;
         console.log('openDialogWithHit hit', hit);
         // Set person from hit
