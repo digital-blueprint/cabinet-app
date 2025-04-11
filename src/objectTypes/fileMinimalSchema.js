@@ -93,11 +93,11 @@ class CabinetHitElement extends BaseHitElement {
 
         const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString(
             'de-DE',
-            {dateStyle: 'short', timeStyle: 'medium'},
+            {dateStyle: 'medium', timeStyle: 'medium'},
         );
         const dateCreated = new Date(hit.file.base.createdTimestamp * 1000).toLocaleString(
             'de-DE',
-            {dateStyle: 'short', timeStyle: 'medium'},
+            {dateStyle: 'medium', timeStyle: 'medium'},
         );
         const issueDate = minimalSchema.dateCreated;
         let formattedDate = issueDate
