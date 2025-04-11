@@ -1021,7 +1021,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <div class="student-info">
                             ${person.fullName}
                             <br />
-                            ${formatDate(person.birthDate)}(${person.studId} | ${person.stPersonNr})
+                            ${formatDate(person.birthDate)} &nbsp;(${person.studId} |
+                            ${person.stPersonNr})
                             <br />
                         </div>
                     </div>
