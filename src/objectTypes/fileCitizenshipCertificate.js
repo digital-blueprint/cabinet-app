@@ -117,7 +117,7 @@ class CabinetHitElement extends BaseHitElement {
             <form>
                 <header class="ais-doc-Hits-header">
                     <div class="ais-doc-title-wrapper">
-                        <div class="icon-container"></div>
+                        <dbp-icon class="icon-container" name="files"></dbp-icon>
                         <div class="ais-doc-title">${hit.file.base.additionalType.text}</div>
                     </div>
                     <div class="text-container">
