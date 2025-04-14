@@ -30,6 +30,18 @@ export default class extends BaseObject {
     }
 }
 
+const DEFAULT_IDENTITY_OCUMENT = {
+    '@type': 'DocumentFile',
+    objectType: 'file-cabinet-identityDocument',
+    file: {
+        'file-cabinet-identityDocument': {
+            nationality: '',
+            identifier: '',
+            dateCreated: '',
+        },
+    },
+};
+
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
@@ -43,7 +55,7 @@ class CabinetFormElement extends BaseFormElement {
         console.log('-- Render CabinetFormElement --');
         console.log('render this.data', this.data);
 
-        let hit = getDocumentHit(this.data);
+        let hit = getDocumentHit(this._getData() ?? DEFAULT_IDENTITY_OCUMENT);
         let identityDocument = getIdentityDocument(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/identityDocument.schema.json
@@ -54,7 +66,7 @@ class CabinetFormElement extends BaseFormElement {
                     subscribe="lang"
                     name="identifier"
                     label=${this._i18n.t('doc-modal-Identifier')}
-                    .value=${identityDocument.identifier || ''}
+                    .value=${identityDocument.identifier}
                     required></dbp-form-string-element>
 
                 <dbp-form-enum-element
@@ -62,14 +74,14 @@ class CabinetFormElement extends BaseFormElement {
                     name="nationality"
                     label=${this._i18n.t('doc-modal-nationality')}
                     .items=${formElements.getNationalityItems()}
-                    .value=${identityDocument.nationality || ''}
+                    .value=${identityDocument.nationality}
                     required></dbp-form-enum-element>
 
                 <dbp-form-date-element
                     subscribe="lang"
                     name="dateCreated"
                     label=${this._i18n.t('doc-modal-issue-date')}
-                    .value=${identityDocument.dateCreated || ''}
+                    .value=${identityDocument.dateCreated}
                     required></dbp-form-date-element>
 
                 ${this.getCommonFormElements()}

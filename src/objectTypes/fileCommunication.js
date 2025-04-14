@@ -29,6 +29,21 @@ export default class extends BaseObject {
     }
 }
 
+const DEFAULT_COMMUNICATION = {
+    '@type': 'DocumentFile',
+    objectType: 'file-cabinet-communication',
+    file: {
+        'file-cabinet-communication': {
+            abstract: '',
+            agent: {
+                givenName: '',
+                familyName: '',
+            },
+            dateCreated: '',
+        },
+    },
+};
+
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes = () => {
         return {
@@ -40,7 +55,7 @@ class CabinetFormElement extends BaseFormElement {
         console.log('-- Render CabinetFormElement --');
         console.log('render this.data', this.data);
 
-        let hit = getDocumentHit(this.data);
+        let hit = getDocumentHit(this._getData() ?? DEFAULT_COMMUNICATION);
         let communication = getCommunication(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/communication.schema.json
@@ -51,30 +66,26 @@ class CabinetFormElement extends BaseFormElement {
                     subscribe="lang"
                     name="agent[givenName]"
                     label=${this._i18n.t('given-name')}
-                    .value=${communication.agent
-                        ? communication.agent.givenName
-                        : ''}></dbp-form-string-element>
+                    .value=${communication.agent.givenName}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="agent[familyName]"
                     label=${this._i18n.t('family-name')}
-                    .value=${communication.agent
-                        ? communication.agent.familyName
-                        : ''}></dbp-form-string-element>
+                    .value=${communication.agent.familyName}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="abstract"
                     label=${this._i18n.t('communication-abstract')}
                     rows="10"
-                    .value=${communication.abstract || ''}></dbp-form-string-element>
+                    .value=${communication.abstract}></dbp-form-string-element>
 
                 <dbp-form-datetime-element
                     subscribe="lang"
                     name="dateCreated"
                     label=${this._i18n.t('doc-modal-issue-date')}
-                    value=${communication.dateCreated || ''}
+                    value=${communication.dateCreated}
                     required></dbp-form-datetime-element>
 
                 ${this.getCommonFormElements()}

@@ -29,6 +29,16 @@ export default class extends BaseObject {
     }
 }
 
+const DEFAULT_MINIMAL_SCHEMA = {
+    '@type': 'DocumentFile',
+    objectType: 'file-cabinet-minimalSchema',
+    file: {
+        'file-cabinet-minimalSchema': {
+            dateCreated: null,
+        },
+    },
+};
+
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
@@ -41,7 +51,7 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
         console.log('render this.data', this.data);
-        let hit = getDocumentHit(this.data);
+        let hit = getDocumentHit(this._getData() ?? DEFAULT_MINIMAL_SCHEMA);
         let minimalSchema = getMinimalSchema(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/minimalSchema.schema.json

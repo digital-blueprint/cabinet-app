@@ -29,6 +29,18 @@ export default class extends BaseObject {
     }
 }
 
+const DEFAULT_ADMISSION_NOTICE = {
+    '@type': 'DocumentFile',
+    objectType: 'file-cabinet-admissionNotice',
+    file: {
+        'file-cabinet-admissionNotice': {
+            dateCreated: '',
+            previousStudy: '',
+            decision: '',
+        },
+    },
+};
+
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes = () => {
         return {
@@ -46,9 +58,9 @@ class CabinetFormElement extends BaseFormElement {
 
     render() {
         console.log('-- Render CabinetFormElement --');
-        console.log('this.data', this.data);
+        console.log('this.data', this._getData());
 
-        let hit = getDocumentHit(this.data);
+        let hit = getDocumentHit(this._getData() ?? DEFAULT_ADMISSION_NOTICE);
         let admissionNotice = getAdmissionNotice(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/admissionNotice.schema.json
@@ -59,21 +71,21 @@ class CabinetFormElement extends BaseFormElement {
                     subscribe="lang"
                     name="dateCreated"
                     label=${this._i18n.t('doc-modal-issue-date')}
-                    .value=${admissionNotice.dateCreated || ''}
+                    .value=${admissionNotice.dateCreated}
                     required></dbp-form-date-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousStudy"
                     label=${this._i18n.t('doc-modal-previousStudy')}
-                    .value=${admissionNotice.previousStudy || ''}></dbp-form-string-element>
+                    .value=${admissionNotice.previousStudy}></dbp-form-string-element>
 
                 <dbp-form-enum-element
                     subscribe="lang"
                     name="decision"
                     label=${this._i18n.t('doc-modal-decision')}
                     .items=${CabinetFormElement.getDecisions()}
-                    .value=${admissionNotice.decision || ''}></dbp-form-enum-element>
+                    .value=${admissionNotice.decision}></dbp-form-enum-element>
 
                 ${this.getCommonFormElements()}
             </form>

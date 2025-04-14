@@ -30,6 +30,17 @@ export default class extends BaseObject {
     }
 }
 
+const DEFAULT_CITIZENSHIP_CERTIFICATE = {
+    '@type': 'DocumentFile',
+    objectType: 'file-cabinet-citizenshipCertificate',
+    file: {
+        'file-cabinet-citizenshipCertificate': {
+            nationality: '',
+            dateCreated: '',
+        },
+    },
+};
+
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes = () => {
         return {
@@ -40,7 +51,7 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
 
-        let hit = getDocumentHit(this.data);
+        let hit = getDocumentHit(this._getData() ?? DEFAULT_CITIZENSHIP_CERTIFICATE);
         let citizenshipCertificate = getCitizenshipCertificate(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/citizenshipCertificate.schema.json
@@ -52,13 +63,13 @@ class CabinetFormElement extends BaseFormElement {
                     name="nationality"
                     label=${this._i18n.t('doc-modal-nationality')}
                     .items=${formElements.getNationalityItems()}
-                    .value=${citizenshipCertificate.nationality || ''}></dbp-form-enum-element>
+                    .value=${citizenshipCertificate.nationality}></dbp-form-enum-element>
 
                 <dbp-form-date-element
                     subscribe="lang"
                     name="dateCreated"
                     label=${this._i18n.t('doc-modal-issue-date')}
-                    .value=${citizenshipCertificate.dateCreated || ''}
+                    .value=${citizenshipCertificate.dateCreated}
                     required></dbp-form-date-element>
 
                 ${this.getCommonFormElements()}

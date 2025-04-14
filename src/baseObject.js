@@ -5,6 +5,7 @@ import '@dbp-toolkit/form-elements';
 import {createInstance} from './i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './objectTypes/formElements';
+import {getDocumentHit} from './objectTypes/schema.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {
     gatherFormDataFromElement,
@@ -88,6 +89,39 @@ export const getCommonStyles = () => css`
     }
 `;
 
+function getDefaultSemester() {
+    let currentDate = new Date();
+    let currentYear = currentDate.getFullYear();
+    currentYear = currentYear % 100;
+    let currentMonth = currentDate.getMonth();
+    let currentSeason;
+    if (currentMonth >= 2 && currentMonth <= 8) {
+        currentSeason = 'S';
+    } else {
+        currentSeason = 'W';
+    }
+    return currentYear.toString() + currentSeason;
+}
+
+const DEFAULT_FILE_COMMON = {
+    '@type': 'DocumentFile',
+    file: {
+        base: {
+            additionalType: {
+                key: '',
+                text: '',
+            },
+            groupId: null,
+            comment: null,
+            isPartOf: [],
+            studyField: '',
+            studyFieldName: '',
+            subjectOf: null,
+            semester: getDefaultSemester(),
+        },
+    },
+};
+
 export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
         super();
@@ -99,6 +133,15 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         this.entryPointUrl = '';
         this.auth = {};
         this.saveButtonEnabled = true;
+    }
+
+    _getData() {
+        // Return the hit if set, otherwise null
+        // FIXME: make this.data nullable
+        if (Object.keys(this.data).length === 0) {
+            return null;
+        }
+        return this.data;
     }
 
     enableSaveButton() {
@@ -152,24 +195,22 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     };
 
     getCommonFormElements = () => {
-        const fileData = this.data?.file || {};
-        const baseData = fileData.base || {};
-        const defaultSemester = this.getDefaultSemester(baseData);
-        const additionalType = this.additionalType || baseData.additionalType?.key || '';
+        let hit = getDocumentHit(this._getData() ?? DEFAULT_FILE_COMMON);
+        let fileCommon = hit.file.base;
 
         return html`
             <dbp-form-string-element
                 subscribe="lang"
                 name="subjectOf"
                 label=${this._i18n.t('doc-modal-subject-of')}
-                .value=${baseData.subjectOf || ''}></dbp-form-string-element>
+                .value=${fileCommon.subjectOf || ''}></dbp-form-string-element>
 
             <dbp-form-enum-element
                 subscribe="lang"
                 name="studyField"
                 label=${this._i18n.t('doc-modal-study-field')}
                 .items=${this.getStudyFields()}
-                .value=${baseData.studyField || ''}
+                .value=${fileCommon.studyField}
                 required></dbp-form-enum-element>
 
             <dbp-form-enum-element
@@ -177,7 +218,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
                 name="semester"
                 label=${this._i18n.t('doc-modal-semester')}
                 .items=${this.getSemesters()}
-                .value=${defaultSemester}
+                .value=${fileCommon.semester}
                 required></dbp-form-enum-element>
 
             <dbp-form-enum-element
@@ -185,7 +226,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
                 name="isPartOf"
                 label=${this._i18n.t('doc-modal-purpose-storage')}
                 .items=${BaseFormElement.getIsPartOfItems(this._i18n)}
-                .value=${baseData.isPartOf || ''}
+                .value=${fileCommon.isPartOf}
                 multiple
                 required></dbp-form-enum-element>
 
@@ -194,30 +235,12 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
                 name="comment"
                 label=${this._i18n.t('doc-modal-comment')}
                 rows="5"
-                .value=${baseData.comment || ''}></dbp-form-string-element>
+                .value=${fileCommon.comment || ''}></dbp-form-string-element>
 
-            <input type="hidden" name="additionalType" value="${additionalType}" />
+            <input type="hidden" name="additionalType" value="${fileCommon.additionalType.key}" />
             ${this.getButtonRowHtml()}
         `;
     };
-
-    getDefaultSemester(baseData) {
-        if (baseData.semester) {
-            return baseData.semester;
-        } else {
-            let currentDate = new Date();
-            let currentYear = currentDate.getFullYear();
-            currentYear = currentYear % 100;
-            let currentMonth = currentDate.getMonth();
-            let currentSeason;
-            if (currentMonth >= 2 && currentMonth <= 8) {
-                currentSeason = 'S';
-            } else {
-                currentSeason = 'W';
-            }
-            return currentYear.toString() + currentSeason;
-        }
-    }
 
     async validateForm() {
         const formElement = this.shadowRoot.querySelector('form');
