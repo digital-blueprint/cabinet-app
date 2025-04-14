@@ -6,6 +6,7 @@ import {createInstance} from './i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './objectTypes/formElements';
 import {getDocumentHit} from './objectTypes/schema.js';
+import {getSemesters, DEFAULT_FILE_COMMON} from './objectTypes/fileCommon.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {
     gatherFormDataFromElement,
@@ -88,81 +89,6 @@ export const getCommonStyles = () => css`
         color: var(--dbp-override-content);
     }
 `;
-
-function getDefaultSemester() {
-    let currentDate = new Date();
-    let currentYear = currentDate.getFullYear();
-    currentYear = currentYear % 100;
-    let currentMonth = currentDate.getMonth();
-    let currentSeason;
-    if (currentMonth >= 2 && currentMonth <= 8) {
-        currentSeason = 'S';
-    } else {
-        currentSeason = 'W';
-    }
-    return currentYear.toString() + currentSeason;
-}
-
-function getSemesters() {
-    let currentDate = new Date();
-    let currentYear = currentDate.getFullYear();
-    currentYear = currentYear % 100;
-    let nextYear = currentYear + 1;
-    let previousYear = currentYear - 1;
-    let currentMonth = currentDate.getMonth();
-    let currentSeason;
-    if (currentMonth >= 2 && currentMonth <= 8) {
-        currentSeason = 'S';
-    } else {
-        currentSeason = 'W';
-    }
-
-    let currentSemester = currentYear.toString() + currentSeason;
-
-    let nextSemester;
-
-    const semesters = {};
-
-    if (currentSeason === 'S') {
-        nextSemester = currentYear.toString() + 'W';
-        semesters[nextSemester] = nextSemester;
-        semesters[currentSemester] = currentSemester;
-    } else {
-        nextSemester = nextYear.toString() + 'S';
-        semesters[nextSemester] = nextSemester;
-        semesters[currentSemester] = currentSemester;
-        let previousSemester = currentYear.toString() + 'S';
-        semesters[previousSemester] = previousSemester;
-    }
-
-    for (let year = previousYear; year >= 20; year--) {
-        let winterSemester = year + 'W';
-        semesters[winterSemester] = winterSemester;
-        let summerSemester = year + 'S';
-        semesters[summerSemester] = summerSemester;
-    }
-
-    return semesters;
-}
-
-const DEFAULT_FILE_COMMON = {
-    '@type': 'DocumentFile',
-    file: {
-        base: {
-            additionalType: {
-                key: '',
-                text: '',
-            },
-            groupId: null,
-            comment: null,
-            isPartOf: [],
-            studyField: '',
-            studyFieldName: '',
-            subjectOf: null,
-            semester: getDefaultSemester(),
-        },
-    },
-};
 
 export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     constructor() {
