@@ -1,4 +1,4 @@
-import {css, html, unsafeCSS} from 'lit';
+import {css, html} from 'lit';
 import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
 import {ref, createRef} from 'lit/directives/ref.js';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
@@ -7,7 +7,6 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal} from '@dbp-toolkit/common';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {pascalToKebab} from '../utils';
-import {getIconSVGURL} from '../utils.js';
 import {send} from '@dbp-toolkit/common/notification';
 
 export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement) {
@@ -119,10 +118,27 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
                 --dbp-modal-title-font-size: 24px;
                 --dbp-modal-title-font-weight: bold;
                 --dbp-modal-title-padding: 0 0 0 40px;
-                --dbp-modal-title-background: url('${unsafeCSS(getIconSVGURL('user'))}') left
-                    center / 28px 28px no-repeat;
                 list-style-type: none;
                 --dbp-modal-min-width: min(75vw, 85vw);
+            }
+
+            #view-modal .modal-header {
+                display: flex;
+                align-items: center;
+            }
+
+            #view-modal .person-modal-icon {
+                width: 25px;
+                height: 25px;
+                color: var(--dbp-override-accent);
+                margin-top: 0px;
+                margin-bottom: 0.75rem;
+            }
+
+            #view-modal .person-modal-title {
+                margin-left: 10px;
+                padding-top: 0.4rem;
+                font-weight: bold;
             }
         `;
     }
@@ -170,8 +186,11 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
                 min-width="80%"
                 min-height="80%"
                 subscribe="lang"
-                @dbp-modal-closed="${this.onClosePersonModal}"
-                title="${hit.person.fullName}">
+                @dbp-modal-closed="${this.onClosePersonModal}">
+                <div slot="header" class="modal-header">
+                    <dbp-icon name="user" class="person-modal-icon"></dbp-icon>
+                    <h3 class="person-modal-title">${hit.person.fullName}</h3>
+                </div>
                 <div slot="content">
                     <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" .data=${hit}></${unsafeStatic(tagName)}>
                 </div>
