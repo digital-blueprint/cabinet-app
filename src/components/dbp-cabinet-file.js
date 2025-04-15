@@ -1,4 +1,4 @@
-import {css, html, unsafeCSS} from 'lit';
+import {css, html} from 'lit';
 import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
 import {createRef, ref} from 'lit/directives/ref.js';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
@@ -13,7 +13,6 @@ import * as formElements from '../objectTypes/formElements.js';
 import {BaseFormElement} from '../baseObject.js';
 import {send} from '@dbp-toolkit/common/notification';
 import {getSelectorFixCSS} from '../styles.js';
-import {getIconSVGURL} from '../utils.js';
 import {Notification} from '@dbp-toolkit/notification';
 import {formatDate} from '../utils.js';
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
@@ -872,12 +871,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             #document-modal .doc-title {
-                background-image: url('${unsafeCSS(getIconSVGURL('docs'))}');
-                background-repeat: no-repeat;
-                background-size: 24px 24px;
-                background-position: left;
-                padding-left: 2em;
+                display: flex;
+                align-items: center;
             }
+
+            #document-modal .view-modal-icon {
+                color: var(--dbp-override-accent);
+                width: 25px;
+                height: 25px;
+                padding-right: 0.5em;
+            }
+
             #document-modal .student-info {
                 display: flex;
                 align-items: flex-start;
@@ -1031,7 +1035,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 </div>
                 <div slot="content" class="content">
                     <div class="description">
-                        <div class="doc-title"><h1>${headline}</h1></div>
+                        <div class="doc-title">
+                            <dbp-icon name="files" class="view-modal-icon"></dbp-icon>
+                            <h1>${headline}</h1>
+                        </div>
                         <div class="student-info">
                             ${person.fullName}
                             <br />
