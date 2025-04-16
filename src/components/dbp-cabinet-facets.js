@@ -1,15 +1,13 @@
 // noinspection CssUnusedSymbol,JSUnresolvedReference
 
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
-import * as commonUtils from '@dbp-toolkit/common/utils';
-import {css, html, render, unsafeCSS} from 'lit';
+import {css, html, render} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
 import {panel, refinementList} from 'instantsearch.js/es/widgets/index.js';
 import {connectCurrentRefinements, connectClearRefinements} from 'instantsearch.js/es/connectors';
 import {createDateRefinement} from './dbp-cabinet-date-facet.js';
-import {getIconSVGURL} from '../utils.js';
 import {createInstance} from '../i18n.js';
 
 class FacetLabel extends DBPLitElement {
@@ -382,24 +380,16 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         return html`
                             ${options.collapsed
                                 ? html`
-                                      <img
-                                          src="${commonUtils.getAssetURL(
-                                              '@digital-blueprint/cabinet-app',
-                                              'icon/chevron-down.svg',
-                                          )}"
-                                          width="16"
-                                          height="16"
-                                          alt="chevron-down" />
+                                      <dbp-icon
+                                          class="chevron-container"
+                                          name="chevron-down"
+                                          alt="chevron-down"></dbp-icon>
                                   `
                                 : html`
-                                      <img
-                                          src="${commonUtils.getAssetURL(
-                                              '@digital-blueprint/cabinet-app',
-                                              'icon/chevron-up.svg',
-                                          )}"
-                                          width="16"
-                                          height="16"
-                                          alt="chevron-up" />
+                                      <dbp-icon
+                                          class="chevron-container"
+                                          name="chevron-up"
+                                          alt="chevron-up"></dbp-icon>
                                   `}
                         `;
                     },
@@ -650,37 +640,9 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 gap: 1em;
             }
 
-            /*.filter-group--category {
-                background-image:url("${unsafeCSS(getIconSVGURL('category'))}");
-                background-repeat: no-repeat;
-                background-size: 22px 22px;
-                background-position: right 3px;
-            }*/
-
             .refinement-list-item-inner > refinement-list-item-count {
                 padding-left: 1em;
             }
-
-            /*.filter-group--person {
-                background-image:url("${unsafeCSS(getIconSVGURL('user'))}");
-                background-repeat: no-repeat;
-                background-size: 22px 22px;
-                background-position: right 3px;
-            }*/
-
-            /*.filter-group--study {
-                background-image: url("${unsafeCSS(getIconSVGURL('book'))}");
-                background-repeat: no-repeat;
-                background-size: 22px 22px;
-                background-position: right 3px;
-            }*/
-
-            /*.filter-group--file {
-                background-image:url("${unsafeCSS(getIconSVGURL('docs'))}");
-                background-repeat: no-repeat;
-                background-size: 22px 22px;
-                background-position: right 3px;
-            }*/
 
             .filter-title {
                 margin: 0;
@@ -690,6 +652,12 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .filter:has(> [hidden]) {
                 display: none;
+            }
+
+            .chevron-container {
+                color: var(--dbp-override-accent);
+                width: 16px;
+                height: 16px;
             }
 
             /* panel search */
@@ -774,11 +742,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             .filter input[type='date'] {
                 padding: 0.5em;
             }
-
-            /* input[type="date"]:invalid::after {
-                display: block;
-                content: "✖";
-            } */
 
             /* input wrapper */
             ::-internal-datetime-container {
