@@ -53,6 +53,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.documentViewId = null;
         this.personViewId = null;
         this.resetRoutingUrl = false;
+        this.lockDocumentViewDialog = false;
     }
 
     static get scopedElements() {
@@ -134,7 +135,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async handleAutomaticDocumentViewOpen() {
         // The first process that fulfills all needs to open the document view dialog will do so
-        if (this.documentViewId) {
+        if (this.documentViewId && !this.lockDocumentViewDialog) {
             if (await this.openDocumentViewDialogWithId(this.documentViewId)) {
                 this.documentViewId = null;
             }
@@ -201,19 +202,30 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async openDocumentViewDialogWithId(id) {
+        // We need an extra check, because we need to be very quick in returning false
+        if (!this.typesenseService || this.objectTypeViewComponents.length === 0) {
+            return false;
+        }
+
         /**
          * @type {CabinetFile}
          */
         const component = this.documentFileComponentRef.value;
 
-        if (!component || !this.typesenseService || this.objectTypeViewComponents.length === 0) {
+        if (!component) {
             return false;
         }
+
+        // We need a lock, because openDocumentViewDialogWithId can be called multiple times
+        // so quickly in the lit lifecycle that we make multiple typesense requests and get
+        // multiple error messages if the document was not found
+        this.lockDocumentViewDialog = true;
 
         component.setObjectTypeViewComponents(this.objectTypeViewComponents);
         component.setTypesenseService(this.typesenseService);
 
         await component.openViewDialogWithFileId(id);
+        this.lockDocumentViewDialog = false;
 
         return true;
     }
