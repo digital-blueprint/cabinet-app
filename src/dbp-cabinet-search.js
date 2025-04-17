@@ -41,6 +41,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.cabinetFacetsRef = createRef();
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
+        /** @type {InstantSearchModule} */
         this.instantSearchModule = {};
         this.facetConfigs = [];
         this.typesenseInstantsearchAdapter = null;
@@ -753,7 +754,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     createFacets() {
-        return this.cabinetFacetsRef.value.createFacetsFromConfig(this.facetConfigs);
+        /** @type {CabinetFacets} */
+        const ref = this.cabinetFacetsRef.value;
+        return ref.createFacetsFromConfig(this.facetConfigs);
     }
 
     toggleShowDeleted(event) {

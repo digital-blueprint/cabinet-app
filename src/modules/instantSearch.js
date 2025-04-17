@@ -5,7 +5,7 @@ function t(key) {
     return key;
 }
 
-export default class {
+export default class InstantSearchModule {
     constructor() {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
