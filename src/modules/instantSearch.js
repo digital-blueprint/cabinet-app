@@ -380,15 +380,6 @@ export default class {
             },
             {
                 groupId: 'file',
-                schemaField: 'file.file-cabinet-citizenshipCertificate.nationality',
-                schemaFieldType: 'checkbox',
-                name: t(
-                    'cabinet-search.filter-file-file-cabinet-citizenship-certificate-nationality-title',
-                ),
-                facetOptions: {facet: {searchable: false}},
-            },
-            {
-                groupId: 'file',
                 schemaField: 'file.file-cabinet-identityDocument.nationality',
                 schemaFieldType: 'checkbox',
                 name: t(
