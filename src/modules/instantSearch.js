@@ -19,7 +19,7 @@ export default class {
      *  id: A unique identifier for the filter group.
      *  name: The translation key used as title of the filter group.
      *  groupId: A name of the group ID to which the schema field belongs.
-     *  schemaField: A the typesense schema field to be used for the facet.
+     *  schemaField: The typesense schema field to be used for the facet.
      *  schemaFieldType: The type of the facet (e.g., "checkbox", "datepicker").
      *  facetOptions: An object containing options for the facet.
      *  facet: An object to override facet options.
