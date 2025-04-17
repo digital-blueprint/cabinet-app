@@ -80,7 +80,7 @@ class CabinetHitElement extends BaseHitElement {
                 grid-template-columns: 2fr 1fr;
                 align-items: center;
                 padding: 10px 5px;
-                border-bottom: 1px solid var(--dbp-override-content);
+                border-bottom: 0.15em solid var(--dbp-override-accent);
                 margin-bottom: calc(7px + 1vh);
             }
 
