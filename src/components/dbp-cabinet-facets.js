@@ -554,15 +554,15 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     const isExpanded = facetList.classList.contains('is-expanded');
 
                     if (!showMoreButton) {
-                        widget.classList.add('no-gradient');
+                        widget.classList.add('gradient');
                         return;
                     }
                     // Remove gradient if all facet items are visible.
                     if (!isExpanded && facetCount < COLLAPSED_COUNT) {
-                        widget.classList.add('no-gradient');
+                        widget.classList.add('gradient');
                     }
                     if (isExpanded && facetCount < EXPANDED_COUNT) {
-                        widget.classList.add('no-gradient');
+                        widget.classList.add('gradient');
                     }
                 }
             });
@@ -576,9 +576,9 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         const isShowMoreButtonPresent = facetWidget.querySelector('.ais-RefinementList-showMore');
 
         if (!isShowMoreButtonPresent && facetCount < EXPANDED_COUNT) {
-            facetWidget.classList.add('no-gradient');
+            facetWidget.classList.add('gradient');
         } else {
-            facetWidget.classList.remove('no-gradient');
+            facetWidget.classList.remove('gradient');
         }
     }
 
@@ -699,12 +699,17 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 position: relative;
             }
 
-            .filter:not(.no-gradient) .ais-RefinementList-list:after {
+            .filter:not(.gradient) .ais-RefinementList-list:after {
                 content: '';
                 display: block;
                 height: 30px;
                 width: 100%;
-
+                background: linear-gradient(
+                    0deg,
+                    rgb(from var(--dbp-background) r g b / 100%) 0%,
+                    rgb(from var(--dbp-background) r g b / 60%) 60%,
+                    rgb(from var(--dbp-background) r g b / 0%) 100%
+                );
                 pointer-events: none;
                 z-index: 99;
                 position: absolute;

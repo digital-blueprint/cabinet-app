@@ -30,7 +30,7 @@ export default class InstantSearchModule {
      * @returns {Array} - Array of search facets config
      */
     getFacetsConfig() {
-        const showMoreLimitValue = 1000;
+        const showMoreLimitValue = 50;
         return [
             {'filter-group': {id: 'category', name: t('cabinet-search.type-filter-group-title')}},
             {
