@@ -137,6 +137,20 @@ class CabinetHitElement extends BaseHitElement {
                 color: var(--dbp-override-content);
                 padding-bottom: 1em;
             }
+
+            .study-entry {
+                display: flex;
+                margin-bottom: 4px;
+            }
+
+            .study-icon {
+                margin-right: 6px;
+                font-size: 16px;
+            }
+
+            .count {
+                padding-top: 1em;
+            }
         `;
     }
 
@@ -191,8 +205,14 @@ class CabinetHitElement extends BaseHitElement {
                         ? html`
                               ${displayedStudies.map(
                                   (study) => html`
-                                      ${study.name} (${study.status.text})
-                                      <br />
+                                      <div class="study-entry">
+                                          <dbp-icon
+                                              name="chevron-right-circle"
+                                              class="study-icon"
+                                              aria-label="Study icon"
+                                              title="Study icon"></dbp-icon>
+                                          <span>${study.name} (${study.status.text})</span>
+                                      </div>
                                   `,
                               )}
                               ${extraCount > 0
