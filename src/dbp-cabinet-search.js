@@ -624,8 +624,31 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         return hits({
             container: this._('#hits'),
             escapeHTML: true,
+            transformItems: (items) => {
+                const helper = this.search.helper;
+                const facetName = 'person.person';
+                const state = helper.state;
+
+                return items.map((item) => {
+                    const value = item.person.person;
+                    const active = (state.facetsRefinements?.[facetName] || []).concat(
+                        state.disjunctiveFacetsRefinements?.[facetName] || [],
+                    );
+
+                    return {
+                        ...item,
+                        isFiltered: active.includes(value),
+                    };
+                });
+            },
+
             templates: {
                 item: (hit, {html}) => {
+                    const i18n = this._i18n;
+                    const buttonLabel = hit.isFiltered
+                        ? i18n.t('unselect-button-name')
+                        : i18n.t('focus-button-name');
+
                     const objectType = hit.objectType;
                     const tagPart = pascalToKebab(hit.objectType);
                     const tagName = 'dbp-cabinet-object-type-hit-' + tagPart;
@@ -637,7 +660,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                     // Note: We can't access local functions, nor can we use a script tag, so we are using a custom event to open the file edit dialog (is this still the case with preact?)
                     // Note: "html" is preact html, not lit-html!
-                    const i18n = this._i18n;
                     const buttonRowHtml =
                         objectType === 'person'
                             ? html`
@@ -681,11 +703,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                       }),
                                                   );
                                               }}">
-                                              ${
-                                                  /*@TODO: find something to test here */ hit
-                                                      ? i18n.t('focus-button-name')
-                                                      : i18n.t('unselect-button-name')
-                                              }
+                                              ${buttonLabel}
                                           </button>
                                           <button
                                               class="button is-primary"
