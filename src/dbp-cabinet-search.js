@@ -539,7 +539,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             query_by:
                 'person.familyName,person.givenName,file.base.fileName,objectType,person.stPersonNr,person.studId,person.identNrObfuscated,person.birthDate',
             // @TODO we should set typo tolerance by field. ex.: birthdate or identNrObfuscated dont need typo tolerance
-            sort_by: '@type:desc,_text_match:desc,person.familyName:asc',
+            sort_by: 'person.person:asc,@type:desc,objectType:desc',
             // Show not-deleted documents / Show only deleted documents
             // filter_by: "base.isScheduledForDeletion:" + (this.showScheduledForDeletion ? "true" : "false"),
             // filter_by: "file.base.deleteAtTimestamp:>0",
