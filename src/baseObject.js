@@ -41,7 +41,6 @@ export const getCommonStyles = () => css`
         justify-content: space-between;
         align-items: center;
         padding: 15px 5px;
-        border-bottom: 0.15em solid var(--dbp-override-content);
         margin-bottom: calc(7px + 1vh);
         flex-wrap: wrap;
     }

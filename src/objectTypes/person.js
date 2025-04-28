@@ -80,8 +80,8 @@ class CabinetHitElement extends BaseHitElement {
                 grid-template-columns: 2fr 1fr;
                 align-items: center;
                 padding: 10px 5px;
-                border-bottom: 0.15em solid var(--dbp-override-accent);
                 margin-bottom: calc(7px + 1vh);
+                background-color: var(--dbp-primary-surface);
             }
 
             .hit-person-info-header {
@@ -89,11 +89,12 @@ class CabinetHitElement extends BaseHitElement {
                 align-items: center;
                 font-size: 18px;
                 font-weight: bold;
-                color: var(--dbp-override-content);
+                color: white;
             }
 
             .hit-person-info-header .person-name {
                 margin-right: 10px;
+                color: white;
             }
 
             .hit-right-wrapper {
@@ -104,7 +105,7 @@ class CabinetHitElement extends BaseHitElement {
 
             .person-id {
                 margin-right: 10px;
-                color: var(--dbp-override-content);
+                color: white;
             }
 
             .right-column {
@@ -120,7 +121,7 @@ class CabinetHitElement extends BaseHitElement {
                 background-repeat: no-repeat;
                 background-size: contain;
                 background-position-x: right;
-                color: var(--dbp-override-accent);
+                color: #ffffff;
             }
 
             .ais-Hits-content {
