@@ -62,7 +62,7 @@ export const getCommonStyles = () => css`
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--dbp-override-accent);
+        color: var(--dbp-override-content);
         background-repeat: no-repeat;
         background-size: 50px;
         background-position: center;
