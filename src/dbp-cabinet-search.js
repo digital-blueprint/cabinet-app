@@ -10,7 +10,7 @@ import {classMap} from 'lit/directives/class-map.js';
 import {Activity} from './activity.js';
 import metadata from './dbp-cabinet-search.metadata.json';
 import instantsearch from 'instantsearch.js';
-import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
+import DbpTypesenseInstantSearchAdapter from './dbp-typesense-instantsearch-adapter.js';
 import {hits, searchBox, sortBy, stats, pagination} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
 import {pascalToKebab} from './utils';
@@ -536,7 +536,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Create the Instantsearch instance
      */
     createInstantsearch() {
-        const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter(
+        const typesenseInstantsearchAdapter = new DbpTypesenseInstantSearchAdapter(
             this.getTypesenseInstantsearchAdapterConfig(),
         );
 
