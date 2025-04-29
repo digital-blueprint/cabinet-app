@@ -1,18 +1,12 @@
 'use strict';
 
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
-import {SearchRequestAdapter} from 'typesense-instantsearch-adapter/src/SearchRequestAdapter';
 
 export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSearchAdapter {
     async _adaptAndPerformTypesenseRequest(instantsearchRequests) {
         instantsearchRequests[0].params.facets = ['@type'];
-        const requestAdapter = new SearchRequestAdapter(
-            instantsearchRequests,
-            this.typesenseClient,
-            this.configuration,
-        );
 
-        var typesenseResponse = await requestAdapter.request();
+        var typesenseResponse = await super._adaptAndPerformTypesenseRequest(instantsearchRequests);
         typesenseResponse.results[0].facet_counts = this.dummyFacetCountsData();
 
         return typesenseResponse;
