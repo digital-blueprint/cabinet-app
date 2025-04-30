@@ -32,6 +32,11 @@ term: term-kill term-run
 open-browser:
     xdg-open http://localhost:8001
 
+# Interactive npm watch script selector for watching cabinet only
+[group('dev')]
+watch-cabinet:
+    APP_ACTIVITIES=dbp-cabinet-search just watch
+
 # Interactive npm watch script selector
 [group('dev')]
 watch:
