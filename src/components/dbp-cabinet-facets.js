@@ -126,6 +126,72 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
     }
 
+    /**
+     * Transforms a string with dots and camelCase to kebab-case with hyphens
+     * @param {string} input - The input string to transform (e.g., "file.base.createdTimestamp")
+     * @returns {string} - The transformed string (e.g., "file-base-created-timestamp")
+     */
+    transformToDashCase(input) {
+        // First, replace all dots with hyphens
+        let result = input.replace(/\./g, '-');
+
+        // Then, convert camelCase to kebab-case
+        // Look for any uppercase letter that has a lowercase letter before it
+        result = result.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+
+        return result;
+    }
+
+    /**
+     * Gathers the facet names to use in TypesenseInstantsearchAdapter._adaptAndPerformTypesenseRequest
+     * @param facetsConfigs
+     * @returns {*[]}
+     */
+    gatherActivatedWidgetsFacetNames(facetsConfigs) {
+        const widgets = [];
+        const facetWidgets = this._a('#filters-container .filter');
+        console.log('gatherActivatedWidgets facetWidgets', facetWidgets);
+
+        facetWidgets.forEach((facetWidget) => {
+            // Gather all facet div containers that are collapsible
+            const div = facetWidget.querySelector('.ais-Panel--collapsible');
+
+            if (div === null) {
+                return;
+            }
+
+            // Check if the div container is collapsed, we only want uncollapsed containers
+            if (div.classList.contains('ais-Panel--collapsed') !== false) {
+                return;
+            }
+
+            // Get the HTML id from the widget
+            const facetId = facetWidget.id;
+
+            if (!facetId) {
+                return;
+            }
+
+            // Check all facet configs for a matching "id" entry
+            facetsConfigs.forEach((facetConfig) => {
+                const id = this.transformToDashCase(facetConfig.schemaField || '');
+
+                if (id === facetId) {
+                    widgets.push(facetConfig.schemaField);
+                }
+
+                // if (
+                //     facetConfig?.facetOptions?.facet?.id &&
+                //     facetConfig.facetOptions.facet.id === facetId
+                // ) {
+                //     widgets.push(facetConfig.schemaField);
+                // }
+            });
+        });
+
+        return widgets;
+    }
+
     filterOnSelectedPerson(event) {
         if (event.detail.person) {
             // @TODO: don't hardcode facet name?

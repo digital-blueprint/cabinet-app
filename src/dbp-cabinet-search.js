@@ -540,6 +540,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.getTypesenseInstantsearchAdapterConfig(),
         );
 
+        /** @type {CabinetFacets} */
+        const ref = this.cabinetFacetsRef.value;
+        typesenseInstantsearchAdapter.setFacetComponent(ref);
+        typesenseInstantsearchAdapter.setFacetConfigs(this.facetConfigs);
+
         // We need to leak the typesenseInstantsearchAdapter instance to the global scope,
         // so we can update the additional search parameters later
         this.typesenseInstantsearchAdapter = typesenseInstantsearchAdapter;

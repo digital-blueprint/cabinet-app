@@ -1,10 +1,31 @@
 'use strict';
 
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
+import {CabinetFacets} from './components/dbp-cabinet-facets.js';
 
 export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSearchAdapter {
+    /** @type {CabinetFacets} */
+    facetComponent = null;
+
+    facetConfigs = {};
+
+    /**
+     * @param {CabinetFacets} facetComponent
+     */
+    setFacetComponent(facetComponent) {
+        this.facetComponent = facetComponent;
+    }
+
+    setFacetConfigs(facetConfigs) {
+        this.facetConfigs = facetConfigs;
+    }
+
     async _adaptAndPerformTypesenseRequest(instantsearchRequests) {
-        instantsearchRequests[0].params.facets = ['@type'];
+        let facetNames = ['@type'];
+        facetNames.push(...this.facetComponent.gatherActivatedWidgetsFacetNames(this.facetConfigs));
+        console.log('_adaptAndPerformTypesenseRequest facetNames', facetNames);
+
+        instantsearchRequests[0].params.facets = facetNames;
 
         var typesenseResponse = await super._adaptAndPerformTypesenseRequest(instantsearchRequests);
         typesenseResponse.results[0].facet_counts = this.dummyFacetCountsData();
