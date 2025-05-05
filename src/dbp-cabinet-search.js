@@ -285,6 +285,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         protocol: typesenseUrl.protocol.replace(':', ''),
                     },
                 ],
+                useServerSideSearchCache: true,
+                cacheSearchResultsForSeconds: 0,
                 additionalHeaders: {Authorization: 'Bearer ' + this.auth.token},
                 sendApiKeyAsQueryParam: true,
             };
