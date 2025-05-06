@@ -151,6 +151,7 @@
     "Study-information": "Study information",
     "studyAddress": "Study address",
     "sync-hit": "Last synchronized",
+    "sync-student-data": "Synchronize student data",
     "tuitionStatus": "Status of tuition fees",
     "typesense-schema": {
         "@type": {

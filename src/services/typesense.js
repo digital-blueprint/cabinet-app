@@ -1,11 +1,37 @@
 import Typesense from 'typesense';
 
-export class TypesenseService {
-    constructor(serverConfig, collectionsName) {
-        console.log('constructor serverConfig', serverConfig);
+export const TYPESENSE_COLLECTION = 'cabinet';
 
+export class TypesenseService {
+    constructor(serverConfig) {
         this.client = new Typesense.Client(serverConfig);
-        this.collectionName = collectionsName;
+        this.collectionName = TYPESENSE_COLLECTION;
+    }
+
+    static getServerConfigForEntryPointUrl(entryPointUrl, token) {
+        let typesenseUrl = new URL(entryPointUrl + '/cabinet/typesense');
+        let serverConfig = {
+            apiKey: '', // unused
+            nodes: [
+                {
+                    host: typesenseUrl.hostname,
+                    port:
+                        typesenseUrl.port ||
+                        (typesenseUrl.protocol === 'https:'
+                            ? '443'
+                            : typesenseUrl.protocol === 'http:'
+                              ? '80'
+                              : ''),
+                    path: typesenseUrl.pathname,
+                    protocol: typesenseUrl.protocol.replace(':', ''),
+                },
+            ],
+            useServerSideSearchCache: true,
+            cacheSearchResultsForSeconds: 0,
+            additionalHeaders: {Authorization: 'Bearer ' + token},
+            sendApiKeyAsQueryParam: true,
+        };
+        return serverConfig;
     }
 
     /**

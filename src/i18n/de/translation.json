@@ -151,6 +151,7 @@
     "Study-information": "Studiumbezogene Informationen",
     "studyAddress": "Studienadresse",
     "sync-hit": "Zuletzt synchronisiert",
+    "sync-student-data": "Daten synchronisieren",
     "tuitionStatus": "Beitragsstatus",
     "typesense-schema": {
         "@type": {

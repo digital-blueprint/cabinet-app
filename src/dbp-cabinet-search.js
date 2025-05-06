@@ -17,12 +17,10 @@ import {pascalToKebab} from './utils';
 import {CabinetFile} from './components/dbp-cabinet-file.js';
 import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
-import {TypesenseService} from './services/typesense.js';
+import {TypesenseService, TYPESENSE_COLLECTION} from './services/typesense.js';
 import {updateDatePickersForExternalRefinementChange} from './components/dbp-cabinet-date-facet.js';
 import {BaseObject} from './baseObject.js';
 import {name as pkgName} from '../package.json';
-
-const TYPESENSE_COLLECTION = 'cabinet';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -267,29 +265,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.updateComplete.then(async () => {
             console.log('-- updateComplete --');
 
-            let typesenseUrl = new URL(this.entryPointUrl + '/cabinet/typesense');
-
-            this.serverConfig = {
-                apiKey: '', // unused
-                nodes: [
-                    {
-                        host: typesenseUrl.hostname,
-                        port:
-                            typesenseUrl.port ||
-                            (typesenseUrl.protocol === 'https:'
-                                ? '443'
-                                : typesenseUrl.protocol === 'http:'
-                                  ? '80'
-                                  : ''),
-                        path: typesenseUrl.pathname,
-                        protocol: typesenseUrl.protocol.replace(':', ''),
-                    },
-                ],
-                useServerSideSearchCache: true,
-                cacheSearchResultsForSeconds: 0,
-                additionalHeaders: {Authorization: 'Bearer ' + this.auth.token},
-                sendApiKeyAsQueryParam: true,
-            };
+            this.serverConfig = TypesenseService.getServerConfigForEntryPointUrl(
+                this.entryPointUrl,
+                this.auth.token,
+            );
             console.log('serverConfig', this.serverConfig);
 
             await this.loadModules();
@@ -575,7 +554,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             return;
         }
 
-        this.typesenseService = new TypesenseService(this.serverConfig, TYPESENSE_COLLECTION);
+        this.typesenseService = new TypesenseService(this.serverConfig);
         console.log('initTypesenseService this.typesenseService', this.typesenseService);
 
         // Update the Typesense service with the new bearer token
@@ -863,7 +842,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <dbp-cabinet-view-person
                     ${ref(this.documentViewPersonModalRef)}
                     @close="${this.resetRoutingUrlIfNeeded}"
-                    subscribe="lang,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info"></dbp-cabinet-view-person>
+                    subscribe="lang,auth,entry-point-url,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info"></dbp-cabinet-view-person>
 
                 <dbp-cabinet-file
                     mode="${CabinetFile.Modes.ADD}"

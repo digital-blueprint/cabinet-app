@@ -416,6 +416,8 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         super();
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+        this.entryPointUrl = '';
+        this.auth = {};
         this.data = {};
         this.additionalTypes = {};
     }
@@ -428,6 +430,8 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
         return {
             ...super.properties,
             lang: {type: String},
+            auth: {type: Object},
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
             data: {type: Object},
         };
     }

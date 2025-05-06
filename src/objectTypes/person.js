@@ -2,8 +2,10 @@ import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from '../baseObject.js';
 import {renderFieldWithHighlight} from '../utils';
 import {formatDate} from '../utils.js';
+import {MiniSpinner, Icon} from '@dbp-toolkit/common';
 
 import {getPersonHit} from './schema.js';
+import {CabinetApi} from '../api.js';
 
 export default class extends BaseObject {
     name = 'person';
@@ -232,6 +234,26 @@ class CabinetHitElement extends BaseHitElement {
 }
 
 class CabinetViewElement extends BaseViewElement {
+    constructor() {
+        super();
+        this._syncing = false;
+    }
+
+    static get properties() {
+        return {
+            ...super.properties,
+            _syncing: {type: Boolean},
+        };
+    }
+
+    static get scopedElements() {
+        return {
+            ...super.scopedElements,
+            'dbp-mini-spinner': MiniSpinner,
+            'dbp-icon': Icon,
+        };
+    }
+
     static get styles() {
         // language=css
         return css`
@@ -415,13 +437,13 @@ class CabinetViewElement extends BaseViewElement {
                 padding-bottom: 2.2em;
             }
 
-            .sync-tu-button {
+            .edit-tu-button {
                 overflow: hidden;
                 background-color: var(--dbp-override-background);
                 text-decoration: none;
             }
 
-            .sync-tu-button:hover {
+            .edit-tu-button:hover {
                 text-decoration: underline;
             }
 
@@ -438,6 +460,16 @@ class CabinetViewElement extends BaseViewElement {
                 border-bottom: var(--dbp-border);
             }
         `;
+    }
+
+    async _onSync() {
+        this._syncing = true;
+        try {
+            let api = new CabinetApi(this.entryPointUrl, this.auth.token);
+            this.data = await api.syncTypesenseDocument(this.data);
+        } finally {
+            this._syncing = false;
+        }
     }
 
     render() {
@@ -460,6 +492,22 @@ class CabinetViewElement extends BaseViewElement {
         }).format(new Date(hit.person.syncTimestamp * 1000))}
         </div>
         <div class="sync-tu-button">
+            ${
+                this._syncing
+                    ? html`
+                          <dbp-mini-spinner></dbp-mini-spinner>
+                      `
+                    : html`
+                          <a href="#" @click=${this._onSync}>
+                              <dbp-icon
+                                  title="${i18n.t('sync-student-data')}"
+                                  aria-label="${i18n.t('sync-student-data')}"
+                                  name="cloud-sync"></dbp-icon>
+                          </a>
+                      `
+            }
+        </div>
+        <div class="edit-tu-button">
             <a href="${hit.person.coUrl}" no-spinner-on-click target="_blank">
                 <dbp-icon  title='${i18n.t('Edit-student-data')}'
                 aria-label='${i18n.t('Edit-student-data')}'
