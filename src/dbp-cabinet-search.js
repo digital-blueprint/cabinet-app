@@ -43,7 +43,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.instantSearchModule = {};
         this.facetConfigs = [];
         this.typesenseInstantsearchAdapter = null;
-        this.typesenseService = null;
         // Only show not-deleted documents by default
         this.showScheduledForDeletion = false;
         this.search = null;
@@ -93,11 +92,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         this.initInstantsearch();
                     }
 
-                    // Init the Typesense service with the new bearer token
-                    // This needs to happen after the Typesense Instantsearch adapter has been initialized,
-                    // not before, or Instantsearch will break! Maybe there is some leaked stated between the two?
-                    this.initTypesenseService();
-
                     this.handleAutomaticDocumentViewOpen();
                     this.handleAutomaticPersonViewOpen();
 
@@ -122,7 +116,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async handleAutomaticDocumentViewOpen() {
         // The first process that fulfills all needs to open the document view dialog will do so
-        if (this.documentViewId && !this.lockDocumentViewDialog) {
+        if (this.documentViewId && !this.lockDocumentViewDialog && this.auth.token) {
             if (await this.openDocumentViewDialogWithId(this.documentViewId)) {
                 this.documentViewId = null;
             }
@@ -131,7 +125,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async handleAutomaticPersonViewOpen() {
         // The first process that fulfills all needs to open the person view dialog will do so
-        if (this.personViewId) {
+        if (this.personViewId && this.auth.token) {
             if (await this.openPersonViewDialogWithId(this.personViewId)) {
                 this.personViewId = null;
             }
@@ -176,13 +170,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
          */
         const component = this.documentViewPersonModalRef.value;
 
-        if (!component || !this.typesenseService || this.objectTypeViewComponents.length === 0) {
+        if (!component || this.objectTypeViewComponents.length === 0) {
             return false;
         }
 
         component.setObjectTypeViewComponents(this.objectTypeViewComponents);
 
-        const hit = await this.typesenseService.fetchItem(id);
+        const hit = await this._getTypesenseService().fetchItem(id);
         await component.openDialogWithHit(hit);
 
         return true;
@@ -190,7 +184,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async openDocumentViewDialogWithId(id) {
         // We need an extra check, because we need to be very quick in returning false
-        if (!this.typesenseService || this.objectTypeViewComponents.length === 0) {
+        if (this.objectTypeViewComponents.length === 0) {
             return false;
         }
 
@@ -532,17 +526,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         };
     }
 
-    initTypesenseService() {
+    _getTypesenseService() {
         if (!this.auth.token) {
-            return;
+            throw new Error('No auth token set');
         }
 
         let serverConfig = TypesenseService.getServerConfigForEntryPointUrl(
             this.entryPointUrl,
             this.auth.token,
         );
-        this.typesenseService = new TypesenseService(serverConfig);
-        console.log('initTypesenseService this.typesenseService', this.typesenseService);
+        return new TypesenseService(serverConfig);
     }
 
     /**
@@ -898,7 +891,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.facetConfigs = this.instantSearchModule.getFacetsConfig();
 
             this.initInstantsearch();
-            this.initTypesenseService();
 
             /**
              * @type {CabinetFile}
