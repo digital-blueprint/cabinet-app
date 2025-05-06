@@ -15,6 +15,8 @@ import {send} from '@dbp-toolkit/common/notification';
 import {getSelectorFixCSS} from '../styles.js';
 import {Notification} from '@dbp-toolkit/notification';
 import {formatDate} from '../utils.js';
+import {TypesenseService} from '../services/typesense.js';
+
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static Modes = {
         VIEW: 'view',
@@ -49,10 +51,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.fileSourceRef = createRef();
         this.fileSinkRef = createRef();
         this.formRef = createRef();
-        this.typesenseService = null;
 
         // Initialize the state in the beginning
         this.initializeState();
+    }
+
+    _getTypesenseService() {
+        let serverConfig = TypesenseService.getServerConfigForEntryPointUrl(
+            this.entryPointUrl,
+            this.auth.token,
+        );
+        return new TypesenseService(serverConfig);
     }
 
     /**
@@ -156,10 +165,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.objectTypeViewComponents = objectTypeViewComponents;
     }
 
-    setTypesenseService(typesenseService) {
-        this.typesenseService = typesenseService;
-    }
-
     async storeDocumentToBlob(formData) {
         const fileData = await this.storeDocumentInBlob(formData);
         console.log('storeDocumentToBlob fileData', fileData);
@@ -173,8 +178,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     'Document will now be fetched from Typesense.',
                 'success',
             );
-
-            console.log('storeDocumentToBlob this.typesenseService', this.typesenseService);
 
             // Try to fetch the document from Typesense again and again until it is found
             await this.fetchFileDocumentFromTypesense(fileData.identifier);
@@ -199,48 +202,36 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             return;
         }
 
-        // We had a case that the service was not there, even if it should, we will just try again in 1 second
-        if (this.typesenseService) {
-            try {
-                // Could throw an exception if there was another error than 404
-                const item = await this.typesenseService.fetchFileDocumentByBlobId(fileId);
+        try {
+            // Could throw an exception if there was another error than 404
+            const item = await this._getTypesenseService().fetchFileDocumentByBlobId(fileId);
 
-                // If the document was found, and we were in ADD mode or the item was already updated in Typesense
-                // set the hit data and switch to view mode
-                if (
-                    item !== null &&
-                    (this.mode === CabinetFile.Modes.ADD ||
-                        this.fileHitData.file.base.modifiedTimestamp <
-                            item.file.base.modifiedTimestamp)
-                ) {
-                    console.log(
-                        'fetchFileDocumentFromTypesense this.fileHitData',
-                        this.fileHitData,
-                    );
-                    console.log('fetchFileDocumentFromTypesense item', item);
+            // If the document was found, and we were in ADD mode or the item was already updated in Typesense
+            // set the hit data and switch to view mode
+            if (
+                item !== null &&
+                (this.mode === CabinetFile.Modes.ADD ||
+                    this.fileHitData.file.base.modifiedTimestamp < item.file.base.modifiedTimestamp)
+            ) {
+                console.log('fetchFileDocumentFromTypesense this.fileHitData', this.fileHitData);
+                console.log('fetchFileDocumentFromTypesense item', item);
 
-                    this.fileHitData = item;
-                    this.mode = CabinetFile.Modes.VIEW;
+                this.fileHitData = item;
+                this.mode = CabinetFile.Modes.VIEW;
 
-                    return;
-                }
-                // eslint-disable-next-line no-unused-vars
-            } catch (error) {
-                this.documentModalNotification('Error', 'Could not load file from Blob!', 'danger');
-                this.state = CabinetFile.States.LOADING_FILE_FAILED;
-
-                // The save button will still be disabled and has a spinner, enabling it again doesn't
-                // make a lot of sense, because because the document was already stored to Blob and
-                // we are in a failed state
-                // TODO: Is there something else we should do here?
                 return;
             }
-        }
+            // eslint-disable-next-line no-unused-vars
+        } catch (error) {
+            this.documentModalNotification('Error', 'Could not load file from Blob!', 'danger');
+            this.state = CabinetFile.States.LOADING_FILE_FAILED;
 
-        // Try again in 1 second
-        setTimeout(() => {
-            this.fetchFileDocumentFromTypesense(fileId, ++increment);
-        }, 1000);
+            // The save button will still be disabled and has a spinner, enabling it again doesn't
+            // make a lot of sense, because because the document was already stored to Blob and
+            // we are in a failed state
+            // TODO: Is there something else we should do here?
+            return;
+        }
     }
 
     /**
@@ -547,7 +538,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.state = CabinetFile.States.LOADING_FILE;
 
         // Fetch the hit data from Typesense again in case it changed
-        hit = await this.typesenseService.fetchItem(hit.id);
+        hit = await this._getTypesenseService().fetchItem(hit.id);
 
         if (!hit) {
             modal.close();

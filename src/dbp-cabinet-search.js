@@ -209,7 +209,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.lockDocumentViewDialog = true;
 
         component.setObjectTypeViewComponents(this.objectTypeViewComponents);
-        component.setTypesenseService(this.typesenseService);
 
         await component.openViewDialogWithFileId(id);
         this.lockDocumentViewDialog = false;
@@ -229,7 +228,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
              * @type {CabinetFile}
              */
             const component = that.documentFileComponentRef.value;
-            component.setTypesenseService(this.typesenseService);
             component.setObjectTypeViewComponents(this.objectTypeViewComponents);
             component.openDocumentAddDialogWithPersonHit(event.detail.hit);
         });
@@ -545,15 +543,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         );
         this.typesenseService = new TypesenseService(serverConfig);
         console.log('initTypesenseService this.typesenseService', this.typesenseService);
-
-        // Update the Typesense service with the new bearer token
-        /**
-         * @type {CabinetFile}
-         */
-        const fileComponent = this.documentFileComponentRef.value;
-        if (fileComponent) {
-            fileComponent.setTypesenseService(this.typesenseService);
-        }
     }
 
     /**
