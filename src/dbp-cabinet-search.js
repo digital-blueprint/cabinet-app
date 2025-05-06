@@ -321,6 +321,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this._('input.ais-SearchBox-input').value = ' ';
             search.refresh();
         }, 1000);
+        this.requestUpdate();
     }
 
     createConfigureWidget() {
