@@ -677,7 +677,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   minute: '2-digit',
                                                   second: '2-digit',
                                               },
-                                          ).format(new Date())}
+                                          ).format(hit.person.syncTimestamp * 1000)}
                                           <br />
                                       </div>
                                       <footer class="hits-person-footer">
