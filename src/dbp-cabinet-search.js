@@ -44,7 +44,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.facetConfigs = [];
         this.typesenseInstantsearchAdapter = null;
         this.typesenseService = null;
-        this.serverConfig = null;
         // Only show not-deleted documents by default
         this.showScheduledForDeletion = false;
         this.search = null;
@@ -85,17 +84,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     }
                     break;
                 case 'auth':
-                    if (!this.serverConfig) {
-                        return;
-                    }
-
-                    // Update the bearer token in additional headers for the Typesense Instantsearch adapter
-                    this.serverConfig.additionalHeaders = {
-                        Authorization: 'Bearer ' + this.auth.token,
-                    };
-
-                    console.log('this.serverConfig auth-update', this.serverConfig);
-
                     // Update the Typesense Instantsearch adapter configuration with the new bearer token
                     if (this.typesenseInstantsearchAdapter) {
                         this.typesenseInstantsearchAdapter.updateConfiguration(
@@ -263,14 +251,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
 
         this.updateComplete.then(async () => {
-            console.log('-- updateComplete --');
-
-            this.serverConfig = TypesenseService.getServerConfigForEntryPointUrl(
-                this.entryPointUrl,
-                this.auth.token,
-            );
-            console.log('serverConfig', this.serverConfig);
-
             await this.loadModules();
             await this.handleAutomaticDocumentViewOpen();
             await this.handleAutomaticPersonViewOpen();
@@ -544,18 +524,26 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Get the config for the Typesense Instantsearch adapter depending on the fuzzy search setting
      */
     getTypesenseInstantsearchAdapterConfig() {
+        let serverConfig = TypesenseService.getServerConfigForEntryPointUrl(
+            this.entryPointUrl,
+            this.auth.token,
+        );
         return {
-            server: this.serverConfig,
+            server: serverConfig,
             additionalSearchParameters: this.getSearchParameters(),
         };
     }
 
     initTypesenseService() {
-        if (!this.serverConfig || !this.auth.token) {
+        if (!this.auth.token) {
             return;
         }
 
-        this.typesenseService = new TypesenseService(this.serverConfig);
+        let serverConfig = TypesenseService.getServerConfigForEntryPointUrl(
+            this.entryPointUrl,
+            this.auth.token,
+        );
+        this.typesenseService = new TypesenseService(serverConfig);
         console.log('initTypesenseService this.typesenseService', this.typesenseService);
 
         // Update the Typesense service with the new bearer token
