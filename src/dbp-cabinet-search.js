@@ -287,12 +287,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         search.helper.on('change', (res) => {
             updateDatePickersForExternalRefinementChange(res, this.cabinetFacetsRef.value.facets);
         });
-
-        // TODO: Improve on workaround to show hits after the page loads
-        setTimeout(() => {
-            this._('input.ais-SearchBox-input').value = ' ';
-            search.refresh();
-        }, 1000);
         this.requestUpdate();
     }
 
