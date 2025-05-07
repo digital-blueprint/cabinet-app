@@ -21,11 +21,10 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
     }
 
     async _adaptAndPerformTypesenseRequest(instantsearchRequests) {
-        let facetNames = ['@type'];
-        facetNames.push(...this.facetComponent.gatherActivatedWidgetsFacetNames(this.facetConfigs));
+        // Override facet names
+        let facetNames = this.facetComponent.gatherActivatedWidgetsFacetNames(this.facetConfigs);
         console.log('_adaptAndPerformTypesenseRequest facetNames', facetNames);
         // console.log('_adaptAndPerformTypesenseRequest instantsearchRequests[0].params.facets', instantsearchRequests[0].params.facets);
-
         instantsearchRequests[0].params.facets = facetNames;
 
         var typesenseResponse = await super._adaptAndPerformTypesenseRequest(instantsearchRequests);

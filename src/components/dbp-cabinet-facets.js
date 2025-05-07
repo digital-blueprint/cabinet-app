@@ -148,7 +148,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @returns {*[]}
      */
     gatherActivatedWidgetsFacetNames(facetsConfigs) {
-        const widgets = [];
+        const facetNames = ['@type'];
         const facetWidgets = this._a('#filters-container .filter');
         console.log('gatherActivatedWidgets facetWidgets', facetWidgets);
         const schemaFieldHash = this.getSchemaFieldHash(facetsConfigs);
@@ -177,11 +177,11 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             if (schemaFieldHash[facetId]) {
-                widgets.push(schemaFieldHash[facetId]);
+                facetNames.push(schemaFieldHash[facetId]);
             }
         });
 
-        return widgets;
+        return facetNames;
     }
 
     getSchemaFieldHash(facetsConfigs) {
