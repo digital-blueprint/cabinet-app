@@ -70,6 +70,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             hitData: {type: Object, attribute: false},
             documentFile: {type: File, attribute: false},
             showScheduledForDeletion: {type: Boolean, attribute: false},
+            search: {type: Object, attribute: false},
         };
     }
 
@@ -287,7 +288,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         search.helper.on('change', (res) => {
             updateDatePickersForExternalRefinementChange(res, this.cabinetFacetsRef.value.facets);
         });
-        this.requestUpdate();
     }
 
     createConfigureWidget() {
