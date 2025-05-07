@@ -151,6 +151,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         const widgets = [];
         const facetWidgets = this._a('#filters-container .filter');
         console.log('gatherActivatedWidgets facetWidgets', facetWidgets);
+        const schemaFieldHash = this.getSchemaFieldHash(facetsConfigs);
 
         facetWidgets.forEach((facetWidget) => {
             // Gather all facet div containers that are collapsible
@@ -160,8 +161,11 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 return;
             }
 
-            // Check if the div container is collapsed, we only want uncollapsed containers
-            if (div.classList.contains('ais-Panel--collapsed') !== false) {
+            // Check if the div container is collapsed or hidden, we only want visible and uncollapsed containers
+            if (
+                div.classList.contains('ais-Panel--collapsed') !== false ||
+                div.hasAttribute('hidden')
+            ) {
                 return;
             }
 
@@ -172,24 +176,25 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 return;
             }
 
-            // Check all facet configs for a matching "id" entry
-            facetsConfigs.forEach((facetConfig) => {
-                const id = this.transformToDashCase(facetConfig.schemaField || '');
-
-                if (id === facetId) {
-                    widgets.push(facetConfig.schemaField);
-                }
-
-                // if (
-                //     facetConfig?.facetOptions?.facet?.id &&
-                //     facetConfig.facetOptions.facet.id === facetId
-                // ) {
-                //     widgets.push(facetConfig.schemaField);
-                // }
-            });
+            if (schemaFieldHash[facetId]) {
+                widgets.push(schemaFieldHash[facetId]);
+            }
         });
 
         return widgets;
+    }
+
+    getSchemaFieldHash(facetsConfigs) {
+        let resultHash = {};
+
+        facetsConfigs.forEach((facetConfig) => {
+            const id = this.transformToDashCase(facetConfig.schemaField || '');
+            if (id) {
+                resultHash[id] = facetConfig.schemaField;
+            }
+        });
+
+        return resultHash;
     }
 
     filterOnSelectedPerson(event) {
