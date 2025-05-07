@@ -225,7 +225,7 @@ export function getSelectorFixCSS() {
         select:not(.select),
         .dropdown-menu {
             background-size: 1em;
-            padding: 0.14rem 1.3rem 0.14rem 1.3rem;
+            padding: 0.14rem 2rem 0.14rem 1rem;
         }
     `;
 }
