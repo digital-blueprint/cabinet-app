@@ -23,6 +23,22 @@ export default class extends BaseObject {
     }
 }
 
+/**
+ * Wait for a window to close
+ * @param {Window} windowRef
+ * @returns {Promise<void>}
+ */
+function waitForWindowClose(windowRef) {
+    return new Promise((resolve) => {
+        const timer = setInterval(() => {
+            if (windowRef.closed) {
+                clearInterval(timer);
+                resolve();
+            }
+        }, 500);
+    });
+}
+
 class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
@@ -472,6 +488,15 @@ class CabinetViewElement extends BaseViewElement {
         }
     }
 
+    async _onEdit(event) {
+        event.preventDefault();
+
+        const url = event.currentTarget.getAttribute('href');
+        const win = window.open(url, '_blank');
+        await waitForWindowClose(win);
+        await this._onSync();
+    }
+
     render() {
         let hit = getPersonHit(this.data);
         const i18n = this._i18n;
@@ -508,7 +533,7 @@ class CabinetViewElement extends BaseViewElement {
             }
         </div>
         <div class="edit-tu-button">
-            <a href="${hit.person.coUrl}" no-spinner-on-click target="_blank">
+            <a href="${hit.person.coUrl}" @click=${this._onEdit}>
                 <dbp-icon  title='${i18n.t('Edit-student-data')}'
                 aria-label='${i18n.t('Edit-student-data')}'
                 name='link'>
