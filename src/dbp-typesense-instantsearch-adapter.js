@@ -1,7 +1,20 @@
 'use strict';
 
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
+import {SearchRequestAdapter} from 'typesense-instantsearch-adapter/lib/SearchRequestAdapter.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
+import {mergeNestedConditions} from './utils.js';
+
+class CustomSearchRequestAdapter extends SearchRequestAdapter {
+    // When filtering on facets of nested objects we want to merge the conditions
+    // So all the conditions need to be true for one specific nested object
+    _buildSearchParameters(instantsearchRequest) {
+        let result = super._buildSearchParameters(instantsearchRequest);
+        result.filter_by = mergeNestedConditions('studies', result.filter_by);
+        console.log(result.filter_by);
+        return result;
+    }
+}
 
 export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSearchAdapter {
     /** @type {CabinetFacets} */
@@ -34,7 +47,12 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
             instantsearchRequests[0].params.facets = facetNames;
         }
 
-        var typesenseResponse = await super._adaptAndPerformTypesenseRequest(instantsearchRequests);
+        const requestAdapter = new CustomSearchRequestAdapter(
+            instantsearchRequests,
+            this.typesenseClient,
+            this.configuration,
+        );
+        const typesenseResponse = await requestAdapter.request();
 
         if (this.overrideData) {
             console.log(
@@ -1994,7 +2012,7 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
             },
             {
                 counts: [],
-                field_name: 'study.status.text',
+                field_name: 'study.statusText',
                 sampled: false,
                 stats: {
                     total_values: 5,

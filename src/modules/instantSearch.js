@@ -278,7 +278,7 @@ export default class InstantSearchModule {
             {'filter-group': {id: 'study', name: t('cabinet-search.study-filter-group-title')}},
             {
                 groupId: 'study',
-                schemaField: 'study.name',
+                schemaField: 'studies.name',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-study-name-title'),
                 facetOptions: {
@@ -291,7 +291,7 @@ export default class InstantSearchModule {
             },
             {
                 groupId: 'study',
-                schemaField: 'study.type',
+                schemaField: 'studies.type',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-study-type-title'),
                 facetOptions: {
@@ -304,7 +304,7 @@ export default class InstantSearchModule {
             },
             {
                 groupId: 'study',
-                schemaField: 'study.status.text',
+                schemaField: 'studies.statusText',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-study-status-text-title'),
                 facetOptions: {

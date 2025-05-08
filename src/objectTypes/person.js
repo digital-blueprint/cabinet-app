@@ -176,7 +176,7 @@ class CabinetHitElement extends BaseHitElement {
     render() {
         let hit = getPersonHit(this.data);
         const i18n = this._i18n;
-        const studies = hit.person.studies || [];
+        const studies = hit.studies || [];
         const sortedStudies = studies.sort((a, b) => {
             const dateA = a.immatriculationDate
                 ? new Date(a.immatriculationDate).getTime()
@@ -230,7 +230,7 @@ class CabinetHitElement extends BaseHitElement {
                                               class="study-icon"
                                               aria-label="Study icon"
                                               title="Study icon"></dbp-icon>
-                                          <span>${study.name} (${study.status.text})</span>
+                                          <span>${study.name} (${study.statusText})</span>
                                       </div>
                                   `,
                               )}
@@ -614,7 +614,7 @@ class CabinetViewElement extends BaseViewElement {
                 </div>
             </div>
             <hr/>
-                ${hit.person.studies
+                ${hit.studies
                     .slice()
                     .sort((a, b) => {
                         const dateA = a.immatriculationDate
@@ -634,7 +634,7 @@ class CabinetViewElement extends BaseViewElement {
                             <li class="study-row"><b><span> ${displayValue(study.name)}</span></b></li>
                         </div>
                         <li class="study-row"><b>${i18n.t('semester')}</b><span>${displayValue(study.semester)}</span></li>
-                        <li class="study-row"><b>${i18n.t('status')}</b><span> ${displayValue(study.status?.text)}</span></li>
+                        <li class="study-row"><b>${i18n.t('status')}</b><span> ${displayValue(study.statusText)}</span></li>
                         <li class="study-row"><b>${i18n.t('immatriculation-date')}</b><span> ${formatDate(study.immatriculationDate)}</span></li>
                         <li class="study-row"><b>${i18n.t('qualification-study')}</b><span> ${displayValue(study.qualificationType?.text)} ${formatDate(study.qualificationDate)} ${study.qualificationState?.text}</span></li>
                         <li class="study-row"><b>${i18n.t('exmatriculation')}</b><span> ${displayValue(study.exmatriculationType?.text)} ${formatDate(study.exmatriculationDate)}</span></li>
@@ -716,7 +716,7 @@ class CabinetViewElement extends BaseViewElement {
             </ul>
             <!--<h4>Applications</h4>-->
             <!--<ul>
-                ${hit.person.applications.map(
+                ${hit.applications.map(
                     (application) => html`
                         <li>
                             <ul>
