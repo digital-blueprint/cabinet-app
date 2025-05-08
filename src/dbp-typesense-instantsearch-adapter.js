@@ -9,6 +9,9 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
 
     facetConfigs = {};
 
+    // Set this to true to override data in _adaptAndPerformTypesenseRequest
+    overrideData = false;
+
     /**
      * @param {CabinetFacets} facetComponent
      */
@@ -21,14 +24,27 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
     }
 
     async _adaptAndPerformTypesenseRequest(instantsearchRequests) {
-        // Override facet names
-        let facetNames = this.facetComponent.gatherActivatedWidgetsFacetNames(this.facetConfigs);
-        console.log('_adaptAndPerformTypesenseRequest facetNames', facetNames);
-        // console.log('_adaptAndPerformTypesenseRequest instantsearchRequests[0].params.facets', instantsearchRequests[0].params.facets);
-        instantsearchRequests[0].params.facets = facetNames;
+        if (this.overrideData) {
+            // Override facet names
+            let facetNames = this.facetComponent.gatherActivatedWidgetsFacetNames(
+                this.facetConfigs,
+            );
+            console.log('_adaptAndPerformTypesenseRequest facetNames', facetNames);
+            // console.log('_adaptAndPerformTypesenseRequest instantsearchRequests[0].params.facets', instantsearchRequests[0].params.facets);
+            instantsearchRequests[0].params.facets = facetNames;
+        }
 
         var typesenseResponse = await super._adaptAndPerformTypesenseRequest(instantsearchRequests);
-        typesenseResponse.results[0].facet_counts = this.dummyFacetCountsData();
+
+        if (this.overrideData) {
+            console.log(
+                '_adaptAndPerformTypesenseRequest typesenseResponse.results[0].facet_counts',
+                typesenseResponse.results[0].facet_counts,
+            );
+
+            // TODO: Fake data we didn't get
+            typesenseResponse.results[0].facet_counts = this.dummyFacetCountsData();
+        }
 
         return typesenseResponse;
     }
