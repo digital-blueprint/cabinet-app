@@ -59,7 +59,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.searchResultsElement = null;
         this.search = null;
         this.facets = [];
-        this.facetToggleEventContainerIds = [];
+        this.facetToggleEventContainers = [];
     }
 
     connectedCallback() {
@@ -296,21 +296,21 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Create click events for all facet toggle buttons to trigger a search when a facet was expanded
      */
     createFacetToggleClickEvents() {
-        // Gather all facet toggle buttons to create click events for their filter containers
+        // Gather all facet toggle buttons to create click events for their panel header containers
         this._a('button.ais-Panel-collapseButton').forEach((button) => {
-            // We need to get the outer div, because it can be clicked too!
-            const filterContainer = button.closest('div.filter');
-            if (!filterContainer) {
+            // We need to get the panel header div, because it can be clicked too
+            const panelHeaderContainer = button.closest('div.ais-Panel-header');
+            if (!panelHeaderContainer) {
                 return;
             }
 
             // I don't think we can properly remove the event listeners in the instantsearch lifecycle,
-            // so the best we can do is to check if the filter container already has an event listener attached to it
-            if (this.facetToggleEventContainerIds.includes(filterContainer.id)) {
+            // so the best we can do is to check if the panel header container already has an event listener attached to it
+            if (this.facetToggleEventContainers.includes(panelHeaderContainer)) {
                 return;
             }
 
-            filterContainer.addEventListener('click', () => {
+            panelHeaderContainer.addEventListener('click', () => {
                 const isExpanded = button.attributes.getNamedItem('aria-expanded').value === 'true';
 
                 // If the facet was not expanded, do nothing
@@ -322,8 +322,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 this.search.helper.search();
             });
 
-            // Now add the filter container to the list of filter containers with event listeners attached to them
-            this.facetToggleEventContainerIds.push(filterContainer.id);
+            // Now add the panel header container to the list of panel header containers with event listeners attached to them
+            this.facetToggleEventContainers.push(panelHeaderContainer);
         });
     }
 
