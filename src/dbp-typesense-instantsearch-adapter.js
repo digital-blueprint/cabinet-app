@@ -23,7 +23,7 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
     facetConfigs = {};
 
     // Set this to true to override data in _adaptAndPerformTypesenseRequest
-    overrideData = false;
+    overrideData = true;
 
     /**
      * @param {CabinetFacets} facetComponent
