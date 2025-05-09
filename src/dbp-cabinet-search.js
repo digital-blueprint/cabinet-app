@@ -279,14 +279,20 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         search.start();
 
         search.on('render', () => {
+            /** @type {CabinetFacets} */
+            const ref = this.cabinetFacetsRef.value;
+
             // Handle gradients display on facets.
-            this.cabinetFacetsRef.value.handleGradientDisplay();
-            this.cabinetFacetsRef.value.hideFilterGroupIfEmpty();
+            ref.handleGradientDisplay();
+            ref.hideFilterGroupIfEmpty();
         });
 
         // Clear date facets on refinement clearing.
         search.helper.on('change', (res) => {
-            updateDatePickersForExternalRefinementChange(res, this.cabinetFacetsRef.value.facets);
+            /** @type {CabinetFacets} */
+            const ref = this.cabinetFacetsRef.value;
+
+            updateDatePickersForExternalRefinementChange(res, ref.facets);
         });
     }
 
