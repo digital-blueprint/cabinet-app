@@ -285,6 +285,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             // Handle gradients display on facets.
             ref.handleGradientDisplay();
             ref.hideFilterGroupIfEmpty();
+
+            // Create the click events for the facets to we can refresh the search if a facet was opened
+            ref.createFacetToggleClickEvents();
         });
 
         // Clear date facets on refinement clearing.
