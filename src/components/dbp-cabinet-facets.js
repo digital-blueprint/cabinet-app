@@ -59,8 +59,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.searchResultsElement = null;
         this.search = null;
         this.facets = [];
-        /** @type {Array} */
-        this.facetToggleEventButtons = [];
+        this.facetToggleEventContainerIds = [];
     }
 
     connectedCallback() {
@@ -297,15 +296,21 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Create click events for all facet toggle buttons to trigger a search when a facet was expanded
      */
     createFacetToggleClickEvents() {
-        // Gather all facet toggle buttons to create click events
+        // Gather all facet toggle buttons to create click events for their filter containers
         this._a('button.ais-Panel-collapseButton').forEach((button) => {
-            // I don't think we can properly remove the event listeners in the instantsearch lifecycle,
-            // so the best we can do is to check if the button already has an event listener attached to it
-            if (this.facetToggleEventButtons.includes(button)) {
+            // We need to get the outer div, because it can be clicked too!
+            const filterContainer = button.closest('div.filter');
+            if (!filterContainer) {
                 return;
             }
 
-            button.addEventListener('click', () => {
+            // I don't think we can properly remove the event listeners in the instantsearch lifecycle,
+            // so the best we can do is to check if the filter container already has an event listener attached to it
+            if (this.facetToggleEventContainerIds.includes(filterContainer.id)) {
+                return;
+            }
+
+            filterContainer.addEventListener('click', () => {
                 const isExpanded = button.attributes.getNamedItem('aria-expanded').value === 'true';
 
                 // If the facet was not expanded, do nothing
@@ -315,15 +320,10 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 // Trigger a search, so the facet items will be updated
                 this.search.helper.search();
-
-                // const filterDiv = button.closest('div.filter');
-                // if (filterDiv) {
-                //     console.log('render filterDiv', filterDiv.id);
-                // }
             });
 
-            // Now add the button to the list of buttons with event listeners attached to them
-            this.facetToggleEventButtons.push(button);
+            // Now add the filter container to the list of filter containers with event listeners attached to them
+            this.facetToggleEventContainerIds.push(filterContainer.id);
         });
     }
 
