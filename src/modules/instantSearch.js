@@ -42,7 +42,7 @@ export default class InstantSearchModule {
                     facet: {
                         searchablePlaceholder: t('cabinet-search.search-placeholder-person-person'),
                         searchable: false,
-                        sortBy: ['name:asc'],
+                        sortBy: ['name:desc'],
                     },
                 },
                 usePanel: false,
@@ -230,6 +230,21 @@ export default class InstantSearchModule {
             },
             {
                 groupId: 'person',
+                schemaField: 'person.studyAddress.country.text',
+                schemaFieldType: 'checkbox',
+                name: t('cabinet-search.filter-person-study-address-country-text-title'),
+                facetOptions: {
+                    facet: {
+                        searchablePlaceholder: t(
+                            'cabinet-search.search-placeholder-person-student-address-country',
+                        ),
+                        showMore: true,
+                        showMoreLimit: showMoreLimitValue,
+                    },
+                },
+            },
+            {
+                groupId: 'person',
                 schemaField: 'person.studyAddress.region',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-study-address-region-title'),
@@ -252,21 +267,6 @@ export default class InstantSearchModule {
                     facet: {
                         searchablePlaceholder: t(
                             'cabinet-search.search-placeholder-person-student-address-place',
-                        ),
-                        showMore: true,
-                        showMoreLimit: showMoreLimitValue,
-                    },
-                },
-            },
-            {
-                groupId: 'person',
-                schemaField: 'person.studyAddress.country.text',
-                schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-study-address-country-text-title'),
-                facetOptions: {
-                    facet: {
-                        searchablePlaceholder: t(
-                            'cabinet-search.search-placeholder-person-student-address-country',
                         ),
                         showMore: true,
                         showMoreLimit: showMoreLimitValue,
@@ -317,6 +317,13 @@ export default class InstantSearchModule {
 
             // Document properties
             {'filter-group': {id: 'file', name: t('cabinet-search.document-filter-group-title')}},
+            {
+                groupId: 'file',
+                schemaField: 'file.base.additionalType.text',
+                schemaFieldType: 'checkbox',
+                name: t('cabinet-search.filter-file-base-additional-type-text-title'),
+                facetOptions: {facet: {searchable: false}},
+            },
             {
                 groupId: 'file',
                 schemaField: 'file.base.additionalType.text',

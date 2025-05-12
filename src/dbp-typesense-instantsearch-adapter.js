@@ -63,7 +63,6 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
     /**
      * Generate fake facet counts data for schema fields that we didn't get from Typesense,
      * because we didn't request it
-     *
      * @param facetCountsData
      * @returns {*}
      */
