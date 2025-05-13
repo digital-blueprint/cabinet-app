@@ -47,7 +47,6 @@ export default class InstantSearchModule {
                 },
                 usePanel: false,
             },
-
             // Person properties
             {'filter-group': {id: 'person', name: t('cabinet-search.person-filter-group-title')}},
             {
@@ -317,13 +316,6 @@ export default class InstantSearchModule {
 
             // Document properties
             {'filter-group': {id: 'file', name: t('cabinet-search.document-filter-group-title')}},
-            {
-                groupId: 'file',
-                schemaField: 'file.base.additionalType.text',
-                schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-file-base-additional-type-text-title'),
-                facetOptions: {facet: {searchable: false}},
-            },
             {
                 groupId: 'file',
                 schemaField: 'file.base.additionalType.text',
