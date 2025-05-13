@@ -249,17 +249,18 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     }
 
     getButtonRowHtml() {
+        const i18n = this._i18n;
         return html`
             <div class="button-row">
                 <button class="button is-secondary" type="button" @click=${this.cancelForm}>
-                    Cancel
+                    ${i18n.t('buttons.cancel')}
                 </button>
                 <button
                     class="button is-primary"
                     type="submit"
                     ?disabled=${!this.saveButtonEnabled}
                     @click=${this.storeBlobItem}>
-                    Save
+                    ${i18n.t('buttons.save')}
                     <dbp-mini-spinner
                         class="${classMap({hidden: this.saveButtonEnabled})}"></dbp-mini-spinner>
                 </button>

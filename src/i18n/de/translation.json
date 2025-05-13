@@ -8,6 +8,9 @@
         "add": {
             "documents": "Dokument hinzufügen"
         },
+        "cancel": "Abbrechen",
+        "replace-document": "Datei ersetzen",
+        "save": "Speichern",
         "view": "Anzeigen"
     },
     "cabinet-file": {
@@ -43,9 +46,9 @@
         "filter-person-person-title": "Person",
         "filter-person-personal-status-text-title": "Personenstatus",
         "filter-person-student-status-text-title": "Hörerstatus",
-        "filter-person-study-address-country-text-title": "Studienadressland",
-        "filter-person-study-address-place-title": "Studienadresse",
-        "filter-person-study-address-region-title": "Studienregion",
+        "filter-person-study-address-country-text-title": "Land(Studienadresse)",
+        "filter-person-study-address-place-title": "Region(Studienadresse)",
+        "filter-person-study-address-region-title": "Ort(Studienadresse)",
         "filter-study-name-title": "Studienfach",
         "filter-study-status-text-title": "Studienstatus",
         "filter-study-type-title": "Abschlussziel",

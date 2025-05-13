@@ -8,6 +8,9 @@
         "add": {
             "documents": "Add document"
         },
+        "cancel": "Cancel",
+        "replace-document": "Replace file",
+        "save": "Save",
         "view": "View"
     },
     "cabinet-file": {

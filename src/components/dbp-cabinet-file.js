@@ -1060,7 +1060,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 })}"
                                 @click="${this.openReplacePdfDialog}"
                                 ?disabled="${!id}">
-                                Replace Document ${this.getMiniSpinnerHtml(id)}
+                                ${i18n.t('buttons.replace-document')} ${this.getMiniSpinnerHtml(id)}
                             </button>
                             <select
                                 id="export-select"
