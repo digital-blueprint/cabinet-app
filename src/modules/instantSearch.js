@@ -272,11 +272,8 @@ export default class InstantSearchModule {
                     },
                 },
             },
-
-            // Study field properties
-            {'filter-group': {id: 'study', name: t('cabinet-search.study-filter-group-title')}},
             {
-                groupId: 'study',
+                groupId: 'person',
                 schemaField: 'studies.name',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-study-name-title'),
@@ -289,7 +286,7 @@ export default class InstantSearchModule {
                 },
             },
             {
-                groupId: 'study',
+                groupId: 'person',
                 schemaField: 'studies.type',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-study-type-title'),
@@ -302,7 +299,7 @@ export default class InstantSearchModule {
                 },
             },
             {
-                groupId: 'study',
+                groupId: 'person',
                 schemaField: 'studies.statusText',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-study-status-text-title'),
@@ -313,7 +310,6 @@ export default class InstantSearchModule {
                     },
                 },
             },
-
             // Document properties
             {'filter-group': {id: 'file', name: t('cabinet-search.document-filter-group-title')}},
             {
