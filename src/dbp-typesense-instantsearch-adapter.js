@@ -49,12 +49,12 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
             this.configuration,
         );
         const typesenseResponse = await requestAdapter.request();
+        const facetCountsData = typesenseResponse.results[0].facet_counts;
 
-        if (this.overrideData) {
+        if (this.overrideData && facetCountsData) {
             // Fake data we didn't get
-            typesenseResponse.results[0].facet_counts = this.generateFacetCountsData(
-                typesenseResponse.results[0].facet_counts,
-            );
+            typesenseResponse.results[0].facet_counts =
+                this.generateFacetCountsData(facetCountsData);
         }
 
         return typesenseResponse;
