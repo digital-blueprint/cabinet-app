@@ -145,16 +145,10 @@ class Study {
     semester;
 
     /**
-     * Examples: "I"
-     * @type {string}
+     * Examples: key="I", text="geschlossen (Antrag oder ex lege)"
+     * @type {KeyedText}
      */
-    statusKey;
-
-    /**
-     * Examples: geschlossen (Antrag oder ex lege)"
-     * @type {string}
-     */
-    statusText;
+    status;
 
     /**
      * Example: "Doktoratsstudium"
@@ -474,6 +468,18 @@ class Person {
      * @type {?string}
      */
     studyLimitEndSemester;
+
+    /**
+     * A list of all study objects
+     * @type {Study[]}
+     */
+    studies;
+
+    /**
+     * A list of all application objects
+     * @type {Application[]}
+     */
+    applications;
 }
 
 /**
@@ -590,6 +596,12 @@ class FileCommon extends FileBase {
  * Fields that are common to all Person/DocumentFile documents
  */
 class Base {
+    /**
+     * An ID for grouping person and study objects, which is not set for DocumentFile documents
+     * @type {?string}
+     */
+    personGroupId;
+
     /**
      * Example: true - true for all files that have a deleteAtTimestamp, false otherwise
      * @type {boolean}
@@ -751,18 +763,6 @@ class Hit {
 export class PersonHit extends Hit {
     /** @type {Person} */
     person;
-
-    /**
-     * A list of all study objects
-     * @type {Study[]}
-     */
-    studies;
-
-    /**
-     * A list of all application objects
-     * @type {Application[]}
-     */
-    applications;
 }
 
 export class DocumentHit extends PersonHit {

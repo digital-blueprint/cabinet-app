@@ -68,29 +68,3 @@ export function formatDate(value) {
               year: 'numeric',
           });
 }
-
-/**
- * Merges nested conditions for a specific field within a filter string.
- * (Can only handle non-nested AND conditions atm)
- * @param {string} field - The field name to check for nested conditions.
- * @param {string} filter_by - The filter string
- * @returns {string} - The modified filter string with nested conditions for the specified field merged
- */
-export function mergeNestedConditions(field, filter_by) {
-    const conditions = filter_by.split('&&').map((c) => c.trim());
-    const studiesConditions = [];
-    const otherConditions = [];
-
-    conditions.forEach((condition) => {
-        if (condition.startsWith(`${field}.`)) {
-            studiesConditions.push(condition.replace(`${field}.`, ''));
-        } else {
-            otherConditions.push(condition);
-        }
-    });
-    if (studiesConditions.length > 1) {
-        return [...otherConditions, `${field}.{${studiesConditions.join(' && ')}}`].join(' && ');
-    } else {
-        return filter_by;
-    }
-}
