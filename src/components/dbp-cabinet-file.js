@@ -1064,7 +1064,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             </button>
                             <select
                                 id="export-select"
-                                class="dropdown-menu"
+                                class="dropdown-menu ${classMap({
+                                    hidden: this.mode !== CabinetFile.Modes.VIEW,
+                                })}""
                                 ?disabled="${!file}"
                                 @change="${this.downloadFile}">
                                 <option value="" disabled="" selected="">
@@ -1098,6 +1100,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 class="${classMap({
                                     hidden:
                                         this.mode === CabinetFile.Modes.ADD ||
+                                        this.mode === CabinetFile.Modes.EDIT ||
                                         hit.base?.isScheduledForDeletion,
                                 })} button is-primary">
                                 <dbp-icon
