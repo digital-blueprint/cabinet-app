@@ -114,6 +114,9 @@
     "error-login-message": "Please log in to use this functionality.",
     "exmatriculation": "Exmatriculation status",
     "exmatriculation-GI": "Deregistration status",
+    "facets": {
+        "no-data-available": "No data available"
+    },
     "family-name": "Surname",
     "focus-button-name": "Focus",
     "former-family-name": "Former family name",

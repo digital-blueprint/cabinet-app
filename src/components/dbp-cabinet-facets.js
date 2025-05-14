@@ -523,6 +523,13 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     searchableShowReset: false,
                     templates: {
                         item(item, {html}) {
+                            if (item.count === undefined) {
+                                return html`
+                                    <div class="facets-no-data">
+                                        ${i18n.t('facets.no-data-available')}
+                                    </div>
+                                `;
+                            }
                             return html`
                                 <div class="refinement-list-item refinement-list-item--${cssClass}">
                                     <div class="refinement-list-item-inner">
@@ -914,6 +921,10 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             button.ais-RefinementList-showMore {
                 margin-bottom: 1em;
+            }
+
+            .facets-no-data {
+                color: var(--dbp-override-muted);
             }
         `;
     }
