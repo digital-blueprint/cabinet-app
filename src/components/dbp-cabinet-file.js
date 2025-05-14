@@ -946,6 +946,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 justify-content: right;
                 gap: 5px;
             }
+            #document-modal .doc-type-edit-view {
+                padding: 0.14rem 1rem 0.14rem 0.14rem;
+            }
         `;
     }
 
@@ -1244,6 +1247,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <label>${this._i18n.t('doc-modal-document-type')}</label>
                 <select
                     id="document-type"
+                    class="doc-type-edit-view"
                     name="object-type"
                     required
                     @change="${this.onDocumentTypeSelected}">
