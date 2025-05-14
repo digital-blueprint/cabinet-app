@@ -47,8 +47,8 @@
         "filter-person-personal-status-text-title": "Personenstatus",
         "filter-person-student-status-text-title": "Hörerstatus",
         "filter-person-study-address-country-text-title": "Land(Studienadresse)",
-        "filter-person-study-address-place-title": "Region(Studienadresse)",
-        "filter-person-study-address-region-title": "Ort(Studienadresse)",
+        "filter-person-study-address-place-title": "Ort(Studienadresse)",
+        "filter-person-study-address-region-title": "Region(Studienadresse)",
         "filter-study-name-title": "Studienfach",
         "filter-study-status-text-title": "Studienstatus",
         "filter-study-type-title": "Abschlussziel",
@@ -165,8 +165,22 @@
         },
         "file": {
             "base": {
+                "additionalType": {
+                    "key": {
+                        "AdmissionNotice": "Zulassungsbescheid",
+                        "BirthCertificate": "Geburtsurkunde",
+                        "CitizenshipCertificate": "Staatsbürgerschaftsnachweis",
+                        "Communication": "Kontaktaufnahme",
+                        "DriversLicence": "Führerschein",
+                        "MaritalStatusCertificate": "Heiratsurkunde",
+                        "Passport": "Reisepass",
+                        "PersonalLicence": "Personalausweis",
+                        "SupervisionAcceptance": "Betreuungszusage"
+                    }
+                },
                 "fileSource": {
-                    "cabinet-bucket": "Manuell hochgeladen"
+                    "cabinet-bucket": "Manuell hochgeladen",
+                    "TUGraz": ""
                 },
                 "isPartOf": {
                     "admission-archive-80": "Ansuchen um Zulassung (Archivierung nach 80 Jahren)",

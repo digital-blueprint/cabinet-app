@@ -314,7 +314,7 @@ export default class InstantSearchModule {
             {'filter-group': {id: 'file', name: t('cabinet-search.document-filter-group-title')}},
             {
                 groupId: 'file',
-                schemaField: 'file.base.additionalType.text',
+                schemaField: 'file.base.additionalType.key',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-file-base-additional-type-text-title'),
                 facetOptions: {facet: {searchable: false}},

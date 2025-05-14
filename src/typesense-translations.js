@@ -1,10 +1,19 @@
 /*
 
 This is just needed to register the translation keys with i18next-parser
-
+t('typesense-schema.file.base.additionalType.key.AdmissionNotice')
+t('typesense-schema.file.base.additionalType.key.CitizenshipCertificate')
+t('typesense-schema.file.base.additionalType.key.Communication')
+t('typesense-schema.file.base.additionalType.key.PersonalLicence')
+t('typesense-schema.file.base.additionalType.key.Passport')
+t('typesense-schema.file.base.additionalType.key.DriversLicence')
+t('typesense-schema.file.base.additionalType.key.BirthCertificate')
+t('typesense-schema.file.base.additionalType.key.MaritalStatusCertificate')
+t('typesense-schema.file.base.additionalType.key.SupervisionAcceptance')
 t('typesense-schema.@type.DocumentFile')
 t('typesense-schema.@type.Person')
 t('typesense-schema.file.base.fileSource.cabinet-bucket')
+t('typesense-schema.file.base.fileSource.TUGraz')
 t('typesense-schema.file.base.isPartOf.admission-archive-80')
 t('typesense-schema.file.base.isPartOf.communication-archive-10')
 t('typesense-schema.file.base.isPartOf.financial-archive-7')

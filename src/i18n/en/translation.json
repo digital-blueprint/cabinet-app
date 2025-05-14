@@ -165,8 +165,22 @@
         },
         "file": {
             "base": {
+                "additionalType": {
+                    "key": {
+                        "AdmissionNotice": "SupervisionAcceptance",
+                        "BirthCertificate": "Birth certificate",
+                        "CitizenshipCertificate": "Citizenship certificate",
+                        "Communication": "Communication",
+                        "DriversLicence": "Driver's licence",
+                        "MaritalStatusCertificate": "Merital status certificate",
+                        "Passport": "Passport",
+                        "PersonalLicence": "Personal licence",
+                        "SupervisionAcceptance": "Supervision acceptance"
+                    }
+                },
                 "fileSource": {
-                    "cabinet-bucket": "Manually uploaded"
+                    "cabinet-bucket": "Manually uploaded",
+                    "TUGraz": ""
                 },
                 "isPartOf": {
                     "admission-archive-80": "Application for registration  (archive after 80 years)",

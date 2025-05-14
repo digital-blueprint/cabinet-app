@@ -542,7 +542,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                 checked=${item.isRefined} />
                                         </label>
                                         <dbp-cabinet-facet-label
-                                            subscribe="lang"
+                                            ref=${(el) =>
+                                                el && el.setAttribute('subscribe', 'lang')}
                                             class="refinement-list-item-name"
                                             title="${item.label}"
                                             namespace="${schemaField}"
