@@ -505,6 +505,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             group_by: 'base.personGroupId',
             group_limit: 1,
             group_missing_values: false,
+            facet_strategy: 'exhaustive',
         };
 
         if (!this.fuzzySearch) {
