@@ -732,12 +732,21 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             .filter-header {
                 padding-bottom: 1.6em;
                 border-bottom: 5px solid var(--dbp-override-accent);
+                display: flex;
+                justify-content: flex-start;
+                flex-direction: row;
+                align-items: flex-start;
+                padding-top: 1em;
             }
 
             .filter-header__title {
                 margin: 0;
                 font-weight: bold;
-                padding-top: 0.6em;
+            }
+
+            .facet-filter-icon {
+                color: var(--dbp-override-accent);
+                padding-right: 0.5em;
             }
 
             .filters-container {
@@ -937,6 +946,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         return html`
             <div class="filters">
                 <div class="filter-header">
+                    <dbp-icon name="funnel" class="facet-filter-icon"></dbp-icon>
                     <h2 class="filter-header__title">${i18n.t('cabinet-search.filters')}</h2>
                 </div>
                 <div id="filters-container" class="filters-container"></div>
