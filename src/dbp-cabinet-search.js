@@ -482,6 +482,42 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 color: var(--dbp-content);
             }
 
+            @media (max-width: 767px) {
+                .result-container {
+                    margin-top: 0;
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    grid-template-rows: auto auto;
+                    grid-template-areas:
+                        'empty header'
+                        'sidebar main';
+                    gap: 0 1em;
+                }
+
+                .filters {
+                    grid-area: sidebar;
+                    width: 100%;
+                }
+
+                .ais-Hits-list {
+                    grid-area: main;
+                    width: 100%;
+                }
+
+                .result-count {
+                    grid-area: empty;
+                }
+                .hit-person-row {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    grid-template-rows: auto auto;
+                }
+
+                .hits-person-footer {
+                    justify-content: normal;
+                }
+            }
+
             @media (max-width: 1280px) and (min-width: 768px) {
             }
         `;

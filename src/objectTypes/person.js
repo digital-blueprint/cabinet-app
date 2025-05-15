@@ -124,6 +124,7 @@ class CabinetHitElement extends BaseHitElement {
             .person-id {
                 margin-right: 10px;
                 color: white;
+                gap: 0.5em;
             }
 
             .right-column {
@@ -170,6 +171,41 @@ class CabinetHitElement extends BaseHitElement {
             .count {
                 padding-top: 1em;
             }
+
+            @media (max-width: 767px) {
+                .hit-person-info-header {
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    gap: 0.5em;
+                }
+
+                .right-column {
+                    order: 0;
+                }
+
+                .person-name {
+                    order: 1;
+                }
+
+                .person-birthdate {
+                    order: 2;
+                    flex-basis: 100%;
+                    font-weight: normal;
+                }
+
+                .hit-right-wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    height: 100%;
+                }
+
+                .person-id {
+                    display: inline-flex;
+                    align-items: center;
+                }
+            }
         `;
     }
 
@@ -199,22 +235,23 @@ class CabinetHitElement extends BaseHitElement {
                             aria-label="Person hit box symbol"
                             title="Person hit box symbol"></dbp-icon>
                     </div>
-                    <span class="person-name">
+                    <div class="person-name">
                         <!-- familyName: ${hit.person.familyName}-->
                         ${renderFieldWithHighlight(hit, 'person.familyName')},
                         <!-- givenName: ${hit.person.givenName} -->
                         ${renderFieldWithHighlight(hit, 'person.givenName')}
-                    </span>
-                    <span class="person-birthdate">
+                    </div>
+                    <div class="person-birthdate">
                         <!-- birthDate: ${hit.person.birthDate}-->
                         ${formatDate(hit.person.birthDate)}
-                    </span>
+                    </div>
                 </div>
                 <div class="hit-right-wrapper">
                     <div class="person-id">
                         <!-- studId: ${hit.person.studId}-->
-                        ${renderFieldWithHighlight(hit, 'person.studId')} |
-                        ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
+                        <span>${renderFieldWithHighlight(hit, 'person.studId')}</span>
+                        |
+                        <span>${renderFieldWithHighlight(hit, 'person.stPersonNr')}</span>
                     </div>
                 </div>
             </header>
