@@ -122,6 +122,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     getCommonFormElements = () => {
         let hit = getDocumentHit(this._getData() ?? DEFAULT_FILE_COMMON);
         let fileCommon = hit.file.base;
+        const additionalType = this.additionalType || fileCommon.additionalType.key;
 
         return html`
             <dbp-form-string-element
@@ -162,7 +163,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
                 rows="5"
                 .value=${fileCommon.comment || ''}></dbp-form-string-element>
 
-            <input type="hidden" name="additionalType" value="${fileCommon.additionalType.key}" />
+            <input type="hidden" name="additionalType" value="${additionalType}" />
             ${this.getButtonRowHtml()}
         `;
     };
