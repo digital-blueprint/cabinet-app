@@ -24,10 +24,14 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
     }
 
     async _adaptAndPerformTypesenseRequest(instantsearchRequests) {
+        const originalFacetNames = instantsearchRequests[0].params.facets;
         if (this.overrideData) {
             // Override facet names with names of activated widgets
             instantsearchRequests[0].params.facets =
-                this.facetComponent.gatherActivatedWidgetsFacetNames(this.facetConfigs);
+                this.facetComponent.gatherActivatedWidgetsFacetNames(
+                    this.facetConfigs,
+                    originalFacetNames,
+                );
         }
 
         var typesenseResponse = await super._adaptAndPerformTypesenseRequest(instantsearchRequests);
@@ -35,8 +39,10 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
 
         if (this.overrideData && facetCountsData) {
             // Fake data we didn't get
-            typesenseResponse.results[0].facet_counts =
-                this.generateFacetCountsData(facetCountsData);
+            typesenseResponse.results[0].facet_counts = this.generateFacetCountsData(
+                facetCountsData,
+                originalFacetNames,
+            );
         }
 
         return typesenseResponse;
@@ -46,22 +52,29 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
      * Generate fake facet counts data for schema fields that we didn't get from Typesense,
      * because we didn't request it
      * @param facetCountsData
+     * @param originalFacetNames
      * @returns {*}
      */
-    generateFacetCountsData(facetCountsData) {
-        const facetNames = this.facetComponent.gatherActivatedWidgetsFacetNames(this.facetConfigs);
+    generateFacetCountsData(facetCountsData, originalFacetNames) {
+        const generatedFacetNames = this.facetComponent.gatherActivatedWidgetsFacetNames(
+            this.facetConfigs,
+            originalFacetNames,
+        );
         const schemaFieldNames = Object.values(
             this.facetComponent.getSchemaFieldHash(this.facetConfigs),
         );
 
         // Iterate of all schema field names to add data we didn't get from Typesense
         schemaFieldNames.forEach((schemaFieldName) => {
-            // We don't need to generate data we got from Typesense
-            if (facetNames.includes(schemaFieldName)) {
+            // We don't need to generate data we got from Typesense, or we didn't need in the first place
+            if (
+                generatedFacetNames.includes(schemaFieldName) ||
+                !originalFacetNames.includes(schemaFieldName)
+            ) {
                 return;
             }
 
-            // Generate data for this schema field name
+            // Generate data for the schema field name
             facetCountsData.push({
                 field_name: schemaFieldName,
                 counts: [{}],

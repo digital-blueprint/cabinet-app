@@ -146,12 +146,12 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     /**
      * Gathers the facet names to use in TypesenseInstantsearchAdapter._adaptAndPerformTypesenseRequest
      * @param facetsConfigs
+     * @param originalFacetNames
      * @returns {*[]}
      */
-    gatherActivatedWidgetsFacetNames(facetsConfigs) {
-        const facetNames = ['@type'];
+    gatherActivatedWidgetsFacetNames(facetsConfigs, originalFacetNames) {
+        const generatedFacetNames = ['@type'];
         const facetWidgets = this._a('#filters-container .filter');
-        console.log('gatherActivatedWidgets facetWidgets', facetWidgets);
         const schemaFieldHash = this.getSchemaFieldHash(facetsConfigs);
 
         facetWidgets.forEach((facetWidget) => {
@@ -162,27 +162,33 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 return;
             }
 
-            // Check if the div container is collapsed or hidden, we only want visible and uncollapsed containers
-            if (
-                div.classList.contains('ais-Panel--collapsed') !== false ||
-                div.hasAttribute('hidden')
-            ) {
-                return;
-            }
-
             // Get the HTML id from the widget
             const facetId = facetWidget.id;
+            const facetName = facetId ? schemaFieldHash[facetId] : null;
+            const parent = div.parentElement;
 
-            if (!facetId) {
+            if (!parent || !facetId || !facetName || div.hasAttribute('hidden')) {
                 return;
             }
 
-            if (schemaFieldHash[facetId]) {
-                facetNames.push(schemaFieldHash[facetId]);
+            // If it's not a checkbox, we want to add the facet all the time, because we can't handle the missing data in the facet
+            // if (!parent.classList.contains('filter-type-checkbox')) {
+            //     console.log('gatherActivatedWidgetsFacetNames parent.classList', parent.classList);
+            //     generatedFacetNames.push(facetName);
+            //     return;
+            // }
+
+            // Check if the div container is collapsed or hidden, we only want visible and uncollapsed containers
+            if (
+                div.classList.contains('ais-Panel--collapsed') === false &&
+                !div.hasAttribute('hidden')
+            ) {
+                generatedFacetNames.push(facetName);
             }
         });
 
-        return facetNames;
+        // Filter generatedFacetNames to only include items that are in originalFacetNames
+        return generatedFacetNames.filter((item) => originalFacetNames.includes(item));
     }
 
     getSchemaFieldHash(facetsConfigs) {
@@ -578,6 +584,17 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     fieldType: schemaFieldType,
                     attribute: schemaField,
                     container: that._(`#${cssClass}`),
+                    templates: {
+                        item(item, {html}) {
+                            if (item.count === undefined) {
+                                return html`
+                                    <div class="facets-no-data">
+                                        ${i18n.t('facets.no-data-available')}
+                                    </div>
+                                `;
+                            }
+                        },
+                    },
                 };
                 const dateRefinementOptions = {
                     ...defaultDateRefinementOptions,
