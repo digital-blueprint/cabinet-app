@@ -48,34 +48,46 @@ export class TypesenseService {
     }
 
     /**
+     * Fetches a single item from the collection using the provided filter.
+     * Throws an error if more than one result is found.
+     * @param {string} filter_by - The filter string to apply to the search query.
+     * @returns {Promise<object|null>} The found document object, or null if no result is found.
+     * @throws {Error} If more than one result is found for the given filter.
+     */
+    async fetchItemByFilter(filter_by) {
+        let searchRequests = {
+            searches: [
+                {
+                    collection: this.collectionName,
+                    q: '*',
+                    filter_by: filter_by,
+                    page: 1,
+                    per_page: 1,
+                },
+            ],
+        };
+
+        let response = await this.client.multiSearch.perform(searchRequests);
+        let result = response.results[0];
+        if (result.found > 1) {
+            throw new Error('More than one result found for filter: ' + filter_by);
+        } else if (result.found === 0) {
+            return null;
+        } else {
+            return result.hits[0].document;
+        }
+    }
+
+    /**
      * Fetch a file document by Blob fileId
-     * @param fileId
-     * @returns {Promise<null|*>}
+     * @param {string} fileId
+     * @returns {Promise<null|object>}
      */
     async fetchFileDocumentByBlobId(fileId) {
         if (!fileId) {
             throw new Error('fileId is required');
         }
 
-        try {
-            return await this.client
-                .collections(this.collectionName)
-                .documents('file.' + fileId)
-                .retrieve();
-        } catch (error) {
-            console.log('fetchFileDocumentByBlobId error.name', error.name);
-            console.log('fetchFileDocumentByBlobId error.httpStatus', error.httpStatus);
-            console.log('fetchFileDocumentByBlobId error prototype', Object.getPrototypeOf(error));
-
-            // Check httpStatus of TypesenseError
-            // If the document is not found, return null, because we want to try to fetch it again later
-            if (error.httpStatus === 404) {
-                return null;
-            }
-
-            // We escalate other errors
-            console.error('Error fetching file document:', error);
-            throw error;
-        }
+        return await this.fetchItemByFilter('file.base.fileId:=[`' + fileId + '`]');
     }
 }
