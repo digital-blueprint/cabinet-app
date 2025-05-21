@@ -584,17 +584,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     fieldType: schemaFieldType,
                     attribute: schemaField,
                     container: that._(`#${cssClass}`),
-                    templates: {
-                        item(item, {html}) {
-                            if (item.count === undefined) {
-                                return html`
-                                    <div class="facets-no-data">
-                                        ${i18n.t('facets.no-data-available')}
-                                    </div>
-                                `;
-                            }
-                        },
-                    },
                 };
                 const dateRefinementOptions = {
                     ...defaultDateRefinementOptions,
