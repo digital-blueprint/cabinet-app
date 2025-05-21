@@ -10,7 +10,7 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
     facetConfigs = {};
 
     // Set this to true to override data in _adaptAndPerformTypesenseRequest
-    overrideData = true;
+    overrideFacetByData = false;
 
     /**
      * @param {CabinetFacets} facetComponent
@@ -25,7 +25,7 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
 
     async _adaptAndPerformTypesenseRequest(instantsearchRequests) {
         const originalFacetNames = instantsearchRequests[0].params.facets;
-        if (this.overrideData) {
+        if (this.overrideFacetByData) {
             // Override facet names with names of activated widgets
             instantsearchRequests[0].params.facets =
                 this.facetComponent.gatherActivatedWidgetsFacetNames(
@@ -37,7 +37,7 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
         var typesenseResponse = await super._adaptAndPerformTypesenseRequest(instantsearchRequests);
         const facetCountsData = typesenseResponse.results[0].facet_counts;
 
-        if (this.overrideData && facetCountsData) {
+        if (this.overrideFacetByData && facetCountsData) {
             // Fake data we didn't get
             typesenseResponse.results[0].facet_counts = this.generateFacetCountsData(
                 facetCountsData,
