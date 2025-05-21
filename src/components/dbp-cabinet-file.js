@@ -232,6 +232,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             // TODO: Is there something else we should do here?
             return;
         }
+
+        setTimeout(() => {
+            this.fetchFileDocumentFromTypesense(fileId, ++increment);
+        }, 1000);
     }
 
     /**
