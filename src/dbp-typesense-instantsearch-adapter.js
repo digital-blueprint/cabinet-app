@@ -12,6 +12,10 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
     // Set this to true to override data in _adaptAndPerformTypesenseRequest
     overrideFacetByData = false;
 
+    // Set this to true to allow removing facet names from the request
+    allowFacetByFacetNameRemoval = true;
+    removedFacetNames = ['person.person'];
+
     /**
      * @param {CabinetFacets} facetComponent
      */
@@ -24,7 +28,16 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
     }
 
     async _adaptAndPerformTypesenseRequest(instantsearchRequests) {
-        const originalFacetNames = instantsearchRequests[0].params.facets;
+        let originalFacetNames = instantsearchRequests[0].params.facets;
+
+        if (this.allowFacetByFacetNameRemoval) {
+            // Override originalFacetNames in case overrideFacetByData is enabled
+            originalFacetNames = originalFacetNames.filter(
+                (item) => !this.removedFacetNames.includes(item),
+            );
+            instantsearchRequests[0].params.facets = originalFacetNames;
+        }
+
         if (this.overrideFacetByData) {
             // Override facet names with names of activated widgets
             instantsearchRequests[0].params.facets =
