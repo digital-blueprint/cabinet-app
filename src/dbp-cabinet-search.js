@@ -790,7 +790,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             <link rel="stylesheet" href="${algoliaCss}" />
             <div
                 class="control ${classMap({
-                    hidden: this.isLoggedIn() || !this.isLoading() || !this.loadingTranslations,
+                    hidden: this.isLoggedIn() || !this.isAuthPending() || !this.loadingTranslations,
                 })}">
                 <span class="loading">
                     <dbp-mini-spinner text=${i18n.t('loading-message')}></dbp-mini-spinner>
@@ -798,7 +798,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             </div>
             <div
                 class="notification is-warning ${classMap({
-                    hidden: this.isLoggedIn() || this.isLoading() || this.loadingTranslations,
+                    hidden: this.isLoggedIn() || this.isAuthPending() || this.loadingTranslations,
                 })}">
                 ${i18n.t('error-login-message')}
                 <a href="#" @click="${this._onLoginClicked}">${i18n.t('error-login-link')}</a>
@@ -806,7 +806,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             <div
                 class="${classMap({
-                    hidden: !this.isLoggedIn() || this.isLoading() || this.loadingTranslations,
+                    hidden: !this.isLoggedIn() || this.isAuthPending() || this.loadingTranslations,
                 })}">
                 <div class="search-box-container">
                     <div id="searchbox" class="search-box-widget"></div>

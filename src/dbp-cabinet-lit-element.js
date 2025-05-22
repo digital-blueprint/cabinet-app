@@ -2,11 +2,11 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {IconButton} from '@dbp-toolkit/common';
 import {Translated} from '@dbp-toolkit/common';
 import {createInstance} from './i18n';
+import {AuthMixin} from '@dbp-toolkit/common';
 
-export default class DBPCabinetLitElement extends DBPLitElement {
+export default class DBPCabinetLitElement extends AuthMixin(DBPLitElement) {
     constructor() {
         super();
-        this.auth = {};
         this._i18n = createInstance();
         this.lang = this._i18n.language;
         this.entryPointUrl = '';
@@ -22,7 +22,6 @@ export default class DBPCabinetLitElement extends DBPLitElement {
     static get properties() {
         return {
             ...super.properties,
-            auth: {type: Object},
             lang: {type: String},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             fileHandlingEnabledTargets: {type: String, attribute: 'file-handling-enabled-targets'},
@@ -34,24 +33,11 @@ export default class DBPCabinetLitElement extends DBPLitElement {
         };
     }
 
-    connectedCallback() {
-        super.connectedCallback();
-
-        this._loginStatus = '';
-        this._loginState = [];
-    }
-
-    /**
-     *  Request a re-rendering every time isLoggedIn()/isLoading() changes
-     */
-    _updateAuth() {
-        this._loginStatus = this.auth['login-status'];
-
-        let newLoginState = [this.isLoggedIn(), this.isLoading()];
-        if (this._loginState.toString() !== newLoginState.toString()) {
-            this.requestUpdate();
+    // This will be called after login
+    loginCallback() {
+        if (!this._initialized) {
+            console.log('loginCallback');
         }
-        this._loginState = newLoginState;
     }
 
     update(changedProperties) {
@@ -60,30 +46,10 @@ export default class DBPCabinetLitElement extends DBPLitElement {
                 case 'lang':
                     this._i18n.changeLanguage(this.lang);
                     break;
-                case 'auth':
-                    this._updateAuth();
-                    break;
             }
         });
 
         super.update(changedProperties);
-    }
-
-    /**
-     * Returns if a person is set in or not
-     * @returns {boolean} true or false
-     */
-    isLoggedIn() {
-        return this.auth.person !== undefined && this.auth.person !== null;
-    }
-
-    /**
-     * Returns true if a person has successfully logged in
-     * @returns {boolean} true or false
-     */
-    isLoading() {
-        if (this._loginStatus === 'logged-out') return false;
-        return !this.isLoggedIn() && this.auth.token !== undefined;
     }
 
     /**
