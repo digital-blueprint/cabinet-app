@@ -780,6 +780,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.showScheduledForDeletion = event.target.checked;
     }
 
+    _onLoginClicked(e) {
+        this.sendSetPropertyEvent('requested-login-status', "logged-in");
+        e.preventDefault();
+    }
+
     render() {
         const i18n = this._i18n;
         const algoliaCss = commonUtils.getAssetURL(pkgName, 'algolia-min.css');
