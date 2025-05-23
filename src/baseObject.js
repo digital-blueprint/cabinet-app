@@ -1,8 +1,6 @@
-import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {css, html} from 'lit';
 import '@dbp-toolkit/form-elements';
-import {createInstance} from './i18n';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './objectTypes/formElements';
 import {getDocumentHit} from './objectTypes/schema.js';
@@ -12,6 +10,7 @@ import {
     gatherFormDataFromElement,
     validateRequiredFields,
 } from '@dbp-toolkit/form-elements/src/utils.js';
+import DBPCabinetLitElement from './dbp-cabinet-lit-element.js';
 
 export class BaseObject {
     name = 'baseObject';
@@ -89,11 +88,9 @@ export const getCommonStyles = () => css`
     }
 `;
 
-export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
+export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.data = {};
         this.person = {};
         this.additionalType = '';
@@ -215,11 +212,9 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             person: {type: Object},
             additionalType: {type: String, attribute: 'additional-type'},
             data: {type: Object},
-            auth: {type: Object},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             saveButtonEnabled: {type: Boolean, attribute: false},
         };
@@ -295,18 +290,6 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
         return studyFields;
     }
 
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-                    break;
-            }
-        });
-
-        super.update(changedProperties);
-    }
-
     static getIsPartOfItems(i18n) {
         const items = [
             'financial-archive-7',
@@ -330,11 +313,9 @@ export class BaseFormElement extends ScopedElementsMixin(DBPLitElement) {
     }
 }
 
-export class BaseHitElement extends ScopedElementsMixin(DBPLitElement) {
+export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.data = {};
     }
 
@@ -345,7 +326,6 @@ export class BaseHitElement extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             data: {type: Object},
         };
     }
@@ -371,18 +351,6 @@ export class BaseHitElement extends ScopedElementsMixin(DBPLitElement) {
                 <br />
             </form>
         `;
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-                    break;
-            }
-        });
-
-        super.update(changedProperties);
     }
 
     documentViewButtonClick(hit, e) {
@@ -413,12 +381,9 @@ export class BaseHitElement extends ScopedElementsMixin(DBPLitElement) {
     }
 }
 
-export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
+export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
-        this.entryPointUrl = '';
         this.auth = {};
         this.data = {};
         this.additionalTypes = {};
@@ -431,8 +396,6 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
-            auth: {type: Object},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             data: {type: Object},
         };
@@ -557,17 +520,5 @@ export class BaseViewElement extends ScopedElementsMixin(DBPLitElement) {
                 .items=${this.additionalTypes}></dbp-form-enum-view>
             ${this.getCustomViewElements()} ${this.getCommonViewElements()}
         `;
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-                    break;
-            }
-        });
-
-        super.update(changedProperties);
     }
 }

@@ -1,14 +1,14 @@
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {IconButton} from '@dbp-toolkit/common';
+import {IconButton, AuthMixin, LangMixin} from '@dbp-toolkit/common';
 import {Translated} from '@dbp-toolkit/common';
 import {createInstance} from './i18n';
-import {AuthMixin} from '@dbp-toolkit/common';
 
-export default class DBPCabinetLitElement extends AuthMixin(DBPLitElement) {
+export default class DBPCabinetLitElement extends LangMixin(
+    AuthMixin(DBPLitElement),
+    createInstance,
+) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.entryPointUrl = '';
     }
 
@@ -22,7 +22,6 @@ export default class DBPCabinetLitElement extends AuthMixin(DBPLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             fileHandlingEnabledTargets: {type: String, attribute: 'file-handling-enabled-targets'},
             nextcloudWebAppPasswordURL: {type: String, attribute: 'nextcloud-web-app-password-url'},
@@ -38,18 +37,6 @@ export default class DBPCabinetLitElement extends AuthMixin(DBPLitElement) {
         if (!this._initialized) {
             console.log('loginCallback');
         }
-    }
-
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-                    break;
-            }
-        });
-
-        super.update(changedProperties);
     }
 
     /**
