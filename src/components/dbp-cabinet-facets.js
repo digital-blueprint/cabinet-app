@@ -3,18 +3,14 @@
 import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import {css, html, render} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
 import {panel, refinementList} from 'instantsearch.js/es/widgets/index.js';
 import {connectCurrentRefinements, connectClearRefinements} from 'instantsearch.js/es/connectors';
 import {createDateRefinement} from './dbp-cabinet-date-facet.js';
-import {createInstance} from '../i18n.js';
 
-class FacetLabel extends DBPLitElement {
+class FacetLabel extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
-        this._i18n = createInstance();
-        this.lang = this._i18n.language;
         this.namespace = '';
         this.value = '';
     }
@@ -22,7 +18,6 @@ class FacetLabel extends DBPLitElement {
     static get properties() {
         return {
             ...super.properties,
-            lang: {type: String},
             namespace: {type: String},
             value: {type: String},
         };
@@ -34,18 +29,8 @@ class FacetLabel extends DBPLitElement {
             ${text}
         `;
     }
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            switch (propName) {
-                case 'lang':
-                    this._i18n.changeLanguage(this.lang);
-                    break;
-            }
-        });
-
-        super.update(changedProperties);
-    }
 }
+
 // FIXME: don't register globally
 customElements.define('dbp-cabinet-facet-label', FacetLabel);
 
