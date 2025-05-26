@@ -259,12 +259,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         let method;
-        let fileName = '';
         switch (blobUrlType) {
             case CabinetFile.BlobUrlTypes.UPLOAD:
                 identifier = this.getFileHitDataBlobId();
                 method = identifier === '' ? 'POST' : 'PATCH';
-                fileName = this.documentFile.name;
                 break;
             case CabinetFile.BlobUrlTypes.DOWNLOAD:
                 method = 'GET';
