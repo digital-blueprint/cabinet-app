@@ -287,10 +287,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             params['identifier'] = identifier;
         }
 
-        if (fileName !== '') {
-            params['fileName'] = fileName;
-        }
-
         if (includeData) {
             params['includeData'] = '1';
         }
