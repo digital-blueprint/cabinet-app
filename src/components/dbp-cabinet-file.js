@@ -276,10 +276,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const apiUrl = new URL(baseUrl);
         let params = {
             method: method,
-            prefix: this.blobDocumentPrefix,
-            // TODO: Does this replacing always work?
-            type: this.objectType.replace('file-cabinet-', ''),
         };
+        if (blobUrlType === CabinetFile.BlobUrlTypes.UPLOAD) {
+            params['prefix'] = this.blobDocumentPrefix;
+            params['type'] = this.objectType.replace('file-cabinet-', '');
+        }
 
         if (identifier !== '') {
             params['identifier'] = identifier;
