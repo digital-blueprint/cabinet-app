@@ -122,7 +122,6 @@ class CabinetHitElement extends BaseHitElement {
         let hit = getDocumentHit(this.data);
         let admissionNotice = getAdmissionNotice(hit);
         const i18n = this._i18n;
-
         const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString(
             'de-DE',
             {dateStyle: 'medium', timeStyle: 'medium'},
@@ -145,7 +144,11 @@ class CabinetHitElement extends BaseHitElement {
                 <header class="ais-doc-Hits-header">
                     <div class="ais-doc-title-wrapper">
                         <dbp-icon class="icon-container" name="files"></dbp-icon>
-                        <div class="ais-doc-title">${hit.file.base.additionalType.text}</div>
+                        <div class="ais-doc-title">
+                            ${i18n.t(
+                                `typesense-schema.file.base.additionalType.key.${hit.file.base.additionalType.key}`,
+                            )}
+                        </div>
                     </div>
                     <div class="text-container">
                         <div class="ais-doc-Hits-header-items header-item1">

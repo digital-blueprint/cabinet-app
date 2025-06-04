@@ -123,7 +123,11 @@ class CabinetHitElement extends BaseHitElement {
                 <header class="ais-doc-Hits-header">
                     <div class="ais-doc-title-wrapper">
                         <dbp-icon class="icon-container" name="files"></dbp-icon>
-                        <div class="ais-doc-title">${hit.file.base.additionalType.text}</div>
+                        <div class="ais-doc-title">
+                            ${i18n.t(
+                                `typesense-schema.file.base.additionalType.key.${hit.file.base.additionalType.key}`,
+                            )}
+                        </div>
                     </div>
                     <div class="text-container">
                         <div class="ais-doc-Hits-header-items header-item1">
