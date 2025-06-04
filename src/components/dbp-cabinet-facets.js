@@ -34,7 +34,6 @@ class FacetLabel extends DBPLitElement {
             ${text}
         `;
     }
-
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
@@ -47,7 +46,6 @@ class FacetLabel extends DBPLitElement {
         super.update(changedProperties);
     }
 }
-
 // FIXME: don't register globally
 customElements.define('dbp-cabinet-facet-label', FacetLabel);
 
@@ -96,7 +94,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             search: {type: Object, attribute: 'search'},
         };
     }
-
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
@@ -702,6 +699,27 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             facetWidget.classList.remove('gradient');
         }
     }
+    toggleFilters() {
+        const filtersElement = this.shadowRoot.querySelector('.filters');
+        if (filtersElement) {
+            filtersElement.classList.toggle('active');
+        }
+    }
+    firstUpdated() {
+        const toggleCloseFilter = this.shadowRoot.querySelector('#filter-exit-icon');
+        if (toggleCloseFilter) {
+            toggleCloseFilter.addEventListener('click', () => {
+                console.log('close button clicked');
+                this.toggleCloseFilter();
+            });
+        }
+    }
+    toggleCloseFilter() {
+        const filtersElement = this.shadowRoot.querySelector('.filters');
+        if (filtersElement && filtersElement.classList.contains('active')) {
+            filtersElement.classList.remove('active');
+        }
+    }
 
     /**
      * Convert schema name to kebabCase for css classes and translation keys
@@ -739,10 +757,13 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 padding-bottom: 1.6em;
                 border-bottom: 5px solid var(--dbp-override-accent);
                 display: flex;
-                justify-content: flex-start;
-                flex-direction: row;
-                align-items: flex-start;
+                justify-content: space-between;
+                align-items: center;
                 padding-top: 1em;
+            }
+
+            .filter-header__left {
+                display: flex;
             }
 
             .filter-header__title {
@@ -753,10 +774,16 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             .facet-filter-icon {
                 color: var(--dbp-override-accent);
                 padding-right: 0.5em;
+                align-items: center;
+                justify-self: center;
             }
 
             .filters-container {
                 margin-top: 3em;
+            }
+
+            .filter-exit-icon {
+                cursor: pointer;
             }
 
             .custom-checkbox {
@@ -942,6 +969,39 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             .facets-no-data {
                 color: var(--dbp-override-muted);
             }
+
+            .filter-exit-icon {
+                display: none;
+            }
+
+            @media (max-width: 768px) {
+                .filters {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: calc(100vw - 30px);
+                    height: 100vh;
+                    background: white;
+                    z-index: 9999;
+                    transition: transform 0.3s ease-in-out;
+                    transform: translateX(-130%);
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                    overflow-y: auto;
+                    padding: 1em;
+                }
+
+                .filters.active {
+                    transform: translateX(0);
+                }
+
+                .filter-exit-icon {
+                    display: block;
+                }
+
+                filter-header-button__title {
+                    align-items: center;
+                }
+            }
         `;
     }
 
@@ -952,8 +1012,14 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         return html`
             <div class="filters">
                 <div class="filter-header">
-                    <dbp-icon name="funnel" class="facet-filter-icon"></dbp-icon>
-                    <h2 class="filter-header__title">${i18n.t('cabinet-search.filters')}</h2>
+                    <div class="filter-header__left">
+                        <dbp-icon name="funnel" class="facet-filter-icon"></dbp-icon>
+                        <h2 class="filter-header__title">${i18n.t('cabinet-search.filters')}</h2>
+                    </div>
+                    <dbp-icon
+                        name="close"
+                        id="filter-exit-icon"
+                        class="filter-exit-icon"></dbp-icon>
                 </div>
                 <div id="filters-container" class="filters-container"></div>
             </div>

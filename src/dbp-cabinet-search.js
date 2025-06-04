@@ -484,7 +484,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 color: var(--dbp-content);
             }
 
-            @media (max-width: 767px) {
+            @media (max-width: 768px) {
                 .result-container {
                     margin-top: 0;
                     display: grid;
@@ -492,23 +492,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     grid-template-rows: auto auto;
                     grid-template-areas:
                         'empty header'
-                        'sidebar main';
+                        'main main';
                     gap: 0 1em;
-                }
-
-                .filters {
-                    grid-area: sidebar;
-                    width: 100%;
                 }
 
                 .ais-Hits-list {
                     grid-area: main;
-                    width: 100%;
                 }
 
-                .result-count {
-                    grid-area: empty;
-                }
                 .hit-person-row {
                     display: grid;
                     grid-template-columns: 1fr;
@@ -517,6 +508,31 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .hits-person-footer {
                     justify-content: normal;
+                }
+
+                .results {
+                    grid-area: main;
+                    width: 100%;
+                }
+
+                .facet-filter-button-icon {
+                    color: #9e1e4d;
+                    padding-bottom: 0.2em;
+                }
+
+                .filter-header-button {
+                    gap: 0.5em;
+                    display: flex;
+                    align-items: center;
+                    border: var(--dbp-override-border);
+                    height: 1.9em;
+                    padding: 0 1em 0 1em;
+                    cursor: pointer;
+                }
+            }
+            @media (min-width: 769px) {
+                #filter-header-button {
+                    display: none;
                 }
             }
 
@@ -814,6 +830,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     hidden: !this.isLoggedIn() || this.isAuthPending() || this.loadingTranslations,
                 })}">
                 <div class="search-box-container">
+                    <div id="filter-header-button" class="filter-header-button">
+                        <dbp-icon name="funnel" class="facet-filter-button-icon"></dbp-icon>
+                        <div class="filter-header-button__title">
+                            ${i18n.t('cabinet-search.filters')}
+                        </div>
+                    </div>
                     <div id="searchbox" class="search-box-widget"></div>
                     <div class="help-container">
                         <svg
@@ -853,6 +875,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div class="result-container">
                     <div id="result-count"></div>
                     <dbp-cabinet-facets
+                        class="dbp-cabinet-facets"
                         ${ref(this.cabinetFacetsRef)}
                         .search="${this.search}"
                         subscribe="lang"></dbp-cabinet-facets>
@@ -1001,6 +1024,26 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         console.log('handleRoutingUrlChange reset');
+    }
+
+    firstUpdated() {
+        // Add toggle filter functionality
+        const toggleFilter = this.renderRoot?.querySelector('#filter-header-button');
+        const cabinetFacets = this.cabinetFacetsRef.value;
+        const toggleCloseFilter = this.renderRoot?.querySelector('#filter-exit-icon');
+
+        if (toggleFilter && cabinetFacets) {
+            toggleFilter.addEventListener('click', () => {
+                console.log('filter clicked');
+                cabinetFacets.toggleFilters();
+            });
+        }
+        if (toggleCloseFilter && cabinetFacets) {
+            toggleCloseFilter.addEventListener('click', () => {
+                console.log('close button clicked');
+                cabinetFacets.toggleCloseFilter();
+            });
+        }
     }
 }
 
