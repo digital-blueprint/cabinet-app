@@ -167,12 +167,12 @@
             "base": {
                 "additionalType": {
                     "key": {
-                        "AdmissionNotice": "SupervisionAcceptance",
+                        "AdmissionNotice": "Admission notice",
                         "BirthCertificate": "Birth certificate",
                         "CitizenshipCertificate": "Citizenship certificate",
                         "Communication": "Communication",
                         "DriversLicence": "Driver's licence",
-                        "MaritalStatusCertificate": "Merital status certificate",
+                        "MaritalStatusCertificate": "Marital status certificate",
                         "Passport": "Passport",
                         "PersonalLicence": "Personal licence",
                         "SupervisionAcceptance": "Supervision acceptance"
