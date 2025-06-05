@@ -488,10 +488,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .result-container {
                     margin-top: 0;
                     display: grid;
-                    grid-template-columns: 1fr 1fr;
+                    grid-template-columns: 1fr 1fr auto;
                     grid-template-rows: auto auto;
                     grid-template-areas:
                         'empty header'
+                        'sub1 sub2'
                         'main main';
                     gap: 0 1em;
                 }
@@ -528,6 +529,25 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     height: 1.9em;
                     padding: 0 1em 0 1em;
                     cursor: pointer;
+                }
+
+                .deleted-only {
+                    display: flex;
+                    flex-wrap: nowrap;
+                    justify-content: end;
+                    padding-right: 0.4em;
+                }
+
+                #result-count {
+                    grid-area: header;
+                    text-align: end;
+                }
+
+                .refinement-container {
+                    grid-area: sub1 / sub1 / span 1 / span 2;
+                    display: flex;
+                    justify-content: space-between;
+                    padding-top: 0.5em;
                 }
             }
             @media (min-width: 769px) {
@@ -865,7 +885,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </div>
                     <div id="sort-by" class="sort-widget"></div>
                 </div>
-                <div>
+                <div class="deleted-only">
                     <input
                         type="checkbox"
                         id="deleted-checkbox"
