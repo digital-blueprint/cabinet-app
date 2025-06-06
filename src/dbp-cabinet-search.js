@@ -558,6 +558,40 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             @media (max-width: 1280px) and (min-width: 768px) {
             }
+
+            @media (min-width: 380px) and (max-width: 489px) {
+                #result-count {
+                    padding-right: 0.4em;
+                }
+
+                .result-container {
+                    grid-template-columns: auto 1fr;
+                    gap: 0;
+                }
+
+                .hits-person-footer {
+                    display: grid;
+                    grid-template-columns: auto auto;
+                    grid-template-rows: auto auto;
+                    gap: 0.5em;
+                    align-items: center;
+                }
+
+                .hits-person-footer button:nth-child(1) {
+                    grid-column: 1 / span 2;
+                    grid-row: 1;
+                }
+
+                .hits-person-footer button:nth-child(2) {
+                    grid-column: 1;
+                    grid-row: 2;
+                }
+
+                .hits-person-footer button:nth-child(3) {
+                    grid-column: 2;
+                    grid-row: 2;
+                }
+            }
         `;
     }
 
