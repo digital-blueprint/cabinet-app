@@ -496,9 +496,9 @@ Dependencies:
                             dest: 'dist/' + (await getDistPath(pkg.name, 'fonts/source-sans-pro')),
                         },
                         {
-                            src: await getPackagePath('@dbp-toolkit/common', 'src/spinner.js'),
+                            src: await getPackagePath('@tugraz/web-components', 'src/spinner.js'),
                             dest: 'dist/' + (await getDistPath(pkg.name)),
-                            rename: 'org_spinner.js',
+                            rename: 'tug_spinner.js',
                         },
                         {
                             src: await getPackagePath('@dbp-toolkit/common', 'src/spinner.js'),
