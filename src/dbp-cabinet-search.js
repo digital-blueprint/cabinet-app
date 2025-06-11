@@ -178,6 +178,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         component.setObjectTypeViewComponents(this.objectTypeViewComponents);
 
         const hit = await this._getTypesenseService().fetchItem(id);
+        console.assert(hit !== null, 'Error fetching item:', id);
         await component.openDialogWithHit(hit);
 
         return true;

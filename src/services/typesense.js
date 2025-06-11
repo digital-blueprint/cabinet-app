@@ -35,16 +35,12 @@ export class TypesenseService {
     }
 
     /**
-     * Fetch an item by its Typesense ID
-     * @param itemId
-     * @returns {Promise<object>}
+     * Fetch an item by its Typesense ID.
+     * @param {string} itemId - The unique identifier of the item to fetch.
+     * @returns {Promise<null|object>}
      */
     async fetchItem(itemId) {
-        try {
-            return await this.client.collections(this.collectionName).documents(itemId).retrieve();
-        } catch (error) {
-            console.error('Error fetching item:', error);
-        }
+        return await this.fetchItemByFilter('id:=[`' + itemId + '`]');
     }
 
     /**
