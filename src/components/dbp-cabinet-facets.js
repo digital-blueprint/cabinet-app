@@ -769,6 +769,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .filter-exit-icon {
                 cursor: pointer;
+                color: var(--dbp-override-accent);
             }
 
             .custom-checkbox {
