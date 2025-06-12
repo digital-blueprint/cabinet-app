@@ -512,6 +512,44 @@ class CabinetViewElement extends BaseViewElement {
                 text-decoration: none;
                 border-bottom: var(--dbp-border);
             }
+            @media (max-width: 768px) {
+                .info-container {
+                    display: flex;
+                    justify-content: flex-start;
+                    flex-direction: column;
+                }
+
+                .info-row {
+                    flex-direction: column;
+                }
+                .info-row span {
+                    padding-left: 0;
+                }
+
+                .header-button-container {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 10px;
+                    padding-bottom: 2.2em;
+                    flex-direction: column;
+                }
+
+                .study-key-group {
+                    flex-direction: column;
+                }
+
+                .study-row {
+                    flex-direction: column;
+                }
+
+                .Ci-item {
+                    flex-direction: column;
+                }
+
+                .address-info {
+                    display: inline;
+                }
+            }
         `;
     }
 
