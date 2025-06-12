@@ -121,12 +121,19 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         let fileCommon = hit.file.base;
         const additionalType = this.additionalType || fileCommon.additionalType.key;
 
+        // This prevents values from being overwritten with old or undefined values when re-rendering,
+        // even if something was already set in the form
+        const updateField = (field) => (e) => {
+            fileCommon[field] = e.detail?.value ?? e.target?.value;
+        };
+
         return html`
             <dbp-form-string-element
                 subscribe="lang"
                 name="subjectOf"
                 label=${this._i18n.t('doc-modal-subject-of')}
-                .value=${fileCommon.subjectOf || ''}></dbp-form-string-element>
+                .value=${fileCommon.subjectOf || ''}
+                @change=${updateField('subjectOf')}></dbp-form-string-element>
 
             <dbp-form-enum-element
                 subscribe="lang"
@@ -134,7 +141,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 label=${this._i18n.t('doc-modal-study-field')}
                 .items=${this.getStudyFields()}
                 .value=${fileCommon.studyField}
-                required></dbp-form-enum-element>
+                required
+                @change=${updateField('studyField')}></dbp-form-enum-element>
 
             <dbp-form-enum-element
                 subscribe="lang"
@@ -142,7 +150,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 label=${this._i18n.t('doc-modal-semester')}
                 .items=${getSemesters()}
                 .value=${fileCommon.semester}
-                required></dbp-form-enum-element>
+                required
+                @change=${updateField('semester')}></dbp-form-enum-element>
 
             <dbp-form-enum-element
                 subscribe="lang"
@@ -151,14 +160,16 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .items=${BaseFormElement.getIsPartOfItems(this._i18n)}
                 .value=${fileCommon.isPartOf}
                 multiple
-                required></dbp-form-enum-element>
+                required
+                @change=${updateField('isPartOf')}></dbp-form-enum-element>
 
             <dbp-form-string-element
                 subscribe="lang"
                 name="comment"
                 label=${this._i18n.t('doc-modal-comment')}
                 rows="5"
-                .value=${fileCommon.comment || ''}></dbp-form-string-element>
+                .value=${fileCommon.comment || ''}
+                @change=${updateField('comment')}></dbp-form-string-element>
 
             <input type="hidden" name="additionalType" value="${additionalType}" />
             ${this.getButtonRowHtml()}
