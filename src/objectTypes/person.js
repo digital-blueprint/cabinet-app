@@ -514,8 +514,6 @@ class CabinetViewElement extends BaseViewElement {
             }
             @media (max-width: 768px) {
                 .info-container {
-                    display: flex;
-                    justify-content: flex-start;
                     flex-direction: column;
                 }
 
@@ -527,10 +525,7 @@ class CabinetViewElement extends BaseViewElement {
                 }
 
                 .header-button-container {
-                    display: flex;
                     align-items: flex-start;
-                    gap: 10px;
-                    padding-bottom: 2.2em;
                     flex-direction: column;
                 }
 
@@ -548,6 +543,16 @@ class CabinetViewElement extends BaseViewElement {
 
                 .address-info {
                     display: inline;
+                }
+            }
+
+            @media (min-width: 769px) and (max-width: 1100px) {
+                .info-container {
+                    flex-direction: column;
+                }
+
+                .Ci-item span {
+                    padding-left: 0.5em;
                 }
             }
         `;
