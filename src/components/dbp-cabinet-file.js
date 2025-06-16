@@ -879,10 +879,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             #document-modal .status {
-                grid-area: 1 / 2 / 2 / 3;
                 display: flex;
-                flex-direction: row;
-                justify-content: flex-end;
+                flex-direction: column;
+                justify-content: space-evenly;
                 align-items: flex-end;
             }
 
@@ -942,12 +941,29 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             #document-modal .fileButtons {
                 display: flex;
-                justify-content: right;
                 gap: 5px;
+                justify-content: flex-end;
             }
             #document-modal .doc-type-edit-view {
                 padding: 0.14rem 1rem 0.14rem 0.14rem;
                 width: calc(100% - 0.9em);
+            }
+            @media (max-width: 768px) {
+            }
+            @media (max-width: 490px) {
+                #document-modal .content {
+                    display: flex;
+                    flex-direction: column;
+                }
+                #document-modal .status {
+                    align-items: flex-start;
+                }
+                #document-modal .fileButtons {
+                    justify-content: flex-start;
+                }
+                #document-modal .form {
+                    padding-left: 0;
+                }
             }
         `;
     }
@@ -1050,84 +1066,85 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 </span>
                             </div>
                         </div>
-                    </div>
-                    <div class="pdf-preview">
-                        <div class="fileButtons"></div>
-                        ${this.getPdfViewerHtml()}
-                    </div>
-                    <div class="form">
                         <div class="fileButtons">
                             <button
-                                class="button ${classMap({
-                                    hidden: this.mode !== CabinetFile.Modes.EDIT,
-                                })}"
-                                @click="${this.openReplacePdfDialog}"
-                                ?disabled="${!id}">
+                                    class="button ${classMap({
+                                        hidden: this.mode !== CabinetFile.Modes.EDIT,
+                                    })}"
+                                    @click="${this.openReplacePdfDialog}"
+                                    ?disabled="${!id}">
                                 ${i18n.t('buttons.replace-document')} ${this.getMiniSpinnerHtml(id)}
                             </button>
                             <select
-                                id="export-select"
-                                class="dropdown-menu ${classMap({
-                                    hidden: this.mode !== CabinetFile.Modes.VIEW,
-                                })}""
+                                    id="export-select"
+                                    class="dropdown-menu ${classMap({
+                                        hidden: this.mode !== CabinetFile.Modes.VIEW,
+                                    })}""
                                 ?disabled="${!file}"
                                 @change="${this.downloadFile}">
-                                <option value="" disabled="" selected="">
-                                    ${i18n.t('doc-modal-download-document')}
-                                </option>
-                                <option value="document-file-only">
-                                    ${i18n.t('doc-modal-document-only')}
-                                </option>
-                                <option value="metadata-only">
-                                    ${i18n.t('doc-modal-only-data')}
-                                </option>
-                                <option value="all">${i18n.t('doc-modal-all')}</option>
+                            <option value="" disabled="" selected="">
+                                ${i18n.t('doc-modal-download-document')}
+                            </option>
+                            <option value="document-file-only">
+                                ${i18n.t('doc-modal-document-only')}
+                            </option>
+                            <option value="metadata-only">
+                                ${i18n.t('doc-modal-only-data')}
+                            </option>
+                            <option value="all">${i18n.t('doc-modal-all')}</option>
                             </select>
                             <button
-                                @click="${this.editFile}"
-                                ?disabled="${!file}"
-                                class="${classMap({
-                                    hidden: this.mode !== CabinetFile.Modes.VIEW,
-                                })} button is-primary">
+                                    @click="${this.editFile}"
+                                    ?disabled="${!file}"
+                                    class="${classMap({
+                                        hidden: this.mode !== CabinetFile.Modes.VIEW,
+                                    })} button is-primary">
                                 <dbp-icon
-                                    title="${i18n.t('doc-modal-edit-document')}"
-                                    aria-label="${i18n.t('doc-modal-edit-document')}"
-                                    name="edit-pencil"></dbp-icon>
+                                        title="${i18n.t('doc-modal-edit-document')}"
+                                        aria-label="${i18n.t('doc-modal-edit-document')}"
+                                        name="edit-pencil"></dbp-icon>
                                 ${this.getMiniSpinnerHtml(
                                     this.state !== CabinetFile.States.LOADING_FILE,
                                 )}
                             </button>
                             <button
-                                @click="${this.deleteFile}"
-                                ?disabled="${!file}"
-                                class="${classMap({
-                                    hidden:
-                                        this.mode === CabinetFile.Modes.ADD ||
-                                        this.mode === CabinetFile.Modes.EDIT ||
-                                        hit.base?.isScheduledForDeletion,
-                                })} button is-primary">
+                                    @click="${this.deleteFile}"
+                                    ?disabled="${!file}"
+                                    class="${classMap({
+                                        hidden:
+                                            this.mode === CabinetFile.Modes.ADD ||
+                                            this.mode === CabinetFile.Modes.EDIT ||
+                                            hit.base?.isScheduledForDeletion,
+                                    })} button is-primary">
                                 <dbp-icon
-                                    title="${i18n.t('doc-modal-delete-document')}"
-                                    aria-label="${i18n.t('doc-modal-delete-document')}"
-                                    name="trash"></dbp-icon>
+                                        title="${i18n.t('doc-modal-delete-document')}"
+                                        aria-label="${i18n.t('doc-modal-delete-document')}"
+                                        name="trash"></dbp-icon>
                                 ${this.getMiniSpinnerHtml(
                                     this.state !== CabinetFile.States.LOADING_FILE,
                                 )}
                             </button>
                             <button
-                                @click="${this.undeleteFile}"
-                                ?disabled="${!file}"
-                                class="${classMap({
-                                    hidden:
-                                        this.mode === CabinetFile.Modes.ADD ||
-                                        !hit.base?.isScheduledForDeletion,
-                                })} button is-primary">
+                                    @click="${this.undeleteFile}"
+                                    ?disabled="${!file}"
+                                    class="${classMap({
+                                        hidden:
+                                            this.mode === CabinetFile.Modes.ADD ||
+                                            !hit.base?.isScheduledForDeletion,
+                                    })} button is-primary">
                                 Undelete
                                 ${this.getMiniSpinnerHtml(
                                     this.state !== CabinetFile.States.LOADING_FILE,
                                 )}
                             </button>
                         </div>
+                    </div>
+                    <div class="pdf-preview">
+                        
+                        ${this.getPdfViewerHtml()}
+                        
+                    </div>
+                    <div class="form">
                         ${this.getObjectTypeFormPartHtml()}
                     </div>
                 </div>
