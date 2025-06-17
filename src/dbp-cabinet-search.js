@@ -234,7 +234,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
 
         // Listen to DbpCabinetDocumentChanged events to refresh the search
-        this.addEventListener('DbpCabinetDocumentChanged', function () {
+        this.addEventListener('DbpCabinetDocumentChanged', () => {
             console.log('Refresh after document changed');
             this.search.refresh();
         });
@@ -242,6 +242,24 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Listen to DbpCabinetFilterPerson events to filter to a specific person
         this.addEventListener('DbpCabinetFilterPerson', function (event) {
             that.cabinetFacetsRef.value.filterOnSelectedPerson(event);
+        });
+
+        // Listen to DbpCabinetFilterPerson events to filter to a specific person
+        this.addEventListener('DbpCabinetOpenFilterSettings', (event) => {
+            console.log('DbpCabinetOpenFilterSettings event', event);
+            // this.initInstantsearch();
+
+            const schemaFields = ['person.exmatriculationStatus.text', 'person.birthDateTimestamp'];
+            const facetConfigs = this.filterFacetConfigsBySchemaFields(schemaFields);
+
+            console.log('DbpCabinetOpenFilterSettings facetConfigs', facetConfigs);
+            /** @type {CabinetFacets} */
+            const ref = this.cabinetFacetsRef.value;
+            if (facetConfigs.length > 0 && this.search) {
+                const facets = ref.createFacetsFromConfig(facetConfigs);
+
+                this.search.removeWidgets(facets);
+            }
         });
 
         this.updateComplete.then(async () => {
@@ -959,6 +977,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.sendSetPropertyEvent('routing-url', '/', true);
             this.resetRoutingUrl = false;
         }
+    }
+
+    filterFacetConfigsBySchemaFields(schemaFields) {
+        return this.facetConfigs.filter((item) => schemaFields.includes(item.schemaField));
     }
 
     async loadModules() {
