@@ -494,6 +494,15 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     const facetValues = options.results.getFacetValues(schemaField, {});
                     return Array.isArray(facetValues) ? facetValues.length === 0 : false;
                 },
+                // TODO: This function should be called when the panel is disposed, but isn't
+                dispose: () => {
+                    // Remove the filter item from the DOM when the panel is disposed
+                    const filterItem = that._(`#${cssClass}`);
+                    console.log('dispose filterItem', filterItem);
+                    if (filterItem) {
+                        filterItem.remove();
+                    }
+                },
             };
             const panelOptions = {
                 ...defaultPanelOptions,
@@ -763,6 +772,15 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 justify-self: center;
             }
 
+            .facet-settings-button {
+                background: transparent;
+                border: none;
+                font-size: 2rem;
+                color: var(--dbp-override-accent);
+                cursor: pointer;
+                padding: 0.2em;
+            }
+
             .filters-container {
                 margin-top: 3em;
             }
@@ -991,6 +1009,16 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         `;
     }
 
+    openFilterSettings() {
+        console.log('DbpCabinetOpenFilterSettings -- Open Filter Settings --');
+        this.dispatchEvent(
+            new CustomEvent('DbpCabinetOpenFilterSettings', {
+                bubbles: true,
+                composed: true,
+            }),
+        );
+    }
+
     render() {
         const i18n = this._i18n;
         console.log('-- Render Facets --');
@@ -1001,6 +1029,14 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="filter-header__left">
                         <dbp-icon name="funnel" class="facet-filter-icon"></dbp-icon>
                         <h2 class="filter-header__title">${i18n.t('cabinet-search.filters')}</h2>
+                    </div>
+                    <div class="filter-header__right">
+                        <button @click="${this.openFilterSettings}" class="facet-settings-button">
+                            <dbp-icon
+                                title="${i18n.t('cabinet-search.facet-settings')}"
+                                aria-label="${i18n.t('cabinet-search.facet-settings')}"
+                                name="cog"></dbp-icon>
+                        </button>
                     </div>
                     <dbp-icon
                         name="close"
