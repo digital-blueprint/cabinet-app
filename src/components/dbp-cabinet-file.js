@@ -948,21 +948,65 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 padding: 0.14rem 1rem 0.14rem 0.14rem;
                 width: calc(100% - 0.9em);
             }
-            @media (max-width: 768px) {
+            @media (min-width: 768px) {
+                .desc-stat,
+                .form,
+                .pdf-preview {
+                    grid-column: 1 / -1;
+                }
+                #document-modal .desc-stat {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: normal;
+                    justify-content: space-between;
+                }
+            }
+            @media (min-width: 490px) and (max-width: 767px) {
+                #document-modal .content {
+                    display: flex;
+                    flex-direction: column;
+                }
+                #document-modal .desc-stat {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+                    word-spacing: inherit;
+                    word-wrap: break-word;
+                    word-break: break-word;
+                }
+                #document-modal .status {
+                    align-items: flex-start;
+                }
+                #document-modal .form {
+                    padding-left: 0;
+                }
+                #document-modal .description {
+                    flex-wrap: wrap;
+                }
             }
             @media (max-width: 490px) {
                 #document-modal .content {
                     display: flex;
                     flex-direction: column;
                 }
+                #document-modal .desc-stat {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+                    word-spacing: inherit;
+                    word-wrap: break-word;
+                    word-break: break-word;
+                }
                 #document-modal .status {
                     align-items: flex-start;
                 }
-                #document-modal .fileButtons {
-                    justify-content: flex-start;
-                }
                 #document-modal .form {
                     padding-left: 0;
+                }
+                #document-modal .description {
+                    flex-wrap: wrap;
                 }
             }
         `;
@@ -1044,7 +1088,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </div>
                 </div>
                 <div slot="content" class="content">
-                    <div class="description">
+                    <div class="desc-stat">
+                        <div class="description">
                         <div class="doc-title">
                             <dbp-icon name="files" class="view-modal-icon"></dbp-icon>
                             <h1>${headline}</h1>
@@ -1057,7 +1102,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             <br />
                         </div>
                     </div>
-                    <div class="status ${classMap({hidden: this.mode === CabinetFile.Modes.ADD})}">
+                        <div class="status ${classMap({hidden: this.mode === CabinetFile.Modes.ADD})}">
                         <div class="status-badge ${this.documentStatus}">
                             <div class="status-description">
                                 ${this.documentStatusDescription}
@@ -1139,10 +1184,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             </button>
                         </div>
                     </div>
+                    </div>   
+                    
                     <div class="pdf-preview">
-                        
                         ${this.getPdfViewerHtml()}
-                        
                     </div>
                     <div class="form">
                         ${this.getObjectTypeFormPartHtml()}
