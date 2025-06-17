@@ -86,6 +86,19 @@ export const getCommonStyles = () => css`
     .hit-content-item {
         color: var(--dbp-override-content);
     }
+
+    .button-view {
+        padding: 0.3em 0.8em;
+        text-align: center;
+        white-space: nowrap;
+        font-size: inherit;
+        font-weight: bolder;
+        font-family: inherit;
+        transition:
+            0.15s,
+            color 0.15s;
+        border: none;
+    }
 `;
 
 export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
@@ -380,14 +393,14 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         const i18n = this._i18n;
 
         return html`
-            <button
+            <dbp-button
                 class="button-view"
-                type="is-primary"
+                type="is-secondary"
                 @click=${(e) => {
                     this.documentViewButtonClick(hit, e);
                 }}>
                 ${i18n.t('buttons.view')}
-            </button>
+            </dbp-button>
         `;
     }
 }

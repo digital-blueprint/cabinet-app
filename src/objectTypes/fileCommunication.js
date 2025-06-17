@@ -100,22 +100,6 @@ class CabinetHitElement extends BaseHitElement {
         return css`
             ${super.styles}
             ${getCommonStyles()}
-
-            .button-view {
-                padding: 0.3em 0.8em;
-                font-size: 18px;
-                background-color: var(--dbp-primary-surface);
-                color: var(--dbp-on-primary-surface);
-                text-align: center;
-                white-space: nowrap;
-                font-size: inherit;
-                font-weight: bolder;
-                font-family: inherit;
-                transition:
-                    0.15s,
-                    color 0.15s;
-                border: none;
-            }
         `;
     }
 
