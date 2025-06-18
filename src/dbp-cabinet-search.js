@@ -51,6 +51,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.personViewId = null;
         this.resetRoutingUrl = false;
         this.lockDocumentViewDialog = false;
+        this.facetWidgets = [];
     }
 
     static get scopedElements() {
@@ -246,19 +247,37 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Listen to DbpCabinetFilterPerson events to filter to a specific person
         this.addEventListener('DbpCabinetOpenFilterSettings', (event) => {
-            console.log('DbpCabinetOpenFilterSettings event', event);
             // this.initInstantsearch();
 
+            // TODO: Use schema fields from the filter dialog to filter the facets
             const schemaFields = ['person.exmatriculationStatus.text', 'person.birthDateTimestamp'];
-            const facetConfigs = this.filterFacetConfigsBySchemaFields(schemaFields);
 
-            console.log('DbpCabinetOpenFilterSettings facetConfigs', facetConfigs);
-            /** @type {CabinetFacets} */
-            const ref = this.cabinetFacetsRef.value;
-            if (facetConfigs.length > 0 && this.search) {
-                const facets = ref.createFacetsFromConfig(facetConfigs);
+            // console.log('DbpCabinetOpenFilterSettings this.facetConfigs before', this.facetConfigs.length);
+            // const facetConfigs = this.filterFacetConfigsBySchemaFields(schemaFields);
+            const facetWidgets = this.filterFacetWidgetsBySchemaFields(schemaFields);
+            // console.log('DbpCabinetOpenFilterSettings this.facetConfigs after', this.facetConfigs.length);
 
-                this.search.removeWidgets(facets);
+            // console.log('DbpCabinetOpenFilterSettings facetConfigs', facetConfigs);
+            console.log('DbpCabinetOpenFilterSettings facetWidgets', facetWidgets);
+
+            // this.search.dispose();
+            // this.search.addWidgets(this.createFacets());
+
+            // /** @type {CabinetFacets} */
+            // const ref = this.cabinetFacetsRef.value;
+            // if (facetConfigs.length > 0 && this.search) {
+            //     // TODO: This causes the creation of empty div containers for the facets in the DOM
+            //     const facets = ref.createFacetsFromConfig(facetConfigs);
+            //
+            //     // TODO: This doesn't seem to remove the facets from the DOM
+            //     this.search.removeWidgets(facets);
+            // }
+
+            if (facetWidgets.length > 0 && this.search) {
+                // We need to remove the actual facet objects, creating the same facet widget
+                // with createFacetsFromConfig to remove is not enough
+                // TODO: There is an empty div container left in the DOM for each removed facet
+                this.search.removeWidgets(facetWidgets);
             }
         });
 
@@ -292,7 +311,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         if (this.facetConfigs.length > 0 && this.search) {
-            search.addWidgets(this.createFacets());
+            this.facetWidgets = this.createFacets();
+            search.addWidgets(this.facetWidgets);
+            console.log('initInstantsearch this.createFacets()', this.facetWidgets);
         }
 
         search.start();
@@ -981,6 +1002,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     filterFacetConfigsBySchemaFields(schemaFields) {
         return this.facetConfigs.filter((item) => schemaFields.includes(item.schemaField));
+    }
+
+    filterFacetWidgetsBySchemaFields(schemaFields) {
+        /** @type {CabinetFacets} */
+        const ref = this.cabinetFacetsRef.value;
+        const facetWidgetHash = ref.getFacetWidgetHash();
+
+        // Return all facet widgets where the key (schemaField) is in schemaFields
+        return schemaFields
+            .map((field) => facetWidgetHash[field])
+            .filter((widget) => widget !== undefined);
     }
 
     async loadModules() {
