@@ -219,7 +219,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     /**
-     * Set facets configurations
+     * Creates a facet widget based on a configuration
      * @param facetsConfigs {array} - configuration for the facets
      */
     createFacetsFromConfig(facetsConfigs) {
@@ -433,7 +433,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     };
 
     /**
-     * Generate facets based on schema name
+     * Generates a facet based on schema name of a configuration
      * @param {object} facetConfig - configuration for the facet
      * @returns {function(): *}
      */
