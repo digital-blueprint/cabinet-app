@@ -42,6 +42,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.searchResultsElement = null;
         this.search = null;
         this.facets = [];
+        // This hash contains the facet widgets by their schema field name, so we can remove them from the search state later
+        this.facetWidgetHash = {};
         this.facetToggleEventContainers = [];
     }
 
@@ -232,18 +234,33 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         facets.push(this.createCurrentRefinements());
         facets.push(this.createClearRefinements());
+        this.facetWidgetHash = {};
 
         facetsConfigs.forEach((facetConfig) => {
             if (Object.hasOwn(facetConfig, 'filter-group')) {
                 this.addFilterHeader(facetConfig['filter-group']);
             } else {
                 const facet = this.generateFacet(facetConfig);
-                facets.push(facet());
+                const facetWidget = facet();
+
+                // Store the facet widget in the hash for later removal from the search state
+                this.facetWidgetHash[facetConfig.schemaField] = facetWidget;
+
+                facets.push(facetWidget);
             }
             facetConfig = null;
         });
 
         return facets;
+    }
+
+    /**
+     * Returns the facet widget hash, which contains the facet widgets by their schema field name
+     * We need this to remove facets from the search state later
+     * @returns {*|{}}
+     */
+    getFacetWidgetHash() {
+        return this.facetWidgetHash;
     }
 
     addFilterHeader(filterGroup) {
@@ -495,7 +512,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     return Array.isArray(facetValues) ? facetValues.length === 0 : false;
                 },
                 // TODO: This function should be called when the panel is disposed, but isn't
-                dispose: () => {
+                dispose({state}) {
                     // Remove the filter item from the DOM when the panel is disposed
                     const filterItem = that._(`#${cssClass}`);
                     console.log('dispose filterItem', filterItem);
