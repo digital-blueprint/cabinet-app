@@ -250,7 +250,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             // this.initInstantsearch();
 
             // TODO: Use schema fields from the filter dialog to filter the facets
-            const schemaFields = ['person.exmatriculationStatus.text', 'person.birthDateTimestamp'];
+            const schemaFields = ['person.studentStatus.text', 'person.birthDateTimestamp'];
 
             // console.log('DbpCabinetOpenFilterSettings this.facetConfigs before', this.facetConfigs.length);
             // const facetConfigs = this.filterFacetConfigsBySchemaFields(schemaFields);
