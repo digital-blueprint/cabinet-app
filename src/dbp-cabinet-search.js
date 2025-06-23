@@ -250,7 +250,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             // this.initInstantsearch();
 
             // TODO: Use schema fields from the filter dialog to filter the facets
-            const schemaFields = ['person.studentStatus.text', 'person.birthDateTimestamp'];
+            const schemaFields = [
+                'person.studentStatus.text',
+                'person.birthDateTimestamp',
+                'person.gender.text',
+            ];
 
             // console.log('DbpCabinetOpenFilterSettings this.facetConfigs before', this.facetConfigs.length);
             // const facetConfigs = this.filterFacetConfigsBySchemaFields(schemaFields);
@@ -276,8 +280,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             if (facetWidgets.length > 0 && this.search) {
                 // We need to remove the actual facet objects, creating the same facet widget
                 // with createFacetsFromConfig to remove is not enough
-                // TODO: There is an empty div container left in the DOM for each removed facet
                 this.search.removeWidgets(facetWidgets);
+
+                /** @type {CabinetFacets} */
+                const ref = this.cabinetFacetsRef.value;
+
+                // Remove the leftover widget divs for the facets
+                ref.removeWidgetDivs(schemaFields);
             }
         });
 

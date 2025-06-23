@@ -733,7 +733,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     /**
-     * Convert schema name to kebabCase for css classes and translation keys
+     * Convert schema name to kebabCase for CSS classes and translation keys
+     * For example, "file.base.createdTimestamp" becomes "file-base-created-timestamp"
      * @param input {string}
      * @returns {string}
      */
@@ -1063,5 +1064,30 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div id="filters-container" class="filters-container"></div>
             </div>
         `;
+    }
+
+    /**
+     * Remove a widget div from the DOM based on the schema field
+     * @param schemaField
+     */
+    removeWidgetDiv(schemaField) {
+        const filterItem = this._(`#${this.schemaNameToKebabCase(schemaField)}`);
+        if (filterItem) {
+            filterItem.remove();
+        }
+    }
+
+    /**
+     * Remove all widget divs from the DOM based on the schema fields
+     * @param {Array} schemaFields - Array of schema field names to remove
+     */
+    removeWidgetDivs(schemaFields) {
+        if (!Array.isArray(schemaFields)) {
+            return;
+        }
+
+        schemaFields.forEach((schemaField) => {
+            this.removeWidgetDiv(schemaField);
+        });
     }
 }
