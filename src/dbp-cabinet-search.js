@@ -256,6 +256,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 'person.studentStatus.text',
                 'person.birthDateTimestamp',
                 'person.gender.text',
+                'file.base.recommendedDeletionTimestamp',
+                'file.base.semester',
             ];
 
             // this.search.dispose();
