@@ -1067,27 +1067,29 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     /**
-     * Remove a widget div from the DOM based on the schema field
+     * Remove a widget div and facetWidgetHash entry from the DOM based on the schema field
      * @param schemaField
      */
-    removeWidgetDiv(schemaField) {
+    removeWidget(schemaField) {
         const filterItem = this._(`#${this.schemaNameToKebabCase(schemaField)}`);
         if (filterItem) {
             filterItem.remove();
         }
+
+        delete this.facetWidgetHash[schemaField];
     }
 
     /**
-     * Remove all widget divs from the DOM based on the schema fields
+     * Remove all widget divs and facetWidgetHash entries from the DOM based on the schema fields
      * @param {Array} schemaFields - Array of schema field names to remove
      */
-    removeWidgetDivs(schemaFields) {
+    removeWidgets(schemaFields) {
         if (!Array.isArray(schemaFields)) {
             return;
         }
 
         schemaFields.forEach((schemaField) => {
-            this.removeWidgetDiv(schemaField);
+            this.removeWidget(schemaField);
         });
     }
 }

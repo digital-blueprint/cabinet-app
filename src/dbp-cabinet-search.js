@@ -286,7 +286,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 const ref = this.cabinetFacetsRef.value;
 
                 // Remove the leftover widget divs for the facets
-                ref.removeWidgetDivs(schemaFields);
+                ref.removeWidgets(schemaFields);
             }
         });
 
