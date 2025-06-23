@@ -248,9 +248,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Listen to DbpCabinetFilterPerson events to filter to a specific person
         this.addEventListener('DbpCabinetOpenFilterSettings', (event) => {
-            // this.initInstantsearch();
+            // Alternately remove and add some facets
             this.filterSettingsState = !this.filterSettingsState;
 
+            // For demonstration purposes, we will use some hardcoded schema fields
             // TODO: Use schema fields from the filter dialog to filter the facets
             const schemaFields = [
                 'person.studentStatus.text',
@@ -259,9 +260,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 'file.base.recommendedDeletionTimestamp',
                 'file.base.semester',
             ];
-
-            // this.search.dispose();
-            // this.search.addWidgets(this.createFacets());
 
             /** @type {CabinetFacets} */
             const ref = this.cabinetFacetsRef.value;
