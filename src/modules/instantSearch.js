@@ -1,8 +1,22 @@
 import {createInstance} from '../i18n.js';
+import {html} from 'lit';
+import {getNationalityDisplayName} from '../objectTypes/nationalityCodes.js';
 
 // Dummy function to make translations
 function t(key) {
     return key;
+}
+
+function translationRenderFunction(elm) {
+    let text = elm._i18n.t(`typesense-schema.${elm.schemaField}.${elm.value}`, elm.value);
+    return html`
+        ${text}
+    `;
+}
+
+function nationalityRenderFunction(elm) {
+    let text = getNationalityDisplayName(elm.value, elm.lang);
+    return html`${text}`;
 }
 
 export default class InstantSearchModule {
@@ -21,6 +35,7 @@ export default class InstantSearchModule {
      *  groupId: A name of the group ID to which the schema field belongs.
      *  schemaField: The typesense schema field to be used for the facet.
      *  schemaFieldType: The type of the facet (e.g., "checkbox", "datepicker").
+     *  renderFunction: A function to render the facet value, which can be used for translations.
      *  facetOptions: An object containing options for the facet.
      *  facet: An object to override facet options.
      *  - facet options: https://www.algolia.com/doc/api-reference/widgets/refinement-list/js/
@@ -38,6 +53,7 @@ export default class InstantSearchModule {
                 schemaField: '@type',
                 schemaFieldType: 'checkbox',
                 name: null,
+                renderFunction: translationRenderFunction,
                 facetOptions: {
                     facet: {
                         searchablePlaceholder: t('cabinet-search.search-placeholder-person-person'),
@@ -316,6 +332,7 @@ export default class InstantSearchModule {
                 groupId: 'file',
                 schemaField: 'file.base.additionalType.key',
                 schemaFieldType: 'checkbox',
+                renderFunction: translationRenderFunction,
                 name: t('cabinet-search.filter-file-base-additional-type-text-title'),
                 facetOptions: {facet: {searchable: false}},
             },
@@ -335,6 +352,7 @@ export default class InstantSearchModule {
                 groupId: 'file',
                 schemaField: 'file.base.fileSource',
                 schemaFieldType: 'checkbox',
+                renderFunction: translationRenderFunction,
                 name: t('cabinet-search.filter-file-base-file-source-title'),
                 facetOptions: {facet: {searchable: false}},
             },
@@ -356,6 +374,7 @@ export default class InstantSearchModule {
                 groupId: 'file',
                 schemaField: 'file.base.isPartOf',
                 schemaFieldType: 'checkbox',
+                renderFunction: translationRenderFunction,
                 name: t('cabinet-search.filter-file-base-is-part-of-title'),
                 facetOptions: {facet: {searchable: false}},
             },
@@ -370,13 +389,15 @@ export default class InstantSearchModule {
                 groupId: 'file',
                 schemaField: 'file.file-cabinet-admissionNotice.decision',
                 schemaFieldType: 'checkbox',
+                renderFunction: translationRenderFunction,
                 name: t('cabinet-search.filter-file-file-cabinet-admission-notice-decision-title'),
                 facetOptions: {facet: {searchable: false}},
             },
             {
                 groupId: 'file',
                 schemaField: 'file.file-cabinet-identityDocument.nationality',
-                schemaFieldType: 'checkbox-nationality',
+                schemaFieldType: 'checkbox',
+                renderFunction: nationalityRenderFunction,
                 name: t(
                     'cabinet-search.filter-file-file-cabinet-identity-document-nationality-title',
                 ),
