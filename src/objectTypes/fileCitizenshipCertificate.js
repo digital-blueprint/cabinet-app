@@ -8,8 +8,14 @@ import {
 } from '../baseObject.js';
 import {getDocumentHit, getCitizenshipCertificate} from './schema.js';
 import {formatDate} from '../utils.js';
-import {getAllNationalityCodes, getNationalityDisplayName} from './nationalityCodes.js';
-import {DbpDateElement, DbpDateView, DbpEnumElement, DbpEnumView} from '@dbp-toolkit/form-elements';
+import {getNationalityDisplayName} from './nationalityCodes.js';
+import {
+    DbpDateElement,
+    DbpDateView,
+    DbpEnumElement,
+    DbpStringView,
+} from '@dbp-toolkit/form-elements';
+import {NationalityInput} from './nationalityInput.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-citizenshipCertificate';
@@ -42,14 +48,6 @@ const DEFAULT_CITIZENSHIP_CERTIFICATE = {
     },
 };
 
-function getNationalityItems(lang) {
-    let nationalityItems = {};
-    getAllNationalityCodes().forEach((code) => {
-        nationalityItems[code] = `${getNationalityDisplayName(code, lang)} (${code})`;
-    });
-    return nationalityItems;
-}
-
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
@@ -62,6 +60,7 @@ class CabinetFormElement extends BaseFormElement {
             ...super.scopedElements,
             'dbp-form-date-element': DbpDateElement,
             'dbp-form-enum-element': DbpEnumElement,
+            'dbp-cabinet-form-nationality-element': NationalityInput,
         };
     }
 
@@ -75,12 +74,12 @@ class CabinetFormElement extends BaseFormElement {
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/citizenshipCertificate_example.json
         return html`
             <form>
-                <dbp-form-enum-element
+                <dbp-cabinet-form-nationality-element
                     subscribe="lang"
                     name="nationality"
                     label=${this._i18n.t('doc-modal-nationality')}
-                    .items=${getNationalityItems(this.lang)}
-                    .value=${citizenshipCertificate.nationality}></dbp-form-enum-element>
+                    .value=${citizenshipCertificate.nationality}
+                    required></dbp-cabinet-form-nationality-element>
 
                 <dbp-form-date-element
                     subscribe="lang"
@@ -177,7 +176,7 @@ class CabinetViewElement extends BaseViewElement {
         return {
             ...super.scopedElements,
             'dbp-form-date-view': DbpDateView,
-            'dbp-form-enum-view': DbpEnumView,
+            'dbp-form-string-view': DbpStringView,
         };
     }
 
@@ -186,13 +185,15 @@ class CabinetViewElement extends BaseViewElement {
         let citizenshipCertificate = getCitizenshipCertificate(hit);
 
         const i18n = this._i18n;
+        let nationalityCode = citizenshipCertificate.nationality;
 
         return html`
-            <dbp-form-enum-view
+            <dbp-form-string-view
                 subscribe="lang"
                 label=${i18n.t('doc-modal-nationality')}
-                .value=${citizenshipCertificate.nationality || ''}
-                .items=${getNationalityItems(this.lang)}></dbp-form-enum-view>
+                .value=${html`
+                    ${getNationalityDisplayName(nationalityCode, this.lang)} (${nationalityCode})
+                `}></dbp-form-string-view>
 
             <dbp-form-date-view
                 subscribe="lang"

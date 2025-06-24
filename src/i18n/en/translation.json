@@ -139,6 +139,10 @@
     "last-modified-documents": "Last modified documents",
     "loading-message": "",
     "nationalities": "Citizenship(s)",
+    "nationality-input": {
+        "invalid-code-format": "Invalid format. Must be 1-3 uppercase letters.",
+        "no-matches-found": "No matches found"
+    },
     "note": "Comment",
     "person": {
         "person-not-found-body": "The requested person could not be found!",

@@ -419,3 +419,13 @@ export function getAllNationalityCodes() {
         Object.keys(nonIsoCodesDisplayNames),
     );
 }
+
+/**
+ * Checks if the provided value is a valid nationality code.
+ * A valid code must be 1 to 3 uppercase letters (A-Z).
+ * @param {string} value - The code to validate.
+ * @returns {boolean} True if the value is a valid code, false otherwise.
+ */
+export function isValidCode(value) {
+    return value.length >= 1 && value.length <= 3 && /^[A-Z]*$/.test(value);
+}

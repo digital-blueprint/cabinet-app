@@ -8,15 +8,14 @@ import {
 } from '../baseObject.js';
 import {getDocumentHit, getIdentityDocument} from './schema.js';
 import {formatDate} from '../utils.js';
-import {getAllNationalityCodes, getNationalityDisplayName} from './nationalityCodes.js';
+import {getNationalityDisplayName} from './nationalityCodes.js';
 import {
     DbpDateElement,
     DbpDateView,
-    DbpEnumElement,
-    DbpEnumView,
     DbpStringElement,
     DbpStringView,
 } from '@dbp-toolkit/form-elements';
+import {NationalityInput} from './nationalityInput.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-identityDocument';
@@ -50,14 +49,6 @@ const DEFAULT_IDENTITY_OCUMENT = {
     },
 };
 
-function getNationalityItems(lang) {
-    let nationalityItems = {};
-    getAllNationalityCodes().forEach((code) => {
-        nationalityItems[code] = `${getNationalityDisplayName(code, lang)} (${code})`;
-    });
-    return nationalityItems;
-}
-
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
@@ -71,7 +62,7 @@ class CabinetFormElement extends BaseFormElement {
         return {
             ...super.scopedElements,
             'dbp-form-string-element': DbpStringElement,
-            'dbp-form-enum-element': DbpEnumElement,
+            'dbp-cabinet-form-nationality-element': NationalityInput,
             'dbp-form-date-element': DbpDateElement,
         };
     }
@@ -94,13 +85,12 @@ class CabinetFormElement extends BaseFormElement {
                     .value=${identityDocument.identifier}
                     required></dbp-form-string-element>
 
-                <dbp-form-enum-element
+                <dbp-cabinet-form-nationality-element
                     subscribe="lang"
                     name="nationality"
                     label=${this._i18n.t('doc-modal-nationality')}
-                    .items=${getNationalityItems(this.lang)}
                     .value=${identityDocument.nationality}
-                    required></dbp-form-enum-element>
+                    required></dbp-cabinet-form-nationality-element>
 
                 <dbp-form-date-element
                     subscribe="lang"
@@ -198,7 +188,6 @@ class CabinetViewElement extends BaseViewElement {
         return {
             ...super.scopedElements,
             'dbp-form-string-view': DbpStringView,
-            'dbp-form-enum-view': DbpEnumView,
             'dbp-form-date-view': DbpDateView,
         };
     }
@@ -206,6 +195,7 @@ class CabinetViewElement extends BaseViewElement {
     _getCustomViewElements() {
         let hit = getDocumentHit(this.data);
         let identityDocument = getIdentityDocument(hit);
+        let nationalityCode = identityDocument.nationality;
 
         return html`
             <dbp-form-string-view
@@ -213,11 +203,12 @@ class CabinetViewElement extends BaseViewElement {
                 label=${this._i18n.t('doc-modal-Identifier')}
                 .value=${identityDocument.identifier || ''}></dbp-form-string-view>
 
-            <dbp-form-enum-view
+            <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-nationality')}
-                .value=${identityDocument.nationality || ''}
-                .items=${getNationalityItems(this.lang)}></dbp-form-enum-view>
+                .value=${html`
+                    ${getNationalityDisplayName(nationalityCode, this.lang)} (${nationalityCode})
+                `}></dbp-form-string-view>
 
             <dbp-form-date-view
                 subscribe="lang"
