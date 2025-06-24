@@ -7,6 +7,7 @@ import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
 import {panel, refinementList} from 'instantsearch.js/es/widgets/index.js';
 import {connectCurrentRefinements, connectClearRefinements} from 'instantsearch.js/es/connectors';
 import {createDateRefinement} from './dbp-cabinet-date-facet.js';
+import {getNationalityDisplayName} from '../objectTypes/nationalityCodes.js';
 
 class FacetLabel extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -33,6 +34,29 @@ class FacetLabel extends ScopedElementsMixin(DBPCabinetLitElement) {
 
 // FIXME: don't register globally
 customElements.define('dbp-cabinet-facet-label', FacetLabel);
+
+class NationalityFacetLabel extends ScopedElementsMixin(DBPCabinetLitElement) {
+    constructor() {
+        super();
+        this.value = '';
+    }
+
+    static get properties() {
+        return {
+            ...super.properties,
+            value: {type: String},
+        };
+    }
+
+    render() {
+        return html`
+            ${getNationalityDisplayName(this.value, this.lang)}
+        `;
+    }
+}
+
+// FIXME: don't register globally
+customElements.define('dbp-cabinet-facet-nationality-label', NationalityFacetLabel);
 
 export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -526,7 +550,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 ...(facetOptions.panel || {}),
             };
 
-            if (schemaFieldType === 'checkbox') {
+            if (schemaFieldType === 'checkbox' || schemaFieldType === 'checkbox-nationality') {
                 const defaultRefinementListOptions = {
                     fieldType: schemaFieldType,
                     container: that._(`#${cssClass}`),
@@ -544,28 +568,59 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                                     </div>
                                 `;
                             }
-                            return html`
-                                <div class="refinement-list-item refinement-list-item--${cssClass}">
-                                    <div class="refinement-list-item-inner">
-                                        <label class="refinement-list-item-checkbox">
-                                            <input
-                                                type="checkbox"
-                                                class="custom-checkbox"
-                                                aria-label="${item.label}"
-                                                value="${item.value}"
-                                                checked=${item.isRefined} />
-                                        </label>
-                                        <dbp-cabinet-facet-label
-                                            ref=${(el) =>
-                                                el && el.setAttribute('subscribe', 'lang')}
-                                            class="refinement-list-item-name"
-                                            title="${item.label}"
-                                            namespace="${schemaField}"
-                                            value="${item.value}"></dbp-cabinet-facet-label>
+
+                            if (schemaFieldType === 'checkbox-nationality') {
+                                return html`
+                                    <div
+                                        class="refinement-list-item refinement-list-item--${cssClass}">
+                                        <div class="refinement-list-item-inner">
+                                            <label class="refinement-list-item-checkbox">
+                                                <input
+                                                    type="checkbox"
+                                                    class="custom-checkbox"
+                                                    aria-label="${item.label}"
+                                                    value="${item.value}"
+                                                    checked=${item.isRefined} />
+                                            </label>
+                                            <dbp-cabinet-facet-nationality-label
+                                                ref=${(el) =>
+                                                    el && el.setAttribute('subscribe', 'lang')}
+                                                class="refinement-list-item-name"
+                                                title="${item.label}"
+                                                value="${item.value}"></dbp-cabinet-facet-nationality-label>
+                                        </div>
+                                        <span class="refinement-list-item-count">
+                                            (${item.count})
+                                        </span>
                                     </div>
-                                    <span class="refinement-list-item-count">(${item.count})</span>
-                                </div>
-                            `;
+                                `;
+                            } else {
+                                return html`
+                                    <div
+                                        class="refinement-list-item refinement-list-item--${cssClass}">
+                                        <div class="refinement-list-item-inner">
+                                            <label class="refinement-list-item-checkbox">
+                                                <input
+                                                    type="checkbox"
+                                                    class="custom-checkbox"
+                                                    aria-label="${item.label}"
+                                                    value="${item.value}"
+                                                    checked=${item.isRefined} />
+                                            </label>
+                                            <dbp-cabinet-facet-label
+                                                ref=${(el) =>
+                                                    el && el.setAttribute('subscribe', 'lang')}
+                                                class="refinement-list-item-name"
+                                                title="${item.label}"
+                                                namespace="${schemaField}"
+                                                value="${item.value}"></dbp-cabinet-facet-label>
+                                        </div>
+                                        <span class="refinement-list-item-count">
+                                            (${item.count})
+                                        </span>
+                                    </div>
+                                `;
+                            }
                         },
                         searchableSubmit() {
                             return null;

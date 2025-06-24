@@ -376,7 +376,7 @@ export default class InstantSearchModule {
             {
                 groupId: 'file',
                 schemaField: 'file.file-cabinet-identityDocument.nationality',
-                schemaFieldType: 'checkbox',
+                schemaFieldType: 'checkbox-nationality',
                 name: t(
                     'cabinet-search.filter-file-file-cabinet-identity-document-nationality-title',
                 ),
