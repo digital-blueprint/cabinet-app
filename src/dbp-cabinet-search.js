@@ -21,6 +21,7 @@ import {TypesenseService, TYPESENSE_COLLECTION} from './services/typesense.js';
 import {updateDatePickersForExternalRefinementChange} from './components/dbp-cabinet-date-facet.js';
 import {BaseObject} from './baseObject.js';
 import {name as pkgName} from '../package.json';
+import {CabinetFilterSettings} from './components/dbp-cabinet-filter-settings.js';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -36,6 +37,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         };
         this.documentViewPersonModalRef = createRef();
         this.documentFileComponentRef = createRef();
+        this.filterSettingsModalRef = createRef();
         this.cabinetFacetsRef = createRef();
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
@@ -63,6 +65,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-cabinet-view-person': CabinetViewPerson,
             'dbp-inline-notification': InlineNotification,
             'dbp-cabinet-facets': CabinetFacets,
+            'dbp-cabinet-filter-settings': CabinetFilterSettings,
         };
     }
 
@@ -248,6 +251,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Listen to DbpCabinetFilterPerson events to filter to a specific person
         this.addEventListener('DbpCabinetOpenFilterSettings', (event) => {
+            /** @type {CabinetFilterSettings} */
+            const filterSettingsModal = this.filterSettingsModalRef.value;
+
+            // TODO: Work in progress
+            filterSettingsModal.open();
+
             // Alternately remove and add some facets
             this.filterSettingsState = !this.filterSettingsState;
 
@@ -994,6 +1003,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     ${ref(this.documentFileComponentRef)}
                     @close="${this.resetRoutingUrlIfNeeded}"
                     subscribe="lang,auth,entry-point-url,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info"></dbp-cabinet-file>
+
+                <dbp-cabinet-filter-settings
+                    ${ref(this.filterSettingsModalRef)}
+                    subscribe="lang,auth,entry-point-url"></dbp-cabinet-view-person>
             </div>
         `;
     }

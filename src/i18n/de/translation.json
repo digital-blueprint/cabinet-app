@@ -119,6 +119,15 @@
         "no-data-available": "Keine Daten verfügbar"
     },
     "family-name": "Nachname",
+    "filter-settings": {
+        "abort": "",
+        "all-filters-hide": "",
+        "all-filters-show": "",
+        "header-settings": "",
+        "modal-close": "",
+        "reset-filter": "",
+        "save-columns": ""
+    },
     "focus-button-name": "Eingrenzen",
     "former-family-name": "Früherer Nachname",
     "gender": "Geschlecht",

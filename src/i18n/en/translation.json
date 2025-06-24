@@ -119,6 +119,15 @@
         "no-data-available": "No data available"
     },
     "family-name": "Surname",
+    "filter-settings": {
+        "abort": "",
+        "all-filters-hide": "",
+        "all-filters-show": "",
+        "header-settings": "",
+        "modal-close": "",
+        "reset-filter": "",
+        "save-columns": ""
+    },
     "focus-button-name": "Focus",
     "former-family-name": "Former family name",
     "gender": "Gender",
