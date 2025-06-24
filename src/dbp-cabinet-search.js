@@ -21,6 +21,7 @@ import {TypesenseService, TYPESENSE_COLLECTION} from './services/typesense.js';
 import {updateDatePickersForExternalRefinementChange} from './components/dbp-cabinet-date-facet.js';
 import {BaseObject} from './baseObject.js';
 import {name as pkgName} from '../package.json';
+import {NationalityInput} from './objectTypes/nationalityInput.js';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -63,6 +64,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-cabinet-view-person': CabinetViewPerson,
             'dbp-inline-notification': InlineNotification,
             'dbp-cabinet-facets': CabinetFacets,
+            'dbp-nationality-input': NationalityInput,
         };
     }
 
@@ -907,6 +909,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('-- Render --');
 
         return html`
+            <dbp-nationality-input></dbp-nationality-input>
             <link rel="stylesheet" href="${algoliaCss}" />
             <div
                 class="control ${classMap({
