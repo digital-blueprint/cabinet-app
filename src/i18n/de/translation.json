@@ -150,6 +150,9 @@
     "personal-Status": "Personenstatus",
     "qualification-study": "Hochschulzugangsform",
     "school-Certificate-Date": "Zeugnisdatum",
+    "search": {
+        "stats": "{{nbHits}} Ergebnisse gefunden in {{processingTimeMS}}ms"
+    },
     "search-cabinet": "Suchen",
     "semester": "Semester",
     "show-deleted-only": "Nur gelöschte anzeigen",

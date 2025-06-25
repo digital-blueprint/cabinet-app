@@ -150,6 +150,9 @@
     "personal-Status": "Personal status",
     "qualification-study": "Study qualification",
     "school-Certificate-Date": "Date of certificate",
+    "search": {
+        "stats": "{{nbHits}} result found in {{processingTimeMS}}ms"
+    },
     "search-cabinet": "Search",
     "semester": "Semester",
     "show-deleted-only": "Show deleted only",
