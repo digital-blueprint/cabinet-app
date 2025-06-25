@@ -8,6 +8,14 @@ import {
 } from '../baseObject.js';
 import {getDocumentHit, getAdmissionNotice} from './schema.js';
 import {formatDate} from '../utils.js';
+import {
+    DbpDateElement,
+    DbpDateView,
+    DbpEnumElement,
+    DbpEnumView,
+    DbpStringElement,
+    DbpStringView,
+} from '@dbp-toolkit/form-elements';
 
 export default class extends BaseObject {
     name = 'file-cabinet-admissionNotice';
@@ -47,6 +55,15 @@ class CabinetFormElement extends BaseFormElement {
             AdmissionNotice: 'Admission Notice',
         };
     };
+
+    static get scopedElements() {
+        return {
+            ...super.scopedElements,
+            'dbp-form-date-element': DbpDateElement,
+            'dbp-form-string-element': DbpStringElement,
+            'dbp-form-enum-element': DbpEnumElement,
+        };
+    }
 
     static getDecisions = () => {
         return {
@@ -169,6 +186,15 @@ class CabinetViewElement extends BaseViewElement {
     constructor() {
         super();
         this.setAdditionalTypes(CabinetFormElement.getAdditionalTypes());
+    }
+
+    static get scopedElements() {
+        return {
+            ...super.scopedElements,
+            'dbp-form-date-view': DbpDateView,
+            'dbp-form-string-view': DbpStringView,
+            'dbp-form-enum-view': DbpEnumView,
+        };
     }
 
     getCustomViewElements() {

@@ -11,6 +11,14 @@ import {
     validateRequiredFields,
 } from '@dbp-toolkit/form-elements/src/utils.js';
 import DBPCabinetLitElement from './dbp-cabinet-lit-element.js';
+import {
+    DbpDateTimeView,
+    DbpDateView,
+    DbpEnumElement,
+    DbpEnumView,
+    DbpStringElement,
+    DbpStringView,
+} from '@dbp-toolkit/form-elements';
 
 export class BaseObject {
     name = 'baseObject';
@@ -97,6 +105,13 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.entryPointUrl = '';
         this.auth = {};
         this.saveButtonEnabled = true;
+    }
+
+    static get scopedElements() {
+        return {
+            'dbp-form-string-element': DbpStringElement,
+            'dbp-form-enum-element': DbpEnumElement,
+        };
     }
 
     _getData() {
@@ -401,7 +416,12 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     static get scopedElements() {
-        return {};
+        return {
+            'dbp-form-string-view': DbpStringView,
+            'dbp-form-enum-view': DbpEnumView,
+            'dbp-form-date-view': DbpDateView,
+            'dbp-form-datetime-view': DbpDateTimeView,
+        };
     }
 
     static get properties() {
@@ -451,7 +471,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.additionalTypes = types;
     };
 
-    getCommonViewElements = (data) => {
+    _getCommonViewElements = (data) => {
         const fileData = this.data?.file || {};
         const baseData = fileData.base || {};
 
@@ -529,7 +549,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 label=${this._i18n.t('doc-modal-document-type')}
                 .value=${baseData.additionalType?.key || ''}
                 .items=${this.additionalTypes}></dbp-form-enum-view>
-            ${this.getCustomViewElements()} ${this.getCommonViewElements()}
+            ${this.getCustomViewElements()} ${this._getCommonViewElements()}
         `;
     }
 }

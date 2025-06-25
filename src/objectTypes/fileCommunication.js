@@ -8,6 +8,12 @@ import {
 } from '../baseObject.js';
 import {getDocumentHit, getCommunication} from './schema.js';
 import {formatDate} from '../utils.js';
+import {
+    DbpDateTimeElement,
+    DbpDateTimeView,
+    DbpStringElement,
+    DbpStringView,
+} from '@dbp-toolkit/form-elements';
 
 export default class extends BaseObject {
     name = 'file-cabinet-communication';
@@ -50,6 +56,14 @@ class CabinetFormElement extends BaseFormElement {
             Communication: 'Communication',
         };
     };
+
+    static get scopedElements() {
+        return {
+            ...super.scopedElements,
+            'dbp-form-string-element': DbpStringElement,
+            'dbp-form-datetime-element': DbpDateTimeElement,
+        };
+    }
 
     render() {
         console.log('-- Render CabinetFormElement --');
@@ -171,6 +185,14 @@ class CabinetViewElement extends BaseViewElement {
     constructor() {
         super();
         this.setAdditionalTypes(CabinetFormElement.getAdditionalTypes());
+    }
+
+    static get scopedElements() {
+        return {
+            ...super.scopedElements,
+            'dbp-form-string-view': DbpStringView,
+            'dbp-form-datetime-view': DbpDateTimeView,
+        };
     }
 
     getCustomViewElements() {

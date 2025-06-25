@@ -1,6 +1,6 @@
 import {css, html} from 'lit';
 import {ref, createRef} from 'lit/directives/ref.js';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {IconButton, ScopedElementsMixin} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal} from '@dbp-toolkit/common';
@@ -16,6 +16,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
             'dbp-icon': Icon,
             'dbp-modal': Modal,
             'dbp-button': Button,
+            'dbp-icon-button': IconButton,
         };
     }
 

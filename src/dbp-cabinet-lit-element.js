@@ -1,6 +1,5 @@
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
-import {IconButton, AuthMixin, LangMixin} from '@dbp-toolkit/common';
-import {Translated} from '@dbp-toolkit/common';
+import {AuthMixin, LangMixin} from '@dbp-toolkit/common';
 import {createInstance} from './i18n';
 
 export default class DBPCabinetLitElement extends LangMixin(
@@ -10,13 +9,6 @@ export default class DBPCabinetLitElement extends LangMixin(
     constructor() {
         super();
         this.entryPointUrl = '';
-    }
-
-    static get scopedElements() {
-        return {
-            'dbp-icon-button': IconButton,
-            'dbp-translated': Translated,
-        };
     }
 
     static get properties() {

@@ -9,6 +9,7 @@ import {
 import {getDocumentHit, getCitizenshipCertificate} from './schema.js';
 import {formatDate} from '../utils.js';
 import {getAllNationalityCodes, getNationalityDisplayName} from './nationalityCodes.js';
+import {DbpDateElement, DbpDateView, DbpEnumElement, DbpEnumView} from '@dbp-toolkit/form-elements';
 
 export default class extends BaseObject {
     name = 'file-cabinet-citizenshipCertificate';
@@ -55,6 +56,14 @@ class CabinetFormElement extends BaseFormElement {
             CitizenshipCertificate: 'Citizenship Certificate',
         };
     };
+
+    static get scopedElements() {
+        return {
+            ...super.scopedElements,
+            'dbp-form-date-element': DbpDateElement,
+            'dbp-form-enum-element': DbpEnumElement,
+        };
+    }
 
     render() {
         console.log('-- Render CabinetFormElement --');
@@ -162,6 +171,14 @@ class CabinetViewElement extends BaseViewElement {
     constructor() {
         super();
         this.setAdditionalTypes(CabinetFormElement.getAdditionalTypes());
+    }
+
+    static get scopedElements() {
+        return {
+            ...super.scopedElements,
+            'dbp-form-date-view': DbpDateView,
+            'dbp-form-enum-view': DbpEnumView,
+        };
     }
 
     getCustomViewElements() {

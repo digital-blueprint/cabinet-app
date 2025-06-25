@@ -8,6 +8,7 @@ import {
 } from '../baseObject.js';
 import {getDocumentHit, getMinimalSchema} from './schema.js';
 import {formatDate} from '../utils.js';
+import {DbpDateElement, DbpDateView} from '@dbp-toolkit/form-elements';
 
 export default class extends BaseObject {
     name = 'file-cabinet-minimalSchema';
@@ -45,6 +46,13 @@ class CabinetFormElement extends BaseFormElement {
             BirthCertificate: 'Birth Certificate',
             MaritalStatusCertificate: 'Marital Status Certificate',
             SupervisionAcceptance: 'Supervision Acceptance',
+        };
+    }
+
+    static get scopedElements() {
+        return {
+            ...super.scopedElements,
+            'dbp-form-date-element': DbpDateElement,
         };
     }
 
@@ -148,6 +156,13 @@ class CabinetViewElement extends BaseViewElement {
     constructor() {
         super();
         this.setAdditionalTypes(CabinetFormElement.getAdditionalTypes());
+    }
+
+    static get scopedElements() {
+        return {
+            ...super.scopedElements,
+            'dbp-form-date-view': DbpDateView,
+        };
     }
 
     getCustomViewElements() {

@@ -9,6 +9,14 @@ import {
 import {getDocumentHit, getIdentityDocument} from './schema.js';
 import {formatDate} from '../utils.js';
 import {getAllNationalityCodes, getNationalityDisplayName} from './nationalityCodes.js';
+import {
+    DbpDateElement,
+    DbpDateView,
+    DbpEnumElement,
+    DbpEnumView,
+    DbpStringElement,
+    DbpStringView,
+} from '@dbp-toolkit/form-elements';
 
 export default class extends BaseObject {
     name = 'file-cabinet-identityDocument';
@@ -56,6 +64,15 @@ class CabinetFormElement extends BaseFormElement {
             DriversLicence: 'Drivers Licence',
             Passport: 'Passport',
             PersonalLicence: 'Personal Licence',
+        };
+    }
+
+    static get scopedElements() {
+        return {
+            ...super.scopedElements,
+            'dbp-form-string-element': DbpStringElement,
+            'dbp-form-enum-element': DbpEnumElement,
+            'dbp-form-date-element': DbpDateElement,
         };
     }
 
@@ -175,6 +192,15 @@ class CabinetViewElement extends BaseViewElement {
     constructor() {
         super();
         this.setAdditionalTypes(CabinetFormElement.getAdditionalTypes());
+    }
+
+    static get scopedElements() {
+        return {
+            ...super.scopedElements,
+            'dbp-form-string-view': DbpStringView,
+            'dbp-form-enum-view': DbpEnumView,
+            'dbp-form-date-view': DbpDateView,
+        };
     }
 
     getCustomViewElements() {
