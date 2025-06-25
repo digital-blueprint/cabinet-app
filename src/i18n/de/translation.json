@@ -120,13 +120,11 @@
     },
     "family-name": "Nachname",
     "filter-settings": {
-        "abort": "",
-        "all-filters-hide": "",
-        "all-filters-show": "",
-        "header-settings": "",
-        "modal-close": "",
-        "reset-filter": "",
-        "save-columns": ""
+        "abort": "Abbrechen",
+        "all-filters-hide": "Alle verstecken",
+        "all-filters-show": "Alle anzeigen",
+        "reset-filter": "Alle zurücksetzen",
+        "save": "Speichern"
     },
     "focus-button-name": "Eingrenzen",
     "former-family-name": "Früherer Nachname",

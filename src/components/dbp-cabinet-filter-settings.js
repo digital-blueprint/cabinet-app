@@ -49,11 +49,42 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS(false)}
 
-            #filter-modal .content {
+            #filter-modal .modal-title {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            #filter-modal .modal-title h3 {
+                color: var(--dbp-override-accent);
+                padding-top: 0.5rem;
+                font-weight: 300;
+                font-size: 1.5em;
+                margin: 0;
+            }
+
+            #filter-modal .modal-header h3 {
+                font-size: 1.5em;
+            }
+
+            #filter-modal .modal-content {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 10px 10px;
                 grid-auto-flow: row;
+            }
+
+            #filter-modal .modal-footer {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .facet-filter-icon {
+                color: var(--dbp-override-accent);
+                font-size: 2em;
             }
         `;
     }
@@ -77,74 +108,67 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 min-height="80%"
                 subscribe="lang"
                 @dbp-modal-closed="${this.onCloseModal}">
-                <div slot="header" class="modal-header">
-                    pre-header-text
-                    <dbp-icon-button
-                        title="${i18n.t('filter-settings.modal-close')}"
-                        aria-label="${i18n.t('filter-settings.modal-close')}"
-                        class="modal-close"
-                        icon-name="close"
-                        @click="${() => {
-                            this.close();
-                        }}"></dbp-icon-button>
-                    <p id="submission-modal-title">
-                        ${i18n.t('filter-settings.header-settings')} text
-                    </p>
-                    <dbp-icon name="user" class="person-modal-icon"></dbp-icon>
-                    <h3 class="person-modal-title">Filter Settings</h3>
-                    post-header-text
+                <div slot="title" class="modal-title">
+                    <dbp-icon
+                        class="facet-filter-icon"
+                        title="${i18n.t('cabinet-search.facet-settings')}"
+                        aria-label="${i18n.t('cabinet-search.facet-settings')}"
+                        name="cog"></dbp-icon>
+                    <h3>Filter configuration</h3>
                 </div>
-                <div slot="content">Content for filter settings goes here.</div>
+                <div slot="header" class="modal-header">
+                    <h3>Person properties</h3>
+                </div>
+                <div slot="content" class="modal-content">
+                    Content for filter settings goes here.
+                </div>
                 <div slot="footer" class="modal-footer">
-                    footer-text
-                    <div class="modal-footer-btn">
-                        <div>
-                            <button
-                                title="${i18n.t('filter-settings.abort')}"
-                                class="check-btn button is-secondary"
-                                @click="${() => {
-                                    this.closeColumnOptionsModal();
-                                }}">
-                                ${i18n.t('filter-settings.abort')}
-                            </button>
-                        </div>
-                        <div>
-                            <button
-                                title="${i18n.t('filter-settings.reset-filter')}"
-                                class="check-btn button is-secondary"
-                                @click="${() => {
-                                    this.resetSettings();
-                                }}">
-                                ${i18n.t('filter-settings.reset-filter')}
-                            </button>
-                            <button
-                                title="${i18n.t('filter-settings.all-filters-hide')}"
-                                class="check-btn button is-secondary"
-                                @click="${() => {
-                                    this.toggleAllColumns('hide');
-                                }}">
-                                ${i18n.t('filter-settings.all-filters-hide')}
-                            </button>
-                            <button
-                                title="${i18n.t('filter-settings.all-filters-show')}"
-                                class="check-btn button is-secondary"
-                                @click="${() => {
-                                    this.toggleAllColumns('show');
-                                }}">
-                                ${i18n.t('filter-settings.all-filters-show')}
-                            </button>
-                        </div>
-                        <button
-                            class="check-btn button is-primary"
-                            id="check"
+                    <div>
+                        <dbp-button
+                            title="${i18n.t('filter-settings.abort')}"
+                            class="check-btn button is-secondary"
                             @click="${() => {
-                                this.updateSubmissionTable();
                                 this.closeColumnOptionsModal();
-                                this.setSubmissionTableSettings();
                             }}">
-                            ${i18n.t('filter-settings.save-columns')}
-                        </button>
+                            ${i18n.t('filter-settings.abort')}
+                        </dbp-button>
                     </div>
+                    <div>
+                        <dbp-button
+                            title="${i18n.t('filter-settings.reset-filter')}"
+                            class="check-btn button is-secondary"
+                            @click="${() => {
+                                this.resetSettings();
+                            }}">
+                            ${i18n.t('filter-settings.reset-filter')}
+                        </dbp-button>
+                        <dbp-button
+                            title="${i18n.t('filter-settings.all-filters-hide')}"
+                            class="check-btn button is-secondary"
+                            @click="${() => {
+                                this.toggleAllColumns('hide');
+                            }}">
+                            ${i18n.t('filter-settings.all-filters-hide')}
+                        </dbp-button>
+                        <dbp-button
+                            title="${i18n.t('filter-settings.all-filters-show')}"
+                            class="check-btn button is-secondary"
+                            @click="${() => {
+                                this.toggleAllColumns('show');
+                            }}">
+                            ${i18n.t('filter-settings.all-filters-show')}
+                        </dbp-button>
+                    </div>
+                    <dbp-button
+                        class="check-btn button is-primary"
+                        id="check"
+                        @click="${() => {
+                            this.updateSubmissionTable();
+                            this.closeColumnOptionsModal();
+                            this.setSubmissionTableSettings();
+                        }}">
+                        ${i18n.t('filter-settings.save')}
+                    </dbp-button>
                 </div>
             </dbp-modal>
         `;

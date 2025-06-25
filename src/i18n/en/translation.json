@@ -120,13 +120,11 @@
     },
     "family-name": "Surname",
     "filter-settings": {
-        "abort": "",
-        "all-filters-hide": "",
-        "all-filters-show": "",
-        "header-settings": "",
-        "modal-close": "",
-        "reset-filter": "",
-        "save-columns": ""
+        "abort": "Cancel",
+        "all-filters-hide": "Hide all",
+        "all-filters-show": "Show all",
+        "reset-filter": "Default",
+        "save": "Save settings"
     },
     "focus-button-name": "Focus",
     "former-family-name": "Former family name",
