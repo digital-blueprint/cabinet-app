@@ -24,6 +24,34 @@ import {name as pkgName} from '../package.json';
 import {CabinetFilterSettings} from './components/dbp-cabinet-filter-settings.js';
 import InstantSearchModule from './modules/instantSearch.js';
 
+class StatsWidget extends DBPCabinetLitElement {
+    constructor() {
+        super();
+        this.data = null;
+    }
+
+    static get properties() {
+        return {
+            ...super.properties,
+            data: {type: Object},
+        };
+    }
+
+    render() {
+        if (this.data !== null) {
+            return html`
+                ${this._i18n.t('search.stats', {
+                    nbHits: this.data.nbHits,
+                    processingTimeMS: this.data.processingTimeMS,
+                })}
+            `;
+        }
+        return html``;
+    }
+}
+
+customElements.define('dbp-cabinet-stats-widget', StatsWidget);
+
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
@@ -404,7 +432,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             dbp-cabinet-facets {
-                grid-row-start: 2;
+                grid-area: sidebar;
             }
 
             .results {
@@ -549,7 +577,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         'empty header'
                         'sub1 sub2'
                         'main main';
-                    gap: 0 1em;
+                    gap: 0;
                 }
 
                 .ais-Hits-list {
@@ -605,13 +633,39 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     padding-top: 0.5em;
                 }
             }
-            @media (min-width: 769px) {
+            @media (min-width: 1100px) {
                 #filter-header-button {
                     display: none;
                 }
             }
 
-            @media (max-width: 1280px) and (min-width: 768px) {
+            @media (min-width: 769px) and (max-width: 1099px) {
+                #filter-header-button {
+                    display: none;
+                }
+
+                .dbp-cabinet-facets {
+                }
+
+                .filter {
+                    min-width: 24em;
+                    max-width: max-content;
+                }
+
+                .result-container {
+                    gap: 0.5em;
+                    grid-template-columns: auto;
+                }
+
+                .hit-person-row {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    grid-template-rows: auto auto;
+                }
+
+                .hits-person-footer {
+                    justify-content: normal;
+                }
             }
 
             @media (min-width: 380px) and (max-width: 489px) {
@@ -886,6 +940,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     createStats() {
         return stats({
             container: this._('#result-count'),
+            templates: {
+                text: (data, {html}) => {
+                    return html`
+                        <dbp-cabinet-stats-widget
+                            data=${data}
+                            ref=${(el) =>
+                                el &&
+                                el.setAttribute('subscribe', 'lang')}></dbp-cabinet-stats-widget>
+                    `;
+                },
+            },
         });
     }
 
