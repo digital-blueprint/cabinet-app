@@ -22,6 +22,7 @@ import {updateDatePickersForExternalRefinementChange} from './components/dbp-cab
 import {BaseObject} from './baseObject.js';
 import {name as pkgName} from '../package.json';
 import {CabinetFilterSettings} from './components/dbp-cabinet-filter-settings.js';
+import InstantSearchModule from './modules/instantSearch.js';
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {

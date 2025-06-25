@@ -16,7 +16,9 @@ function translationRenderFunction(elm) {
 
 function nationalityRenderFunction(elm) {
     let text = getNationalityDisplayName(elm.value, elm.lang);
-    return html`${text}`;
+    return html`
+        ${text}
+    `;
 }
 
 export default class InstantSearchModule {
