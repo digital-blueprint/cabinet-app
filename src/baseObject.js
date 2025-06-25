@@ -462,10 +462,9 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     // Needs to be implemented in the derived class
-    // For some reason, this method is not called in the derived class if it is implemented here
-    // getCustomViewElements = () => {
-    //     return html`Please implement getCustomViewElements() in your view element`;
-    // };
+    _getCustomViewElements(){
+         return html`Please implement _getCustomViewElements() in your view element`;
+    };
 
     setAdditionalTypes = (types) => {
         this.additionalTypes = types;
@@ -549,7 +548,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 label=${this._i18n.t('doc-modal-document-type')}
                 .value=${baseData.additionalType?.key || ''}
                 .items=${this.additionalTypes}></dbp-form-enum-view>
-            ${this.getCustomViewElements()} ${this._getCommonViewElements()}
+            ${this._getCustomViewElements()} ${this._getCommonViewElements()}
         `;
     }
 }

@@ -195,7 +195,7 @@ class CabinetViewElement extends BaseViewElement {
         };
     }
 
-    getCustomViewElements() {
+    _getCustomViewElements() {
         let hit = getDocumentHit(this.data);
         let communication = getCommunication(hit);
 

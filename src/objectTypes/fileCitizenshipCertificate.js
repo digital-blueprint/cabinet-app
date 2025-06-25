@@ -181,7 +181,7 @@ class CabinetViewElement extends BaseViewElement {
         };
     }
 
-    getCustomViewElements() {
+    _getCustomViewElements() {
         let hit = getDocumentHit(this.data);
         let citizenshipCertificate = getCitizenshipCertificate(hit);
 
