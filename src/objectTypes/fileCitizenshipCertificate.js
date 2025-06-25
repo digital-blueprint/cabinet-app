@@ -51,11 +51,11 @@ function getNationalityItems(lang) {
 }
 
 class CabinetFormElement extends BaseFormElement {
-    static getAdditionalTypes = () => {
+    static getAdditionalTypes() {
         return {
             CitizenshipCertificate: 'Citizenship Certificate',
         };
-    };
+    }
 
     static get scopedElements() {
         return {

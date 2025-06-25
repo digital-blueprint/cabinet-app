@@ -51,11 +51,11 @@ const DEFAULT_COMMUNICATION = {
 };
 
 class CabinetFormElement extends BaseFormElement {
-    static getAdditionalTypes = () => {
+    static getAdditionalTypes() {
         return {
             Communication: 'Communication',
         };
-    };
+    }
 
     static get scopedElements() {
         return {

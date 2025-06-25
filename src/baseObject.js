@@ -131,7 +131,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         return {};
     }
 
-    getCommonFormElements = () => {
+    getCommonFormElements() {
         let hit = getDocumentHit(this._getData() ?? DEFAULT_FILE_COMMON);
         let fileCommon = hit.file.base;
         const additionalType = this.additionalType || fileCommon.additionalType.key;
@@ -189,7 +189,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
             <input type="hidden" name="additionalType" value="${additionalType}" />
             ${this.getButtonRowHtml()}
         `;
-    };
+    }
 
     async validateForm() {
         const formElement = this.shadowRoot.querySelector('form');
@@ -462,15 +462,17 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     // Needs to be implemented in the derived class
-    _getCustomViewElements(){
-         return html`Please implement _getCustomViewElements() in your view element`;
-    };
+    _getCustomViewElements() {
+        return html`
+            Please implement _getCustomViewElements() in your view element
+        `;
+    }
 
-    setAdditionalTypes = (types) => {
+    setAdditionalTypes(types) {
         this.additionalTypes = types;
-    };
+    }
 
-    _getCommonViewElements = (data) => {
+    _getCommonViewElements(data) {
         const fileData = this.data?.file || {};
         const baseData = fileData.base || {};
 
@@ -523,9 +525,9 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                     ? ''
                     : new Date(baseData.modifiedTimestamp * 1000)}></dbp-form-datetime-view>
         `;
-    };
+    }
 
-    getStudyFieldNameForKey = (key) => {
+    getStudyFieldNameForKey(key) {
         const personData = this.data?.person || {};
         const studies = [{key: 'none', name: 'Unspecified'}, ...(personData.studies || [])];
 
@@ -536,7 +538,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         return `Unknown study field (${key})`;
-    };
+    }
 
     render() {
         const fileData = this.data?.file || {};

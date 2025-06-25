@@ -337,15 +337,17 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
     }
 
-    createCurrentRefinements = () => {
-        const customCurrentRefinements = connectCurrentRefinements(this.renderCurrentRefinements);
+    createCurrentRefinements() {
+        const customCurrentRefinements = connectCurrentRefinements(
+            this.renderCurrentRefinements.bind(this),
+        );
 
         return customCurrentRefinements({
             container: this.searchResultsElement.querySelector('#current-filters'),
         });
-    };
+    }
 
-    renderCurrentRefinements = (renderOptions) => {
+    renderCurrentRefinements(renderOptions) {
         const i18n = this._i18n;
         const {items, refine, widgetParams} = renderOptions;
         const container = widgetParams.container;
@@ -417,9 +419,9 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             `,
             container,
         );
-    };
+    }
 
-    renderClearRefinements = (renderOptions, isFirstRender) => {
+    renderClearRefinements(renderOptions, isFirstRender) {
         const i18n = this._i18n;
         const {canRefine, refine} = renderOptions;
 
@@ -444,15 +446,17 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.searchResultsElement
             .querySelector('.clear-refinement-container')
             .querySelector('button').disabled = !canRefine;
-    };
+    }
 
-    createClearRefinements = () => {
-        const customClearRefinements = connectClearRefinements(this.renderClearRefinements);
+    createClearRefinements() {
+        const customClearRefinements = connectClearRefinements(
+            this.renderClearRefinements.bind(this),
+        );
 
         return customClearRefinements({
             container: this.searchResultsElement.querySelector('#clear-filters'),
         });
-    };
+    }
 
     /**
      * Generates a facet based on schema name of a configuration

@@ -50,11 +50,11 @@ const DEFAULT_ADMISSION_NOTICE = {
 };
 
 class CabinetFormElement extends BaseFormElement {
-    static getAdditionalTypes = () => {
+    static getAdditionalTypes() {
         return {
             AdmissionNotice: 'Admission Notice',
         };
-    };
+    }
 
     static get scopedElements() {
         return {
@@ -65,13 +65,13 @@ class CabinetFormElement extends BaseFormElement {
         };
     }
 
-    static getDecisions = () => {
+    static getDecisions() {
         return {
             rejected: 'Rejected',
             refused: 'Refused',
             granted: 'Granted',
         };
-    };
+    }
 
     render() {
         console.log('-- Render CabinetFormElement --');
