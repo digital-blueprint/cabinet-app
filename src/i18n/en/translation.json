@@ -185,7 +185,6 @@
         },
         "status-label": "Last synchronized"
     },
-    "sync-hit": "",
     "tuitionStatus": "Status of tuition fees",
     "typesense-schema": {
         "@type": {

@@ -185,7 +185,6 @@
         },
         "status-label": "Zuletzt synchronisiert"
     },
-    "sync-hit": "",
     "tuitionStatus": "Beitragsstatus",
     "typesense-schema": {
         "@type": {

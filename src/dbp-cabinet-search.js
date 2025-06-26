@@ -843,17 +843,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                             ? html`
                                   <div class="hit-person-row">
                                       <div class="hit-person-last-modify-content">
-                                          ${i18n.t('sync-hit')}:${'\u00A0'}${Intl.DateTimeFormat(
-                                              'de',
-                                              {
-                                                  year: 'numeric',
-                                                  month: '2-digit',
-                                                  day: '2-digit',
-                                                  hour: '2-digit',
-                                                  minute: '2-digit',
-                                                  second: '2-digit',
-                                              },
-                                          ).format(hit.person.syncTimestamp * 1000)}
+                                          ${i18n.t(
+                                              'sync.status-label',
+                                          )}:${'\u00A0'}${Intl.DateTimeFormat('de', {
+                                              year: 'numeric',
+                                              month: '2-digit',
+                                              day: '2-digit',
+                                              hour: '2-digit',
+                                              minute: '2-digit',
+                                              second: '2-digit',
+                                          }).format(hit.person.syncTimestamp * 1000)}
                                           <br />
                                       </div>
                                       <footer class="hits-person-footer">
