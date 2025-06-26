@@ -710,7 +710,6 @@ class CabinetViewElement extends BaseViewElement {
                 <li>
                     <ul class="study-info">
                         <div class="study-key-group">
-                            <li class="study-row"><b><span> ${displayValue(study.key)}</span></b></li>
                             <li class="study-row"><b><span> ${displayValue(study.name)}</span></b></li>
                         </div>
                         <li class="study-row"><b>${i18n.t('semester')}</b><span>${displayValue(study.semester)}</span></li>
