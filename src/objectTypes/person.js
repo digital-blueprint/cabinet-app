@@ -3,6 +3,8 @@ import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from '../b
 import {renderFieldWithHighlight} from '../utils';
 import {formatDate} from '../utils.js';
 import {MiniSpinner, Icon} from '@dbp-toolkit/common';
+import {send} from '@dbp-toolkit/common/notification';
+import {Notification} from '@dbp-toolkit/notification';
 
 import {getPersonHit} from './schema.js';
 import {CabinetApi} from '../api.js';
@@ -295,7 +297,7 @@ class CabinetViewElement extends BaseViewElement {
     static get properties() {
         return {
             ...super.properties,
-            _syncing: {type: Boolean},
+            _syncing: {type: Boolean, state: true},
         };
     }
 
@@ -304,6 +306,7 @@ class CabinetViewElement extends BaseViewElement {
             ...super.scopedElements,
             'dbp-mini-spinner': MiniSpinner,
             'dbp-icon': Icon,
+            'dbp-notification': Notification,
         };
     }
 
@@ -563,6 +566,23 @@ class CabinetViewElement extends BaseViewElement {
         try {
             let api = new CabinetApi(this.entryPointUrl, this.auth.token);
             this.data = await api.syncTypesenseDocument(this.data);
+            send({
+                summary: this._i18n.t('sync.notification.success.title'),
+                body: this._i18n.t('sync.notification.success.body'),
+                type: 'success',
+                targetNotificationId: 'dbp-modal-notification-person',
+                replaceId: '-',
+                timeout: 3,
+            });
+        } catch (error) {
+            console.error('Error during sync:', error);
+            send({
+                summary: this._i18n.t('sync.notification.error.title'),
+                body: this._i18n.t('sync.notification.error.body', {error: error.message}),
+                type: 'danger',
+                targetNotificationId: 'dbp-modal-notification-person',
+                replaceId: '-',
+            });
         } finally {
             this._syncing = false;
         }
@@ -585,9 +605,14 @@ class CabinetViewElement extends BaseViewElement {
         };
 
         return html`
+        <dbp-notification
+            id="dbp-modal-notification-person"
+            inline
+            lang="${this.lang}"></dbp-notification>
+
         <div class="header-button-container">
         <div class="last-sync-info">
-        ${i18n.t('sync-hit')}:&nbsp;${Intl.DateTimeFormat('de', {
+        ${i18n.t('sync.status-label')}:&nbsp;${Intl.DateTimeFormat('de', {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',
@@ -605,8 +630,8 @@ class CabinetViewElement extends BaseViewElement {
                     : html`
                           <a href="#" @click=${this._onSync}>
                               <dbp-icon
-                                  title="${i18n.t('sync-student-data')}"
-                                  aria-label="${i18n.t('sync-student-data')}"
+                                  title="${i18n.t('sync.button-title')}"
+                                  aria-label="${i18n.t('sync.button-title')}"
                                   name="cloud-sync"></dbp-icon>
                           </a>
                       `

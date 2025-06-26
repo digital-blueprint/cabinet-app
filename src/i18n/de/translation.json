@@ -170,8 +170,21 @@
     "student-Status": "Hörerstatus",
     "Study-information": "Studiumbezogene Informationen",
     "studyAddress": "Studienadresse",
-    "sync-hit": "Zuletzt synchronisiert",
-    "sync-student-data": "Daten synchronisieren",
+    "sync": {
+        "button-title": "Studierendendaten synchronisieren",
+        "notification": {
+            "error": {
+                "body": "Bei der Synchronisation der Studierendendaten ist ein Fehler aufgetreten: {{error}}",
+                "title": "Synchronisation der Studierendendaten fehlgeschlagen"
+            },
+            "success": {
+                "body": "Die Studierendendaten wurden erfolgreich synchronisiert.",
+                "title": "Studierendendaten synchronisiert"
+            }
+        },
+        "status-label": "Zuletzt synchronisiert"
+    },
+    "sync-hit": "",
     "tuitionStatus": "Beitragsstatus",
     "typesense-schema": {
         "@type": {

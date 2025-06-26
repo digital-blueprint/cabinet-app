@@ -170,8 +170,21 @@
     "student-Status": "Student status",
     "Study-information": "Study information",
     "studyAddress": "Study address",
-    "sync-hit": "Last synchronized",
-    "sync-student-data": "Synchronize student data",
+    "sync": {
+        "button-title": "Synchronize student data",
+        "notification": {
+            "error": {
+                "body": "An error occurred during student data synchronization: {{error}}",
+                "title": "Student data synchronization failed"
+            },
+            "success": {
+                "body": "The student data has been successfully synchronized.",
+                "title": "Student data synchronized"
+            }
+        },
+        "status-label": "Last synchronized"
+    },
+    "sync-hit": "",
     "tuitionStatus": "Status of tuition fees",
     "typesense-schema": {
         "@type": {
