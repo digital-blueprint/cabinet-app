@@ -284,7 +284,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             const filterSettingsModal = this.filterSettingsModalRef.value;
 
             // TODO: Work in progress
-            filterSettingsModal.open();
+            filterSettingsModal.open(this.facetConfigs);
 
             // Alternately remove and add some facets
             this.filterSettingsState = !this.filterSettingsState;

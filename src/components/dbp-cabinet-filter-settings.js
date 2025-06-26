@@ -9,6 +9,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
     constructor() {
         super();
         this.modalRef = createRef();
+        this.facetConfigs = [];
     }
 
     static get scopedElements() {
@@ -23,10 +24,14 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
     static get properties() {
         return {
             ...super.properties,
+            facetConfigs: {type: Array, attribute: false},
         };
     }
 
-    async open() {
+    async open(facetConfigs) {
+        console.log('open facetConfigs', facetConfigs);
+        this.facetConfigs = facetConfigs;
+
         /**
          * @type {Modal}
          */
@@ -86,6 +91,59 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 color: var(--dbp-override-accent);
                 font-size: 2em;
             }
+
+            .headers {
+                max-width: 100%;
+                margin: 0;
+                list-style-type: none;
+                padding: 0;
+                display: grid;
+                width: 100%;
+            }
+
+            .header-field {
+                align-items: center;
+                height: 50px;
+                border: 1px solid var(--dbp-muted);
+                display: flex;
+                margin-bottom: 5px;
+                width: 100%;
+            }
+
+            .header-button {
+                justify-content: center;
+                display: flex;
+                align-items: center;
+                height: 50px;
+                width: 50px;
+                min-width: 50px;
+                flex-grow: 0;
+                cursor: pointer;
+            }
+
+            .header-button dbp-icon {
+                font-size: 1.3em;
+                top: 0;
+            }
+
+            .header-button.hidden,
+            .extended-menu.hidden {
+                display: none !important;
+            }
+
+            .header-title {
+                flex-grow: 2;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                padding-left: 5px;
+                text-align: left;
+            }
+
+            .header-order {
+                background-color: var(--dbp-muted-surface);
+                color: var(--dbp-on-muted-surface);
+                font-weight: bold;
+            }
         `;
     }
 
@@ -99,12 +157,13 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         // TODO: Work in progress
         return html`
             <dbp-modal
+                style="--dbp-modal-width: 600px;"
                 ${ref(this.modalRef)}
                 id="filter-modal"
                 modal-id="filter-modal"
-                width="80%"
+                width="600px"
                 height="80%"
-                min-width="80%"
+                min-width="300px"
                 min-height="80%"
                 subscribe="lang"
                 @dbp-modal-closed="${this.onCloseModal}">
@@ -119,9 +178,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 <div slot="header" class="modal-header">
                     <h3>Person properties</h3>
                 </div>
-                <div slot="content" class="modal-content">
-                    Content for filter settings goes here.
-                </div>
+                <div slot="content" class="modal-content">${this.renderFacetList()}</div>
                 <div slot="footer" class="modal-footer">
                     <div>
                         <dbp-button
@@ -171,6 +228,40 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                     </dbp-button>
                 </div>
             </dbp-modal>
+        `;
+    }
+
+    renderFacetListItem(item, key) {
+        console.log('renderFacetListItem key', key);
+        console.log('renderFacetListItem item', item);
+        return html`
+            <li class="header-fields ${item.schemaField}" data-index="${key}">
+                <div class="header-field">
+                    <span class="header-button header-order">${key + 1}</span>
+                    <span class="header-title"><strong>${item.schemaField}</strong></span>
+                    <dbp-icon-button
+                        icon-name="source_icons_eye-empty"
+                        class="header-visibility-icon"
+                        @click="${() => {
+                            // TODO: Set icon to source_icons_eye-off
+                            this.changeVisibility(key);
+                        }}"></dbp-icon-button>
+                </div>
+            </li>
+        `;
+    }
+
+    renderFacetList() {
+        if (!this.facetConfigs || this.facetConfigs.length === 0) {
+            return html`
+                <p>No facets configured.</p>
+            `;
+        }
+
+        return html`
+            <ul class="headers">
+                ${this.facetConfigs.map(this.renderFacetListItem)}
+            </ul>
         `;
     }
 
