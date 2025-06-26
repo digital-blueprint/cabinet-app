@@ -944,6 +944,15 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 gap: 5px;
                 justify-content: flex-end;
             }
+
+            #document-modal .delete-button {
+                border: unset;
+            }
+
+            #document-modal .edit-button {
+                border: unset;
+            }
+
             #document-modal .doc-type-edit-view {
                 padding: 0.14rem 1rem 0.14rem 0.14rem;
                 width: calc(100% - 0.9em);
@@ -1120,6 +1129,37 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                     ?disabled="${!id}">
                                 ${i18n.t('buttons.replace-document')} ${this.getMiniSpinnerHtml(id)}
                             </button>
+                            <button
+                                    @click="${this.deleteFile}"
+                                    ?disabled="${!file}"
+                                    class="${classMap({
+                                        hidden:
+                                            this.mode === CabinetFile.Modes.ADD ||
+                                            this.mode === CabinetFile.Modes.EDIT ||
+                                            hit.base?.isScheduledForDeletion,
+                                    })} button is-secondary delete-button">
+                                <dbp-icon
+                                        title="${i18n.t('doc-modal-delete-document')}"
+                                        aria-label="${i18n.t('doc-modal-delete-document')}"
+                                        name="trash"></dbp-icon>
+                                ${this.getMiniSpinnerHtml(
+                                    this.state !== CabinetFile.States.LOADING_FILE,
+                                )}
+                            </button>
+                            <button
+                                    @click="${this.editFile}"
+                                    ?disabled="${!file}"
+                                    class="${classMap({
+                                        hidden: this.mode !== CabinetFile.Modes.VIEW,
+                                    })} button is-secondary edit-button">
+                                <dbp-icon
+                                        title="${i18n.t('doc-modal-edit-document')}"
+                                        aria-label="${i18n.t('doc-modal-edit-document')}"
+                                        name="edit-pencil"></dbp-icon>
+                                ${this.getMiniSpinnerHtml(
+                                    this.state !== CabinetFile.States.LOADING_FILE,
+                                )}
+                            </button>
                             <select
                                     id="export-select"
                                     class="dropdown-menu ${classMap({
@@ -1138,37 +1178,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             </option>
                             <option value="all">${i18n.t('doc-modal-all')}</option>
                             </select>
-                            <button
-                                    @click="${this.editFile}"
-                                    ?disabled="${!file}"
-                                    class="${classMap({
-                                        hidden: this.mode !== CabinetFile.Modes.VIEW,
-                                    })} button is-primary">
-                                <dbp-icon
-                                        title="${i18n.t('doc-modal-edit-document')}"
-                                        aria-label="${i18n.t('doc-modal-edit-document')}"
-                                        name="edit-pencil"></dbp-icon>
-                                ${this.getMiniSpinnerHtml(
-                                    this.state !== CabinetFile.States.LOADING_FILE,
-                                )}
-                            </button>
-                            <button
-                                    @click="${this.deleteFile}"
-                                    ?disabled="${!file}"
-                                    class="${classMap({
-                                        hidden:
-                                            this.mode === CabinetFile.Modes.ADD ||
-                                            this.mode === CabinetFile.Modes.EDIT ||
-                                            hit.base?.isScheduledForDeletion,
-                                    })} button is-primary">
-                                <dbp-icon
-                                        title="${i18n.t('doc-modal-delete-document')}"
-                                        aria-label="${i18n.t('doc-modal-delete-document')}"
-                                        name="trash"></dbp-icon>
-                                ${this.getMiniSpinnerHtml(
-                                    this.state !== CabinetFile.States.LOADING_FILE,
-                                )}
-                            </button>
                             <button
                                     @click="${this.undeleteFile}"
                                     ?disabled="${!file}"
