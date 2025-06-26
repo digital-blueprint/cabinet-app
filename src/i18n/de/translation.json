@@ -153,7 +153,8 @@
     "qualification-study": "Hochschulzugangsform",
     "school-Certificate-Date": "Zeugnisdatum",
     "search": {
-        "stats": "{{nbHits}} Ergebnisse gefunden in {{processingTimeMS}}ms"
+        "stats_one": "{{count}} Ergebnis gefunden in {{processingTimeMS}}ms",
+        "stats_other": "{{count}} Ergebnisse gefunden in {{processingTimeMS}}ms"
     },
     "search-cabinet": "Suchen",
     "semester": "Semester",

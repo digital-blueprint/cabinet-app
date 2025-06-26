@@ -41,7 +41,7 @@ class StatsWidget extends DBPCabinetLitElement {
         if (this.data !== null) {
             return html`
                 ${this._i18n.t('search.stats', {
-                    nbHits: this.data.nbHits,
+                    count: this.data.nbHits,
                     processingTimeMS: this.data.processingTimeMS,
                 })}
             `;
