@@ -884,7 +884,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                                               ${buttonLabel}
                                           </button>
                                           <button
-                                              class="button is-primary"
+                                              class="button is-secondary"
                                               onclick=${() => {
                                                   this.dispatchEvent(
                                                       new CustomEvent('DbpCabinetDocumentView', {
