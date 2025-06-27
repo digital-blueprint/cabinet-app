@@ -1088,6 +1088,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 id="document-modal"
                 modal-id="document-modal"
                 subscribe="lang">
+
+                <div slot="title" class="modal-title doc-title">
+                    <dbp-icon name="files" class="view-modal-icon"></dbp-icon>
+                    <h1>${headline}</h1>
+                </div>
                 <div slot="header" class="header">
                     <div class="modal-notification">
                         <dbp-notification
@@ -1099,10 +1104,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div slot="content" class="content">
                     <div class="desc-stat">
                         <div class="description">
-                        <div class="doc-title">
-                            <dbp-icon name="files" class="view-modal-icon"></dbp-icon>
-                            <h1>${headline}</h1>
-                        </div>
                         <div class="student-info">
                             ${person.fullName}
                             <br />
@@ -1185,7 +1186,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                         hidden:
                                             this.mode === CabinetFile.Modes.ADD ||
                                             !hit.base?.isScheduledForDeletion,
-                                    })} button is-primary">
+                                    })} button is-secondary">
                                 Undelete
                                 ${this.getMiniSpinnerHtml(
                                     this.state !== CabinetFile.States.LOADING_FILE,
