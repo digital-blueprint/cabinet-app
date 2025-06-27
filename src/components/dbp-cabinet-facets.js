@@ -926,10 +926,12 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .filter-type-datepicker .ais-Panel-body {
                 padding: 1em 0;
+                width: max-content;
             }
 
             .filter-type-datepicker .ais-Panel-body > div {
                 display: flex;
+                flex-direction: column;
                 gap: 1.5em;
                 justify-content: center;
             }
