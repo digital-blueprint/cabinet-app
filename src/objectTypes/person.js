@@ -208,6 +208,29 @@ class CabinetHitElement extends BaseHitElement {
                     align-items: center;
                 }
             }
+
+            @media (min-width: 769px) and (max-width: 1099px) {
+                .hit-person-info-header {
+                    display: grid;
+                    grid-template-columns: auto auto;
+                    grid-template-rows: auto auto;
+                }
+                .right-column {
+                    grid-column: 1;
+                    grid-row: 1;
+                }
+
+                .person-name {
+                    grid-column: 1;
+                    grid-row: 1;
+                    padding-left: 2em;
+                }
+
+                .person-birthdate {
+                    grid-column: 1;
+                    grid-row: 2;
+                }
+            }
         `;
     }
 
@@ -549,7 +572,7 @@ class CabinetViewElement extends BaseViewElement {
                 }
             }
 
-            @media (min-width: 769px) and (max-width: 1100px) {
+            @media (min-width: 769px) and (max-width: 1099px) {
                 .info-container {
                     flex-direction: column;
                 }
