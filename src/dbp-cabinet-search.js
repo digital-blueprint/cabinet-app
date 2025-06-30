@@ -494,6 +494,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 height: 1.7em;
             }
 
+            .delete-result {
+                display: flex;
+                justify-content: space-between;
+            }
+
             .ais-Hits-list {
                 display: grid;
                 grid-template-columns: repeat(1, minmax(300px, 1fr));
@@ -622,8 +627,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 #result-count {
-                    grid-area: header;
-                    text-align: end;
                 }
 
                 .refinement-container {
@@ -669,6 +672,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             @media (min-width: 380px) and (max-width: 489px) {
+                .delete-result {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                }
+
+                .deleted-only {
+                    justify-content: flex-start;
+                    padding-right: 0.4em;
+                }
+
                 #result-count {
                     padding-right: 0.4em;
                 }
@@ -1038,6 +1052,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </div>
                     <div id="sort-by" class="sort-widget"></div>
                 </div>
+                <div class="delete-result">
                 <div class="deleted-only">
                     <input
                         type="checkbox"
@@ -1045,8 +1060,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         @click="${this.toggleShowDeleted}" />
                     <label for="deleted-checkbox">${i18n.t('show-deleted-only')}</label>
                 </div>
+                <div id="result-count"></div>
+                </div>
                 <div class="result-container">
-                    <div id="result-count"></div>
                     <dbp-cabinet-facets
                         class="dbp-cabinet-facets"
                         ${ref(this.cabinetFacetsRef)}
