@@ -122,7 +122,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
                 --dbp-modal-min-width: min(75vw, 85vw);
             }
 
-            #view-modal .modal-header {
+            #view-modal .modal-title-person {
                 display: flex;
                 align-items: center;
             }
@@ -187,9 +187,11 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
                 min-height="80%"
                 subscribe="lang"
                 @dbp-modal-closed="${this.onClosePersonModal}">
-                <div slot="header" class="modal-header">
+                <div slot="title" class="modal-title modal-title-person">
                     <dbp-icon name="user" class="person-modal-icon"></dbp-icon>
                     <h3 class="person-modal-title">${hit.person.fullName}</h3>
+                </div>
+                <div slot="header">
                 </div>
                 <div slot="content">
                     <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang,auth,entry-point-url" .data=${hit}></${unsafeStatic(tagName)}>
