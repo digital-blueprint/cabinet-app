@@ -153,12 +153,11 @@ class CabinetHitElement extends BaseHitElement {
                     </div>
                     <div class="text-container">
                         <div class="ais-doc-Hits-header-items header-item1">
-                            ${hit.person.fullName}
+                            ${hit.person.fullName}&nbsp${formatDate(hit.person.birthDate)}
                         </div>
                         &nbsp
                         <div class="ais-doc-Hits-header-items header-item2">
-                            ${formatDate(hit.person.birthDate)}&nbsp(${hit.person
-                                .studId}&nbsp|&nbsp${hit.person.stPersonNr})
+                            ${hit.person.studId}&nbsp|&nbsp${hit.person.stPersonNr}
                         </div>
                     </div>
                 </header>

@@ -45,8 +45,8 @@ export class BaseObject {
 export const getCommonStyles = () => css`
     .ais-doc-Hits-header {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
+        justify-content: flex-start;
         padding: 15px 5px;
         margin-bottom: calc(7px + 1vh);
         flex-wrap: wrap;
@@ -54,8 +54,14 @@ export const getCommonStyles = () => css`
 
     .text-container {
         display: flex;
+        justify-content: space-between;
+        align-items: center;
         color: var(--dbp-override-content);
         flex-shrink: 1;
+    }
+
+    .header-item1 {
+        font-weight: bold;
     }
 
     .ais-doc-title-wrapper {
