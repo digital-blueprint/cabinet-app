@@ -1,6 +1,6 @@
 // noinspection CssUnusedSymbol,JSUnresolvedReference
 
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
 import {css, html, render} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
@@ -8,8 +8,10 @@ import {panel, refinementList} from 'instantsearch.js/es/widgets/index.js';
 import {connectCurrentRefinements, connectClearRefinements} from 'instantsearch.js/es/connectors';
 import {createDateRefinement} from './dbp-cabinet-date-facet.js';
 import {preactRefReplaceElement} from '../utils.js';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element.js';
+import {createInstance} from '../i18n.js';
 
-class FacetLabel extends ScopedElementsMixin(DBPCabinetLitElement) {
+class FacetLabel extends LangMixin(DBPLitElement, createInstance) {
     constructor() {
         super();
         this.schemaField = '';

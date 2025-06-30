@@ -1,6 +1,6 @@
 import {css, html} from 'lit';
 import {ref, createRef} from 'lit/directives/ref.js';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from './dbp-cabinet-lit-element';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -24,8 +24,10 @@ import {name as pkgName} from '../package.json';
 import {CabinetFilterSettings} from './components/dbp-cabinet-filter-settings.js';
 import InstantSearchModule from './modules/instantSearch.js';
 import {preactRefReplaceElement} from './utils';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import {createInstance} from './i18n';
 
-class StatsWidget extends DBPCabinetLitElement {
+class StatsWidget extends LangMixin(DBPLitElement, createInstance) {
     constructor() {
         super();
         this.data = null;
