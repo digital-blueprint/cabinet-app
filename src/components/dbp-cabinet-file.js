@@ -949,6 +949,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 border: unset;
             }
 
+            #document-modal .undo-button {
+                border: unset;
+            }
+
             #document-modal .edit-button {
                 border: unset;
             }
@@ -1131,6 +1135,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 ${i18n.t('buttons.replace-document')} ${this.getMiniSpinnerHtml(id)}
                             </button>
                             <button
+                                    @click="${this.editFile}"
+                                    ?disabled="${!file}"
+                                    class="${classMap({
+                                        hidden: this.mode !== CabinetFile.Modes.VIEW,
+                                    })} button is-secondary edit-button">
+                                <dbp-icon
+                                        title="${i18n.t('doc-modal-edit-document')}"
+                                        aria-label="${i18n.t('doc-modal-edit-document')}"
+                                        name="edit-pencil"></dbp-icon>
+                                ${this.getMiniSpinnerHtml(
+                                    this.state !== CabinetFile.States.LOADING_FILE,
+                                )}
+                            </button>
+                            <button
                                     @click="${this.deleteFile}"
                                     ?disabled="${!file}"
                                     class="${classMap({
@@ -1148,15 +1166,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 )}
                             </button>
                             <button
-                                    @click="${this.editFile}"
+                                    @click="${this.undeleteFile}"
                                     ?disabled="${!file}"
                                     class="${classMap({
-                                        hidden: this.mode !== CabinetFile.Modes.VIEW,
-                                    })} button is-secondary edit-button">
+                                        hidden:
+                                            this.mode === CabinetFile.Modes.ADD ||
+                                            !hit.base?.isScheduledForDeletion,
+                                    })} button is-secondary undo-button">
                                 <dbp-icon
-                                        title="${i18n.t('doc-modal-edit-document')}"
-                                        aria-label="${i18n.t('doc-modal-edit-document')}"
-                                        name="edit-pencil"></dbp-icon>
+                                        title="${i18n.t('doc-modal-delete-document')}"
+                                        aria-label="${i18n.t('doc-modal-delete-document')}"
+                                        name="undo"></dbp-icon>
                                 ${this.getMiniSpinnerHtml(
                                     this.state !== CabinetFile.States.LOADING_FILE,
                                 )}
@@ -1179,19 +1199,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             </option>
                             <option value="all">${i18n.t('doc-modal-all')}</option>
                             </select>
-                            <button
-                                    @click="${this.undeleteFile}"
-                                    ?disabled="${!file}"
-                                    class="${classMap({
-                                        hidden:
-                                            this.mode === CabinetFile.Modes.ADD ||
-                                            !hit.base?.isScheduledForDeletion,
-                                    })} button is-secondary">
-                                Undelete
-                                ${this.getMiniSpinnerHtml(
-                                    this.state !== CabinetFile.States.LOADING_FILE,
-                                )}
-                            </button>
                         </div>
                     </div>
                     </div>   
