@@ -2,18 +2,6 @@ import * as commonUtils from '@dbp-toolkit/common/utils';
 import {name as pkgName} from './../package.json';
 
 /**
- * Returns a function that sets a specified attribute on a DOM element.
- * This is useful because Preact sets attributes as properties by default.
- * @param {string} name - The name of the attribute to set.
- * @param {string} value - The value to assign to the attribute.
- */
-export const preactRefSetAttribute = (name, value) => {
-    return (el) => {
-        el && el.setAttribute(name, value);
-    };
-};
-
-/**
  * Returns a function that replaces a DOM element with a specified replacement element.
  * @param {HTMLElement} replacementElement - The element to replace the target element with.
  */
