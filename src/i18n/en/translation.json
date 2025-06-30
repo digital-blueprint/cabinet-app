@@ -153,8 +153,8 @@
     "qualification-study": "Study qualification",
     "school-Certificate-Date": "Date of certificate",
     "search": {
-        "stats_one": "{{count}} result found in {{processingTimeMS}}ms",
-        "stats_other": "{{count}} results found in {{processingTimeMS}}ms"
+        "stats_one": "~{{count}} result found in {{processingTimeMS}}ms",
+        "stats_other": "~{{count}} results found in {{processingTimeMS}}ms"
     },
     "search-cabinet": "Search",
     "semester": "Semester",
