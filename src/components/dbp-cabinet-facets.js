@@ -36,9 +36,6 @@ class FacetLabel extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 }
 
-// FIXME: don't register globally
-customElements.define('dbp-cabinet-facet-label', FacetLabel);
-
 export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
@@ -77,6 +74,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     static get scopedElements() {
         return {
             ...super.scopedElements,
+            'dbp-cabinet-facet-label': FacetLabel,
         };
     }
 
@@ -488,6 +486,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         filterItem.classList.add(`filter--${cssClass}`);
         filterItem.classList.add(`filter-type-${cssTypeClass}`);
         this._(`#${groupId}`).appendChild(filterItem);
+        let cabinetFacets = this;
 
         return function () {
             const defaultPanelOptions = {
@@ -554,6 +553,15 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 `;
                             }
 
+                            let facetLabel =
+                                cabinetFacets.createScopedElement('dbp-cabinet-facet-label');
+                            facetLabel.setAttribute('schemaField', schemaField);
+                            facetLabel.setAttribute('value', item.value);
+                            facetLabel.renderFunction = facetConfig.renderFunction;
+                            facetLabel.setAttribute('subscribe', 'lang');
+                            facetLabel.setAttribute('title', item.label);
+                            facetLabel.setAttribute('class', 'refinement-list-item-name');
+
                             return html`
                                 <div class="refinement-list-item refinement-list-item--${cssClass}">
                                     <div class="refinement-list-item-inner">
@@ -565,14 +573,19 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                 value="${item.value}"
                                                 checked=${item.isRefined} />
                                         </label>
-                                        <dbp-cabinet-facet-label
-                                            ref=${(el) =>
-                                                el && el.setAttribute('subscribe', 'lang')}
-                                            class="refinement-list-item-name"
-                                            title="${item.label}"
-                                            schemaField="${schemaField}"
-                                            renderFunction="${facetConfig.renderFunction ?? null}"
-                                            value="${item.value}"></dbp-cabinet-facet-label>
+                                        <span
+                                            ref=${(container) => {
+                                                if (
+                                                    container &&
+                                                    container.parentNode &&
+                                                    !facetLabel.parentNode
+                                                ) {
+                                                    container.parentNode.replaceChild(
+                                                        facetLabel,
+                                                        container,
+                                                    );
+                                                }
+                                            }}></span>
                                     </div>
                                     <span class="refinement-list-item-count">(${item.count})</span>
                                 </div>
