@@ -13,7 +13,7 @@ import instantsearch from 'instantsearch.js';
 import DbpTypesenseInstantSearchAdapter from './dbp-typesense-instantsearch-adapter.js';
 import {hits, searchBox, sortBy, stats, pagination} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
-import {pascalToKebab, preactRefSetAttribute} from './utils';
+import {pascalToKebab} from './utils';
 import {CabinetFile} from './components/dbp-cabinet-file.js';
 import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
@@ -23,6 +23,7 @@ import {BaseObject} from './baseObject.js';
 import {name as pkgName} from '../package.json';
 import {CabinetFilterSettings} from './components/dbp-cabinet-filter-settings.js';
 import InstantSearchModule from './modules/instantSearch.js';
+import {preactRefReplaceElement} from './utils';
 
 class StatsWidget extends DBPCabinetLitElement {
     constructor() {
@@ -49,8 +50,6 @@ class StatsWidget extends DBPCabinetLitElement {
         return html``;
     }
 }
-
-customElements.define('dbp-cabinet-stats-widget', StatsWidget);
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -95,6 +94,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-inline-notification': InlineNotification,
             'dbp-cabinet-facets': CabinetFacets,
             'dbp-cabinet-filter-settings': CabinetFilterSettings,
+            'dbp-cabinet-stats-widget': StatsWidget,
         };
     }
 
@@ -937,17 +937,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     createStats() {
+        let statsWidget = this.createScopedElement('dbp-cabinet-stats-widget');
+        statsWidget.setAttribute('subscribe', 'lang');
+
         return stats({
             container: this._('#result-count'),
             templates: {
                 text: (data, {html}) => {
+                    statsWidget.data = data;
                     return html`
-                        <dbp-cabinet-stats-widget
-                            data=${data}
-                            ref=${preactRefSetAttribute(
-                                'subscribe',
-                                'lang',
-                            )}></dbp-cabinet-stats-widget>
+                        <span ref=${preactRefReplaceElement(statsWidget)}></span>
                     `;
                 },
             },
