@@ -30,7 +30,12 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
     async open(facetConfigs) {
         console.log('open facetConfigs', facetConfigs);
-        this.facetConfigs = facetConfigs;
+        // Filter facetConfigs to only include items with groupId 'person' or 'file', don't include 'person.person'
+        this.facetConfigs = (facetConfigs || []).filter(
+            (item) =>
+                (item.groupId === 'person' || item.groupId === 'file') &&
+                item.schemaField !== 'person.person',
+        );
 
         /**
          * @type {Modal}
