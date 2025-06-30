@@ -30,12 +30,19 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
     async open(facetConfigs) {
         console.log('open facetConfigs', facetConfigs);
+
         // Filter facetConfigs to only include items with groupId 'person' or 'file', don't include 'person.person'
-        this.facetConfigs = (facetConfigs || []).filter(
+        facetConfigs = (facetConfigs || []).filter(
             (item) =>
                 (item.groupId === 'person' || item.groupId === 'file') &&
                 item.schemaField !== 'person.person',
         );
+
+        // Translate the names of the facetConfigs
+        this.facetConfigs = facetConfigs.map((item) => {
+            item.name = this._i18n.t(item.name);
+            return item;
+        });
 
         /**
          * @type {Modal}
@@ -243,7 +250,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
             <li class="header-fields ${item.schemaField}" data-index="${key}">
                 <div class="header-field">
                     <span class="header-button header-order">${key + 1}</span>
-                    <span class="header-title"><strong>${item.schemaField}</strong></span>
+                    <span class="header-title"><strong>${item.name}</strong></span>
                     <dbp-icon-button
                         icon-name="source_icons_eye-empty"
                         class="header-visibility-icon"
