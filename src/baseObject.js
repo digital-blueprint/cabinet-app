@@ -1,4 +1,4 @@
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, Icon} from '@dbp-toolkit/common';
 import {css, html} from 'lit';
 import '@dbp-toolkit/form-elements';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -346,7 +346,9 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     static get scopedElements() {
-        return {};
+        return {
+            'dbp-icon': Icon,
+        };
     }
 
     static get properties() {
