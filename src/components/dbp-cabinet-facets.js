@@ -7,6 +7,7 @@ import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
 import {panel, refinementList} from 'instantsearch.js/es/widgets/index.js';
 import {connectCurrentRefinements, connectClearRefinements} from 'instantsearch.js/es/connectors';
 import {createDateRefinement} from './dbp-cabinet-date-facet.js';
+import {preactRefReplaceElement} from '../utils.js';
 
 class FacetLabel extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -573,19 +574,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                 value="${item.value}"
                                                 checked=${item.isRefined} />
                                         </label>
-                                        <span
-                                            ref=${(container) => {
-                                                if (
-                                                    container &&
-                                                    container.parentNode &&
-                                                    !facetLabel.parentNode
-                                                ) {
-                                                    container.parentNode.replaceChild(
-                                                        facetLabel,
-                                                        container,
-                                                    );
-                                                }
-                                            }}></span>
+                                        <span ref=${preactRefReplaceElement(facetLabel)}></span>
                                     </div>
                                     <span class="refinement-list-item-count">(${item.count})</span>
                                 </div>

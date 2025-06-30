@@ -13,7 +13,7 @@ import instantsearch from 'instantsearch.js';
 import DbpTypesenseInstantSearchAdapter from './dbp-typesense-instantsearch-adapter.js';
 import {hits, searchBox, sortBy, stats, pagination} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
-import {pascalToKebab} from './utils';
+import {pascalToKebab, preactRefSetAttribute} from './utils';
 import {CabinetFile} from './components/dbp-cabinet-file.js';
 import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
@@ -944,9 +944,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     return html`
                         <dbp-cabinet-stats-widget
                             data=${data}
-                            ref=${(el) =>
-                                el &&
-                                el.setAttribute('subscribe', 'lang')}></dbp-cabinet-stats-widget>
+                            ref=${preactRefSetAttribute(
+                                'subscribe',
+                                'lang',
+                            )}></dbp-cabinet-stats-widget>
                     `;
                 },
             },
