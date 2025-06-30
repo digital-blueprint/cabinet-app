@@ -23,30 +23,4 @@ export default class DBPCabinetLitElement extends LangMixin(
             nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
         };
     }
-
-    // This will be called after login
-    loginCallback() {
-        if (!this._initialized) {
-            console.log('loginCallback');
-        }
-    }
-
-    /**
-     * Send a fetch to given url with given options
-     * @param url
-     * @param options
-     * @returns {object} response (error or result)
-     */
-    async httpGetAsync(url, options) {
-        let response = await fetch(url, options)
-            .then((result) => {
-                if (!result.ok) throw result;
-                return result;
-            })
-            .catch((error) => {
-                return error;
-            });
-
-        return response;
-    }
 }
