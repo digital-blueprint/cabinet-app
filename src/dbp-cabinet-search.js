@@ -113,12 +113,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
-                case 'lang':
-                    // Refresh the search after switching the language to update hits with new language
-                    if (this.search) {
-                        this.search.refresh();
-                    }
-                    break;
                 case 'auth':
                     // Update the Typesense Instantsearch adapter configuration with the new bearer token
                     if (this.typesenseInstantsearchAdapter) {
