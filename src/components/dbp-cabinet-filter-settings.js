@@ -32,17 +32,11 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         console.log('open facetConfigs', facetConfigs);
 
         // Filter facetConfigs to only include items with groupId 'person' or 'file', don't include 'person.person'
-        facetConfigs = (facetConfigs || []).filter(
+        this.facetConfigs = (facetConfigs || []).filter(
             (item) =>
                 (item.groupId === 'person' || item.groupId === 'file') &&
                 item.schemaField !== 'person.person',
         );
-
-        // Translate the names of the facetConfigs
-        this.facetConfigs = facetConfigs.map((item) => {
-            item.name = this._i18n.t(item.name);
-            return item;
-        });
 
         /**
          * @type {Modal}
@@ -244,13 +238,15 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
     }
 
     renderFacetListItem(item, key) {
+        const i18n = this._i18n;
         console.log('renderFacetListItem key', key);
         console.log('renderFacetListItem item', item);
+
         return html`
             <li class="header-fields ${item.schemaField}" data-index="${key}">
                 <div class="header-field">
                     <span class="header-button header-order">${key + 1}</span>
-                    <span class="header-title"><strong>${item.name}</strong></span>
+                    <span class="header-title"><strong>${i18n.t(item.name)}</strong></span>
                     <dbp-icon-button
                         icon-name="source_icons_eye-empty"
                         class="header-visibility-icon"
@@ -272,7 +268,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
         return html`
             <ul class="headers">
-                ${this.facetConfigs.map(this.renderFacetListItem)}
+                ${this.facetConfigs.map(this.renderFacetListItem.bind(this))}
             </ul>
         `;
     }
