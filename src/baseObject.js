@@ -58,6 +58,7 @@ export const getCommonStyles = () => css`
         align-items: center;
         color: var(--dbp-override-content);
         flex-shrink: 1;
+        padding-top: 0.5em;
     }
 
     .header-item1 {
