@@ -78,9 +78,9 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
             #filter-modal .modal-content {
                 display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 10px 10px;
+                gap: 10px;
                 grid-auto-flow: row;
+                margin-right: 5px;
             }
 
             #filter-modal .modal-content h3 {
@@ -164,7 +164,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         // TODO: Work in progress
         return html`
             <dbp-modal
-                style="--dbp-modal-width: 600px;"
                 ${ref(this.modalRef)}
                 id="filter-modal"
                 modal-id="filter-modal"
