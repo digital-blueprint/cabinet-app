@@ -174,6 +174,24 @@ class CabinetHitElement extends BaseHitElement {
                 padding-top: 1em;
             }
 
+            .hit-person-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .hit-person-last-modify-content {
+                flex: 1;
+                color: var(--dbp-override-content);
+            }
+
+            .hits-person-footer {
+                display: grid;
+                grid-template-columns: repeat(3, auto); /* auto adjusts to button widths */
+                gap: 5px;
+                justify-content: end;
+            }
+
             @media (max-width: 768px) {
                 .hit-person-info-header {
                     display: flex;
@@ -207,6 +225,16 @@ class CabinetHitElement extends BaseHitElement {
                     display: inline-flex;
                     align-items: center;
                 }
+
+                .hit-person-row {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    grid-template-rows: auto auto;
+                }
+
+                .hits-person-footer {
+                    justify-content: normal;
+                }
             }
 
             @media (min-width: 769px) and (max-width: 1099px) {
@@ -230,6 +258,41 @@ class CabinetHitElement extends BaseHitElement {
                     grid-column: 1;
                     grid-row: 2;
                 }
+
+                .hit-person-row {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    grid-template-rows: auto auto;
+                }
+
+                .hits-person-footer {
+                    justify-content: normal;
+                }
+            }
+
+            @media (min-width: 380px) and (max-width: 489px) {
+                .hits-person-footer {
+                    display: grid;
+                    grid-template-columns: auto auto;
+                    grid-template-rows: auto auto;
+                    gap: 0.5em;
+                    align-items: center;
+                }
+
+                .hits-person-footer button:nth-child(1) {
+                    grid-column: 1 / span 2;
+                    grid-row: 1;
+                }
+
+                .hits-person-footer button:nth-child(2) {
+                    grid-column: 1;
+                    grid-row: 2;
+                }
+
+                .hits-person-footer button:nth-child(3) {
+                    grid-column: 2;
+                    grid-row: 2;
+                }
             }
         `;
     }
@@ -250,6 +313,9 @@ class CabinetHitElement extends BaseHitElement {
         const maxStudies = 3;
         const displayedStudies = studies.slice(0, maxStudies);
         const extraCount = sortedStudies.length - maxStudies;
+        const focusButtonLabel = this.data.isFiltered
+            ? i18n.t('unselect-button-name')
+            : i18n.t('focus-button-name');
         return html`
             <header class="ais-Hits-header">
                 <div class="hit-person-info-header">
@@ -307,6 +373,61 @@ class CabinetHitElement extends BaseHitElement {
                           `}
                 </div>
             </main>
+
+            <div class="hit-person-row">
+                <div class="hit-person-last-modify-content">
+                    ${i18n.t('sync.status-label')}:${'\u00A0'}${Intl.DateTimeFormat('de', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                    }).format(hit.person.syncTimestamp * 1000)}
+                    <br />
+                </div>
+                <footer class="hits-person-footer">
+                    <button
+                        class="button"
+                        @click=${() => {
+                            this.dispatchEvent(
+                                new CustomEvent('DbpCabinetDocumentAdd', {
+                                    detail: {hit: hit},
+                                    bubbles: true,
+                                    composed: true,
+                                }),
+                            );
+                        }}>
+                        ${i18n.t('buttons.add.documents')}
+                    </button>
+                    <button
+                        class="button"
+                        @click="${(event) => {
+                            this.dispatchEvent(
+                                new CustomEvent('DbpCabinetFilterPerson', {
+                                    detail: {person: hit.person.person},
+                                    bubbles: true,
+                                    composed: true,
+                                }),
+                            );
+                        }}">
+                        ${focusButtonLabel}
+                    </button>
+                    <button
+                        class="button is-secondary"
+                        @click=${() => {
+                            this.dispatchEvent(
+                                new CustomEvent('DbpCabinetDocumentView', {
+                                    detail: {hit: hit},
+                                    bubbles: true,
+                                    composed: true,
+                                }),
+                            );
+                        }}>
+                        ${i18n.t('buttons.view')}
+                    </button>
+                </footer>
+            </div>
         `;
     }
 }

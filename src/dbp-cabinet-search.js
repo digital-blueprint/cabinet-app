@@ -520,24 +520,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 justify-content: space-between;
             }
 
-            .hit-person-row {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-            }
-
-            .hit-person-last-modify-content {
-                flex: 1;
-                color: var(--dbp-override-content);
-            }
-
-            .hits-person-footer {
-                display: grid;
-                grid-template-columns: repeat(3, auto); /* auto adjusts to button widths */
-                gap: 5px;
-                justify-content: end;
-            }
-
             .hits-doc-footer {
                 position: relative;
                 display: flex;
@@ -589,16 +571,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .ais-Hits-list {
                     grid-area: main;
-                }
-
-                .hit-person-row {
-                    display: grid;
-                    grid-template-columns: 1fr;
-                    grid-template-rows: auto auto;
-                }
-
-                .hits-person-footer {
-                    justify-content: normal;
                 }
 
                 .results {
@@ -661,16 +633,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     gap: 0.5em;
                     grid-template-columns: auto;
                 }
-
-                .hit-person-row {
-                    display: grid;
-                    grid-template-columns: 1fr;
-                    grid-template-rows: auto auto;
-                }
-
-                .hits-person-footer {
-                    justify-content: normal;
-                }
             }
 
             @media (min-width: 380px) and (max-width: 489px) {
@@ -692,29 +654,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .result-container {
                     grid-template-columns: auto 1fr;
                     gap: 0;
-                }
-
-                .hits-person-footer {
-                    display: grid;
-                    grid-template-columns: auto auto;
-                    grid-template-rows: auto auto;
-                    gap: 0.5em;
-                    align-items: center;
-                }
-
-                .hits-person-footer button:nth-child(1) {
-                    grid-column: 1 / span 2;
-                    grid-row: 1;
-                }
-
-                .hits-person-footer button:nth-child(2) {
-                    grid-column: 1;
-                    grid-row: 2;
-                }
-
-                .hits-person-footer button:nth-child(3) {
-                    grid-column: 2;
-                    grid-row: 2;
                 }
             }
         `;
@@ -840,11 +779,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             templates: {
                 item: (hit, {html}) => {
-                    const i18n = this._i18n;
-                    const buttonLabel = hit.isFiltered
-                        ? i18n.t('unselect-button-name')
-                        : i18n.t('focus-button-name');
-
                     const objectType = hit.objectType;
                     const tagPart = pascalToKebab(hit.objectType);
                     const tagName = 'dbp-cabinet-object-type-hit-' + tagPart;
@@ -855,73 +789,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     hitElement.setAttribute('subscribe', 'lang');
                     hitElement.data = hit;
 
-                    // Note: We can't access local functions, nor can we use a script tag, so we are using a custom event to open the file edit dialog (is this still the case with preact?)
-                    // Note: "html" is preact html, not lit-html!
-                    const buttonRowHtml =
-                        objectType === 'person'
-                            ? html`
-                                  <div class="hit-person-row">
-                                      <div class="hit-person-last-modify-content">
-                                          ${i18n.t(
-                                              'sync.status-label',
-                                          )}:${'\u00A0'}${Intl.DateTimeFormat('de', {
-                                              year: 'numeric',
-                                              month: '2-digit',
-                                              day: '2-digit',
-                                              hour: '2-digit',
-                                              minute: '2-digit',
-                                              second: '2-digit',
-                                          }).format(hit.person.syncTimestamp * 1000)}
-                                          <br />
-                                      </div>
-                                      <footer class="hits-person-footer">
-                                          <button
-                                              class="button"
-                                              onclick=${() => {
-                                                  this.dispatchEvent(
-                                                      new CustomEvent('DbpCabinetDocumentAdd', {
-                                                          detail: {hit: hit},
-                                                          bubbles: true,
-                                                          composed: true,
-                                                      }),
-                                                  );
-                                              }}>
-                                              ${i18n.t('buttons.add.documents')}
-                                          </button>
-                                          <button
-                                              class="button select-person-button"
-                                              onclick="${(event) => {
-                                                  this.dispatchEvent(
-                                                      new CustomEvent('DbpCabinetFilterPerson', {
-                                                          detail: {person: hit.person.person},
-                                                          bubbles: true,
-                                                          composed: true,
-                                                      }),
-                                                  );
-                                              }}">
-                                              ${buttonLabel}
-                                          </button>
-                                          <button
-                                              class="button is-secondary"
-                                              onclick=${() => {
-                                                  this.dispatchEvent(
-                                                      new CustomEvent('DbpCabinetDocumentView', {
-                                                          detail: {hit: hit},
-                                                          bubbles: true,
-                                                          composed: true,
-                                                      }),
-                                                  );
-                                              }}>
-                                              ${i18n.t('buttons.view')}
-                                          </button>
-                                      </footer>
-                                  </div>
-                              `
-                            : html``;
-
                     return html`
                         <span ref=${preactRefReplaceElement(hitElement)}></span>
-                        ${buttonRowHtml}
                     `;
                 },
             },
