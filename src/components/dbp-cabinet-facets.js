@@ -7,7 +7,7 @@ import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
 import {panel, refinementList} from 'instantsearch.js/es/widgets/index.js';
 import {connectCurrentRefinements, connectClearRefinements} from 'instantsearch.js/es/connectors';
 import {createDateRefinement} from './dbp-cabinet-date-facet.js';
-import {preactRefReplaceElement} from '../utils.js';
+import {preactRefReplaceChildren, preactRefReplaceElement} from '../utils.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element.js';
 import {createInstance} from '../i18n.js';
 
@@ -107,6 +107,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             header.addEventListener('click', (event) => {
                 if (
                     event.target instanceof HTMLElement &&
+                    event.target.closest('.ais-Panel-header') &&
                     !event.target.closest('.ais-Panel-collapseButton')
                 ) {
                     const collapseButton = header.querySelector('.ais-Panel-collapseButton');
@@ -501,20 +502,19 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         }
                     },
                     collapseButtonText(options, {html}) {
+                        let iconElement = cabinetFacets.createScopedElement('dbp-icon');
+                        iconElement.classList.add('chevron-container');
+                        iconElement.setAttribute(
+                            'name',
+                            options.collapsed ? 'chevron-down' : 'chevron-up',
+                        );
+                        iconElement.setAttribute(
+                            'alt',
+                            options.collapsed ? 'chevron-down' : 'chevron-up',
+                        );
+
                         return html`
-                            ${options.collapsed
-                                ? html`
-                                      <dbp-icon
-                                          class="chevron-container"
-                                          name="chevron-down"
-                                          alt="chevron-down"></dbp-icon>
-                                  `
-                                : html`
-                                      <dbp-icon
-                                          class="chevron-container"
-                                          name="chevron-up"
-                                          alt="chevron-up"></dbp-icon>
-                                  `}
+                            <span ref=${preactRefReplaceChildren(iconElement)}></span>
                         `;
                     },
                 },

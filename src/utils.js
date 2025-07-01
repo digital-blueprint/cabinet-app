@@ -13,6 +13,18 @@ export const preactRefReplaceElement = (replacementElement) => {
     };
 };
 
+/**
+ * Returns a function that replaces DOM children elements with a specified replacement element.
+ * @param {HTMLElement} replacementElement - The element to replace the target children with.
+ */
+export const preactRefReplaceChildren = (replacementElement) => {
+    return (el) => {
+        if (el && !replacementElement.parentNode) {
+            el.replaceChildren(replacementElement);
+        }
+    };
+};
+
 export const pascalToKebab = (str) => {
     // Replace capital letters with hyphen followed by the lowercase equivalent
     return str.replace(/([A-Z])/g, '-$1').toLowerCase();
