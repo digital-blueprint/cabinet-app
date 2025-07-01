@@ -106,6 +106,7 @@
         "document-not-found-body": "The requested document could not be found!",
         "document-not-found-summary": "Document not found"
     },
+    "Document-details-modal": "Document details",
     "document-issue-date": "Document issue date",
     "Edit-student-data": "Edit student data",
     "emailAddressConfirmed": "Confirmed email address",

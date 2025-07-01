@@ -478,7 +478,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
-            <h2>Document details</h2>
+            <h2>${this._i18n.t('Document-details-modal')}</h2>
             <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" .data=${hit}></${unsafeStatic(tagName)}>
         `;
     }
@@ -1268,18 +1268,18 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             case CabinetFile.Modes.ADD:
                 if (this.objectType === '') {
                     return html`
-                        <h2>Document details</h2>
+                        <h2>${this._i18n.t('Document-details-modal')}</h2>
                         ${this.getDocumentTypeSelector()}
                     `;
                 } else {
                     return html`
-                        <h2>Document details</h2>
+                        <h2>${this._i18n.t('Document-details-modal')}</h2>
                         ${this.getDocumentTypeSelector()} ${this.getDocumentEditFormHtml()}
                     `;
                 }
             case CabinetFile.Modes.EDIT:
                 return html`
-                    <h2>Document details</h2>
+                    <h2>${this._i18n.t('Document-details-modal')}</h2>
                     ${this.getDocumentTypeSelector()} ${this.getDocumentEditFormHtml(true)}
                 `;
         }
