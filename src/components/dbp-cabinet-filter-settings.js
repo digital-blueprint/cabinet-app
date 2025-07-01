@@ -34,8 +34,9 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         // Filter facetConfigs to only include items with groupId 'person' or 'file', don't include 'person.person'
         this.facetConfigs = (facetConfigs || []).filter(
             (item) =>
-                (item.groupId === 'person' || item.groupId === 'file') &&
-                item.schemaField !== 'person.person',
+                (item.groupId === 'person' || item.groupId === 'file' || item['filter-group']) &&
+                item.schemaField !== 'person.person' &&
+                item['filter-group']?.id !== 'category',
         );
 
         /**
@@ -75,15 +76,15 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 margin: 0;
             }
 
-            #filter-modal .modal-header h3 {
-                font-size: 1.5em;
-            }
-
             #filter-modal .modal-content {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 10px 10px;
                 grid-auto-flow: row;
+            }
+
+            #filter-modal .modal-content h3 {
+                font-size: 1.5em;
             }
 
             #filter-modal .modal-footer {
@@ -181,9 +182,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         name="cog"></dbp-icon>
                     <h3>Filter configuration</h3>
                 </div>
-                <div slot="header" class="modal-header">
-                    <h3>Person properties</h3>
-                </div>
                 <div slot="content" class="modal-content">${this.renderFacetList()}</div>
                 <div slot="footer" class="modal-footer">
                     <div>
@@ -242,21 +240,29 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         console.log('renderFacetListItem key', key);
         console.log('renderFacetListItem item', item);
 
-        return html`
-            <li class="header-fields ${item.schemaField}" data-index="${key}">
-                <div class="header-field">
-                    <span class="header-button header-order">${key + 1}</span>
-                    <span class="header-title"><strong>${i18n.t(item.name)}</strong></span>
-                    <dbp-icon-button
-                        icon-name="source_icons_eye-empty"
-                        class="header-visibility-icon"
-                        @click="${() => {
-                            // TODO: Set icon to source_icons_eye-off
-                            this.changeVisibility(key);
-                        }}"></dbp-icon-button>
-                </div>
-            </li>
-        `;
+        if (item['filter-group']) {
+            return html`
+                <li class="header-fields ${item.schemaField}" data-index="${key}">
+                    <h3>${i18n.t(item['filter-group'].name)}</h3>
+                </li>
+            `;
+        } else {
+            return html`
+                <li class="header-fields ${item.schemaField}" data-index="${key}">
+                    <div class="header-field">
+                        <span class="header-button header-order">${key + 1}</span>
+                        <span class="header-title"><strong>${i18n.t(item.name)}</strong></span>
+                        <dbp-icon-button
+                            icon-name="source_icons_eye-empty"
+                            class="header-visibility-icon"
+                            @click="${() => {
+                                // TODO: Set icon to source_icons_eye-off
+                                this.changeVisibility(key);
+                            }}"></dbp-icon-button>
+                    </div>
+                </li>
+            `;
+        }
     }
 
     renderFacetList() {
