@@ -174,7 +174,7 @@ class CabinetHitElement extends BaseHitElement {
                 padding-top: 1em;
             }
 
-            @media (max-width: 767px) {
+            @media (max-width: 768px) {
                 .hit-person-info-header {
                     display: flex;
                     align-items: center;
