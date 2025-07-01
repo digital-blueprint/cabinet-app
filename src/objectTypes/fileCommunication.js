@@ -80,18 +80,21 @@ class CabinetFormElement extends BaseFormElement {
                     subscribe="lang"
                     name="agent[givenName]"
                     label=${this._i18n.t('given-name')}
+                    placeholder=${this._i18n.t('given-name')}
                     .value=${communication.agent.givenName}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="agent[familyName]"
                     label=${this._i18n.t('family-name')}
+                    placeholder=${this._i18n.t('family-name')}
                     .value=${communication.agent.familyName}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="abstract"
                     label=${this._i18n.t('communication-abstract')}
+                    placeholder=${this._i18n.t('communication-abstract')}
                     rows="10"
                     .value=${communication.abstract}></dbp-form-string-element>
 
