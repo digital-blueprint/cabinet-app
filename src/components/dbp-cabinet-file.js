@@ -1073,15 +1073,15 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         let file = this.documentFile;
         console.log('getDocumentModalHtml this.documentFile', this.documentFile);
         console.log('this.mode', this.mode);
-
+        const i18n = this._i18n;
         const id = hit.id;
         const headline =
             this.mode === CabinetFile.Modes.ADD
                 ? 'Upload Document'
-                : hit?.file?.base.additionalType.text;
-
-        const i18n = this._i18n;
-
+                : i18n.t(
+                      `typesense-schema.file.base.additionalType.key.${hit?.file?.base.additionalType.key}`,
+                  );
+        console.log('additionalType', hit?.file?.base.additionalType);
         this.showLineWhenDelete = this.deleteAtDateTime ? ' | ' : '';
 
         // TODO: Check if PDF was uploaded
