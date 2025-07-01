@@ -154,6 +154,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 subscribe="lang"
                 name="subjectOf"
                 label=${this._i18n.t('doc-modal-subject-of')}
+                placeholder=${this._i18n.t('doc-modal-E-G')}987654-AB/2023
                 .value=${fileCommon.subjectOf || ''}
                 @change=${updateField('subjectOf')}></dbp-form-string-element>
 
@@ -189,6 +190,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 subscribe="lang"
                 name="comment"
                 label=${this._i18n.t('doc-modal-comment')}
+                placeholder=${this._i18n.t('doc-modal-comment')}
                 rows="5"
                 .value=${fileCommon.comment || ''}
                 @change=${updateField('comment')}></dbp-form-string-element>
