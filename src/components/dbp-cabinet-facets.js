@@ -39,6 +39,26 @@ class FacetLabel extends LangMixin(DBPLitElement, createInstance) {
     }
 }
 
+class FacetTitle extends LangMixin(DBPLitElement, createInstance) {
+    constructor() {
+        super();
+        this.key = '';
+    }
+
+    static get properties() {
+        return {
+            ...super.properties,
+            key: {type: String},
+        };
+    }
+
+    render() {
+        return html`
+            ${this._i18n.t(this.key)}
+        `;
+    }
+}
+
 export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
@@ -78,6 +98,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         return {
             ...super.scopedElements,
             'dbp-cabinet-facet-label': FacetLabel,
+            'dbp-cabinet-facet-title': FacetTitle,
             'dbp-icon': Icon,
         };
     }
@@ -497,9 +518,13 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             const defaultPanelOptions = {
                 templates: {
                     header(options, {html}) {
-                        if (name !== null) {
-                            return i18n.t(name);
-                        }
+                        let titleElement =
+                            cabinetFacets.createScopedElement('dbp-cabinet-facet-title');
+                        titleElement.setAttribute('subscribe', 'lang');
+                        titleElement.key = name ?? '';
+                        return html`
+                            <span ref=${preactRefReplaceChildren(titleElement)}></span>
+                        `;
                     },
                     collapseButtonText(options, {html}) {
                         let iconElement = cabinetFacets.createScopedElement('dbp-icon');
