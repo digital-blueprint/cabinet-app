@@ -815,6 +815,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     createHits() {
+        let cabinetSearch = this;
+
         return hits({
             container: this._('#hits'),
             escapeHTML: true,
@@ -848,9 +850,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     const tagName = 'dbp-cabinet-object-type-hit-' + tagPart;
                     const objectTypeHitComponent = this.objectTypeHitComponents[objectType];
 
-                    if (!customElements.get(tagName) && objectTypeHitComponent) {
-                        customElements.define(tagName, objectTypeHitComponent);
-                    }
+                    cabinetSearch.defineScopedElement(tagName, objectTypeHitComponent);
+                    let hitElement = cabinetSearch.createScopedElement(tagName);
+                    hitElement.setAttribute('subscribe', 'lang');
+                    hitElement.data = hit;
 
                     // Note: We can't access local functions, nor can we use a script tag, so we are using a custom event to open the file edit dialog (is this still the case with preact?)
                     // Note: "html" is preact html, not lit-html!
@@ -916,9 +919,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                               `
                             : html``;
 
-                    // TODO: Subscriber attribute "lang" doesn't work anymore, so we need to set the lang attribute manually, so it at least works when the hit is rendered initially
                     return html`
-                        <${tagName} subscribe="lang" lang="${this.lang}" data=${hit}></${tagName}>
+                        <span ref=${preactRefReplaceElement(hitElement)}></span>
                         ${buttonRowHtml}
                     `;
                 },

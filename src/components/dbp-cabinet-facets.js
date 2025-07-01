@@ -1,6 +1,6 @@
 // noinspection CssUnusedSymbol,JSUnresolvedReference
 
-import {LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
+import {Icon, LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
 import {css, html, render} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
@@ -78,6 +78,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         return {
             ...super.scopedElements,
             'dbp-cabinet-facet-label': FacetLabel,
+            'dbp-icon': Icon,
         };
     }
 
