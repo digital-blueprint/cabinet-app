@@ -4,7 +4,7 @@ import {LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from './dbp-cabinet-lit-element';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {getCurrentRefinementCSS, getPaginationCSS} from './styles';
+import {getPaginationCSS} from './styles.js';
 import {Icon, InlineNotification, Modal} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
 import {Activity} from './activity.js';
@@ -407,8 +407,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${commonStyles.getActivityCSS()}
             ${commonStyles.getRadioAndCheckboxCss()}
             ${commonStyles.getFormAddonsCSS()}
-            ${getCurrentRefinementCSS()}
             ${getPaginationCSS()}
+
+            .refinement-container {
+                min-height: 3em;
+                grid-area: header;
+                display: flex;
+            }
 
             .result-container {
                 margin-top: 0;
