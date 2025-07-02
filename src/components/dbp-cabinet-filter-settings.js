@@ -117,6 +117,23 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 width: 100%;
             }
 
+            .category-field {
+                align-items: center;
+                height: 50px;
+                display: flex;
+                margin-bottom: 5px;
+                width: 100%;
+            }
+
+            .category-field h3 {
+                flex: 1;
+            }
+
+            .category-field dbp-icon-button {
+                /* Compensate for the border of .facet-field  */
+                margin-right: -1px;
+            }
+
             .facet-button {
                 justify-content: center;
                 display: flex;
@@ -242,7 +259,16 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         if (item['filter-group']) {
             return html`
                 <li class="facet-fields ${item.schemaField}" data-index="${key}">
-                    <h3>${i18n.t(item['filter-group'].name)}</h3>
+                    <div class="category-field">
+                        <h3>${i18n.t(item['filter-group'].name)}</h3>
+                        <dbp-icon-button
+                            icon-name="source_icons_eye-empty"
+                            class="facet-visibility-icon"
+                            @click="${() => {
+                                // TODO: Set icon to source_icons_eye-off
+                                this.changeVisibility(key);
+                            }}"></dbp-icon-button>
+                    </div>
                 </li>
             `;
         } else {
