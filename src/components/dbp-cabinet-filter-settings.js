@@ -99,7 +99,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 font-size: 2em;
             }
 
-            .headers {
+            .facets {
                 max-width: 100%;
                 margin: 0;
                 list-style-type: none;
@@ -108,7 +108,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 width: 100%;
             }
 
-            .header-field {
+            .facet-field {
                 align-items: center;
                 height: 50px;
                 border: 1px solid var(--dbp-muted);
@@ -117,7 +117,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 width: 100%;
             }
 
-            .header-button {
+            .facet-button {
                 justify-content: center;
                 display: flex;
                 align-items: center;
@@ -128,17 +128,17 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 cursor: pointer;
             }
 
-            .header-button dbp-icon {
+            .facet-button dbp-icon {
                 font-size: 1.3em;
                 top: 0;
             }
 
-            .header-button.hidden,
+            .facet-button.hidden,
             .extended-menu.hidden {
                 display: none !important;
             }
 
-            .header-title {
+            .facet-title {
                 flex-grow: 2;
                 text-overflow: ellipsis;
                 overflow: hidden;
@@ -146,7 +146,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 text-align: left;
             }
 
-            .header-order {
+            .facet-order {
                 background-color: var(--dbp-muted-surface);
                 color: var(--dbp-on-muted-surface);
                 font-weight: bold;
@@ -241,19 +241,19 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
         if (item['filter-group']) {
             return html`
-                <li class="header-fields ${item.schemaField}" data-index="${key}">
+                <li class="facet-fields ${item.schemaField}" data-index="${key}">
                     <h3>${i18n.t(item['filter-group'].name)}</h3>
                 </li>
             `;
         } else {
             return html`
-                <li class="header-fields ${item.schemaField}" data-index="${key}">
-                    <div class="header-field">
-                        <span class="header-button header-order">${key + 1}</span>
-                        <span class="header-title"><strong>${i18n.t(item.name)}</strong></span>
+                <li class="facet-fields ${item.schemaField}" data-index="${key}">
+                    <div class="facet-field">
+                        <span class="facet-button facet-order">${key + 1}</span>
+                        <span class="facet-title"><strong>${i18n.t(item.name)}</strong></span>
                         <dbp-icon-button
                             icon-name="source_icons_eye-empty"
-                            class="header-visibility-icon"
+                            class="facet-visibility-icon"
                             @click="${() => {
                                 // TODO: Set icon to source_icons_eye-off
                                 this.changeVisibility(key);
@@ -272,7 +272,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         }
 
         return html`
-            <ul class="headers">
+            <ul class="facets">
                 ${this.facetConfigs.map(this.renderFacetListItem.bind(this))}
             </ul>
         `;
