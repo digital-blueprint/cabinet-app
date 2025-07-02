@@ -267,7 +267,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                             class="facet-visibility-icon"
                             @click="${() => {
                                 // TODO: Set icon to source_icons_eye-off
-                                this.changeVisibility(key);
+                                this.changeFacetVisibility(key);
                             }}"></dbp-icon-button>
                     </div>
                 </li>
@@ -283,12 +283,26 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                             class="facet-visibility-icon"
                             @click="${() => {
                                 // TODO: Set icon to source_icons_eye-off
-                                this.changeVisibility(key);
+                                this.changeFacetVisibility(item);
                             }}"></dbp-icon-button>
                     </div>
                 </li>
             `;
         }
+    }
+
+    changeFacetVisibility(item) {
+        console.log('item', item);
+
+        // Toggle the visibility of the facet
+        // if (item.visible) {
+        //     item.visible = false;
+        // } else {
+        //     item.visible = true;
+        // }
+
+        // Re-render the list to reflect the changes
+        // this.requestUpdate();
     }
 
     renderFacetList() {
