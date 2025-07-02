@@ -127,6 +127,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
             .category-field h3 {
                 flex: 1;
+                margin-top: 0.5em;
             }
 
             .category-field dbp-icon-button {
