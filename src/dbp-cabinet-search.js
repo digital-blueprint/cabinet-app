@@ -277,7 +277,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
 
         // Listen to DbpCabinetFilterPerson events to filter to a specific person
-        this.addEventListener('DbpCabinetOpenFilterSettings', (event) => {
+        this.addEventListener('DbpCabinetOpenFilterSettings', async (event) => {
             /** @type {CabinetFilterSettings} */
             const filterSettingsModal = this.filterSettingsModalRef.value;
 
@@ -315,7 +315,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 // For demonstration purposes, we will add the removed facets again
                 const facetConfigs = this.filterFacetConfigsBySchemaFields(schemaFields);
                 if (facetConfigs.length > 0 && this.search) {
-                    const facets = ref.createFacetsFromConfig(facetConfigs);
+                    const facets = await ref.createFacetsFromConfig(facetConfigs);
 
                     this.search.addWidgets(facets);
                 }
@@ -329,7 +329,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
     }
 
-    initInstantsearch() {
+    async initInstantsearch() {
         if (!this.auth.token || this.facetConfigs.length === 0) {
             return;
         }
@@ -353,7 +353,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         if (this.facetConfigs.length > 0 && this.search) {
-            this.facetWidgets = this.createFacets();
+            this.facetWidgets = await this.createFacets();
             search.addWidgets(this.facetWidgets);
             console.log('initInstantsearch this.createFacets()', this.facetWidgets);
         }
@@ -796,10 +796,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
     }
 
-    createFacets() {
+    async createFacets() {
         /** @type {CabinetFacets} */
         const ref = this.cabinetFacetsRef.value;
-        return ref.createFacetsFromConfig(this.facetConfigs);
+        return await ref.createFacetsFromConfig(this.facetConfigs);
     }
 
     toggleShowDeleted(event) {

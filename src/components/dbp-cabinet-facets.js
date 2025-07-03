@@ -10,6 +10,7 @@ import {preactRefReplaceChildren, preactRefReplaceElement} from '../utils.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element.js';
 import {createInstance} from '../i18n.js';
 import {classMap} from 'lit/directives/class-map.js';
+import {repeat} from 'lit/directives/repeat.js';
 
 class FacetLabel extends LangMixin(DBPLitElement, createInstance) {
     constructor() {
@@ -67,6 +68,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         // This hash contains the facet widgets by their schema field name, so we can remove them from the search state later
         this.facetWidgetHash = {};
         this.active = false;
+        this._facetsConfigs = [];
     }
 
     static get scopedElements() {
@@ -83,37 +85,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             ...super.properties,
             search: {type: Object, attribute: 'search'},
             active: {type: Boolean, state: true},
+            _facetsConfigs: {type: Array, state: true},
         };
-    }
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            switch (propName) {
-                case 'search':
-                    this.afterSearchInit();
-                    break;
-            }
-        });
-
-        super.update(changedProperties);
-    }
-
-    afterSearchInit() {
-        // Add event listeners to open filters by clicking panel headers
-        this._a('.ais-Panel-header').forEach((panelHeader) => {
-            const header = /** @type {HTMLElement} */ (panelHeader);
-            header.addEventListener('click', (event) => {
-                if (
-                    event.target instanceof HTMLElement &&
-                    event.target.closest('.ais-Panel-header') &&
-                    !event.target.closest('.ais-Panel-collapseButton')
-                ) {
-                    const collapseButton = header.querySelector('.ais-Panel-collapseButton');
-                    if (collapseButton instanceof HTMLElement) {
-                        collapseButton.click();
-                    }
-                }
-            });
-        });
     }
 
     /**
@@ -229,26 +202,25 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Creates a facet widget based on a configuration
      * @param facetsConfigs {array} - configuration for the facets
      */
-    createFacetsFromConfig(facetsConfigs) {
-        if (Array.isArray(facetsConfigs) === false) {
-            return [];
-        }
+    async createFacetsFromConfig(facetsConfigs) {
+        this._facetsConfigs = facetsConfigs;
+        // Wait for the DOM to be updated before creating facets referencing it
+        await this.updateComplete;
+
         let facets = [];
         this.facetWidgetHash = {};
 
         facetsConfigs.forEach((facetConfig) => {
             if (Object.hasOwn(facetConfig, 'filter-group')) {
-                this.addFilterHeader(facetConfig['filter-group']);
-            } else {
-                const facet = this.generateFacet(facetConfig);
-                const facetWidget = facet();
-
-                // Store the facet widget in the hash for later removal from the search state
-                this.facetWidgetHash[facetConfig.schemaField] = facetWidget;
-
-                facets.push(facetWidget);
+                return;
             }
-            facetConfig = null;
+            const facet = this.generateFacet(facetConfig);
+            const facetWidget = facet();
+
+            // Store the facet widget in the hash for later removal from the search state
+            this.facetWidgetHash[facetConfig.schemaField] = facetWidget;
+
+            facets.push(facetWidget);
         });
 
         return facets;
@@ -261,19 +233,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
      */
     getFacetWidgetHash() {
         return this.facetWidgetHash;
-    }
-
-    addFilterHeader(filterGroup) {
-        let filterGroupHtml = document.createElement('div');
-        filterGroupHtml.setAttribute('id', `${filterGroup.id}`);
-        filterGroupHtml.classList.add('filter-group');
-        filterGroupHtml.classList.add(`filter-group--${filterGroup.id}`);
-        filterGroupHtml.innerHTML = `
-            <h3 class="filter-title">
-                ${this._i18n.t(`${filterGroup.name}`)}
-            </h3>
-        `;
-        this._('#filters-container').appendChild(filterGroupHtml);
     }
 
     hideFilterGroupIfEmpty() {
@@ -307,7 +266,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         let that = this;
 
         const {
-            groupId,
             schemaField,
             schemaFieldType = 'checkbox',
             facetOptions = {},
@@ -319,14 +277,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         const schemaFieldSafe = schemaField.replace(/[@#]/g, '');
 
         const cssClass = this.schemaNameToKebabCase(schemaFieldSafe);
-        const cssTypeClass = this.schemaNameToKebabCase(schemaFieldType);
 
-        const filterItem = document.createElement('div');
-        filterItem.classList.add('filter');
-        filterItem.setAttribute('id', `${cssClass}`);
-        filterItem.classList.add(`filter--${cssClass}`);
-        filterItem.classList.add(`filter-type-${cssTypeClass}`);
-        this._(`#${groupId}`).appendChild(filterItem);
         let cabinetFacets = this;
 
         if (facetConfig.searchablePlaceholderKey) {
@@ -370,15 +321,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 hidden(options) {
                     const facetValues = options.results.getFacetValues(schemaField, {});
                     return Array.isArray(facetValues) ? facetValues.length === 0 : false;
-                },
-                // TODO: This function should be called when the panel is disposed, but isn't
-                dispose({state}) {
-                    // Remove the filter item from the DOM when the panel is disposed
-                    const filterItem = that._(`#${cssClass}`);
-                    console.log('dispose filterItem', filterItem);
-                    if (filterItem) {
-                        filterItem.remove();
-                    }
                 },
             };
             const panelOptions = {
@@ -870,6 +812,73 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         const i18n = this._i18n;
         console.log('-- Render Facets --');
 
+        let getFacetsForGroup = (groupId) => {
+            return this._facetsConfigs.filter((facetConfig) => {
+                return facetConfig['groupId'] && facetConfig['groupId'] === groupId;
+            });
+        };
+
+        let getFacetGroups = () => {
+            return this._facetsConfigs.filter((facetConfig) => {
+                return Object.hasOwn(facetConfig, 'filter-group');
+            });
+        };
+
+        let renderGroupFacets = (filterGroupId) => {
+            return html`
+                ${repeat(
+                    getFacetsForGroup(filterGroupId),
+                    (facetConfig) => facetConfig.schemaField,
+                    (facetConfig, index) => {
+                        const schemaFieldSafe = facetConfig.schemaField.replace(/[@#]/g, '');
+                        const cssClass = this.schemaNameToKebabCase(schemaFieldSafe);
+                        const cssTypeClass = this.schemaNameToKebabCase(
+                            facetConfig.schemaFieldType,
+                        );
+                        return html`
+                            <div
+                                id="${cssClass}"
+                                class="filter filter--${cssClass} filter-type-${cssTypeClass}"
+                                @click=${(event) => {
+                                    if (
+                                        event.target instanceof HTMLElement &&
+                                        event.target.closest('.ais-Panel-header') &&
+                                        !event.target.closest('.ais-Panel-collapseButton')
+                                    ) {
+                                        const collapseButton = event.currentTarget.querySelector(
+                                            '.ais-Panel-collapseButton',
+                                        );
+                                        if (collapseButton instanceof HTMLElement) {
+                                            collapseButton.click();
+                                        }
+                                    }
+                                }}></div>
+                        `;
+                    },
+                )}
+            `;
+        };
+
+        let renderGroups = () => {
+            return html`
+                ${repeat(
+                    getFacetGroups(),
+                    (facetConfig) => facetConfig['filter-group'].id,
+                    (facetConfig, index) => {
+                        let filterGroup = facetConfig['filter-group'];
+                        return html`
+                            <div
+                                id="${filterGroup.id}"
+                                class="filter-group filter-group--${filterGroup.id}">
+                                <h3 class="filter-title">${this._i18n.t(`${filterGroup.name}`)}</h3>
+                                ${renderGroupFacets(filterGroup.id)}
+                            </div>
+                        `;
+                    },
+                )}
+            `;
+        };
+
         return html`
             <div class="filters ${classMap({active: this.active})}">
                 <div class="filter-header">
@@ -893,7 +902,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                             this.toggleFilters();
                         }}></dbp-icon>
                 </div>
-                <div id="filters-container" class="filters-container"></div>
+                <div id="filters-container" class="filters-container">${renderGroups()}</div>
             </div>
         `;
     }
