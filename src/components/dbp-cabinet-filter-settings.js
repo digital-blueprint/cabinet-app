@@ -6,17 +6,12 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal} from '@dbp-toolkit/common';
 
 export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElement) {
-    static settingsLocalStorageKey = 'dbp-cabinet:facetVisibilityStates';
-
     constructor() {
         super();
         this.modalRef = createRef();
         this.facetConfigs = [];
-
-        // Load facetVisibilityStates from localStorage or initialize it
-        // TODO: Do this per user, not globally
-        this.facetVisibilityStates =
-            JSON.parse(localStorage.getItem(CabinetFilterSettings.settingsLocalStorageKey)) || {};
+        this.settingsLocalStorageKey = '';
+        this.facetVisibilityStates = {};
     }
 
     static get scopedElements() {
@@ -33,6 +28,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
             ...super.properties,
             facetConfigs: {type: Array, attribute: false},
             facetVisibilityStates: {type: Object, attribute: false},
+            settingsLocalStorageKey: {type: String, attribute: false},
         };
     }
 
@@ -252,6 +248,9 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                     <dbp-button
                         class="check-btn button is-primary"
                         id="check"
+                        ?disabled="${!this.facetConfigs ||
+                        this.facetConfigs.length === 0 ||
+                        !this.settingsLocalStorageKey}"
                         @click="${this.storeSettings}">
                         ${i18n.t('filter-settings.save')}
                     </dbp-button>
@@ -375,6 +374,11 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
     }
 
     storeSettings(e) {
+        if (!this.settingsLocalStorageKey) {
+            console.warn('No settingsLocalStorageKey set, cannot store settings.');
+            return;
+        }
+
         /**
          * @type {IconButton}
          */
@@ -382,12 +386,44 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         button.start();
 
         // Store the current facet visibility states in localStorage
-        // TODO: Do this per user, not globally
         localStorage.setItem(
-            CabinetFilterSettings.settingsLocalStorageKey,
+            this.settingsLocalStorageKey,
             JSON.stringify(this.facetVisibilityStates),
         );
 
         button.stop();
+    }
+
+    update(changedProperties) {
+        changedProperties.forEach((oldValue, propName) => {
+            switch (propName) {
+                case 'auth':
+                    this.generateSettingsLocalStorageKey();
+                    break;
+                case 'settingsLocalStorageKey':
+                    // If the settingsLocalStorageKey has changed, we need to load the facetVisibilityStates again
+                    this.loadFacetVisibilityStates();
+                    break;
+            }
+        });
+
+        super.update(changedProperties);
+    }
+
+    loadFacetVisibilityStates() {
+        if (!this.settingsLocalStorageKey) {
+            return;
+        }
+
+        this.facetVisibilityStates =
+            JSON.parse(localStorage.getItem(this.settingsLocalStorageKey)) || {};
+    }
+
+    generateSettingsLocalStorageKey() {
+        const publicId = this.auth['user-id'];
+
+        if (publicId) {
+            this.settingsLocalStorageKey = `dbp-cabinet:${publicId}:facetVisibilityStates`;
+        }
     }
 }
