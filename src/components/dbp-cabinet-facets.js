@@ -122,9 +122,7 @@ class CurrentRefinements extends LangMixin(DBPLitElement, createInstance) {
 
             .ais-CurrentRefinements-category {
                 border: 1px solid var(--dbp-content);
-                padding: 0.3em 0.4em;
                 display: flex;
-                gap: 0.5em;
                 white-space: nowrap;
             }
 
@@ -149,6 +147,17 @@ class CurrentRefinements extends LangMixin(DBPLitElement, createInstance) {
                 background-size: 10px;
                 color: var(--dbp-content);
                 background: var(--dbp-content);
+            }
+
+            .refinement-title {
+                color: var(--dbp-on-primary-surface);
+                background: var(--dbp-primary-surface);
+                padding: 4px 8px;
+                font-weight: bold;
+            }
+
+            .refinement-value {
+                padding: 4px 6px;
             }
         `;
     }
@@ -183,18 +192,21 @@ class CurrentRefinements extends LangMixin(DBPLitElement, createInstance) {
 
                 return html`
                     <li class="ais-CurrentRefinements-category">
-                        <span class="ais-CurrentRefinements-categoryLabel">
-                            ${i18n.t(activeFacet.facetNameKey)}: ${label}
-                        </span>
-                        <button
-                            class="ais-CurrentRefinements-delete"
-                            title="${i18n.t('cabinet-search.refinement-delete-filter-button-text')}"
-                            @click="${() => refine(refinement)}">
-                            <span class="visually-hidden">
-                                ${i18n.t('cabinet-search.refinement-delete-filter-button-text')}
-                            </span>
-                            <span class="filter-close-icon"></span>
-                        </button>
+                        <div class="refinement-title">${i18n.t(activeFacet.facetNameKey)}</div>
+                        <div class="refinement-value">
+                            <span class="ais-CurrentRefinements-categoryLabel">${label}</span>
+                            <button
+                                class="ais-CurrentRefinements-delete"
+                                title="${i18n.t(
+                                    'cabinet-search.refinement-delete-filter-button-text',
+                                )}"
+                                @click="${() => refine(refinement)}">
+                                <span class="visually-hidden">
+                                    ${i18n.t('cabinet-search.refinement-delete-filter-button-text')}
+                                </span>
+                                <span class="filter-close-icon"></span>
+                            </button>
+                        </div>
                     </li>
                 `;
             });
