@@ -7,17 +7,32 @@ function t(key) {
     return key;
 }
 
-function translationRenderFunction(elm) {
-    let text = elm._i18n.t(`typesense-schema.${elm.schemaField}.${elm.value}`, elm.value);
+function translationRenderFunction(i18n, schemaField, value, operator = null) {
+    let text = i18n.t(`typesense-schema.${schemaField}.${value}`, value);
     return html`
         ${text}
     `;
 }
 
-function nationalityRenderFunction(elm) {
-    let text = getNationalityDisplayName(elm.value, elm.lang);
+function nationalityRenderFunction(i18n, schemaField, value, operator = null) {
+    let text = getNationalityDisplayName(value, i18n.language);
     return html`
         ${text}
+    `;
+}
+
+function datePickerRenderFunction(i18n, schemaField, value, operator = null) {
+    let date = new Date(value * 1000).toLocaleDateString('de-AT', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+    });
+    let operatorLabel =
+        operator === '>='
+            ? i18n.t('cabinet-search.refinement-date-after-text')
+            : i18n.t('cabinet-search.refinement-date-before-text');
+    return html`
+        ${operatorLabel} ${date}
     `;
 }
 
@@ -85,6 +100,7 @@ export default class InstantSearchModule {
                 schemaField: 'person.birthDateTimestamp',
                 name: t('cabinet-search.filter-person-birth-date-timestamp-title'),
                 schemaFieldType: 'datepicker',
+                renderFunction: datePickerRenderFunction,
             },
             {
                 groupId: 'person',
@@ -343,12 +359,14 @@ export default class InstantSearchModule {
                 schemaField: 'file.base.createdTimestamp',
                 schemaFieldType: 'datepicker',
                 name: t('cabinet-search.filter-file-base-created-timestamp-title'),
+                renderFunction: datePickerRenderFunction,
             },
             {
                 groupId: 'file',
                 schemaField: 'file.base.recommendedDeletionTimestamp',
                 schemaFieldType: 'datepicker',
                 name: t('cabinet-search.filter-file-base-recommended-deletion-timestamp-title'),
+                renderFunction: datePickerRenderFunction,
             },
             {
                 groupId: 'file',

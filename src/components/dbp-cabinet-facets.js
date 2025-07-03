@@ -30,7 +30,7 @@ class FacetLabel extends LangMixin(DBPLitElement, createInstance) {
 
     render() {
         if (this.renderFunction) {
-            return this.renderFunction(this);
+            return this.renderFunction(this._i18n, this.schemaField, this.value, null);
         } else {
             return html`
                 ${this.value}
@@ -163,40 +163,24 @@ class CurrentRefinements extends LangMixin(DBPLitElement, createInstance) {
 
         let listItems = items.map((item) => {
             return item.refinements.map((refinement) => {
-                // Set refinement filter labels
+                const activeFacet = this.facets.find(
+                    (facet) => facet.attribute === refinement.attribute,
+                );
+
                 let label;
-                switch (refinement.type) {
-                    case 'numeric': {
-                        // Date picker refinement filter labels
-                        const activeFacet = this.facets.find(
-                            (facet) => facet.attribute === refinement.attribute,
-                        );
-                        if (activeFacet && activeFacet.fieldType === 'datepicker') {
-                            let date = new Date(refinement.value * 1000).toLocaleDateString(
-                                'de-AT',
-                                {
-                                    day: '2-digit',
-                                    month: 'short',
-                                    year: 'numeric',
-                                },
-                            );
-                            let operatorLabel =
-                                refinement.operator === '>='
-                                    ? i18n.t('cabinet-search.refinement-date-after-text')
-                                    : i18n.t('cabinet-search.refinement-date-before-text');
-                            label = `${operatorLabel} ${date}`;
-                        }
-                        break;
-                    }
-                    default: {
-                        // Set checkbox refinement filter labels
-                        label = i18n.t(
-                            `typesense-schema.${refinement.attribute}.${refinement.value}`,
-                            refinement.label,
-                        );
-                        break;
-                    }
+                if (activeFacet.renderFunction) {
+                    label = activeFacet.renderFunction(
+                        i18n,
+                        refinement.attribute,
+                        refinement.value,
+                        refinement.operator,
+                    );
+                } else {
+                    label = html`
+                        ${refinement.value}
+                    `;
                 }
+
                 return html`
                     <li class="ais-CurrentRefinements-category">
                         <span class="ais-CurrentRefinements-categoryLabel">${label}</span>
@@ -792,6 +776,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 const refinementListOptions = {
                     ...defaultRefinementListOptions,
                     ...(facetOptions.facet || {}),
+                    renderFunction: facetConfig.renderFunction,
                 };
 
                 that.facets.push(refinementListOptions);
@@ -813,6 +798,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 const dateRefinementOptions = {
                     ...defaultDateRefinementOptions,
                     ...(facetOptions.facet || {}),
+                    renderFunction: facetConfig.renderFunction,
                 };
 
                 that.facets.push(dateRefinementOptions);
