@@ -27,6 +27,7 @@ import {preactRefReplaceElement} from './utils';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from './i18n';
 import {createClearRefinements} from './clear-refinements.js';
+import {createCurrentRefinements} from './current-refinements';
 
 class StatsWidget extends LangMixin(DBPLitElement, createInstance) {
     constructor() {
@@ -344,6 +345,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.createStats(),
             this.createPagination('#pagination-bottom'),
             createClearRefinements(this, this._('#clear-filters')),
+            createCurrentRefinements(this, this._('#current-filters'), this.facetConfigs),
         ]);
 
         if (this.facetConfigs.length === 0) {
