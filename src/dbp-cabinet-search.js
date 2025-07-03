@@ -26,6 +26,7 @@ import InstantSearchModule from './modules/instantSearch.js';
 import {preactRefReplaceElement} from './utils';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from './i18n';
+import {createClearRefinements} from './clear-refinements.js';
 
 class StatsWidget extends LangMixin(DBPLitElement, createInstance) {
     constructor() {
@@ -342,6 +343,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.createSortBy(),
             this.createStats(),
             this.createPagination('#pagination-bottom'),
+            createClearRefinements(this, this._('#clear-filters')),
         ]);
 
         if (this.facetConfigs.length === 0) {
