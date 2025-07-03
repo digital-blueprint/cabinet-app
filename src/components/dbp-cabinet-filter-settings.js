@@ -70,7 +70,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
             ${commonStyles.getGeneralCSS(false)}
 
             :host {
-                --dbp-modal-max-width: 600px;
+                --dbp-modal-max-width: 650px;
             }
 
             #filter-modal .modal-title {
