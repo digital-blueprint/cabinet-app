@@ -6,10 +6,17 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal} from '@dbp-toolkit/common';
 
 export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElement) {
+    static settingsLocalStorageKey = 'dbp-cabinet:facetVisibilityStates';
+
     constructor() {
         super();
         this.modalRef = createRef();
         this.facetConfigs = [];
+
+        // Load facetVisibilityStates from localStorage or initialize it
+        // TODO: Do this per user, not globally
+        this.facetVisibilityStates =
+            JSON.parse(localStorage.getItem(CabinetFilterSettings.settingsLocalStorageKey)) || {};
     }
 
     static get scopedElements() {
@@ -25,6 +32,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         return {
             ...super.properties,
             facetConfigs: {type: Array, attribute: false},
+            facetVisibilityStates: {type: Object, attribute: false},
         };
     }
 
@@ -244,11 +252,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                     <dbp-button
                         class="check-btn button is-primary"
                         id="check"
-                        @click="${() => {
-                            this.updateSubmissionTable();
-                            this.closeColumnOptionsModal();
-                            this.setSubmissionTableSettings();
-                        }}">
+                        @click="${this.storeSettings}">
                         ${i18n.t('filter-settings.save')}
                     </dbp-button>
                 </div>
@@ -258,8 +262,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
     renderFacetListItem(item, key) {
         const i18n = this._i18n;
-        console.log('renderFacetListItem key', key);
-        console.log('renderFacetListItem item', item);
 
         if (item['filter-group']) {
             return html`
@@ -271,7 +273,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                             class="facet-visibility-icon"
                             @click="${() => {
                                 // TODO: Set icon to source_icons_eye-off
-                                this.changeFacetVisibility(key);
+                                this.changeFacetCategoryVisibility(item);
                             }}"></dbp-icon-button>
                     </div>
                 </li>
@@ -282,31 +284,37 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                     <div class="facet-field">
                         <span class="facet-button facet-order">${key + 1}</span>
                         <span class="facet-title"><strong>${i18n.t(item.name)}</strong></span>
-                        <dbp-icon-button
-                            icon-name="source_icons_eye-empty"
-                            class="facet-visibility-icon"
-                            @click="${() => {
-                                // TODO: Set icon to source_icons_eye-off
-                                this.changeFacetVisibility(item);
-                            }}"></dbp-icon-button>
+                        ${this.renderFacetVisibilityIconButton(item)}
                     </div>
                 </li>
             `;
         }
     }
 
-    changeFacetVisibility(item) {
-        console.log('item', item);
+    renderFacetVisibilityIconButton(item) {
+        const visible = this.facetVisibilityStates[item.schemaField] === true;
 
-        // Toggle the visibility of the facet
-        // if (item.visible) {
-        //     item.visible = false;
-        // } else {
-        //     item.visible = true;
-        // }
+        return html`
+            <dbp-icon-button
+                icon-name="${visible ? 'source_icons_eye-empty' : 'source_icons_eye-off'}"
+                class="facet-visibility-icon"
+                @click="${() => {
+                    this.changeFacetVisibility(item, !visible);
+                }}"></dbp-icon-button>
+        `;
+    }
 
-        // Re-render the list to reflect the changes
-        // this.requestUpdate();
+    changeFacetVisibility(item, visible) {
+        console.log('changeFacetVisibility item', item);
+
+        // Change the visibility of the facet
+        this.facetVisibilityStates[item.schemaField] = visible;
+
+        console.log('changeFacetVisibility this.facetVisibilityStates', this.facetVisibilityStates);
+
+        // Because the visibility state has changed, we need to re-render the list
+        // Setting a property of this.facetVisibilityStates will not trigger a re-render
+        this.requestUpdate();
     }
 
     renderFacetList() {
@@ -364,5 +372,22 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         // Opens the modal dialog for adding a document to a person after the document was
         // selected in the file source
         this.modalRef.value.open();
+    }
+
+    storeSettings(e) {
+        /**
+         * @type {IconButton}
+         */
+        const button = e.target;
+        button.start();
+
+        // Store the current facet visibility states in localStorage
+        // TODO: Do this per user, not globally
+        localStorage.setItem(
+            CabinetFilterSettings.settingsLocalStorageKey,
+            JSON.stringify(this.facetVisibilityStates),
+        );
+
+        button.stop();
     }
 }
