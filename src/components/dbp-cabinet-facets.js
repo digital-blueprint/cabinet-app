@@ -66,7 +66,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.facets = [];
         // This hash contains the facet widgets by their schema field name, so we can remove them from the search state later
         this.facetWidgetHash = {};
-        this.facetToggleEventContainers = [];
         this.active = false;
     }
 
@@ -295,41 +294,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             } else {
                 filterGroupElement.classList.remove('display-none');
             }
-        });
-    }
-
-    /**
-     * Create click events for all facet toggle buttons to trigger a search when a facet was expanded
-     */
-    createFacetToggleClickEvents() {
-        // Gather all facet toggle buttons to create click events for their panel header containers
-        this._a('button.ais-Panel-collapseButton').forEach((button) => {
-            // We need to get the panel header div, because it can be clicked too
-            const panelHeaderContainer = button.closest('div.ais-Panel-header');
-            if (!panelHeaderContainer) {
-                return;
-            }
-
-            // I don't think we can properly remove the event listeners in the instantsearch lifecycle,
-            // so the best we can do is to check if the panel header container already has an event listener attached to it
-            if (this.facetToggleEventContainers.includes(panelHeaderContainer)) {
-                return;
-            }
-
-            panelHeaderContainer.addEventListener('click', () => {
-                const isExpanded = button.attributes.getNamedItem('aria-expanded').value === 'true';
-
-                // If the facet was not expanded, do nothing
-                if (!isExpanded) {
-                    return;
-                }
-
-                // Trigger a search, so the facet items will be updated
-                this.search.helper.search();
-            });
-
-            // Now add the panel header container to the list of panel header containers with event listeners attached to them
-            this.facetToggleEventContainers.push(panelHeaderContainer);
         });
     }
 
