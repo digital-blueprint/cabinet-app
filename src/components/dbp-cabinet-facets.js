@@ -61,20 +61,11 @@ class FacetTitle extends LangMixin(DBPLitElement, createInstance) {
 export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
-        // this.search = null;
-        /** @type {HTMLElement} */
-        this.searchResultsElement = null;
         this.search = null;
         this.facets = [];
         // This hash contains the facet widgets by their schema field name, so we can remove them from the search state later
         this.facetWidgetHash = {};
         this.facetToggleEventContainers = [];
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-
-        this.searchResultsElement = /** @type {HTMLElement} */ (this.closest('.result-container'));
     }
 
     static get scopedElements() {
