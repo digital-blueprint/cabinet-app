@@ -9,6 +9,7 @@ import {createDateRefinement} from './dbp-cabinet-date-facet.js';
 import {preactRefReplaceChildren, preactRefReplaceElement} from '../utils.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element.js';
 import {createInstance} from '../i18n.js';
+import {classMap} from 'lit/directives/class-map.js';
 
 class FacetLabel extends LangMixin(DBPLitElement, createInstance) {
     constructor() {
@@ -66,6 +67,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         // This hash contains the facet widgets by their schema field name, so we can remove them from the search state later
         this.facetWidgetHash = {};
         this.facetToggleEventContainers = [];
+        this.active = false;
     }
 
     static get scopedElements() {
@@ -81,6 +83,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         return {
             ...super.properties,
             search: {type: Object, attribute: 'search'},
+            active: {type: Boolean, state: true},
         };
     }
     update(changedProperties) {
@@ -587,26 +590,9 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             facetWidget.classList.remove('gradient');
         }
     }
+
     toggleFilters() {
-        const filtersElement = this.shadowRoot.querySelector('.filters');
-        if (filtersElement) {
-            filtersElement.classList.toggle('active');
-        }
-    }
-    firstUpdated() {
-        const toggleCloseFilter = this.shadowRoot.querySelector('#filter-exit-icon');
-        if (toggleCloseFilter) {
-            toggleCloseFilter.addEventListener('click', () => {
-                console.log('close button clicked');
-                this.toggleCloseFilter();
-            });
-        }
-    }
-    toggleCloseFilter() {
-        const filtersElement = this.shadowRoot.querySelector('.filters');
-        if (filtersElement && filtersElement.classList.contains('active')) {
-            filtersElement.classList.remove('active');
-        }
+        this.active = !this.active;
     }
 
     /**
@@ -921,7 +907,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('-- Render Facets --');
 
         return html`
-            <div class="filters">
+            <div class="filters ${classMap({active: this.active})}">
                 <div class="filter-header">
                     <div class="filter-header__left">
                         <dbp-icon name="funnel" class="facet-filter-icon"></dbp-icon>
@@ -938,7 +924,10 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <dbp-icon
                         name="close"
                         id="filter-exit-icon"
-                        class="filter-exit-icon"></dbp-icon>
+                        class="filter-exit-icon"
+                        @click=${() => {
+                            this.toggleFilters();
+                        }}></dbp-icon>
                 </div>
                 <div id="filters-container" class="filters-container"></div>
             </div>

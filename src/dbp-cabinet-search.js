@@ -845,7 +845,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     hidden: !this.isLoggedIn() || this.isAuthPending() || this.loadingTranslations,
                 })}">
                 <div class="search-box-container">
-                    <div id="filter-header-button" class="filter-header-button">
+                    <div id="filter-header-button" class="filter-header-button"
+                        @click="${() => {
+                            const cabinetFacets = this.cabinetFacetsRef.value;
+                            cabinetFacets.toggleFilters();
+                        }}">
                         <dbp-icon name="funnel" class="facet-filter-button-icon"></dbp-icon>
                         <div class="filter-header-button__title">
                             ${i18n.t('cabinet-search.filters')}
@@ -1063,26 +1067,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         console.log('handleRoutingUrlChange reset');
-    }
-
-    firstUpdated() {
-        // Add toggle filter functionality
-        const toggleFilter = this.renderRoot?.querySelector('#filter-header-button');
-        const cabinetFacets = this.cabinetFacetsRef.value;
-        const toggleCloseFilter = this.renderRoot?.querySelector('#filter-exit-icon');
-
-        if (toggleFilter && cabinetFacets) {
-            toggleFilter.addEventListener('click', () => {
-                console.log('filter clicked');
-                cabinetFacets.toggleFilters();
-            });
-        }
-        if (toggleCloseFilter && cabinetFacets) {
-            toggleCloseFilter.addEventListener('click', () => {
-                console.log('close button clicked');
-                cabinetFacets.toggleCloseFilter();
-            });
-        }
     }
 }
 
