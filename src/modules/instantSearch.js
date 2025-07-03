@@ -73,7 +73,6 @@ export default class InstantSearchModule {
                 renderFunction: translationRenderFunction,
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t('cabinet-search.search-placeholder-person-person'),
                         searchable: false,
                         sortBy: ['name:desc'],
                     },
@@ -87,9 +86,9 @@ export default class InstantSearchModule {
                 schemaField: 'person.person',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-person-title'),
+                searchablePlaceholderKey: t('cabinet-search.search-placeholder-person-person'),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t('cabinet-search.search-placeholder-person-person'),
                         showMore: true,
                         showMoreLimit: showMoreLimitValue,
                     },
@@ -109,9 +108,6 @@ export default class InstantSearchModule {
                 name: t('cabinet-search.filter-person-personal-status-text-title'),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t(
-                            'cabinet-search.search-placeholder-person-personal-status-text',
-                        ),
                         searchable: false,
                         showMoreLimit: showMoreLimitValue,
                     },
@@ -134,11 +130,11 @@ export default class InstantSearchModule {
                 schemaField: 'person.exmatriculationStatus.text',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-exmatriculation-status-text-title'),
+                searchablePlaceholderKey: t(
+                    'cabinet-search.search-placeholder-person-exmatriculation-status',
+                ),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t(
-                            'cabinet-search.search-placeholder-person-exmatriculation-status',
-                        ),
                         showMore: false,
                         showMoreLimit: showMoreLimitValue,
                     },
@@ -149,11 +145,11 @@ export default class InstantSearchModule {
                 schemaField: 'person.admissionQualificationType.text',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-admission-qualification-type-text-title'),
+                searchablePlaceholderKey: t(
+                    'cabinet-search.search-placeholder-person-admission-qualification-type',
+                ),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t(
-                            'cabinet-search.search-placeholder-person-admission-qualification-type',
-                        ),
                         showMore: true,
                         showMoreLimit: showMoreLimitValue,
                     },
@@ -164,11 +160,11 @@ export default class InstantSearchModule {
                 schemaField: 'person.nationalities.text',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-nationalities-text-title'),
+                searchablePlaceholderKey: t(
+                    'cabinet-search.search-placeholder-person-nationalities-text',
+                ),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t(
-                            'cabinet-search.search-placeholder-person-nationalities-text',
-                        ),
                         showMore: true,
                         showMoreLimit: showMoreLimitValue,
                     },
@@ -181,7 +177,6 @@ export default class InstantSearchModule {
                 name: t('cabinet-search.filter-person-gender-text-title'),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t('cabinet-search.search-placeholder-person-gender'),
                         searchable: false,
                     },
                 },
@@ -191,11 +186,11 @@ export default class InstantSearchModule {
                 schemaField: 'person.immatriculationSemester',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-immatriculation-semester-title'),
+                searchablePlaceholderKey: t(
+                    'cabinet-search.search-placeholder-person-immatriculation-semester',
+                ),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t(
-                            'cabinet-search.search-placeholder-person-immatriculation-semester',
-                        ),
                         showMore: true,
                         showMoreLimit: showMoreLimitValue,
                     },
@@ -206,11 +201,11 @@ export default class InstantSearchModule {
                 schemaField: 'person.exmatriculationSemester',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-exmatriculation-semester-title'),
+                searchablePlaceholderKey: t(
+                    'cabinet-search.search-placeholder-person-exmatriculation-semester',
+                ),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t(
-                            'cabinet-search.search-placeholder-person-exmatriculation-semester',
-                        ),
                         showMore: true,
                         showMoreLimit: showMoreLimitValue,
                     },
@@ -221,11 +216,11 @@ export default class InstantSearchModule {
                 schemaField: 'person.homeAddress.country.text',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-home-address-country-text-title'),
+                searchablePlaceholderKey: t(
+                    'cabinet-search.search-placeholder-person-home-address-country-text',
+                ),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t(
-                            'cabinet-search.search-placeholder-person-home-address-country-text',
-                        ),
                         showMore: true,
                         showMoreLimit: showMoreLimitValue,
                     },
@@ -236,11 +231,11 @@ export default class InstantSearchModule {
                 schemaField: 'person.homeAddress.region',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-home-address-region-title'),
+                searchablePlaceholderKey: t(
+                    'cabinet-search.search-placeholder-person-home-address-region',
+                ),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t(
-                            'cabinet-search.search-placeholder-person-home-address-region',
-                        ),
                         showMore: true,
                         showMoreLimit: showMoreLimitValue,
                     },
@@ -251,11 +246,11 @@ export default class InstantSearchModule {
                 schemaField: 'person.homeAddress.place',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-home-address-place-title'),
+                searchablePlaceholderKey: t(
+                    'cabinet-search.search-placeholder-person-home-address-place',
+                ),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t(
-                            'cabinet-search.search-placeholder-person-home-address-place',
-                        ),
                         showMore: true,
                         showMoreLimit: showMoreLimitValue,
                     },
@@ -266,11 +261,11 @@ export default class InstantSearchModule {
                 schemaField: 'person.studyAddress.country.text',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-study-address-country-text-title'),
+                searchablePlaceholderKey: t(
+                    'cabinet-search.search-placeholder-person-student-address-country',
+                ),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t(
-                            'cabinet-search.search-placeholder-person-student-address-country',
-                        ),
                         showMore: true,
                         showMoreLimit: showMoreLimitValue,
                     },
@@ -281,11 +276,11 @@ export default class InstantSearchModule {
                 schemaField: 'person.studyAddress.region',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-study-address-region-title'),
+                searchablePlaceholderKey: t(
+                    'cabinet-search.search-placeholder-person-student-address-region',
+                ),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t(
-                            'cabinet-search.search-placeholder-person-student-address-region',
-                        ),
                         showMore: true,
                         showMoreLimit: showMoreLimitValue,
                     },
@@ -296,11 +291,11 @@ export default class InstantSearchModule {
                 schemaField: 'person.studyAddress.place',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-study-address-place-title'),
+                searchablePlaceholderKey: t(
+                    'cabinet-search.search-placeholder-person-student-address-place',
+                ),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t(
-                            'cabinet-search.search-placeholder-person-student-address-place',
-                        ),
                         showMore: true,
                         showMoreLimit: showMoreLimitValue,
                     },
@@ -311,9 +306,9 @@ export default class InstantSearchModule {
                 schemaField: 'study.name',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-study-name-title'),
+                searchablePlaceholderKey: t('cabinet-search.search-placeholder-study-name'),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t('cabinet-search.search-placeholder-study-name'),
                         showMore: true,
                         showMoreLimit: showMoreLimitValue,
                     },
@@ -324,9 +319,9 @@ export default class InstantSearchModule {
                 schemaField: 'study.type',
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-study-type-title'),
+                searchablePlaceholderKey: t('cabinet-search.search-placeholder-study-type'),
                 facetOptions: {
                     facet: {
-                        searchablePlaceholder: t('cabinet-search.search-placeholder-study-type'),
                         showMore: true,
                         showMoreLimit: showMoreLimitValue,
                     },

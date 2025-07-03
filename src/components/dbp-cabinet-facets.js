@@ -232,8 +232,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             return [];
         }
         let facets = [];
-        // Translate placeholders
-        facetsConfigs = this.translatePlaceholders(facetsConfigs);
         this.facetWidgetHash = {};
 
         facetsConfigs.forEach((facetConfig) => {
@@ -363,6 +361,14 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         filterItem.classList.add(`filter-type-${cssTypeClass}`);
         this._(`#${groupId}`).appendChild(filterItem);
         let cabinetFacets = this;
+
+        if (facetConfig.searchablePlaceholderKey) {
+            const placeholder = i18n.t(facetConfig.searchablePlaceholderKey);
+            facetOptions.facet = {
+                ...facetOptions.facet,
+                searchablePlaceholder: placeholder,
+            };
+        }
 
         return function () {
             const defaultPanelOptions = {
@@ -499,26 +505,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
             }
         };
-    }
-
-    // Translate placeholders in array of objects
-    translatePlaceholders(facetsConfigs) {
-        const i18n = this._i18n;
-        return facetsConfigs.map((item) => {
-            if (item['filter-group']) {
-                return item;
-            }
-
-            if (item.facetOptions && item.facetOptions.facet) {
-                const facet = item.facetOptions.facet;
-
-                if (facet.searchablePlaceholder) {
-                    facet.searchablePlaceholder = i18n.t(facet.searchablePlaceholder);
-                }
-            }
-
-            return item;
-        });
     }
 
     handleGradientDisplay() {
