@@ -79,7 +79,6 @@
     "communication-abstract": "Summary",
     "Contact-information": "Contact information",
     "curriculum-version": "Curriculum version",
-    "default-sort": "Standard",
     "doc-modal-added": "Added",
     "doc-modal-all": "All",
     "doc-modal-comment": "Comment",
@@ -137,7 +136,6 @@
     "immatriculation-Date": "Registration date",
     "immatriculationSemester": "Immatriculation semester",
     "last-modified": "Last modified",
-    "last-modified-documents": "Last modified documents",
     "loading-message": "",
     "nationalities": "Citizenship(s)",
     "nationality-input": {
@@ -161,7 +159,6 @@
     "semester": "Semester",
     "show-deleted-only": "Show deleted only",
     "social-SecurityNr": "Social security number",
-    "sorting": "Sorting",
     "ssPIN": "ssPIN",
     "st-PersonNr": "Identification number",
     "status": "Study status",

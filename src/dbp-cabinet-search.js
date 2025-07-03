@@ -11,7 +11,7 @@ import {Activity} from './activity.js';
 import metadata from './dbp-cabinet-search.metadata.json';
 import instantsearch from 'instantsearch.js';
 import DbpTypesenseInstantSearchAdapter from './dbp-typesense-instantsearch-adapter.js';
-import {hits, searchBox, sortBy, stats, pagination} from 'instantsearch.js/es/widgets';
+import {hits, searchBox, stats, pagination} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
 import {pascalToKebab} from './utils';
 import {CabinetFile} from './components/dbp-cabinet-file.js';
@@ -341,7 +341,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.createConfigureWidget(),
             this.createSearchBox(),
             this.createHits(),
-            this.createSortBy(),
             this.createStats(),
             this.createPagination('#pagination-bottom'),
             createClearRefinements(this, this._('#clear-filters')),
@@ -453,21 +452,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 flex: 4 1 auto;
             }
 
-            .sort-widget .ais-SortBy-select {
-                height: 2em;
-                padding: 1px 0.5em;
-                padding-right: 2em;
-                /* override toolkit select style */
-                background-size: 16px;
-                background-position: right 0.5em center;
-                display: none;
-            }
-
-            .sort-widget .ais-SortBy-select option {
-                background-color: var(--dbp-background);
-                color: var(--dbp-content);
-            }
-
             .ais-SearchBox-form {
                 display: flex;
             }
@@ -547,12 +531,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     0.15s,
                     color 0.15s;
                 border: none;
-            }
-
-            .dropdown-title {
-                padding: 5px;
-                align-items: center;
-                display: none;
             }
 
             .ais-CurrentRefinements-categoryLabel {
@@ -800,32 +778,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
     }
 
-    createSortBy() {
-        const i18n = this._i18n;
-        const container = this._('#sort-by');
-        const titleElement = document.createElement('div');
-        titleElement.textContent = i18n.t('sorting') + ' :';
-        titleElement.className = 'dropdown-title';
-        container.insertAdjacentElement('beforebegin', titleElement);
-        return sortBy({
-            container: container,
-            items: [
-                {
-                    label: i18n.t('default-sort'),
-                    value: `${TYPESENSE_COLLECTION}`,
-                } /* default sorting "@type:desc,_text_match:desc,person.familyName:asc" */,
-                {
-                    label: i18n.t('family-name'),
-                    value: `${TYPESENSE_COLLECTION}/sort/@type:desc,person.familyName:asc,_text_match:desc`,
-                },
-                {
-                    label: i18n.t('last-modified-documents'),
-                    value: `${TYPESENSE_COLLECTION}/sort/@type:asc,file.base.modifiedTimestamp:desc,_text_match:desc`,
-                },
-            ],
-        });
-    }
-
     createStats() {
         let statsWidget = this.createScopedElement('dbp-cabinet-stats-widget');
         statsWidget.setAttribute('subscribe', 'lang');
@@ -926,7 +878,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                             </g>
                         </svg>
                     </div>
-                    <div id="sort-by" class="sort-widget"></div>
                 </div>
                 <div class="delete-result">
                 <div class="deleted-only">
