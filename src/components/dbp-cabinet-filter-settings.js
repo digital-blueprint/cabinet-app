@@ -61,6 +61,10 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS(false)}
 
+            :host {
+                --dbp-modal-max-width: 600px;
+            }
+
             #filter-modal .modal-title {
                 display: flex;
                 align-items: center;
