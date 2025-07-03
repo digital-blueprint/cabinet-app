@@ -69,7 +69,7 @@ export default class InstantSearchModule {
                 groupId: 'category',
                 schemaField: '@type',
                 schemaFieldType: 'checkbox',
-                name: null,
+                name: t('cabinet-search.filter-type-title'),
                 renderFunction: translationRenderFunction,
                 facetOptions: {
                     facet: {

@@ -183,7 +183,9 @@ class CurrentRefinements extends LangMixin(DBPLitElement, createInstance) {
 
                 return html`
                     <li class="ais-CurrentRefinements-category">
-                        <span class="ais-CurrentRefinements-categoryLabel">${label}</span>
+                        <span class="ais-CurrentRefinements-categoryLabel">
+                            ${i18n.t(activeFacet.facetNameKey)}: ${label}
+                        </span>
                         <button
                             class="ais-CurrentRefinements-delete"
                             title="${i18n.t('cabinet-search.refinement-delete-filter-button-text')}"
@@ -656,7 +658,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             schemaField,
             schemaFieldType = 'checkbox',
             facetOptions = {},
-            name = null,
+            name,
             usePanel = true,
         } = facetConfig;
 
@@ -681,7 +683,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         let titleElement =
                             cabinetFacets.createScopedElement('dbp-cabinet-facet-title');
                         titleElement.setAttribute('subscribe', 'lang');
-                        titleElement.key = name ?? '';
+                        titleElement.key = name;
                         return html`
                             <span ref=${preactRefReplaceChildren(titleElement)}></span>
                         `;
@@ -777,6 +779,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     ...defaultRefinementListOptions,
                     ...(facetOptions.facet || {}),
                     renderFunction: facetConfig.renderFunction,
+                    facetNameKey: facetConfig.name,
                 };
 
                 that.facets.push(refinementListOptions);
@@ -799,6 +802,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     ...defaultDateRefinementOptions,
                     ...(facetOptions.facet || {}),
                     renderFunction: facetConfig.renderFunction,
+                    facetNameKey: facetConfig.name,
                 };
 
                 that.facets.push(dateRefinementOptions);
