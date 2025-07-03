@@ -93,11 +93,6 @@ class CurrentRefinements extends LangMixin(DBPLitElement, createInstance) {
                 min-height: 4em;
             }
 
-            .refinement-container {
-                min-height: 3em;
-                grid-area: header;
-            }
-
             .ais-CurrentRefinements-list {
                 display: flex;
                 flex-wrap: wrap;
@@ -321,23 +316,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     connectedCallback() {
         super.connectedCallback();
 
-        const allFiltersContainer = document.createElement('div');
-        allFiltersContainer.setAttribute('id', 'refinement-container');
-        allFiltersContainer.classList.add('refinement-container');
-
-        const currentRefinementsContainer = document.createElement('div');
-        currentRefinementsContainer.setAttribute('id', 'current-filters');
-        currentRefinementsContainer.classList.add('current-filters');
-
-        const clearRefinementsContainer = document.createElement('div');
-        clearRefinementsContainer.setAttribute('id', 'clear-filters');
-        clearRefinementsContainer.classList.add('clear-filters');
-
-        allFiltersContainer.append(currentRefinementsContainer);
-        allFiltersContainer.append(clearRefinementsContainer);
-
         this.searchResultsElement = /** @type {HTMLElement} */ (this.closest('.result-container'));
-        this.searchResultsElement.prepend(allFiltersContainer);
     }
 
     static get scopedElements() {

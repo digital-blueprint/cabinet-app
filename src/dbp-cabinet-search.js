@@ -935,6 +935,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div id="result-count"></div>
                 </div>
                 <div class="result-container">
+                    <div id="refinement-container" class="refinement-container">
+                        <div id="current-filters" class="current-filters"></div>
+                        <div id="clear-filters" class="clear-filters"></div>
+                    </div>
                     <dbp-cabinet-facets
                         class="dbp-cabinet-facets"
                         ${ref(this.cabinetFacetsRef)}
