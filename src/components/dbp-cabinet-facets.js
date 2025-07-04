@@ -912,11 +912,9 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @param schemaField
      */
     removeWidget(schemaField) {
-        const filterItem = this._(`#${this.schemaNameToKebabCase(schemaField)}`);
-        if (filterItem) {
-            filterItem.remove();
-        }
-
+        this._facetsConfigs = this._facetsConfigs.filter((facetConfig) => {
+            return facetConfig.schemaField !== schemaField;
+        });
         delete this.facetWidgetHash[schemaField];
     }
 
