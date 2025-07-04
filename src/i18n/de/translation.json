@@ -116,7 +116,8 @@
     "exmatriculation": "Abmeldestatus",
     "exmatriculation-GI": "Abmeldedatum",
     "facets": {
-        "no-data-available": "Keine Daten verfügbar"
+        "no-data-available": "Keine Daten verfügbar",
+        "no-results": "Keine Ergebnisse gefunden"
     },
     "family-name": "Nachname",
     "filter-settings": {

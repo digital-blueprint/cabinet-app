@@ -60,6 +60,14 @@ class FacetTitle extends LangMixin(DBPLitElement, createInstance) {
     }
 }
 
+class NoResultsLabel extends LangMixin(DBPLitElement, createInstance) {
+    render() {
+        return html`
+            ${this._i18n.t('facets.no-results')}
+        `;
+    }
+}
+
 export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
@@ -75,6 +83,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             ...super.scopedElements,
             'dbp-cabinet-facet-label': FacetLabel,
             'dbp-cabinet-facet-title': FacetTitle,
+            'dbp-cabinet-no-results-label': NoResultsLabel,
             'dbp-icon': Icon,
         };
     }
@@ -304,6 +313,15 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     searchable: true,
                     searchableShowReset: false,
                     templates: {
+                        searchableNoResults(data, {html}) {
+                            let noResultsLabel = cabinetFacets.createScopedElement(
+                                'dbp-cabinet-no-results-label',
+                            );
+                            noResultsLabel.setAttribute('subscribe', 'lang');
+                            return html`
+                                <span ref=${preactRefReplaceElement(noResultsLabel)}></span>
+                            `;
+                        },
                         item(item, {html}) {
                             if (item.count === undefined || item.value === 'undefined') {
                                 return html`

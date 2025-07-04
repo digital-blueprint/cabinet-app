@@ -116,7 +116,8 @@
     "exmatriculation": "Exmatriculation status",
     "exmatriculation-GI": "Deregistration status",
     "facets": {
-        "no-data-available": "No data available"
+        "no-data-available": "No data available",
+        "no-results": "No results found"
     },
     "family-name": "Surname",
     "filter-settings": {
