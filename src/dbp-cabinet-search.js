@@ -273,7 +273,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Listen to DbpCabinetFilterPerson events to filter to a specific person
         this.addEventListener('DbpCabinetFilterPerson', function (event) {
-            that.cabinetFacetsRef.value.filterOnSelectedPerson(event);
+            let helper = that.search.helper;
+            helper.toggleFacetRefinement('person.person', event.detail.person).search();
         });
 
         // Listen to DbpCabinetFilterPerson events to filter to a specific person

@@ -63,7 +63,6 @@ class FacetTitle extends LangMixin(DBPLitElement, createInstance) {
 export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
-        this.search = null;
         this.facets = [];
         // This hash contains the facet widgets by their schema field name, so we can remove them from the search state later
         this.facetWidgetHash = {};
@@ -83,7 +82,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            search: {type: Object, attribute: 'search'},
             active: {type: Boolean, state: true},
             _facetsConfigs: {type: Array, state: true},
         };
@@ -164,38 +162,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
 
         return resultHash;
-    }
-
-    filterOnSelectedPerson(event) {
-        if (event.detail.person) {
-            // @TODO: don't hardcode facet name?
-            const facetName = 'person.person';
-            const value = event.detail.person;
-
-            // Get the InstantSearch helper
-            const helper = this.search.helper;
-
-            // Toggle the refinement
-            helper.toggleRefinement(facetName, value).search();
-            this.openFacetOnPersonSelect(facetName);
-        }
-    }
-
-    /**
-     * Open a facet if a person is selected with the "person select" button
-     * @param {string} facetName - the name of the facet field
-     */
-    openFacetOnPersonSelect(facetName) {
-        const facetID = facetName.replace('.', '-');
-
-        /** @type {HTMLElement} */
-        const facet = this._(`#${facetID}`);
-
-        if (facet && facet.querySelector('.ais-Panel').classList.contains('ais-Panel--collapsed')) {
-            /** @type {HTMLElement} */
-            const facetHeader = facet.querySelector('.ais-Panel-header');
-            facetHeader.click();
-        }
     }
 
     /**
