@@ -121,9 +121,7 @@ class CurrentRefinements extends LangMixin(DBPLitElement, createInstance) {
                         refinement.operator,
                     );
                 } else {
-                    label = html`
-                        ${refinement.value}
-                    `;
+                    label = refinement.value;
                 }
 
                 return html`

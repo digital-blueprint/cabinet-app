@@ -1,5 +1,4 @@
 import {createInstance} from '../i18n.js';
-import {html} from 'lit';
 import {getNationalityDisplayName} from '../objectTypes/nationalityCodes.js';
 
 // Dummy function to make translations
@@ -9,16 +8,12 @@ function t(key) {
 
 function translationRenderFunction(i18n, schemaField, value, operator = null) {
     let text = i18n.t(`typesense-schema.${schemaField}.${value}`, value);
-    return html`
-        ${text}
-    `;
+    return text;
 }
 
 function nationalityRenderFunction(i18n, schemaField, value, operator = null) {
     let text = getNationalityDisplayName(value, i18n.language);
-    return html`
-        ${text}
-    `;
+    return text;
 }
 
 function datePickerRenderFunction(i18n, schemaField, value, operator = null) {
@@ -31,9 +26,7 @@ function datePickerRenderFunction(i18n, schemaField, value, operator = null) {
         operator === '>='
             ? i18n.t('cabinet-search.refinement-date-after-text')
             : i18n.t('cabinet-search.refinement-date-before-text');
-    return html`
-        ${operatorLabel} ${date}
-    `;
+    return `${operatorLabel} ${date}`;
 }
 
 export default class InstantSearchModule {

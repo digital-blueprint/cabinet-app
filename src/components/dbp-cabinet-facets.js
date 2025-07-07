@@ -31,10 +31,13 @@ class FacetLabel extends LangMixin(DBPLitElement, createInstance) {
 
     render() {
         if (this.renderFunction) {
-            return this.renderFunction(this._i18n, this.schemaField, this.value, null);
+            let value = this.renderFunction(this._i18n, this.schemaField, this.value, null);
+            return html`
+                <span title="${value}">${value}</span>
+            `;
         } else {
             return html`
-                ${this.value}
+                <span title="${this.value}">${this.value}</span>
             `;
         }
     }
@@ -318,7 +321,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                             facetLabel.setAttribute('value', item.value);
                             facetLabel.renderFunction = facetConfig.renderFunction;
                             facetLabel.setAttribute('subscribe', 'lang');
-                            facetLabel.setAttribute('title', item.label);
                             facetLabel.setAttribute('class', 'refinement-list-item-name');
 
                             return html`
