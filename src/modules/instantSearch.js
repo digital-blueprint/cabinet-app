@@ -56,9 +56,8 @@ export default class InstantSearchModule {
      *  facetOptions: An object containing options for the facet.
      *  facet: An object to override facet options.
      *  - facet options: https://www.algolia.com/doc/api-reference/widgets/refinement-list/js/
-     *  panel: An object to override panel options.
-     *  - panel options: https://www.algolia.com/doc/api-reference/widgets/panel/js/
-     *  usePanel: A boolean indicating whether to use a panel for the facet (optional).
+     *  usePanel: A boolean indicating whether to use a panel for the facet (optional, defaults to true).
+     *  hidden: A boolean indicating whether the facet should be hidden (optional, defaults to false).
      * @returns {Array} - Array of search facets config
      */
     getFacetsConfig() {
@@ -87,6 +86,7 @@ export default class InstantSearchModule {
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-person-title'),
                 searchablePlaceholderKey: t('cabinet-search.search-placeholder-person-person'),
+                hidden: true,
                 facetOptions: {
                     facet: {
                         showMore: true,

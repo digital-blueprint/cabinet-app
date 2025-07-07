@@ -4,9 +4,9 @@ import {Icon, LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
 import {css, html} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
-import {panel, refinementList} from 'instantsearch.js/es/widgets/index.js';
+import {refinementList} from 'instantsearch.js/es/widgets/index.js';
 import {createDateRefinement} from './dbp-cabinet-date-facet.js';
-import {preactRefReplaceChildren, preactRefReplaceElement} from '../utils.js';
+import {preactRefReplaceElement} from '../utils.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element.js';
 import {createInstance} from '../i18n.js';
 import {classMap} from 'lit/directives/class-map.js';
@@ -40,30 +40,93 @@ class FacetLabel extends LangMixin(DBPLitElement, createInstance) {
     }
 }
 
-class FacetTitle extends LangMixin(DBPLitElement, createInstance) {
-    constructor() {
-        super();
-        this.key = '';
-    }
-
-    static get properties() {
-        return {
-            ...super.properties,
-            key: {type: String},
-        };
-    }
-
-    render() {
-        return html`
-            ${this._i18n.t(this.key)}
-        `;
-    }
-}
-
 class NoResultsLabel extends LangMixin(DBPLitElement, createInstance) {
     render() {
         return html`
             ${this._i18n.t('facets.no-results')}
+        `;
+    }
+}
+
+class FacetPanel extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
+    constructor() {
+        super();
+        this.titleKey = '';
+        this.isOpen = false;
+    }
+
+    static properties = {
+        titleKey: {type: String},
+        isOpen: {type: Boolean, state: true},
+    };
+
+    static get scopedElements() {
+        return {
+            ...super.scopedElements,
+            'dbp-icon': Icon,
+        };
+    }
+
+    static styles = css`
+        .collapsible-button {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .chevron-container {
+            color: var(--dbp-accent);
+            width: 16px;
+            height: 16px;
+        }
+
+        .panel-header {
+            display: flex;
+            gap: 1em;
+            align-items: center;
+            padding: 0.5em auto 0.5em;
+            justify-content: space-between;
+            user-select: none;
+        }
+
+        .content {
+            display: none;
+            padding-left: 6px;
+        }
+
+        .content.show {
+            display: block;
+        }
+    `;
+
+    _toggleContent(event) {
+        event.stopPropagation();
+        this.isOpen = !this.isOpen;
+    }
+
+    render() {
+        return html`
+            <div class="collapsible-section">
+                <div class="panel-header" @click="${this._toggleContent}">
+                    <span>${this._i18n.t(this.titleKey)}</span>
+                    <button
+                        class="collapsible-button"
+                        aria-expanded="${this.isOpen}"
+                        aria-controls="content"
+                        @click="${this._toggleContent}">
+                        <dbp-icon
+                            class="chevron-container"
+                            name="${this.isOpen ? 'chevron-up' : 'chevron-down'}"
+                            alt="${this.isOpen ? 'chevron-up' : 'chevron-down'}"></dbp-icon>
+                    </button>
+                </div>
+                <div class="content ${this.isOpen ? 'show' : ''}">
+                    <slot></slot>
+                </div>
+            </div>
         `;
     }
 }
@@ -82,8 +145,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         return {
             ...super.scopedElements,
             'dbp-cabinet-facet-label': FacetLabel,
-            'dbp-cabinet-facet-title': FacetTitle,
             'dbp-cabinet-no-results-label': NoResultsLabel,
+            'dbp-cabinet-facet-panel': FacetPanel,
             'dbp-icon': Icon,
         };
     }
@@ -119,45 +182,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @returns {*[]}
      */
     gatherActivatedWidgetsFacetNames(facetsConfigs, originalFacetNames) {
-        const generatedFacetNames = ['@type'];
-        const facetWidgets = this._a('#filters-container .filter');
-        const schemaFieldHash = this.getSchemaFieldHash(facetsConfigs);
-
-        facetWidgets.forEach((facetWidget) => {
-            // Gather all facet div containers that are collapsible
-            const div = facetWidget.querySelector('.ais-Panel--collapsible');
-
-            if (div === null) {
-                return;
-            }
-
-            // Get the HTML id from the widget
-            const facetId = facetWidget.id;
-            const facetName = facetId ? schemaFieldHash[facetId] : null;
-            const parent = div.parentElement;
-
-            if (!parent || !facetId || !facetName || div.hasAttribute('hidden')) {
-                return;
-            }
-
-            // If it's not a checkbox, we want to add the facet all the time, because we can't handle the missing data in the facet
-            // if (!parent.classList.contains('filter-type-checkbox')) {
-            //     console.log('gatherActivatedWidgetsFacetNames parent.classList', parent.classList);
-            //     generatedFacetNames.push(facetName);
-            //     return;
-            // }
-
-            // Check if the div container is collapsed or hidden, we only want visible and uncollapsed containers
-            if (
-                div.classList.contains('ais-Panel--collapsed') === false &&
-                !div.hasAttribute('hidden')
-            ) {
-                generatedFacetNames.push(facetName);
-            }
-        });
-
-        // Filter generatedFacetNames to only include items that are in originalFacetNames
-        return generatedFacetNames.filter((item) => originalFacetNames.includes(item));
+        // XXX: removed since panels got reworked, this needs to be re-implemented if needed
+        return [];
     }
 
     getSchemaFieldHash(facetsConfigs) {
@@ -240,13 +266,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         const i18n = this._i18n;
         let that = this;
 
-        const {
-            schemaField,
-            schemaFieldType = 'checkbox',
-            facetOptions = {},
-            name,
-            usePanel = true,
-        } = facetConfig;
+        const {schemaField, schemaFieldType = 'checkbox', facetOptions = {}} = facetConfig;
 
         // Remove special characters from schema field name to use as css class and translation key.
         const schemaFieldSafe = schemaField.replace(/[@#]/g, '');
@@ -264,45 +284,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         return function () {
-            const defaultPanelOptions = {
-                templates: {
-                    header(options, {html}) {
-                        let titleElement =
-                            cabinetFacets.createScopedElement('dbp-cabinet-facet-title');
-                        titleElement.setAttribute('subscribe', 'lang');
-                        titleElement.key = name;
-                        return html`
-                            <span ref=${preactRefReplaceChildren(titleElement)}></span>
-                        `;
-                    },
-                    collapseButtonText(options, {html}) {
-                        let iconElement = cabinetFacets.createScopedElement('dbp-icon');
-                        iconElement.classList.add('chevron-container');
-                        iconElement.setAttribute(
-                            'name',
-                            options.collapsed ? 'chevron-down' : 'chevron-up',
-                        );
-                        iconElement.setAttribute(
-                            'alt',
-                            options.collapsed ? 'chevron-down' : 'chevron-up',
-                        );
-
-                        return html`
-                            <span ref=${preactRefReplaceChildren(iconElement)}></span>
-                        `;
-                    },
-                },
-                collapsed: () => true,
-                hidden(options) {
-                    const facetValues = options.results.getFacetValues(schemaField, {});
-                    return Array.isArray(facetValues) ? facetValues.length === 0 : false;
-                },
-            };
-            const panelOptions = {
-                ...defaultPanelOptions,
-                ...(facetOptions.panel || {}),
-            };
-
             if (schemaFieldType === 'checkbox') {
                 const defaultRefinementListOptions = {
                     fieldType: schemaFieldType,
@@ -369,12 +350,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 that.facets.push(refinementListOptions);
 
-                if (usePanel === false) {
-                    return refinementList(refinementListOptions);
-                } else {
-                    const PanelWidget = panel(panelOptions)(refinementList);
-                    return PanelWidget(refinementListOptions);
-                }
+                return refinementList(refinementListOptions);
             }
 
             if (schemaFieldType === 'datepicker') {
@@ -390,12 +366,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 that.facets.push(dateRefinementOptions);
 
-                if (usePanel === false) {
-                    return createDateRefinement(dateRefinementOptions);
-                } else {
-                    const PanelWidget = panel(panelOptions)(createDateRefinement);
-                    return PanelWidget(dateRefinementOptions);
-                }
+                return createDateRefinement(dateRefinementOptions);
             }
         };
     }
@@ -504,12 +475,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${commonStyles.getThemeCSS()}
             ${commonStyles.getGeneralCSS(false)}
 
-            /* @TODO: remove this once we have a better solution for hiding facets (from configuration?) */
-            .filter--person-person {
-                visibility: hidden;
-                height: 0;
-            }
-
             .display-none {
                 display: none !important;
             }
@@ -586,24 +551,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 display: none;
             }
 
-            .chevron-container {
-                color: var(--dbp-override-accent);
-                width: 16px;
-                height: 16px;
-            }
-
-            /* panel search */
-            .ais-Panel-collapseButton {
-                background: none !important;
-                border: none !important;
-                position: relative;
-            }
-
-            .ais-Panel-collapseButton span {
-                display: flex;
-                right: 2px;
-            }
-
+            /* refinement search */
             .ais-SearchBox-form {
                 display: flex;
                 gap: 0.25em;
@@ -648,30 +596,9 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 bottom: 0.5em;
             }
 
-            .ais-Panel-header {
-                display: flex;
-                gap: 1em;
-                align-items: center;
-                padding: 0.5em auto 0.5em;
-                justify-content: space-between;
-            }
-
-            /* Prevent text selection on panel headers on click */
-            .ais-Panel-header > span {
-                user-select: none;
-            }
-
-            .ais-Panel-body {
-                border-top: none 0;
-                padding: 0 0.5em;
-            }
-
-            .filter-type-datepicker .ais-Panel-body {
+            .filter-type-datepicker {
                 padding: 1em 0;
                 width: max-content;
-            }
-
-            .filter-type-datepicker .ais-Panel-body > div {
                 display: flex;
                 flex-direction: column;
                 gap: 1.5em;
@@ -729,16 +656,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 white-space: nowrap;
             }
 
-            .ais-Panel-body {
-                /*transition: opacity 0.25s, display 0.25s;*/
-                /*transition-behavior: allow-discrete;*/
-            }
-
-            .ais-Panel--collapsed .ais-Panel-body {
-                opacity: 0;
-                display: none;
-            }
-
             button.ais-RefinementList-showMore {
                 margin-bottom: 1em;
             }
@@ -773,10 +690,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .filter-exit-icon {
                     display: block;
-                }
-
-                filter-header-button__title {
-                    align-items: center;
                 }
             }
         `;
@@ -819,25 +732,31 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         const cssTypeClass = this.schemaNameToKebabCase(
                             facetConfig.schemaFieldType,
                         );
-                        return html`
-                            <div
-                                id="${cssClass}"
-                                class="filter filter--${cssClass} filter-type-${cssTypeClass}"
-                                @click=${(event) => {
-                                    if (
-                                        event.target instanceof HTMLElement &&
-                                        event.target.closest('.ais-Panel-header') &&
-                                        !event.target.closest('.ais-Panel-collapseButton')
-                                    ) {
-                                        const collapseButton = event.currentTarget.querySelector(
-                                            '.ais-Panel-collapseButton',
-                                        );
-                                        if (collapseButton instanceof HTMLElement) {
-                                            collapseButton.click();
-                                        }
-                                    }
-                                }}></div>
-                        `;
+                        let hidden = facetConfig.hidden || false;
+                        let usePanel = facetConfig.usePanel ?? true;
+                        if (usePanel) {
+                            return html`
+                                <dbp-cabinet-facet-panel
+                                    .lang="${this.lang}"
+                                    class="${classMap({'display-none': hidden})}"
+                                    .titleKey="${facetConfig.name}">
+                                    <div
+                                        id="${cssClass}"
+                                        class="filter filter--${cssClass} filter-type-${cssTypeClass}"></div>
+                                </dbp-cabinet-facet-panel>
+                            `;
+                        } else {
+                            return html`
+                                <div
+                                    id="${cssClass}"
+                                    class="${classMap({
+                                        'display-none': hidden,
+                                        filter: true,
+                                        [`filter--${cssClass}`]: true,
+                                        [`filter-type-${cssTypeClass}`]: true,
+                                    })}"></div>
+                            `;
+                        }
                     },
                 )}
             `;
