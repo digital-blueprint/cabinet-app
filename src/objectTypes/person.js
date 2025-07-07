@@ -124,7 +124,6 @@ class CabinetHitElement extends BaseHitElement {
             }
 
             .person-id {
-                margin-right: 10px;
                 color: white;
                 gap: 0.5em;
             }
@@ -219,11 +218,13 @@ class CabinetHitElement extends BaseHitElement {
                     flex-direction: column;
                     justify-content: flex-end;
                     height: 100%;
+                    align-items: end;
                 }
 
                 .person-id {
                     display: inline-flex;
                     align-items: center;
+                    margin-right: 0;
                 }
 
                 .hit-person-row {
@@ -263,6 +264,12 @@ class CabinetHitElement extends BaseHitElement {
                     display: grid;
                     grid-template-columns: 1fr;
                     grid-template-rows: auto auto;
+                }
+
+                .person-id {
+                    display: inline-flex;
+                    align-items: center;
+                    margin-right: 0;
                 }
 
                 .hits-person-footer {
