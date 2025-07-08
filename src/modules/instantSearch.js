@@ -1,5 +1,4 @@
 import {createInstance} from '../i18n.js';
-import {getNationalityDisplayName} from '../objectTypes/nationalityCodes.js';
 
 // Dummy function to make translations
 function t(key) {
@@ -8,11 +7,6 @@ function t(key) {
 
 function translationRenderFunction(i18n, schemaField, value, operator = null) {
     let text = i18n.t(`typesense-schema.${schemaField}.${value}`, value);
-    return text;
-}
-
-function nationalityRenderFunction(i18n, schemaField, value, operator = null) {
-    let text = getNationalityDisplayName(value, i18n.language);
     return text;
 }
 
@@ -403,13 +397,12 @@ export default class InstantSearchModule {
             },
             {
                 groupId: 'file',
-                schemaField: 'file.file-cabinet-identityDocument.nationality',
+                schemaField: 'file.file-cabinet-identityDocument.nationalityText',
                 schemaFieldType: 'checkbox',
-                renderFunction: nationalityRenderFunction,
                 name: t(
                     'cabinet-search.filter-file-file-cabinet-identity-document-nationality-title',
                 ),
-                facetOptions: {facet: {searchable: false}},
+                facetOptions: {facet: {searchable: true}},
             },
         ];
     }
