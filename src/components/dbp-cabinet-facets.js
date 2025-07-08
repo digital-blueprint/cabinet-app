@@ -71,15 +71,6 @@ class FacetPanel extends LangMixin(ScopedElementsMixin(DBPLitElement), createIns
     }
 
     static styles = css`
-        .collapsible-button {
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
         .chevron-container {
             color: var(--dbp-accent);
             width: 16px;
@@ -93,6 +84,14 @@ class FacetPanel extends LangMixin(ScopedElementsMixin(DBPLitElement), createIns
             padding: 0.5em auto 0.5em;
             justify-content: space-between;
             user-select: none;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            width: 100%;
+            font-size: inherit;
+            color: inherit;
+            font-family: inherit;
         }
 
         .content {
@@ -113,20 +112,18 @@ class FacetPanel extends LangMixin(ScopedElementsMixin(DBPLitElement), createIns
     render() {
         return html`
             <div class="collapsible-section">
-                <div class="panel-header" @click="${this._toggleContent}">
+                <button
+                    class="panel-header"
+                    aria-expanded="${this.isOpen}"
+                    aria-controls="content"
+                    @click="${this._toggleContent}">
                     <span>${this._i18n.t(this.titleKey)}</span>
-                    <button
-                        class="collapsible-button"
-                        aria-expanded="${this.isOpen}"
-                        aria-controls="content"
-                        @click="${this._toggleContent}">
-                        <dbp-icon
-                            class="chevron-container"
-                            name="${this.isOpen ? 'chevron-up' : 'chevron-down'}"
-                            alt="${this.isOpen ? 'chevron-up' : 'chevron-down'}"></dbp-icon>
-                    </button>
-                </div>
-                <div class="content ${this.isOpen ? 'show' : ''}">
+                    <dbp-icon
+                        class="chevron-container"
+                        name="${this.isOpen ? 'chevron-up' : 'chevron-down'}"
+                        alt="${this.isOpen ? 'chevron-up' : 'chevron-down'}"></dbp-icon>
+                </button>
+                <div id="content" class="content ${this.isOpen ? 'show' : ''}">
                     <slot></slot>
                 </div>
             </div>
