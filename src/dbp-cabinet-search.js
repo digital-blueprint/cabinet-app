@@ -668,9 +668,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.entryPointUrl,
             this.auth.token,
         );
+        let facetFields = this.facetConfigs
+            .filter((facetConfig) => facetConfig.schemaField)
+            .map((facetConfig) => facetConfig.schemaField);
         return {
             server: serverConfig,
             additionalSearchParameters: this.getSearchParameters(),
+            // study.status.text can contain ":" for example
+            facetableFieldsWithSpecialCharacters: facetFields,
         };
     }
 
