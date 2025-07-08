@@ -7,7 +7,7 @@ import {
     getCommonStyles,
 } from '../baseObject.js';
 import {getDocumentHit, getCommunication} from './schema.js';
-import {formatDate} from '../utils.js';
+import {renderFieldWithHighlight} from '../utils.js';
 import {
     DbpDateTimeElement,
     DbpDateTimeView,
@@ -148,18 +148,19 @@ class CabinetHitElement extends BaseHitElement {
                     <div class="ais-doc-title-wrapper">
                         <dbp-icon class="icon-container" name="files"></dbp-icon>
                         <div class="ais-doc-title">
-                            ${i18n.t(
-                                `typesense-schema.file.base.additionalType.key.${hit.file.base.additionalType.key}`,
-                            )}
+                            ${renderFieldWithHighlight(hit, 'file.base.additionalType.text')}
                         </div>
                     </div>
                     <div class="text-container">
                         <div class="ais-doc-Hits-header-items header-item1">
-                            ${hit.person.fullName}&nbsp${formatDate(hit.person.birthDate)}
+                            ${renderFieldWithHighlight(hit, 'person.familyName')},
+                            ${renderFieldWithHighlight(hit, 'person.givenName')}
+                            ${renderFieldWithHighlight(hit, 'person.birthDateDe')}
                         </div>
                         &nbsp
                         <div class="ais-doc-Hits-header-items header-item2">
-                            ${hit.person.studId}&nbsp|&nbsp${hit.person.stPersonNr}
+                            ${renderFieldWithHighlight(hit, 'person.studId')} |
+                            ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
                         </div>
                     </div>
                 </header>

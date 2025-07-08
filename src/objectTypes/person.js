@@ -352,8 +352,8 @@ class CabinetHitElement extends BaseHitElement {
                         ${renderFieldWithHighlight(hit, 'person.givenName')}
                     </div>
                     <div class="person-birthdate">
-                        <!-- birthDate: ${hit.person.birthDate}-->
-                        ${formatDate(hit.person.birthDate)}
+                        <!-- birthDate: ${hit.person.birthDateDe}-->
+                        ${renderFieldWithHighlight(hit, 'person.birthDateDe')}
                     </div>
                 </div>
                 <div class="hit-right-wrapper">
