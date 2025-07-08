@@ -196,7 +196,6 @@ class CabinetHitElement extends BaseHitElement {
                     display: flex;
                     align-items: center;
                     flex-wrap: wrap;
-                    gap: 0.5em;
                 }
 
                 .right-column {
@@ -239,6 +238,14 @@ class CabinetHitElement extends BaseHitElement {
             }
 
             @media (min-width: 769px) and (max-width: 1099px) {
+                .ais-Hits-header {
+                    align-items: normal;
+                }
+
+                .hit-right-wrapper {
+                    align-items: end;
+                }
+
                 .hit-person-info-header {
                     display: grid;
                     grid-template-columns: auto auto;
@@ -268,7 +275,7 @@ class CabinetHitElement extends BaseHitElement {
 
                 .person-id {
                     display: inline-flex;
-                    align-items: center;
+                    align-items: end;
                     margin-right: 0;
                 }
 
