@@ -59,7 +59,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
         this.activity = new Activity(metadata);
-        this.fuzzySearch = true;
         this.objectTypeFormComponents = {};
         this.objectTypeHitComponents = {};
         this.objectTypeViewComponents = {};
@@ -650,17 +649,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             // filter_by: "base.isScheduledForDeletion:" + (this.showScheduledForDeletion ? "true" : "false"),
             // filter_by: "file.base.deleteAtTimestamp:>0",
             // filter_by: "@type:=Person || file.base.isSchedulerForDeletion:=false",
-            num_typos: '2,2,0,0,0,0,0,0',
+            num_typos: '1,1,0,0,0,0,0,0',
+            drop_tokens_threshold: 0,
+            typo_tokens_threshold: 0,
             group_by: 'base.personGroupId',
             group_limit: 1,
             group_missing_values: false,
             facet_strategy: 'exhaustive',
         };
-
-        if (!this.fuzzySearch) {
-            searchParameters.num_typos = '0';
-            searchParameters.typo_tokens_threshold = 0;
-        }
 
         return searchParameters;
     }
