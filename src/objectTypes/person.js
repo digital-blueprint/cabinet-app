@@ -117,6 +117,11 @@ class CabinetHitElement extends BaseHitElement {
                 color: white;
             }
 
+            .ais-Hits-header ::selection {
+                background: var(--dbp-on-primary-surface);
+                color: var(--dbp-primary-surface);
+            }
+
             .hit-right-wrapper {
                 display: flex;
                 justify-content: flex-end;
