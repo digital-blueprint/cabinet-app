@@ -478,6 +478,10 @@ class CabinetViewElement extends BaseViewElement {
         return css`
             ${super.styles}
 
+            .section {
+                break-inside: avoid;
+            }
+
             .modal-Gi-header-container {
                 display: flex;
                 align-items: center;
@@ -800,6 +804,44 @@ class CabinetViewElement extends BaseViewElement {
                       `
             }
         </div>
+        <a href="#" @click="${(e) => {
+            let that = this;
+
+            const printWindow = window.open('', '_blank');
+            const elementHTML = this.shadowRoot.innerHTML;
+
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        :root {
+                            font-family: Arial, sans-serif;
+                            font-size: 12px;
+                        }
+
+                        ${that.constructor.styles.cssText}
+
+                        .header-button-container {
+                            display: none;
+                        }
+                    </style>
+                </head>
+                <body>
+                ${elementHTML}
+                </body>
+                </html>
+            `);
+
+            printWindow.document.close();
+            printWindow.onload = () => {
+                printWindow.print();
+                printWindow.close();
+            };
+
+            }}">
+            PDF
+        </a>
         <div class="edit-tu-button">
             <a href="${hit.person.coUrl}" @click=${this._onEdit}>
                 <dbp-icon  title='${i18n.t('Edit-student-data')}'
@@ -810,7 +852,8 @@ class CabinetViewElement extends BaseViewElement {
             </a>
         </div>
         </div>
-            <div class="modal-Gi-header-container">
+            <div class="section">
+            <div class="modal-Gi-header-container heading-container">
                 <div class="modal-Gi-header-svg">
                     <svg fill="#000000" width="32px" height="32px" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg">
                         <path d="M225.26514,60.20508l-96-32a4.00487,4.00487,0,0,0-2.53028,0l-96,32c-.05713.019-.10815.04809-.16406.06958-.08545.033-.16821.06811-.251.10644a4.04126,4.04126,0,0,0-.415.22535c-.06714.04174-.13575.08007-.20044.12548a3.99,3.99,0,0,0-.47632.39307c-.02027.01953-.0437.0354-.06348.05542a3.97787,3.97787,0,0,0-.44556.53979c-.04077.0586-.07373.12183-.11132.18262a3.99741,3.99741,0,0,0-.23487.43262c-.03613.07837-.06811.15771-.09912.23852a3.96217,3.96217,0,0,0-.144.46412c-.01929.07714-.04126.15234-.05591.2312A3.98077,3.98077,0,0,0,28,64v80a4,4,0,0,0,8,0V69.55005l43.87524,14.625A59.981,59.981,0,0,0,104.272,175.09814a91.80574,91.80574,0,0,0-53.39062,38.71631,3.99985,3.99985,0,1,0,6.70117,4.36914,84.02266,84.02266,0,0,1,140.83447,0,3.99985,3.99985,0,1,0,6.70117-4.36914A91.80619,91.80619,0,0,0,151.728,175.09814a59.981,59.981,0,0,0,24.39673-90.92309l49.14038-16.38013a4.00037,4.00037,0,0,0,0-7.58984ZM180,120A52,52,0,1,1,87.92993,86.85986l38.80493,12.93506a4.00487,4.00487,0,0,0,2.53028,0l38.80493-12.93506A51.85133,51.85133,0,0,1,180,120ZM168.00659,78.44775l-.01294.0044L128,91.7832,44.64893,64,128,36.2168,211.35107,64Z"/>
@@ -863,8 +906,10 @@ class CabinetViewElement extends BaseViewElement {
                     </ul>
                 </div>
             </div>
+            </div>
             <br />
-            <div class="modal-Si-header-container">
+            <div class="section">
+            <div class="modal-Si-header-container heading-container">
                 <div class="modal-Si-header-svg">
                     <svg width="32px" height="32px" version="1.1" id="Layer_2_1_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                     viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
@@ -918,8 +963,10 @@ class CabinetViewElement extends BaseViewElement {
                 </li>
                 `,
                     )}
+            </div>
             </br>
-            <div class="modal-Ci-header-container">
+            <div class="section">
+            <div class="modal-Ci-header-container heading-container">
                 <div class="modal-Ci-header-svg">
                     <svg width="32px" height="32px" version="1.1" id="Layer_2_1_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                     viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
@@ -981,6 +1028,7 @@ class CabinetViewElement extends BaseViewElement {
                 <li><b>academicTitlePreceding</b> ${hit.person.academicTitlePreceding}</li>
                 <li><b>coUrl</b> <a href="${hit.person.coUrl}">${hit.person.coUrl}</a></li>-->
             </ul>
+            </div>
             <!--<h4>Applications</h4>-->
             <!--<ul>
                 ${hit.person.applications.map(
