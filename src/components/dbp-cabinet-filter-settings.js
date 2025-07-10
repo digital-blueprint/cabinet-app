@@ -14,8 +14,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         super();
         this.modalRef = createRef();
         this.facetConfigs = [];
-        this.settingsLocalStorageKey = '';
-        this.facetVisibilityStates = {};
     }
 
     static get scopedElements() {
@@ -31,8 +29,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         return {
             ...super.properties,
             facetConfigs: {type: Array, attribute: false},
-            facetVisibilityStates: {type: Object, attribute: false},
-            settingsLocalStorageKey: {type: String, attribute: false},
         };
     }
 
@@ -422,38 +418,12 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
             'The filter settings were stored successfully.',
             'success',
         );
-    }
 
-    update(changedProperties) {
-        changedProperties.forEach((oldValue, propName) => {
-            switch (propName) {
-                case 'auth':
-                    this.generateSettingsLocalStorageKey();
-                    break;
-                case 'settingsLocalStorageKey':
-                    // If the settingsLocalStorageKey has changed, we need to load the facetVisibilityStates again
-                    this.loadFacetVisibilityStates();
-                    break;
-            }
+        const customEvent = new CustomEvent('settingsStored', {
+            detail: this.facetVisibilityStates,
+            bubbles: true,
+            composed: true,
         });
-
-        super.update(changedProperties);
-    }
-
-    loadFacetVisibilityStates() {
-        if (!this.settingsLocalStorageKey) {
-            return;
-        }
-
-        this.facetVisibilityStates =
-            JSON.parse(localStorage.getItem(this.settingsLocalStorageKey)) || {};
-    }
-
-    generateSettingsLocalStorageKey() {
-        const publicId = this.auth['user-id'];
-
-        if (publicId) {
-            this.settingsLocalStorageKey = `dbp-cabinet:${publicId}:facetVisibilityStates`;
-        }
+        this.dispatchEvent(customEvent);
     }
 }

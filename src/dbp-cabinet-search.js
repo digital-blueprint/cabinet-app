@@ -140,6 +140,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 case 'routingUrl':
                     this.handleRoutingUrlChange();
                     break;
+                case 'facetVisibilityStates':
+                    console.log(' this.facetVisibilityStates', this.facetVisibilityStates);
+                    break;
             }
         });
 
@@ -918,6 +921,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 <dbp-cabinet-filter-settings
                     ${ref(this.filterSettingsModalRef)}
+                    @settingsStored=${this.updateFacetVisibilityStates}
                     subscribe="lang,auth,entry-point-url"></dbp-cabinet-view-person>
             </div>
         `;
@@ -928,6 +932,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.sendSetPropertyEvent('routing-url', '/', true);
             this.resetRoutingUrl = false;
         }
+    }
+
+    updateFacetVisibilityStates(e) {
+        this.facetVisibilityStates = e.detail || {};
     }
 
     filterFacetConfigsBySchemaFields(schemaFields) {
