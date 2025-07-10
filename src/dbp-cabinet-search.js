@@ -55,6 +55,14 @@ class StatsWidget extends LangMixin(DBPLitElement, createInstance) {
     }
 }
 
+function debounce(func, delay) {
+    let timerId;
+    return function (...args) {
+        clearTimeout(timerId);
+        timerId = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
@@ -730,6 +738,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             container: this._('#searchbox'),
             showLoadingIndicator: false,
             placeholder: placeholderText,
+            queryHook: debounce((query, refine) => {
+                refine(query);
+            }, 150),
         });
     }
 
