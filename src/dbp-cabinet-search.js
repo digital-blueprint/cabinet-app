@@ -380,6 +380,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             ref.hideFilterGroupIfEmpty();
         });
 
+        // When the search is stalled, we dim the search results,
+        // so the user knows that the search is still running.
+        search.on('render', () => {
+            if (search.status === 'stalled') {
+                this._('.results').classList.add('stalled');
+            } else {
+                this._('.results').classList.remove('stalled');
+            }
+        });
+
         // Clear date facets on refinement clearing.
         search.helper.on('change', (res) => {
             /** @type {CabinetFacets} */
@@ -422,6 +432,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 min-height: 3em;
                 grid-area: header;
                 display: flex;
+            }
+
+            .results.stalled {
+                opacity: 0.6;
+                pointer-events: none;
+                transition: opacity 0.2s ease;
             }
 
             .result-container {
@@ -728,6 +744,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             future: {
                 preserveSharedStateOnUnmount: true,
             },
+            stalledSearchDelay: 500,
         });
     }
 
