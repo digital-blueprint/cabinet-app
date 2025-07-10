@@ -4,6 +4,10 @@ import {IconButton, ScopedElementsMixin} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal} from '@dbp-toolkit/common';
+import {
+    scopedElements as modalNotificationScopedElements,
+    sendModalNotification,
+} from '../modules/modal-notification';
 
 export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -16,8 +20,8 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
     static get scopedElements() {
         return {
+            ...modalNotificationScopedElements(),
             'dbp-icon': Icon,
-            'dbp-modal': Modal,
             'dbp-button': Button,
             'dbp-icon-button': IconButton,
         };
@@ -207,6 +211,14 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         name="cog"></dbp-icon>
                     <h3>Filter configuration</h3>
                 </div>
+                <div slot="header" class="header">
+                    <div class="modal-notification">
+                        <dbp-notification
+                            id="modal-notification"
+                            inline
+                            lang="${this.lang}"></dbp-notification>
+                    </div>
+                </div>
                 <div slot="content" class="modal-content">${this.renderFacetList()}</div>
                 <div slot="footer" class="modal-footer">
                     <div>
@@ -288,6 +300,17 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 </li>
             `;
         }
+    }
+
+    /**
+     * Sends a notification to the filter modal
+     * @param summary Summary of the notification
+     * @param body Body of the notification
+     * @param type Type can be info/success/warning/danger
+     * @param timeout Timeout in seconds, 0 means no timeout
+     */
+    sendFilterModalNotification(summary, body, type = 'info', timeout = null) {
+        sendModalNotification('modal-notification', summary, body, type, timeout);
     }
 
     renderFacetVisibilityIconButton(item) {
@@ -392,6 +415,13 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         );
 
         button.stop();
+
+        // Send a notification that the settings were stored
+        this.sendFilterModalNotification(
+            'Filter settings stored',
+            'The filter settings were stored successfully.',
+            'success',
+        );
     }
 
     update(changedProperties) {
