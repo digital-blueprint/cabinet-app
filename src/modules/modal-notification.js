@@ -1,0 +1,48 @@
+import {Modal} from '@dbp-toolkit/common';
+import {send} from '@dbp-toolkit/common/notification';
+import {Notification} from '@dbp-toolkit/notification';
+
+export const scopedElements = () => {
+    return {
+        'dbp-modal': Modal,
+        'dbp-notification': Notification,
+    };
+};
+
+export const sendModalNotification = (
+    targetNotificationId,
+    summary,
+    body,
+    type = 'info',
+    timeout = null,
+) => {
+    if (timeout === null) {
+        switch (type) {
+            case 'info':
+            case 'success':
+                timeout = 5;
+                break;
+            case 'warning':
+                timeout = 10;
+                break;
+            case 'danger':
+                timeout = 15;
+                // delete options.timeout;
+                break;
+        }
+    }
+
+    let options = {
+        summary: summary,
+        body: body,
+        type: type,
+        timeout: timeout,
+        targetNotificationId: targetNotificationId,
+    };
+
+    if (timeout <= 0) {
+        delete options.timeout;
+    }
+
+    send(options);
+};

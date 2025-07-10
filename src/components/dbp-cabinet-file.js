@@ -13,9 +13,12 @@ import * as formElements from '../objectTypes/formElements.js';
 import {BaseFormElement} from '../baseObject.js';
 import {send} from '@dbp-toolkit/common/notification';
 import {getSelectorFixCSS} from '../styles.js';
-import {Notification} from '@dbp-toolkit/notification';
 import {formatDate} from '../utils.js';
 import {TypesenseService} from '../services/typesense.js';
+import {
+    scopedElements as modalNotificationScopedElements,
+    sendModalNotification,
+} from '../modules/modal-notification';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static Modes = {
@@ -127,13 +130,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     static get scopedElements() {
         return {
+            ...modalNotificationScopedElements(),
             'dbp-icon': Icon,
             'dbp-file-source': FileSource,
             'dbp-file-sink': FileSink,
             'dbp-pdf-viewer': PdfViewer,
-            'dbp-modal': Modal,
             'dbp-button': Button,
-            'dbp-notification': Notification,
         };
     }
 
@@ -722,42 +724,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     /**
      * Sends a notification to the document modal
-     * See https://github.com/digital-blueprint/toolkit/blob/main/packages/common/notification.js
      * @param summary Summary of the notification
      * @param body Body of the notification
      * @param type Type can be info/success/warning/danger
      * @param timeout Timeout in seconds, 0 means no timeout
      */
     documentModalNotification(summary, body, type = 'info', timeout = null) {
-        if (timeout === null) {
-            switch (type) {
-                case 'info':
-                case 'success':
-                    timeout = 5;
-                    break;
-                case 'warning':
-                    timeout = 10;
-                    break;
-                case 'danger':
-                    timeout = 15;
-                    // delete options.timeout;
-                    break;
-            }
-        }
-
-        let options = {
-            summary: summary,
-            body: body,
-            type: type,
-            timeout: timeout,
-            targetNotificationId: 'document-modal-notification',
-        };
-
-        if (timeout <= 0) {
-            delete options.timeout;
-        }
-
-        send(options);
+        sendModalNotification('document-modal-notification', summary, body, type, timeout);
     }
 
     async downloadFile(e) {
