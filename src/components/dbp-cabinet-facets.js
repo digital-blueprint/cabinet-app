@@ -4,7 +4,6 @@ import {Icon, LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
 import {css, html} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
-import {refinementList} from 'instantsearch.js/es/widgets/index.js';
 import {createDateRefinement} from './dbp-cabinet-date-facet.js';
 import {preactRefReplaceElement} from '../utils.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element.js';
@@ -12,6 +11,8 @@ import {createInstance} from '../i18n.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {repeat} from 'lit/directives/repeat.js';
 import {FacetPanel} from './facet-panel.js';
+import {connectRefinementList} from 'instantsearch.js/es/connectors/index.js';
+import { RefinementList } from './refinement-list.js';
 
 class FacetLabel extends LangMixin(DBPLitElement, createInstance) {
     constructor() {
@@ -69,6 +70,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-cabinet-no-results-label': NoResultsLabel,
             'dbp-cabinet-facet-panel': FacetPanel,
             'dbp-icon': Icon,
+            'dbp-cabinet-refinement-list': RefinementList,
         };
     }
 
@@ -270,7 +272,22 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 that.facets.push(refinementListOptions);
 
-                return refinementList(refinementListOptions);
+                const renderRefinementList = (renderOptions, isFirstRender) => {
+                    const container = renderOptions.widgetParams.container;
+
+                    let refinementList;
+                    if (isFirstRender) {
+                        refinementList = cabinetFacets.createScopedElement('dbp-cabinet-refinement-list');
+                        refinementList.setAttribute('subscribe', 'lang');
+                        container.replaceChildren(refinementList);
+                    } else {
+                        refinementList = container.children[0];
+                    }
+                    refinementList.refinementListRenderOptions = renderOptions;
+                };
+
+                const customRefinementList = connectRefinementList(renderRefinementList)
+                return customRefinementList(refinementListOptions);
             }
 
             if (schemaFieldType === 'datepicker') {
