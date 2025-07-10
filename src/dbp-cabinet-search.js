@@ -333,15 +333,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         search.start();
 
-        search.on('render', () => {
-            /** @type {CabinetFacets} */
-            const ref = this.cabinetFacetsRef.value;
-
-            // Handle gradients display on facets.
-            ref.handleGradientDisplay();
-            ref.hideFilterGroupIfEmpty();
-        });
-
         // When the search is stalled, we dim the search results,
         // so the user knows that the search is still running.
         search.on('render', () => {

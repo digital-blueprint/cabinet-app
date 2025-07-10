@@ -60,20 +60,6 @@
         "refinement-date-before-text": "vorher",
         "refinement-delete-all-filters": "Filter löschen",
         "refinement-delete-filter-button-text": "Auswahl löschen",
-        "search-placeholder-person-admission-qualification-type": "Suchen",
-        "search-placeholder-person-exmatriculation-semester": "Suchen",
-        "search-placeholder-person-exmatriculation-status": "Suchen",
-        "search-placeholder-person-home-address-country-text": "Suchen",
-        "search-placeholder-person-home-address-place": "Suchen",
-        "search-placeholder-person-home-address-region": "Suchen",
-        "search-placeholder-person-immatriculation-semester": "Suchen",
-        "search-placeholder-person-nationalities-text": "Suchen",
-        "search-placeholder-person-person": "Person suchen",
-        "search-placeholder-person-student-address-country": "Suchen",
-        "search-placeholder-person-student-address-place": "Suchen",
-        "search-placeholder-person-student-address-region": "Suchen",
-        "search-placeholder-study-name": "Suchen",
-        "search-placeholder-study-type": "Suchen",
         "type-filter-group-title": "Kategorie"
     },
     "communication-abstract": "Zusammenfassung",
@@ -122,8 +108,13 @@
         "table-title": "Export: {{personName}}"
     },
     "facets": {
-        "no-data-available": "Keine Daten verfügbar",
-        "no-results": "Keine Ergebnisse gefunden"
+        "no-items-found": "Keine Ergebnisse gefunden",
+        "no-refinements": "Keine Verfeinerungen verfügbar",
+        "search": {
+            "placeholder": "Suchen"
+        },
+        "show-less": "Weniger anzeigen",
+        "show-more": "Mehr anzeigen"
     },
     "family-name": "Nachname",
     "filter-settings": {

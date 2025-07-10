@@ -1,56 +1,15 @@
 // noinspection CssUnusedSymbol,JSUnresolvedReference
 
-import {Icon, LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
+import {Icon, ScopedElementsMixin} from '@dbp-toolkit/common';
 import {css, html} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
-import {refinementList} from 'instantsearch.js/es/widgets/index.js';
 import {createDateRefinement} from './dbp-cabinet-date-facet.js';
-import {preactRefReplaceElement} from '../utils.js';
-import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element.js';
-import {createInstance} from '../i18n.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {repeat} from 'lit/directives/repeat.js';
 import {FacetPanel} from './facet-panel.js';
-
-class FacetLabel extends LangMixin(DBPLitElement, createInstance) {
-    constructor() {
-        super();
-        this.schemaField = '';
-        this.value = '';
-        this.renderFunction = null;
-    }
-
-    static get properties() {
-        return {
-            ...super.properties,
-            renderFunction: {type: Object, attribute: false},
-            schemaField: {type: String},
-            value: {type: String},
-        };
-    }
-
-    render() {
-        if (this.renderFunction) {
-            let value = this.renderFunction(this._i18n, this.schemaField, this.value, null);
-            return html`
-                <span title="${value}">${value}</span>
-            `;
-        } else {
-            return html`
-                <span title="${this.value}">${this.value}</span>
-            `;
-        }
-    }
-}
-
-class NoResultsLabel extends LangMixin(DBPLitElement, createInstance) {
-    render() {
-        return html`
-            ${this._i18n.t('facets.no-results')}
-        `;
-    }
-}
+import {connectRefinementList} from 'instantsearch.js/es/connectors/index.js';
+import {RefinementList} from './refinement-list.js';
 
 export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -65,10 +24,9 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     static get scopedElements() {
         return {
             ...super.scopedElements,
-            'dbp-cabinet-facet-label': FacetLabel,
-            'dbp-cabinet-no-results-label': NoResultsLabel,
-            'dbp-cabinet-facet-panel': FacetPanel,
             'dbp-icon': Icon,
+            'dbp-cabinet-facet-panel': FacetPanel,
+            'dbp-cabinet-refinement-list': RefinementList,
         };
     }
 
@@ -157,34 +115,12 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
         return this.facetWidgetHash;
     }
 
-    hideFilterGroupIfEmpty() {
-        const filterGroups = this._a('#filters-container .filter-group');
-        filterGroups.forEach((filterGroup) => {
-            const filterGroupElement = /** @type {HTMLElement} */ (filterGroup);
-            const refinementLists = filterGroupElement.querySelectorAll(
-                '.filter .ais-RefinementList',
-            );
-            if (refinementLists.length === 0) {
-                return;
-            }
-            const activeFilters = Array.from(refinementLists).filter(
-                (list) => !list.classList.contains('ais-RefinementList--noRefinement'),
-            );
-            if (activeFilters.length === 0) {
-                filterGroupElement.classList.add('display-none');
-            } else {
-                filterGroupElement.classList.remove('display-none');
-            }
-        });
-    }
-
     /**
      * Generates a facet based on schema name of a configuration
      * @param {object} facetConfig - configuration for the facet
      * @returns {function(): *}
      */
     generateFacet(facetConfig) {
-        const i18n = this._i18n;
         let that = this;
 
         const {schemaField, schemaFieldType = 'checkbox', facetOptions = {}} = facetConfig;
@@ -196,14 +132,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         let cabinetFacets = this;
 
-        if (facetConfig.searchablePlaceholderKey) {
-            const placeholder = i18n.t(facetConfig.searchablePlaceholderKey);
-            facetOptions.facet = {
-                ...facetOptions.facet,
-                searchablePlaceholder: placeholder,
-            };
-        }
-
         return function () {
             if (schemaFieldType === 'checkbox') {
                 const defaultRefinementListOptions = {
@@ -213,55 +141,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     sortBy: ['isRefined:desc', 'count:desc', 'name:asc'],
                     limit: 12,
                     searchable: true,
-                    searchableShowReset: false,
-                    templates: {
-                        searchableNoResults(data, {html}) {
-                            let noResultsLabel = cabinetFacets.createScopedElement(
-                                'dbp-cabinet-no-results-label',
-                            );
-                            noResultsLabel.setAttribute('subscribe', 'lang');
-                            return html`
-                                <span ref=${preactRefReplaceElement(noResultsLabel)}></span>
-                            `;
-                        },
-                        item(item, {html}) {
-                            if (item.count === undefined || item.value === 'undefined') {
-                                return html`
-                                    <div class="facets-no-data">
-                                        ${i18n.t('facets.no-data-available')}
-                                    </div>
-                                `;
-                            }
-
-                            let facetLabel =
-                                cabinetFacets.createScopedElement('dbp-cabinet-facet-label');
-                            facetLabel.setAttribute('schemaField', schemaField);
-                            facetLabel.setAttribute('value', item.value);
-                            facetLabel.renderFunction = facetConfig.renderFunction;
-                            facetLabel.setAttribute('subscribe', 'lang');
-                            facetLabel.setAttribute('class', 'refinement-list-item-name');
-
-                            return html`
-                                <div class="refinement-list-item refinement-list-item--${cssClass}">
-                                    <div class="refinement-list-item-inner">
-                                        <label class="refinement-list-item-checkbox">
-                                            <input
-                                                type="checkbox"
-                                                class="custom-checkbox"
-                                                aria-label="${item.label}"
-                                                value="${item.value}"
-                                                checked=${item.isRefined} />
-                                        </label>
-                                        <span ref=${preactRefReplaceElement(facetLabel)}></span>
-                                    </div>
-                                    <span class="refinement-list-item-count">(${item.count})</span>
-                                </div>
-                            `;
-                        },
-                        searchableSubmit() {
-                            return null;
-                        },
-                    },
                 };
                 const refinementListOptions = {
                     ...defaultRefinementListOptions,
@@ -270,7 +149,25 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 that.facets.push(refinementListOptions);
 
-                return refinementList(refinementListOptions);
+                const renderRefinementList = (renderOptions, isFirstRender) => {
+                    const container = renderOptions.widgetParams.container;
+
+                    let refinementList;
+                    if (isFirstRender) {
+                        refinementList = cabinetFacets.createScopedElement(
+                            'dbp-cabinet-refinement-list',
+                        );
+                        refinementList.setAttribute('subscribe', 'lang');
+                        refinementList.renderFunction = facetConfig.renderFunction;
+                        container.replaceChildren(refinementList);
+                    } else {
+                        refinementList = container.children[0];
+                    }
+                    refinementList.refinementListRenderOptions = renderOptions;
+                };
+
+                const customRefinementList = connectRefinementList(renderRefinementList);
+                return customRefinementList(refinementListOptions);
             }
 
             if (schemaFieldType === 'datepicker') {
@@ -289,87 +186,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 return createDateRefinement(dateRefinementOptions);
             }
         };
-    }
-
-    handleGradientDisplay() {
-        const facetWidgets = this._a('#filters-container .filter');
-
-        if (facetWidgets) {
-            facetWidgets.forEach((facetWidget) => {
-                const widget = /** @type {HTMLElement} */ (facetWidget);
-
-                const COLLAPSED_COUNT = 12;
-                const EXPANDED_COUNT = 30;
-                const showMoreButton = widget.querySelector('.ais-RefinementList-showMore');
-                const searchBox = widget.querySelector('.ais-SearchBox-input');
-                const resetButton = widget.querySelector('.ais-SearchBox-reset');
-                const facetList = widget.querySelector('.ais-RefinementList-list');
-                const facetItems = widget.querySelectorAll('.refinement-list-item');
-                const facetCount = facetItems.length;
-
-                // Toggle is-expanded class on showMoreButton click
-                if (showMoreButton && showMoreButton.getAttribute('data-event-added') === null) {
-                    showMoreButton.addEventListener('click', () => {
-                        widget
-                            .querySelector('.ais-RefinementList-list')
-                            .classList.toggle('is-expanded');
-                    });
-                    showMoreButton.setAttribute('data-event-added', 'true');
-                }
-
-                if (searchBox) {
-                    // Handle gradient on search
-                    if (searchBox.getAttribute('data-event-added') === null) {
-                        searchBox.addEventListener('input', () => {
-                            setTimeout(() => {
-                                this.showHideFacetGradientOnSearch(facetWidget);
-                            }, 200);
-                        });
-                        searchBox.setAttribute('data-event-added', 'true');
-                    }
-
-                    // Handle gradient on search reset
-                    if (resetButton && resetButton.getAttribute('data-event-added') === null) {
-                        resetButton.addEventListener('click', (event) => {
-                            setTimeout(() => {
-                                this.showHideFacetGradientOnSearch(facetWidget);
-                            }, 200);
-                        });
-                        resetButton.setAttribute('data-event-added', 'true');
-                    }
-                }
-
-                // Check if facet needs gradient
-                if (facetList) {
-                    const isExpanded = facetList.classList.contains('is-expanded');
-
-                    if (!showMoreButton) {
-                        widget.classList.add('gradient');
-                        return;
-                    }
-                    // Remove gradient if all facet items are visible.
-                    if (!isExpanded && facetCount < COLLAPSED_COUNT) {
-                        widget.classList.add('gradient');
-                    }
-                    if (isExpanded && facetCount < EXPANDED_COUNT) {
-                        widget.classList.add('gradient');
-                    }
-                }
-            });
-        }
-    }
-
-    showHideFacetGradientOnSearch(facetWidget) {
-        const EXPANDED_COUNT = 30;
-        const facetItems = facetWidget.querySelectorAll('.refinement-list-item');
-        const facetCount = facetItems.length;
-        const isShowMoreButtonPresent = facetWidget.querySelector('.ais-RefinementList-showMore');
-
-        if (!isShowMoreButtonPresent && facetCount < EXPANDED_COUNT) {
-            facetWidget.classList.add('gradient');
-        } else {
-            facetWidget.classList.remove('gradient');
-        }
     }
 
     toggleFilters() {
@@ -446,19 +262,11 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 color: var(--dbp-override-accent);
             }
 
-            .custom-checkbox {
-                transform: translateY(-10%);
-            }
-
             .filter-group {
                 margin-bottom: 2em;
                 display: flex;
                 flex-direction: column;
                 gap: 1em;
-            }
-
-            .refinement-list-item-inner > refinement-list-item-count {
-                padding-left: 1em;
             }
 
             .filter-title {
@@ -469,51 +277,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .filter:has(> [hidden]) {
                 display: none;
-            }
-
-            /* refinement search */
-            .ais-SearchBox-form {
-                display: flex;
-                gap: 0.25em;
-                padding-top: 0.5em;
-            }
-
-            .ais-SearchBox-input {
-                flex-grow: 1;
-            }
-
-            input[type='search']::-webkit-search-cancel-button {
-                -webkit-appearance: none;
-                appearance: none;
-            }
-
-            .ais-SearchBox-input::-webkit-search-cancel-button {
-                -webkit-appearance: none;
-                appearance: none;
-            }
-
-            .ais-RefinementList-list {
-                list-style: none;
-                margin: 0;
-                padding: 0.5em 0;
-                position: relative;
-            }
-
-            .filter:not(.gradient) .ais-RefinementList-list:after {
-                content: '';
-                display: block;
-                height: 30px;
-                width: 100%;
-                background: linear-gradient(
-                    0deg,
-                    rgb(from var(--dbp-background) r g b / 100%) 0%,
-                    rgb(from var(--dbp-background) r g b / 60%) 60%,
-                    rgb(from var(--dbp-background) r g b / 0%) 100%
-                );
-                pointer-events: none;
-                z-index: 99;
-                position: absolute;
-                bottom: 0.5em;
             }
 
             .filter-type-datepicker {
@@ -556,32 +319,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
             /* ??? */
             ::-webkit-inner-spin-button {
-            }
-
-            .refinement-list-item {
-                display: flex;
-                gap: 1em;
-                justify-content: space-between;
-                cursor: pointer;
-            }
-
-            .refinement-list-item-inner {
-                display: flex;
-                max-width: 80%;
-            }
-
-            .refinement-list-item-name {
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-            }
-
-            button.ais-RefinementList-showMore {
-                margin-bottom: 1em;
-            }
-
-            .facets-no-data {
-                color: var(--dbp-override-muted);
             }
 
             .filter-exit-icon {

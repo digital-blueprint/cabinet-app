@@ -60,20 +60,6 @@
         "refinement-date-before-text": "before",
         "refinement-delete-all-filters": "Clear filters",
         "refinement-delete-filter-button-text": "Delete filter",
-        "search-placeholder-person-admission-qualification-type": "Search",
-        "search-placeholder-person-exmatriculation-semester": "Search semester",
-        "search-placeholder-person-exmatriculation-status": "Search status",
-        "search-placeholder-person-home-address-country-text": "Search",
-        "search-placeholder-person-home-address-place": "Search",
-        "search-placeholder-person-home-address-region": "Search",
-        "search-placeholder-person-immatriculation-semester": "Search",
-        "search-placeholder-person-nationalities-text": "Search",
-        "search-placeholder-person-person": "Search person",
-        "search-placeholder-person-student-address-country": "Search",
-        "search-placeholder-person-student-address-place": "Search",
-        "search-placeholder-person-student-address-region": "Search",
-        "search-placeholder-study-name": "Search",
-        "search-placeholder-study-type": "Search",
         "type-filter-group-title": "Category"
     },
     "communication-abstract": "Summary",
@@ -122,8 +108,13 @@
         "table-title": "Export: {{personName}}"
     },
     "facets": {
-        "no-data-available": "No data available",
-        "no-results": "No results found"
+        "no-items-found": "No results found",
+        "no-refinements": "No refinements available",
+        "search": {
+            "placeholder": "Search"
+        },
+        "show-less": "Show less",
+        "show-more": "Show more"
     },
     "family-name": "Surname",
     "filter-settings": {
