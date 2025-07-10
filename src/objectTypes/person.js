@@ -5,8 +5,10 @@ import {formatDate} from '../utils.js';
 import {MiniSpinner, Icon} from '@dbp-toolkit/common';
 import {send} from '@dbp-toolkit/common/notification';
 import {Notification} from '@dbp-toolkit/notification';
+import {jsPDF} from 'jspdf';
+import {autoTable} from 'jspdf-autotable';
 
-import {getPersonHit} from './schema.js';
+import {getPersonHit, PersonHit} from './schema.js';
 import {CabinetApi} from '../api.js';
 
 export default class extends BaseObject {
@@ -451,6 +453,169 @@ class CabinetHitElement extends BaseHitElement {
     }
 }
 
+/**
+ * Generate a PDF document for a person hit.
+ * The data meeds to be kept in sync with the view element.
+ * @param {import('i18next').i18n} i18n
+ * @param {PersonHit} hit
+ * @param {boolean} hideNotes - Whether to hide notes in the PDF export.
+ */
+function exportPersonPdf(i18n, hit, hideNotes = true) {
+    const doc = new jsPDF();
+
+    let subFillColor = 220;
+    let subTextColor = 30;
+    let subLeftMargin = 18;
+
+    const displayValue = (value) => {
+        return value === undefined || value === null || value === '' ? '-' : value;
+    };
+
+    let formatter = Intl.DateTimeFormat('de', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+    });
+
+    let syncDate = formatter.format(new Date(hit.person.syncTimestamp * 1000));
+    let exportDate = formatter.format(new Date());
+
+    autoTable(doc, {
+        showHead: 'firstPage',
+        head: [
+            [{content: i18n.t('export.table-title', {personName: hit.person.person}), colSpan: 2}],
+        ],
+        body: [
+            [i18n.t('export.sync-date-label'), syncDate],
+            [i18n.t('export.export-date-label'), exportDate],
+        ],
+    });
+
+    autoTable(doc, {
+        showHead: 'firstPage',
+        head: [[{content: i18n.t('General-information'), colSpan: 2}]],
+        body: [
+            [i18n.t('academic-titles'), displayValue(hit.person.academicTitles.join(', '))],
+            [i18n.t('given-name'), displayValue(hit.person.givenName)],
+            [i18n.t('family-name'), displayValue(hit.person.familyName)],
+            [i18n.t('former-family-name'), displayValue(hit.person.formerFamilyName)],
+            [i18n.t('academic-title-following'), displayValue(hit.person.academicTitleFollowing)],
+            [i18n.t('stud-id'), displayValue(hit.person.studId)],
+            [i18n.t('st-PersonNr'), displayValue(hit.person.stPersonNr)],
+            [i18n.t('birth-date'), formatDate(hit.person.birthDate)],
+            [
+                i18n.t('nationalities'),
+                displayValue(hit.person.nationalities.map((n) => n.text).join(', ')),
+            ],
+            [i18n.t('gender'), displayValue(hit.person.gender?.text)],
+            [i18n.t('social-SecurityNr'), displayValue(hit.person.socialSecurityNr)],
+            [i18n.t('ssPIN'), displayValue(hit.person.bpk)],
+            [i18n.t('personal-Status'), displayValue(hit.person.personalStatus?.text)],
+            [i18n.t('student-Status'), displayValue(hit.person.studentStatus?.text)],
+            [i18n.t('tuitionStatus'), displayValue(hit.person.tuitionStatus)],
+            [i18n.t('immatriculation-Date'), formatDate(hit.person.immatriculationDate)],
+            [i18n.t('immatriculationSemester'), displayValue(hit.person.immatriculationSemester)],
+            [
+                i18n.t('exmatriculation-GI'),
+                `${displayValue(hit.person.exmatriculationStatus?.text)} ${formatDate(hit.person.exmatriculationDate)}`,
+            ],
+            [
+                i18n.t('admission-Qualification-Type'),
+                displayValue(hit.person.admissionQualificationType?.text),
+            ],
+            [i18n.t('school-Certificate-Date'), formatDate(hit.person.schoolCertificateDate)],
+            [i18n.t('note'), hideNotes ? displayValue('') : displayValue(hit.person.note)],
+        ],
+    });
+
+    autoTable(doc, {
+        showHead: 'firstPage',
+        head: [[{content: i18n.t('Study-information'), colSpan: 3}]],
+    });
+
+    hit.person.studies
+        .slice()
+        .sort((a, b) => {
+            const dateA = a.immatriculationDate
+                ? new Date(a.immatriculationDate).getTime()
+                : Infinity;
+            const dateB = b.immatriculationDate
+                ? new Date(b.immatriculationDate).getTime()
+                : Infinity;
+            return dateB - dateA;
+        })
+        .forEach((study) => {
+            autoTable(doc, {
+                showHead: 'firstPage',
+                headStyles: {fillColor: subFillColor, textColor: subTextColor},
+                margin: {left: subLeftMargin},
+                head: [[{content: displayValue(study.name), colSpan: 2}]],
+                body: [
+                    [i18n.t('semester'), displayValue(study.semester)],
+                    [i18n.t('status'), displayValue(study.status?.text)],
+                    [i18n.t('immatriculation-date'), formatDate(study.immatriculationDate)],
+                    [
+                        i18n.t('qualification-study'),
+                        `${displayValue(study.qualificationType?.text)} ${formatDate(study.qualificationDate)} ${study.qualificationState?.text}`,
+                    ],
+                    [
+                        i18n.t('exmatriculation'),
+                        `${displayValue(study.exmatriculationType?.text)} ${formatDate(study.exmatriculationDate)}`,
+                    ],
+                    [i18n.t('curriculum-version'), displayValue(study.curriculumVersion)],
+                ],
+            });
+        });
+
+    autoTable(doc, {
+        showHead: 'firstPage',
+        head: [[{content: i18n.t('Contact-information'), colSpan: 3}]],
+        body: [
+            [i18n.t('emailAddressUniversity'), displayValue(hit.person.emailAddressUniversity)],
+            [i18n.t('emailAddressConfirmed'), displayValue(hit.person.emailAddressConfirmed)],
+            [i18n.t('emailAddressTemporary'), displayValue(hit.person.emailAddressTemporary)],
+        ],
+    });
+
+    autoTable(doc, {
+        showHead: 'firstPage',
+        headStyles: {fillColor: subFillColor, textColor: subTextColor},
+        head: [[{content: i18n.t('homeAddress'), colSpan: 1}]],
+        margin: {left: subLeftMargin},
+        body: [
+            [displayValue(hit.person.homeAddress?.note)],
+            [displayValue(hit.person.homeAddress?.street)],
+            [displayValue(hit.person.homeAddress?.place)],
+            [displayValue(hit.person.homeAddress?.region)],
+            [displayValue(hit.person.homeAddress?.postCode)],
+            [displayValue(hit.person.homeAddress?.country?.text)],
+            [displayValue(hit.person.homeAddress?.telephoneNumber)],
+        ],
+    });
+
+    autoTable(doc, {
+        showHead: 'firstPage',
+        headStyles: {fillColor: subFillColor, textColor: subTextColor},
+        head: [[{content: i18n.t('studyAddress'), colSpan: 1}]],
+        margin: {left: subLeftMargin},
+        body: [
+            [displayValue(hit.person.studyAddress?.note)],
+            [displayValue(hit.person.studyAddress?.street)],
+            [displayValue(hit.person.studyAddress?.place)],
+            [displayValue(hit.person.studyAddress?.region)],
+            [displayValue(hit.person.studyAddress?.postCode)],
+            [displayValue(hit.person.studyAddress?.country?.text)],
+            [displayValue(hit.person.studyAddress?.telephoneNumber)],
+        ],
+    });
+
+    const filename = `${encodeURIComponent(hit.person.familyName)}_${encodeURIComponent(hit.person.givenName)}_${encodeURIComponent(hit.person.studId)}.pdf`;
+    doc.save(filename);
+}
+
 class CabinetViewElement extends BaseViewElement {
     constructor() {
         super();
@@ -666,6 +831,10 @@ class CabinetViewElement extends BaseViewElement {
                 text-decoration: underline;
             }
 
+            .export-pdf-button:hover {
+                text-decoration: underline;
+            }
+
             .links {
                 border-bottom-style: solid;
                 border-color: var(--dbp-content);
@@ -807,6 +976,17 @@ class CabinetViewElement extends BaseViewElement {
                 name='link'>
                 </dbp-icon>
                 ${i18n.t('Edit-student-data')}
+            </a>
+        </div>
+        <div class="export-pdf-button">
+            <a href="#" @click="${() => {
+                exportPersonPdf(i18n, hit);
+                return false;
+            }}">
+                <dbp-icon title='${i18n.t('export.button-label')}'
+                name='download'>
+                </dbp-icon>
+                ${i18n.t('export.button-label')}
             </a>
         </div>
         </div>

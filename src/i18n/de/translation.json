@@ -115,6 +115,12 @@
     "error-login-message": "Bitte melden Sie sich an, um diese Funktion nutzen zu können.",
     "exmatriculation": "Abmeldestatus",
     "exmatriculation-GI": "Abmeldedatum",
+    "export": {
+        "button-label": "Exportieren",
+        "export-date-label": "Exportiert am",
+        "sync-date-label": "Zuletzt synchronisiert",
+        "table-title": "Export: {{personName}}"
+    },
     "facets": {
         "no-data-available": "Keine Daten verfügbar",
         "no-results": "Keine Ergebnisse gefunden"

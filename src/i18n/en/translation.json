@@ -115,6 +115,12 @@
     "error-login-message": "Please log in to use this functionality.",
     "exmatriculation": "Exmatriculation status",
     "exmatriculation-GI": "Deregistration status",
+    "export": {
+        "button-label": "Export",
+        "export-date-label": "Exported on",
+        "sync-date-label": "Last synchronized",
+        "table-title": "Export: {{personName}}"
+    },
     "facets": {
         "no-data-available": "No data available",
         "no-results": "No results found"
