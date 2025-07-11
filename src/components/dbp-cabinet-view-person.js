@@ -86,7 +86,10 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
          * @type {Modal}
          */
         const modal = this.modalRef.value;
-        modal.close();
+
+        if (modal) {
+            modal.close();
+        }
     }
 
     static get styles() {
