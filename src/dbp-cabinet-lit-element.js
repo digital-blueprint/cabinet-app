@@ -11,6 +11,9 @@ export default class DBPCabinetLitElement extends LangMixin(
         this.entryPointUrl = '';
         this.facetVisibilityStates = {};
         this.settingsLocalStorageKey = '';
+
+        // Try to load the facet visibility states from localStorage if the settingsLocalStorageKey is already set
+        this.loadFacetVisibilityStates();
     }
 
     static get properties() {
@@ -32,10 +35,15 @@ export default class DBPCabinetLitElement extends LangMixin(
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'auth':
-                    this.generateSettingsLocalStorageKey();
+                    // If the auth has changed, and the user is authenticated and the settingsLocalStorageKey is not set, we need to generate it
+                    // We assume that auth['user-id'] will never change, because the page would be reloaded
+                    if (!this.settingsLocalStorageKey) {
+                        this.generateSettingsLocalStorageKey();
+                    }
                     break;
                 case 'settingsLocalStorageKey':
-                    // If the settingsLocalStorageKey has changed, we need to load the facetVisibilityStates again
+                    // If the settingsLocalStorageKey has changed, we need to load the facetVisibilityStates
+                    // This should only happen one time after initialization
                     this.loadFacetVisibilityStates();
                     break;
             }
@@ -44,20 +52,46 @@ export default class DBPCabinetLitElement extends LangMixin(
         super.update(changedProperties);
     }
 
-    loadFacetVisibilityStates() {
-        if (!this.settingsLocalStorageKey) {
-            return;
+    setFacetVisibilityStates(facetVisibilityStates) {
+        // If the facetVisibilityStates is not an object or is empty, we cannot set it
+        if (
+            typeof facetVisibilityStates !== 'object' ||
+            facetVisibilityStates === null ||
+            Object.keys(facetVisibilityStates).length === 0
+        ) {
+            return false;
         }
 
-        this.facetVisibilityStates =
-            JSON.parse(localStorage.getItem(this.settingsLocalStorageKey)) || {};
+        this.facetVisibilityStates = facetVisibilityStates;
+
+        return true;
+    }
+
+    loadFacetVisibilityStates() {
+        // If the settingsLocalStorageKey is not set, we need to generate it
+        // If that fails, we cannot load the facet visibility states
+        if (!this.settingsLocalStorageKey && !this.generateSettingsLocalStorageKey()) {
+            return false;
+        }
+
+        // Load the facet visibility states from localStorage
+        this.setFacetVisibilityStates(
+            JSON.parse(localStorage.getItem(this.settingsLocalStorageKey)) || {},
+        );
+
+        return true;
     }
 
     generateSettingsLocalStorageKey() {
+        // We need the publicId from the auth object to generate the settingsLocalStorageKey
         const publicId = this.auth && this.auth['user-id'];
 
-        if (publicId) {
-            this.settingsLocalStorageKey = `dbp-cabinet:${publicId}:facetVisibilityStates`;
+        if (!publicId) {
+            return false;
         }
+
+        this.settingsLocalStorageKey = `dbp-cabinet:${publicId}:facetVisibilityStates`;
+
+        return true;
     }
 }

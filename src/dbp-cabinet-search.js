@@ -120,6 +120,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     update(changedProperties) {
+        // We need to call super.update first, so the property facetVisibilityStates is set correctly!
+        super.update(changedProperties);
+
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'auth':
@@ -149,12 +152,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     this.handleRoutingUrlChange();
                     break;
                 case 'facetVisibilityStates':
-                    console.log(' this.facetVisibilityStates', this.facetVisibilityStates);
+                    console.log(
+                        'update facetVisibilityStates this.facetVisibilityStates',
+                        this.facetVisibilityStates,
+                    );
                     break;
             }
         });
-
-        super.update(changedProperties);
     }
 
     async handleAutomaticDocumentViewOpen() {
@@ -962,8 +966,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
     }
 
+    /**
+     * Update the facet visibility states after the filter settings were stored.
+     * @param e
+     */
     updateFacetVisibilityStates(e) {
-        this.facetVisibilityStates = e.detail || {};
+        this.setFacetVisibilityStates(e.detail || {});
     }
 
     filterFacetConfigsBySchemaFields(schemaFields) {
