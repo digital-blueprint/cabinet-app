@@ -186,10 +186,18 @@ export function createDateRefinement(widgetParams) {
             errorSpan.style.color = 'red';
             errorSpan.style.fontSize = '12px';
             errorSpan.style.display = 'none';
-            errorSpan.textContent = 'Please enter a valid date (YYYY-MM-DD)';
+            errorSpan.textContent = 'Please enter a valid date (MM-DD-YYYY)';
 
             // Show error while typing
             input.addEventListener('input', () => {
+                // If user typed more than 4 digits for year, trim
+                // Chrome input is always in "YYYY-MM-DD"
+                const val = input.value;
+                const m = val.match(/^(\d{4,})-(\d{2})-(\d{2})$/);
+                if (m && m[1].length > 4) {
+                    // Limit year to 4 digits
+                    input.value = `${m[1].slice(0, 4)}-${m[2]}-${m[3]}`;
+                }
                 if (input.value && !isValidDateString(input.value)) {
                     errorSpan.style.display = '';
                 } else {
