@@ -114,9 +114,12 @@ class CabinetHitElement extends BaseHitElement {
                 color: white;
             }
 
-            .hit-person-info-header .person-name {
+            .hit-person-info-header .person-name,
+            .person-birthdate {
                 margin-right: 10px;
                 color: white;
+                font-size: 1em;
+                font-weight: 600;
             }
 
             .ais-Hits-header ::selection {
@@ -130,9 +133,12 @@ class CabinetHitElement extends BaseHitElement {
                 align-items: center;
             }
 
-            .person-id {
+            .person-id,
+            .person-birthdate {
                 color: white;
                 gap: 0.5em;
+                margin: 0;
+                font-size: 1em;
             }
 
             .right-column {
@@ -196,6 +202,10 @@ class CabinetHitElement extends BaseHitElement {
                 grid-template-columns: repeat(3, auto); /* auto adjusts to button widths */
                 gap: 5px;
                 justify-content: end;
+            }
+
+            .sr-only {
+                display: none;
             }
 
             @media (max-width: 768px) {
@@ -338,60 +348,77 @@ class CabinetHitElement extends BaseHitElement {
             ? i18n.t('unselect-button-name')
             : i18n.t('focus-button-name');
         return html`
-            <header class="ais-Hits-header">
+           
+            <header class="ais-Hits-header" tabindex="0" @keydown=${(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault(); // no scrolling with space
+                    this.dispatchEvent(
+                        new CustomEvent('DbpCabinetDocumentView', {
+                            detail: {hit: hit},
+                            bubbles: true,
+                            composed: true,
+                        }),
+                    );
+                }
+            }}>
                 <div class="hit-person-info-header">
                     <div class="right-column">
                         <dbp-icon
                             class="column-icon"
                             name="user"
-                            aria-label="Person hit box symbol"
+                            aria-hidden="true"
+                            <!--  aria-label="Person hit box symbol"}-->
                             title="Person hit box symbol"></dbp-icon>
                     </div>
-                    <div class="person-name">
+                    <h2 class="person-name" aria-label="${i18n.t('full-family-name')} ${hit.person.familyName},${hit.person.givenName}">
                         <!-- familyName: ${hit.person.familyName}-->
                         ${renderFieldWithHighlight(hit, 'person.familyName')},
                         <!-- givenName: ${hit.person.givenName} -->
                         ${renderFieldWithHighlight(hit, 'person.givenName')}
-                    </div>
-                    <div class="person-birthdate">
+                    </h2>
+                    <h3 class="person-birthdate" aria-label="${i18n.t('birth-date')} ${hit.person.birthDateDe}">
                         <!-- birthDate: ${hit.person.birthDateDe}-->
                         ${renderFieldWithHighlight(hit, 'person.birthDateDe')}
-                    </div>
+                    </h3>
+                </div>
                 </div>
                 <div class="hit-right-wrapper">
-                    <div class="person-id">
+                    <h3 class="person-id" aria-label="${i18n.t('st-PersonNr')} ${hit.person.studId}">
                         <!-- studId: ${hit.person.studId}-->
                         <span>${renderFieldWithHighlight(hit, 'person.studId')}</span>
                         |
                         <span>${renderFieldWithHighlight(hit, 'person.stPersonNr')}</span>
-                    </div>
+                    </h3>
                 </div>
             </header>
             <main class="ais-Hits-content">
                 <div class="hit-person-content-item1">
-                    ${studies.length > 0
-                        ? html`
-                              ${displayedStudies.map(
-                                  (study) => html`
+                    ${
+                        studies.length > 0
+                            ? html`
+                                  ${displayedStudies.map(
+                                      (study) => html`
                                       <div class="study-entry">
                                           <dbp-icon
                                               name="chevron-right-circle"
                                               class="study-icon"
-                                              aria-label="Study icon"
+                                              aria-hidden="true"
+                                              <!--  aria-label="Study icon"-->
                                               title="Study icon"></dbp-icon>
                                           <span>${study.name} (${study.status.text})</span>
                                       </div>
                                   `,
-                              )}
-                              ${extraCount > 0
-                                  ? html`
-                                        <span>${extraCount}&nbsp;${i18n.t('person-hit')}</span>
-                                    `
-                                  : ''}
-                          `
-                        : html`
-                              —
-                          `}
+                                  )}
+                                  ${extraCount > 0
+                                      ? html`
+                                            <span>${extraCount}&nbsp;${i18n.t('person-hit')}</span>
+                                        `
+                                      : ''}
+                              `
+                            : html`
+                                  — —
+                              `
+                    }
                 </div>
             </main>
 
@@ -410,6 +437,7 @@ class CabinetHitElement extends BaseHitElement {
                 <footer class="hits-person-footer">
                     <button
                         class="button"
+                        aria-label="${i18n.t('buttons.add.documents')}: ${hit.person.familyName},${hit.person.givenName}"
                         @click=${() => {
                             this.dispatchEvent(
                                 new CustomEvent('DbpCabinetDocumentAdd', {
@@ -423,6 +451,7 @@ class CabinetHitElement extends BaseHitElement {
                     </button>
                     <button
                         class="button"
+                        aria-label=" ${focusButtonLabel}: ${hit.person.familyName},${hit.person.givenName}""
                         @click="${(event) => {
                             this.dispatchEvent(
                                 new CustomEvent('DbpCabinetFilterPerson', {
@@ -436,6 +465,7 @@ class CabinetHitElement extends BaseHitElement {
                     </button>
                     <button
                         class="button is-secondary"
+                        aria-label=" ${i18n.t('buttons.view')}: ${hit.person.familyName},${hit.person.givenName}"
                         @click=${() => {
                             this.dispatchEvent(
                                 new CustomEvent('DbpCabinetDocumentView', {
