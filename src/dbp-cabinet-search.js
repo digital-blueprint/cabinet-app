@@ -93,7 +93,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.resetRoutingUrl = false;
         this.lockDocumentViewDialog = false;
         this.facetWidgets = [];
-        this.filterSettingsState = false;
     }
 
     static get scopedElements() {
@@ -152,10 +151,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     this.handleRoutingUrlChange();
                     break;
                 case 'facetVisibilityStates':
-                    console.log(
-                        'update facetVisibilityStates this.facetVisibilityStates',
-                        this.facetVisibilityStates,
-                    );
+                    this.updateFacetVisibility(oldValue);
                     break;
             }
         });
@@ -296,45 +292,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             /** @type {CabinetFilterSettings} */
             const filterSettingsModal = this.filterSettingsModalRef.value;
 
-            // TODO: Work in progress
             filterSettingsModal.open(this.facetConfigs);
-
-            // Alternately remove and add some facets
-            this.filterSettingsState = !this.filterSettingsState;
-
-            // For demonstration purposes, we will use some hardcoded schema fields
-            // TODO: Use schema fields from the filter dialog to filter the facets
-            const schemaFields = [
-                'person.studentStatus.text',
-                'person.birthDateTimestamp',
-                'person.gender.text',
-                'file.base.recommendedDeletionTimestamp',
-                'file.base.semester',
-            ];
-
-            /** @type {CabinetFacets} */
-            const ref = this.cabinetFacetsRef.value;
-
-            if (this.filterSettingsState) {
-                // For demonstration purposes, we will remove some facets
-                const facetWidgets = this.filterFacetWidgetsBySchemaFields(schemaFields);
-                if (facetWidgets.length > 0 && this.search) {
-                    // We need to remove the actual facet objects, creating the same facet widget
-                    // with createFacetsFromConfig to remove is not enough
-                    this.search.removeWidgets(facetWidgets);
-
-                    // Remove the leftover widget divs for the facets
-                    ref.removeWidgets(schemaFields);
-                }
-            } else {
-                // For demonstration purposes, we will add the removed facets again
-                const facetConfigs = this.filterFacetConfigsBySchemaFields(schemaFields);
-                if (facetConfigs.length > 0 && this.search) {
-                    const facets = await ref.createFacetsFromConfig(facetConfigs);
-
-                    this.search.addWidgets(facets);
-                }
-            }
         });
 
         this.updateComplete.then(async () => {
@@ -1107,6 +1065,46 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         console.log('handleRoutingUrlChange reset');
+    }
+
+    async updateFacetVisibility(oldFacetVisibilityStates) {
+        console.log('updateFacetVisibility this.facetVisibilityStates', this.facetVisibilityStates);
+        console.log('updateFacetVisibility oldFacetVisibilityStates', oldFacetVisibilityStates);
+
+        const newVisibleFacetNames = this.getVisibleFacetNames();
+        const oldVisibleFacetNames =
+            this.getVisibleFacetNamesFromFacetStates(oldFacetVisibilityStates);
+
+        console.log('updateFacetVisibility oldVisibleFacetNames', oldVisibleFacetNames);
+        console.log('updateFacetVisibility newVisibleFacetNames', newVisibleFacetNames);
+
+        const facetsToRemove = oldVisibleFacetNames.filter(
+            (facetName) => !newVisibleFacetNames.includes(facetName),
+        );
+
+        const facetWidgets = this.filterFacetWidgetsBySchemaFields(facetsToRemove);
+        if (facetWidgets.length > 0 && this.search) {
+            // We need to remove the actual facet objects, creating the same facet widget
+            // with createFacetsFromConfig to remove is not enough
+            this.search.removeWidgets(facetWidgets);
+
+            // Remove the leftover widget divs for the facets
+            ref.removeWidgets(facetsToRemove);
+        }
+
+        const facetsToAdd = newVisibleFacetNames.filter(
+            (facetName) => !oldVisibleFacetNames.includes(facetName),
+        );
+
+        const facetConfigs = this.filterFacetConfigsBySchemaFields(facetsToAdd);
+        if (facetConfigs.length > 0 && this.search) {
+            /** @type {CabinetFacets} */
+            const ref = this.cabinetFacetsRef.value;
+
+            const facets = await ref.createFacetsFromConfig(facetConfigs);
+
+            this.search.addWidgets(facets);
+        }
     }
 }
 

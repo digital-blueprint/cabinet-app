@@ -82,6 +82,20 @@ export default class DBPCabinetLitElement extends LangMixin(
         return true;
     }
 
+    getVisibleFacetNames() {
+        // Return the names of the facets that are visible
+        return this.getVisibleFacetNamesFromFacetStates(this.facetVisibilityStates);
+    }
+
+    getVisibleFacetNamesFromFacetStates(facetStates) {
+        if (!facetStates || typeof facetStates !== 'object') {
+            return [];
+        }
+
+        // Return the names of the facets that are visible from a given facetStates object
+        return Object.keys(facetStates).filter((facetName) => facetStates[facetName] === true);
+    }
+
     generateSettingsLocalStorageKey() {
         // We need the publicId from the auth object to generate the settingsLocalStorageKey
         const publicId = this.auth && this.auth['user-id'];
