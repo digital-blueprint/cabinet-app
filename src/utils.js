@@ -92,3 +92,25 @@ export function formatDate(value) {
               year: 'numeric',
           });
 }
+
+export function debounce(func, delay) {
+    let timeout;
+    return function (...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), delay);
+    };
+}
+
+/**
+ * Safely formats a Date object into DD-MM-YYYY string for input[type="date"] min/max attributes.
+ * Returns an empty string for invalid/null Date objects.
+ * @param {Date} dateObj - The Date object to format.
+ * @returns {string} The formatted date string (YYYY-MM-DD) or empty string.
+ */
+export function formatDateForInput(dateObj) {
+    if (!dateObj || isNaN(dateObj.getTime())) {
+        return '';
+    }
+    return dateObj.toISOString().split('T')[0];
+}

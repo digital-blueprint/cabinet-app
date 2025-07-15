@@ -1,3 +1,5 @@
+import {debounce, formatDateForInput} from '../utils.js';
+
 const getRefinedState = function getRefinedState(helper, attribute, value) {
     const startDate = value[0];
     const endDate = value[1];
@@ -17,7 +19,6 @@ const getRefinedState = function getRefinedState(helper, attribute, value) {
 
     return resolvedState;
 };
-
 /**
  *
  * @param {object} res - object containing results and state information
@@ -26,7 +27,7 @@ const getRefinedState = function getRefinedState(helper, attribute, value) {
 export function updateDatePickersForExternalRefinementChange(res, facets) {
     Object.entries(res.state.numericRefinements).forEach(([facetField, numRefinement]) => {
         const dateFacet = facets.find((facet) => facet.attribute === facetField);
-
+        if (!dateFacet) return;
         // Clear start dates if refinement is removed
         if ('>=' in numRefinement && numRefinement['>='].length === 0) {
             const startDate = dateFacet.container.querySelector('input.start-date');
@@ -34,7 +35,6 @@ export function updateDatePickersForExternalRefinementChange(res, facets) {
                 startDate.value = '';
             }
         }
-
         // Clear end dates if refinement is removed
         if ('<=' in numRefinement && numRefinement['<='].length === 0) {
             const endDate = dateFacet.container.querySelector('input.end-date');
@@ -49,7 +49,6 @@ function connectComplexDateRangeRefinement(renderFn, unmountFn = noop) {
     return function complexDateRangeRefinement(widgetParams) {
         const connectorState = {};
         const {attribute} = widgetParams;
-
         const dateFacet = {
             $$type: 'cabinet.complexDateRangeRefinement',
             getWidgetRenderState({results, helper}) {
@@ -94,7 +93,6 @@ function connectComplexDateRangeRefinement(renderFn, unmountFn = noop) {
             },
             init(initOptions) {
                 const {instantSearchInstance} = initOptions;
-
                 renderFn(
                     // The render state is the data provided to the render function,
                     // necessary to build the UI.
@@ -109,7 +107,6 @@ function connectComplexDateRangeRefinement(renderFn, unmountFn = noop) {
             },
             render(renderOptions) {
                 const {instantSearchInstance} = renderOptions;
-
                 renderFn(
                     // The render state is the data provided to the render function,
                     // necessary to build the UI.
@@ -133,7 +130,6 @@ function connectComplexDateRangeRefinement(renderFn, unmountFn = noop) {
                 return searchParameters;
             },
         };
-
         return dateFacet;
     };
 }
@@ -142,89 +138,170 @@ const noop = () => {};
 
 export function createDateRefinement(widgetParams) {
     const datePicker = connectComplexDateRangeRefinement((options, isFirstRendering) => {
-        if (!isFirstRendering) return;
+        if (!isFirstRendering) {
+            // Update inputs when refinements change externally
+            const {results} = options;
+            if (results && results.state && results.state.numericRefinements) {
+                const currentRefinements = results.state.numericRefinements[widgetParams.attribute];
+                const startDateInput = widgetParams.container.querySelector('input.start-date');
+                const endDateInput = widgetParams.container.querySelector('input.end-date');
 
-        const {widgetParams, refine} = options;
-
-        let updateRefinement = () => {
-            // Convert date to timestamp in seconds (UTC)
-            let startDate,
-                endDate = null;
-            // Don't allow end date to be before start date
-            if (startDateSelector.value !== '') {
-                startDate = startDateSelector.value + 'T00:00:00.000Z';
-                const minDate = new Intl.DateTimeFormat('en-CA', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                }).format(new Date(startDate));
-                endDateSelector.setAttribute('min', minDate);
+                if (!startDateInput || !endDateInput) return;
+                if (
+                    currentRefinements &&
+                    currentRefinements['>='] &&
+                    currentRefinements['>='].length > 0
+                ) {
+                    const startTimestampMs = currentRefinements['>='][0] * 1000;
+                    startDateInput.value = formatDateForInput(new Date(startTimestampMs));
+                } else {
+                    startDateInput.value = '';
+                }
+                if (
+                    currentRefinements &&
+                    currentRefinements['<='] &&
+                    currentRefinements['<='].length > 0
+                ) {
+                    const endTimestampMs = currentRefinements['<='][0] * 1000;
+                    endDateInput.value = formatDateForInput(new Date(endTimestampMs));
+                } else {
+                    endDateInput.value = '';
+                }
             }
-            // Don't allow start date to be before end date
-            if (endDateSelector.value !== '') {
-                endDate = endDateSelector.value + 'T23:59:59.000Z';
-                const maxDate = new Intl.DateTimeFormat('en-CA', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                }).format(new Date(startDate));
-                startDateSelector.setAttribute('max', maxDate);
-            }
-            const startTimestamp = Date.parse(startDate) || null;
-            const endTimestamp = Date.parse(endDate) || null;
-
-            refine([startTimestamp, endTimestamp]);
-        };
-
-        function createDateSelector(type, attribute) {
-            const dateSelector = document.createElement('input');
-            dateSelector.type = 'date';
-            const kebabAttribute = schemaNameToKebabCase(attribute);
-            const id = `${type}-date-${kebabAttribute}`;
-            dateSelector.setAttribute('id', id);
-            dateSelector.classList.add(`${type}-date`);
-            // Set max date to today as a iso date string in local time
-            const maxDate = new Intl.DateTimeFormat('en-CA', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-            }).format(new Date());
-            dateSelector.setAttribute('max', maxDate);
-            dateSelector.addEventListener('change', updateRefinement);
-
-            return dateSelector;
+            return;
         }
 
-        const startDateSelector = createDateSelector('start', widgetParams.attribute);
-        widgetParams.container.appendChild(startDateSelector);
+        // ---- MAIN RENDER (first time) ----
+        const {widgetParams, refine} = options;
+        const isValidDateString = (dateStr) => /^\d{4}-\d{2}-\d{2}$/.test(dateStr);
 
-        const endDateSelector = createDateSelector('end', widgetParams.attribute);
-        widgetParams.container.appendChild(endDateSelector);
+        // Helper: make date input + error msg
+        function createDateSelector(type, attribute) {
+            const input = document.createElement('input');
+            input.type = 'date';
+            input.classList.add(`${type}-date`);
+            input.setAttribute('max', formatDateForInput(new Date()));
+
+            const errorSpan = document.createElement('span');
+            errorSpan.style.color = 'red';
+            errorSpan.style.fontSize = '12px';
+            errorSpan.style.display = 'none';
+            errorSpan.textContent = 'Please enter a valid date (YYYY-MM-DD)';
+
+            // Show error while typing
+            input.addEventListener('input', () => {
+                if (input.value && !isValidDateString(input.value)) {
+                    errorSpan.style.display = '';
+                } else {
+                    errorSpan.style.display = 'none';
+                }
+            });
+
+            const wrapper = document.createElement('div');
+            wrapper.style.display = 'flex';
+            wrapper.style.flexDirection = 'column';
+            wrapper.style.alignItems = 'flex-start';
+            wrapper.appendChild(input);
+            wrapper.appendChild(errorSpan);
+            return {wrapper, input};
+        }
+
+        // Make & mount the start/end date pickers
+        const {wrapper: startDateWrapper, input: startDateInput} = createDateSelector(
+            'start',
+            widgetParams.attribute,
+        );
+        widgetParams.container.appendChild(startDateWrapper);
+        const {wrapper: endDateWrapper, input: endDateInput} = createDateSelector(
+            'end',
+            widgetParams.attribute,
+        );
+        widgetParams.container.appendChild(endDateWrapper);
+
+        // Debounced refine logic
+        const debouncedRefineAndAttributeUpdate = debounce(() => {
+            const startDateString = startDateInput.value;
+            const endDateString = endDateInput.value;
+
+            // Only run refine if both are blank, or valid full dates (independently)
+            const canRefine =
+                (startDateString === '' || isValidDateString(startDateString)) &&
+                (endDateString === '' || isValidDateString(endDateString));
+
+            if (!canRefine) {
+                // Wait for more user input, do NOT refine or search
+                return;
+            }
+
+            let startTimestamp = null;
+            let endTimestamp = null;
+
+            let selectedStartDateObj =
+                startDateString && isValidDateString(startDateString)
+                    ? startDateInput.valueAsDate
+                    : null;
+            let selectedEndDateObj =
+                endDateString && isValidDateString(endDateString) ? endDateInput.valueAsDate : null;
+
+            if (selectedStartDateObj && !isNaN(selectedStartDateObj.getTime())) {
+                selectedStartDateObj.setUTCHours(0, 0, 0, 0);
+                startTimestamp = selectedStartDateObj.getTime();
+            }
+            if (selectedEndDateObj && !isNaN(selectedEndDateObj.getTime())) {
+                selectedEndDateObj.setUTCHours(23, 59, 59, 999);
+                endTimestamp = selectedEndDateObj.getTime();
+            }
+
+            if (
+                startTimestamp !== null ||
+                endTimestamp !== null ||
+                (startDateString === '' && endDateString === '')
+            ) {
+                refine([startTimestamp, endTimestamp]);
+            }
+
+            // Update min/max on fields
+            const minDateForEndDate =
+                selectedStartDateObj && !isNaN(selectedStartDateObj.getTime())
+                    ? formatDateForInput(selectedStartDateObj)
+                    : '';
+            if (minDateForEndDate !== '') {
+                endDateInput.setAttribute('min', minDateForEndDate);
+            } else {
+                endDateInput.removeAttribute('min');
+            }
+
+            const maxDateForStartDate =
+                selectedEndDateObj && !isNaN(selectedEndDateObj.getTime())
+                    ? formatDateForInput(selectedEndDateObj)
+                    : '';
+            if (maxDateForStartDate !== '') {
+                startDateInput.setAttribute('max', maxDateForStartDate);
+            } else {
+                startDateInput.removeAttribute('max');
+            }
+        }, 300);
+
+        // Only listen to 'change' for triggering refine
+        startDateInput.addEventListener('change', debouncedRefineAndAttributeUpdate);
+        endDateInput.addEventListener('change', debouncedRefineAndAttributeUpdate);
+
+        // Optionally, run on mount to set min/max for prefilled fields
+        setTimeout(debouncedRefineAndAttributeUpdate, 0);
+
+        // Pre-fill initial values from refinement
+        const initialRefinements =
+            options.results?.state?.numericRefinements?.[widgetParams.attribute];
+        if (initialRefinements) {
+            if (initialRefinements['>='] && initialRefinements['>='].length > 0) {
+                const startTimestampMs = initialRefinements['>='][0] * 1000;
+                startDateInput.value = formatDateForInput(new Date(startTimestampMs));
+            }
+            if (initialRefinements['<='] && initialRefinements['<='].length > 0) {
+                const endTimestampMs = initialRefinements['<='][0] * 1000;
+                endDateInput.value = formatDateForInput(new Date(endTimestampMs));
+            }
+        }
     });
     return datePicker(widgetParams);
-}
-
-/**
- * Convert a Date object to a timestamp in seconds.
- * @param {Date} date - The Date object to be processed.
- * @returns {number|null} The processed date in seconds.
- */
-// function dateToTimestamp(date) {
-//     let milli = date.getTime();
-//     if (isNaN(milli)) {
-//         return null;
-//     }
-//     return Math.floor(milli / 1000.0);
-// }
-
-/**
- * Convert schema name to kebabCase for css classes and translation keys
- * @param input {string}
- * @returns {string}
- */
-function schemaNameToKebabCase(input) {
-    return input
-        .split('.')
-        .map((part) => part.replace(/([A-Z])/g, '-$1').toLowerCase())
-        .join('-');
 }
