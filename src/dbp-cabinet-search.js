@@ -796,6 +796,43 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         return await ref.createFacetsFromConfig(this.facetConfigs);
     }
 
+    /**
+     * This will be used as createFacets() in the CabinetFacets component.
+     * @returns {Promise<*[]>}
+     */
+    async createVisibleFacets() {
+        /** @type {CabinetFacets} */
+        const ref = this.cabinetFacetsRef.value;
+
+        // Remove random items from this.facetConfigs (e.g., remove 2 random items)
+        // const shuffled = [...this.facetConfigs].sort(() => 0.5 - Math.random());
+        // const randomSubset = shuffled.slice(0, Math.max(0, this.facetConfigs.length - 2));
+
+        // TODO: Filter out facets we want to hide
+        const visibleFacetNames = this.getVisibleFacetNames();
+        const visibleFacetsConfigs = this.getVisibleFacetsConfig(
+            this.facetConfigs,
+            visibleFacetNames,
+        );
+
+        return await ref.createFacetsFromConfig(visibleFacetsConfigs);
+    }
+
+    /**
+     * Returns filtered facets config where only items with schemaField in visibleFacetNames
+     * or items with 'filter-group' key are included.
+     * @param {Array} facetConfigs
+     * @param {Array<string>} visibleFacetNames
+     * @returns {Array}
+     */
+    getVisibleFacetsConfig(facetConfigs, visibleFacetNames) {
+        return facetConfigs.filter(
+            (item) =>
+                'filter-group' in item ||
+                (item.schemaField && visibleFacetNames.includes(item.schemaField)),
+        );
+    }
+
     toggleShowDeleted(event) {
         this.showScheduledForDeletion = event.target.checked;
     }
@@ -1068,43 +1105,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async updateFacetVisibility(oldFacetVisibilityStates) {
-        console.log('updateFacetVisibility this.facetVisibilityStates', this.facetVisibilityStates);
-        console.log('updateFacetVisibility oldFacetVisibilityStates', oldFacetVisibilityStates);
-
-        const newVisibleFacetNames = this.getVisibleFacetNames();
-        const oldVisibleFacetNames =
-            this.getVisibleFacetNamesFromFacetStates(oldFacetVisibilityStates);
-
-        console.log('updateFacetVisibility oldVisibleFacetNames', oldVisibleFacetNames);
-        console.log('updateFacetVisibility newVisibleFacetNames', newVisibleFacetNames);
-
-        const facetsToRemove = oldVisibleFacetNames.filter(
-            (facetName) => !newVisibleFacetNames.includes(facetName),
-        );
-
-        const facetWidgets = this.filterFacetWidgetsBySchemaFields(facetsToRemove);
-        if (facetWidgets.length > 0 && this.search) {
-            // We need to remove the actual facet objects, creating the same facet widget
-            // with createFacetsFromConfig to remove is not enough
-            this.search.removeWidgets(facetWidgets);
-
-            // Remove the leftover widget divs for the facets
-            ref.removeWidgets(facetsToRemove);
-        }
-
-        const facetsToAdd = newVisibleFacetNames.filter(
-            (facetName) => !oldVisibleFacetNames.includes(facetName),
-        );
-
-        const facetConfigs = this.filterFacetConfigsBySchemaFields(facetsToAdd);
-        if (facetConfigs.length > 0 && this.search) {
-            /** @type {CabinetFacets} */
-            const ref = this.cabinetFacetsRef.value;
-
-            const facets = await ref.createFacetsFromConfig(facetConfigs);
-
-            this.search.addWidgets(facets);
-        }
+        await this.createFacets();
     }
 }
 
