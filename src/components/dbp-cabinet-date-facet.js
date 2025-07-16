@@ -288,7 +288,7 @@ export function createDateRefinement(widgetParams) {
             } else {
                 startDateInput.removeAttribute('max');
             }
-        }, 3000);
+        }, 120000);
 
         // Only listen to 'change' for triggering refine
         startDateInput.addEventListener('change', debouncedRefineAndAttributeUpdate);
