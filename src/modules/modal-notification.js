@@ -20,7 +20,7 @@ export const sendModalNotification = (
         switch (type) {
             case 'info':
             case 'success':
-                timeout = 5;
+                timeout = 3;
                 break;
             case 'warning':
                 timeout = 10;
