@@ -800,11 +800,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Filter out facets we want to hide
         const visibleFacetNames = this.getVisibleFacetNames();
-        const visibleFacetsConfigs = this.getVisibleFacetsConfig(
+        let visibleFacetsConfigs = this.getVisibleFacetsConfig(
             this.facetConfigs,
             visibleFacetNames,
         );
 
+        // Remove unused filter groups
+        visibleFacetsConfigs = this.removeUnusedFilterGroups(visibleFacetsConfigs);
         console.log('createFacets visibleFacetsConfigs', visibleFacetsConfigs);
 
         return await ref.createFacetsFromConfig(visibleFacetsConfigs);
@@ -828,6 +830,21 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 // Show facets with schemaField that are in the visibleFacetNames
                 (item.schemaField && visibleFacetNames.includes(item.schemaField)),
         );
+    }
+
+    removeUnusedFilterGroups(facetConfigs) {
+        // Collect all groupIds used in non-filter-group items
+        const usedGroupIds = new Set(
+            facetConfigs.filter((item) => item.groupId).map((item) => item.groupId),
+        );
+
+        // Filter out filter-group items whose id is not in usedGroupIds
+        return facetConfigs.filter((item) => {
+            if (item['filter-group']) {
+                return usedGroupIds.has(item['filter-group'].id);
+            }
+            return true;
+        });
     }
 
     toggleShowDeleted(event) {
