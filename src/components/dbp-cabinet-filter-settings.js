@@ -204,6 +204,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 min-width="300px"
                 min-height="80%"
                 subscribe="lang"
+                sticky-footer
                 @dbp-modal-closed="${this.onCloseModal}">
                 <div slot="title" class="modal-title">
                     <dbp-icon
