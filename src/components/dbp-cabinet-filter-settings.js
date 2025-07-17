@@ -190,6 +190,8 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
      */
     getModalHtml() {
         const i18n = this._i18n;
+        const buttonsDisabled =
+            !this.facetConfigs || this.facetConfigs.length === 0 || !this.settingsLocalStorageKey;
 
         // TODO: Work in progress
         return html`
@@ -225,6 +227,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         <dbp-button
                             title="${i18n.t('filter-settings.abort')}"
                             class="check-btn button is-secondary"
+                            no-spinner-on-click
                             @click="${() => {
                                 this.close();
                             }}">
@@ -235,6 +238,8 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         <dbp-button
                             title="${i18n.t('filter-settings.all-filters-hide')}"
                             class="check-btn button is-secondary"
+                            no-spinner-on-click
+                            ?disabled="${buttonsDisabled}"
                             @click="${() => {
                                 this.hideAllFacets();
                             }}">
@@ -243,6 +248,8 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         <dbp-button
                             title="${i18n.t('filter-settings.all-filters-show')}"
                             class="check-btn button is-secondary"
+                            no-spinner-on-click
+                            ?disabled=${buttonsDisabled}
                             @click="${() => {
                                 this.showAllFacets();
                             }}">
@@ -251,10 +258,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                     </div>
                     <dbp-button
                         class="check-btn button is-primary"
-                        id="check"
-                        ?disabled="${!this.facetConfigs ||
-                        this.facetConfigs.length === 0 ||
-                        !this.settingsLocalStorageKey}"
+                        ?disabled=${buttonsDisabled}
                         @click="${this.storeSettings}">
                         ${i18n.t('filter-settings.save')}
                     </dbp-button>
