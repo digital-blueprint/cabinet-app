@@ -193,7 +193,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         const buttonsDisabled =
             !this.facetConfigs || this.facetConfigs.length === 0 || !this.settingsLocalStorageKey;
 
-        // TODO: Work in progress
         return html`
             <dbp-modal
                 ${ref(this.modalRef)}
@@ -280,7 +279,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                             icon-name="source_icons_eye-empty"
                             class="facet-visibility-icon"
                             @click="${() => {
-                                // TODO: Set icon to source_icons_eye-off
                                 this.changeFacetCategoryVisibility(item);
                             }}"></dbp-icon-button>
                     </div>
