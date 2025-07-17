@@ -228,9 +228,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                             title="${i18n.t('filter-settings.abort')}"
                             class="check-btn button is-secondary"
                             no-spinner-on-click
-                            @click="${() => {
-                                this.close();
-                            }}">
+                            @click="${this.close}">
                             ${i18n.t('filter-settings.abort')}
                         </dbp-button>
                     </div>
@@ -240,9 +238,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                             class="check-btn button is-secondary"
                             no-spinner-on-click
                             ?disabled="${buttonsDisabled}"
-                            @click="${() => {
-                                this.hideAllFacets();
-                            }}">
+                            @click="${this.hideAllFacets}">
                             ${i18n.t('filter-settings.all-filters-hide')}
                         </dbp-button>
                         <dbp-button
@@ -250,9 +246,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                             class="check-btn button is-secondary"
                             no-spinner-on-click
                             ?disabled=${buttonsDisabled}
-                            @click="${() => {
-                                this.showAllFacets();
-                            }}">
+                            @click="${this.showAllFacets}">
                             ${i18n.t('filter-settings.all-filters-show')}
                         </dbp-button>
                     </div>
