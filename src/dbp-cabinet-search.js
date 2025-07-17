@@ -790,30 +790,22 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
     }
 
-    async createFacets() {
-        /** @type {CabinetFacets} */
-        const ref = this.cabinetFacetsRef.value;
-        return await ref.createFacetsFromConfig(this.facetConfigs);
-    }
-
     /**
      * This will be used as createFacets() in the CabinetFacets component.
      * @returns {Promise<*[]>}
      */
-    async createVisibleFacets() {
+    async createFacets() {
         /** @type {CabinetFacets} */
         const ref = this.cabinetFacetsRef.value;
 
-        // Remove random items from this.facetConfigs (e.g., remove 2 random items)
-        // const shuffled = [...this.facetConfigs].sort(() => 0.5 - Math.random());
-        // const randomSubset = shuffled.slice(0, Math.max(0, this.facetConfigs.length - 2));
-
-        // TODO: Filter out facets we want to hide
+        // Filter out facets we want to hide
         const visibleFacetNames = this.getVisibleFacetNames();
         const visibleFacetsConfigs = this.getVisibleFacetsConfig(
             this.facetConfigs,
             visibleFacetNames,
         );
+
+        console.log('createFacets visibleFacetsConfigs', visibleFacetsConfigs);
 
         return await ref.createFacetsFromConfig(visibleFacetsConfigs);
     }
@@ -828,7 +820,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     getVisibleFacetsConfig(facetConfigs, visibleFacetNames) {
         return facetConfigs.filter(
             (item) =>
+                // For now we are showing all filter group headlines
+                // TODO: Only show filter groups if they have visible facets
                 'filter-group' in item ||
+                // Always show the category group Person / Document
+                item.groupId === 'category' ||
+                // Show facets with schemaField that are in the visibleFacetNames
                 (item.schemaField && visibleFacetNames.includes(item.schemaField)),
         );
     }

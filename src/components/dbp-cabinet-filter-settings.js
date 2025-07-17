@@ -33,6 +33,10 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
     }
 
     async open(facetConfigs) {
+        // Load the facet visibility states from localStorage again,
+        // because the modal might have been closed without saving the settings
+        this.loadFacetVisibilityStates();
+
         console.log('open facetConfigs', facetConfigs);
 
         // Filter facetConfigs to only include items with groupId 'person' or 'file', don't include 'person.person'
@@ -222,25 +226,17 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                             title="${i18n.t('filter-settings.abort')}"
                             class="check-btn button is-secondary"
                             @click="${() => {
-                                this.closeColumnOptionsModal();
+                                this.close();
                             }}">
                             ${i18n.t('filter-settings.abort')}
                         </dbp-button>
                     </div>
                     <div>
                         <dbp-button
-                            title="${i18n.t('filter-settings.reset-filter')}"
-                            class="check-btn button is-secondary"
-                            @click="${() => {
-                                this.resetSettings();
-                            }}">
-                            ${i18n.t('filter-settings.reset-filter')}
-                        </dbp-button>
-                        <dbp-button
                             title="${i18n.t('filter-settings.all-filters-hide')}"
                             class="check-btn button is-secondary"
                             @click="${() => {
-                                this.toggleAllColumns('hide');
+                                this.hideAllFacets();
                             }}">
                             ${i18n.t('filter-settings.all-filters-hide')}
                         </dbp-button>
@@ -248,7 +244,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                             title="${i18n.t('filter-settings.all-filters-show')}"
                             class="check-btn button is-secondary"
                             @click="${() => {
-                                this.toggleAllColumns('show');
+                                this.showAllFacets();
                             }}">
                             ${i18n.t('filter-settings.all-filters-show')}
                         </dbp-button>
@@ -425,5 +421,17 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
             composed: true,
         });
         this.dispatchEvent(customEvent);
+    }
+
+    hideAllFacets() {
+        this.facetVisibilityStates = [];
+    }
+
+    showAllFacets() {
+        // Show all facets by setting the visibility state to true for all facets in this.facetVisibilityStates
+        this.facetVisibilityStates = this.facetConfigs.reduce((acc, item) => {
+            acc[item.schemaField] = true;
+            return acc;
+        }, {});
     }
 }
