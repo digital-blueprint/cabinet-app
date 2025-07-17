@@ -53,12 +53,8 @@ export default class DBPCabinetLitElement extends LangMixin(
     }
 
     setFacetVisibilityStates(facetVisibilityStates) {
-        // If the facetVisibilityStates is not an object or is empty, we cannot set it
-        if (
-            typeof facetVisibilityStates !== 'object' ||
-            facetVisibilityStates === null ||
-            Object.keys(facetVisibilityStates).length === 0
-        ) {
+        // If the facetVisibilityStates is not an object or not set, we will not set it locally
+        if (typeof facetVisibilityStates !== 'object' || facetVisibilityStates === null) {
             return false;
         }
 

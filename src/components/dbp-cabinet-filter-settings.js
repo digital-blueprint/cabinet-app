@@ -429,7 +429,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
     }
 
     hideAllFacets() {
-        this.facetVisibilityStates = [];
+        this.facetVisibilityStates = {};
     }
 
     showAllFacets() {
