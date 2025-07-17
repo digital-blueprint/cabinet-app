@@ -151,7 +151,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     this.handleRoutingUrlChange();
                     break;
                 case 'facetVisibilityStates':
-                    this.updateFacetVisibility(oldValue);
+                    this.updateFacetVisibility();
                     break;
             }
         });
@@ -1101,7 +1101,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('handleRoutingUrlChange reset');
     }
 
-    async updateFacetVisibility(oldFacetVisibilityStates) {
+    async updateFacetVisibility() {
         await this.createFacets();
     }
 }
