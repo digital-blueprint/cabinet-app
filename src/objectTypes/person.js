@@ -180,6 +180,7 @@ class CabinetHitElement extends BaseHitElement {
             .study-icon {
                 margin-right: 6px;
                 font-size: 16px;
+                flex-shrink: 0;
             }
 
             .count {
@@ -189,7 +190,7 @@ class CabinetHitElement extends BaseHitElement {
             .hit-person-row {
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
+                justify-content: end;
             }
 
             .hit-person-last-modify-content {
@@ -199,9 +200,9 @@ class CabinetHitElement extends BaseHitElement {
 
             .hits-person-footer {
                 display: grid;
-                grid-template-columns: repeat(3, auto); /* auto adjusts to button widths */
+                grid-template-columns: repeat(3, auto);
                 gap: 5px;
-                justify-content: end;
+                align-items: end;
             }
 
             .sr-only {
@@ -423,17 +424,6 @@ class CabinetHitElement extends BaseHitElement {
             </main>
 
             <div class="hit-person-row">
-                <div class="hit-person-last-modify-content">
-                    ${i18n.t('sync.status-label')}:${'\u00A0'}${Intl.DateTimeFormat('de', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                    }).format(hit.person.syncTimestamp * 1000)}
-                    <br />
-                </div>
                 <footer class="hits-person-footer">
                     <button
                         class="button"
