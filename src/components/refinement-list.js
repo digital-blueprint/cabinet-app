@@ -6,6 +6,14 @@ import {LangMixin} from '@dbp-toolkit/common';
 import {createInstance} from '../i18n';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
+function debounce(func, delay) {
+    let timerId;
+    return function (...args) {
+        clearTimeout(timerId);
+        timerId = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+
 export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
     static styles = [
         commonStyles.getThemeCSS(),
@@ -101,6 +109,9 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
         this.refinementListRenderOptions = {};
         this._searchValue = '';
         this.renderFunction = null;
+        this._debouncedSearchForItems = debounce((value) => {
+            this.refinementListRenderOptions.searchForItems(value);
+        }, 150);
     }
 
     updated(changedProperties) {
@@ -114,7 +125,7 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
     _handleSearchInput(event) {
         const value = event.target.value;
         this._searchValue = value;
-        this.refinementListRenderOptions.searchForItems(value);
+        this._debouncedSearchForItems(value);
     }
 
     _handleRefinementChange(event, item) {
