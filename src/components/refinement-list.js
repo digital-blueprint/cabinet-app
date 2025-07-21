@@ -109,8 +109,8 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
         this.refinementListRenderOptions = {};
         this._searchValue = '';
         this.renderFunction = null;
-        this._debouncedSearchForItems = debounce((value) => {
-            this.refinementListRenderOptions.searchForItems(value);
+        this._debounce = debounce((func, value) => {
+            func(value);
         }, 150);
     }
 
@@ -125,7 +125,7 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
     _handleSearchInput(event) {
         const value = event.target.value;
         this._searchValue = value;
-        this._debouncedSearchForItems(value);
+        this._debounce(this.refinementListRenderOptions.searchForItems, value);
     }
 
     _handleRefinementChange(event, item) {
