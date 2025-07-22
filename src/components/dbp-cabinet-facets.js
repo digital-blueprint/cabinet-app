@@ -356,10 +356,10 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             });
         };
 
-        let renderGroupFacets = (filterGroupId) => {
+        let renderGroupFacets = (facets) => {
             return html`
                 ${repeat(
-                    getFacetsForGroup(filterGroupId),
+                    facets,
                     (facetConfig) => facetConfig.schemaField,
                     (facetConfig, index) => {
                         const schemaFieldSafe = facetConfig.schemaField.replace(/[@#]/g, '');
@@ -404,12 +404,17 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     (facetConfig) => facetConfig['filter-group'].id,
                     (facetConfig, index) => {
                         let filterGroup = facetConfig['filter-group'];
+                        let facets = getFacetsForGroup(filterGroup.id);
+                        // if there are no visible facets, hide the group
+                        let hidden = facets.filter((facet) => !facet.hidden).length === 0;
                         return html`
                             <div
                                 id="${filterGroup.id}"
-                                class="filter-group filter-group--${filterGroup.id}">
+                                class="filter-group filter-group--${filterGroup.id} ${hidden
+                                    ? 'display-none'
+                                    : ''}">
                                 <h3 class="filter-title">${this._i18n.t(`${filterGroup.name}`)}</h3>
-                                ${renderGroupFacets(filterGroup.id)}
+                                ${renderGroupFacets(facets)}
                             </div>
                         `;
                     },
