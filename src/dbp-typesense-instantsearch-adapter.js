@@ -23,18 +23,20 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
     }
 
     async _adaptAndPerformTypesenseRequest(instantsearchRequests) {
-        let originalFacetNames = instantsearchRequests[0].params.facets;
-
         if (this.allowFacetByFacetNameRemoval) {
             // Override originalFacetNames in case overrideFacetByData is enabled
-            originalFacetNames = originalFacetNames.filter(
-                (item) => !this.removedFacetNames.includes(item),
-            );
-            instantsearchRequests[0].params.facets = originalFacetNames;
+            for (const request of instantsearchRequests) {
+                let originalFacetNames = request.params.facets;
+                // facets can be undefined a string or an array
+                if (Array.isArray(originalFacetNames)) {
+                    originalFacetNames = originalFacetNames.filter(
+                        (item) => !this.removedFacetNames.includes(item),
+                    );
+                    request.params.facets = originalFacetNames;
+                }
+            }
         }
 
-        var typesenseResponse = await super._adaptAndPerformTypesenseRequest(instantsearchRequests);
-
-        return typesenseResponse;
+        return super._adaptAndPerformTypesenseRequest(instantsearchRequests);
     }
 }
