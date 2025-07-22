@@ -784,6 +784,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Filter out facets we want to hide
         const visibleFacetNames = this.getVisibleFacetNames();
+        visibleFacetNames.push('person.person'); // Always show the person facet, so we can focus
         let visibleFacetsConfigs = this.getVisibleFacetsConfig(
             this.facetConfigs,
             visibleFacetNames,
