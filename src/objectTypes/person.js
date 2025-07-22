@@ -478,9 +478,9 @@ class CabinetHitElement extends BaseHitElement {
  * The data meeds to be kept in sync with the view element.
  * @param {import('i18next').i18n} i18n
  * @param {PersonHit} hit
- * @param {boolean} hideNotes - Whether to hide notes in the PDF export.
+ * @param {boolean} withInternalData - Whether to include internal notes etc. in the PDF export.
  */
-function exportPersonPdf(i18n, hit, hideNotes = true) {
+function exportPersonPdf(i18n, hit, withInternalData = false) {
     const doc = new jsPDF();
 
     let subFillColor = 220;
@@ -546,7 +546,7 @@ function exportPersonPdf(i18n, hit, hideNotes = true) {
         [i18n.t('school-Certificate-Date'), formatDate(hit.person.schoolCertificateDate)],
     ];
 
-    if (!hideNotes) {
+    if (withInternalData) {
         body.push([i18n.t('note'), displayValue(hit.person.note)]);
     }
 
