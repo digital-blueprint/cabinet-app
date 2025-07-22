@@ -1103,7 +1103,19 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async updateFacetVisibility() {
-        await this.createFacets();
+        if (!this.search) {
+            return;
+        }
+
+        // Remove all facet widgets before creating new ones
+        this.search.removeWidgets(this.facetWidgets);
+        this.facetWidgets = [];
+
+        // Create new facet widgets based on the current facet visibility states
+        this.facetWidgets = await this.createFacets();
+
+        // Add the new facet widgets to the search instance
+        this.search.addWidgets(this.facetWidgets);
     }
 }
 
