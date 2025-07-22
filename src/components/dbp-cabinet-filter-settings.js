@@ -319,7 +319,13 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         console.log('changeFacetVisibility item', item);
 
         // Change the visibility of the facet
+        // Currently we only support toggling the visibility
         this.facetVisibilityStates[item.schemaField] = visible;
+
+        // Let's delete the facet visibility state if the facet is not visible anymore
+        if (!visible) {
+            delete this.facetVisibilityStates[item.schemaField];
+        }
 
         console.log('changeFacetVisibility this.facetVisibilityStates', this.facetVisibilityStates);
 
