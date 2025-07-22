@@ -10,6 +10,7 @@ export default class DBPCabinetLitElement extends LangMixin(
         super();
         this.entryPointUrl = '';
         this.facetVisibilityStates = {};
+        this.facetVisibilityStatesUpdated = 0;
         this.settingsLocalStorageKey = '';
 
         // Try to load the facet visibility states from localStorage if the settingsLocalStorageKey is already set
@@ -27,6 +28,7 @@ export default class DBPCabinetLitElement extends LangMixin(
             nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
             nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
             facetVisibilityStates: {type: Object, attribute: false},
+            facetVisibilityStatesUpdated: {type: Number, attribute: false},
             settingsLocalStorageKey: {type: String, attribute: false},
         };
     }
@@ -59,6 +61,9 @@ export default class DBPCabinetLitElement extends LangMixin(
         }
 
         this.facetVisibilityStates = facetVisibilityStates;
+
+        // Updating this.facetVisibilityStates didn't always trigger the update method, so we need to trigger it manually
+        this.facetVisibilityStatesUpdated = Date.now();
 
         return true;
     }
