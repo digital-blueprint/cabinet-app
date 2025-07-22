@@ -934,6 +934,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 padding: 0.14rem 1rem 0.14rem 0.14rem;
                 width: calc(100% - 0.9em);
             }
+
+            .desc-stat {
+                position: sticky;
+                top: 0;
+                background-color: var(--dbp-background);
+                z-index: 1;
+            }
+
             @media (min-width: 768px) {
                 .desc-stat,
                 .form,

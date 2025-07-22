@@ -849,7 +849,11 @@ class CabinetViewElement extends BaseViewElement {
                 display: flex;
                 align-items: center;
                 gap: 10px;
-                padding-bottom: 2.2em;
+                padding-bottom: 0.5em;
+                margin-bottom: 1.7em;
+                position: sticky;
+                top: 0;
+                background-color: var(--dbp-background);
             }
 
             .edit-tu-button {
