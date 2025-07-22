@@ -514,41 +514,46 @@ function exportPersonPdf(i18n, hit, hideNotes = true) {
         ],
     });
 
+    let body = [
+        [i18n.t('academic-titles'), displayValue(hit.person.academicTitles.join(', '))],
+        [i18n.t('given-name'), displayValue(hit.person.givenName)],
+        [i18n.t('family-name'), displayValue(hit.person.familyName)],
+        [i18n.t('former-family-name'), displayValue(hit.person.formerFamilyName)],
+        [i18n.t('academic-title-following'), displayValue(hit.person.academicTitleFollowing)],
+        [i18n.t('stud-id'), displayValue(hit.person.studId)],
+        [i18n.t('st-PersonNr'), displayValue(hit.person.stPersonNr)],
+        [i18n.t('birth-date'), formatDate(hit.person.birthDate)],
+        [
+            i18n.t('nationalities'),
+            displayValue(hit.person.nationalities.map((n) => n.text).join(', ')),
+        ],
+        [i18n.t('gender'), displayValue(hit.person.gender?.text)],
+        [i18n.t('social-SecurityNr'), displayValue(hit.person.socialSecurityNr)],
+        [i18n.t('ssPIN'), displayValue(hit.person.bpk)],
+        [i18n.t('personal-Status'), displayValue(hit.person.personalStatus?.text)],
+        [i18n.t('student-Status'), displayValue(hit.person.studentStatus?.text)],
+        [i18n.t('tuitionStatus'), displayValue(hit.person.tuitionStatus)],
+        [i18n.t('immatriculation-Date'), formatDate(hit.person.immatriculationDate)],
+        [i18n.t('immatriculationSemester'), displayValue(hit.person.immatriculationSemester)],
+        [
+            i18n.t('exmatriculation-GI'),
+            `${displayValue(hit.person.exmatriculationStatus?.text)} ${formatDate(hit.person.exmatriculationDate)}`,
+        ],
+        [
+            i18n.t('admission-Qualification-Type'),
+            displayValue(hit.person.admissionQualificationType?.text),
+        ],
+        [i18n.t('school-Certificate-Date'), formatDate(hit.person.schoolCertificateDate)],
+    ];
+
+    if (!hideNotes) {
+        body.push([i18n.t('note'), displayValue(hit.person.note)]);
+    }
+
     autoTable(doc, {
         showHead: 'firstPage',
         head: [[{content: i18n.t('General-information'), colSpan: 2}]],
-        body: [
-            [i18n.t('academic-titles'), displayValue(hit.person.academicTitles.join(', '))],
-            [i18n.t('given-name'), displayValue(hit.person.givenName)],
-            [i18n.t('family-name'), displayValue(hit.person.familyName)],
-            [i18n.t('former-family-name'), displayValue(hit.person.formerFamilyName)],
-            [i18n.t('academic-title-following'), displayValue(hit.person.academicTitleFollowing)],
-            [i18n.t('stud-id'), displayValue(hit.person.studId)],
-            [i18n.t('st-PersonNr'), displayValue(hit.person.stPersonNr)],
-            [i18n.t('birth-date'), formatDate(hit.person.birthDate)],
-            [
-                i18n.t('nationalities'),
-                displayValue(hit.person.nationalities.map((n) => n.text).join(', ')),
-            ],
-            [i18n.t('gender'), displayValue(hit.person.gender?.text)],
-            [i18n.t('social-SecurityNr'), displayValue(hit.person.socialSecurityNr)],
-            [i18n.t('ssPIN'), displayValue(hit.person.bpk)],
-            [i18n.t('personal-Status'), displayValue(hit.person.personalStatus?.text)],
-            [i18n.t('student-Status'), displayValue(hit.person.studentStatus?.text)],
-            [i18n.t('tuitionStatus'), displayValue(hit.person.tuitionStatus)],
-            [i18n.t('immatriculation-Date'), formatDate(hit.person.immatriculationDate)],
-            [i18n.t('immatriculationSemester'), displayValue(hit.person.immatriculationSemester)],
-            [
-                i18n.t('exmatriculation-GI'),
-                `${displayValue(hit.person.exmatriculationStatus?.text)} ${formatDate(hit.person.exmatriculationDate)}`,
-            ],
-            [
-                i18n.t('admission-Qualification-Type'),
-                displayValue(hit.person.admissionQualificationType?.text),
-            ],
-            [i18n.t('school-Certificate-Date'), formatDate(hit.person.schoolCertificateDate)],
-            [i18n.t('note'), hideNotes ? displayValue('') : displayValue(hit.person.note)],
-        ],
+        body: body,
     });
 
     autoTable(doc, {
