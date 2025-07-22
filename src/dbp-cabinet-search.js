@@ -18,7 +18,6 @@ import {CabinetFile} from './components/dbp-cabinet-file.js';
 import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
 import {TypesenseService, TYPESENSE_COLLECTION} from './services/typesense.js';
-import {updateDatePickersForExternalRefinementChange} from './components/dbp-cabinet-date-facet.js';
 import {BaseObject} from './baseObject.js';
 import {name as pkgName} from '../package.json';
 import {CabinetFilterSettings} from './components/dbp-cabinet-filter-settings.js';
@@ -343,14 +342,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             } else {
                 this._('.results').classList.remove('stalled');
             }
-        });
-
-        // Clear date facets on refinement clearing.
-        search.helper.on('change', (res) => {
-            /** @type {CabinetFacets} */
-            const ref = this.cabinetFacetsRef.value;
-
-            updateDatePickersForExternalRefinementChange(res, ref.facets);
         });
     }
 

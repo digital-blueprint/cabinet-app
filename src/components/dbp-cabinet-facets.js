@@ -4,12 +4,12 @@ import {Icon, ScopedElementsMixin} from '@dbp-toolkit/common';
 import {css, html} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
-import {createDateRefinement} from './dbp-cabinet-date-facet.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {repeat} from 'lit/directives/repeat.js';
 import {FacetPanel} from './facet-panel.js';
 import {connectRefinementList} from 'instantsearch.js/es/connectors/index.js';
 import {RefinementList} from './refinement-list.js';
+import {DateRangeRefinement, connectComplexDateRangeRefinement} from './date-range-refinement.js';
 
 export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -27,6 +27,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-icon': Icon,
             'dbp-cabinet-facet-panel': FacetPanel,
             'dbp-cabinet-refinement-list': RefinementList,
+            'dbp-cabinet-date-range-refinement': DateRangeRefinement,
         };
     }
 
@@ -176,6 +177,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     attribute: schemaField,
                     container: that._(`#${cssClass}`),
                 };
+
                 const dateRefinementOptions = {
                     ...defaultDateRefinementOptions,
                     ...(facetOptions.facet || {}),
@@ -183,7 +185,25 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 that.facets.push(dateRefinementOptions);
 
-                return createDateRefinement(dateRefinementOptions);
+                const renderDateRefinement = (renderOptions, isFirstRender) => {
+                    const container = renderOptions.widgetParams.container;
+
+                    let dateRefinement;
+                    if (isFirstRender) {
+                        dateRefinement = cabinetFacets.createScopedElement(
+                            'dbp-cabinet-date-range-refinement',
+                        );
+                        dateRefinement.setAttribute('subscribe', 'lang');
+                        container.replaceChildren(dateRefinement);
+                    } else {
+                        dateRefinement = container.children[0];
+                    }
+                    dateRefinement.refinementRenderOptions = renderOptions;
+                };
+
+                const customDateRefinement =
+                    connectComplexDateRangeRefinement(renderDateRefinement);
+                return customDateRefinement(dateRefinementOptions);
             }
         };
     }
@@ -277,48 +297,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .filter:has(> [hidden]) {
                 display: none;
-            }
-
-            .filter-type-datepicker {
-                padding: 1em 0;
-                width: max-content;
-                display: flex;
-                flex-direction: column;
-                gap: 1.5em;
-                justify-content: center;
-            }
-
-            .filter input[type='date'] {
-                padding: 0.5em;
-            }
-
-            /* input wrapper */
-            ::-internal-datetime-container {
-                position: relative;
-            }
-            /* date field wrappers */
-            ::-webkit-datetime-edit {
-                max-width: max-content;
-                padding-right: 0.5em;
-            }
-            ::-webkit-datetime-edit-fields-wrapper {
-            }
-            /* date separator */
-            ::-webkit-datetime-edit-text {
-            }
-            /* date fields */
-            ::-webkit-datetime-edit-month-field {
-            }
-            ::-webkit-datetime-edit-day-field {
-            }
-            ::-webkit-datetime-edit-year-field {
-            }
-            /* calendar button */
-            ::-webkit-calendar-picker-indicator {
-                cursor: pointer;
-            }
-            /* ??? */
-            ::-webkit-inner-spin-button {
             }
 
             .filter-exit-icon {

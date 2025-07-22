@@ -3,6 +3,9 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from '../i18n';
 import {css, html} from 'lit';
 
+/**
+ * FacetPanel is a collapsible panel web component for displaying filter facets or grouped content.
+ */
 export class FacetPanel extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
@@ -49,6 +52,7 @@ export class FacetPanel extends LangMixin(ScopedElementsMixin(DBPLitElement), cr
         .content {
             display: none;
             padding-left: 6px;
+            padding-top: 10px;
         }
 
         .content.show {

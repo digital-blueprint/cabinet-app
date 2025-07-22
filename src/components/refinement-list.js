@@ -14,6 +14,9 @@ function debounce(func, delay) {
     };
 }
 
+/**
+ * A customizable refinement list web component for filtering items, supporting search, show more/less, and custom rendering.
+ */
 export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
     static styles = [
         commonStyles.getThemeCSS(),
@@ -23,7 +26,6 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
             :host {
                 display: flex;
                 flex-direction: column;
-                padding-top: 10px;
                 gap: 6px;
             }
 
