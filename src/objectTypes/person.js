@@ -552,13 +552,13 @@ function exportPersonPdf(i18n, hit, hideNotes = true) {
 
     autoTable(doc, {
         showHead: 'firstPage',
-        head: [[{content: i18n.t('General-information'), colSpan: 2}]],
+        head: [[{content: i18n.t('General-information')}]],
         body: body,
     });
 
     autoTable(doc, {
         showHead: 'firstPage',
-        head: [[{content: i18n.t('Study-information'), colSpan: 3}]],
+        head: [[{content: i18n.t('Study-information')}]],
     });
 
     hit.person.studies
@@ -597,7 +597,7 @@ function exportPersonPdf(i18n, hit, hideNotes = true) {
 
     autoTable(doc, {
         showHead: 'firstPage',
-        head: [[{content: i18n.t('Contact-information'), colSpan: 3}]],
+        head: [[{content: i18n.t('Contact-information'), colSpan: 2}]],
         body: [
             [i18n.t('emailAddressUniversity'), displayValue(hit.person.emailAddressUniversity)],
             [i18n.t('emailAddressConfirmed'), displayValue(hit.person.emailAddressConfirmed)],
@@ -608,32 +608,38 @@ function exportPersonPdf(i18n, hit, hideNotes = true) {
     autoTable(doc, {
         showHead: 'firstPage',
         headStyles: {fillColor: subFillColor, textColor: subTextColor},
-        head: [[{content: i18n.t('homeAddress'), colSpan: 1}]],
+        head: [[{content: i18n.t('homeAddress.heading'), colSpan: 2}]],
         margin: {left: subLeftMargin},
         body: [
-            [displayValue(hit.person.homeAddress?.note)],
-            [displayValue(hit.person.homeAddress?.street)],
-            [displayValue(hit.person.homeAddress?.place)],
-            [displayValue(hit.person.homeAddress?.region)],
-            [displayValue(hit.person.homeAddress?.postCode)],
-            [displayValue(hit.person.homeAddress?.country?.text)],
-            [displayValue(hit.person.homeAddress?.telephoneNumber)],
+            [i18n.t('homeAddress.note'), displayValue(hit.person.homeAddress?.note)],
+            [i18n.t('homeAddress.street'), displayValue(hit.person.homeAddress?.street)],
+            [i18n.t('homeAddress.place'), displayValue(hit.person.homeAddress?.place)],
+            [i18n.t('homeAddress.region'), displayValue(hit.person.homeAddress?.region)],
+            [i18n.t('homeAddress.postCode'), displayValue(hit.person.homeAddress?.postCode)],
+            [i18n.t('homeAddress.country'), displayValue(hit.person.homeAddress?.country?.text)],
+            [
+                i18n.t('homeAddress.telephoneNumber'),
+                displayValue(hit.person.homeAddress?.telephoneNumber),
+            ],
         ],
     });
 
     autoTable(doc, {
         showHead: 'firstPage',
         headStyles: {fillColor: subFillColor, textColor: subTextColor},
-        head: [[{content: i18n.t('studyAddress'), colSpan: 1}]],
+        head: [[{content: i18n.t('studyAddress.heading'), colSpan: 2}]],
         margin: {left: subLeftMargin},
         body: [
-            [displayValue(hit.person.studyAddress?.note)],
-            [displayValue(hit.person.studyAddress?.street)],
-            [displayValue(hit.person.studyAddress?.place)],
-            [displayValue(hit.person.studyAddress?.region)],
-            [displayValue(hit.person.studyAddress?.postCode)],
-            [displayValue(hit.person.studyAddress?.country?.text)],
-            [displayValue(hit.person.studyAddress?.telephoneNumber)],
+            [i18n.t('studyAddress.note'), displayValue(hit.person.studyAddress?.note)],
+            [i18n.t('studyAddress.street'), displayValue(hit.person.studyAddress?.street)],
+            [i18n.t('studyAddress.place'), displayValue(hit.person.studyAddress?.place)],
+            [i18n.t('studyAddress.region'), displayValue(hit.person.studyAddress?.region)],
+            [i18n.t('studyAddress.postCode'), displayValue(hit.person.studyAddress?.postCode)],
+            [i18n.t('studyAddress.country'), displayValue(hit.person.studyAddress?.country?.text)],
+            [
+                i18n.t('studyAddress.telephoneNumber'),
+                displayValue(hit.person.studyAddress?.telephoneNumber),
+            ],
         ],
     });
 
@@ -1158,7 +1164,7 @@ class CabinetViewElement extends BaseViewElement {
                 <li class="Ci-item"><b>${i18n.t('emailAddressTemporary')}</b><span>${displayValue(hit.person.emailAddressTemporary)}</span></li>
             </ul>
                 </br/>
-                <li class="Address-flex-item"><b>${i18n.t('homeAddress')}</li></b>
+                <li class="Address-flex-item"><b>${i18n.t('homeAddress.heading')}</li></b>
                     <ul class="address-info">
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.note)}</li>
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.street)}</li>
@@ -1170,7 +1176,7 @@ class CabinetViewElement extends BaseViewElement {
                     </ul>
 
                 </br>
-                <li class="Address-flex-item"><b>${i18n.t('studyAddress')} </li></b>
+                <li class="Address-flex-item"><b>${i18n.t('studyAddress.heading')} </li></b>
                     <ul class="address-info">
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.note)}</li>
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.street)}</li>

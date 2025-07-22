@@ -129,7 +129,16 @@
     "gender": "Gender",
     "General-information": "General information",
     "given-name": "First name",
-    "homeAddress": "Home address",
+    "homeAddress": {
+        "country": "Country",
+        "heading": "Home Address",
+        "note": "Note",
+        "place": "City/Place",
+        "postCode": "Postal Code",
+        "region": "Region",
+        "street": "Street",
+        "telephoneNumber": "Phone Number"
+    },
     "immatriculation-date": "Immatriculation date",
     "immatriculation-Date": "Registration date",
     "immatriculationSemester": "Immatriculation semester",
@@ -166,7 +175,16 @@
     "stud-id": "Matriculation number",
     "student-Status": "Student status",
     "Study-information": "Study information",
-    "studyAddress": "Study address",
+    "studyAddress": {
+        "country": "Country",
+        "heading": "Study Address",
+        "note": "Note",
+        "place": "City/Place",
+        "postCode": "Postal Code",
+        "region": "Region",
+        "street": "Street",
+        "telephoneNumber": "Phone Number"
+    },
     "sync": {
         "button-title": "Synchronize student data",
         "notification": {
