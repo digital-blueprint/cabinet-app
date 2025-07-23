@@ -374,7 +374,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${getPaginationCSS()}
 
             .refinement-container {
-                min-height: 3em;
                 grid-area: header;
                 display: flex;
             }
@@ -900,16 +899,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div id="result-count"></div>
                 </div>
                 <div class="result-container ${this.facetConfigs.length === 0 ? 'no-facets' : ''}">
-                    <div id="refinement-container" class="refinement-container">
-                        <div id="current-filters" class="current-filters"></div>
-                        <div id="clear-filters" class="clear-filters"></div>
-                    </div>
                     <dbp-cabinet-facets
                         class="dbp-cabinet-facets"
                         ${ref(this.cabinetFacetsRef)}
                         .search="${this.search}"
                         subscribe="lang"></dbp-cabinet-facets>
                     <div class="results">
+                        <div id="refinement-container" class="refinement-container">
+                        <div id="current-filters" class="current-filters"></div>
+                        <div id="clear-filters" class="clear-filters"></div>
+                    </div>
                         <div id="hits"></div>
                         <div id="pagination-bottom"></div>
                     </div>

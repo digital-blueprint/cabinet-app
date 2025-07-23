@@ -44,7 +44,7 @@ class CurrentRefinements extends LangMixin(DBPLitElement, createInstance) {
                 align-items: center;
                 gap: 0.5em 1em;
                 margin: 0;
-                padding: 0 0 1em 0;
+                padding: 0;
                 height: 100%;
                 list-style: none;
             }
