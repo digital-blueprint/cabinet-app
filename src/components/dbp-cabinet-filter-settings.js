@@ -269,12 +269,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 <li class="facet-fields ${item.schemaField}" data-index="${key}">
                     <div class="category-field">
                         <h3>${i18n.t(item['filter-group'].name)}</h3>
-                        <dbp-icon-button
-                            icon-name="source_icons_eye-empty"
-                            class="facet-visibility-icon"
-                            @click="${() => {
-                                this.changeFacetCategoryVisibility(item);
-                            }}"></dbp-icon-button>
+                        ${this.renderFacetGroupVisibilityIconButton(item)}
                     </div>
                 </li>
             `;
@@ -443,5 +438,37 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
             acc[item.schemaField] = true;
             return acc;
         }, {});
+    }
+
+    renderFacetGroupVisibilityIconButton(item) {
+        const groupId = item['filter-group'].id;
+
+        // Check if there is at least one facet item in this.facetVisibilityStates with the groupId that is visible
+        const visible = Object.keys(this.facetVisibilityStates).some(
+            (key) => this.facetVisibilityStates[key] === true && key.startsWith(groupId),
+        );
+
+        return html`
+            <dbp-icon-button
+                icon-name="${visible ? 'source_icons_eye-empty' : 'source_icons_eye-off'}"
+                class="facet-visibility-icon"
+                @click="${() => {
+                    this.changeFacetGroupVisibility(item, !visible);
+                }}"></dbp-icon-button>
+        `;
+    }
+
+    changeFacetGroupVisibility(item, visible) {
+        const groupId = item['filter-group'].id;
+
+        // Find all facets in this.facetVisibilityStates that have the correct groupId and change their visibility
+        this.facetConfigs.forEach((facetItem) => {
+            if (facetItem.groupId === groupId) {
+                this.facetVisibilityStates[facetItem.schemaField] = visible;
+            }
+        });
+
+        // Set a new states-object to trigger a re-render
+        this.facetVisibilityStates = {...this.facetVisibilityStates};
     }
 }
