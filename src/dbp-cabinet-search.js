@@ -479,6 +479,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 justify-content: flex-end;
             }
 
+            #hits-footer {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                padding-top: 15px;
+            }
+
+            .ais-Pagination-list {
+                padding-top: 0px;
+            }
+
             .ais-Hits-item {
                 width: inherit;
             }
@@ -896,7 +907,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         @click="${this.toggleShowDeleted}" />
                     <label for="deleted-checkbox">${i18n.t('show-deleted-only')}</label>
                 </div>
-                <div id="result-count"></div>
                 </div>
                 <div class="result-container ${this.facetConfigs.length === 0 ? 'no-facets' : ''}">
                     <dbp-cabinet-facets
@@ -910,7 +920,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <div id="clear-filters" class="clear-filters"></div>
                     </div>
                         <div id="hits"></div>
-                        <div id="pagination-bottom"></div>
+                        <div id="hits-footer">
+                            <div id="result-count"></div>
+                            <div id="pagination-bottom"></div>
+                        </div>
                     </div>
                 </div>
 
