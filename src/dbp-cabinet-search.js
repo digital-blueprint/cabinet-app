@@ -13,7 +13,7 @@ import instantsearch from 'instantsearch.js';
 import DbpTypesenseInstantSearchAdapter from './dbp-typesense-instantsearch-adapter.js';
 import {hits, searchBox, stats, pagination} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
-import {pascalToKebab} from './utils';
+import {pascalToKebab, preactRefReplaceChildren} from './utils';
 import {CabinetFile} from './components/dbp-cabinet-file.js';
 import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
@@ -51,6 +51,39 @@ class StatsWidget extends LangMixin(AuthMixin(DBPLitElement), createInstance) {
             `;
         }
         return html``;
+    }
+}
+
+class EmptyWidget extends LangMixin(DBPLitElement, createInstance) {
+    constructor() {
+        super();
+        this.results = null;
+    }
+
+    static get properties() {
+        return {
+            ...super.properties,
+            results: {type: Object},
+        };
+    }
+
+    static styles = [
+        commonStyles.getThemeCSS(),
+        commonStyles.getGeneralCSS(false),
+        css`
+            .no-results {
+                text-align: center;
+                padding: 1em;
+                color: var(--dbp-content);
+            }
+        `,
+    ];
+
+    render() {
+        const text = this._i18n.t('search.no-results');
+        return html`
+            <div class="no-results">${text}</div>
+        `;
     }
 }
 
@@ -105,6 +138,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-cabinet-facets': CabinetFacets,
             'dbp-cabinet-filter-settings': CabinetFilterSettings,
             'dbp-cabinet-stats-widget': StatsWidget,
+            'dbp-cabinet-empty-widget': EmptyWidget,
         };
     }
 
@@ -707,6 +741,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             },
 
             templates: {
+                empty: (results, {html}) => {
+                    let emptyElement = cabinetSearch.createScopedElement(
+                        'dbp-cabinet-empty-widget',
+                    );
+                    emptyElement.setAttribute('subscribe', 'lang');
+                    emptyElement.results = results;
+                    return html`
+                        <span ref=${preactRefReplaceChildren(emptyElement)}></span>
+                    `;
+                },
                 item: (hit, {html}) => {
                     const objectType = hit.objectType;
                     const tagPart = pascalToKebab(hit.objectType);

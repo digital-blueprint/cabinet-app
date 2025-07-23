@@ -159,6 +159,7 @@
     "qualification-study": "Hochschulzugangsform",
     "school-Certificate-Date": "Zeugnisdatum",
     "search": {
+        "no-results": "Keine Ergebnisse gefunden",
         "stats_one": "~{{count}} Ergebnis gefunden in {{processingTimeMS}}ms",
         "stats_other": "~{{count}} Ergebnisse gefunden in {{processingTimeMS}}ms"
     },
