@@ -62,7 +62,8 @@ export default class DBPCabinetLitElement extends LangMixin(
 
         this.facetVisibilityStates = facetVisibilityStates;
 
-        // Updating this.facetVisibilityStates didn't always trigger the update method, so we need to trigger it manually
+        // Sometimes in the settings when a filter group has no item anymore, the state will not get updated when adding an item and saving
+        // Workaround: Trigger the update method manually
         this.facetVisibilityStatesUpdated = Date.now();
 
         return true;
