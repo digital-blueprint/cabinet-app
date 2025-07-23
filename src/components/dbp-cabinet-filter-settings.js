@@ -419,7 +419,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         );
 
         const customEvent = new CustomEvent('settingsStored', {
-            detail: this.facetVisibilityStates,
+            detail: {...this.facetVisibilityStates},
             bubbles: true,
             composed: true,
         });

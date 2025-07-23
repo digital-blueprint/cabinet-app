@@ -10,7 +10,6 @@ export default class DBPCabinetLitElement extends LangMixin(
         super();
         this.entryPointUrl = '';
         this.facetVisibilityStates = {};
-        this.facetVisibilityStatesUpdated = 0;
         this.settingsLocalStorageKey = '';
 
         // Try to load the facet visibility states from localStorage if the settingsLocalStorageKey is already set
@@ -28,7 +27,6 @@ export default class DBPCabinetLitElement extends LangMixin(
             nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
             nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
             facetVisibilityStates: {type: Object, attribute: false},
-            facetVisibilityStatesUpdated: {type: Number, attribute: false},
             settingsLocalStorageKey: {type: String, attribute: false},
         };
     }
@@ -61,10 +59,6 @@ export default class DBPCabinetLitElement extends LangMixin(
         }
 
         this.facetVisibilityStates = facetVisibilityStates;
-
-        // Sometimes in the settings when a filter group has no item anymore, the state will not get updated when adding an item and saving
-        // Workaround: Trigger the update method manually
-        this.facetVisibilityStatesUpdated = Date.now();
 
         return true;
     }

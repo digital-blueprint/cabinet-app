@@ -158,9 +158,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 case 'routingUrl':
                     this.handleRoutingUrlChange();
                     break;
-                // facetVisibilityStates wasn't always triggered, so we also facetVisibilityStatesUpdated
                 case 'facetVisibilityStates':
-                case 'facetVisibilityStatesUpdated':
                     this.updateFacetVisibility();
                     break;
             }
