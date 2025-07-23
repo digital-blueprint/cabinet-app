@@ -76,6 +76,7 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
                     border: var(--dbp-border);
                     border-radius: var(--dbp-border-radius);
                     color: var(--dbp-content);
+                    background-color: var(--dbp-background);
                 }
 
                 ::-webkit-datetime-edit {

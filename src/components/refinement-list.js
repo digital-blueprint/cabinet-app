@@ -49,6 +49,9 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
             .search-input {
                 width: 100%;
                 box-sizing: border-box;
+                background-color: var(--dbp-background);
+                color: var(--dbp-content);
+                border: var(--dbp-border);
             }
 
             .refinement-list {
