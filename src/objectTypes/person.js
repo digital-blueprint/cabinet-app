@@ -552,7 +552,7 @@ function exportPersonPdf(i18n, hit, withInternalData = false) {
 
     autoTable(doc, {
         showHead: 'firstPage',
-        head: [[{content: i18n.t('General-information')}]],
+        head: [[{content: i18n.t('General-information'), colSpan: 2}]],
         body: body,
     });
 
