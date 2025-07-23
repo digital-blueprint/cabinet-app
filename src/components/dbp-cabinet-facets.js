@@ -10,6 +10,8 @@ import {FacetPanel} from './facet-panel.js';
 import {connectRefinementList} from 'instantsearch.js/es/connectors/index.js';
 import {RefinementList} from './refinement-list.js';
 import {DateRangeRefinement, connectComplexDateRangeRefinement} from './date-range-refinement.js';
+import {connectConfigure} from 'instantsearch.js/es/connectors';
+import {ConfigureWidget} from './configure-widget.js';
 
 export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -28,6 +30,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-cabinet-facet-panel': FacetPanel,
             'dbp-cabinet-refinement-list': RefinementList,
             'dbp-cabinet-date-range-refinement': DateRangeRefinement,
+            'dbp-cabinet-configure-widget': ConfigureWidget,
         };
     }
 
@@ -114,6 +117,30 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
      */
     getFacetWidgetHash() {
         return this.facetWidgetHash;
+    }
+
+    createConfigureWidget() {
+        let cabinetFacets = this;
+
+        const renderConfig = (renderOptions, isFirstRender) => {
+            const container = renderOptions.widgetParams.container;
+
+            let configureWidget;
+            if (isFirstRender) {
+                configureWidget = cabinetFacets.createScopedElement('dbp-cabinet-configure-widget');
+                configureWidget.setAttribute('subscribe', 'lang');
+                container.replaceChildren(configureWidget);
+            } else {
+                configureWidget = container.children[0];
+            }
+            configureWidget.configureRenderOptions = renderOptions;
+        };
+
+        let customConfigure = connectConfigure(renderConfig);
+        return customConfigure({
+            searchParameters: {filters: 'base.isScheduledForDeletion:false'},
+            container: this._(`#custom-configure`),
+        });
     }
 
     /**
@@ -240,7 +267,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             .filter-header {
-                padding-bottom: 1.6em;
+                padding-bottom: 0.8em;
                 border-bottom: 5px solid var(--dbp-override-accent);
                 display: flex;
                 justify-content: space-between;
@@ -273,8 +300,12 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 padding: 0.2em;
             }
 
+            #custom-configure {
+                margin-top: 1em;
+            }
+
             .filters-container {
-                margin-top: 3em;
+                margin-top: 2em;
             }
 
             .filter-exit-icon {
@@ -446,6 +477,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         }}></dbp-icon>
                 </div>
                 <div id="filters-container" class="filters-container">${renderGroups()}</div>
+                <div id="custom-configure"></div>
             </div>
         `;
     }

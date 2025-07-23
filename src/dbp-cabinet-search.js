@@ -83,8 +83,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.instantSearchModule = null;
         this.facetConfigs = [];
         this.typesenseInstantsearchAdapter = null;
-        // Only show not-deleted documents by default
-        this.showScheduledForDeletion = false;
         this.search = null;
         this.configureWidget = null;
         this.documentViewId = null;
@@ -127,7 +125,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             ...super.properties,
             hitData: {type: Object, attribute: false},
             documentFile: {type: File, attribute: false},
-            showScheduledForDeletion: {type: Boolean, attribute: false},
             search: {type: Object, attribute: false},
             facetConfigs: {type: Array, state: true},
         };
@@ -146,15 +143,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                             this.getTypesenseInstantsearchAdapterConfig(),
                         );
                     }
-                    break;
-                case 'showScheduledForDeletion':
-                    if (!this.search) {
-                        return;
-                    }
-
-                    // We need to remove the "configure" widget and add it again, because it seems we can't update the filters directly
-                    this.search.removeWidgets([this.configureWidget]);
-                    this.search.addWidgets([this.createConfigureWidget()]);
                     break;
                 case 'routingUrl':
                     this.handleRoutingUrlChange();
@@ -312,13 +300,21 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         return this._initInstantsearchPromise;
     }
 
+    /**
+     * @returns {CabinetFacets}
+     */
+    getCabinetFacets() {
+        return this.cabinetFacetsRef.value;
+    }
+
     async _performInitInstantsearch() {
         const search = this.createInstantsearch();
         this.search = search;
 
-        await this.updateComplete;
+        let facets = this.getCabinetFacets();
         search.addWidgets([
-            this.createConfigureWidget(),
+            configure({hitsPerPage: 24}),
+            facets.createConfigureWidget(),
             this.createSearchBox(),
             this.createHits(),
             this.createStats(),
@@ -342,22 +338,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 this._('.results').classList.remove('stalled');
             }
         });
-    }
-
-    createConfigureWidget() {
-        console.log(
-            'createConfigureWidget this.showScheduledForDeletion',
-            this.showScheduledForDeletion,
-        );
-
-        this.configureWidget = configure({
-            hitsPerPage: 24,
-            // Show not-deleted documents / Show only deleted documents
-            filters:
-                'base.isScheduledForDeletion:' + (this.showScheduledForDeletion ? 'true' : 'false'),
-        });
-
-        return this.configureWidget;
     }
 
     static get styles() {
@@ -447,11 +427,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 fill: var(--dbp-override-content);
                 width: 2em;
                 height: 1.7em;
-            }
-
-            .delete-result {
-                display: flex;
-                justify-content: space-between;
             }
 
             .ais-Hits-list {
@@ -594,17 +569,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             @media (min-width: 380px) and (max-width: 489px) {
-                .delete-result {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: flex-start;
-                }
-
-                .deleted-only {
-                    justify-content: flex-start;
-                    padding-right: 0.4em;
-                }
-
                 #result-count {
                     padding-right: 0.4em;
                 }
@@ -823,10 +787,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         );
     }
 
-    toggleShowDeleted(event) {
-        this.showScheduledForDeletion = event.target.checked;
-    }
-
     _onLoginClicked(e) {
         this.sendSetPropertyEvent('requested-login-status', 'logged-in');
         e.preventDefault();
@@ -898,15 +858,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                             </g>
                         </svg>
                     </div>
-                </div>
-                <div class="delete-result">
-                <div class="deleted-only">
-                    <input
-                        type="checkbox"
-                        id="deleted-checkbox"
-                        @click="${this.toggleShowDeleted}" />
-                    <label for="deleted-checkbox">${i18n.t('show-deleted-only')}</label>
-                </div>
                 </div>
                 <div class="result-container ${this.facetConfigs.length === 0 ? 'no-facets' : ''}">
                     <dbp-cabinet-facets
