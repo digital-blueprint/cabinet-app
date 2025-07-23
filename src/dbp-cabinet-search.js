@@ -1,6 +1,6 @@
 import {css, html} from 'lit';
 import {ref, createRef} from 'lit/directives/ref.js';
-import {LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
+import {AuthMixin, LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from './dbp-cabinet-lit-element';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -28,7 +28,7 @@ import {createInstance} from './i18n';
 import {createClearRefinements} from './clear-refinements.js';
 import {createCurrentRefinements} from './current-refinements';
 
-class StatsWidget extends LangMixin(DBPLitElement, createInstance) {
+class StatsWidget extends LangMixin(AuthMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
         this.data = null;
@@ -80,7 +80,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
         /** @type {InstantSearchModule} */
-        this.instantSearchModule = {};
+        this.instantSearchModule = null;
         this.facetConfigs = [];
         this.typesenseInstantsearchAdapter = null;
         // Only show not-deleted documents by default
@@ -92,6 +92,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.resetRoutingUrl = false;
         this.lockDocumentViewDialog = false;
         this.facetWidgets = [];
+        this._loadModulesPromise = null;
+        this._initInstantsearchPromise = null;
     }
 
     static get scopedElements() {
@@ -107,6 +109,18 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         };
     }
 
+    async loginCallback(auth) {
+        await this.ensureModules();
+        await this.ensureInstantsearch();
+        await this.updateComplete;
+        await this.handleAutomaticDocumentViewOpen();
+        await this.handleAutomaticPersonViewOpen();
+    }
+
+    async firstUpdated() {
+        await this.ensureModules();
+    }
+
     static get properties() {
         return {
             ...super.properties,
@@ -114,6 +128,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             documentFile: {type: File, attribute: false},
             showScheduledForDeletion: {type: Boolean, attribute: false},
             search: {type: Object, attribute: false},
+            facetConfigs: {type: Array, state: true},
         };
     }
 
@@ -129,13 +144,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         this.typesenseInstantsearchAdapter.updateConfiguration(
                             this.getTypesenseInstantsearchAdapterConfig(),
                         );
-                    } else {
-                        this.initInstantsearch();
                     }
-
-                    this.handleAutomaticDocumentViewOpen();
-                    this.handleAutomaticPersonViewOpen();
-
                     break;
                 case 'showScheduledForDeletion':
                     if (!this.search) {
@@ -255,7 +264,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         return true;
     }
 
-    connectedCallback() {
+    async connectedCallback() {
         super.connectedCallback();
         let that = this;
         this._loginStatus = '';
@@ -295,22 +304,20 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             filterSettingsModal.open(this.facetConfigs);
         });
-
-        this.updateComplete.then(async () => {
-            await this.loadModules();
-            await this.handleAutomaticDocumentViewOpen();
-            await this.handleAutomaticPersonViewOpen();
-        });
     }
 
-    async initInstantsearch() {
-        if (!this.auth.token || this.facetConfigs.length === 0) {
-            return;
+    async ensureInstantsearch() {
+        if (!this._initInstantsearchPromise) {
+            this._initInstantsearchPromise = this._performInitInstantsearch();
         }
+        return this._initInstantsearchPromise;
+    }
 
-        this.search = this.createInstantsearch();
-        const search = this.search;
+    async _performInitInstantsearch() {
+        const search = this.createInstantsearch();
+        this.search = search;
 
+        await this.updateComplete;
         search.addWidgets([
             this.createConfigureWidget(),
             this.createSearchBox(),
@@ -321,16 +328,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             createCurrentRefinements(this, this._('#current-filters'), this.facetConfigs),
         ]);
 
-        if (this.facetConfigs.length === 0) {
-            this._('dbp-cabinet-facets').remove();
-            this._('.result-container').classList.add('no-facets');
-        }
-
-        if (this.facetConfigs.length > 0 && this.search) {
-            this.facetWidgets = await this.createFacets();
-            search.addWidgets(this.facetWidgets);
-            console.log('initInstantsearch this.createFacets()', this.facetWidgets);
-        }
+        this.facetWidgets = await this.createFacets();
+        search.addWidgets(this.facetWidgets);
+        console.log('initInstantsearch this.createFacets()', this.facetWidgets);
 
         search.start();
 
@@ -899,7 +899,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 </div>
                 <div id="result-count"></div>
                 </div>
-                <div class="result-container">
+                <div class="result-container ${this.facetConfigs.length === 0 ? 'no-facets' : ''}">
                     <div id="refinement-container" class="refinement-container">
                         <div id="current-filters" class="current-filters"></div>
                         <div id="clear-filters" class="clear-filters"></div>
@@ -964,7 +964,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             .filter((widget) => widget !== undefined);
     }
 
-    async loadModules() {
+    async ensureModules() {
+        if (!this._loadModulesPromise) {
+            this._loadModulesPromise = this._performLoadModules();
+        }
+        return this._loadModulesPromise;
+    }
+
+    async _performLoadModules() {
         try {
             // Fetch the JSON file containing module paths
             const response = await fetch(commonUtils.getAssetURL(pkgName, 'modules.json'));
@@ -1023,8 +1030,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.instantSearchModule = new instantSearchModule.default();
             this.facetConfigs = this.instantSearchModule.getFacetsConfig();
 
-            this.initInstantsearch();
-
+            await this.updateComplete;
             /**
              * @type {CabinetFile}
              */
