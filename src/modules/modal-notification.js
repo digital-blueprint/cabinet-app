@@ -15,6 +15,7 @@ export const sendModalNotification = (
     body,
     type = 'info',
     timeout = null,
+    replaceId = null,
 ) => {
     if (timeout === null) {
         switch (type) {
@@ -38,6 +39,7 @@ export const sendModalNotification = (
         type: type,
         timeout: timeout,
         targetNotificationId: targetNotificationId,
+        replaceId: replaceId,
     };
 
     if (timeout <= 0) {

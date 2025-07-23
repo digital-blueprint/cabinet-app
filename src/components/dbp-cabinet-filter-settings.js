@@ -299,7 +299,14 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
      * @param timeout Timeout in seconds, 0 means no timeout
      */
     sendFilterModalNotification(summary, body, type = 'info', timeout = null) {
-        sendModalNotification('modal-notification', summary, body, type, timeout);
+        sendModalNotification(
+            'modal-notification',
+            summary,
+            body,
+            type,
+            timeout,
+            'save-filter-settings',
+        );
     }
 
     renderFacetVisibilityIconButton(item) {
