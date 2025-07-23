@@ -366,6 +366,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .result-container {
                 margin-top: 0;
+                padding-top: 1em;
                 display: grid;
                 grid-template-columns: 24em minmax(0, 1fr);
                 grid-template-areas: 'empty header' 'sidebar main';
