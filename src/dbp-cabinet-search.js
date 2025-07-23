@@ -94,6 +94,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.facetWidgets = [];
         this._loadModulesPromise = null;
         this._initInstantsearchPromise = null;
+        this._initialUiState = null;
     }
 
     static get scopedElements() {
@@ -689,6 +690,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 preserveSharedStateOnUnmount: true,
             },
             stalledSearchDelay: 500,
+            initialUiState: this._initialUiState ?? {},
         });
     }
 
@@ -1096,6 +1098,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         let fullReInit = true;
 
         if (fullReInit) {
+            this._initialUiState = this.search.getUiState();
             this.search.dispose();
             this.search = null;
             this._initInstantsearchPromise = null;
