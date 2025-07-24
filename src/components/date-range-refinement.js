@@ -216,6 +216,8 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
             } else {
                 this._endDateValue = getLocalDateStringFromUnixTimestamp(endTimestamp);
             }
+        } else {
+            this._endDateValue = '';
         }
 
         this._updateConstraints();
