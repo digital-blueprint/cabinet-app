@@ -103,6 +103,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
             #filter-modal .modal-footer {
                 display: flex;
                 gap: 10px;
+                padding-top: 10px;
                 justify-content: space-between;
                 /* We need spacing because of the spacing in #filter-modal .modal-content */
                 margin-right: 3px;
