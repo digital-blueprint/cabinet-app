@@ -10,8 +10,9 @@ function translationRenderFunction(i18n, schemaField, value, operator = null) {
     return text;
 }
 
-function datePickerRenderFunction(i18n, schemaField, value, operator = null) {
+function _renderDate(i18n, value, operator, timeZone = undefined) {
     let date = new Date(value * 1000).toLocaleDateString('de-AT', {
+        timeZone: timeZone,
         day: '2-digit',
         month: 'short',
         year: 'numeric',
@@ -21,6 +22,14 @@ function datePickerRenderFunction(i18n, schemaField, value, operator = null) {
             ? i18n.t('cabinet-search.refinement-date-after-text')
             : i18n.t('cabinet-search.refinement-date-before-text');
     return `${operatorLabel} ${date}`;
+}
+
+function datePickerLocalRenderFunction(i18n, schemaField, value, operator) {
+    return _renderDate(i18n, value, operator);
+}
+
+function datePickerUTCRenderFunction(i18n, schemaField, value, operator) {
+    return _renderDate(i18n, value, operator, 'UTC');
 }
 
 export default class InstantSearchModule {
@@ -85,7 +94,12 @@ export default class InstantSearchModule {
                 schemaField: 'person.birthDateTimestamp',
                 name: t('cabinet-search.filter-person-birth-date-timestamp-title'),
                 schemaFieldType: 'datepicker',
-                renderFunction: datePickerRenderFunction,
+                renderFunction: datePickerUTCRenderFunction,
+                facetOptions: {
+                    facet: {
+                        inputIsUtc: true,
+                    },
+                },
             },
             {
                 groupId: 'person',
@@ -305,14 +319,14 @@ export default class InstantSearchModule {
                 schemaField: 'file.base.createdTimestamp',
                 schemaFieldType: 'datepicker',
                 name: t('cabinet-search.filter-file-base-created-timestamp-title'),
-                renderFunction: datePickerRenderFunction,
+                renderFunction: datePickerLocalRenderFunction,
             },
             {
                 groupId: 'file',
                 schemaField: 'file.base.recommendedDeletionTimestamp',
                 schemaFieldType: 'datepicker',
                 name: t('cabinet-search.filter-file-base-recommended-deletion-timestamp-title'),
-                renderFunction: datePickerRenderFunction,
+                renderFunction: datePickerLocalRenderFunction,
             },
             {
                 groupId: 'file',

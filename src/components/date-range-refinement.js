@@ -3,6 +3,7 @@ import {LangMixin} from '@dbp-toolkit/common';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element.js';
 import {createInstance} from '../i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
+import {live} from 'lit/directives/live.js';
 
 function getRefinedState(helper, attribute, value) {
     const startDate = value[0];
@@ -12,52 +13,115 @@ function getRefinedState(helper, attribute, value) {
     resolvedState = resolvedState.removeNumericRefinement(attribute);
 
     if (startDate !== null) {
-        const startDateTimestamp = Math.round(startDate / 1000);
-        resolvedState = resolvedState.addNumericRefinement(attribute, '>=', startDateTimestamp);
+        resolvedState = resolvedState.addNumericRefinement(attribute, '>=', startDate);
     }
 
     if (endDate !== null) {
-        const endDateTimestamp = Math.round(endDate / 1000);
-        resolvedState = resolvedState.addNumericRefinement(attribute, '<=', endDateTimestamp);
+        resolvedState = resolvedState.addNumericRefinement(attribute, '<=', endDate);
     }
 
     return resolvedState;
 }
 
 /**
- * Safely formats a Date object into DD-MM-YYYY string for input[type="date"] min/max attributes.
- * Returns an empty string for invalid/null Date objects.
- * @param {Date} dateObj - The Date object to format.
- * @returns {string} The formatted date string (YYYY-MM-DD) or empty string.
+ * Returns the unix timestamp representing the end of the (local time) day (23:59:59.999)
+ * for the given date string.
+ * @param {string} dateString - The date string in the format 'YYYY-MM-DD'
+ * @returns {number} The timestamp
  */
-function formatDateForInput(dateObj) {
-    if (!dateObj || isNaN(dateObj.getTime())) {
-        return '';
-    }
-    return dateObj.toISOString().split('T')[0];
+function getLocalEndOfDayUnixTimestamp(dateString) {
+    const date = new Date(dateString);
+    date.setHours(23, 59, 59, 999);
+    return Math.floor(date.getTime() / 1000);
+}
+
+/**
+ * Returns the unix timestamp representing the end of the (UTC) day (23:59:59.999)
+ * for the given date string.
+ * @param {string} dateString - The date string in the format 'YYYY-MM-DD'
+ * @returns {number} The timestamp
+ */
+function getUTCEndOfDayUnixTimestamp(dateString) {
+    const date = new Date(dateString + 'T00:00:00.000Z');
+    date.setUTCHours(23, 59, 59, 999);
+    return Math.floor(date.getTime() / 1000);
+}
+
+/**
+ * Returns the unix timestamp representing the start of the (local time) day (00:00:00.000)
+ * for the given date string.
+ * @param {string} dateString - The date string in the format 'YYYY-MM-DD'
+ * @returns {number} The timestamp
+ */
+function getLocalStartOfDayUnixTimestamp(dateString) {
+    const date = new Date(dateString);
+    date.setHours(0, 0, 0, 0);
+    return Math.floor(date.getTime() / 1000);
+}
+
+/**
+ * Returns the unix timestamp representing the start of the (UTC) day (00:00:00.000)
+ * for the given date string.
+ * @param {string} dateString - The date string in the format 'YYYY-MM-DD'
+ * @returns {number} The timestamp
+ */
+function getUTCStartOfDayUnixTimestamp(dateString) {
+    const date = new Date(dateString + 'T00:00:00.000Z');
+    date.setUTCHours(0, 0, 0, 0);
+    return Math.floor(date.getTime() / 1000);
+}
+
+/**
+ * Converts a Unix timestamp (in seconds) to a date string in the format 'YYYY-MM-DD' in local time.
+ * @param {number} unixTimestamp - The Unix timestamp in seconds.
+ * @returns {string} The formatted date string in 'YYYY-MM-DD' format.
+ */
+function getLocalDateStringFromUnixTimestamp(unixTimestamp) {
+    const date = new Date(unixTimestamp * 1000);
+    const year = String(date.getFullYear()).padStart(4, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+/**
+ * Converts a Unix timestamp (in seconds) to a date string in the format 'YYYY-MM-DD' in UTC.
+ * @param {number} unixTimestamp - The Unix timestamp in seconds.
+ * @returns {string} The formatted date string in 'YYYY-MM-DD' format.
+ */
+function getUTCDateStringFromUnixTimestamp(unixTimestamp) {
+    return new Date(unixTimestamp * 1000).toISOString().split('T')[0];
 }
 
 /**
  * A web component for selecting and refining a date range.
+ * if the widgetParam `inputIsUtc` is set to true, the date inputs will be treated as UTC,
+ * otherwise they will be treated as local time.
  */
 export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance) {
     constructor() {
         super();
         this.refinementRenderOptions = {};
-        this.startDateValue = '';
-        this.endDateValue = '';
-        this.startDateMax = '';
-        this.endDateMin = '';
+        this._startDateValue = '';
+        this._endDateValue = '';
+        this._startDateMax = '';
+        this._endDateMin = '';
     }
 
     static get properties() {
         return {
             refinementRenderOptions: {type: Object},
-            startDateValue: {type: String},
-            endDateValue: {type: String},
-            startDateMax: {type: String},
-            endDateMin: {type: String},
+            _startDateValue: {type: String, state: true},
+            _endDateValue: {type: String, state: true},
+            _startDateMax: {type: String, state: true},
+            _endDateMin: {type: String, state: true},
         };
+    }
+
+    get _inputIsUtc() {
+        // In case the visual date is in UTC you need to set this
+        // (for example for the birthdate which is stored in UTC in the backend)
+        return this.refinementRenderOptions?.widgetParams?.inputIsUtc ?? false;
     }
 
     static get styles() {
@@ -105,8 +169,8 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
                 <input
                     type="date"
                     class="date-input start-date"
-                    .value=${this.startDateValue}
-                    max=${this.startDateMax}
+                    .value=${live(this._startDateValue)}
+                    max=${this._startDateMax}
                     @change=${this._handleStartDateChange} />
             </div>
 
@@ -114,8 +178,8 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
                 <input
                     type="date"
                     class="date-input end-date"
-                    .value=${this.endDateValue}
-                    min=${this.endDateMin}
+                    .value=${live(this._endDateValue)}
+                    min=${this._endDateMin}
                     @change=${this._handleEndDateChange} />
             </div>
         `;
@@ -128,54 +192,60 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
         const refinements = results._state.numericRefinements[widgetParams?.attribute];
 
         if (!refinements) {
-            this.startDateValue = '';
-            this.endDateValue = '';
+            this._startDateValue = '';
+            this._endDateValue = '';
             this._updateConstraints();
             return;
         }
 
         if (refinements['>='] && refinements['>='].length > 0) {
-            const startTimestampMs = refinements['>='][0] * 1000;
-            this.startDateValue = formatDateForInput(new Date(startTimestampMs));
+            let startTimestamp = refinements['>='][0];
+            if (this._inputIsUtc) {
+                this._startDateValue = getUTCDateStringFromUnixTimestamp(startTimestamp);
+            } else {
+                this._startDateValue = getLocalDateStringFromUnixTimestamp(startTimestamp);
+            }
         } else {
-            this.startDateValue = '';
+            this._startDateValue = '';
         }
 
         if (refinements['<='] && refinements['<='].length > 0) {
-            const endTimestampMs = refinements['<='][0] * 1000;
-            this.endDateValue = formatDateForInput(new Date(endTimestampMs));
-        } else {
-            this.endDateValue = '';
+            let endTimestamp = refinements['<='][0];
+            if (this._inputIsUtc) {
+                this._endDateValue = getUTCDateStringFromUnixTimestamp(endTimestamp);
+            } else {
+                this._endDateValue = getLocalDateStringFromUnixTimestamp(endTimestamp);
+            }
         }
 
         this._updateConstraints();
     }
 
     _handleStartDateChange(e) {
-        this.startDateValue = e.target.value;
+        this._startDateValue = e.target.value;
         this._updateConstraints();
         this._refine();
     }
 
     _handleEndDateChange(e) {
-        this.endDateValue = e.target.value;
+        this._endDateValue = e.target.value;
         this._updateConstraints();
         this._refine();
     }
 
     _updateConstraints() {
         // Update end date minimum based on start date
-        if (this.startDateValue) {
-            this.endDateMin = this.startDateValue;
+        if (this._startDateValue) {
+            this._endDateMin = this._startDateValue;
         } else {
-            this.endDateMin = '';
+            this._endDateMin = '';
         }
 
         // Update start date maximum based on end date
-        if (this.endDateValue) {
-            this.startDateMax = this.endDateValue;
+        if (this._endDateValue) {
+            this._startDateMax = this._endDateValue;
         } else {
-            this.startDateMax = '';
+            this._startDateMax = '';
         }
     }
 
@@ -185,16 +255,20 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
         let startTimestamp = null;
         let endTimestamp = null;
 
-        if (this.startDateValue) {
-            const startDateObj = new Date(this.startDateValue + 'T00:00:00.000Z');
-            startDateObj.setUTCHours(0, 0, 0, 0);
-            startTimestamp = startDateObj.getTime();
+        if (this._startDateValue) {
+            if (this._inputIsUtc) {
+                startTimestamp = getUTCStartOfDayUnixTimestamp(this._startDateValue);
+            } else {
+                startTimestamp = getLocalStartOfDayUnixTimestamp(this._startDateValue);
+            }
         }
 
-        if (this.endDateValue) {
-            const endDateObj = new Date(this.endDateValue + 'T00:00:00.000Z');
-            endDateObj.setUTCHours(23, 59, 59, 999);
-            endTimestamp = endDateObj.getTime();
+        if (this._endDateValue) {
+            if (this._inputIsUtc) {
+                endTimestamp = getUTCEndOfDayUnixTimestamp(this._endDateValue);
+            } else {
+                endTimestamp = getLocalEndOfDayUnixTimestamp(this._endDateValue);
+            }
         }
 
         this.refinementRenderOptions.refine([startTimestamp, endTimestamp]);
