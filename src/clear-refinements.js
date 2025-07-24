@@ -60,6 +60,10 @@ class ClearRefinements extends LangMixin(DBPLitElement, createInstance) {
             .clear-refinements-button:hover:before {
                 transform: rotate(360deg);
             }
+
+            .clear-refinements-button-label {
+                white-space: nowrap;
+            }
         `;
     }
 
