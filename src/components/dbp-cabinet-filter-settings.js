@@ -212,10 +212,10 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 <div slot="title" class="modal-title">
                     <dbp-icon
                         class="facet-filter-icon"
-                        title="${i18n.t('cabinet-search.facet-settings')}"
-                        aria-label="${i18n.t('cabinet-search.facet-settings')}"
+                        title="${i18n.t('filter-settings.filter-configuration')}"
+                        aria-label="${i18n.t('filter-settings.filter-configuration')}"
                         name="cog"></dbp-icon>
-                    <h1>Filter configuration</h1>
+                    <h1>${i18n.t('filter-settings.filter-configuration')}</h1>
                 </div>
                 <div slot="header" class="header">
                     <div class="modal-notification">
@@ -255,6 +255,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         </dbp-button>
                     </div>
                     <dbp-button
+                        title="${i18n.t('filter-settings.save')}"
                         type="is-primary"
                         ?disabled=${buttonsDisabled}
                         @click="${this.storeSettings}">
@@ -311,11 +312,21 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
     renderFacetVisibilityIconButton(item) {
         const visible = this.facetVisibilityStates[item.schemaField] === true;
+        const name = this._i18n.t(item.name);
 
+        // We need to define "filter-settings.facet-hide" and "filter-settings.facet-show" separately,
+        // or "npm run fix" will remove the translation keys
         return html`
             <dbp-icon-button
                 icon-name="${visible ? 'source_icons_eye-empty' : 'source_icons_eye-off'}"
                 class="facet-visibility-icon"
+                title="${visible
+                    ? this._i18n.t('filter-settings.facet-hide', {
+                          name: name,
+                      })
+                    : this._i18n.t('filter-settings.facet-show', {
+                          name: name,
+                      })}"
                 @click="${() => {
                     this.changeFacetVisibility(item, !visible);
                 }}"></dbp-icon-button>
@@ -449,11 +460,21 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         const visible = Object.keys(this.facetVisibilityStates).some(
             (key) => this.facetVisibilityStates[key] === true && key.startsWith(groupId),
         );
+        const groupName = this._i18n.t(item['filter-group'].name);
 
+        // We need to define "filter-settings.group-hide" and "filter-settings.group-show" separately,
+        // or "npm run fix" will remove the translation keys
         return html`
             <dbp-icon-button
                 icon-name="${visible ? 'source_icons_eye-empty' : 'source_icons_eye-off'}"
                 class="facet-visibility-icon"
+                title="${visible
+                    ? this._i18n.t('filter-settings.group-hide', {
+                          name: groupName,
+                      })
+                    : this._i18n.t('filter-settings.group-show', {
+                          name: groupName,
+                      })}"
                 @click="${() => {
                     this.changeFacetGroupVisibility(item, !visible);
                 }}"></dbp-icon-button>

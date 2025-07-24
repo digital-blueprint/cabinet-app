@@ -476,8 +476,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 @click="${this.openFilterSettings}"
                                 class="facet-settings-button">
                                 <dbp-icon
-                                    title="${i18n.t('cabinet-search.facet-settings')}"
-                                    aria-label="${i18n.t('cabinet-search.facet-settings')}"
+                                    title="${i18n.t('filter-settings.filter-configuration')}"
+                                    aria-label="${i18n.t('filter-settings.filter-configuration')}"
                                     name="cog"></dbp-icon>
                             </button>
                         </div>

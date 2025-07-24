@@ -23,7 +23,6 @@
     },
     "cabinet-search": {
         "document-filter-group-title": "Document properties",
-        "facet-settings": "",
         "filter-file-base-additional-type-text-title": "Document type",
         "filter-file-base-created-timestamp-title": "Added",
         "filter-file-base-file-source-title": "Digital document source",
@@ -121,6 +120,11 @@
         "abort": "Cancel",
         "all-filters-hide": "Hide all",
         "all-filters-show": "Show all",
+        "facet-hide": "Hide filter '{{name}}'",
+        "facet-show": "Show filter '{{name}}'",
+        "filter-configuration": "Filter configuration",
+        "group-hide": "Hide all filters in group '{{name}}'",
+        "group-show": "Show all filters in group '{{name}}'",
         "save": "Save settings"
     },
     "focus-button-name": "Focus",
