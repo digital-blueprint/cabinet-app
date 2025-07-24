@@ -278,6 +278,17 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 display: flex;
             }
 
+            .filter-header__right-group {
+                display: flex;
+                align-items: center;
+                gap: 0.2em;
+            }
+
+            .filter-header__right {
+                display: flex;
+                align-items: center;
+            }
+
             .filter-header__title {
                 margin: 0;
                 font-weight: bold;
@@ -459,21 +470,25 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <dbp-icon name="funnel" class="facet-filter-icon"></dbp-icon>
                         <h2 class="filter-header__title">${i18n.t('cabinet-search.filters')}</h2>
                     </div>
-                    <div class="filter-header__right">
-                        <button @click="${this.openFilterSettings}" class="facet-settings-button">
-                            <dbp-icon
-                                title="${i18n.t('cabinet-search.facet-settings')}"
-                                aria-label="${i18n.t('cabinet-search.facet-settings')}"
-                                name="cog"></dbp-icon>
-                        </button>
+                    <div class="filter-header__right-group">
+                        <div class="filter-header__right">
+                            <button
+                                @click="${this.openFilterSettings}"
+                                class="facet-settings-button">
+                                <dbp-icon
+                                    title="${i18n.t('cabinet-search.facet-settings')}"
+                                    aria-label="${i18n.t('cabinet-search.facet-settings')}"
+                                    name="cog"></dbp-icon>
+                            </button>
+                        </div>
+                        <dbp-icon
+                            name="close"
+                            id="filter-exit-icon"
+                            class="filter-exit-icon"
+                            @click=${() => {
+                                this.toggleFilters();
+                            }}></dbp-icon>
                     </div>
-                    <dbp-icon
-                        name="close"
-                        id="filter-exit-icon"
-                        class="filter-exit-icon"
-                        @click=${() => {
-                            this.toggleFilters();
-                        }}></dbp-icon>
                 </div>
                 <div id="filters-container" class="filters-container">${renderGroups()}</div>
                 <div id="custom-configure"></div>
