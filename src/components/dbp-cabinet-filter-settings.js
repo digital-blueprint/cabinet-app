@@ -413,19 +413,14 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
         button.stop();
 
-        // Send a notification that the settings were stored
-        this.sendFilterModalNotification(
-            'Filter settings stored',
-            'The filter settings were stored successfully.',
-            'success',
-        );
-
         const customEvent = new CustomEvent('settingsStored', {
             detail: {...this.facetVisibilityStates},
             bubbles: true,
             composed: true,
         });
         this.dispatchEvent(customEvent);
+
+        this.close();
     }
 
     hideAllFacets() {
