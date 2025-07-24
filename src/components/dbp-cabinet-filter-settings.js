@@ -92,6 +92,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 display: grid;
                 gap: 10px;
                 grid-auto-flow: row;
+                /* Add space for the scrollbar */
                 margin-right: 5px;
             }
 
@@ -101,9 +102,10 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
             #filter-modal .modal-footer {
                 display: flex;
-                flex-direction: row;
-                align-items: center;
                 gap: 10px;
+                justify-content: space-between;
+                /* We need spacing because of the spacing in #filter-modal .modal-content */
+                margin-right: 3px;
             }
 
             .facet-filter-icon {
@@ -226,7 +228,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                     <div>
                         <dbp-button
                             title="${i18n.t('filter-settings.abort')}"
-                            class="check-btn button is-secondary"
+                            type="is-secondary"
                             no-spinner-on-click
                             @click="${this.close}">
                             ${i18n.t('filter-settings.abort')}
@@ -235,7 +237,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                     <div>
                         <dbp-button
                             title="${i18n.t('filter-settings.all-filters-hide')}"
-                            class="check-btn button is-secondary"
+                            type="is-secondary"
                             no-spinner-on-click
                             ?disabled="${buttonsDisabled}"
                             @click="${this.hideAllFacets}">
@@ -243,7 +245,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         </dbp-button>
                         <dbp-button
                             title="${i18n.t('filter-settings.all-filters-show')}"
-                            class="check-btn button is-secondary"
+                            type="is-secondary"
                             no-spinner-on-click
                             ?disabled=${buttonsDisabled}
                             @click="${this.showAllFacets}">
@@ -251,7 +253,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         </dbp-button>
                     </div>
                     <dbp-button
-                        class="check-btn button is-primary"
+                        type="is-primary"
                         ?disabled=${buttonsDisabled}
                         @click="${this.storeSettings}">
                         ${i18n.t('filter-settings.save')}
