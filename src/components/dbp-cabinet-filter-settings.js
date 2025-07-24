@@ -14,6 +14,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         super();
         this.modalRef = createRef();
         this.facetConfigs = [];
+        this.facetNumber = 0;
     }
 
     static get scopedElements() {
@@ -277,10 +278,11 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 </li>
             `;
         } else {
+            this.facetNumber++;
             return html`
                 <li class="facet-fields ${item.schemaField}" data-index="${key}">
                     <div class="facet-field">
-                        <span class="facet-button facet-order">${key + 1}</span>
+                        <span class="facet-button facet-order">${this.facetNumber}</span>
                         <span class="facet-title"><strong>${i18n.t(item.name)}</strong></span>
                         ${this.renderFacetVisibilityIconButton(item)}
                     </div>
@@ -345,6 +347,8 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 <p>No facets configured.</p>
             `;
         }
+
+        this.facetNumber = 0;
 
         return html`
             <ul class="facets">
