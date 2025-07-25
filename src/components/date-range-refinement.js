@@ -5,6 +5,14 @@ import {createInstance} from '../i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {live} from 'lit/directives/live.js';
 
+function debounce(func, delay) {
+    let timerId;
+    return function (...args) {
+        clearTimeout(timerId);
+        timerId = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+
 function getRefinedState(helper, attribute, value) {
     const startDate = value[0];
     const endDate = value[1];
@@ -93,6 +101,8 @@ function getUTCDateStringFromUnixTimestamp(unixTimestamp) {
     return new Date(unixTimestamp * 1000).toISOString().split('T')[0];
 }
 
+const DEBOUNCE_DELAY = 150;
+
 /**
  * A web component for selecting and refining a date range.
  * if the widgetParam `inputIsUtc` is set to true, the date inputs will be treated as UTC,
@@ -106,6 +116,14 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
         this._endDateValue = '';
         this._startDateMax = '';
         this._endDateMin = '';
+        this._startFocused = false;
+        this._endFocused = false;
+        this._debounce = debounce((func, ...args) => {
+            func(...args);
+        }, DEBOUNCE_DELAY);
+        this._debounceBlur = debounce((func, ...args) => {
+            func(...args);
+        }, DEBOUNCE_DELAY);
     }
 
     static get properties() {
@@ -171,7 +189,9 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
                     class="date-input start-date"
                     .value=${live(this._startDateValue)}
                     max=${this._startDateMax}
-                    @change=${this._handleStartDateChange} />
+                    @change=${(e) => this._handleDateChange(e, true)}
+                    @focus=${(e) => this._handleFocus(e, true)}
+                    @blur=${(e) => this._handleBlur(e, true)} />
             </div>
 
             <div class="date-wrapper">
@@ -180,7 +200,9 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
                     class="date-input end-date"
                     .value=${live(this._endDateValue)}
                     min=${this._endDateMin}
-                    @change=${this._handleEndDateChange} />
+                    @change=${(e) => this._handleDateChange(e, false)}
+                    @focus=${(e) => this._handleFocus(e, false)}
+                    @blur=${(e) => this._handleBlur(e, false)} />
             </div>
         `;
     }
@@ -189,48 +211,67 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
         if (!this.refinementRenderOptions?.results?._state?.numericRefinements) return;
 
         const {results, widgetParams} = this.refinementRenderOptions;
-        const refinements = results._state.numericRefinements[widgetParams?.attribute];
+        const refinements = results._state.numericRefinements[widgetParams.attribute];
 
-        if (!refinements) {
-            this._startDateValue = '';
-            this._endDateValue = '';
-            this._updateConstraints();
-            return;
+        // In case the user is focused on the input, we ignore the refinements
+        // updates to avoid overwriting the user's input.
+
+        if (!this._startFocused) {
+            if (refinements && refinements['>='] && refinements['>='].length > 0) {
+                let startTimestamp = refinements['>='][0];
+                if (this._inputIsUtc) {
+                    this._startDateValue = getUTCDateStringFromUnixTimestamp(startTimestamp);
+                } else {
+                    this._startDateValue = getLocalDateStringFromUnixTimestamp(startTimestamp);
+                }
+            } else {
+                this._startDateValue = '';
+            }
         }
 
-        if (refinements['>='] && refinements['>='].length > 0) {
-            let startTimestamp = refinements['>='][0];
-            if (this._inputIsUtc) {
-                this._startDateValue = getUTCDateStringFromUnixTimestamp(startTimestamp);
+        if (!this._endFocused) {
+            if (refinements && refinements['<='] && refinements['<='].length > 0) {
+                let endTimestamp = refinements['<='][0];
+                if (this._inputIsUtc) {
+                    this._endDateValue = getUTCDateStringFromUnixTimestamp(endTimestamp);
+                } else {
+                    this._endDateValue = getLocalDateStringFromUnixTimestamp(endTimestamp);
+                }
             } else {
-                this._startDateValue = getLocalDateStringFromUnixTimestamp(startTimestamp);
+                this._endDateValue = '';
             }
-        } else {
-            this._startDateValue = '';
-        }
-
-        if (refinements['<='] && refinements['<='].length > 0) {
-            let endTimestamp = refinements['<='][0];
-            if (this._inputIsUtc) {
-                this._endDateValue = getUTCDateStringFromUnixTimestamp(endTimestamp);
-            } else {
-                this._endDateValue = getLocalDateStringFromUnixTimestamp(endTimestamp);
-            }
-        } else {
-            this._endDateValue = '';
         }
 
         this._updateConstraints();
     }
 
-    _handleStartDateChange(e) {
-        this._startDateValue = e.target.value;
-        this._updateConstraints();
-        this._refine();
+    _handleFocus(e, isStart) {
+        if (isStart) {
+            this._startFocused = true;
+        } else {
+            this._endFocused = true;
+        }
     }
 
-    _handleEndDateChange(e) {
-        this._endDateValue = e.target.value;
+    _handleBlur(e, isStart) {
+        if (isStart) {
+            this._startFocused = false;
+        } else {
+            this._endFocused = false;
+        }
+        // We ignore refinements updates when focused, and due to debouncing
+        // those focused changes can come back after the blur event, so we have
+        // to mirror the debounce logic here, to not re-apply outdated values
+        // when the user blurs the input.
+        this._debounceBlur(this._updateFromRefinements.bind(this));
+    }
+
+    _handleDateChange(e, isStart) {
+        if (isStart) {
+            this._startDateValue = e.target.value;
+        } else {
+            this._endDateValue = e.target.value;
+        }
         this._updateConstraints();
         this._refine();
     }
@@ -273,7 +314,7 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
             }
         }
 
-        this.refinementRenderOptions.refine([startTimestamp, endTimestamp]);
+        this._debounce(this.refinementRenderOptions.refine, [startTimestamp, endTimestamp]);
     }
 }
 
