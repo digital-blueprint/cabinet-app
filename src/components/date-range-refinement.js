@@ -118,6 +118,8 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
         this._endDateMin = '';
         this._startFocused = false;
         this._endFocused = false;
+        this._startManuallySet = false;
+        this._endManuallySet = false;
         this._debounce = debounce((func, ...args) => {
             func(...args);
         }, DEBOUNCE_DELAY);
@@ -226,6 +228,7 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
                 }
             } else {
                 this._startDateValue = '';
+                this._startManuallySet = false;
             }
         }
 
@@ -239,6 +242,7 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
                 }
             } else {
                 this._endDateValue = '';
+                this._endManuallySet = false;
             }
         }
 
@@ -256,8 +260,14 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
     _handleBlur(e, isStart) {
         if (isStart) {
             this._startFocused = false;
+            if (!this._endDateValue) {
+                this._handleDateChange(e, false);
+            }
         } else {
             this._endFocused = false;
+            if (!this._startDateValue) {
+                this._handleDateChange(e, true);
+            }
         }
         // We ignore refinements updates when focused, and due to debouncing
         // those focused changes can come back after the blur event, so we have
@@ -269,26 +279,42 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
     _handleDateChange(e, isStart) {
         if (isStart) {
             this._startDateValue = e.target.value;
+            this._startManuallySet = !!this._startDateValue && this._startFocused;
+            if (!this._endManuallySet && this._startDateValue) {
+                this._handleDateChange(e, false);
+            }
         } else {
             this._endDateValue = e.target.value;
+            this._endManuallySet = !!this._endDateValue && this._endFocused;
+            if (!this._startManuallySet && this._endDateValue) {
+                this._handleDateChange(e, true);
+            }
         }
         this._updateConstraints();
         this._refine();
     }
 
     _updateConstraints() {
-        // Update end date minimum based on start date
-        if (this._startDateValue) {
-            this._endDateMin = this._startDateValue;
-        } else {
-            this._endDateMin = '';
+        // Changing min/max during editing breaks breaks the input in chrome
+        // while typing, so avoid updating them while the user is focused.
+        // We will update them on the next blur event instead.
+
+        if (!this._endFocused) {
+            // Update end date minimum based on start date
+            if (this._startDateValue) {
+                this._endDateMin = this._startDateValue;
+            } else {
+                this._endDateMin = '';
+            }
         }
 
-        // Update start date maximum based on end date
-        if (this._endDateValue) {
-            this._startDateMax = this._endDateValue;
-        } else {
-            this._startDateMax = '';
+        if (!this._startFocused) {
+            // Update start date maximum based on end date
+            if (this._endDateValue) {
+                this._startDateMax = this._endDateValue;
+            } else {
+                this._startDateMax = '';
+            }
         }
     }
 
