@@ -314,7 +314,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
     getStudyFields() {
         const personData = this.data?.person || this.person || {};
         const studies = personData.studies;
-        let studyFields = {none: 'Unspecified'};
+        let i18n = this._i18n;
+        let studyFields = {Unspecified: i18n.t('doc-modal-study-field-unspecified')};
 
         if (studies) {
             for (const study of studies) {
@@ -539,16 +540,21 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     getStudyFieldNameForKey(key) {
+        let i18n = this._i18n;
+        let keyUnspecified = 'Unspecified';
         const personData = this.data?.person || {};
-        const studies = [{key: 'none', name: 'Unspecified'}, ...(personData.studies || [])];
+        const studies = [
+            {key: keyUnspecified, name: i18n.t('doc-modal-study-field-unspecified')},
+            ...(personData.studies || []),
+        ];
 
         for (const study of studies) {
             if (study.key === key) {
-                return key === 'none' ? study.name : study.key + ' ' + study.name;
+                return key === keyUnspecified ? study.name : study.key + ' ' + study.name;
             }
         }
 
-        return `Unknown study field (${key})`;
+        return i18n.t('doc-modal-study-field-unknown', {studyFieldKey: key});
     }
 
     render() {

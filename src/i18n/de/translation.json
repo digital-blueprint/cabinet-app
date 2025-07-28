@@ -85,6 +85,8 @@
     "doc-modal-semester": "Zuordnung zum Semester",
     "doc-modal-storage-purpose-deletion": "Speicherzweck",
     "doc-modal-study-field": "Zuordnung zum Studienfach",
+    "doc-modal-study-field-unknown": "Unbekanntes Studienfach ({{studyFieldKey}})",
+    "doc-modal-study-field-unspecified": "Unspezifiziert",
     "doc-modal-subject-of": "Geschäftszahl",
     "document": {
         "document-not-found-body": "Das angeforderte Dokument konnte nicht gefunden werden!",

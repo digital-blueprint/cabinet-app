@@ -85,6 +85,8 @@
     "doc-modal-semester": "Assignment to semester",
     "doc-modal-storage-purpose-deletion": "Purpose of storage",
     "doc-modal-study-field": "Assignment to study field",
+    "doc-modal-study-field-unknown": "Unknown study field ({{studyFieldKey}})",
+    "doc-modal-study-field-unspecified": "Unspecified",
     "doc-modal-subject-of": "Registry number",
     "document": {
         "document-not-found-body": "The requested document could not be found!",
