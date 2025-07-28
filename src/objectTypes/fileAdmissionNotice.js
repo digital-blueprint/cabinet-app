@@ -65,11 +65,17 @@ class CabinetFormElement extends BaseFormElement {
         };
     }
 
-    static getDecisions() {
+    getDecisions() {
         return {
-            rejected: 'Rejected',
-            refused: 'Refused',
-            granted: 'Granted',
+            rejected: this._i18n.t(
+                'typesense-schema.file.file-cabinet-admissionNotice.decision.rejected',
+            ),
+            refused: this._i18n.t(
+                'typesense-schema.file.file-cabinet-admissionNotice.decision.refused',
+            ),
+            granted: this._i18n.t(
+                'typesense-schema.file.file-cabinet-admissionNotice.decision.granted',
+            ),
         };
     }
 
@@ -101,7 +107,7 @@ class CabinetFormElement extends BaseFormElement {
                     subscribe="lang"
                     name="decision"
                     label=${this._i18n.t('doc-modal-decision')}
-                    .items=${CabinetFormElement.getDecisions()}
+                    .items=${this.getDecisions()}
                     .value=${admissionNotice.decision}></dbp-form-enum-element>
 
                 ${this.getCommonFormElements()}
@@ -197,6 +203,20 @@ class CabinetViewElement extends BaseViewElement {
         };
     }
 
+    getDecisions() {
+        return {
+            rejected: this._i18n.t(
+                'typesense-schema.file.file-cabinet-admissionNotice.decision.rejected',
+            ),
+            refused: this._i18n.t(
+                'typesense-schema.file.file-cabinet-admissionNotice.decision.refused',
+            ),
+            granted: this._i18n.t(
+                'typesense-schema.file.file-cabinet-admissionNotice.decision.granted',
+            ),
+        };
+    }
+
     _getCustomViewElements() {
         let hit = getDocumentHit(this.data);
         let admissionNotice = getAdmissionNotice(hit);
@@ -220,7 +240,7 @@ class CabinetViewElement extends BaseViewElement {
                 subscribe="lang"
                 label=${i18n.t('doc-modal-decision')}
                 .value=${admissionNotice.decision || ''}
-                .items=${CabinetFormElement.getDecisions()}></dbp-form-enum-view>
+                .items=${this.getDecisions()}></dbp-form-enum-view>
         `;
     }
 }
