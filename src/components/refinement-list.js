@@ -190,7 +190,9 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
                 `;
             } else {
                 return html`
-                    <span class="refinement-text" title="${item.label}">${unsafeHTML(item.highlighted)}</span>
+                    <span class="refinement-text" title="${item.label}">
+                        ${unsafeHTML(item.highlighted)}
+                    </span>
                 `;
             }
         };
