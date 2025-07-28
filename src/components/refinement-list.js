@@ -1,4 +1,5 @@
 import {html, css} from 'lit';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {repeat} from 'lit/directives/repeat.js';
 import {live} from 'lit/directives/live.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -189,7 +190,7 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
                 `;
             } else {
                 return html`
-                    <span class="refinement-text" title="${item.label}">${item.label}</span>
+                    <span class="refinement-text" title="${item.label}">${unsafeHTML(item.highlighted)}</span>
                 `;
             }
         };
