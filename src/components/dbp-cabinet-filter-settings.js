@@ -82,7 +82,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
             }
 
             #filter-modal .modal-title h1 {
-                color: var(--dbp-override-accent);
                 padding-top: 0.5rem;
                 font-weight: 300;
                 font-size: 1.5em;
@@ -111,7 +110,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
             }
 
             .facet-filter-icon {
-                color: var(--dbp-override-accent);
                 font-size: 2em;
             }
 
