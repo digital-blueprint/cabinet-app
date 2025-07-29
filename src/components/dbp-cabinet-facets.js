@@ -268,7 +268,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .filter-header {
                 padding-bottom: 0.8em;
-                border-bottom: 5px solid var(--dbp-override-accent);
+                border-bottom: 5px solid var(--dbp-accent);
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -295,7 +295,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             .facet-filter-icon {
-                color: var(--dbp-override-accent);
+                color: var(--dbp-accent);
                 padding-right: 0.5em;
                 align-items: center;
                 justify-self: center;
@@ -305,7 +305,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 background: transparent;
                 border: none;
                 font-size: 2rem;
-                color: var(--dbp-override-accent);
+                color: var(--dbp-accent);
                 cursor: pointer;
                 padding: 0.2em;
             }
@@ -320,7 +320,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             .filter-exit-icon {
                 cursor: pointer;
-                color: var(--dbp-override-accent);
+                color: var(--dbp-accent);
             }
 
             .filter-group {

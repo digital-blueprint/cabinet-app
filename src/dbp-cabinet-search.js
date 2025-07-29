@@ -459,7 +459,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             .help-container svg {
-                fill: var(--dbp-override-content);
+                fill: var(--dbp-content);
                 width: 2em;
                 height: 1.7em;
             }
@@ -555,7 +555,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     gap: 0.5em;
                     display: flex;
                     align-items: center;
-                    border: var(--dbp-override-border);
+                    border: var(--dbp-border);
                     height: 1.9em;
                     padding: 0 1em 0 1em;
                     cursor: pointer;

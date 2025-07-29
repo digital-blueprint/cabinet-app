@@ -133,7 +133,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
             #view-modal .person-modal-icon {
                 width: 25px;
                 height: 25px;
-                color: var(--dbp-override-accent);
+                color: var(--dbp-accent);
                 margin-top: 0px;
                 margin-bottom: 0.75rem;
             }

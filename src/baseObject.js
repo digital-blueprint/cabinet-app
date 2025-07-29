@@ -56,7 +56,7 @@ export const getCommonStyles = () => css`
         display: flex;
         justify-content: space-between;
         align-items: center;
-        color: var(--dbp-override-content);
+        color: var(--dbp-content);
         flex-shrink: 1;
         padding-top: 0.5em;
     }
@@ -76,7 +76,7 @@ export const getCommonStyles = () => css`
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--dbp-override-content);
+        color: var(--dbp-content);
         background-repeat: no-repeat;
         background-size: 50px;
         background-position: center;
@@ -86,7 +86,7 @@ export const getCommonStyles = () => css`
     }
 
     .ais-doc-title {
-        color: var(--dbp-override-content);
+        color: var(--dbp-content);
         font-size: 24px;
         display: inline-block;
         white-space: nowrap;
@@ -99,7 +99,7 @@ export const getCommonStyles = () => css`
     }
 
     .hit-content-item {
-        color: var(--dbp-override-content);
+        color: var(--dbp-content);
     }
 `;
 

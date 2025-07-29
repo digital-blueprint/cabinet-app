@@ -839,7 +839,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             #document-modal .view-modal-icon {
-                color: var(--dbp-override-accent);
+                color: var(--dbp-accent);
                 width: 25px;
                 height: 25px;
                 padding-right: 0.5em;
@@ -880,22 +880,22 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             #document-modal .status .status-badge.success {
-                color: var(--dbp-override-success);
+                color: var(--dbp-success);
                 font-weight: bold;
             }
 
             #document-modal .status .status-badge.warning {
-                color: var(--dbp-override-warning);
+                color: var(--dbp-warning);
                 font-weight: bold;
             }
 
             #document-modal .status .status-badge.danger {
-                color: var(--dbp-override-danger);
+                color: var(--dbp-danger);
                 font-weight: bold;
             }
 
             #document-modal .status .status-badge .delete-text {
-                color: var(--dbp-override-content);
+                color: var(--dbp-content);
                 font-weight: normal;
             }
 

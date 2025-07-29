@@ -168,7 +168,7 @@ class CabinetHitElement extends BaseHitElement {
 
             .hit-person-content-item1 {
                 align-self: start;
-                color: var(--dbp-override-content);
+                color: var(--dbp-content);
                 padding-bottom: 1em;
             }
 
@@ -195,7 +195,7 @@ class CabinetHitElement extends BaseHitElement {
 
             .hit-person-last-modify-content {
                 flex: 1;
-                color: var(--dbp-override-content);
+                color: var(--dbp-content);
             }
 
             .hits-person-footer {
@@ -685,7 +685,7 @@ class CabinetViewElement extends BaseViewElement {
             }
 
             .modal-Gi-header-svg svg {
-                fill: var(--dbp-override-content);
+                fill: var(--dbp-content);
             }
 
             .modal-Gi-header-title h4 {
@@ -749,7 +749,7 @@ class CabinetViewElement extends BaseViewElement {
             }
 
             .modal-Si-header-svg svg {
-                fill: var(--dbp-override-content);
+                fill: var(--dbp-content);
             }
 
             .modal-Si-header-title h4 {
@@ -767,7 +767,7 @@ class CabinetViewElement extends BaseViewElement {
             }
 
             .modal-Ci-header-svg svg {
-                fill: var(--dbp-override-content);
+                fill: var(--dbp-content);
             }
 
             .modal-Ci-header-title h4 {
@@ -858,7 +858,7 @@ class CabinetViewElement extends BaseViewElement {
 
             .edit-tu-button {
                 overflow: hidden;
-                background-color: var(--dbp-override-background);
+                background-color: var(--dbp-background);
                 text-decoration: none;
             }
 
