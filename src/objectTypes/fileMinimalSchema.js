@@ -43,9 +43,11 @@ const DEFAULT_MINIMAL_SCHEMA = {
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
-            BirthCertificate: 'Birth Certificate',
-            MaritalStatusCertificate: 'Marital Status Certificate',
-            SupervisionAcceptance: 'Supervision Acceptance',
+            BirthCertificate: 'typesense-schema.file.base.additionalType.key.BirthCertificate',
+            MaritalStatusCertificate:
+                'typesense-schema.file.base.additionalType.key.MaritalStatusCertificate',
+            SupervisionAcceptance:
+                'typesense-schema.file.base.additionalType.key.SupervisionAcceptance',
         };
     }
 

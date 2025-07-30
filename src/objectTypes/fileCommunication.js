@@ -53,7 +53,7 @@ const DEFAULT_COMMUNICATION = {
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
-            Communication: 'Communication',
+            Communication: 'typesense-schema.file.base.additionalType.key.Communication',
         };
     }
 

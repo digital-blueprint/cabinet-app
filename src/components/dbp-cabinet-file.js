@@ -1291,7 +1291,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const options = Object.keys(fileDocumentTypeNames).map((key) => {
             return html`
                 <option value="${key}" ?selected=${key === fileDocumentType}>
-                    ${fileDocumentTypeNames[key]}
+                    ${this._i18n.t(fileDocumentTypeNames[key])}
                 </option>
             `;
         });

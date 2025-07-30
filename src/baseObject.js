@@ -561,12 +561,16 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         const fileData = this.data?.file || {};
         const baseData = fileData.base || {};
 
+        const translatedTypes = Object.fromEntries(
+            Object.entries(this.additionalTypes).map(([key, value]) => [key, this._i18n.t(value)]),
+        );
+
         return html`
             <dbp-form-enum-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-document-type')}
                 .value=${baseData.additionalType?.key || ''}
-                .items=${this.additionalTypes}></dbp-form-enum-view>
+                .items=${translatedTypes}></dbp-form-enum-view>
             ${this._getCustomViewElements()} ${this._getCommonViewElements()}
         `;
     }

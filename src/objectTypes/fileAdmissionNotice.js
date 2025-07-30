@@ -52,7 +52,7 @@ const DEFAULT_ADMISSION_NOTICE = {
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
-            AdmissionNotice: 'Admission Notice',
+            AdmissionNotice: 'typesense-schema.file.base.additionalType.key.AdmissionNotice',
         };
     }
 

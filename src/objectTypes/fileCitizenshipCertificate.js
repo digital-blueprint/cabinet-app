@@ -51,7 +51,8 @@ const DEFAULT_CITIZENSHIP_CERTIFICATE = {
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
-            CitizenshipCertificate: 'Citizenship Certificate',
+            CitizenshipCertificate:
+                'typesense-schema.file.base.additionalType.key.CitizenshipCertificate',
         };
     }
 

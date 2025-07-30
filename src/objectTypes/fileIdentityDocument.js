@@ -52,9 +52,9 @@ const DEFAULT_IDENTITY_OCUMENT = {
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
-            DriversLicence: 'Drivers Licence',
-            Passport: 'Passport',
-            PersonalLicence: 'Personal Licence',
+            DriversLicence: 'typesense-schema.file.base.additionalType.key.DriversLicence',
+            Passport: 'typesense-schema.file.base.additionalType.key.Passport',
+            PersonalLicence: 'typesense-schema.file.base.additionalType.key.PersonalLicence',
         };
     }
 
