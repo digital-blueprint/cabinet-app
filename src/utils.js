@@ -48,11 +48,6 @@ export const dataURLtoFile = (dataURL, filename) => {
 };
 
 /**
- * If value matches translated value, return the highlight or value
- * If they don't match, return the translated value and ignore highlights.
- */
-
-/**
  * Same as renderFieldWithHighlight(), but in case the translated value doesn't match the real
  * value it returns the translated value without highlights.
  * @param {import('i18next').i18n} i18n
