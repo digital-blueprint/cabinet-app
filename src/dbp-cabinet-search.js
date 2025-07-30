@@ -387,11 +387,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             ${commonStyles.getFormAddonsCSS()}
             ${getPaginationCSS()}
 
-            .refinement-container {
-                grid-area: header;
-                display: flex;
-            }
-
             .results.stalled {
                 opacity: 0.6;
                 pointer-events: none;
@@ -414,6 +409,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             .result-container.no-facets {
                 grid-template-columns: minmax(0, 1fr);
                 grid-template-areas: 'header' 'main';
+            }
+
+            .refinement-container {
+                padding-top: 1em;
+                grid-area: sub1 / sub1 / span 1 / span 2;
+                display: flex;
+                justify-content: space-between;
             }
 
             dbp-cabinet-facets {
@@ -572,10 +574,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 .refinement-container {
-                    grid-area: sub1 / sub1 / span 1 / span 2;
-                    display: flex;
-                    justify-content: space-between;
-                    padding-top: 0.5em;
+                    display: inline-block;
                 }
             }
             @media (min-width: 1100px) {
@@ -904,6 +903,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         </svg>
                     </div>
                 </div>
+                <div id="refinement-container" class="refinement-container">
+                    <div id="current-filters" class="current-filters"></div>
+                    <div id="clear-filters" class="clear-filters"></div>
+                </div>
                 <div class="result-container ${this.facetConfigs.length === 0 ? 'no-facets' : ''}">
                     <dbp-cabinet-facets
                         class="dbp-cabinet-facets"
@@ -911,10 +914,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         .search="${this.search}"
                         subscribe="lang"></dbp-cabinet-facets>
                     <div class="results">
-                        <div id="refinement-container" class="refinement-container">
-                        <div id="current-filters" class="current-filters"></div>
-                        <div id="clear-filters" class="clear-filters"></div>
-                    </div>
                         <div id="hits"></div>
                         <div id="hits-footer">
                             <div id="result-count"></div>
