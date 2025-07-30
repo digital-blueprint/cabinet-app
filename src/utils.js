@@ -48,20 +48,59 @@ export const dataURLtoFile = (dataURL, filename) => {
 };
 
 /**
+ * If value matches translated value, return the highlight or value
+ * If they don't match, return the translated value and ignore highlights.
+ */
+
+/**
+ * Same as renderFieldWithHighlight(), but in case the translated value doesn't match the real
+ * value it returns the translated value without highlights.
+ * @param {import('i18next').i18n} i18n
+ * @param {string} i18nPrefix
+ * @param {object} hit
+ * @param {string} keyFieldName
+ * @param {string} textFieldName
+ * @returns {DocumentFragment}
+ */
+export function renderFieldWithHighlightOrTranslated(
+    i18n,
+    i18nPrefix,
+    hit,
+    keyFieldName,
+    textFieldName,
+) {
+    const realKey = getNestedProperty(hit, keyFieldName) ?? '';
+    const translated = i18n.t(i18nPrefix + realKey);
+    const realValue = getNestedProperty(hit, textFieldName) ?? '';
+    if (translated !== realValue) {
+        const fragment = document.createDocumentFragment();
+        const textNode = document.createTextNode(translated);
+        fragment.appendChild(textNode);
+        return fragment;
+    } else {
+        return renderFieldWithHighlight(hit, textFieldName);
+    }
+}
+
+/**
  * Return highlighted text markup for a given field if exists.
  * @param {object} hit - hits object from Typesense
  * @param {string} fieldName - hit field we want to highlight
  * @returns {DocumentFragment}
  */
 export function renderFieldWithHighlight(hit, fieldName) {
-    const fieldNameValue = fieldName + '.value';
-    const htmlContent = getNestedProperty(hit['_highlightResult'], fieldNameValue)
-        ? getNestedProperty(hit['_highlightResult'], fieldNameValue)
-        : getNestedProperty(hit, fieldName);
-    const template = document.createElement('template');
-    template.innerHTML = htmlContent;
-
-    return template.content;
+    const htmlContent = getNestedProperty(hit['_highlightResult'], fieldName + '.value');
+    const realValue = getNestedProperty(hit, fieldName) ?? '';
+    if (htmlContent !== null) {
+        const template = document.createElement('template');
+        template.innerHTML = htmlContent;
+        return template.content;
+    } else {
+        const fragment = document.createDocumentFragment();
+        const textNode = document.createTextNode(realValue);
+        fragment.appendChild(textNode);
+        return fragment;
+    }
 }
 
 /**
