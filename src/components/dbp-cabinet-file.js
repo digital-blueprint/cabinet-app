@@ -1279,6 +1279,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('onDocumentTypeSelected additionalType', additionalType);
         this.objectType = objectType;
         this.additionalType = additionalType;
+        this.fileHitData = {};
     }
 
     getDocumentTypeSelector() {
