@@ -51,6 +51,10 @@ class CabinetFormElement extends BaseFormElement {
         };
     }
 
+    static getDefaultData() {
+        return DEFAULT_MINIMAL_SCHEMA;
+    }
+
     static get scopedElements() {
         return {
             ...super.scopedElements,

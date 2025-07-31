@@ -56,6 +56,10 @@ class CabinetFormElement extends BaseFormElement {
         };
     }
 
+    static getDefaultData() {
+        return DEFAULT_CITIZENSHIP_CERTIFICATE;
+    }
+
     static get scopedElements() {
         return {
             ...super.scopedElements,

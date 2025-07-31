@@ -56,6 +56,10 @@ class CabinetFormElement extends BaseFormElement {
         };
     }
 
+    static getDefaultData() {
+        return DEFAULT_ADMISSION_NOTICE;
+    }
+
     static get scopedElements() {
         return {
             ...super.scopedElements,

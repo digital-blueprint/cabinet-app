@@ -58,6 +58,10 @@ class CabinetFormElement extends BaseFormElement {
         };
     }
 
+    static getDefaultData() {
+        return DEFAULT_IDENTITY_DOCUMENT;
+    }
+
     static get scopedElements() {
         return {
             ...super.scopedElements,

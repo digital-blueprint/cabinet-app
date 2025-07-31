@@ -138,6 +138,10 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         return {};
     }
 
+    static getDefaultData() {
+        return {};
+    }
+
     getCommonFormElements() {
         let hit = getDocumentHit(this._getData() ?? DEFAULT_FILE_COMMON);
         let fileCommon = hit.file.base;
