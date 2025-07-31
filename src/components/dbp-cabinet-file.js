@@ -91,6 +91,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.allowStateReset = true;
         this.state = CabinetFile.States.NONE;
         this.showLineWhenDelete = '';
+
+        // Will be used when canceling the form in EDIT mode, when the data was changed via this.fileHitDataCache
+        this.fileHitDataBackup = {};
     }
 
     connectedCallback() {
@@ -107,6 +110,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 if (this.mode === CabinetFile.Modes.ADD) {
                     this.objectType = '';
                 } else {
+                    this.fileHitData = this.fileHitDataBackup;
                     // Reset this.objectType if it was changed by the objectType selector
                     this.objectType = this.fileHitData.objectType;
 
@@ -219,6 +223,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 console.log('fetchFileDocumentFromTypesense item', item);
 
                 this.fileHitData = item;
+                this.fileHitDataBackup = this.fileHitData;
                 this.mode = CabinetFile.Modes.VIEW;
 
                 return;
@@ -456,7 +461,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const objectType = this.objectType;
         console.log('objectType', objectType);
 
-        if (objectType === '') {
+        if (!this.objectType || objectType === '') {
             console.log('objectType empty', objectType);
             return this.getMiniSpinnerHtml();
         }
@@ -556,6 +561,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         this.fileHitData = hit;
+        this.fileHitDataBackup = this.fileHitData;
         console.log('openDialogWithHit hit', hit);
         // Set person from hit
         this.person = hit.person;
