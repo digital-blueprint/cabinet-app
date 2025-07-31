@@ -153,7 +153,24 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
                     gap: 12px;
                 }
 
+                .date-range {
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: flex-start;
+                    gap: 1rem;
+                }
+
+                .date-wrapper {
+                    display: flex;
+                    flex-direction: column;
+                }
+
                 .date-input {
+                    display: block;
+                    box-sizing: border-box;
                     padding: 0.5em;
                     border: var(--dbp-border);
                     border-radius: var(--dbp-border-radius);
@@ -183,27 +200,35 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
 
     render() {
         return html`
-            <div class="date-wrapper">
-                <input
-                    type="date"
-                    class="date-input start-date"
-                    .value=${live(this._startDateValue)}
-                    max=${this._startDateMax}
-                    @change=${(e) => this._handleDateChange(e, true)}
-                    @focus=${(e) => this._handleFocus(e, true)}
-                    @blur=${(e) => this._handleBlur(e, true)} />
-            </div>
+            <ul class="date-range">
+                <li class="date-wrapper">
+                    <label>
+                        ${this._i18n.t('start-date-label')}
+                        <input
+                            type="date"
+                            class="date-input start-date"
+                            .value=${live(this._startDateValue)}
+                            max=${this._startDateMax}
+                            @change=${(e) => this._handleDateChange(e, true)}
+                            @focus=${(e) => this._handleFocus(e, true)}
+                            @blur=${(e) => this._handleBlur(e, true)} />
+                    </label>
+                </li>
 
-            <div class="date-wrapper">
-                <input
-                    type="date"
-                    class="date-input end-date"
-                    .value=${live(this._endDateValue)}
-                    min=${this._endDateMin}
-                    @change=${(e) => this._handleDateChange(e, false)}
-                    @focus=${(e) => this._handleFocus(e, false)}
-                    @blur=${(e) => this._handleBlur(e, false)} />
-            </div>
+                <li class="date-wrapper">
+                    <label>
+                        ${this._i18n.t('end-date-label')}
+                        <input
+                            type="date"
+                            class="date-input end-date"
+                            .value=${live(this._endDateValue)}
+                            min=${this._endDateMin}
+                            @change=${(e) => this._handleDateChange(e, false)}
+                            @focus=${(e) => this._handleFocus(e, false)}
+                            @blur=${(e) => this._handleBlur(e, false)} />
+                    </label>
+                </li>
+            </ul>
         `;
     }
 
