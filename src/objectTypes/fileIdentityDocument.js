@@ -37,7 +37,7 @@ export default class extends BaseObject {
     }
 }
 
-const DEFAULT_IDENTITY_OCUMENT = {
+const DEFAULT_IDENTITY_DOCUMENT = {
     '@type': 'DocumentFile',
     objectType: 'file-cabinet-identityDocument',
     file: {
@@ -71,7 +71,7 @@ class CabinetFormElement extends BaseFormElement {
         console.log('-- Render CabinetFormElement --');
         console.log('render this.data', this.data);
 
-        let hit = getDocumentHit(this._getData() ?? DEFAULT_IDENTITY_OCUMENT);
+        let hit = getDocumentHit(this._getData() ?? DEFAULT_IDENTITY_DOCUMENT);
         let identityDocument = getIdentityDocument(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/identityDocument.schema.json
