@@ -1255,17 +1255,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 if (this.objectType === '') {
                     return html`
                         <h2>${this._i18n.t('Document-details-modal')}</h2>
+                        <p>${this._i18n.t('required-files-mark')}</p>
                         ${this.getDocumentTypeSelector()}
                     `;
                 } else {
                     return html`
                         <h2>${this._i18n.t('Document-details-modal')}</h2>
+                        <p>${this._i18n.t('required-files-mark')}</p>
                         ${this.getDocumentTypeSelector()} ${this.getDocumentEditFormHtml()}
                     `;
                 }
             case CabinetFile.Modes.EDIT:
                 return html`
                     <h2>${this._i18n.t('Document-details-modal')}</h2>
+                    <p>${this._i18n.t('required-files-mark')}</p>
                     ${this.getDocumentTypeSelector()} ${this.getDocumentEditFormHtml(true)}
                 `;
         }

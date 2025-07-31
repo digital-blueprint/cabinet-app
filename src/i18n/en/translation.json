@@ -93,6 +93,7 @@
         "document-not-found-summary": "Document not found"
     },
     "Document-details-modal": "Document details",
+    "required-files-mark": "* kennzeichnet ein Pflichtfeld",
     "document-issue-date": "Document issue date",
     "Edit-student-data": "Edit student data",
     "emailAddressConfirmed": "Confirmed email address",
