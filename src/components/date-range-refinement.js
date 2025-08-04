@@ -154,13 +154,13 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
                 }
 
                 .date-range {
-                    list-style: none;
-                    margin: 0;
-                    padding: 0;
                     display: flex;
                     flex-wrap: wrap;
+                    gap: 15px 20px;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
                     align-items: flex-start;
-                    gap: 1rem;
                 }
 
                 .date-wrapper {
@@ -169,8 +169,6 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
                 }
 
                 .date-input {
-                    display: block;
-                    box-sizing: border-box;
                     padding: 0.5em;
                     border: var(--dbp-border);
                     border-radius: var(--dbp-border-radius);
@@ -185,6 +183,30 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
 
                 ::-webkit-calendar-picker-indicator {
                     cursor: pointer;
+                }
+                @media (min-width: 769px) and (max-width: 1100px) {
+                    .date-range {
+                        display: grid;
+                        grid-template-rows: repeat(2, auto);
+                        grid-template-columns: 1fr;
+                        max-width: fit-content;
+                    }
+
+                    .date-wrapper {
+                        display: grid;
+                        grid-template-columns: 1fr auto;
+                        align-items: center;
+                    }
+
+                    .date-label {
+                        justify-self: start;
+                        padding-right: 1em;
+                    }
+
+                    .date-input {
+                        justify-self: start;
+                        width: auto;
+                    }
                 }
             `,
         ];
@@ -202,31 +224,27 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
         return html`
             <ul class="date-range">
                 <li class="date-wrapper">
-                    <label>
-                        ${this._i18n.t('start-date-label')}
-                        <input
-                            type="date"
-                            class="date-input start-date"
-                            .value=${live(this._startDateValue)}
-                            max=${this._startDateMax}
-                            @change=${(e) => this._handleDateChange(e, true)}
-                            @focus=${(e) => this._handleFocus(e, true)}
-                            @blur=${(e) => this._handleBlur(e, true)} />
-                    </label>
+                    <label class="date-label">${this._i18n.t('start-date-label')}</label>
+                    <input
+                        type="date"
+                        class="date-input start-date"
+                        .value=${live(this._startDateValue)}
+                        max=${this._startDateMax}
+                        @change=${(e) => this._handleDateChange(e, true)}
+                        @focus=${(e) => this._handleFocus(e, true)}
+                        @blur=${(e) => this._handleBlur(e, true)} />
                 </li>
 
                 <li class="date-wrapper">
-                    <label>
-                        ${this._i18n.t('end-date-label')}
-                        <input
-                            type="date"
-                            class="date-input end-date"
-                            .value=${live(this._endDateValue)}
-                            min=${this._endDateMin}
-                            @change=${(e) => this._handleDateChange(e, false)}
-                            @focus=${(e) => this._handleFocus(e, false)}
-                            @blur=${(e) => this._handleBlur(e, false)} />
-                    </label>
+                    <label class="date-label">${this._i18n.t('end-date-label')}</label>
+                    <input
+                        type="date"
+                        class="date-input end-date"
+                        .value=${live(this._endDateValue)}
+                        min=${this._endDateMin}
+                        @change=${(e) => this._handleDateChange(e, false)}
+                        @focus=${(e) => this._handleFocus(e, false)}
+                        @blur=${(e) => this._handleBlur(e, false)} />
                 </li>
             </ul>
         `;

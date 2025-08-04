@@ -93,7 +93,6 @@
         "document-not-found-summary": "Dokument nicht gefunden"
     },
     "Document-details-modal": "Dokumentinformationen",
-    "required-files-mark": "* indicates a required field",
     "document-issue-date": "Datum der Ausstellung",
     "Edit-student-data": "Daten bearbeiten",
     "emailAddressConfirmed": "Bestätigte E-Mailadresse",
@@ -165,6 +164,7 @@
     "person-hit": "weitere",
     "personal-Status": "Personenstatus",
     "qualification-study": "Hochschulzugangsform",
+    "required-files-mark": "* indicates a required field",
     "school-Certificate-Date": "Zeugnisdatum",
     "search": {
         "no-results": "Keine Ergebnisse gefunden",

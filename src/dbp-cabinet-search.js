@@ -583,7 +583,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
             }
 
-            @media (min-width: 768px) and (max-width: 1099px) {
+            @media (min-width: 769px) and (max-width: 1099px) {
                 #filter-header-button {
                     display: none;
                 }
