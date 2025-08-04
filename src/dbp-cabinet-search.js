@@ -622,13 +622,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // https://typesense.org/docs/0.25.1/api/search.html#ranking-and-sorting-parameters
         let searchParameters = {
             query_by:
-                'person.familyName,person.givenName,file.base.additionalType.text,person.stPersonNr,person.studId,person.birthDateDe',
+                'person.familyName,person.givenName,file.base.additionalType.text,person.stPersonNr,person.studId,person.birthDateDe,file.base.subjectOf',
             sort_by: 'sortKey:asc',
             // Show not-deleted documents / Show only deleted documents
             // filter_by: "base.isScheduledForDeletion:" + (this.showScheduledForDeletion ? "true" : "false"),
             // filter_by: "file.base.deleteAtTimestamp:>0",
             // filter_by: "@type:=Person || file.base.isSchedulerForDeletion:=false",
-            num_typos: '1,1,0,0,0,0',
+            num_typos: '1,1,0,0,0,0,0',
             drop_tokens_threshold: 0,
             typo_tokens_threshold: 0,
             group_by: 'base.personGroupId',

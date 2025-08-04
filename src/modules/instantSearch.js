@@ -360,13 +360,6 @@ export default class InstantSearchModule {
             },
             {
                 groupId: 'file',
-                schemaField: 'file.base.subjectOf',
-                schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-file-base-subject-of-title'),
-                facetOptions: {facet: {searchable: false}},
-            },
-            {
-                groupId: 'file',
                 schemaField: 'file.file-cabinet-admissionNotice.decision',
                 schemaFieldType: 'checkbox',
                 renderFunction: translationRenderFunction,
