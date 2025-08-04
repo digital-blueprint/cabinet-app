@@ -229,7 +229,7 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
                         type="date"
                         class="date-input start-date"
                         .value=${live(this._startDateValue)}
-                        max=${this._startDateMax}
+                        max=${this._startDateMax || '9999-12-31'}
                         @change=${(e) => this._handleDateChange(e, true)}
                         @focus=${(e) => this._handleFocus(e, true)}
                         @blur=${(e) => this._handleBlur(e, true)} />
@@ -242,6 +242,7 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
                         class="date-input end-date"
                         .value=${live(this._endDateValue)}
                         min=${this._endDateMin}
+                        max="9999-12-31"
                         @change=${(e) => this._handleDateChange(e, false)}
                         @focus=${(e) => this._handleFocus(e, false)}
                         @blur=${(e) => this._handleBlur(e, false)} />

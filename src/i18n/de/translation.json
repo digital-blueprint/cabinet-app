@@ -55,8 +55,8 @@
         "filter-type-title": "Kategorie",
         "filters": "Filter",
         "person-filter-group-title": "Personeneigenschaften",
-        "refinement-date-after-text": "nach",
-        "refinement-date-before-text": "vorher",
+        "refinement-date-after-text": "von",
+        "refinement-date-before-text": "bis",
         "refinement-delete-all-filters": "Filter löschen",
         "refinement-delete-filter-button-text": "Auswahl löschen",
         "type-filter-group-title": "Kategorie"
