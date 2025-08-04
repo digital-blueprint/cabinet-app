@@ -5,9 +5,6 @@ import {formatDate} from '../utils.js';
 import {MiniSpinner, Icon} from '@dbp-toolkit/common';
 import {send} from '@dbp-toolkit/common/notification';
 import {Notification} from '@dbp-toolkit/notification';
-import {jsPDF} from 'jspdf';
-import {autoTable} from 'jspdf-autotable';
-
 import {getPersonHit, PersonHit} from './schema.js';
 import {CabinetApi} from '../api.js';
 
@@ -480,7 +477,10 @@ class CabinetHitElement extends BaseHitElement {
  * @param {PersonHit} hit
  * @param {boolean} withInternalData - Whether to include internal notes etc. in the PDF export.
  */
-function exportPersonPdf(i18n, hit, withInternalData = false) {
+async function exportPersonPdf(i18n, hit, withInternalData = false) {
+    let jsPDF = (await import('jspdf')).jsPDF;
+    let autoTable = (await import('jspdf-autotable')).autoTable;
+
     const doc = new jsPDF();
 
     let subFillColor = 220;
