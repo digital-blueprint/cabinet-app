@@ -375,11 +375,9 @@ export default class InstantSearchModule {
             },
             {
                 groupId: 'file',
-                schemaField: 'file.file-cabinet-identityDocument.nationalityText',
+                schemaField: 'file.shared.nationalityText',
                 schemaFieldType: 'checkbox',
-                name: t(
-                    'cabinet-search.filter-file-file-cabinet-identity-document-nationality-title',
-                ),
+                name: t('cabinet-search.filter-file-file-shared-nationality-title'),
                 facetOptions: {facet: {searchable: true}},
             },
         ];
