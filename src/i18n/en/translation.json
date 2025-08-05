@@ -71,7 +71,6 @@
     "doc-modal-document-only": "Only document",
     "doc-modal-document-type": "Document type",
     "doc-modal-download-document": "Download",
-    "doc-modal-E-G": "e.g.",
     "doc-modal-edit-document": "Edit document details",
     "doc-modal-Identifier": "Document ID",
     "doc-modal-issue-date": "Document issue date",
@@ -87,6 +86,7 @@
     "doc-modal-study-field-unknown": "Unknown study field ({{studyFieldKey}})",
     "doc-modal-study-field-unspecified": "Unspecified",
     "doc-modal-subject-of": "Registry number",
+    "doc-modal-subject-of-placeholder": "e.g. {{-id}}",
     "document": {
         "document-not-found-body": "The requested document could not be found!",
         "document-not-found-summary": "Document not found"
