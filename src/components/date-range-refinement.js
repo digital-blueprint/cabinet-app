@@ -4,6 +4,7 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element.js';
 import {createInstance} from '../i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {live} from 'lit/directives/live.js';
+import {ResponsiveController} from './responsiveController.js';
 
 function debounce(func, delay) {
     let timerId;
@@ -124,6 +125,10 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
         this._debounceBlur = debounce((func, ...args) => {
             func(...args);
         }, DEBOUNCE_DELAY);
+
+        this._responsiveController = new ResponsiveController(this, [
+            {name: 'small', maxWidth: 320},
+        ]);
     }
 
     static get properties() {
@@ -184,29 +189,28 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
                 ::-webkit-calendar-picker-indicator {
                     cursor: pointer;
                 }
-                @media (min-width: 769px) and (max-width: 1100px) {
-                    .date-range {
-                        display: grid;
-                        grid-template-rows: repeat(2, auto);
-                        grid-template-columns: 1fr;
-                        max-width: fit-content;
-                    }
 
-                    .date-wrapper {
-                        display: grid;
-                        grid-template-columns: 1fr auto;
-                        align-items: center;
-                    }
+                :host(.container--small) .date-range {
+                    display: grid;
+                    grid-template-rows: repeat(2, auto);
+                    grid-template-columns: 1fr;
+                    max-width: fit-content;
+                }
 
-                    .date-label {
-                        justify-self: start;
-                        padding-right: 1em;
-                    }
+                :host(.container--small) .date-wrapper {
+                    display: grid;
+                    grid-template-columns: 1fr auto;
+                    align-items: center;
+                }
 
-                    .date-input {
-                        justify-self: start;
-                        width: auto;
-                    }
+                :host(.container--small) .date-label {
+                    justify-self: start;
+                    padding-right: 1em;
+                }
+
+                :host(.container--small) .date-input {
+                    justify-self: start;
+                    width: auto;
                 }
             `,
         ];
