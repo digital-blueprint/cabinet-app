@@ -105,7 +105,7 @@ export function renderFieldWithHighlight(hit, fieldName) {
  * @returns {string|null} - the value of the property or null if not found
  */
 export function getNestedProperty(obj, path) {
-    return path.split('.').reduce((current, key) => current && current[key], obj);
+    return path.split('.').reduce((current, key) => current && current[key], obj) ?? null;
 }
 
 export function getIconSVGURL(name) {
