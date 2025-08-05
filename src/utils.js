@@ -1,6 +1,3 @@
-import * as commonUtils from '@dbp-toolkit/common/utils';
-import {name as pkgName} from './../package.json';
-
 /**
  * Returns a function that replaces a DOM element with a specified replacement element.
  * @param {HTMLElement} replacementElement - The element to replace the target element with.
@@ -106,13 +103,6 @@ export function renderFieldWithHighlight(hit, fieldName) {
  */
 export function getNestedProperty(obj, path) {
     return path.split('.').reduce((current, key) => current && current[key], obj) ?? null;
-}
-
-export function getIconSVGURL(name) {
-    return commonUtils.getAssetURL(
-        pkgName,
-        '../../@digital-blueprint/cabinet-app/icon/' + encodeURI(name) + '.svg',
-    );
 }
 
 export function formatDate(value) {
