@@ -1,16 +1,4 @@
 /**
- * Returns a function that replaces a DOM element with a specified replacement element.
- * @param {HTMLElement} replacementElement - The element to replace the target element with.
- */
-export const preactRefReplaceElement = (replacementElement) => {
-    return (el) => {
-        if (el && el.parentNode && !replacementElement.parentNode) {
-            el.parentNode.replaceChild(replacementElement, el);
-        }
-    };
-};
-
-/**
  * Returns a function that replaces DOM children elements with a specified replacement element.
  * @param {HTMLElement} replacementElement - The element to replace the target children with.
  */

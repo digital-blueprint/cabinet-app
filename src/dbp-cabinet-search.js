@@ -22,7 +22,6 @@ import {BaseObject} from './baseObject.js';
 import {name as pkgName} from '../package.json';
 import {CabinetFilterSettings} from './components/dbp-cabinet-filter-settings.js';
 import InstantSearchModule from './modules/instantSearch.js';
-import {preactRefReplaceElement} from './utils';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from './i18n';
 import {createClearRefinements} from './clear-refinements.js';
@@ -763,7 +762,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     hitElement.data = hit;
 
                     return html`
-                        <span ref=${preactRefReplaceElement(hitElement)}></span>
+                        <span ref=${preactRefReplaceChildren(hitElement)}></span>
                     `;
                 },
             },
@@ -780,7 +779,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 text: (data, {html}) => {
                     statsWidget.data = data;
                     return html`
-                        <span ref=${preactRefReplaceElement(statsWidget)}></span>
+                        <span ref=${preactRefReplaceChildren(statsWidget)}></span>
                     `;
                 },
             },
