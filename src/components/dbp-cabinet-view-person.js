@@ -93,57 +93,58 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
     }
 
     static get styles() {
-        // language=css
-        return css`
-            ${commonStyles.getThemeCSS()}
-            ${commonStyles.getGeneralCSS(false)}
+        return [
+            commonStyles.getThemeCSS(),
+            commonStyles.getGeneralCSS(false),
+            // language=css
+            css`
+                #view-modal .content {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 10px 10px;
+                    grid-auto-flow: row;
+                }
 
-            #view-modal .content {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 10px 10px;
-                grid-auto-flow: row;
-            }
+                #view-modal .description {
+                    grid-area: 1 / 1 / 2 / 3;
+                }
 
-            #view-modal .description {
-                grid-area: 1 / 1 / 2 / 3;
-            }
+                #view-modal .pdf-preview {
+                    grid-area: 2 / 1 / 3 / 2;
+                }
 
-            #view-modal .pdf-preview {
-                grid-area: 2 / 1 / 3 / 2;
-            }
+                #view-modal .form {
+                    grid-area: 2 / 2 / 3 / 3;
+                }
 
-            #view-modal .form {
-                grid-area: 2 / 2 / 3 / 3;
-            }
+                #view-modal {
+                    --dbp-modal-title-font-size: 24px;
+                    --dbp-modal-title-font-weight: bold;
+                    --dbp-modal-title-padding: 0 0 0 40px;
+                    list-style-type: none;
+                    --dbp-modal-min-width: min(75vw, 85vw);
+                }
 
-            #view-modal {
-                --dbp-modal-title-font-size: 24px;
-                --dbp-modal-title-font-weight: bold;
-                --dbp-modal-title-padding: 0 0 0 40px;
-                list-style-type: none;
-                --dbp-modal-min-width: min(75vw, 85vw);
-            }
+                #view-modal .modal-title-person {
+                    display: flex;
+                    align-items: center;
+                }
 
-            #view-modal .modal-title-person {
-                display: flex;
-                align-items: center;
-            }
+                #view-modal .person-modal-icon {
+                    width: 25px;
+                    height: 25px;
+                    color: var(--dbp-accent);
+                    margin-top: 0px;
+                    margin-bottom: 0.75rem;
+                }
 
-            #view-modal .person-modal-icon {
-                width: 25px;
-                height: 25px;
-                color: var(--dbp-accent);
-                margin-top: 0px;
-                margin-bottom: 0.75rem;
-            }
-
-            #view-modal .person-modal-title {
-                margin-left: 10px;
-                padding-top: 0.4rem;
-                font-weight: bold;
-            }
-        `;
+                #view-modal .person-modal-title {
+                    margin-left: 10px;
+                    padding-top: 0.4rem;
+                    font-weight: bold;
+                }
+            `,
+        ];
     }
 
     /**

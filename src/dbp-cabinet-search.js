@@ -375,244 +375,245 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     static get styles() {
-        // language=css
-        return css`
-            ${commonStyles.getThemeCSS()}
-            ${commonStyles.getGeneralCSS(false)}
-            ${commonStyles.getButtonCSS()}
-            ${commonStyles.getLinkCss()}
-            ${commonStyles.getNotificationCSS()}
-            ${commonStyles.getActivityCSS()}
-            ${commonStyles.getRadioAndCheckboxCss()}
-            ${commonStyles.getFormAddonsCSS()}
-            ${getPaginationCSS()}
-
-            .results.stalled {
-                opacity: 0.6;
-                pointer-events: none;
-                transition: opacity 0.2s ease;
-            }
-
-            .result-container {
-                margin-top: 0;
-                padding-top: 1em;
-                display: grid;
-                grid-template-columns: 24em minmax(0, 1fr);
-                grid-template-areas: 'empty header' 'sidebar main';
-                gap: 0 2em;
-            }
-
-            .result-container.wide-facets {
-                grid-template-columns: 40em minmax(0, 1fr);
-            }
-
-            .result-container.no-facets {
-                grid-template-columns: minmax(0, 1fr);
-                grid-template-areas: 'header' 'main';
-            }
-
-            .refinement-container {
-                padding-top: 1em;
-                grid-area: sub1 / sub1 / span 1 / span 2;
-                display: flex;
-                justify-content: space-between;
-            }
-
-            dbp-cabinet-facets {
-                grid-area: sidebar;
-            }
-
-            .results {
-                grid-area: main;
-            }
-
-            .search-box-container {
-                display: flex;
-                gap: 5px;
-            }
-
-            .search-box-widget {
-                flex: 4 1 auto;
-            }
-
-            .ais-SearchBox-form {
-                display: flex;
-            }
-
-            .ais-SearchBox-input {
-                flex-grow: 1;
-                height: 2em;
-                background-color: var(--dbp-background);
-                color: var(--dbp-content);
-                border: var(--dbp-border);
-                padding-inline: 0.5em;
-                padding: 0 1.2em 0 2.2em;
-                border-radius: 0 !important;
-            }
-
-            .help-container {
-                flex: 0.5 auto 0%;
-                background-color: var(--dbp-background);
-                border: var(--dbp-border);
-                /*display:flex is none for now*/
-                display: none;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .help-container svg {
-                fill: var(--dbp-content);
-                width: 2em;
-                height: 1.7em;
-            }
-
-            .ais-Hits-list {
-                display: grid;
-                grid-template-columns: repeat(1, minmax(300px, 1fr));
-                padding: 0;
-                margin-top: 0;
-                box-sizing: border-box;
-            }
-
-            .ais-Hits-item {
-                padding: 5px;
-                border: 1px solid var(--dbp-content);
-                list-style-type: none;
-                overflow: hidden;
-                min-height: calc(100px + 3vh);
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-            }
-
-            .hits-doc-footer {
-                position: relative;
-                display: flex;
-                justify-content: flex-end;
-            }
-
-            #hits-footer {
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                padding-top: 15px;
-            }
-
-            .ais-Pagination-list {
-                padding-top: 0px;
-            }
-
-            .ais-Hits-item {
-                width: inherit;
-            }
-
-            .button-view {
-                padding: 0.3em 2em;
-                font-size: 18px;
-                background-color: var(--dbp-primary-surface);
-                color: var(--dbp-on-primary-surface);
-                text-align: center;
-                white-space: nowrap;
-                font-size: inherit;
-                font-weight: bolder;
-                font-family: inherit;
-                transition:
-                    0.15s,
-                    color 0.15s;
-                border: none;
-            }
-
-            .ais-CurrentRefinements-categoryLabel {
-                color: var(--dbp-content);
-            }
-
-            @media (max-width: 768px) {
-                .result-container {
-                    margin-top: 0;
-                    display: grid;
-                    grid-template-columns: 1fr 1fr auto;
-                    grid-template-rows: auto auto;
-                    grid-template-areas:
-                        'empty header'
-                        'sub1 sub2'
-                        'main main';
-                    gap: 0;
+        return [
+            commonStyles.getThemeCSS(),
+            commonStyles.getGeneralCSS(false),
+            commonStyles.getButtonCSS(),
+            commonStyles.getLinkCss(),
+            commonStyles.getNotificationCSS(),
+            commonStyles.getActivityCSS(),
+            commonStyles.getRadioAndCheckboxCss(),
+            commonStyles.getFormAddonsCSS(),
+            getPaginationCSS(),
+            // language=css
+            css`
+                .results.stalled {
+                    opacity: 0.6;
+                    pointer-events: none;
+                    transition: opacity 0.2s ease;
                 }
 
-                .ais-Hits-list {
-                    grid-area: main;
+                .result-container {
+                    margin-top: 0;
+                    padding-top: 1em;
+                    display: grid;
+                    grid-template-columns: 24em minmax(0, 1fr);
+                    grid-template-areas: 'empty header' 'sidebar main';
+                    gap: 0 2em;
+                }
+
+                .result-container.wide-facets {
+                    grid-template-columns: 40em minmax(0, 1fr);
+                }
+
+                .result-container.no-facets {
+                    grid-template-columns: minmax(0, 1fr);
+                    grid-template-areas: 'header' 'main';
+                }
+
+                .refinement-container {
+                    padding-top: 1em;
+                    grid-area: sub1 / sub1 / span 1 / span 2;
+                    display: flex;
+                    justify-content: space-between;
+                }
+
+                dbp-cabinet-facets {
+                    grid-area: sidebar;
                 }
 
                 .results {
                     grid-area: main;
-                    width: 100%;
                 }
 
-                .facet-filter-button-icon {
-                    color: #9e1e4d;
-                    padding-bottom: 0.2em;
-                }
-
-                .filter-header-button {
-                    gap: 0.5em;
+                .search-box-container {
                     display: flex;
-                    align-items: center;
+                    gap: 5px;
+                }
+
+                .search-box-widget {
+                    flex: 4 1 auto;
+                }
+
+                .ais-SearchBox-form {
+                    display: flex;
+                }
+
+                .ais-SearchBox-input {
+                    flex-grow: 1;
+                    height: 2em;
+                    background-color: var(--dbp-background);
+                    color: var(--dbp-content);
                     border: var(--dbp-border);
-                    height: 1.9em;
-                    padding: 0 1em 0 1em;
-                    cursor: pointer;
+                    padding-inline: 0.5em;
+                    padding: 0 1.2em 0 2.2em;
+                    border-radius: 0 !important;
                 }
 
-                .deleted-only {
+                .help-container {
+                    flex: 0.5 auto 0%;
+                    background-color: var(--dbp-background);
+                    border: var(--dbp-border);
+                    /*display:flex is none for now*/
+                    display: none;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .help-container svg {
+                    fill: var(--dbp-content);
+                    width: 2em;
+                    height: 1.7em;
+                }
+
+                .ais-Hits-list {
+                    display: grid;
+                    grid-template-columns: repeat(1, minmax(300px, 1fr));
+                    padding: 0;
+                    margin-top: 0;
+                    box-sizing: border-box;
+                }
+
+                .ais-Hits-item {
+                    padding: 5px;
+                    border: 1px solid var(--dbp-content);
+                    list-style-type: none;
+                    overflow: hidden;
+                    min-height: calc(100px + 3vh);
                     display: flex;
-                    flex-wrap: nowrap;
-                    justify-content: end;
-                    padding-right: 0.4em;
+                    flex-direction: column;
+                    justify-content: space-between;
                 }
 
-                #result-count {
+                .hits-doc-footer {
+                    position: relative;
+                    display: flex;
+                    justify-content: flex-end;
                 }
 
-                .refinement-container {
-                    display: inline-block;
-                }
-            }
-            @media (min-width: 1100px) {
-                #filter-header-button {
-                    display: none;
-                }
-            }
-
-            @media (min-width: 769px) and (max-width: 1099px) {
-                #filter-header-button {
-                    display: none;
+                #hits-footer {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    padding-top: 15px;
                 }
 
-                .dbp-cabinet-facets {
+                .ais-Pagination-list {
+                    padding-top: 0px;
                 }
 
-                .filter {
-                    min-width: 24em;
-                    max-width: max-content;
+                .ais-Hits-item {
+                    width: inherit;
                 }
 
-                .result-container {
-                    gap: 0.5em;
-                    grid-template-columns: auto;
+                .button-view {
+                    padding: 0.3em 2em;
+                    font-size: 18px;
+                    background-color: var(--dbp-primary-surface);
+                    color: var(--dbp-on-primary-surface);
+                    text-align: center;
+                    white-space: nowrap;
+                    font-size: inherit;
+                    font-weight: bolder;
+                    font-family: inherit;
+                    transition:
+                        0.15s,
+                        color 0.15s;
+                    border: none;
                 }
-            }
 
-            @media (min-width: 380px) and (max-width: 489px) {
-                #result-count {
-                    padding-right: 0.4em;
+                .ais-CurrentRefinements-categoryLabel {
+                    color: var(--dbp-content);
                 }
 
-                .result-container {
-                    grid-template-columns: auto 1fr;
-                    gap: 0;
+                @media (max-width: 768px) {
+                    .result-container {
+                        margin-top: 0;
+                        display: grid;
+                        grid-template-columns: 1fr 1fr auto;
+                        grid-template-rows: auto auto;
+                        grid-template-areas:
+                            'empty header'
+                            'sub1 sub2'
+                            'main main';
+                        gap: 0;
+                    }
+
+                    .ais-Hits-list {
+                        grid-area: main;
+                    }
+
+                    .results {
+                        grid-area: main;
+                        width: 100%;
+                    }
+
+                    .facet-filter-button-icon {
+                        color: #9e1e4d;
+                        padding-bottom: 0.2em;
+                    }
+
+                    .filter-header-button {
+                        gap: 0.5em;
+                        display: flex;
+                        align-items: center;
+                        border: var(--dbp-border);
+                        height: 1.9em;
+                        padding: 0 1em 0 1em;
+                        cursor: pointer;
+                    }
+
+                    .deleted-only {
+                        display: flex;
+                        flex-wrap: nowrap;
+                        justify-content: end;
+                        padding-right: 0.4em;
+                    }
+
+                    #result-count {
+                    }
+
+                    .refinement-container {
+                        display: inline-block;
+                    }
                 }
-            }
-        `;
+                @media (min-width: 1100px) {
+                    #filter-header-button {
+                        display: none;
+                    }
+                }
+
+                @media (min-width: 769px) and (max-width: 1099px) {
+                    #filter-header-button {
+                        display: none;
+                    }
+
+                    .dbp-cabinet-facets {
+                    }
+
+                    .filter {
+                        min-width: 24em;
+                        max-width: max-content;
+                    }
+
+                    .result-container {
+                        gap: 0.5em;
+                        grid-template-columns: auto;
+                    }
+                }
+
+                @media (min-width: 380px) and (max-width: 489px) {
+                    #result-count {
+                        padding-right: 0.4em;
+                    }
+
+                    .result-container {
+                        grid-template-columns: auto 1fr;
+                        gap: 0;
+                    }
+                }
+            `,
+        ];
     }
 
     /**

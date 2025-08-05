@@ -253,122 +253,123 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     static get styles() {
-        // language=css
-        return css`
-            ${commonStyles.getThemeCSS()}
-            ${commonStyles.getGeneralCSS(false)}
-
-            .display-none {
-                display: none !important;
-            }
-
-            .filters {
-                height: 100%;
-            }
-
-            .filter-header {
-                padding-bottom: 0.8em;
-                border-bottom: 5px solid var(--dbp-accent);
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            .filter-header__left {
-                display: flex;
-            }
-
-            .filter-header__right-group {
-                display: flex;
-                align-items: center;
-                gap: 0.2em;
-            }
-
-            .filter-header__right {
-                display: flex;
-                align-items: center;
-            }
-
-            .filter-header__title {
-                margin: 0;
-                font-weight: bold;
-            }
-
-            .facet-filter-icon {
-                color: var(--dbp-accent);
-                padding-right: 0.5em;
-                align-items: center;
-                justify-self: center;
-            }
-
-            .facet-settings-button {
-                background: transparent;
-                border: none;
-                font-size: 2rem;
-                color: var(--dbp-accent);
-                cursor: pointer;
-                padding: 0.2em;
-            }
-
-            #custom-configure {
-                margin-top: 1em;
-            }
-
-            .filters-container {
-                margin-top: 2em;
-            }
-
-            .filter-exit-icon {
-                cursor: pointer;
-                color: var(--dbp-accent);
-            }
-
-            .filter-group {
-                margin-bottom: 2em;
-                display: flex;
-                flex-direction: column;
-                gap: 1em;
-            }
-
-            .filter-title {
-                margin: 0;
-                padding-left: 1px;
-                font-weight: bold;
-            }
-
-            .filter:has(> [hidden]) {
-                display: none;
-            }
-
-            .filter-exit-icon {
-                display: none;
-            }
-
-            @media (max-width: 768px) {
-                .filters {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: calc(100vw - 30px);
-                    height: 100vh;
-                    background: white;
-                    z-index: 9999;
-                    transition: transform 0.3s ease-in-out;
-                    transform: translateX(-130%);
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-                    overflow-y: auto;
-                    padding: 1em;
+        return [
+            commonStyles.getThemeCSS(),
+            commonStyles.getGeneralCSS(false),
+            // language=css
+            css`
+                .display-none {
+                    display: none !important;
                 }
 
-                .filters.active {
-                    transform: translateX(0);
+                .filters {
+                    height: 100%;
+                }
+
+                .filter-header {
+                    padding-bottom: 0.8em;
+                    border-bottom: 5px solid var(--dbp-accent);
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
+                .filter-header__left {
+                    display: flex;
+                }
+
+                .filter-header__right-group {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.2em;
+                }
+
+                .filter-header__right {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .filter-header__title {
+                    margin: 0;
+                    font-weight: bold;
+                }
+
+                .facet-filter-icon {
+                    color: var(--dbp-accent);
+                    padding-right: 0.5em;
+                    align-items: center;
+                    justify-self: center;
+                }
+
+                .facet-settings-button {
+                    background: transparent;
+                    border: none;
+                    font-size: 2rem;
+                    color: var(--dbp-accent);
+                    cursor: pointer;
+                    padding: 0.2em;
+                }
+
+                #custom-configure {
+                    margin-top: 1em;
+                }
+
+                .filters-container {
+                    margin-top: 2em;
                 }
 
                 .filter-exit-icon {
-                    display: block;
+                    cursor: pointer;
+                    color: var(--dbp-accent);
                 }
-            }
-        `;
+
+                .filter-group {
+                    margin-bottom: 2em;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1em;
+                }
+
+                .filter-title {
+                    margin: 0;
+                    padding-left: 1px;
+                    font-weight: bold;
+                }
+
+                .filter:has(> [hidden]) {
+                    display: none;
+                }
+
+                .filter-exit-icon {
+                    display: none;
+                }
+
+                @media (max-width: 768px) {
+                    .filters {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: calc(100vw - 30px);
+                        height: 100vh;
+                        background: white;
+                        z-index: 9999;
+                        transition: transform 0.3s ease-in-out;
+                        transform: translateX(-130%);
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                        overflow-y: auto;
+                        padding: 1em;
+                    }
+
+                    .filters.active {
+                        transform: translateX(0);
+                    }
+
+                    .filter-exit-icon {
+                        display: block;
+                    }
+                }
+            `,
+        ];
     }
 
     openFilterSettings() {

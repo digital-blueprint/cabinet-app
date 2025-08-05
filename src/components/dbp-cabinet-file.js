@@ -811,205 +811,206 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     static get styles() {
-        // language=css
-        return css`
-            ${commonStyles.getThemeCSS()}
-            ${commonStyles.getGeneralCSS(false)}
-            ${commonStyles.getButtonCSS()}
-            ${commonStyles.getRadioAndCheckboxCss()}
-            ${formElements.getFieldsetCSS()}
-            ${getSelectorFixCSS()}
-
-            #document-modal {
-                --dbp-modal-min-width: 85vw;
-                --dbp-modal-max-width: 85vw;
-                --dbp-modal-min-height: 90vh;
-                --dbp-modal-max-height: 90vh;
-            }
-
-            #document-modal .content {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 10px 10px;
-                grid-auto-flow: row;
-                padding: 0 25px;
-            }
-
-            #document-modal .description {
-                grid-area: 1 / 1 / 2 / 2;
-            }
-
-            #document-modal .doc-title {
-                display: flex;
-                align-items: center;
-            }
-
-            #document-modal .view-modal-icon {
-                color: var(--dbp-accent);
-                width: 25px;
-                height: 25px;
-                padding-right: 0.5em;
-            }
-
-            #document-modal .student-info {
-                display: flex;
-                align-items: flex-start;
-                justify-content: flex-start;
-            }
-
-            #document-modal .status {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-evenly;
-                align-items: flex-end;
-            }
-
-            #document-modal .status.hidden {
-                display: none;
-            }
-
-            #document-modal .status .status-badge {
-                display: flex;
-                flex-direction: row;
-            }
-
-            #document-modal .status .status-badge::before {
-                content: '\\2022';
-                padding-right: 10px;
-                margin-top: -1px;
-                font-size: 20px;
-            }
-
-            #document-modal .status .status-badge .status-text {
-                text-transform: capitalize;
-                font-weight: bold;
-            }
-
-            #document-modal .status .status-badge.success {
-                color: var(--dbp-success);
-                font-weight: bold;
-            }
-
-            #document-modal .status .status-badge.warning {
-                color: var(--dbp-warning);
-                font-weight: bold;
-            }
-
-            #document-modal .status .status-badge.danger {
-                color: var(--dbp-danger);
-                font-weight: bold;
-            }
-
-            #document-modal .status .status-badge .delete-text {
-                color: var(--dbp-content);
-                font-weight: normal;
-            }
-
-            #document-modal .pdf-preview {
-                grid-area: 2 / 1 / 3 / 2;
-            }
-
-            #document-modal .form {
-                grid-area: 2 / 2 / 3 / 3;
-                padding-left: 10px;
-            }
-
-            #document-modal .form h2 {
-                font-weight: bold;
-            }
-
-            #document-modal .fileButtons {
-                display: flex;
-                gap: 5px;
-                justify-content: flex-end;
-            }
-
-            #document-modal .delete-button {
-                border: unset;
-            }
-
-            #document-modal .undo-button {
-                border: unset;
-            }
-
-            #document-modal .edit-button {
-                border: unset;
-            }
-
-            #document-modal .doc-type-edit-view {
-                padding: 0.14rem 1rem 0.14rem 0.14rem;
-                width: calc(100% - 0.9em);
-            }
-
-            .desc-stat {
-                position: sticky;
-                top: 0;
-                background-color: var(--dbp-background);
-                z-index: 1;
-            }
-
-            @media (min-width: 768px) {
-                .desc-stat,
-                .form,
-                .pdf-preview {
-                    grid-column: 1 / -1;
+        return [
+            commonStyles.getThemeCSS(),
+            commonStyles.getGeneralCSS(false),
+            commonStyles.getButtonCSS(),
+            commonStyles.getRadioAndCheckboxCss(),
+            formElements.getFieldsetCSS(),
+            getSelectorFixCSS(),
+            // language=css
+            css`
+                #document-modal {
+                    --dbp-modal-min-width: 85vw;
+                    --dbp-modal-max-width: 85vw;
+                    --dbp-modal-min-height: 90vh;
+                    --dbp-modal-max-height: 90vh;
                 }
-                #document-modal .desc-stat {
+
+                #document-modal .content {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 10px 10px;
+                    grid-auto-flow: row;
+                    padding: 0 25px;
+                }
+
+                #document-modal .description {
+                    grid-area: 1 / 1 / 2 / 2;
+                }
+
+                #document-modal .doc-title {
+                    display: flex;
+                    align-items: center;
+                }
+
+                #document-modal .view-modal-icon {
+                    color: var(--dbp-accent);
+                    width: 25px;
+                    height: 25px;
+                    padding-right: 0.5em;
+                }
+
+                #document-modal .student-info {
+                    display: flex;
+                    align-items: flex-start;
+                    justify-content: flex-start;
+                }
+
+                #document-modal .status {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;
+                    align-items: flex-end;
+                }
+
+                #document-modal .status.hidden {
+                    display: none;
+                }
+
+                #document-modal .status .status-badge {
                     display: flex;
                     flex-direction: row;
-                    align-items: normal;
-                    justify-content: space-between;
                 }
-            }
-            @media (min-width: 490px) and (max-width: 767px) {
-                #document-modal .content {
-                    display: flex;
-                    flex-direction: column;
+
+                #document-modal .status .status-badge::before {
+                    content: '\\2022';
+                    padding-right: 10px;
+                    margin-top: -1px;
+                    font-size: 20px;
                 }
-                #document-modal .desc-stat {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: flex-start;
-                    align-items: flex-start;
-                    word-spacing: inherit;
-                    word-wrap: break-word;
-                    word-break: break-word;
+
+                #document-modal .status .status-badge .status-text {
+                    text-transform: capitalize;
+                    font-weight: bold;
                 }
-                #document-modal .status {
-                    align-items: flex-start;
+
+                #document-modal .status .status-badge.success {
+                    color: var(--dbp-success);
+                    font-weight: bold;
                 }
+
+                #document-modal .status .status-badge.warning {
+                    color: var(--dbp-warning);
+                    font-weight: bold;
+                }
+
+                #document-modal .status .status-badge.danger {
+                    color: var(--dbp-danger);
+                    font-weight: bold;
+                }
+
+                #document-modal .status .status-badge .delete-text {
+                    color: var(--dbp-content);
+                    font-weight: normal;
+                }
+
+                #document-modal .pdf-preview {
+                    grid-area: 2 / 1 / 3 / 2;
+                }
+
                 #document-modal .form {
-                    padding-left: 0;
+                    grid-area: 2 / 2 / 3 / 3;
+                    padding-left: 10px;
                 }
-                #document-modal .description {
-                    flex-wrap: wrap;
+
+                #document-modal .form h2 {
+                    font-weight: bold;
                 }
-            }
-            @media (max-width: 490px) {
-                #document-modal .content {
+
+                #document-modal .fileButtons {
                     display: flex;
-                    flex-direction: column;
+                    gap: 5px;
+                    justify-content: flex-end;
                 }
-                #document-modal .desc-stat {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: flex-start;
-                    align-items: flex-start;
-                    word-spacing: inherit;
-                    word-wrap: break-word;
-                    word-break: break-word;
+
+                #document-modal .delete-button {
+                    border: unset;
                 }
-                #document-modal .status {
-                    align-items: flex-start;
+
+                #document-modal .undo-button {
+                    border: unset;
                 }
-                #document-modal .form {
-                    padding-left: 0;
+
+                #document-modal .edit-button {
+                    border: unset;
                 }
-                #document-modal .description {
-                    flex-wrap: wrap;
+
+                #document-modal .doc-type-edit-view {
+                    padding: 0.14rem 1rem 0.14rem 0.14rem;
+                    width: calc(100% - 0.9em);
                 }
-            }
-        `;
+
+                .desc-stat {
+                    position: sticky;
+                    top: 0;
+                    background-color: var(--dbp-background);
+                    z-index: 1;
+                }
+
+                @media (min-width: 768px) {
+                    .desc-stat,
+                    .form,
+                    .pdf-preview {
+                        grid-column: 1 / -1;
+                    }
+                    #document-modal .desc-stat {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: normal;
+                        justify-content: space-between;
+                    }
+                }
+                @media (min-width: 490px) and (max-width: 767px) {
+                    #document-modal .content {
+                        display: flex;
+                        flex-direction: column;
+                    }
+                    #document-modal .desc-stat {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: flex-start;
+                        align-items: flex-start;
+                        word-spacing: inherit;
+                        word-wrap: break-word;
+                        word-break: break-word;
+                    }
+                    #document-modal .status {
+                        align-items: flex-start;
+                    }
+                    #document-modal .form {
+                        padding-left: 0;
+                    }
+                    #document-modal .description {
+                        flex-wrap: wrap;
+                    }
+                }
+                @media (max-width: 490px) {
+                    #document-modal .content {
+                        display: flex;
+                        flex-direction: column;
+                    }
+                    #document-modal .desc-stat {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: flex-start;
+                        align-items: flex-start;
+                        word-spacing: inherit;
+                        word-wrap: break-word;
+                        word-break: break-word;
+                    }
+                    #document-modal .status {
+                        align-items: flex-start;
+                    }
+                    #document-modal .form {
+                        padding-left: 0;
+                    }
+                    #document-modal .description {
+                        flex-wrap: wrap;
+                    }
+                }
+            `,
+        ];
     }
 
     getPdfViewerHtml() {

@@ -1,4 +1,4 @@
-import {css, html} from 'lit';
+import {html} from 'lit';
 import {
     BaseFormElement,
     BaseHitElement,
@@ -101,11 +101,7 @@ class CabinetFormElement extends BaseFormElement {
 
 class CabinetHitElement extends BaseHitElement {
     static get styles() {
-        // language=css
-        return css`
-            ${super.styles}
-            ${getCommonStyles()}
-        `;
+        return [...super.styles, getCommonStyles()];
     }
 
     render() {

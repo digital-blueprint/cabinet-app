@@ -65,125 +65,126 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
     }
 
     static get styles() {
-        // language=css
-        return css`
-            ${commonStyles.getThemeCSS()}
-            ${commonStyles.getGeneralCSS(false)}
+        return [
+            commonStyles.getThemeCSS(),
+            commonStyles.getGeneralCSS(false),
+            // language=css
+            css`
+                :host {
+                    --dbp-modal-max-width: 650px;
+                }
 
-            :host {
-                --dbp-modal-max-width: 650px;
-            }
+                #filter-modal .modal-title {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                }
 
-            #filter-modal .modal-title {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-            }
+                #filter-modal .modal-title h1 {
+                    padding-top: 0.5rem;
+                    font-weight: 300;
+                    font-size: 1.5em;
+                    margin: 0;
+                }
 
-            #filter-modal .modal-title h1 {
-                padding-top: 0.5rem;
-                font-weight: 300;
-                font-size: 1.5em;
-                margin: 0;
-            }
+                #filter-modal .modal-content {
+                    display: grid;
+                    gap: 10px;
+                    grid-auto-flow: row;
+                    /* Add space for the scrollbar */
+                    margin-right: 5px;
+                }
 
-            #filter-modal .modal-content {
-                display: grid;
-                gap: 10px;
-                grid-auto-flow: row;
-                /* Add space for the scrollbar */
-                margin-right: 5px;
-            }
+                #filter-modal .modal-content h2 {
+                    font-size: 1.5em;
+                }
 
-            #filter-modal .modal-content h2 {
-                font-size: 1.5em;
-            }
+                #filter-modal .modal-footer {
+                    display: flex;
+                    gap: 10px;
+                    padding-top: 10px;
+                    justify-content: space-between;
+                    /* We need spacing because of the spacing in #filter-modal .modal-content */
+                    margin-right: 3px;
+                }
 
-            #filter-modal .modal-footer {
-                display: flex;
-                gap: 10px;
-                padding-top: 10px;
-                justify-content: space-between;
-                /* We need spacing because of the spacing in #filter-modal .modal-content */
-                margin-right: 3px;
-            }
+                .facet-filter-icon {
+                    font-size: 2em;
+                }
 
-            .facet-filter-icon {
-                font-size: 2em;
-            }
+                .facets {
+                    max-width: 100%;
+                    margin: 0;
+                    list-style-type: none;
+                    padding: 0;
+                    display: grid;
+                    width: 100%;
+                }
 
-            .facets {
-                max-width: 100%;
-                margin: 0;
-                list-style-type: none;
-                padding: 0;
-                display: grid;
-                width: 100%;
-            }
+                .facet-field {
+                    align-items: center;
+                    height: 50px;
+                    border: 1px solid var(--dbp-muted);
+                    display: flex;
+                    margin-bottom: 5px;
+                    width: 100%;
+                }
 
-            .facet-field {
-                align-items: center;
-                height: 50px;
-                border: 1px solid var(--dbp-muted);
-                display: flex;
-                margin-bottom: 5px;
-                width: 100%;
-            }
+                .category-field {
+                    align-items: center;
+                    height: 50px;
+                    display: flex;
+                    margin-bottom: 5px;
+                    width: 100%;
+                }
 
-            .category-field {
-                align-items: center;
-                height: 50px;
-                display: flex;
-                margin-bottom: 5px;
-                width: 100%;
-            }
+                .category-field h2 {
+                    flex: 1;
+                    margin-top: 0.5em;
+                }
 
-            .category-field h2 {
-                flex: 1;
-                margin-top: 0.5em;
-            }
+                .category-field dbp-icon-button {
+                    /* Compensate for the border of .facet-field  */
+                    margin-right: -1px;
+                }
 
-            .category-field dbp-icon-button {
-                /* Compensate for the border of .facet-field  */
-                margin-right: -1px;
-            }
+                .facet-button {
+                    justify-content: center;
+                    display: flex;
+                    align-items: center;
+                    height: 50px;
+                    width: 50px;
+                    min-width: 50px;
+                    flex-grow: 0;
+                    cursor: pointer;
+                }
 
-            .facet-button {
-                justify-content: center;
-                display: flex;
-                align-items: center;
-                height: 50px;
-                width: 50px;
-                min-width: 50px;
-                flex-grow: 0;
-                cursor: pointer;
-            }
+                .facet-button dbp-icon {
+                    font-size: 1.3em;
+                    top: 0;
+                }
 
-            .facet-button dbp-icon {
-                font-size: 1.3em;
-                top: 0;
-            }
+                .facet-button.hidden,
+                .extended-menu.hidden {
+                    display: none !important;
+                }
 
-            .facet-button.hidden,
-            .extended-menu.hidden {
-                display: none !important;
-            }
+                .facet-title {
+                    flex-grow: 2;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    padding-left: 5px;
+                    text-align: left;
+                }
 
-            .facet-title {
-                flex-grow: 2;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                padding-left: 5px;
-                text-align: left;
-            }
-
-            .facet-order {
-                background-color: var(--dbp-muted-surface);
-                color: var(--dbp-on-muted-surface);
-                font-weight: bold;
-            }
-        `;
+                .facet-order {
+                    background-color: var(--dbp-muted-surface);
+                    color: var(--dbp-on-muted-surface);
+                    font-weight: bold;
+                }
+            `,
+        ];
     }
 
     /**

@@ -263,16 +263,17 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     static get styles() {
         // language=css
-        return css`
-            ${commonStyles.getGeneralCSS(false)}
-            ${commonStyles.getButtonCSS()}
-            ${formElements.getFieldsetCSS()}
-
-            .button-row {
-                margin-top: 1em;
-                text-align: right;
-            }
-        `;
+        return [
+            commonStyles.getGeneralCSS(false),
+            commonStyles.getButtonCSS(),
+            formElements.getFieldsetCSS(),
+            css`
+                .button-row {
+                    margin-top: 1em;
+                    text-align: right;
+                }
+            `,
+        ];
     }
 
     cancelForm(event) {
@@ -376,15 +377,16 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     static get styles() {
         // language=css
-        return css`
-            h2 {
-                margin: 0;
-                font-size: 1.2em;
-            }
-
-            ${commonStyles.getGeneralCSS(false)}
-            ${commonStyles.getButtonCSS()}
-        `;
+        return [
+            css`
+                h2 {
+                    margin: 0;
+                    font-size: 1.2em;
+                }
+            `,
+            commonStyles.getGeneralCSS(false),
+            commonStyles.getButtonCSS(),
+        ];
     }
 
     render() {
@@ -451,32 +453,33 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     static get styles() {
-        // language=css
-        return css`
-            ${commonStyles.getGeneralCSS(false)}
-            ${commonStyles.getButtonCSS()}
+        return [
+            commonStyles.getGeneralCSS(false),
+            commonStyles.getButtonCSS(),
+            // language=css
+            css`
+                fieldset {
+                    border: none;
+                    margin: 15px 0;
+                    padding: 0;
+                }
 
-            fieldset {
-                border: none;
-                margin: 15px 0;
-                padding: 0;
-            }
+                fieldset label {
+                    font-weight: bold;
+                    display: block;
+                }
 
-            fieldset label {
-                font-weight: bold;
-                display: block;
-            }
+                h2 {
+                    margin: 0;
+                    font-size: 1.2em;
+                }
 
-            h2 {
-                margin: 0;
-                font-size: 1.2em;
-            }
-
-            h3 {
-                margin: 1em 0;
-                font-size: 1.1em;
-            }
-        `;
+                h3 {
+                    margin: 1em 0;
+                    font-size: 1.1em;
+                }
+            `,
+        ];
     }
 
     // Needs to be implemented in the derived class
