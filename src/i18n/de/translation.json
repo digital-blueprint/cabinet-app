@@ -194,6 +194,7 @@
         "street": "Straße",
         "telephoneNumber": "Telefonnummer"
     },
+    "subject-of": "Geschäftszahl",
     "sync": {
         "button-title": "Studierendendaten synchronisieren",
         "notification": {

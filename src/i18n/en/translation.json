@@ -194,6 +194,7 @@
         "street": "Street",
         "telephoneNumber": "Phone Number"
     },
+    "subject-of": "Registry number",
     "sync": {
         "button-title": "Synchronize student data",
         "notification": {
