@@ -1,13 +1,6 @@
 import {html} from 'lit';
-import {
-    BaseFormElement,
-    BaseHitElement,
-    BaseObject,
-    BaseViewElement,
-    getCommonStyles,
-} from '../baseObject.js';
+import {BaseFormElement, BaseObject, BaseViewElement} from '../baseObject.js';
 import {getDocumentHit, getCitizenshipCertificate} from './schema.js';
-import {renderFieldWithHighlight, renderFieldWithHighlightOrTranslated} from '../utils.js';
 import {getNationalityDisplayName} from './nationalityCodes.js';
 import {
     DbpDateElement,
@@ -16,6 +9,7 @@ import {
     DbpStringView,
 } from '@dbp-toolkit/form-elements';
 import {NationalityInput} from './nationalityInput.js';
+import {BaseDocumentHitElement} from './document.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-citizenshipCertificate';
@@ -99,24 +93,12 @@ class CabinetFormElement extends BaseFormElement {
     }
 }
 
-class CabinetHitElement extends BaseHitElement {
-    static get styles() {
-        return [...super.styles, getCommonStyles()];
-    }
-
-    render() {
+class CabinetHitElement extends BaseDocumentHitElement {
+    _renderContent() {
         let hit = getDocumentHit(this.data);
         let citizenshipCertificate = getCitizenshipCertificate(hit);
         const i18n = this._i18n;
 
-        const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString(
-            'de-DE',
-            {dateStyle: 'medium', timeStyle: 'medium'},
-        );
-        const dateCreated = new Date(hit.file.base.createdTimestamp * 1000).toLocaleString(
-            'de-DE',
-            {dateStyle: 'medium', timeStyle: 'medium'},
-        );
         const issueDate = citizenshipCertificate.dateCreated;
         let formattedDate = issueDate
             ? new Intl.DateTimeFormat('de', {
@@ -126,49 +108,11 @@ class CabinetHitElement extends BaseHitElement {
               }).format(new Date(issueDate))
             : '';
         return html`
-            <form>
-                <header class="ais-doc-Hits-header">
-                    <div class="ais-doc-title-wrapper">
-                        <dbp-icon class="icon-container" name="files"></dbp-icon>
-                        <div class="ais-doc-title">
-                            ${renderFieldWithHighlightOrTranslated(
-                                this._i18n,
-                                'typesense-schema.file.base.additionalType.key.',
-                                hit,
-                                'file.base.additionalType.key',
-                                'file.base.additionalType.text',
-                            )}
-                        </div>
-                    </div>
-                    <div class="text-container">
-                        <div class="ais-doc-Hits-header-items header-item1">
-                            ${renderFieldWithHighlight(hit, 'person.familyName')},
-                            ${renderFieldWithHighlight(hit, 'person.givenName')}
-                            ${renderFieldWithHighlight(hit, 'person.birthDateDe')}
-                        </div>
-                        &nbsp
-                        <div class="ais-doc-Hits-header-items header-item2">
-                            ${renderFieldWithHighlight(hit, 'person.studId')} |
-                            ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
-                        </div>
-                    </div>
-                </header>
-                <main class="ais-doc-Hits-content">
-                    <div class="hit-content-item">
-                        ${issueDate
-                            ? html`
-                                  ${i18n.t('document-issue-date')}: ${formattedDate}
-                              `
-                            : ''}
-                        <br />
-                        <span>${i18n.t('Added')}: ${dateCreated}</span>
-                        <br />
-                        <span>${i18n.t('last-modified')}: ${lastModified}</span>
-                        <br />
-                    </div>
-                    ${this.renderViewButton(hit)}
-                </main>
-            </form>
+            ${issueDate
+                ? html`
+                      ${i18n.t('document-issue-date')}: ${formattedDate}
+                  `
+                : ''}
         `;
     }
 }
