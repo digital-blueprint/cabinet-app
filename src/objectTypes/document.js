@@ -53,11 +53,15 @@ export class BaseDocumentHitElement extends BaseHitElement {
                     <div class="hit-content-item">
                         ${this._renderContent()}
                         <br />
-                        <span>
-                            ${i18n.t('subject-of')}:
-                            ${renderFieldWithHighlight(hit, 'file.base.subjectOf')}
-                        </span>
-                        <br />
+                        ${hit.file.base.subjectOf
+                            ? html`
+                                  <span>
+                                      ${i18n.t('subject-of')}:
+                                      ${renderFieldWithHighlight(hit, 'file.base.subjectOf')}
+                                  </span>
+                                  <br />
+                              `
+                            : ''}
                         <span>${i18n.t('Added')}: ${dateCreated}</span>
                         <br />
                         <span>${i18n.t('last-modified')}: ${lastModified}</span>
