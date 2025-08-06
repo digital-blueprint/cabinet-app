@@ -530,7 +530,7 @@ class FileBase {
 
     /**
      * Example: 4854261742 - The unix timestamp for when the file should be deleted by the user
-     * @type {number}
+     * @type {?number}
      */
     recommendedDeletionTimestamp;
 }
