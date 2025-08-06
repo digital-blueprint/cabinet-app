@@ -150,6 +150,7 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
                 :host {
                     display: flex;
                     flex-direction: column;
+                    container-type: inline-size;
                     gap: 12px;
                 }
 
@@ -184,7 +185,7 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
                 ::-webkit-calendar-picker-indicator {
                     cursor: pointer;
                 }
-                @media (min-width: 769px) and (max-width: 1100px) {
+                @container (max-width: 320px) {
                     .date-range {
                         display: grid;
                         grid-template-rows: repeat(2, auto);
