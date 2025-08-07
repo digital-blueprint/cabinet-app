@@ -189,6 +189,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .items=${BaseFormElement.getIsPartOfItems(this._i18n)}
                 .value=${fileCommon.isPartOf}
                 multiple
+                display-mode="tags"
                 required
                 @change=${updateField('isPartOf')}></dbp-form-enum-element>
 
