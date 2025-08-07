@@ -525,7 +525,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .items=${BaseFormElement.getIsPartOfItems(this._i18n)}></dbp-form-enum-view>
 
             <dbp-form-date-view
-                .hidden=${baseData.deleteAtTimestamp === undefined}
+                .hidden=${baseData.recommendedDeletionTimestamp === undefined}
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-recommended-deletion')}
                 .value=${baseData.recommendedDeletionTimestamp === undefined
