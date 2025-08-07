@@ -235,15 +235,15 @@
                     "TUGraz": ""
                 },
                 "isPartOf": {
-                    "admission-archive-80": "Ansuchen um Zulassung (Archivierung nach 80 Jahren)",
-                    "communication-archive-10": "Kommunikation (Archivierung nach 10 Jahren)",
-                    "financial-archive-7": "Finanzielles (Archivierung nach 7 Jahren)",
-                    "generalApplications-archive-3": "Allgemeine Anträge (Archivierung nach 3 Jahren)",
-                    "other-archive-3": "Sonstige Dokumente (Archivierung nach 3 Jahren)",
-                    "other-delete-3": "Sonstige Dokumente (Löschung nach 3 Jahren)",
-                    "study-archive-80": "Student-Life-Cycle-Dokumente (Archivierung nach 80 Jahren)",
-                    "subordination-delete-3": "Unterstellung (Löschung nach 3 Jahren)",
-                    "vacation-archive-3": "Beurlaubung (Archivierung nach 3 Jahren)"
+                    "admission-archive-80": "Ansuchen um Zulassung ",
+                    "communication-archive-10": "Kommunikation",
+                    "financial-archive-7": "Finanzielles",
+                    "generalApplications-archive-3": "Allgemeine Anträge",
+                    "other-archive-3": "Sonstige Dokumente (Archivierung)",
+                    "other-delete-3": "Sonstige Dokumente",
+                    "study-archive-80": "Student-Life-Cycle-Dokumente",
+                    "subordination-delete-3": "Unterstellung",
+                    "vacation-archive-3": "Beurlaubung"
                 }
             },
             "file-cabinet-admissionNotice": {
