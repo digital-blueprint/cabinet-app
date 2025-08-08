@@ -105,7 +105,7 @@
     "exmatriculation": "Exmatriculation status",
     "exmatriculation-GI": "Deregistration status",
     "export": {
-        "button-label": "",
+        "button-label": "Download",
         "export-date-label": "Exported on",
         "sync-date-label": "Last synchronized",
         "table-title": "Export: {{personName}}"
@@ -198,7 +198,7 @@
     },
     "subject-of": "Registry number",
     "sync": {
-        "button-title": "",
+        "button-title": "Synchronize data",
         "notification": {
             "error": {
                 "body": "An error occurred during student data synchronization: {{error}}",

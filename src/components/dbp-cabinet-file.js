@@ -485,7 +485,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
-            <h2>${this._i18n.t('Document-details-modal')}</h2>
+            <h3>${this._i18n.t('Document-details-modal')}</h3>
             <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" .data=${hit}></${unsafeStatic(tagName)}>
         `;
     }
@@ -925,7 +925,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 #document-modal .delete-button {
-                    border: unset;
+                    font-weight: normal;
                 }
 
                 #document-modal .undo-button {
@@ -933,7 +933,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 #document-modal .edit-button {
-                    border: unset;
+                    font-weight: normal;
                 }
 
                 #document-modal .doc-type-edit-view {
@@ -1082,7 +1082,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 <div slot="title" class="modal-title doc-title">
                     <dbp-icon name="files" class="view-modal-icon"></dbp-icon>
-                    <h1>${headline}</h1>
+                    <h2>${headline}</h2>
                 </div>
                 <div slot="header" class="header">
                     <div class="modal-notification">
@@ -1096,10 +1096,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="desc-stat">
                         <div class="description">
                         <div class="student-info">
-                            ${person.fullName}
-                            <br />
-                            ${formatDate(person.birthDate)} &nbsp;(${person.studId} |
-                            ${person.stPersonNr})
+                            <p><b>${person.fullName}
+                            ${formatDate(person.birthDate)}</b> &nbsp;(${person.studId} |
+                            ${person.stPersonNr})</p>
                             <br />
                         </div>
                     </div>
@@ -1122,20 +1121,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 ${i18n.t('buttons.replace-document')} ${this.getMiniSpinnerHtml(id)}
                             </button>
                             <button
-                                    @click="${this.editFile}"
-                                    ?disabled="${!file}"
-                                    class="${classMap({
-                                        hidden: this.mode !== CabinetFile.Modes.VIEW,
-                                    })} button is-secondary edit-button">
-                                <dbp-icon
-                                        title="${i18n.t('doc-modal-edit-document')}"
-                                        aria-label="${i18n.t('doc-modal-edit-document')}"
-                                        name="edit-pencil"></dbp-icon>
-                                ${this.getMiniSpinnerHtml(
-                                    this.state !== CabinetFile.States.LOADING_FILE,
-                                )}
-                            </button>
-                            <button
                                     @click="${this.deleteFile}"
                                     ?disabled="${!file}"
                                     class="${classMap({
@@ -1148,6 +1133,22 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                         title="${i18n.t('doc-modal-delete-document')}"
                                         aria-label="${i18n.t('doc-modal-delete-document')}"
                                         name="trash"></dbp-icon>
+                                ${i18n.t('delete-button-view-mode')}
+                                ${this.getMiniSpinnerHtml(
+                                    this.state !== CabinetFile.States.LOADING_FILE,
+                                )}
+                            </button>
+                            <button
+                                @click="${this.editFile}"
+                                ?disabled="${!file}"
+                                class="${classMap({
+                                    hidden: this.mode !== CabinetFile.Modes.VIEW,
+                                })} button is-secondary edit-button">
+                                <dbp-icon
+                                    title="${i18n.t('doc-modal-edit-document')}"
+                                    aria-label="${i18n.t('doc-modal-edit-document')}"
+                                    name="edit-pencil"></dbp-icon>
+                                ${i18n.t('edit-button-view-mode')}
                                 ${this.getMiniSpinnerHtml(
                                     this.state !== CabinetFile.States.LOADING_FILE,
                                 )}
@@ -1255,20 +1256,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             case CabinetFile.Modes.ADD:
                 if (this.objectType === '') {
                     return html`
-                        <h2>${this._i18n.t('Document-details-modal')}</h2>
+                        <h3>${this._i18n.t('Document-details-modal')}</h3>
                         <p>${this._i18n.t('required-files-mark')}</p>
                         ${this.getDocumentTypeSelector()}
                     `;
                 } else {
                     return html`
-                        <h2>${this._i18n.t('Document-details-modal')}</h2>
+                        <h3>${this._i18n.t('Document-details-modal')}</h3>
                         <p>${this._i18n.t('required-files-mark')}</p>
                         ${this.getDocumentTypeSelector()} ${this.getDocumentEditFormHtml()}
                     `;
                 }
             case CabinetFile.Modes.EDIT:
                 return html`
-                    <h2>${this._i18n.t('Document-details-modal')}</h2>
+                    <h3>${this._i18n.t('Document-details-modal')}</h3>
                     <p>${this._i18n.t('required-files-mark')}</p>
                     ${this.getDocumentTypeSelector()} ${this.getDocumentEditFormHtml(true)}
                 `;

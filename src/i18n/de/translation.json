@@ -105,7 +105,7 @@
     "exmatriculation": "Abmeldestatus",
     "exmatriculation-GI": "Abmeldedatum",
     "export": {
-        "button-label": "",
+        "button-label": "Herunterladen",
         "export-date-label": "Exportiert am",
         "sync-date-label": "Zuletzt synchronisiert",
         "table-title": "Export: {{personName}}"
@@ -198,7 +198,7 @@
     },
     "subject-of": "Geschäftszahl",
     "sync": {
-        "button-title": "",
+        "button-title": "Daten Synchronisieren",
         "notification": {
             "error": {
                 "body": "Bei der Synchronisation der Studierendendaten ist ein Fehler aufgetreten: {{error}}",

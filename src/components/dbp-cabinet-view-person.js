@@ -142,6 +142,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
                     margin-left: 10px;
                     padding-top: 0.4rem;
                     font-weight: bold;
+                    font-size: 1.5em;
                 }
             `,
         ];
@@ -193,7 +194,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
                 @dbp-modal-closed="${this.onClosePersonModal}">
                 <div slot="title" class="modal-title modal-title-person">
                     <dbp-icon name="user" class="person-modal-icon"></dbp-icon>
-                    <h3 class="person-modal-title">${hit.person.fullName}</h3>
+                    <h2 class="person-modal-title">${hit.person.fullName}</h2>
                 </div>
                 <div slot="header">
                 </div>

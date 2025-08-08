@@ -771,8 +771,10 @@ class CabinetViewElement extends BaseViewElement {
                     fill: var(--dbp-content);
                 }
 
-                .modal-Ci-header-title h4 {
+                .modal-Ci-header-title h3 {
                     margin: 0;
+                    font-size: 1.17em;
+                    font-weight: bold;
                 }
 
                 .study-info {
@@ -861,14 +863,6 @@ class CabinetViewElement extends BaseViewElement {
                     overflow: hidden;
                     background-color: var(--dbp-background);
                     text-decoration: none;
-                }
-
-                .edit-tu-button:hover {
-                    text-decoration: underline;
-                }
-
-                .export-pdf-button:hover {
-                    text-decoration: underline;
                 }
 
                 .links {
