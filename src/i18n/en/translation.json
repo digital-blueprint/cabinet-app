@@ -165,7 +165,7 @@
     "person-hit": "more",
     "personal-Status": "Personal status",
     "qualification-study": "Study qualification",
-    "required-files-mark": "*indicates a required field",
+    "required-files-mark": "* indicates a required field",
     "school-Certificate-Date": "Date of certificate",
     "search": {
         "no-results": "No results found",
