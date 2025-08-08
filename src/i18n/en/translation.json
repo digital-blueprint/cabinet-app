@@ -63,6 +63,7 @@
     "communication-abstract": "Summary",
     "Contact-information": "Contact information",
     "curriculum-version": "Curriculum version",
+    "delete-button-view-mode": "Delete",
     "doc-modal-added": "Added",
     "doc-modal-all": "All",
     "doc-modal-comment": "Comment",
@@ -93,7 +94,8 @@
     },
     "Document-details-modal": "Document details",
     "document-issue-date": "Document issue date",
-    "Edit-student-data": "Edit student data",
+    "edit-button-view-mode": "Edit",
+    "Edit-student-data": "Edit data in TUGO",
     "emailAddressConfirmed": "Confirmed email address",
     "emailAddressTemporary": "Temporary email address",
     "emailAddressUniversity": "TU email address",
@@ -103,7 +105,7 @@
     "exmatriculation": "Exmatriculation status",
     "exmatriculation-GI": "Deregistration status",
     "export": {
-        "button-label": "Export",
+        "button-label": "",
         "export-date-label": "Exported on",
         "sync-date-label": "Last synchronized",
         "table-title": "Export: {{personName}}"
@@ -163,7 +165,7 @@
     "person-hit": "more",
     "personal-Status": "Personal status",
     "qualification-study": "Study qualification",
-    "required-files-mark": "* kennzeichnet ein Pflichtfeld",
+    "required-files-mark": "* indicates a required field",
     "school-Certificate-Date": "Date of certificate",
     "search": {
         "no-results": "No results found",
@@ -196,7 +198,7 @@
     },
     "subject-of": "Registry number",
     "sync": {
-        "button-title": "Synchronize student data",
+        "button-title": "",
         "notification": {
             "error": {
                 "body": "An error occurred during student data synchronization: {{error}}",

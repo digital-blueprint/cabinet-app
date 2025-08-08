@@ -63,6 +63,7 @@
     "communication-abstract": "Zusammenfassung",
     "Contact-information": "Kontaktinformationen",
     "curriculum-version": "Curriculumsversion",
+    "delete-button-view-mode": "Löschen ",
     "doc-modal-added": "Hinzugefügt am",
     "doc-modal-all": "Alles",
     "doc-modal-comment": "Notiz",
@@ -93,7 +94,8 @@
     },
     "Document-details-modal": "Dokumentinformationen",
     "document-issue-date": "Datum der Ausstellung",
-    "Edit-student-data": "Daten bearbeiten",
+    "edit-button-view-mode": "Bearbeiten",
+    "Edit-student-data": "Daten in TUGO bearbeiten",
     "emailAddressConfirmed": "Bestätigte E-Mailadresse",
     "emailAddressTemporary": "Temporäre E-Mailadresse",
     "emailAddressUniversity": "E-Mailadresse an der TU",
@@ -103,7 +105,7 @@
     "exmatriculation": "Abmeldestatus",
     "exmatriculation-GI": "Abmeldedatum",
     "export": {
-        "button-label": "Exportieren",
+        "button-label": "",
         "export-date-label": "Exportiert am",
         "sync-date-label": "Zuletzt synchronisiert",
         "table-title": "Export: {{personName}}"
@@ -163,7 +165,7 @@
     "person-hit": "weitere",
     "personal-Status": "Personenstatus",
     "qualification-study": "Hochschulzugangsform",
-    "required-files-mark": "* indicates a required field",
+    "required-files-mark": "* kennzeichnet ein Pflichtfeld",
     "school-Certificate-Date": "Zeugnisdatum",
     "search": {
         "no-results": "Keine Ergebnisse gefunden",
@@ -196,7 +198,7 @@
     },
     "subject-of": "Geschäftszahl",
     "sync": {
-        "button-title": "Studierendendaten synchronisieren",
+        "button-title": "",
         "notification": {
             "error": {
                 "body": "Bei der Synchronisation der Studierendendaten ist ein Fehler aufgetreten: {{error}}",
