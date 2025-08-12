@@ -206,6 +206,11 @@ class CabinetHitElement extends BaseHitElement {
                     display: none;
                 }
 
+                .dbp-button-icon {
+                    font-size: 1.2em;
+                    top: 0.2em;
+                }
+
                 @media (max-width: 768px) {
                     .hit-person-info-header {
                         display: flex;
@@ -322,6 +327,9 @@ class CabinetHitElement extends BaseHitElement {
                         grid-column: 2;
                         grid-row: 2;
                     }
+                    .dbp-button-icon {
+                        margin-right: 2px;
+                    }
                 }
             `,
         ];
@@ -346,6 +354,7 @@ class CabinetHitElement extends BaseHitElement {
         const focusButtonLabel = this.data.isFiltered
             ? i18n.t('unselect-button-name')
             : i18n.t('focus-button-name');
+
         return html`
            
             <header class="ais-Hits-header" tabindex="0" @keydown=${(e) => {
@@ -434,12 +443,12 @@ class CabinetHitElement extends BaseHitElement {
                                     composed: true,
                                 }),
                             );
-                        }}>
+                        }}><dbp-icon class="dbp-button-icon" name="plus" aria-hidden="true"></dbp-icon>
                         ${i18n.t('buttons.add.documents')}
                     </button>
                     <button
                         class="button"
-                        aria-label=" ${focusButtonLabel}: ${hit.person.familyName},${hit.person.givenName}""
+                        aria-label=" ${focusButtonLabel}: ${hit.person.familyName},${hit.person.givenName}"
                         @click="${(event) => {
                             this.dispatchEvent(
                                 new CustomEvent('DbpCabinetFilterPerson', {
@@ -448,7 +457,7 @@ class CabinetHitElement extends BaseHitElement {
                                     composed: true,
                                 }),
                             );
-                        }}">
+                        }}"><dbp-icon class="dbp-button-icon" name="${this.data.isFiltered ? 'source_icons_eye-off' : 'source_icons_eye-empty'}"" aria-hidden="true"></dbp-icon>
                         ${focusButtonLabel}
                     </button>
                     <button
@@ -462,7 +471,7 @@ class CabinetHitElement extends BaseHitElement {
                                     composed: true,
                                 }),
                             );
-                        }}>
+                        }}><dbp-icon class="dbp-button-icon" name="keyword-research" aria-hidden="true"></dbp-icon>
                         ${i18n.t('buttons.view')}
                     </button>
                 </footer>

@@ -258,6 +258,29 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             commonStyles.getGeneralCSS(false),
             // language=css
             css`
+                button {
+                    border-radius: var(--dbp-border-radius);
+                    cursor: pointer;
+                    text-align: center;
+                    white-space: nowrap;
+                    font-size: inherit;
+                    font-weight: bolder;
+                    font-family: inherit;
+                    transition:
+                        0.15s,
+                        color 0.15s;
+                    background: var(--dbp-secondary-surface);
+                    color: var(--dbp-on-secondary-surface);
+                    border-color: var(--dbp-secondary-surface-border-color);
+                }
+
+                .dbp-button-icon {
+                    font-size: 0.8em;
+                    top: 0.2em;
+                    padding: 0;
+                    color: var(--dbp-secondary);
+                }
+
                 .display-none {
                     display: none !important;
                 }
@@ -468,19 +491,20 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
             <div class="filters ${classMap({active: this.active})}">
                 <div class="filter-header">
                     <div class="filter-header__left">
-                        <dbp-icon name="funnel" class="facet-filter-icon"></dbp-icon>
                         <h2 class="filter-header__title">${i18n.t('cabinet-search.filters')}</h2>
                     </div>
                     <div class="filter-header__right-group">
                         <div class="filter-header__right">
-                            <button
-                                @click="${this.openFilterSettings}"
-                                class="facet-settings-button">
-                                <dbp-icon
-                                    title="${i18n.t('filter-settings.filter-configuration')}"
-                                    aria-label="${i18n.t('filter-settings.filter-configuration')}"
-                                    name="cog"></dbp-icon>
-                            </button>
+                            <div class="filter-header__right">
+                                <button class="facet-settings-button">
+                                    <dbp-icon
+                                        class="dbp-button-icon"
+                                        name="cog"
+                                        title="Filterkonfiguration"
+                                        aria-label="Filterkonfiguration"
+                                        @click="${this.openFilterSettings}"></dbp-icon>
+                                </button>
+                            </div>
                         </div>
                         <dbp-icon
                             name="close"

@@ -419,6 +419,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 dbp-cabinet-facets {
                     grid-area: sidebar;
+                    margin-top: 1em;
                 }
 
                 .results {
