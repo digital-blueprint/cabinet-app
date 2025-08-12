@@ -5,12 +5,14 @@ import {getDocumentHit} from './schema.js';
 
 export class BaseDocumentHitElement extends BaseHitElement {
     static get styles() {
-        return [...super.styles, getCommonStyles(),
+        return [
+            ...super.styles,
+            getCommonStyles(),
             css`
                 h3 {
-                    font-size:1em;
+                    font-size: 1em;
                 }
-             `,
+            `,
         ];
     }
 
@@ -43,13 +45,19 @@ export class BaseDocumentHitElement extends BaseHitElement {
                         </h2>
                     </div>
                     <div class="text-container">
-                        <h3 class="ais-doc-Hits-header-items header-item1" aria-label="${i18n.t('full-family-name')} ${hit.person.familyName}, ${hit.person.givenName} ${i18n.t('birth-date')} ${hit.person.birthDateDe}">
+                        <h3
+                            class="ais-doc-Hits-header-items header-item1"
+                            aria-label="${i18n.t('full-family-name')} ${hit.person
+                                .familyName}, ${hit.person.givenName} ${i18n.t('birth-date')} ${hit
+                                .person.birthDateDe}">
                             ${renderFieldWithHighlight(hit, 'person.familyName')},
                             ${renderFieldWithHighlight(hit, 'person.givenName')}
                             ${renderFieldWithHighlight(hit, 'person.birthDateDe')}
                         </h3>
                         &nbsp
-                        <div class="ais-doc-Hits-header-items header-item2" aria-label="${i18n.t('st-PersonNr')} ${hit.person.studId}">
+                        <div
+                            class="ais-doc-Hits-header-items header-item2"
+                            aria-label="${i18n.t('st-PersonNr')} ${hit.person.studId}">
                             ${renderFieldWithHighlight(hit, 'person.studId')} |
                             ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
                         </div>

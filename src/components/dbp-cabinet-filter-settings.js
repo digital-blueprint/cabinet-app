@@ -186,7 +186,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 .dbp-button-icon {
                     font-size: 1.2em;
                     top: 0.2em;
-                    margin-right:2px;
+                    margin-right: 2px;
                 }
             `,
         ];

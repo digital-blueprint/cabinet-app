@@ -820,17 +820,16 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             getSelectorFixCSS(),
             // language=css
             css`
-
-                h3{
-                    font-weight:600;
+                h3 {
+                    font-weight: 600;
                 }
 
                 .dbp-button-icon {
                     font-size: 1.2em;
                     top: 0.2em;
-                    margin-right:2px;
+                    margin-right: 2px;
                 }
-                
+
                 #document-modal {
                     --dbp-modal-min-width: 85vw;
                     --dbp-modal-max-width: 85vw;

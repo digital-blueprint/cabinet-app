@@ -387,7 +387,7 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .dbp-button-icon {
                     font-size: 1.2em;
                     top: 0.2em;
-                    margin-right:2px;
+                    margin-right: 2px;
                 }
             `,
             commonStyles.getGeneralCSS(false),
@@ -424,11 +424,15 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
             <button
                 class="button"
                 type="is-secondary"
-                aria-label="${i18n.t('buttons.view-document')}: ${hit.person.familyName},${hit.person.givenName}"
+                aria-label="${i18n.t('buttons.view-document')}: ${hit.person.familyName},${hit
+                    .person.givenName}"
                 @click=${(e) => {
                     this.documentViewButtonClick(hit, e);
                 }}>
-                <dbp-icon class="dbp-button-icon" name="keyword-research" aria-hidden="true"></dbp-icon>
+                <dbp-icon
+                    class="dbp-button-icon"
+                    name="keyword-research"
+                    aria-hidden="true"></dbp-icon>
                 ${i18n.t('buttons.view')}
             </button>
         `;
