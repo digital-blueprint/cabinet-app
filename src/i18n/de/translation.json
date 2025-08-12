@@ -11,7 +11,8 @@
         "cancel": "Abbrechen",
         "replace-document": "Datei ersetzen",
         "save": "Speichern",
-        "view": "Anzeigen"
+        "view": "Anzeigen",
+        "view-document": "Dokument anzeigen von"
     },
     "cabinet-file": {
         "at-time": " um",

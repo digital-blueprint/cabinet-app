@@ -11,7 +11,8 @@
         "cancel": "Cancel",
         "replace-document": "Replace file",
         "save": "Save",
-        "view": "View"
+        "view": "View",
+        "view-document": "View document from"
     },
     "cabinet-file": {
         "at-time": " at",

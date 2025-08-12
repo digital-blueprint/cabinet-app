@@ -820,6 +820,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             getSelectorFixCSS(),
             // language=css
             css`
+
+                h3{
+                    font-weight:600;
+                }
+
+                .dbp-button-icon {
+                    font-size: 1.2em;
+                    top: 0.2em;
+                    margin-right:2px;
+                }
+                
                 #document-modal {
                     --dbp-modal-min-width: 85vw;
                     --dbp-modal-max-width: 85vw;
@@ -1073,6 +1084,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // TODO: Check if PDF was uploaded
         return html`
+           
             <dbp-modal
                 ${ref(this.documentModalRef)}
                 @dbp-modal-closed="${this.onCloseDocumentModal}"
@@ -1081,8 +1093,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 subscribe="lang">
 
                 <div slot="title" class="modal-title doc-title">
-                    <dbp-icon name="files" class="view-modal-icon"></dbp-icon>
-                    <h2>${headline}</h2>
+                    <dbp-icon name="files" class="view-modal-icon" aria-hidden="true"></dbp-icon>
+                    <h2> ${headline}</h2>
                 </div>
                 <div slot="header" class="header">
                     <div class="modal-notification">
@@ -1096,9 +1108,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="desc-stat">
                         <div class="description">
                         <div class="student-info">
-                            <p><b>${person.fullName}
-                            ${formatDate(person.birthDate)}</b> &nbsp;(${person.studId} |
-                            ${person.stPersonNr})</p>
+                            <h3>${person.fullName}
+                            ${formatDate(person.birthDate)}<span style="font-weight:300"> &nbsp;(${person.studId} | ${person.stPersonNr})</span>
+                            </h3>
                             <br />
                         </div>
                     </div>
@@ -1130,6 +1142,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                             hit.base?.isScheduledForDeletion,
                                     })} button is-secondary delete-button">
                                 <dbp-icon
+                                    class="dbp-button-icon"
                                         title="${i18n.t('doc-modal-delete-document')}"
                                         aria-label="${i18n.t('doc-modal-delete-document')}"
                                         name="trash"></dbp-icon>
@@ -1141,10 +1154,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             <button
                                 @click="${this.editFile}"
                                 ?disabled="${!file}"
-                                class="${classMap({
+                                class=" ${classMap({
                                     hidden: this.mode !== CabinetFile.Modes.VIEW,
                                 })} button is-secondary edit-button">
                                 <dbp-icon
+                                    class="dbp-button-icon"
                                     title="${i18n.t('doc-modal-edit-document')}"
                                     aria-label="${i18n.t('doc-modal-edit-document')}"
                                     name="edit-pencil"></dbp-icon>
@@ -1156,12 +1170,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             <button
                                     @click="${this.undeleteFile}"
                                     ?disabled="${!file}"
-                                    class="${classMap({
+                                    class="n ${classMap({
                                         hidden:
                                             this.mode === CabinetFile.Modes.ADD ||
                                             !hit.base?.isScheduledForDeletion,
                                     })} button is-secondary undo-button">
                                 <dbp-icon
+                                    class="dbp-button-icon"
                                         title="${i18n.t('doc-modal-delete-document')}"
                                         aria-label="${i18n.t('doc-modal-delete-document')}"
                                         name="undo"></dbp-icon>
