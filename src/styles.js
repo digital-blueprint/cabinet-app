@@ -93,6 +93,15 @@ export function getPaginationCSS() {
             border: 1px solid var(--dbp-muted);
             color: var(--dbp-muted);
         }
+
+        @media (max-width: 489px) {
+            .ais-Pagination-list {
+                justify-content: space-between;
+            }
+            .ais-Pagination-item {
+                width: 100%;
+            }
+        }
     `;
 }
 

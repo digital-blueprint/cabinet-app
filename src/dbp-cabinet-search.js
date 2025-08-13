@@ -612,6 +612,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         gap: 0;
                     }
                 }
+                @media (max-width: 489px) {
+                    #hits-footer {
+                        flex-direction: column;
+                    }
+                }
             `,
         ];
     }
@@ -788,11 +793,18 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     createPagination(id) {
-        return pagination({
+        const config = {
             container: this._(id),
-        });
-    }
+        };
+        if (window.innerWidth <= 489) {
+            config.padding = 1;
+        } else {
+            config.padding = 3;
+        }
 
+        console.log('Final config:', config);
+        return pagination(config);
+    }
     /**
      * This will be used as createFacets() in the CabinetFacets component.
      * @returns {Promise<*[]>}
