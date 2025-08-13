@@ -74,6 +74,11 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                     --dbp-modal-max-width: 650px;
                 }
 
+                #filter-modal .modal {
+                    max-width: 100%;
+                    background-color: green;
+                }
+
                 #filter-modal .modal-title {
                     display: flex;
                     align-items: center;
@@ -81,9 +86,9 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                     gap: 8px;
                 }
 
-                #filter-modal .modal-title h1 {
+                #filter-modal .modal-title h2 {
                     padding-top: 0.5rem;
-                    font-weight: 300;
+                    font-weight: 600;
                     font-size: 1.5em;
                     margin: 0;
                 }
@@ -96,8 +101,8 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                     margin-right: 5px;
                 }
 
-                #filter-modal .modal-content h2 {
-                    font-size: 1.5em;
+                #filter-modal .modal-content h3 {
+                    font-size: 1.17em;
                 }
 
                 #filter-modal .modal-footer {
@@ -110,7 +115,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 }
 
                 .facet-filter-icon {
-                    font-size: 2em;
+                    font-size: 1.5em;
                 }
 
                 .facets {
@@ -132,14 +137,14 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 }
 
                 .category-field {
-                    align-items: center;
+                    align-items: flex-end;
                     height: 50px;
                     display: flex;
-                    margin-bottom: 5px;
                     width: 100%;
+                    margin-top: 0.5em;
                 }
 
-                .category-field h2 {
+                .category-field h3 {
                     flex: 1;
                     margin-top: 0.5em;
                 }
@@ -219,7 +224,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         title="${i18n.t('filter-settings.filter-configuration')}"
                         aria-label="${i18n.t('filter-settings.filter-configuration')}"
                         name="cog"></dbp-icon>
-                    <h1>${i18n.t('filter-settings.filter-configuration')}</h1>
+                    <h2>${i18n.t('filter-settings.filter-configuration')}</h2>
                 </div>
                 <div slot="header" class="header">
                     <div class="modal-notification">
@@ -290,7 +295,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
             return html`
                 <li class="facet-fields ${item.schemaField}" data-index="${key}">
                     <div class="category-field">
-                        <h2>${i18n.t(item['filter-group'].name)}</h2>
+                        <h3>${i18n.t(item['filter-group'].name)}</h3>
                         ${this.renderFacetGroupVisibilityIconButton(item)}
                     </div>
                 </li>

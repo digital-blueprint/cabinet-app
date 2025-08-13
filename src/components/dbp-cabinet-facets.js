@@ -330,7 +330,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     font-size: 2rem;
                     color: var(--dbp-accent);
                     cursor: pointer;
-                    padding: 0.2em;
+                    padding: 0;
                 }
 
                 #custom-configure {
