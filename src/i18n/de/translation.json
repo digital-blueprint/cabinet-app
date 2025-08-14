@@ -89,6 +89,7 @@
     "doc-modal-study-field-unspecified": "Unspezifiziert",
     "doc-modal-subject-of": "Geschäftszahl",
     "doc-modal-subject-of-placeholder": "z.b. {{-id}}",
+    "doc-modal-undelete-document": "Wiederherstellen",
     "document": {
         "document-not-found-body": "Das angeforderte Dokument konnte nicht gefunden werden!",
         "document-not-found-summary": "Dokument nicht gefunden"

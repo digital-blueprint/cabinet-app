@@ -89,6 +89,7 @@
     "doc-modal-study-field-unspecified": "Unspecified",
     "doc-modal-subject-of": "Registry number",
     "doc-modal-subject-of-placeholder": "e.g. {{-id}}",
+    "doc-modal-undelete-document": "Undelete",
     "document": {
         "document-not-found-body": "The requested document could not be found!",
         "document-not-found-summary": "Document not found"

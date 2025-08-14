@@ -1176,8 +1176,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                     })} button is-secondary undo-button">
                                 <dbp-icon
                                     class="dbp-button-icon"
-                                        title="${i18n.t('doc-modal-delete-document')}"
-                                        aria-label="${i18n.t('doc-modal-delete-document')}"
+                                        title="${i18n.t('doc-modal-undelete-document')}"
+                                        aria-label="${i18n.t('doc-modal-undelete-document')}"
                                         name="undo"></dbp-icon>
                                 ${this.getMiniSpinnerHtml(
                                     this.state !== CabinetFile.States.LOADING_FILE,
