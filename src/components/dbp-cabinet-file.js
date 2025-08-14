@@ -1093,7 +1093,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 <div slot="title" class="modal-title doc-title">
                     <dbp-icon name="files" class="view-modal-icon" aria-hidden="true"></dbp-icon>
-                    <h2> ${headline}</h2>
+                    <h2>${headline}</h2>
                 </div>
                 <div slot="header" class="header">
                     <div class="modal-notification">
@@ -1153,7 +1153,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             <button
                                 @click="${this.editFile}"
                                 ?disabled="${!file}"
-                                class=" ${classMap({
+                                class="${classMap({
                                     hidden: this.mode !== CabinetFile.Modes.VIEW,
                                 })} button is-secondary edit-button">
                                 <dbp-icon
@@ -1169,7 +1169,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             <button
                                     @click="${this.undeleteFile}"
                                     ?disabled="${!file}"
-                                    class="n ${classMap({
+                                    class="${classMap({
                                         hidden:
                                             this.mode === CabinetFile.Modes.ADD ||
                                             !hit.base?.isScheduledForDeletion,
