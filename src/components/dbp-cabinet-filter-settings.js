@@ -101,14 +101,20 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 }
 
                 #filter-modal .modal-footer {
-                    display: flex;
-                    gap: 10px;
+                    display: grid;
                     padding-top: 10px;
-                    justify-content: space-between;
                     /* We need spacing because of the spacing in #filter-modal .modal-content */
                     margin-right: 3px;
+                    grid-template-columns: 1fr auto auto 1fr;
+                    gap: 10px;
+                    width:100%;
                 }
-
+                
+                .modal-footer dbp-button:last-child {
+                    justify-self: end;
+                    margin-right: 3px;
+                }
+                
                 .facet-filter-icon {
                     font-size: 1.5em;
                 }
@@ -188,6 +194,43 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                     top: 0.2em;
                     margin-right: 2px;
                 }
+
+                @media (max-width: 540px) {
+                    #filter-modal .modal-footer {
+                        grid-template-columns: 1fr 1fr;
+                        grid-template-rows: auto auto;
+                    }
+                    
+                    .modal-footer dbp-button:nth-child(1) { 
+                        grid-area: 2 / 1; }
+                    
+                    .modal-footer dbp-button:nth-child(2) { 
+                        grid-area: 1 / 1; }
+                    
+                    .modal-footer dbp-button:nth-child(3) { 
+                        grid-area: 1 / 2; }
+                    
+                    .modal-footer dbp-button:nth-child(4) { 
+                        grid-area: 2 / 2; }
+
+                    #filter-modal .modal-footer dbp-button {
+                        width: 100%;
+                        display:grid;
+                        justify-self: stretch;
+                    }
+                }
+                
+                @media (max-width: 370px){
+                   #filter-modal .modal-footer {
+                        grid-template-rows: auto auto auto auto;
+                        gap: 8px;
+                    }
+                    .modal-footer dbp-button:nth-child(1) { grid-area: 3 / 1; }
+                    .modal-footer dbp-button:nth-child(3) { grid-area: 2 / 1 / 3 / 3;}
+                    .modal-footer dbp-button:nth-child(2) { grid-area: 1 / 1 / 2 / 3; }
+                    .modal-footer dbp-button:nth-child(4) { grid-area: 3 / 2; }
+
+                }
             `,
         ];
     }
@@ -231,7 +274,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 </div>
                 <div slot="content" class="modal-content">${this.renderFacetList()}</div>
                 <div slot="footer" class="modal-footer">
-                    <div>
+                   
                         <dbp-button
                             title="${i18n.t('filter-settings.abort')}"
                             type="is-secondary"
@@ -243,8 +286,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                                 aria-hidden="true"></dbp-icon>
                             ${i18n.t('filter-settings.abort')}
                         </dbp-button>
-                    </div>
-                    <div>
+                    
                         <dbp-button
                             title="${i18n.t('filter-settings.all-filters-hide')}"
                             type="is-secondary"
@@ -269,7 +311,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                                 aria-hidden="true"></dbp-icon>
                             ${i18n.t('filter-settings.all-filters-show')}
                         </dbp-button>
-                    </div>
+                   
                     <dbp-button
                         title="${i18n.t('filter-settings.save')}"
                         type="is-primary"
@@ -278,7 +320,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         <dbp-icon class="dbp-button-icon" name="save" aria-hidden="true"></dbp-icon>
                         ${i18n.t('filter-settings.save')}
                     </dbp-button>
-                </div>
+                
             </dbp-modal>
         `;
     }

@@ -344,6 +344,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .filter-exit-icon {
                     cursor: pointer;
                     color: var(--dbp-accent);
+                    font-size: 1.5em;
                 }
 
                 .filter-group {
@@ -389,6 +390,10 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                     .filter-exit-icon {
                         display: block;
+                    }
+
+                    .facet-settings-button{
+                        margin-right:20px;
                     }
                 }
             `,
