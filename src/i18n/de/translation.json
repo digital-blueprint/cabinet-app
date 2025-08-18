@@ -167,7 +167,8 @@
     "person-hit": "weitere",
     "personal-Status": "Personenstatus",
     "qualification-study": "Hochschulzugangsform",
-    "required-files-mark": "* kennzeichnet ein Pflichtfeld",
+    "required-files-asterisk": "* ",
+    "required-files-text": "kennzeichnet ein Pflichtfeld",
     "school-Certificate-Date": "Zeugnisdatum",
     "search": {
         "no-results": "Keine Ergebnisse gefunden",

@@ -829,6 +829,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     top: 0.2em;
                     margin-right: 2px;
                 }
+                
+                .red-marked-asterisk {
+                    color: var(--dbp-danger);
+                }
 
                 #document-modal {
                     --dbp-modal-min-width: 85vw;
@@ -1272,20 +1276,20 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 if (this.objectType === '') {
                     return html`
                         <h3>${this._i18n.t('Document-details-modal')}</h3>
-                        <p>${this._i18n.t('required-files-mark')}</p>
+                        <p><span class="red-marked-asterisk">${this._i18n.t('required-files-asterisk')}</span>${this._i18n.t('required-files-text')}</p>
                         ${this.getDocumentTypeSelector()}
                     `;
                 } else {
                     return html`
                         <h3>${this._i18n.t('Document-details-modal')}</h3>
-                        <p>${this._i18n.t('required-files-mark')}</p>
+                        <p><span class="red-marked-asterisk">${this._i18n.t('required-files-asterisk')}</span>${this._i18n.t('required-files-text')}</p>
                         ${this.getDocumentTypeSelector()} ${this.getDocumentEditFormHtml()}
                     `;
                 }
             case CabinetFile.Modes.EDIT:
                 return html`
                     <h3>${this._i18n.t('Document-details-modal')}</h3>
-                    <p>${this._i18n.t('required-files-mark')}</p>
+                    <p><span class="red-marked-asterisk">${this._i18n.t('required-files-asterisk')}</span>${this._i18n.t('required-files-text')}</p>
                     ${this.getDocumentTypeSelector()} ${this.getDocumentEditFormHtml(true)}
                 `;
         }
