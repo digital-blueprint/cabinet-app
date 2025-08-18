@@ -157,7 +157,8 @@
     "nationalities": "Staatsbürgerschaft",
     "nationality-input": {
         "invalid-code-format": "Ungültiges Format. Es müssen 1-3 Großbuchstaben sein.",
-        "no-matches-found": "Keine Übereinstimmung gefunden"
+        "no-matches-found": "Keine Übereinstimmung gefunden",
+        "placeholder": "Code eingeben, oder nach einem Land suchen"
     },
     "note": "Anmerkung",
     "person": {
