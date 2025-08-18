@@ -939,7 +939,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 #document-modal .undo-button {
-                    border: unset;
+                    font-weight: normal;
                 }
 
                 #document-modal .edit-button {
@@ -1179,6 +1179,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                         title="${i18n.t('doc-modal-undelete-document')}"
                                         aria-label="${i18n.t('doc-modal-undelete-document')}"
                                         name="undo"></dbp-icon>
+                                ${i18n.t('doc-modal-undelete-document')}
                                 ${this.getMiniSpinnerHtml(
                                     this.state !== CabinetFile.States.LOADING_FILE,
                                 )}
