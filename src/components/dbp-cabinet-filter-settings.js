@@ -107,14 +107,14 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                     margin-right: 3px;
                     grid-template-columns: 1fr auto auto 1fr;
                     gap: 10px;
-                    width:100%;
+                    width: 100%;
                 }
-                
+
                 .modal-footer dbp-button:last-child {
                     justify-self: end;
                     margin-right: 3px;
                 }
-                
+
                 .facet-filter-icon {
                     font-size: 1.5em;
                 }
@@ -200,36 +200,47 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         grid-template-columns: 1fr 1fr;
                         grid-template-rows: auto auto;
                     }
-                    
-                    .modal-footer dbp-button:nth-child(1) { 
-                        grid-area: 2 / 1; }
-                    
-                    .modal-footer dbp-button:nth-child(2) { 
-                        grid-area: 1 / 1; }
-                    
-                    .modal-footer dbp-button:nth-child(3) { 
-                        grid-area: 1 / 2; }
-                    
-                    .modal-footer dbp-button:nth-child(4) { 
-                        grid-area: 2 / 2; }
+
+                    .modal-footer dbp-button:nth-child(1) {
+                        grid-area: 2 / 1;
+                    }
+
+                    .modal-footer dbp-button:nth-child(2) {
+                        grid-area: 1 / 1;
+                    }
+
+                    .modal-footer dbp-button:nth-child(3) {
+                        grid-area: 1 / 2;
+                    }
+
+                    .modal-footer dbp-button:nth-child(4) {
+                        grid-area: 2 / 2;
+                    }
 
                     #filter-modal .modal-footer dbp-button {
                         width: 100%;
-                        display:grid;
+                        display: grid;
                         justify-self: stretch;
                     }
                 }
-                
-                @media (max-width: 370px){
-                   #filter-modal .modal-footer {
+
+                @media (max-width: 370px) {
+                    #filter-modal .modal-footer {
                         grid-template-rows: auto auto auto auto;
                         gap: 8px;
                     }
-                    .modal-footer dbp-button:nth-child(1) { grid-area: 3 / 1; }
-                    .modal-footer dbp-button:nth-child(3) { grid-area: 2 / 1 / 3 / 3;}
-                    .modal-footer dbp-button:nth-child(2) { grid-area: 1 / 1 / 2 / 3; }
-                    .modal-footer dbp-button:nth-child(4) { grid-area: 3 / 2; }
-
+                    .modal-footer dbp-button:nth-child(1) {
+                        grid-area: 3 / 1;
+                    }
+                    .modal-footer dbp-button:nth-child(3) {
+                        grid-area: 2 / 1 / 3 / 3;
+                    }
+                    .modal-footer dbp-button:nth-child(2) {
+                        grid-area: 1 / 1 / 2 / 3;
+                    }
+                    .modal-footer dbp-button:nth-child(4) {
+                        grid-area: 3 / 2;
+                    }
                 }
             `,
         ];

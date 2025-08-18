@@ -392,8 +392,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         display: block;
                     }
 
-                    .facet-settings-button{
-                        margin-right:20px;
+                    .facet-settings-button {
+                        margin-right: 20px;
                     }
                 }
             `,
