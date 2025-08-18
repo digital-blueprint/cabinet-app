@@ -381,9 +381,10 @@ const legacyCode = {
  * The code is a three-letter ISO 3166-1 alpha-3 code, or a special code for non-ISO countries.
  * @param {string} code - The citizenship code to look up.
  * @param {string} [lang] - The language code for localization (default is 'en').
+ * @param {string} [style] - The style of the display name (e.g., 'long', 'short', 'narrow').
  * @returns {string} The localized display name for the citizenship code.
  */
-export function getNationalityDisplayName(code, lang = 'en') {
+export function getNationalityDisplayName(code, lang = 'en', style = 'long') {
     code = code.toUpperCase();
     let isLegacyCode = false;
 
@@ -405,7 +406,7 @@ export function getNationalityDisplayName(code, lang = 'en') {
     }
 
     let legacySuffix = isLegacyCode ? ` (${legacyCode[lang] || legacyCode.en})` : '';
-    const displayNames = new Intl.DisplayNames([lang], {type: 'region'});
+    const displayNames = new Intl.DisplayNames([lang], {type: 'region', style: style});
     return displayNames.of(code) + legacySuffix;
 }
 

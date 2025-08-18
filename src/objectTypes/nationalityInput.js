@@ -153,7 +153,9 @@ export class NationalityInput extends LangMixin(DbpBaseElement, createInstance, 
         this._filteredCodes = this._codes.filter(
             (code) =>
                 code.includes(query) ||
-                getNationalityDisplayName(code, this.lang).toUpperCase().includes(query),
+                getNationalityDisplayName(code, this.lang, 'long').toUpperCase().includes(query) ||
+                getNationalityDisplayName(code, this.lang, 'short').toUpperCase().includes(query) ||
+                getNationalityDisplayName(code, this.lang, 'narrow').toUpperCase().includes(query),
         );
         this._showResults = true;
         this._highlightedIndex = -1;
