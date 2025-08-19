@@ -367,13 +367,13 @@ const nonIsoCodesDisplayNames = {
 };
 
 const unknownCode = {
-    en: 'Unknown Nationality Code',
-    de: 'Unbekannter Staatsangehörigkeitscode',
+    en: 'Unknown nationality code',
+    de: 'Unbekannter Ländercode',
 };
 
 const legacyCode = {
-    en: 'Legacy Nationality Code',
-    de: 'Veralteter Staatsangehörigkeitscode',
+    en: 'Legacy nationality code',
+    de: 'Veralteter Ländercode',
 };
 
 /**

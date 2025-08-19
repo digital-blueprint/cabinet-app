@@ -156,7 +156,7 @@
     "loading-message": "",
     "nationalities": "Citizenship(s)",
     "nationality-input": {
-        "invalid-code-format": "Invalid format. Must be 1-3 uppercase letters.",
+        "invalid-code-format": "Invalid format. Please enter 1-3 uppercase letters.",
         "no-matches-found": "No matches found",
         "placeholder": "Enter code or search for a country"
     },
