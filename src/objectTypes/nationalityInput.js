@@ -50,7 +50,7 @@ export class NationalityInput extends LangMixin(DbpBaseElement, createInstance, 
                 }
 
                 .unknown-country {
-                    color: var(--dbp-danger);
+                    color: var(--dbp-warning);
                     white-space: nowrap;
                 }
 
