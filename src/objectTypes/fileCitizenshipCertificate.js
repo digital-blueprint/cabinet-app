@@ -142,9 +142,7 @@ class CabinetViewElement extends BaseViewElement {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${i18n.t('doc-modal-nationality')}
-                .value=${html`
-                    ${getNationalityDisplayName(nationalityCode, this.lang)} (${nationalityCode})
-                `}></dbp-form-string-view>
+                .value=${`${getNationalityDisplayName(nationalityCode, this.lang)} (${nationalityCode})`}></dbp-form-string-view>
 
             <dbp-form-date-view
                 subscribe="lang"
