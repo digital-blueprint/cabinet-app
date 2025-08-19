@@ -685,22 +685,24 @@ class CabinetViewElement extends BaseViewElement {
             ...super.styles,
             // language=css
             css`
-                .modal-Gi-header-container {
+                .modal-Gi-header-container,
+                .modal-Si-header-container,
+                .modal-Ci-header-container {
                     display: flex;
                     align-items: center;
                     margin-bottom: 1rem;
                 }
 
-                .modal-Gi-header-svg {
+                :is(.modal-Gi-header-svg, .modal-Si-header-svg, .modal-Ci-header-svg) {
                     margin-right: 0.5rem;
+                    font-size: 1.4em;
                 }
 
-                .modal-Gi-header-svg svg {
-                    fill: var(--dbp-content);
-                }
-
-                .modal-Gi-header-title h4 {
+                :is(.modal-Gi-header-title, .modal-Si-header-title, .modal-Ci-header-title) h3 {
                     margin: 0;
+                    font-size: 1.17em;
+                    font-weight: 600;
+                    padding-top: 0.2em;
                 }
 
                 .info-container {
@@ -747,44 +749,6 @@ class CabinetViewElement extends BaseViewElement {
                     white-space: normal;
                     padding-left: 3em;
                     hyphens: auto;
-                }
-
-                .modal-Si-header-container {
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 1rem;
-                }
-
-                .modal-Si-header-svg {
-                    margin-right: 0.5rem;
-                }
-
-                .modal-Si-header-svg svg {
-                    fill: var(--dbp-content);
-                }
-
-                .modal-Si-header-title h4 {
-                    margin: 0;
-                }
-
-                .modal-Ci-header-container {
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 1rem;
-                }
-
-                .modal-Ci-header-svg {
-                    margin-right: 0.5rem;
-                }
-
-                .modal-Ci-header-svg svg {
-                    fill: var(--dbp-content);
-                }
-
-                .modal-Ci-header-title h3 {
-                    margin: 0;
-                    font-size: 1.17em;
-                    font-weight: bold;
                 }
 
                 .study-info {
@@ -858,9 +822,10 @@ class CabinetViewElement extends BaseViewElement {
                     text-align: start;
                 }
 
-                .header-button-container {
+                .header-container {
                     display: flex;
                     align-items: center;
+                    justify-content: space-between;
                     gap: 10px;
                     padding-bottom: 0.5em;
                     margin-bottom: 1.7em;
@@ -869,7 +834,22 @@ class CabinetViewElement extends BaseViewElement {
                     background-color: var(--dbp-background);
                 }
 
-                .edit-tu-button {
+                .last-sync-info {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .last-sync-title {
+                    font-weight: 600;
+                }
+
+                .button-container {
+                    justify-self: end;
+                }
+
+                .edit-tu-button,
+                .export-pdf-button,
+                .sync-tu-button {
                     overflow: hidden;
                     background-color: var(--dbp-background);
                     text-decoration: none;
@@ -983,18 +963,23 @@ class CabinetViewElement extends BaseViewElement {
             inline
             lang="${this.lang}"></dbp-notification>
 
-        <div class="header-button-container">
+        <div class="header-container">
         <div class="last-sync-info">
-        ${i18n.t('sync.status-label')}:&nbsp;${Intl.DateTimeFormat('de', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        }).format(new Date(hit.person.syncTimestamp * 1000))}
+        <p class="last-sync-title">${i18n.t('sync.status-label')}:&nbsp;</p><div>${Intl.DateTimeFormat(
+            'de',
+            {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+            },
+        ).format(new Date(hit.person.syncTimestamp * 1000))}
         </div>
-        <div class="sync-tu-button">
+        </div>
+        <div class="button-container">   
+        <button class="button is-secondary sync-tu-button">
             ${
                 this._syncing
                     ? html`
@@ -1005,21 +990,22 @@ class CabinetViewElement extends BaseViewElement {
                               <dbp-icon
                                   title="${i18n.t('sync.button-title')}"
                                   aria-label="${i18n.t('sync.button-title')}"
-                                  name="cloud-sync"></dbp-icon>
+                                  name="reload"></dbp-icon>
+                              ${i18n.t('sync.button-title')}
                           </a>
                       `
             }
-        </div>
-        <div class="edit-tu-button">
+        </button>
+        <button class="button is-secondary edit-tu-button">
             <a href="${hit.person.coUrl}" @click=${this._onEdit}>
                 <dbp-icon  title='${i18n.t('Edit-student-data')}'
                 aria-label='${i18n.t('Edit-student-data')}'
-                name='link'>
+                name='pencil'>
                 </dbp-icon>
                 ${i18n.t('Edit-student-data')}
             </a>
-        </div>
-        <div class="export-pdf-button">
+        </button>
+        <button class="button is-secondary export-pdf-button">
             <a href="#" @click="${() => {
                 exportPersonPdf(i18n, hit);
                 return false;
@@ -1029,16 +1015,15 @@ class CabinetViewElement extends BaseViewElement {
                 </dbp-icon>
                 ${i18n.t('export.button-label')}
             </a>
+        </button>
         </div>
         </div>
             <div class="modal-Gi-header-container">
                 <div class="modal-Gi-header-svg">
-                    <svg fill="#000000" width="32px" height="32px" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M225.26514,60.20508l-96-32a4.00487,4.00487,0,0,0-2.53028,0l-96,32c-.05713.019-.10815.04809-.16406.06958-.08545.033-.16821.06811-.251.10644a4.04126,4.04126,0,0,0-.415.22535c-.06714.04174-.13575.08007-.20044.12548a3.99,3.99,0,0,0-.47632.39307c-.02027.01953-.0437.0354-.06348.05542a3.97787,3.97787,0,0,0-.44556.53979c-.04077.0586-.07373.12183-.11132.18262a3.99741,3.99741,0,0,0-.23487.43262c-.03613.07837-.06811.15771-.09912.23852a3.96217,3.96217,0,0,0-.144.46412c-.01929.07714-.04126.15234-.05591.2312A3.98077,3.98077,0,0,0,28,64v80a4,4,0,0,0,8,0V69.55005l43.87524,14.625A59.981,59.981,0,0,0,104.272,175.09814a91.80574,91.80574,0,0,0-53.39062,38.71631,3.99985,3.99985,0,1,0,6.70117,4.36914,84.02266,84.02266,0,0,1,140.83447,0,3.99985,3.99985,0,1,0,6.70117-4.36914A91.80619,91.80619,0,0,0,151.728,175.09814a59.981,59.981,0,0,0,24.39673-90.92309l49.14038-16.38013a4.00037,4.00037,0,0,0,0-7.58984ZM180,120A52,52,0,1,1,87.92993,86.85986l38.80493,12.93506a4.00487,4.00487,0,0,0,2.53028,0l38.80493-12.93506A51.85133,51.85133,0,0,1,180,120ZM168.00659,78.44775l-.01294.0044L128,91.7832,44.64893,64,128,36.2168,211.35107,64Z"/>
-                    </svg>
+                    <dbp-icon name="graduation"></dbp-icon>
                 </div>
                 <div class="modal-Gi-header-title">
-                    <h4>${i18n.t('General-information')}</h4>
+                    <h3>${i18n.t('General-information')}</h3>
                 </div>
             </div>
             <hr/>
@@ -1087,19 +1072,10 @@ class CabinetViewElement extends BaseViewElement {
             <br />
             <div class="modal-Si-header-container">
                 <div class="modal-Si-header-svg">
-                    <svg width="32px" height="32px" version="1.1" id="Layer_2_1_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                    viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
-                        <g>
-                            <path d="M28.2,8.2H81c1.5,0,2.8-1.2,2.8-2.8S82.5,2.7,81,2.7H28.2c-6.1,0-11.1,4.5-11.8,10.4c-0.1,0.2-0.1,0.5-0.1,0.8v74.8
-                            c0,4.8,3.9,8.7,8.7,8.7h54.1c2,0,3.7-1.7,3.7-3.7V24.8c0-2-1.7-3.7-3.7-3.7H28.2c-3.5,0-6.5-3-6.5-6.5S24.7,8.2,28.2,8.2z
-                            M28.2,26.6h49.1v65.3H25c-1.8,0-3.2-1.4-3.2-3.2V24.7C23.6,25.9,25.8,26.6,28.2,26.6z"/>
-                            <path d="M62.7,80.6H37.3c-1.5,0-2.8,1.2-2.8,2.8s1.2,2.8,2.8,2.8h25.3c1.5,0,2.8-1.2,2.8-2.8S64.2,80.6,62.7,80.6z"/>
-                            <path d="M34.7,44.3h30.5c1.1,0,2-0.9,2-2v-6c0-1.1-0.9-2-2-2H34.7c-1.1,0-2,0.9-2,2v6C32.7,43.4,33.6,44.3,34.7,44.3z"/>
-                        </g>
-                    </svg>
+                    <dbp-icon name="book"></dbp-icon>
                 </div>
                 <div class="modal-Si-header-title">
-                    <h4>${i18n.t('Study-information')}</h4>
+                    <h3>${i18n.t('Study-information')}</h3>
                 </div>
             </div>
             <hr/>
@@ -1142,30 +1118,9 @@ class CabinetViewElement extends BaseViewElement {
             </br>
             <div class="modal-Ci-header-container">
                 <div class="modal-Ci-header-svg">
-                    <svg width="32px" height="32px" version="1.1" id="Layer_2_1_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                    viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
-                    <g>
-                    <path d="M13.7,42.9h13c2.9,0,4.6-1.1,5.5-2c1.9-1.9,2.1-4,2.1-5.5l0-7.9l0.5-0.2h0.5l0.4-0.2c0.1,0,0.3-0.1,0.5-0.2
-                    c0.4-0.1,0.8-0.2,1.1-0.3c0.1-0.1,0.3-0.1,0.4-0.1l0.5-0.1c5.5-1.3,11.7-1.5,18.9-0.7c3.4,0.2,5.9,0.8,8.5,1.9l0,7.6
-                    c0,4.7,2.9,7.6,7.6,7.6h13c0.8,0,3.1,0,5.4-2l0.1-0.1c1.5-1.5,2.2-3.4,2-5.4v-7.9c0-2.6-0.8-4.9-2.6-7.4l-0.3-0.3
-                    c-2.2-2.8-5.2-4.9-10.1-7.1c-6.7-3.2-14.3-5.1-23.9-6l-0.5,0c-2.3-0.1-4.4-0.2-6.4-0.2c-8.8,0-17.5,1.5-25.8,4.4l-1.6,0.7
-                    c-3.6,1.5-8.1,3.3-11.8,6.7l-0.8,0.8c-2.6,2.7-3.8,5.8-3.6,9.1v4.6H6.1v2.8C6.1,40,9,42.9,13.7,42.9z M13.8,22.7l0.6-0.6
-                    c3-2.8,6.8-4.3,10.1-5.6l1.5-0.6c7.7-2.7,15.7-4,23.9-4c1.9,0,4,0.1,6.1,0.2l0.4,0c8.9,0.9,15.9,2.7,22.1,5.6
-                    c4.2,1.9,6.5,3.5,8.2,5.7l0.2,0.2c1,1.5,1.5,2.6,1.5,4v8l0,0.4c0,0.2,0.1,0.5-0.4,0.9c-0.5,0.5-1,0.6-1.7,0.6h-13
-                    c-1.6,0-2.1-0.5-2.1-2.1v-8c0-2.7-1.6-3.9-2.9-4.5l-0.5-0.2h-0.2c-3.1-1.3-6.1-2-9.9-2.2c-7.8-0.8-14.5-0.5-20.7,0.9l-0.5,0.1
-                    c-0.3,0.1-0.6,0.2-0.9,0.3c-0.2,0.1-0.5,0.2-0.6,0.2l-0.4,0.1l-0.2,0.1c-0.1,0-0.1,0-0.2,0.1c-0.3,0-0.7,0.1-1.1,0.2h-0.5l-0.6,0.3
-                    c-0.4,0.2-1,0.5-1.6,1.2c-1,1-1.5,2.2-1.5,3.7v8.2c0,0.8-0.1,1.2-0.5,1.6c-0.1,0.1-0.5,0.4-1.6,0.4h-13c-1.2,0-1.8-0.3-2-1.1v-8.6
-                    l0-0.1C11.6,25.9,12.3,24.2,13.8,22.7z"/>
-                    <path d="M98.4,85.5L87,52.8l0-0.1c-0.9-2.4-3.3-4-5.8-4H19.2c-2.5,0-4.9,1.6-5.9,4.1L1.6,85.5l0,0c-0.7,1.9-0.4,4.1,0.8,5.7
-                    c1.2,1.6,3,2.6,5,2.6h85.2c2,0,3.9-1,5.1-2.6C98.8,89.5,99.1,87.4,98.4,85.5z M93.1,87.9c-0.1,0.1-0.3,0.3-0.6,0.3H7.4
-                    c-0.1,0-0.3,0-0.5-0.2c-0.1-0.1-0.2-0.3-0.1-0.7l11.7-32.5c0.1-0.3,0.4-0.5,0.7-0.5h61.9c0.3,0,0.6,0.2,0.7,0.5l11.4,32.6
-                    C93.3,87.6,93.2,87.8,93.1,87.9z"/>
-                    <path d="M50,60.1c-6.3,0-11.4,5.1-11.4,11.4c0,6.4,5,11.4,11.4,11.4c6.2,0,11.4-5.2,11.4-11.4C61.4,65.2,56.3,60.1,50,60.1z
-                    M50,77.5c-3.3,0-5.9-2.6-5.9-5.9c0-3.2,2.7-5.9,5.9-5.9c3.2,0,5.9,2.7,5.9,5.9C55.9,74.7,53.2,77.5,50,77.5z"/>
-                    </g>
-                    </svg>
+                    <dbp-icon name="phone"></dbp-icon>
                 </div>
-                <div class="modal-Ci-header-title"><h4>${i18n.t('Contact-information')}</h4></div>
+                <div class="modal-Ci-header-title"><h3>${i18n.t('Contact-information')}</h3></div>
             </div>
             <hr/>
             <ul class="Ci-flex-info">
