@@ -27,6 +27,18 @@ export class NationalityInput extends LangMixin(DbpBaseElement, createInstance, 
                     align-items: center;
                     gap: 10px;
                     position: relative;
+                    flex-wrap: wrap;
+                }
+
+                .input-container {
+                    position: relative;
+                    min-width: 10em;
+                    max-width: 20em;
+                    flex: 1;
+                }
+
+                .country-display {
+                    flex-shrink: 0;
                 }
 
                 :host([disabled]) input {
@@ -245,31 +257,36 @@ export class NationalityInput extends LangMixin(DbpBaseElement, createInstance, 
     renderInput() {
         return html`
             <div class="input-wrapper">
-                <input
-                    id="${this.formElementId}"
-                    type="text"
-                    placeholder="${this._i18nSub.t('nationality-input.placeholder')}"
-                    autocomplete="off"
-                    .value="${this.value}"
-                    ?disabled="${this.disabled}"
-                    aria-autocomplete="list"
-                    aria-expanded="${this._showResults}"
-                    role="combobox"
-                    @input="${this._handleInput}"
-                    @keydown="${this._handleKeydown}" />
+                <div class="input-container">
+                    <input
+                        id="${this.formElementId}"
+                        type="text"
+                        class="form-input"
+                        placeholder="${this._i18nSub.t('nationality-input.placeholder')}"
+                        autocomplete="off"
+                        .value="${this.value}"
+                        ?disabled="${this.disabled}"
+                        aria-autocomplete="list"
+                        aria-expanded="${this._showResults}"
+                        role="combobox"
+                        @input="${this._handleInput}"
+                        @keydown="${this._handleKeydown}" />
+                    ${this._showResults
+                        ? html`
+                              <div class="dropdown-results" role="listbox">
+                                  ${this._renderDropdownOptions()}
+                              </div>
+                          `
+                        : ''}
+                </div>
+
                 <span
-                    class="${this._isUnknown ? 'unknown-country' : 'selected-country'}"
+                    class="country-display ${this._isUnknown
+                        ? 'unknown-country'
+                        : 'selected-country'}"
                     aria-live="polite">
                     ${this._selectedCountry}
                 </span>
-
-                ${this._showResults
-                    ? html`
-                          <div class="dropdown-results" role="listbox">
-                              ${this._renderDropdownOptions()}
-                          </div>
-                      `
-                    : ''}
             </div>
         `;
     }
