@@ -8,10 +8,10 @@ export class CabinetApi {
 
     /**
      * Trigger a person sync
-     * @param {string} personId - The ID of the person to sync.
+     * @param {string} documentId - The ID of the typesense document.
      */
-    async triggerPersonSync(personId) {
-        const url = `${this._entryPointUrl}/cabinet/sync-person-actions?person_id=${encodeURIComponent(personId)}`;
+    async triggerPersonSync(documentId) {
+        const url = `${this._entryPointUrl}/cabinet/sync-person-actions?documentId=${encodeURIComponent(documentId)}`;
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -30,7 +30,6 @@ export class CabinetApi {
      * Synchronizes a person's data by triggering a sync operation and polling for updates.
      * @param {object} hit - The object containing person information.
      * @param {object} hit.person - The person object to be synchronized.
-     * @param {string} hit.person.identNrObfuscated - The obfuscated identifier of the person.
      * @param {number} hit.person.syncTimestamp - The current synchronization timestamp of the person.
      * @param {string} hit.id - The ID of the document associated with the person.
      * @throws {Error} Throws an error if synchronization fails after the maximum number of retries.
@@ -40,7 +39,7 @@ export class CabinetApi {
         let syncTimestamp = hit.person.syncTimestamp;
         let documentId = hit.id;
 
-        await this.triggerPersonSync(hit.person.identNrObfuscated);
+        await this.triggerPersonSync(documentId);
 
         let serverConfig = TypesenseService.getServerConfigForEntryPointUrl(
             this._entryPointUrl,
