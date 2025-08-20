@@ -195,7 +195,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                     margin-right: 2px;
                 }
 
-                @media (max-width: 540px) {
+                @media (max-width: 645px) {
                     #filter-modal .modal-footer {
                         grid-template-columns: 1fr 1fr;
                         grid-template-rows: auto auto;
