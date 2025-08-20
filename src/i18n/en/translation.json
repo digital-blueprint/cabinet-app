@@ -131,7 +131,8 @@
         "filter-configuration": "Filter configuration",
         "group-hide": "Hide all filters in group '{{name}}'",
         "group-show": "Show all filters in group '{{name}}'",
-        "save": "Save settings"
+        "save": "Save settings",
+        "configuration": "Configuration"
     },
     "focus-button-name": "Focus",
     "former-family-name": "Former family name",

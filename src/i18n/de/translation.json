@@ -131,7 +131,8 @@
         "filter-configuration": "Filterkonfiguration",
         "group-hide": "Alle Filter in Gruppe '{{name}}' verstecken",
         "group-show": "Alle Filter in Gruppe '{{name}}' anzeigen",
-        "save": "Speichern"
+        "save": "Speichern",
+        "configuration": "Konfiguration"
     },
     "focus-button-name": "Eingrenzen",
     "former-family-name": "Früherer Nachname",
