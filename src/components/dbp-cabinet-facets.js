@@ -267,8 +267,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     font-size: inherit;
                     font-weight: bolder;
                     font-family: inherit;
-                    transition:c
-                        0.15s,
+                    transition:
+                        c 0.15s,
                         color 0.15s;
                     background: var(--dbp-secondary-surface);
                     color: var(--dbp-on-secondary-surface);
@@ -502,17 +502,15 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </div>
                     <div class="filter-header__right-group">
                         <div class="filter-header__right">
-                               
                             <button
                                 class="button"
                                 title="${i18n.t('filter-settings.filter-configuration')}"
                                 aria-label="${i18n.t('filter-settings.filter-configuration')}"
                                 @click="${this.openFilterSettings}">
-                                
-                                    <dbp-icon class="dbp-button-icon" 
-                                              name="cog" 
-                                              aria-hidden="true"
-                                    ></dbp-icon>
+                                <dbp-icon
+                                    class="dbp-button-icon"
+                                    name="cog"
+                                    aria-hidden="true"></dbp-icon>
                                 ${i18n.t('filter-settings.configuration')}
                             </button>
                         </div>

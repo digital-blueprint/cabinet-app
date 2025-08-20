@@ -126,13 +126,13 @@
         "abort": "Cancel",
         "all-filters-hide": "Hide all",
         "all-filters-show": "Show all",
+        "configuration": "Configuration",
         "facet-hide": "Hide filter '{{name}}'",
         "facet-show": "Show filter '{{name}}'",
         "filter-configuration": "Filter configuration",
         "group-hide": "Hide all filters in group '{{name}}'",
         "group-show": "Show all filters in group '{{name}}'",
-        "save": "Save settings",
-        "configuration": "Configuration"
+        "save": "Save settings"
     },
     "focus-button-name": "Focus",
     "former-family-name": "Former family name",

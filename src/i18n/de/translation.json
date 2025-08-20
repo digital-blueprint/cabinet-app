@@ -126,13 +126,13 @@
         "abort": "Abbrechen",
         "all-filters-hide": "Alle verstecken",
         "all-filters-show": "Alle anzeigen",
+        "configuration": "Konfiguration",
         "facet-hide": "Filter '{{name}}' verstecken",
         "facet-show": "Filter '{{name}}' anzeigen",
         "filter-configuration": "Filterkonfiguration",
         "group-hide": "Alle Filter in Gruppe '{{name}}' verstecken",
         "group-show": "Alle Filter in Gruppe '{{name}}' anzeigen",
-        "save": "Speichern",
-        "configuration": "Konfiguration"
+        "save": "Speichern"
     },
     "focus-button-name": "Eingrenzen",
     "former-family-name": "Früherer Nachname",
