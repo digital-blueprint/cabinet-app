@@ -39,7 +39,7 @@ export class BaseDocumentHitElement extends BaseHitElement {
                 <header class="ais-doc-Hits-header">
                     <div class="ais-doc-title-wrapper">
                         <dbp-icon class="icon-container" name="files" aria-hidden="true"></dbp-icon>
-                        <h2 class="ais-doc-title ${hit.base.isSuperseded ? 'superseded' : ''}">
+                        <h2 class="ais-doc-title ${!hit.base.isCurrent ? 'superseded' : ''}">
                             ${renderFieldWithHighlightOrTranslated(
                                 this._i18n,
                                 'typesense-schema.file.base.additionalType.key.',

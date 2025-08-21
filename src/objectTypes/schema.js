@@ -612,7 +612,7 @@ class Base {
      * Indicates whether the object has been superseded by another.
      * @type {boolean}
      */
-    isSuperseded;
+    isCurrent;
 }
 
 class AdmissionNotice {
