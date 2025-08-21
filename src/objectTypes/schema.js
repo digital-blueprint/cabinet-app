@@ -607,6 +607,12 @@ class Base {
      * @type {boolean}
      */
     isScheduledForDeletion;
+
+    /**
+     * Indicates whether the object has been superseded by another.
+     * @type {boolean}
+     */
+    isSuperseded;
 }
 
 class AdmissionNotice {
