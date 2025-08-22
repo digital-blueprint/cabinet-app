@@ -738,9 +738,11 @@ class CabinetViewElement extends BaseViewElement {
                     white-space: normal;
                     text-decoration: none;
                 }
+
                 .info-row abbr {
                     text-decoration: none;
                 }
+
                 .info-row span {
                     flex: 1;
                     text-align: left;
@@ -844,6 +846,8 @@ class CabinetViewElement extends BaseViewElement {
                 }
 
                 .button-container {
+                    display: flex;
+                    gap: 10px;
                     justify-self: end;
                 }
 
@@ -858,7 +862,7 @@ class CabinetViewElement extends BaseViewElement {
                 .links {
                     border-bottom-style: solid;
                     border-color: var(--dbp-content);
-                    padding: 0px;
+                    padding: 0;
                     transition:
                         background-color 0.15s,
                         color 0.15s;
@@ -867,6 +871,16 @@ class CabinetViewElement extends BaseViewElement {
                     text-decoration: none;
                     border-bottom: var(--dbp-border);
                 }
+
+                @media (max-width: 1280px) {
+                    .header-container {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        justify-content: center;
+                        gap: 10px;
+                    }
+                }
+
                 @media (max-width: 768px) {
                     .info-container {
                         flex-direction: column;
@@ -875,13 +889,9 @@ class CabinetViewElement extends BaseViewElement {
                     .info-row {
                         flex-direction: column;
                     }
+
                     .info-row span {
                         padding-left: 0;
-                    }
-
-                    .header-button-container {
-                        align-items: flex-start;
-                        flex-direction: column;
                     }
 
                     .study-key-group {
@@ -899,6 +909,15 @@ class CabinetViewElement extends BaseViewElement {
                     .address-info {
                         display: inline;
                     }
+
+                    .button-container {
+                        display: grid;
+                        grid-template-columns: auto auto;
+                    }
+
+                    .button-container button:first-child {
+                        grid-column: 1 / -1;
+                    }
                 }
 
                 @media (min-width: 769px) and (max-width: 1099px) {
@@ -908,6 +927,31 @@ class CabinetViewElement extends BaseViewElement {
 
                     .Ci-item span {
                         padding-left: 0.5em;
+                    }
+
+                    .button-container {
+                        display: grid;
+                        grid-template-columns: auto auto auto;
+                    }
+                }
+
+                @media (min-width: 491px) and (max-width: 520px) {
+                    .button-container {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 10px;
+                    }
+
+                    .button-container button a {
+                        align-items: normal;
+                        white-space: normal;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .button-container {
+                        display: grid;
+                        grid-template-columns: auto;
                     }
                 }
             `,
