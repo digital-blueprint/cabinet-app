@@ -880,8 +880,26 @@ class CabinetViewElement extends BaseViewElement {
                         gap: 10px;
                     }
                 }
+                @media (min-width: 951px) and (max-width: 1280px) {
+                    .info-container {
+                        flex-direction: column;
+                    }
 
-                @media (max-width: 768px) {
+                    .Ci-item span {
+                        padding-left: 0.5em;
+                    }
+
+                    .button-container {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        width: 100%;
+                    }
+
+                    .button-container .button {
+                        grid-row: 1 / -1;
+                    }
+                }
+                @media (max-width: 950px) {
                     .info-container {
                         flex-direction: column;
                     }
@@ -911,47 +929,18 @@ class CabinetViewElement extends BaseViewElement {
                     }
 
                     .button-container {
-                        display: grid;
-                        grid-template-columns: auto auto;
-                    }
-
-                    .button-container button:first-child {
-                        grid-column: 1 / -1;
-                    }
-                }
-
-                @media (min-width: 769px) and (max-width: 1099px) {
-                    .info-container {
                         flex-direction: column;
                     }
 
-                    .Ci-item span {
-                        padding-left: 0.5em;
-                    }
-
-                    .button-container {
+                    .button-container .button {
                         display: grid;
-                        grid-template-columns: auto auto auto;
-                    }
-                }
-
-                @media (min-width: 491px) and (max-width: 520px) {
-                    .button-container {
-                        display: grid;
-                        grid-template-columns: 1fr 1fr;
-                        gap: 10px;
+                        grid-template-columns: 1fr minmax(auto, 1180px) 1fr;
+                        grid-template-rows: auto;
+                        white-space: nowrap;
                     }
 
                     .button-container button a {
-                        align-items: normal;
-                        white-space: normal;
-                    }
-                }
-
-                @media (max-width: 480px) {
-                    .button-container {
-                        display: grid;
-                        grid-template-columns: auto;
+                        grid-column: 1 / -1;
                     }
                 }
             `,
