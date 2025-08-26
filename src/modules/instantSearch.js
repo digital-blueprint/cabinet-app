@@ -61,6 +61,7 @@ export default class InstantSearchModule {
         return [
             {'filter-group': {id: 'category', name: t('cabinet-search.type-filter-group-title')}},
             {
+                id: '@type',
                 groupId: 'category',
                 schemaField: '@type',
                 schemaFieldType: 'checkbox',
@@ -77,6 +78,7 @@ export default class InstantSearchModule {
             // Person properties
             {'filter-group': {id: 'person', name: t('cabinet-search.person-filter-group-title')}},
             {
+                id: 'person.person',
                 groupId: 'person',
                 schemaField: 'person.person',
                 schemaFieldType: 'checkbox',
@@ -90,6 +92,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.birthDateTimestamp',
                 groupId: 'person',
                 schemaField: 'person.birthDateTimestamp',
                 name: t('cabinet-search.filter-person-birth-date-timestamp-title'),
@@ -102,6 +105,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.personalStatus',
                 groupId: 'person',
                 schemaField: 'person.personalStatus.text',
                 schemaFieldType: 'checkbox',
@@ -114,6 +118,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.studentStatus',
                 groupId: 'person',
                 schemaField: 'person.studentStatus.text',
                 schemaFieldType: 'checkbox',
@@ -126,6 +131,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.exmatriculationStatus',
                 groupId: 'person',
                 schemaField: 'person.exmatriculationStatus.text',
                 schemaFieldType: 'checkbox',
@@ -138,6 +144,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.admissionQualificationType',
                 groupId: 'person',
                 schemaField: 'person.admissionQualificationType.text',
                 schemaFieldType: 'checkbox',
@@ -150,6 +157,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.nationalities',
                 groupId: 'person',
                 schemaField: 'person.nationalities.text',
                 schemaFieldType: 'checkbox',
@@ -162,6 +170,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.gender',
                 groupId: 'person',
                 schemaField: 'person.gender.text',
                 schemaFieldType: 'checkbox',
@@ -173,6 +182,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.immatriculationSemester',
                 groupId: 'person',
                 schemaField: 'person.immatriculationSemester',
                 schemaFieldType: 'checkbox',
@@ -185,6 +195,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.exmatriculationSemester',
                 groupId: 'person',
                 schemaField: 'person.exmatriculationSemester',
                 schemaFieldType: 'checkbox',
@@ -197,6 +208,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.homeAddress.country',
                 groupId: 'person',
                 schemaField: 'person.homeAddress.country.text',
                 schemaFieldType: 'checkbox',
@@ -209,6 +221,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.homeAddress.region',
                 groupId: 'person',
                 schemaField: 'person.homeAddress.region',
                 schemaFieldType: 'checkbox',
@@ -221,6 +234,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.homeAddress.place',
                 groupId: 'person',
                 schemaField: 'person.homeAddress.place',
                 schemaFieldType: 'checkbox',
@@ -233,6 +247,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.studyAddress.country',
                 groupId: 'person',
                 schemaField: 'person.studyAddress.country.text',
                 schemaFieldType: 'checkbox',
@@ -245,6 +260,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.studyAddress.region',
                 groupId: 'person',
                 schemaField: 'person.studyAddress.region',
                 schemaFieldType: 'checkbox',
@@ -257,6 +273,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.studyAddress.place',
                 groupId: 'person',
                 schemaField: 'person.studyAddress.place',
                 schemaFieldType: 'checkbox',
@@ -269,6 +286,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.study.name',
                 groupId: 'person',
                 schemaField: 'study.name',
                 schemaFieldType: 'checkbox',
@@ -281,6 +299,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.study.type',
                 groupId: 'person',
                 schemaField: 'study.type',
                 schemaFieldType: 'checkbox',
@@ -293,6 +312,7 @@ export default class InstantSearchModule {
                 },
             },
             {
+                id: 'person.study.status',
                 groupId: 'person',
                 schemaField: 'study.status.text',
                 schemaFieldType: 'checkbox',
@@ -307,6 +327,7 @@ export default class InstantSearchModule {
             // Document properties
             {'filter-group': {id: 'file', name: t('cabinet-search.document-filter-group-title')}},
             {
+                id: 'file.base.additionalType',
                 groupId: 'file',
                 schemaField: 'file.base.additionalType.key',
                 schemaFieldType: 'checkbox',
@@ -315,6 +336,7 @@ export default class InstantSearchModule {
                 facetOptions: {facet: {searchable: false}},
             },
             {
+                id: 'file.base.createdTimestamp',
                 groupId: 'file',
                 schemaField: 'file.base.createdTimestamp',
                 schemaFieldType: 'datepicker',
@@ -322,6 +344,7 @@ export default class InstantSearchModule {
                 renderFunction: datePickerLocalRenderFunction,
             },
             {
+                id: 'file.base.recommendedDeletionTimestamp',
                 groupId: 'file',
                 schemaField: 'file.base.recommendedDeletionTimestamp',
                 schemaFieldType: 'datepicker',
@@ -329,6 +352,7 @@ export default class InstantSearchModule {
                 renderFunction: datePickerLocalRenderFunction,
             },
             {
+                id: 'file.base.fileSource',
                 groupId: 'file',
                 schemaField: 'file.base.fileSource',
                 schemaFieldType: 'checkbox',
@@ -337,6 +361,7 @@ export default class InstantSearchModule {
                 facetOptions: {facet: {searchable: false}},
             },
             {
+                id: 'file.base.studyFieldName',
                 groupId: 'file',
                 schemaField: 'file.base.studyFieldName',
                 schemaFieldType: 'checkbox',
@@ -344,6 +369,7 @@ export default class InstantSearchModule {
                 facetOptions: {facet: {searchable: false}},
             },
             {
+                id: 'file.base.semester',
                 groupId: 'file',
                 schemaField: 'file.base.semester',
                 schemaFieldType: 'checkbox',
@@ -351,6 +377,7 @@ export default class InstantSearchModule {
                 facetOptions: {facet: {searchable: false}},
             },
             {
+                id: 'file.base.isPartOf',
                 groupId: 'file',
                 schemaField: 'file.base.isPartOf',
                 schemaFieldType: 'checkbox',
@@ -359,6 +386,7 @@ export default class InstantSearchModule {
                 facetOptions: {facet: {searchable: false}},
             },
             {
+                id: 'file.file-cabinet-admissionNotice.decision',
                 groupId: 'file',
                 schemaField: 'file.file-cabinet-admissionNotice.decision',
                 schemaFieldType: 'checkbox',
@@ -367,6 +395,7 @@ export default class InstantSearchModule {
                 facetOptions: {facet: {searchable: false}},
             },
             {
+                id: 'file.shared.nationalityText',
                 groupId: 'file',
                 schemaField: 'file.shared.nationalityText',
                 schemaFieldType: 'checkbox',

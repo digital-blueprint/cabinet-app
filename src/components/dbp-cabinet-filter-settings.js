@@ -44,7 +44,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         this.facetConfigs = (facetConfigs || []).filter(
             (item) =>
                 (item.groupId === 'person' || item.groupId === 'file' || item['filter-group']) &&
-                item.schemaField !== 'person.person' &&
+                item.id !== 'person.person' &&
                 item['filter-group']?.id !== 'category',
         );
 
@@ -341,7 +341,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
         if (item['filter-group']) {
             return html`
-                <li class="facet-fields ${item.schemaField}" data-index="${key}">
+                <li class="facet-fields ${item.id}" data-index="${key}">
                     <div class="category-field">
                         <h3>${i18n.t(item['filter-group'].name)}</h3>
                         ${this.renderFacetGroupVisibilityIconButton(item)}
@@ -351,7 +351,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         } else {
             this.facetNumber++;
             return html`
-                <li class="facet-fields ${item.schemaField}" data-index="${key}">
+                <li class="facet-fields ${item.id}" data-index="${key}">
                     <div class="facet-field">
                         <span class="facet-button facet-order">${this.facetNumber}</span>
                         <span class="facet-title"><strong>${i18n.t(item.name)}</strong></span>
@@ -381,7 +381,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
     }
 
     renderFacetVisibilityIconButton(item) {
-        const visible = this.facetVisibilityStates[item.schemaField] === true;
+        const visible = this.facetVisibilityStates[item.id] === true;
         const name = this._i18n.t(item.name);
 
         // We need to define "filter-settings.facet-hide" and "filter-settings.facet-show" separately,
@@ -408,11 +408,11 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
         // Change the visibility of the facet
         // Currently we only support toggling the visibility
-        this.facetVisibilityStates[item.schemaField] = visible;
+        this.facetVisibilityStates[item.id] = visible;
 
         // Let's delete the facet visibility state if the facet is not visible anymore
         if (!visible) {
-            delete this.facetVisibilityStates[item.schemaField];
+            delete this.facetVisibilityStates[item.id];
         }
 
         console.log('changeFacetVisibility this.facetVisibilityStates', this.facetVisibilityStates);
@@ -494,7 +494,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
     showAllFacets() {
         // Show all facets by setting the visibility state to true for all facets in this.facetVisibilityStates
         this.facetVisibilityStates = this.facetConfigs.reduce((acc, item) => {
-            acc[item.schemaField] = true;
+            acc[item.id] = true;
             return acc;
         }, {});
     }
@@ -533,7 +533,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         // Find all facets in this.facetVisibilityStates that have the correct groupId and change their visibility
         this.facetConfigs.forEach((facetItem) => {
             if (facetItem.groupId === groupId) {
-                this.facetVisibilityStates[facetItem.schemaField] = visible;
+                this.facetVisibilityStates[facetItem.id] = visible;
             }
         });
 

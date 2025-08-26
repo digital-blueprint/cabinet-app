@@ -78,12 +78,12 @@ export default class DBPCabinetLitElement extends LangMixin(
         return true;
     }
 
-    getVisibleFacetNames() {
+    getVisibleFacetIds() {
         // Return the names of the facets that are visible
-        return this.getVisibleFacetNamesFromFacetStates(this.facetVisibilityStates);
+        return this.getVisibleFacetIdsFromFacetStates(this.facetVisibilityStates);
     }
 
-    getVisibleFacetNamesFromFacetStates(facetStates) {
+    getVisibleFacetIdsFromFacetStates(facetStates) {
         if (!facetStates || typeof facetStates !== 'object') {
             return [];
         }

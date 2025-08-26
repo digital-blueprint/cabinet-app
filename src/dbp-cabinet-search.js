@@ -814,12 +814,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         const ref = this.cabinetFacetsRef.value;
 
         // Filter out facets we want to hide
-        const visibleFacetNames = this.getVisibleFacetNames();
-        visibleFacetNames.push('person.person'); // Always show the person facet, so we can focus
-        let visibleFacetsConfigs = this.getVisibleFacetsConfig(
-            this.facetConfigs,
-            visibleFacetNames,
-        );
+        const visibleFacetIds = this.getVisibleFacetIds();
+        visibleFacetIds.push('person.person'); // Always show the person facet, so we can focus
+        let visibleFacetsConfigs = this.getVisibleFacetsConfig(this.facetConfigs, visibleFacetIds);
 
         return await ref.createFacetsFromConfig(visibleFacetsConfigs);
     }
@@ -828,10 +825,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Returns filtered facets config where only items with schemaField in visibleFacetNames
      * or items with 'filter-group' key are included.
      * @param {Array} facetConfigs
-     * @param {Array<string>} visibleFacetNames
+     * @param {Array<string>} visibleFacetIds
      * @returns {Array}
      */
-    getVisibleFacetsConfig(facetConfigs, visibleFacetNames) {
+    getVisibleFacetsConfig(facetConfigs, visibleFacetIds) {
         return facetConfigs.filter(
             (item) =>
                 // For now we are showing all filter group headlines
@@ -840,7 +837,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 // Always show the category group Person / Document
                 item.groupId === 'category' ||
                 // Show facets with schemaField that are in the visibleFacetNames
-                (item.schemaField && visibleFacetNames.includes(item.schemaField)),
+                (item.id && visibleFacetIds.includes(item.id)),
         );
     }
 
