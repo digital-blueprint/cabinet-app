@@ -43,46 +43,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     /**
-     * Transforms a string with dots and camelCase to kebab-case with hyphens
-     * @param {string} input - The input string to transform (e.g., "file.base.createdTimestamp")
-     * @returns {string} - The transformed string (e.g., "file-base-created-timestamp")
-     */
-    transformToDashCase(input) {
-        // First, replace all dots with hyphens
-        let result = input.replace(/\./g, '-');
-
-        // Then, convert camelCase to kebab-case
-        // Look for any uppercase letter that has a lowercase letter before it
-        result = result.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-
-        return result;
-    }
-
-    /**
-     * Gathers the facet names to use in TypesenseInstantsearchAdapter._adaptAndPerformTypesenseRequest
-     * @param facetsConfigs
-     * @param originalFacetNames
-     * @returns {*[]}
-     */
-    gatherActivatedWidgetsFacetNames(facetsConfigs, originalFacetNames) {
-        // XXX: removed since panels got reworked, this needs to be re-implemented if needed
-        return [];
-    }
-
-    getSchemaFieldHash(facetsConfigs) {
-        let resultHash = {};
-
-        facetsConfigs.forEach((facetConfig) => {
-            const id = this.transformToDashCase(facetConfig.schemaField || '');
-            if (id) {
-                resultHash[id] = facetConfig.schemaField;
-            }
-        });
-
-        return resultHash;
-    }
-
-    /**
      * Creates a facet widget based on a configuration
      * @param facetsConfigs {array} - configuration for the facets
      */

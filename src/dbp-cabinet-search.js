@@ -966,21 +966,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.setFacetVisibilityStates(e.detail || {});
     }
 
-    filterFacetConfigsBySchemaFields(schemaFields) {
-        return this.facetConfigs.filter((item) => schemaFields.includes(item.schemaField));
-    }
-
-    filterFacetWidgetsBySchemaFields(schemaFields) {
-        /** @type {CabinetFacets} */
-        const ref = this.cabinetFacetsRef.value;
-        const facetWidgetHash = ref.getFacetWidgetHash();
-
-        // Return all facet widgets where the key (schemaField) is in schemaFields
-        return schemaFields
-            .map((field) => facetWidgetHash[field])
-            .filter((widget) => widget !== undefined);
-    }
-
     async ensureModules() {
         if (!this._loadModulesPromise) {
             this._loadModulesPromise = this._performLoadModules();
