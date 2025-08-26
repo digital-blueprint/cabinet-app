@@ -839,6 +839,7 @@ class CabinetViewElement extends BaseViewElement {
                 .last-sync-info {
                     display: flex;
                     align-items: center;
+                    flex-wrap: wrap;
                 }
 
                 .last-sync-title {
@@ -847,6 +848,7 @@ class CabinetViewElement extends BaseViewElement {
 
                 .button-container {
                     display: flex;
+                    margin-right: 0.5em;
                     gap: 10px;
                     justify-self: end;
                 }
@@ -998,7 +1000,7 @@ class CabinetViewElement extends BaseViewElement {
 
         <div class="header-container">
         <div class="last-sync-info">
-        <p class="last-sync-title">${i18n.t('sync.status-label')}:&nbsp;</p><div>${Intl.DateTimeFormat(
+        <p class="last-sync-title">${i18n.t('sync.status-label')}:&nbsp;</p><div class="person-sync-date">${Intl.DateTimeFormat(
             'de',
             {
                 day: '2-digit',
