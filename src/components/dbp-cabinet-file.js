@@ -1130,7 +1130,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             <button
                                     class="button ${classMap({
                                         hidden: this.mode !== CabinetFile.Modes.EDIT,
-                                    })}"
+                                    })}" aria-label="${i18n.t('buttons.replace-document')}"
                                     @click="${this.openReplacePdfDialog}"
                                     ?disabled="${!id}">
                                 ${i18n.t('buttons.replace-document')} ${this.getMiniSpinnerHtml(id)}

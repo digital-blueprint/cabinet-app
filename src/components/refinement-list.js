@@ -186,7 +186,7 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
                     null,
                 );
                 return html`
-                    <span class="refinement-text" title="${value}">${value}</span>
+                    <span class="refinement-text">${value}</span>
                 `;
             } else {
                 return html`

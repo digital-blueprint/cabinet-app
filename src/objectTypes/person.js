@@ -1035,7 +1035,7 @@ class CabinetViewElement extends BaseViewElement {
         </div>
         </div>
         <div class="button-container">   
-        <button class="button is-secondary sync-tu-button">
+        <button class="button is-secondary sync-tu-button" aria-label="${i18n.t('sync.button-title')}">
             ${
                 this._syncing
                     ? html`
@@ -1045,29 +1045,29 @@ class CabinetViewElement extends BaseViewElement {
                           <a href="#" @click=${this._onSync}>
                               <dbp-icon
                                   title="${i18n.t('sync.button-title')}"
-                                  aria-label="${i18n.t('sync.button-title')}"
+                                  aria-hidden="true"
                                   name="reload"></dbp-icon>
                               ${i18n.t('sync.button-title')}
                           </a>
                       `
             }
         </button>
-        <button class="button is-secondary edit-tu-button">
+        <button class="button is-secondary edit-tu-button" aria-label='${i18n.t('Edit-student-data')}'>
             <a href="${hit.person.coUrl}" @click=${this._onEdit}>
                 <dbp-icon  title='${i18n.t('Edit-student-data')}'
-                aria-label='${i18n.t('Edit-student-data')}'
+                aria-hidden="true"
                 name='pencil'>
                 </dbp-icon>
                 ${i18n.t('Edit-student-data')}
             </a>
         </button>
-        <button class="button is-secondary export-pdf-button">
+        <button class="button is-secondary export-pdf-button" aria-label="${i18n.t('export.button-label')}">
             <a href="#" @click="${() => {
                 exportPersonPdf(i18n, hit);
                 return false;
             }}">
                 <dbp-icon title='${i18n.t('export.button-label')}'
-                name='download'>
+                name='download' aria-hidden="true">
                 </dbp-icon>
                 ${i18n.t('export.button-label')}
             </a>

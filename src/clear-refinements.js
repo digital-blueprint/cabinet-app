@@ -78,6 +78,7 @@ class ClearRefinements extends LangMixin(DBPLitElement, createInstance) {
             <div class="clear-refinement-container">
                 <button
                     class="clear-refinements-button"
+                    aria-label="${this._i18n.t('cabinet-search.refinement-delete-all-filters')}"
                     @click=${() => {
                         refine();
                     }}
