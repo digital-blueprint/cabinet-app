@@ -1,6 +1,6 @@
 import {css, html} from 'lit';
 import {BaseHitElement, getCommonStyles} from '../baseObject.js';
-import {renderFieldWithHighlight, renderFieldWithHighlightOrTranslated} from '../utils.js';
+import {renderFieldWithHighlight} from '../utils.js';
 import {getDocumentHit} from './schema.js';
 
 export class BaseDocumentHitElement extends BaseHitElement {
@@ -40,12 +40,11 @@ export class BaseDocumentHitElement extends BaseHitElement {
                     <div class="ais-doc-title-wrapper">
                         <dbp-icon class="icon-container" name="files" aria-hidden="true"></dbp-icon>
                         <h2 class="ais-doc-title ${!hit.base.isCurrent ? 'superseded' : ''}">
-                            ${renderFieldWithHighlightOrTranslated(
-                                this._i18n,
-                                'typesense-schema.file.base.additionalType.key.',
+                            ${renderFieldWithHighlight(
                                 hit,
-                                'file.base.additionalType.key',
-                                'file.base.additionalType.text',
+                                this.lang === 'de'
+                                    ? 'file.base.additionalType.text'
+                                    : 'file.base.additionalType.textEn',
                             )}
                         </h2>
                     </div>

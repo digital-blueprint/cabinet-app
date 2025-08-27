@@ -65,8 +65,10 @@ export const DEFAULT_FILE_COMMON = {
             groupId: null,
             comment: null,
             isPartOf: [],
-            studyField: '',
-            studyFieldName: '',
+            studyField: {
+                key: '',
+                text: '',
+            },
             subjectOf: null,
             semester: getDefaultSemester(),
         },

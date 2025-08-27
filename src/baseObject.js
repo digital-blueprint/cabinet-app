@@ -150,7 +150,15 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         // This prevents values from being overwritten with old or undefined values when re-rendering,
         // even if something was already set in the form
         const updateField = (field) => (e) => {
-            fileCommon[field] = e.detail?.value ?? e.target?.value;
+            const value = e.detail?.value ?? e.target?.value;
+            const keys = field.split('.');
+            const lastKey = keys.pop();
+
+            let current = fileCommon;
+            for (const key of keys) {
+                current = current[key];
+            }
+            current[lastKey] = value;
         };
 
         return html`
@@ -169,9 +177,9 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 name="studyField"
                 label=${this._i18n.t('doc-modal-study-field')}
                 .items=${this.getStudyFields()}
-                .value=${fileCommon.studyField}
+                .value=${fileCommon.studyField.key}
                 required
-                @change=${updateField('studyField')}></dbp-form-enum-element>
+                @change=${updateField('studyField.key')}></dbp-form-enum-element>
 
             <dbp-form-enum-element
                 subscribe="lang"
@@ -519,7 +527,9 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-study-field')}
-                .value=${this.getStudyFieldNameForKey(baseData.studyField)}></dbp-form-string-view>
+                .value=${this.getStudyFieldNameForKey(
+                    baseData.studyField.key,
+                )}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"

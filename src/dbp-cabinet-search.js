@@ -180,6 +180,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 case 'routingUrl':
                     this.handleRoutingUrlChange();
                     break;
+                case 'lang':
                 case 'facetVisibilityStates':
                     this.updateFacetVisibility();
                     break;
@@ -623,13 +624,29 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     /**
      * Get the search parameters for the Typesense Instantsearch adapter depending on the fuzzy search setting
+     * @param lang
      */
-    getSearchParameters() {
+    getSearchParameters(lang) {
+        let sortBy;
+        if (lang === 'de') {
+            sortBy = 'sortKey:asc,sortKey2:asc,sortKey3:desc';
+        } else {
+            sortBy = 'sortKey:asc,sortKey2En:asc,sortKey3:desc';
+        }
+
+        let queryBy;
+        if (lang === 'de') {
+            queryBy =
+                'person.familyName,person.givenName,file.base.additionalType.text,person.stPersonNr,person.studId,person.birthDateDe,file.base.subjectOf';
+        } else {
+            queryBy =
+                'person.familyName,person.givenName,file.base.additionalType.textEn,person.stPersonNr,person.studId,person.birthDateDe,file.base.subjectOf';
+        }
+
         // https://typesense.org/docs/0.25.1/api/search.html#ranking-and-sorting-parameters
         let searchParameters = {
-            query_by:
-                'person.familyName,person.givenName,file.base.additionalType.text,person.stPersonNr,person.studId,person.birthDateDe,file.base.subjectOf',
-            sort_by: 'sortKey:asc',
+            query_by: queryBy,
+            sort_by: sortBy,
             // Show not-deleted documents / Show only deleted documents
             // filter_by: "base.isScheduledForDeletion:" + (this.showScheduledForDeletion ? "true" : "false"),
             // filter_by: "file.base.deleteAtTimestamp:>0",
@@ -659,7 +676,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             .map((facetConfig) => facetConfig.schemaField);
         return {
             server: serverConfig,
-            additionalSearchParameters: this.getSearchParameters(),
+            additionalSearchParameters: this.getSearchParameters(this.lang),
             // study.status.text can contain ":" for example
             facetableFieldsWithSpecialCharacters: facetFields,
         };
@@ -681,6 +698,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Create the Instantsearch instance
      */
     createInstantsearch() {
+        this.facetConfigs = this.instantSearchModule.getFacetsConfig(this.lang);
+
         const typesenseInstantsearchAdapter = new DbpTypesenseInstantSearchAdapter(
             this.getTypesenseInstantsearchAdapterConfig(),
         );
@@ -1030,7 +1049,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             const instantSearchModule = await import(data['instantSearch']);
             this.instantSearchModule = new instantSearchModule.default();
-            this.facetConfigs = this.instantSearchModule.getFacetsConfig();
 
             await this.updateComplete;
             /**

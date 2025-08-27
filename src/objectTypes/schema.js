@@ -1,4 +1,4 @@
-class KeyedText {
+class Translated {
     /**
      * The unique key of the value
      * @type {string}
@@ -6,10 +6,16 @@ class KeyedText {
     key;
 
     /**
-     * The display text of the value
+     * The display text of the value in German
      * @type {string}
      */
     text;
+
+    /**
+     * The display text of the value in English
+     * @type {string}
+     */
+    textEn;
 }
 
 class Address {
@@ -45,7 +51,7 @@ class Address {
 
     /**
      * Example: key="168", text="Österreich"
-     * @type {KeyedText}
+     * @type {Translated}
      */
     country;
 
@@ -92,7 +98,7 @@ class Study {
 
     /**
      * Example: key="EZ", text="auf Antrag"
-     * @type {?KeyedText}
+     * @type {?Translated}
      */
     exmatriculationType;
 
@@ -128,13 +134,13 @@ class Study {
 
     /**
      * Example: key="168", text="Österreich"
-     * @type {?KeyedText}
+     * @type {?Translated}
      */
     qualificationState;
 
     /**
      * Example: key="41", text="Master-/Diplomst.eigene Univ."
-     * @type {?KeyedText}
+     * @type {?Translated}
      */
     qualificationType;
 
@@ -146,7 +152,7 @@ class Study {
 
     /**
      * Examples: key="I", text="geschlossen (Antrag oder ex lege)"
-     * @type {KeyedText}
+     * @type {Translated}
      */
     status;
 
@@ -158,7 +164,7 @@ class Study {
 
     /**
      * Example: key="ZBU", text="Zus.Prfg. - Biologie und Umweltkunde"
-     * @type {KeyedText[]}
+     * @type {Translated[]}
      */
     additionalCertificates;
 }
@@ -208,13 +214,13 @@ class Application {
 
     /**
      * Example: key="40", text="Bosnien und Herzegowina"
-     * @type {?KeyedText}
+     * @type {?Translated}
      */
     qualificationIssuingCountry;
 
     /**
      * Example: key="25", text="ausländische Reifeprüfung"
-     * @type {?KeyedText}
+     * @type {?Translated}
      */
     qualificationType;
 }
@@ -279,25 +285,25 @@ class Person {
 
     /**
      * Example: key="168", text="Österreich"
-     * @type {KeyedText}
+     * @type {Translated}
      */
     nationality;
 
     /**
      * Example: key="168", text="Österreich"
-     * @type {?KeyedText}
+     * @type {?Translated}
      */
     nationalitySecondary;
 
     /**
      * A list containing both person.nationality and person.nationalitySecondary, if available
-     * @type {KeyedText[]}
+     * @type {Translated[]}
      */
     nationalities;
 
     /**
      * Example: key="38", text="Bachelorstud. and. inl. Univ."
-     * @type {KeyedText}
+     * @type {Translated}
      */
     admissionQualificationType;
 
@@ -339,13 +345,13 @@ class Person {
 
     /**
      * Example: key="gültige/r Studierende/r", text="gültige/r Studierende/r"
-     * @type {KeyedText}
+     * @type {Translated}
      */
     personalStatus;
 
     /**
      * Example: key="O", text="nicht zugelassen" - Called "Hörerstatus" in CO
-     * @type {KeyedText}
+     * @type {Translated}
      */
     studentStatus;
 
@@ -375,7 +381,7 @@ class Person {
 
     /**
      * Example: key="EZ", text="ex lege"
-     * @type {?KeyedText}
+     * @type {?Translated}
      */
     exmatriculationStatus;
 
@@ -417,7 +423,7 @@ class Person {
 
     /**
      * Example: key="W", text="Weiblich"
-     * @type {KeyedText}
+     * @type {Translated}
      */
     gender;
 
@@ -541,7 +547,7 @@ class FileBase {
 class FileCommon extends FileBase {
     /**
      * Example: key="AdmissionNotice", text="Zulassungsbescheid"
-     * @type {KeyedText}
+     * @type {Translated}
      */
     additionalType;
 
@@ -567,17 +573,11 @@ class FileCommon extends FileBase {
 
     /**
      * "UF 033 243" - Study field that the described document applies to. The
-     * value is either the study field key or the value 'Unspecified'
-     * @type {string}
+     * key is either the study field key or the value 'Unspecified'. The value
+     * is the study field named that the described document applies to.
+     * @type {Translated}
      */
     studyField;
-
-    /**
-     * Example: "Bachelorstudium; Architektur" - Study field named that the
-     * described document applies to.
-     * @type {string}
-     */
-    studyFieldName;
 
     /**
      * Example: "GZ 2021-0.123.456" - Optional attribute containing a registry key of a case aka the 'Geschäftszahl'

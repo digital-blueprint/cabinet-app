@@ -54,10 +54,16 @@ export default class InstantSearchModule {
      *  - facet options: https://www.algolia.com/doc/api-reference/widgets/refinement-list/js/
      *  usePanel: A boolean indicating whether to use a panel for the facet (optional, defaults to true).
      *  hidden: A boolean indicating whether the facet should be hidden (optional, defaults to false).
+     * @param lang
      * @returns {Array} - Array of search facets config
      */
-    getFacetsConfig() {
+    getFacetsConfig(lang = 'de') {
         const showMoreLimitValue = 50;
+
+        const selectField = (parentField) => {
+            return lang === 'de' ? `${parentField}.text` : `${parentField}.textEn`;
+        };
+
         return [
             {'filter-group': {id: 'category', name: t('cabinet-search.type-filter-group-title')}},
             {
@@ -107,7 +113,7 @@ export default class InstantSearchModule {
             {
                 id: 'person.personalStatus',
                 groupId: 'person',
-                schemaField: 'person.personalStatus.text',
+                schemaField: selectField('person.personalStatus'),
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-personal-status-text-title'),
                 facetOptions: {
@@ -120,7 +126,7 @@ export default class InstantSearchModule {
             {
                 id: 'person.studentStatus',
                 groupId: 'person',
-                schemaField: 'person.studentStatus.text',
+                schemaField: selectField('person.studentStatus'),
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-student-status-text-title'),
                 facetOptions: {
@@ -133,7 +139,7 @@ export default class InstantSearchModule {
             {
                 id: 'person.exmatriculationStatus',
                 groupId: 'person',
-                schemaField: 'person.exmatriculationStatus.text',
+                schemaField: selectField('person.exmatriculationStatus'),
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-exmatriculation-status-text-title'),
                 facetOptions: {
@@ -146,7 +152,7 @@ export default class InstantSearchModule {
             {
                 id: 'person.admissionQualificationType',
                 groupId: 'person',
-                schemaField: 'person.admissionQualificationType.text',
+                schemaField: selectField('person.admissionQualificationType'),
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-admission-qualification-type-text-title'),
                 facetOptions: {
@@ -159,7 +165,7 @@ export default class InstantSearchModule {
             {
                 id: 'person.nationalities',
                 groupId: 'person',
-                schemaField: 'person.nationalities.text',
+                schemaField: selectField('person.nationalities'),
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-nationalities-text-title'),
                 facetOptions: {
@@ -172,7 +178,7 @@ export default class InstantSearchModule {
             {
                 id: 'person.gender',
                 groupId: 'person',
-                schemaField: 'person.gender.text',
+                schemaField: selectField('person.gender'),
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-gender-text-title'),
                 facetOptions: {
@@ -210,7 +216,7 @@ export default class InstantSearchModule {
             {
                 id: 'person.homeAddress.country',
                 groupId: 'person',
-                schemaField: 'person.homeAddress.country.text',
+                schemaField: selectField('person.homeAddress.country'),
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-home-address-country-text-title'),
                 facetOptions: {
@@ -249,7 +255,7 @@ export default class InstantSearchModule {
             {
                 id: 'person.studyAddress.country',
                 groupId: 'person',
-                schemaField: 'person.studyAddress.country.text',
+                schemaField: selectField('person.studyAddress.country'),
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-person-study-address-country-text-title'),
                 facetOptions: {
@@ -314,7 +320,7 @@ export default class InstantSearchModule {
             {
                 id: 'person.study.status',
                 groupId: 'person',
-                schemaField: 'study.status.text',
+                schemaField: selectField('study.status'),
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-study-status-text-title'),
                 facetOptions: {
@@ -361,9 +367,9 @@ export default class InstantSearchModule {
                 facetOptions: {facet: {searchable: false}},
             },
             {
-                id: 'file.base.studyFieldName',
+                id: 'file.base.studyField',
                 groupId: 'file',
-                schemaField: 'file.base.studyFieldName',
+                schemaField: selectField('file.base.studyField'),
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-file-base-study-field-name-title'),
                 facetOptions: {facet: {searchable: false}},
@@ -395,9 +401,9 @@ export default class InstantSearchModule {
                 facetOptions: {facet: {searchable: false}},
             },
             {
-                id: 'file.shared.nationalityText',
+                id: 'file.shared.nationality',
                 groupId: 'file',
-                schemaField: 'file.shared.nationalityText',
+                schemaField: selectField('file.shared.nationality'),
                 schemaFieldType: 'checkbox',
                 name: t('cabinet-search.filter-file-file-shared-nationality-title'),
                 facetOptions: {facet: {searchable: true}},

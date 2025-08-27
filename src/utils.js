@@ -33,36 +33,6 @@ export const dataURLtoFile = (dataURL, filename) => {
 };
 
 /**
- * Same as renderFieldWithHighlight(), but in case the translated value doesn't match the real
- * value it returns the translated value without highlights.
- * @param {import('i18next').i18n} i18n
- * @param {string} i18nPrefix
- * @param {object} hit
- * @param {string} keyFieldName
- * @param {string} textFieldName
- * @returns {DocumentFragment}
- */
-export function renderFieldWithHighlightOrTranslated(
-    i18n,
-    i18nPrefix,
-    hit,
-    keyFieldName,
-    textFieldName,
-) {
-    const realKey = getNestedProperty(hit, keyFieldName) ?? '';
-    const translated = i18n.t(i18nPrefix + realKey);
-    const realValue = getNestedProperty(hit, textFieldName) ?? '';
-    if (translated !== realValue) {
-        const fragment = document.createDocumentFragment();
-        const textNode = document.createTextNode(translated);
-        fragment.appendChild(textNode);
-        return fragment;
-    } else {
-        return renderFieldWithHighlight(hit, textFieldName);
-    }
-}
-
-/**
  * Return highlighted text markup for a given field if exists.
  * @param {object} hit - hits object from Typesense
  * @param {string} fieldName - hit field we want to highlight

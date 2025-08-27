@@ -8,7 +8,12 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
     facetConfigs = {};
 
     removedFacetNames = ['person.person'];
-    facetsThatNeedGrouping = ['study.name', 'study.type', 'study.status.text'];
+    facetsThatNeedGrouping = [
+        'study.name',
+        'study.type',
+        'study.status.text',
+        'study.status.textEn',
+    ];
 
     /**
      * @param {CabinetFacets} facetComponent

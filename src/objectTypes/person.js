@@ -356,6 +356,11 @@ class CabinetHitElement extends BaseHitElement {
             ? i18n.t('unselect-button-name')
             : i18n.t('focus-button-name');
 
+        const selectTranslation = (keyedText) => {
+            if (!keyedText) return keyedText;
+            return i18n.language === 'de' ? keyedText.text : keyedText.textEn;
+        };
+
         return html`
            
             <header class="ais-Hits-header" tabindex="0" @keydown=${(e) => {
@@ -414,7 +419,7 @@ class CabinetHitElement extends BaseHitElement {
                                               aria-hidden="true"
                                               <!--  aria-label="Study icon"-->
                                               title="Study icon"></dbp-icon>
-                                          <span>${study.name} (${study.status.text})</span>
+                                          <span>${study.name} (${selectTranslation(study.status)})</span>
                                       </div>
                                   `,
                                   )}
@@ -502,6 +507,11 @@ async function exportPersonPdf(i18n, hit, withInternalData = false) {
         return value === undefined || value === null || value === '' ? '-' : value;
     };
 
+    const selectTranslation = (keyedText) => {
+        if (!keyedText) return keyedText;
+        return i18n.language === 'de' ? keyedText.text : keyedText.textEn;
+    };
+
     let formatter = Intl.DateTimeFormat('de', {
         day: '2-digit',
         month: '2-digit',
@@ -538,21 +548,21 @@ async function exportPersonPdf(i18n, hit, withInternalData = false) {
             i18n.t('nationalities'),
             displayValue(hit.person.nationalities.map((n) => n.text).join(', ')),
         ],
-        [i18n.t('gender'), displayValue(hit.person.gender?.text)],
+        [i18n.t('gender'), displayValue(selectTranslation(hit.person.gender))],
         [i18n.t('social-SecurityNr'), displayValue(hit.person.socialSecurityNr)],
         [i18n.t('ssPIN'), displayValue(hit.person.bpk)],
-        [i18n.t('personal-Status'), displayValue(hit.person.personalStatus?.text)],
-        [i18n.t('student-Status'), displayValue(hit.person.studentStatus?.text)],
+        [i18n.t('personal-Status'), displayValue(selectTranslation(hit.person.personalStatus))],
+        [i18n.t('student-Status'), displayValue(selectTranslation(hit.person.studentStatus))],
         [i18n.t('tuitionStatus'), displayValue(hit.person.tuitionStatus)],
         [i18n.t('immatriculation-Date'), formatDate(hit.person.immatriculationDate)],
         [i18n.t('immatriculationSemester'), displayValue(hit.person.immatriculationSemester)],
         [
             i18n.t('exmatriculation-GI'),
-            `${displayValue(hit.person.exmatriculationStatus?.text)} ${formatDate(hit.person.exmatriculationDate)}`,
+            `${displayValue(selectTranslation(hit.person.exmatriculationStatus))} ${formatDate(hit.person.exmatriculationDate)}`,
         ],
         [
             i18n.t('admission-Qualification-Type'),
-            displayValue(hit.person.admissionQualificationType?.text),
+            displayValue(selectTranslation(hit.person.admissionQualificationType)),
         ],
         [i18n.t('school-Certificate-Date'), formatDate(hit.person.schoolCertificateDate)],
     ];
@@ -591,15 +601,15 @@ async function exportPersonPdf(i18n, hit, withInternalData = false) {
                 head: [[{content: displayValue(study.name), colSpan: 2}]],
                 body: [
                     [i18n.t('semester'), displayValue(study.semester)],
-                    [i18n.t('status'), displayValue(study.status?.text)],
+                    [i18n.t('status'), displayValue(selectTranslation(study.status))],
                     [i18n.t('immatriculation-date'), formatDate(study.immatriculationDate)],
                     [
                         i18n.t('qualification-study'),
-                        `${displayValue(study.qualificationType?.text)} ${formatDate(study.qualificationDate)} ${study.qualificationState?.text}`,
+                        `${displayValue(selectTranslation(study.qualificationType))} ${formatDate(study.qualificationDate)} ${selectTranslation(study.qualificationState)}`,
                     ],
                     [
                         i18n.t('exmatriculation'),
-                        `${displayValue(study.exmatriculationType?.text)} ${formatDate(study.exmatriculationDate)}`,
+                        `${displayValue(selectTranslation(study.exmatriculationType))} ${formatDate(study.exmatriculationDate)}`,
                     ],
                     [i18n.t('curriculum-version'), displayValue(study.curriculumVersion)],
                 ],
@@ -627,7 +637,10 @@ async function exportPersonPdf(i18n, hit, withInternalData = false) {
             [i18n.t('homeAddress.place'), displayValue(hit.person.homeAddress?.place)],
             [i18n.t('homeAddress.region'), displayValue(hit.person.homeAddress?.region)],
             [i18n.t('homeAddress.postCode'), displayValue(hit.person.homeAddress?.postCode)],
-            [i18n.t('homeAddress.country'), displayValue(hit.person.homeAddress?.country?.text)],
+            [
+                i18n.t('homeAddress.country'),
+                displayValue(selectTranslation(hit.person.homeAddress?.country)),
+            ],
             [
                 i18n.t('homeAddress.telephoneNumber'),
                 displayValue(hit.person.homeAddress?.telephoneNumber),
@@ -646,7 +659,10 @@ async function exportPersonPdf(i18n, hit, withInternalData = false) {
             [i18n.t('studyAddress.place'), displayValue(hit.person.studyAddress?.place)],
             [i18n.t('studyAddress.region'), displayValue(hit.person.studyAddress?.region)],
             [i18n.t('studyAddress.postCode'), displayValue(hit.person.studyAddress?.postCode)],
-            [i18n.t('studyAddress.country'), displayValue(hit.person.studyAddress?.country?.text)],
+            [
+                i18n.t('studyAddress.country'),
+                displayValue(selectTranslation(hit.person.studyAddress?.country)),
+            ],
             [
                 i18n.t('studyAddress.telephoneNumber'),
                 displayValue(hit.person.studyAddress?.telephoneNumber),
@@ -992,6 +1008,11 @@ class CabinetViewElement extends BaseViewElement {
             return value === undefined || value === null || value === '' ? '-' : value;
         };
 
+        const selectTranslation = (keyedText) => {
+            if (!keyedText) return keyedText;
+            return i18n.language === 'de' ? keyedText.text : keyedText.textEn;
+        };
+
         return html`
         <dbp-notification
             id="dbp-modal-notification-person"
@@ -1073,27 +1094,27 @@ class CabinetViewElement extends BaseViewElement {
                         <li class="info-row"><b>${i18n.t('stud-id')}</b><span> ${displayValue(hit.person.studId)}</span></li>
                         <li class="info-row"><b>${i18n.t('st-PersonNr')}</b><span> ${displayValue(hit.person.stPersonNr)} </span></li>
                         <li class="info-row"><b>${i18n.t('birth-date')}</b><span> ${formatDate(hit.person.birthDate)}</span></li>
-                        <li class="info-row"><b>${i18n.t('nationalities')}</b><span> ${displayValue(hit.person.nationalities.map((n) => n.text).join(', '))}</span></li>
-                        <li class="info-row"><b>${i18n.t('gender')}</b><span> ${displayValue(hit.person.gender?.text)}</span></li>
+                        <li class="info-row"><b>${i18n.t('nationalities')}</b><span> ${displayValue(hit.person.nationalities.map((n) => selectTranslation(n)).join(', '))}</span></li>
+                        <li class="info-row"><b>${i18n.t('gender')}</b><span> ${displayValue(selectTranslation(hit.person.gender))}</span></li>
                         <li class="info-row"><b>${i18n.t('social-SecurityNr')}</b><span> ${displayValue(hit.person.socialSecurityNr)}</span></li>
                     </ul>
                 </div>
                 <div class="info-column">
                     <ul class="info-list">
                         <li class="info-row"><b>${i18n.t('ssPIN')}</b><span> ${displayValue(hit.person.bpk)}</span></li>
-                        <li class="info-row"><b>${i18n.t('personal-Status')}</b><span> ${displayValue(hit.person.personalStatus?.text)}</span></li>
-                        <li class="info-row"><b>${i18n.t('student-Status')}</b><span> ${displayValue(hit.person.studentStatus?.text)}</span></li>
+                        <li class="info-row"><b>${i18n.t('personal-Status')}</b><span> ${displayValue(selectTranslation(hit.person.personalStatus))}</span></li>
+                        <li class="info-row"><b>${i18n.t('student-Status')}</b><span> ${displayValue(selectTranslation(hit.person.studentStatus))}</span></li>
                         <li class="info-row"><b>${i18n.t('tuitionStatus')}</b><span> ${displayValue(hit.person.tuitionStatus)}</span></li>
                         <li class="info-row"><b>${i18n.t('immatriculation-Date')}</b><span> ${formatDate(hit.person.immatriculationDate)}</span></li>
                         <li class="info-row"><b>${i18n.t('immatriculationSemester')}</b><span> ${displayValue(hit.person.immatriculationSemester)}</span></li>
-                        <li class="info-row"><b>${i18n.t('exmatriculation-GI')}</b><span> ${displayValue(hit.person.exmatriculationStatus?.text)} ${formatDate(hit.person.exmatriculationDate)}</span></li>
-                        <li class="info-row"><b>${i18n.t('admission-Qualification-Type')}</b><span> ${displayValue(hit.person.admissionQualificationType?.text)}</span></li>
+                        <li class="info-row"><b>${i18n.t('exmatriculation-GI')}</b><span> ${displayValue(selectTranslation(hit.person.exmatriculationStatus))} ${formatDate(hit.person.exmatriculationDate)}</span></li>
+                        <li class="info-row"><b>${i18n.t('admission-Qualification-Type')}</b><span> ${displayValue(selectTranslation(hit.person.admissionQualificationType))}</span></li>
                         <li class="info-row"><b>${i18n.t('school-Certificate-Date')}</b><span> ${formatDate(hit.person.schoolCertificateDate)}</span></li>
                         <li class="info-row"><b>${i18n.t('note')}</b><span> ${displayValue(hit.person.note)}</span></li>
 
 
-                        <!--<li><b>nationality:</b> ${hit.person.nationality?.text}</li>-->
-                        <!--<li><b>nationality Secondary:</b> ${hit.person.nationalitySecondary?.text}</li>-->
+                        <!--<li><b>nationality:</b> ${selectTranslation(hit.person.nationality)}</li>-->
+                        <!--<li><b>nationality Secondary:</b> ${selectTranslation(hit.person.nationalitySecondary)}</li>-->
                         <!--<li><b>fullName:</b> {hit.person.fullName}</li>-->
                         <!--<li><b>person:</b> {hit.person.person}</li>-->
                         <!--<li><b>identNrObfuscated:</b> {hit.person.identNrObfuscated}</li>-->
@@ -1133,10 +1154,10 @@ class CabinetViewElement extends BaseViewElement {
                             <li class="study-row"><b><span> ${displayValue(study.name)}</span></b></li>
                         </div>
                         <li class="study-row"><b>${i18n.t('semester')}</b><span>${displayValue(study.semester)}</span></li>
-                        <li class="study-row"><b>${i18n.t('status')}</b><span> ${displayValue(study.status?.text)}</span></li>
+                        <li class="study-row"><b>${i18n.t('status')}</b><span> ${displayValue(selectTranslation(study.status))}</span></li>
                         <li class="study-row"><b>${i18n.t('immatriculation-date')}</b><span> ${formatDate(study.immatriculationDate)}</span></li>
-                        <li class="study-row"><b>${i18n.t('qualification-study')}</b><span> ${displayValue(study.qualificationType?.text)} ${formatDate(study.qualificationDate)} ${study.qualificationState?.text}</span></li>
-                        <li class="study-row"><b>${i18n.t('exmatriculation')}</b><span> ${displayValue(study.exmatriculationType?.text)} ${formatDate(study.exmatriculationDate)}</span></li>
+                        <li class="study-row"><b>${i18n.t('qualification-study')}</b><span> ${displayValue(selectTranslation(study.qualificationType))} ${formatDate(study.qualificationDate)} ${selectTranslation(study.qualificationState)}</span></li>
+                        <li class="study-row"><b>${i18n.t('exmatriculation')}</b><span> ${displayValue(selectTranslation(study.exmatriculationType))} ${formatDate(study.exmatriculationDate)}</span></li>
                         <li class="study-row"><b>${i18n.t('curriculum-version')}</b><span> ${displayValue(study.curriculumVersion)}</span></li>
                         </br>
                         </br>
@@ -1145,7 +1166,7 @@ class CabinetViewElement extends BaseViewElement {
                         <li><b>exmatriculationSemester</b> ${study.exmatriculationSemester}</li>
                         <li><b>immatriculationSemester</b> ${study.immatriculationSemester}</li>
                         <li><b>type</b> ${study.type}</li>
-                        <li><b>additionalCertificates</b> ${study.additionalCertificates.map((c) => c.text).join(', ')}</li>-->
+                        <li><b>additionalCertificates</b> ${study.additionalCertificates.map((c) => selectTranslation(c)).join(', ')}</li>-->
                     </ul>
                 </li>
                 `,
@@ -1171,7 +1192,7 @@ class CabinetViewElement extends BaseViewElement {
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.place)}</li>
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.region)}</li>
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.postCode)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.country?.text)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(selectTranslation(hit.person.homeAddress?.country))}</li>
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.telephoneNumber)}</li>
                     </ul>
 
@@ -1183,7 +1204,7 @@ class CabinetViewElement extends BaseViewElement {
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.place)}</li>
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.region)}</li>
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.postCode)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.country?.text)}</li>
+                        <li class="address-info-item"><b></b> ${displayValue(selectTranslation(hit.person.studyAddress?.country))}</li>
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.telephoneNumber)}</li>
                     </ul>
                 </li>
@@ -1228,11 +1249,11 @@ class CabinetViewElement extends BaseViewElement {
                                 </li>
                                 <li>
                                     <b>qualificationIssuingCountry</b>
-                                    ${application.qualificationIssuingCountry?.text}
+                                    ${selectTranslation(application.qualificationIssuingCountry)}
                                 </li>
                                 <li>
                                     <b>qualificationType</b>
-                                    ${application.qualificationType?.text}
+                                    ${selectTranslation(application.qualificationType)}
                                 </li>
                             </ul>
                         </li>
