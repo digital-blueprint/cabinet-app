@@ -26,6 +26,7 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from './i18n';
 import {createClearRefinements} from './clear-refinements.js';
 import {createCurrentRefinements} from './current-refinements';
+import {send} from '@dbp-toolkit/common/notification';
 
 class StatsWidget extends LangMixin(AuthMixin(DBPLitElement), createInstance) {
     constructor() {
@@ -362,6 +363,19 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('initInstantsearch this.createFacets()', this.facetWidgets);
 
         search.start();
+
+        // Add error handling
+        search.on('error', (error) => {
+            console.error('Search error:', error);
+
+            send({
+                summary: this._i18n.t('search.search-failed-summary'),
+                body: this._i18n.t('search.search-failed-body', {message: error.message}),
+                type: 'danger',
+                replaceId: 'search-failed',
+                timeout: 10,
+            });
+        });
 
         // When the search is stalled, we dim the search results,
         // so the user knows that the search is still running.
