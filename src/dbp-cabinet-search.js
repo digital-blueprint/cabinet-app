@@ -508,7 +508,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 #hits-footer {
                     display: flex;
-                    flex-direction: row;
+                    flex-direction: column;
                     justify-content: space-between;
                     padding-top: 15px;
                 }
@@ -628,8 +628,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     }
                 }
                 @media (max-width: 489px) {
-                    #hits-footer {
-                        flex-direction: column;
+                    .ais-Pagination-list {
+                        justify-content: center;
+                        gap: 0.001em;
                     }
                 }
             `,
