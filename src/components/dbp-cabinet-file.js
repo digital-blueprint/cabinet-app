@@ -832,6 +832,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .red-marked-asterisk {
                     color: var(--dbp-danger);
+                    font-weight: bold;
                 }
 
                 #document-modal {
