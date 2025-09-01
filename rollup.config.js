@@ -278,6 +278,7 @@ Dependencies:
                                 'BSD',
                                 '(MPL-2.0 OR Apache-2.0)',
                                 '0BSD',
+                                '(MIT AND Zlib)',
                             ];
                             if (!licenses.includes(dependency.license)) {
                                 throw new Error(
