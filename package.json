@@ -75,7 +75,7 @@
         "jspdf-autotable": "^5.0.2",
         "lit": "^3.0.0",
         "pdfjs-dist": "^4.3  <4.6",
-        "typesense": "^1.8.2",
+        "typesense": "^2.0.0",
         "typesense-instantsearch-adapter": "^2.8.0"
     },
     "scripts": {
