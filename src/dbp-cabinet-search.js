@@ -167,6 +167,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     update(changedProperties) {
         // We need to call super.update first, so the property facetVisibilityStates is set correctly!
         super.update(changedProperties);
+        this.initializeScrollToTopButton();
 
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
@@ -508,9 +509,30 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 #hits-footer {
                     display: flex;
-                    flex-direction: column;
+                    flex-direction: row;
                     justify-content: space-between;
                     padding-top: 15px;
+                }
+
+                .ais-Stats {
+                    color: var(--dbp-content);
+                }
+
+                #scroll-top {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-self: flex-end;
+                    padding-top: 15px;
+                    border: none;
+                    z-index: 1000;
+                    opacity: 1;
+                    pointer-events: auto;
+                    color: var(--dbp-content);
+                    transition:
+                        opacity 0.3s ease,
+                        color 0.3s ease;
+                    cursor: pointer;
                 }
 
                 .ais-Pagination-list {
@@ -541,6 +563,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     color: var(--dbp-content);
                 }
 
+                @media (max-width: 900px) {
+                    #hits-footer {
+                        flex-direction: column;
+                    }
+
+                    #result-count {
+                        justify-items: right;
+                    }
+                }
                 @media (max-width: 768px) {
                     .result-container {
                         margin-top: 0;
@@ -585,9 +616,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         padding-right: 0.4em;
                     }
 
-                    #result-count {
-                    }
-
                     .refinement-container {
                         display: inline-block;
                     }
@@ -617,17 +645,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     }
                 }
 
-                @media (min-width: 380px) and (max-width: 489px) {
-                    #result-count {
-                        padding-right: 0.4em;
-                    }
-
+                @media (min-width: 279px) and (max-width: 490px) {
                     .result-container {
                         grid-template-columns: auto 1fr;
                         gap: 0;
                     }
-                }
-                @media (max-width: 489px) {
                     .ais-Pagination-list {
                         justify-content: center;
                         gap: 0.001em;
@@ -880,6 +902,19 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         e.preventDefault();
     }
 
+    initializeScrollToTopButton() {
+        const scrollBtn = this.shadowRoot.getElementById('scroll-top');
+        if (!scrollBtn) return;
+
+        scrollBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            });
+        });
+    }
+
     render() {
         const i18n = this._i18n;
         const algoliaCss = commonUtils.getAssetURL(pkgName, 'algolia-min.css');
@@ -963,6 +998,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                             <div id="result-count"></div>
                             <div id="pagination-bottom"></div>
                         </div>
+                        <button id="scroll-top" class="button is-secondary" aria-label= ${i18n.t('buttons.scroll-to-top')}>
+                            <dbp-icon name="arrow-up"  aria-hidden="true"></dbp-icon>
+                            ${i18n.t('buttons.scroll-top')}
+                        </button>
                     </div>
                 </div>
 

@@ -11,6 +11,8 @@
         "cancel": "Abbrechen",
         "replace-document": "Datei ersetzen",
         "save": "Speichern",
+        "scroll-to-top": "",
+        "scroll-top": "Anfang",
         "view": "Anzeigen",
         "view-document": "Dokument anzeigen von"
     },
