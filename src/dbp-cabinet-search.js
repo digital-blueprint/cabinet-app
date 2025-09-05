@@ -526,13 +526,18 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     padding-top: 15px;
                     border: none;
                     z-index: 1000;
-                    opacity: 1;
-                    pointer-events: auto;
+                    opacity: 0;
+                    pointer-events: none;
                     color: var(--dbp-content);
                     transition:
                         opacity 0.3s ease,
                         color 0.3s ease;
                     cursor: pointer;
+                }
+
+                #scroll-top.visible {
+                    opacity: 1;
+                    pointer-events: auto;
                 }
 
                 .ais-Pagination-list {
@@ -906,6 +911,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         const scrollBtn = this.shadowRoot.getElementById('scroll-top');
         if (!scrollBtn) return;
 
+        const toggleScrollButton = () => {
+            if (window.scrollY > 100) {
+                scrollBtn.classList.add('visible');
+            } else {
+                scrollBtn.classList.remove('visible');
+            }
+        };
+        window.addEventListener('scroll', toggleScrollButton);
+
+        window.addEventListener('load', toggleScrollButton);
+
         scrollBtn.addEventListener('click', (event) => {
             event.preventDefault();
             window.scrollTo({
@@ -913,6 +929,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 behavior: 'smooth',
             });
         });
+        toggleScrollButton();
     }
 
     render() {
