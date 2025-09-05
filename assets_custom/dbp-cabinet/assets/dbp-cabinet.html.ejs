@@ -92,7 +92,7 @@
 
             --dbp-override-border: 1px solid black;
 
-            --dbp-override-image-nextcloud: url(<%= getUrl('') %>images/nextcloud.svg);
+            --dbp-override-image-nextcloud: url(<%= getPrivateUrl('images/nextcloud.svg') %>);
         }
 
         .dark-theme {
@@ -127,7 +127,7 @@
 
             --dbp-override-border: 1px solid white;
 
-            --dbp-override-image-nextcloud: url(/apps/greenlight/images/nextcloud.svg);
+            --dbp-override-image-nextcloud: url(<%= getPrivateUrl('images/nextcloud.svg') %>);
         }
 
 
@@ -154,7 +154,7 @@
 
             --dbp-override-border: 1px solid black;
 
-            --dbp-override-image-nextcloud: url(<%= getUrl('') %>images/nextcloud.svg);
+            --dbp-override-image-nextcloud: url(<%= getPrivateUrl('images/nextcloud.svg') %>);
         }
     </style>
 
