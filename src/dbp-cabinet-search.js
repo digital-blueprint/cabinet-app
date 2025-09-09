@@ -524,11 +524,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .scroll-top-wrapper {
                     position: fixed;
-                    top: 85vh;
                     display: flex;
-                    flex-direction: column;
-                    z-index: 1000;
+                    justify-content: flex-end;
                     align-items: end;
+                    top: 85vh;
+                    z-index: 1000;
                 }
 
                 #scroll-top {
@@ -540,12 +540,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         opacity 0.3s ease,
                         color 0.3s ease;
                     cursor: pointer;
+                    background-color: var(--dbp-accent);
+                    border: none;
+                    transform: translateX(60em);
                 }
 
                 #scroll-top.visible {
                     opacity: 1;
                     pointer-events: auto;
-                    transform: translateX(60em);
                 }
 
                 .ais-Pagination-list {
@@ -1040,7 +1042,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         </div>
                         <div class="scroll-top-wrapper">
                             <button id="scroll-top" class="button is-secondary" aria-label= ${i18n.t('buttons.scroll-to-top')}>
-                                <dbp-icon class="scroll-top-button" name="chevron-up"  aria-hidden="true"></dbp-icon>
+                                <div class="scroll-top-button" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 106 58" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 53L53 5" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+                                    <path d="M53 5L101 53" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+                                </svg></div>
                             </button>
                         </div>
                     </div>
