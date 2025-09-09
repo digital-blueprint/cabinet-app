@@ -183,6 +183,15 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             <dbp-form-enum-element
                 subscribe="lang"
+                name="disposalType"
+                label=${this._i18n.t('doc-modal-disposal-type')}
+                .items=${BaseFormElement.getDisposalTypes(this._i18n)}
+                .value=${'archival'}
+                required
+                @change=${updateField('disposalType')}></dbp-form-enum-element>
+
+            <dbp-form-enum-element
+                subscribe="lang"
                 name="semester"
                 label=${this._i18n.t('doc-modal-semester')}
                 .items=${getSemesters()}
@@ -345,6 +354,13 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         return studyFields;
+    }
+
+    static getDisposalTypes(i18n) {
+        return {
+            archival: i18n.t('doc-modal-disposal-type-archival'),
+            deletion: i18n.t('doc-modal-disposal-type-deletion'),
+        };
     }
 
     static getIsPartOfItems(i18n) {
@@ -535,6 +551,12 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .value=${this.getStudyFieldNameForKey(
                     baseData.studyField.key,
                 )}></dbp-form-string-view>
+
+            <dbp-form-enum-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-disposal-type')}
+                .value=${baseData.disposalType}
+                .items=${BaseFormElement.getDisposalTypes(this._i18n)}></dbp-form-enum-view>
 
             <dbp-form-string-view
                 subscribe="lang"
