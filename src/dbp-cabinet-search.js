@@ -455,11 +455,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     display: flex;
                 }
 
+                .ais-SearchBox-submitIcon path,
+                .ais-SearchBox-resetIcon path {
+                    fill: #222120;
+                }
+
                 .ais-SearchBox-input {
                     flex-grow: 1;
                     height: 2em;
-                    background-color: var(--dbp-background);
-                    color: var(--dbp-content);
+                    color: #222120;
                     border: var(--dbp-border);
                     padding-inline: 0.5em;
                     padding: 0 1.2em 0 2.2em;
@@ -518,14 +522,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     color: var(--dbp-content);
                 }
 
-                #scroll-top {
+                .scroll-top-wrapper {
+                    position: fixed;
+                    top: 85vh;
                     display: flex;
                     flex-direction: column;
-                    align-items: center;
-                    justify-self: flex-end;
-                    padding-top: 15px;
-                    border: none;
                     z-index: 1000;
+                    align-items: end;
+                }
+
+                #scroll-top {
+                    padding: 0.5em;
                     opacity: 0;
                     pointer-events: none;
                     color: var(--dbp-content);
@@ -538,6 +545,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 #scroll-top.visible {
                     opacity: 1;
                     pointer-events: auto;
+                    transform: translateX(60em);
                 }
 
                 .ais-Pagination-list {
@@ -566,6 +574,20 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .ais-CurrentRefinements-categoryLabel {
                     color: var(--dbp-content);
+                }
+                @media (max-width: 1400px) {
+                    .scroll-top-wrapper {
+                        bottom: 1rem;
+                        right: 1rem;
+                    }
+
+                    #scroll-top {
+                        transform: translateX(1em);
+                    }
+
+                    #scroll-top.visible {
+                        transform: translateX(0);
+                    }
                 }
 
                 @media (max-width: 900px) {
@@ -1010,15 +1032,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         .search="${this.search}"
                         subscribe="lang"></dbp-cabinet-facets>
                     <div class="results">
+                      
                         <div id="hits"></div>
                         <div id="hits-footer">
                             <div id="result-count"></div>
                             <div id="pagination-bottom"></div>
                         </div>
-                        <button id="scroll-top" class="button is-secondary" aria-label= ${i18n.t('buttons.scroll-to-top')}>
-                            <dbp-icon name="arrow-up"  aria-hidden="true"></dbp-icon>
-                            ${i18n.t('buttons.scroll-top')}
-                        </button>
+                        <div class="scroll-top-wrapper">
+                            <button id="scroll-top" class="button is-secondary" aria-label= ${i18n.t('buttons.scroll-to-top')}>
+                                <dbp-icon class="scroll-top-button" name="chevron-up"  aria-hidden="true"></dbp-icon>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
