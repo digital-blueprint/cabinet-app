@@ -54,6 +54,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.fileSourceRef = createRef();
         this.fileSinkRef = createRef();
         this.formRef = createRef();
+        this.actionsMenuOpen = false;
+        this._onDocPointerDown =
+            this._onDocPointerDown?.bind(this) || this._onDocPointerDown.bind(this);
 
         // Initialize the state in the beginning
         this.initializeState();
@@ -156,6 +159,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             state: {type: String, attribute: false},
             mode: {type: String},
             showLineWhenDelete: {type: String},
+            actionsMenuOpen: {type: Boolean, attribute: false},
         };
     }
 
@@ -773,6 +777,91 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Make sure the document dialog is closed, so we can see the file sink dialog
         documentModal.close();
     }
+    _toggleActionsMenu() {
+        this.actionsMenuOpen ? this._closeActionsMenu() : this._openActionsMenu();
+    }
+    _openActionsMenu() {
+        if (this.actionsMenuOpen) return;
+        this.actionsMenuOpen = true;
+        document.addEventListener('pointerdown', this._onDocPointerDown, true);
+        this.updateComplete.then(() => {
+            const first = this.renderRoot.querySelector('.actions-menu .actions-itemBtn');
+            first?.focus();
+        });
+    }
+    _closeActionsMenu() {
+        if (!this.actionsMenuOpen) return;
+        this.actionsMenuOpen = false;
+        document.removeEventListener('pointerdown', this._onDocPointerDown, true);
+        const trigger = this.renderRoot.querySelector('.actions-trigger');
+        trigger?.focus();
+    }
+    _onDocPointerDown(e) {
+        const dropdown = this.renderRoot.querySelector('.actions-dropdown');
+        const path = e.composedPath?.() || [];
+        const inside = !!dropdown && path.includes(dropdown);
+
+        if (!inside) this._closeActionsMenu();
+    }
+    _onTriggerKeydown(e) {
+        if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this._openActionsMenu();
+        }
+    }
+    _onMenuKeydown(e) {
+        const items = Array.from(this.renderRoot.querySelectorAll('.actions-itemBtn'));
+        const idx = items.indexOf(document.activeElement);
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            this._closeActionsMenu();
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            items[(idx + 1) % items.length]?.focus();
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            items[(idx - 1 + items.length) % items.length]?.focus();
+        }
+    }
+    _onActionButtonClick(e) {
+        const action = e.currentTarget?.dataset?.action;
+        if (!action) return;
+        this.handleFileAction(action).finally(() => this._closeActionsMenu());
+    }
+    async handleFileAction(evOrAction) {
+        let action;
+        let fromSelect = false;
+
+        if (typeof evOrAction === 'string') {
+            action = evOrAction;
+        } else if (evOrAction?.currentTarget) {
+            const el = evOrAction.currentTarget;
+            fromSelect = el.tagName === 'SELECT';
+            action = el.value || el.dataset?.action;
+        }
+
+        try {
+            switch (action) {
+                case 'add':
+                    await this.addNewVersion?.();
+                    break;
+                case 'edit':
+                    await this.editFile();
+                    break;
+                case 'delete':
+                    await this.deleteFile();
+                    break;
+                default:
+                    break;
+            }
+        } finally {
+            if (fromSelect) {
+                evOrAction.currentTarget.selectedIndex = 0;
+                evOrAction.currentTarget.value = '';
+                evOrAction.currentTarget.blur?.();
+            }
+        }
+    }
 
     async openReplacePdfDialog() {
         // Don't allow the reset the state of the component when the document modal is closed
@@ -963,6 +1052,62 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     z-index: 1;
                 }
 
+                .actions-dropdown {
+                    position: relative;
+                    display: inline-block;
+                }
+                .actions-trigger {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    padding: 0.4rem 0.6rem;
+                    border: var(--dbp-border);
+                    background: var(--dbp-surface);
+                    cursor: pointer;
+                    font: inherit;
+                    color: var(--dbp-content);
+                }
+                .actions-trigger:disabled {
+                    opacity: 0.6;
+                    cursor: not-allowed;
+                }
+                .actions-menu {
+                    position: absolute;
+                    top: calc(100% + 0.25rem);
+                    min-width: 12rem;
+                    padding: 0.25rem;
+                    margin: 0;
+                    list-style: none;
+                    border: 1px solid var(--dbp-border, #ddd);
+                    background: var(--dbp-surface, #fff);
+                    box-shadow:
+                        0 6px 24px rgba(0, 0, 0, 0.08),
+                        0 2px 8px rgba(0, 0, 0, 0.06);
+                    z-index: 1000;
+                }
+                .actions-itemBtn {
+                    width: 90%;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    padding: 0.5rem 0.6rem;
+                    border: 0;
+                    background: transparent;
+                    font: inherit;
+                    text-align: left;
+                    cursor: pointer;
+                }
+                .actions-itemBtn:hover,
+                .actions-itemBtn:focus-visible {
+                    background: rgba(0, 0, 0, 0.06);
+                    outline: none;
+                }
+                .actions-dropdown dbp-icon {
+                    inline-size: 1rem;
+                    block-size: 1rem;
+                    flex: 0 0 auto;
+                }
+
                 @media (min-width: 768px) {
                     .desc-stat,
                     .form,
@@ -1088,14 +1233,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // TODO: Check if PDF was uploaded
         return html`
-           
             <dbp-modal
                 ${ref(this.documentModalRef)}
                 @dbp-modal-closed="${this.onCloseDocumentModal}"
                 id="document-modal"
                 modal-id="document-modal"
                 subscribe="lang">
-
                 <div slot="title" class="modal-title doc-title">
                     <dbp-icon name="files" class="view-modal-icon" aria-hidden="true"></dbp-icon>
                     <h2>${headline}</h2>
@@ -1111,67 +1254,138 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div slot="content" class="content">
                     <div class="desc-stat">
                         <div class="description">
-                        <div class="student-info">
-                            <h3>${person.fullName}
-                            ${formatDate(person.birthDate)}<span style="font-weight:300"> &nbsp;(${person.studId} | ${person.stPersonNr})</span>
-                            </h3>
-                            <br />
-                        </div>
-                    </div>
-                        <div class="status ${classMap({hidden: this.mode === CabinetFile.Modes.ADD})}">
-                        <div class="status-badge ${this.documentStatus}">
-                            <div class="status-description">
-                                ${this.documentStatusDescription}
-                                <span class="delete-text">
-                                    ${this.showLineWhenDelete}${this.deleteAtDateTime}
-                                </span>
+                            <div class="student-info">
+                                <h3>
+                                    ${person.fullName} ${formatDate(person.birthDate)}
+                                    <span style="font-weight:300">
+                                        &nbsp;(${person.studId} | ${person.stPersonNr})
+                                    </span>
+                                </h3>
+                                <br />
                             </div>
                         </div>
-                        <div class="fileButtons">
-                            <button
+                        <div
+                            class="status ${classMap({
+                                hidden: this.mode === CabinetFile.Modes.ADD,
+                            })}">
+                            <div class="status-badge ${this.documentStatus}">
+                                <div class="status-description">
+                                    ${this.documentStatusDescription}
+                                    <span class="delete-text">
+                                        ${this.showLineWhenDelete}${this.deleteAtDateTime}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="fileButtons">
+                                <button
                                     class="button ${classMap({
                                         hidden: this.mode !== CabinetFile.Modes.EDIT,
-                                    })}" aria-label="${i18n.t('buttons.replace-document')}"
+                                    })}"
+                                    aria-label="${i18n.t('buttons.replace-document')}"
                                     @click="${this.openReplacePdfDialog}"
                                     ?disabled="${!id}">
-                                ${i18n.t('buttons.replace-document')} ${this.getMiniSpinnerHtml(id)}
-                            </button>
-                            <button
-                                    @click="${this.deleteFile}"
-                                    ?disabled="${!file}"
-                                    class="${classMap({
-                                        hidden:
-                                            this.mode === CabinetFile.Modes.ADD ||
-                                            this.mode === CabinetFile.Modes.EDIT ||
-                                            hit.base?.isScheduledForDeletion,
-                                    })} button is-secondary delete-button">
-                                <dbp-icon
-                                    class="dbp-button-icon"
-                                        title="${i18n.t('doc-modal-delete-document')}"
-                                        aria-label="${i18n.t('doc-modal-delete-document')}"
-                                        name="trash"></dbp-icon>
-                                ${i18n.t('delete-button-view-mode')}
-                                ${this.getMiniSpinnerHtml(
-                                    this.state !== CabinetFile.States.LOADING_FILE,
-                                )}
-                            </button>
-                            <button
-                                @click="${this.editFile}"
-                                ?disabled="${!file}"
-                                class="${classMap({
-                                    hidden: this.mode !== CabinetFile.Modes.VIEW,
-                                })} button is-secondary edit-button">
-                                <dbp-icon
-                                    class="dbp-button-icon"
-                                    title="${i18n.t('doc-modal-edit-document')}"
-                                    aria-label="${i18n.t('doc-modal-edit-document')}"
-                                    name="edit-pencil"></dbp-icon>
-                                ${i18n.t('edit-button-view-mode')}
-                                ${this.getMiniSpinnerHtml(
-                                    this.state !== CabinetFile.States.LOADING_FILE,
-                                )}
-                            </button>
-                            <button
+                                    ${i18n.t('buttons.replace-document')}
+                                    ${this.getMiniSpinnerHtml(id)}
+                                </button>
+                                <!-- Actions dropdown with icons -->
+                                ${this.mode !== CabinetFile.Modes.ADD &&
+                                this.mode !== CabinetFile.Modes.EDIT &&
+                                !hit.base?.isScheduledForDeletion
+                                    ? html`
+                                          <div class="actions-dropdown">
+                                              <button
+                                                  class="actions-trigger"
+                                                  @click="${this._toggleActionsMenu}"
+                                                  @keydown="${this._onTriggerKeydown}"
+                                                  ?disabled="${!file}"
+                                                  aria-haspopup="menu"
+                                                  aria-expanded="${String(this.actionsMenuOpen)}"
+                                                  aria-label="File actions">
+                                                  <span>${i18n.t('doc-modal-Actions')}</span>
+                                                  <dbp-icon
+                                                      name="chevron-down"
+                                                      aria-hidden="true"></dbp-icon>
+                                              </button>
+
+                                              ${this.actionsMenuOpen
+                                                  ? html`
+                                                        <ul
+                                                            class="actions-menu"
+                                                            role="menu"
+                                                            @keydown="${this._onMenuKeydown}">
+                                                            ${this.mode === CabinetFile.Modes.VIEW
+                                                                ? html`
+                                                                      <li role="none">
+                                                                          <button
+                                                                              role="menuitem"
+                                                                              class="actions-itemBtn"
+                                                                              data-action="add"
+                                                                              @click="${this
+                                                                                  ._onActionButtonClick}">
+                                                                              <dbp-icon
+                                                                                  name="plus"
+                                                                                  aria-hidden="true"></dbp-icon>
+                                                                              <span>
+                                                                                  ${i18n.t(
+                                                                                      'doc-modal-Add-new-version',
+                                                                                  )}
+                                                                              </span>
+                                                                          </button>
+                                                                      </li>
+                                                                      <li role="none">
+                                                                          <button
+                                                                              role="menuitem"
+                                                                              class="actions-itemBtn"
+                                                                              data-action="edit"
+                                                                              @click="${this
+                                                                                  ._onActionButtonClick}">
+                                                                              <dbp-icon
+                                                                                  name="pencil"
+                                                                                  aria-hidden="true"></dbp-icon>
+                                                                              <span>
+                                                                                  ${i18n.t(
+                                                                                      'doc-modal-edit',
+                                                                                  )}
+                                                                              </span>
+                                                                          </button>
+                                                                      </li>
+                                                                  `
+                                                                : null}
+                                                            <li role="none">
+                                                                <button
+                                                                    role="menuitem"
+                                                                    class="actions-itemBtn"
+                                                                    data-action="delete"
+                                                                    @click="${this
+                                                                        ._onActionButtonClick}">
+                                                                    <dbp-icon
+                                                                        name="trash"
+                                                                        aria-hidden="true"></dbp-icon>
+                                                                    <span>
+                                                                        ${i18n.t(
+                                                                            'doc-modal-delete-document',
+                                                                        )}
+                                                                    </span>
+                                                                </button>
+                                                            </li>
+                                                        </ul>
+                                                    `
+                                                  : null}
+                                          </div>
+                                      `
+                                    : null}
+
+                                <button
+                                    class="button ${classMap({
+                                        hidden: this.mode !== CabinetFile.Modes.EDIT,
+                                    })}"
+                                    aria-label="${i18n.t('buttons.replace-document')}"
+                                    @click="${this.openReplacePdfDialog}"
+                                    ?disabled="${!id}">
+                                    ${i18n.t('buttons.replace-document')}
+                                    ${this.getMiniSpinnerHtml(id)}
+                                </button>
+                                <button
                                     @click="${this.undeleteFile}"
                                     ?disabled="${!file}"
                                     class="${classMap({
@@ -1179,44 +1393,40 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                             this.mode === CabinetFile.Modes.ADD ||
                                             !hit.base?.isScheduledForDeletion,
                                     })} button is-secondary undo-button">
-                                <dbp-icon
-                                    class="dbp-button-icon"
+                                    <dbp-icon
+                                        class="dbp-button-icon"
                                         title="${i18n.t('doc-modal-undelete-document')}"
                                         aria-label="${i18n.t('doc-modal-undelete-document')}"
                                         name="undo"></dbp-icon>
-                                ${i18n.t('doc-modal-undelete-document')}
-                                ${this.getMiniSpinnerHtml(
-                                    this.state !== CabinetFile.States.LOADING_FILE,
-                                )}
-                            </button>
-                            <select
+                                    ${i18n.t('doc-modal-undelete-document')}
+                                    ${this.getMiniSpinnerHtml(
+                                        this.state !== CabinetFile.States.LOADING_FILE,
+                                    )}
+                                </button>
+                                <select
                                     id="export-select"
                                     class="dropdown-menu ${classMap({
                                         hidden: this.mode !== CabinetFile.Modes.VIEW,
-                                    })}""
-                                ?disabled="${!file}"
-                                @change="${this.downloadFile}">
-                            <option value="" disabled="" selected="">
-                                ${i18n.t('doc-modal-download-document')}
-                            </option>
-                            <option value="document-file-only">
-                                ${i18n.t('doc-modal-document-only')}
-                            </option>
-                            <option value="metadata-only">
-                                ${i18n.t('doc-modal-only-data')}
-                            </option>
-                            <option value="all">${i18n.t('doc-modal-all')}</option>
-                            </select>
+                                    })}"
+                                    ?disabled="${!file}"
+                                    @change="${this.downloadFile}">
+                                    <option value="" disabled selected>
+                                        ${i18n.t('doc-modal-download-document')}
+                                    </option>
+                                    <option value="document-file-only">
+                                        ${i18n.t('doc-modal-document-only')}
+                                    </option>
+                                    <option value="metadata-only">
+                                        ${i18n.t('doc-modal-only-data')}
+                                    </option>
+                                    <option value="all">${i18n.t('doc-modal-all')}</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    </div>   
-                    
-                    <div class="pdf-preview">
-                        ${this.getPdfViewerHtml()}
-                    </div>
-                    <div class="form">
-                        ${this.getObjectTypeFormPartHtml()}
-                    </div>
+
+                    <div class="pdf-preview">${this.getPdfViewerHtml()}</div>
+                    <div class="form">${this.getObjectTypeFormPartHtml()}</div>
                 </div>
             </dbp-modal>
         `;
