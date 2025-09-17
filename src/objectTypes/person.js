@@ -305,7 +305,7 @@ class CabinetHitElement extends BaseHitElement {
                     }
                 }
 
-                @media (min-width: 380px) and (max-width: 489px) {
+                @media (max-width: 489px) {
                     .hits-person-footer {
                         display: grid;
                         grid-template-columns: auto auto;
@@ -744,7 +744,7 @@ class CabinetViewElement extends BaseViewElement {
                     padding: 8px 0;
                 }
 
-                .info-row b {
+                .info-row div {
                     text-align: left;
                     font-weight: bold;
                     flex: 0 0 40%;
@@ -787,9 +787,10 @@ class CabinetViewElement extends BaseViewElement {
                     margin-bottom: 8px;
                 }
 
-                .study-row b {
+                .study-row div {
                     flex: 1;
                     text-align: left;
+                    font-weight: bold;
                 }
 
                 .study-row span {
@@ -801,6 +802,10 @@ class CabinetViewElement extends BaseViewElement {
                     display: flex;
                     gap: 20px;
                     align-items: flex-start;
+                }
+
+                .Address-flex-item {
+                    font-weight: bold;
                 }
 
                 .address-info {
@@ -830,9 +835,10 @@ class CabinetViewElement extends BaseViewElement {
                     margin-bottom: 8px;
                 }
 
-                .Ci-item b {
+                .Ci-item div {
                     flex: 1;
                     text-align: left;
+                    font-weight: bold;
                 }
 
                 .Ci-item span {
@@ -848,6 +854,7 @@ class CabinetViewElement extends BaseViewElement {
                     padding-bottom: 0.5em;
                     margin-bottom: 1.7em;
                     position: sticky;
+                    z-index: 1;
                     top: 0;
                     background-color: var(--dbp-background);
                 }
@@ -1086,31 +1093,31 @@ class CabinetViewElement extends BaseViewElement {
             <div class="info-container">
                 <div class="info-column">
                     <ul class="info-list">
-                        <li class="info-row"><b>${i18n.t('academic-titles')}</b><span> ${displayValue(hit.person.academicTitles.join(', '))}</span></li>
-                        <li class="info-row"><b>${i18n.t('given-name')}</b><span> ${displayValue(hit.person.givenName)}</span></li>
-                        <li class="info-row"><b>${i18n.t('family-name')}</b><span> ${displayValue(hit.person.familyName)}</span></li>
-                        <li class="info-row"><b>${i18n.t('former-family-name')}</b><span> ${displayValue(hit.person.formerFamilyName)}</span></li>
-                        <li class="info-row"><b>${i18n.t('academic-title-following')}</b><span> ${displayValue(hit.person.academicTitleFollowing)}</span></li>
-                        <li class="info-row"><b>${i18n.t('stud-id')}</b><span> ${displayValue(hit.person.studId)}</span></li>
-                        <li class="info-row"><b>${i18n.t('st-PersonNr')}</b><span> ${displayValue(hit.person.stPersonNr)} </span></li>
-                        <li class="info-row"><b>${i18n.t('birth-date')}</b><span> ${formatDate(hit.person.birthDate)}</span></li>
-                        <li class="info-row"><b>${i18n.t('nationalities')}</b><span> ${displayValue(hit.person.nationalities.map((n) => selectTranslation(n)).join(', '))}</span></li>
-                        <li class="info-row"><b>${i18n.t('gender')}</b><span> ${displayValue(selectTranslation(hit.person.gender))}</span></li>
-                        <li class="info-row"><b>${i18n.t('social-SecurityNr')}</b><span> ${displayValue(hit.person.socialSecurityNr)}</span></li>
+                        <li class="info-row"><div>${i18n.t('academic-titles')}</div><span> ${displayValue(hit.person.academicTitles.join(', '))}</span></li>
+                        <li class="info-row"><div>${i18n.t('given-name')}</div><span> ${displayValue(hit.person.givenName)}</span></li>
+                        <li class="info-row"><div>${i18n.t('family-name')}</div><span> ${displayValue(hit.person.familyName)}</span></li>
+                        <li class="info-row"><div>${i18n.t('former-family-name')}</div><span> ${displayValue(hit.person.formerFamilyName)}</span></li>
+                        <li class="info-row"><div>${i18n.t('academic-title-following')}</div><span> ${displayValue(hit.person.academicTitleFollowing)}</span></li>
+                        <li class="info-row"><div>${i18n.t('stud-id')}</div><span> ${displayValue(hit.person.studId)}</span></li>
+                        <li class="info-row"><div>${i18n.t('st-PersonNr')}</div><span> ${displayValue(hit.person.stPersonNr)} </span></li>
+                        <li class="info-row"><div>${i18n.t('birth-date')}</div><span> ${formatDate(hit.person.birthDate)}</span></li>
+                        <li class="info-row"><div>${i18n.t('nationalities')}</div><span> ${displayValue(hit.person.nationalities.map((n) => selectTranslation(n)).join(', '))}</span></li>
+                        <li class="info-row"><div>${i18n.t('gender')}</div><span> ${displayValue(selectTranslation(hit.person.gender))}</span></li>
+                        <li class="info-row"><div>${i18n.t('social-SecurityNr')}</div><span> ${displayValue(hit.person.socialSecurityNr)}</span></li>
                     </ul>
                 </div>
                 <div class="info-column">
                     <ul class="info-list">
-                        <li class="info-row"><b>${i18n.t('ssPIN')}</b><span> ${displayValue(hit.person.bpk)}</span></li>
-                        <li class="info-row"><b>${i18n.t('personal-Status')}</b><span> ${displayValue(selectTranslation(hit.person.personalStatus))}</span></li>
-                        <li class="info-row"><b>${i18n.t('student-Status')}</b><span> ${displayValue(selectTranslation(hit.person.studentStatus))}</span></li>
-                        <li class="info-row"><b>${i18n.t('tuitionStatus')}</b><span> ${displayValue(hit.person.tuitionStatus)}</span></li>
-                        <li class="info-row"><b>${i18n.t('immatriculation-Date')}</b><span> ${formatDate(hit.person.immatriculationDate)}</span></li>
-                        <li class="info-row"><b>${i18n.t('immatriculationSemester')}</b><span> ${displayValue(hit.person.immatriculationSemester)}</span></li>
-                        <li class="info-row"><b>${i18n.t('exmatriculation-GI')}</b><span> ${displayValue(selectTranslation(hit.person.exmatriculationStatus))} ${formatDate(hit.person.exmatriculationDate)}</span></li>
-                        <li class="info-row"><b>${i18n.t('admission-Qualification-Type')}</b><span> ${displayValue(selectTranslation(hit.person.admissionQualificationType))}</span></li>
-                        <li class="info-row"><b>${i18n.t('school-Certificate-Date')}</b><span> ${formatDate(hit.person.schoolCertificateDate)}</span></li>
-                        <li class="info-row"><b>${i18n.t('note')}</b><span> ${displayValue(hit.person.note)}</span></li>
+                        <li class="info-row"><div>${i18n.t('ssPIN')}</div><span> ${displayValue(hit.person.bpk)}</span></li>
+                        <li class="info-row"><div>${i18n.t('personal-Status')}</div><span> ${displayValue(selectTranslation(hit.person.personalStatus))}</span></li>
+                        <li class="info-row"><div>${i18n.t('student-Status')}</div><span> ${displayValue(selectTranslation(hit.person.studentStatus))}</span></li>
+                        <li class="info-row"><div>${i18n.t('tuitionStatus')}</div><span> ${displayValue(hit.person.tuitionStatus)}</span></li>
+                        <li class="info-row"><div>${i18n.t('immatriculation-Date')}</div><span> ${formatDate(hit.person.immatriculationDate)}</span></li>
+                        <li class="info-row"><div>${i18n.t('immatriculationSemester')}</div><span> ${displayValue(hit.person.immatriculationSemester)}</span></li>
+                        <li class="info-row"><div>${i18n.t('exmatriculation-GI')}</div><span> ${displayValue(selectTranslation(hit.person.exmatriculationStatus))} ${formatDate(hit.person.exmatriculationDate)}</span></li>
+                        <li class="info-row"><div>${i18n.t('admission-Qualification-Type')}</div><span> ${displayValue(selectTranslation(hit.person.admissionQualificationType))}</span></li>
+                        <li class="info-row"><div>${i18n.t('school-Certificate-Date')}</div><span> ${formatDate(hit.person.schoolCertificateDate)}</span></li>
+                        <li class="info-row"><div>${i18n.t('note')}</div><span> ${displayValue(hit.person.note)}</span></li>
 
 
                         <!--<li><b>nationality:</b> ${selectTranslation(hit.person.nationality)}</li>-->
@@ -1153,12 +1160,12 @@ class CabinetViewElement extends BaseViewElement {
                         <div class="study-key-group">
                             <li class="study-row"><b><span> ${displayValue(study.name)}</span></b></li>
                         </div>
-                        <li class="study-row"><b>${i18n.t('semester')}</b><span>${displayValue(study.semester)}</span></li>
-                        <li class="study-row"><b>${i18n.t('status')}</b><span> ${displayValue(selectTranslation(study.status))}</span></li>
-                        <li class="study-row"><b>${i18n.t('immatriculation-date')}</b><span> ${formatDate(study.immatriculationDate)}</span></li>
-                        <li class="study-row"><b>${i18n.t('qualification-study')}</b><span> ${displayValue(selectTranslation(study.qualificationType))} ${formatDate(study.qualificationDate)} ${selectTranslation(study.qualificationState)}</span></li>
-                        <li class="study-row"><b>${i18n.t('exmatriculation')}</b><span> ${displayValue(selectTranslation(study.exmatriculationType))} ${formatDate(study.exmatriculationDate)}</span></li>
-                        <li class="study-row"><b>${i18n.t('curriculum-version')}</b><span> ${displayValue(study.curriculumVersion)}</span></li>
+                        <li class="study-row"><div>${i18n.t('semester')}</div><span>${displayValue(study.semester)}</span></li>
+                        <li class="study-row"><div>${i18n.t('status')}</div><span> ${displayValue(selectTranslation(study.status))}</span></li>
+                        <li class="study-row"><div>${i18n.t('immatriculation-date')}</div><span> ${formatDate(study.immatriculationDate)}</span></li>
+                        <li class="study-row"><div>${i18n.t('qualification-study')}</div><span> ${displayValue(selectTranslation(study.qualificationType))} ${formatDate(study.qualificationDate)} ${selectTranslation(study.qualificationState)}</span></li>
+                        <li class="study-row"><div>${i18n.t('exmatriculation')}</div><span> ${displayValue(selectTranslation(study.exmatriculationType))} ${formatDate(study.exmatriculationDate)}</span></li>
+                        <li class="study-row"><div>${i18n.t('curriculum-version')}</div><span> ${displayValue(study.curriculumVersion)}</span></li>
                         </br>
                         </br>
                         <!--<li><b>coUrl:</b> <a href="${study.coUrl}">${study.coUrl}</a></li>
@@ -1180,12 +1187,12 @@ class CabinetViewElement extends BaseViewElement {
             </div>
             <hr/>
             <ul class="Ci-flex-info">
-                <li class="Ci-item"><b>${i18n.t('emailAddressUniversity')}</b><span>${displayValue(hit.person.emailAddressUniversity)}</span></li>
-                <li class="Ci-item"><b>${i18n.t('emailAddressConfirmed')}</b><span>${displayValue(hit.person.emailAddressConfirmed)}</span></li>
-                <li class="Ci-item"><b>${i18n.t('emailAddressTemporary')}</b><span>${displayValue(hit.person.emailAddressTemporary)}</span></li>
+                <li class="Ci-item"><div>${i18n.t('emailAddressUniversity')}</div><span>${displayValue(hit.person.emailAddressUniversity)}</span></li>
+                <li class="Ci-item"><div>${i18n.t('emailAddressConfirmed')}</div><span>${displayValue(hit.person.emailAddressConfirmed)}</span></li>
+                <li class="Ci-item"><div>${i18n.t('emailAddressTemporary')}</div><span>${displayValue(hit.person.emailAddressTemporary)}</span></li>
             </ul>
                 </br/>
-                <li class="Address-flex-item"><b>${i18n.t('homeAddress.heading')}</li></b>
+                <li class="Address-flex-item"><div>${i18n.t('homeAddress.heading')}</li></div>
                     <ul class="address-info">
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.note)}</li>
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.street)}</li>
@@ -1197,7 +1204,7 @@ class CabinetViewElement extends BaseViewElement {
                     </ul>
 
                 </br>
-                <li class="Address-flex-item"><b>${i18n.t('studyAddress.heading')} </li></b>
+                <li class="Address-flex-item"><div>${i18n.t('studyAddress.heading')} </li></div>
                     <ul class="address-info">
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.note)}</li>
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.street)}</li>
