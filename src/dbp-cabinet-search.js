@@ -457,17 +457,18 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .ais-SearchBox-submitIcon path,
                 .ais-SearchBox-resetIcon path {
-                    fill: #222120;
+                    fill: var(--dbp-content);
                 }
 
                 .ais-SearchBox-input {
                     flex-grow: 1;
                     height: 2em;
-                    color: #222120;
                     border: var(--dbp-border);
                     padding-inline: 0.5em;
                     padding: 0 1.2em 0 2.2em;
                     border-radius: 0 !important;
+                    color: var(--dbp-content);
+                    background-color: var(--dbp-background);
                 }
 
                 .help-container {
