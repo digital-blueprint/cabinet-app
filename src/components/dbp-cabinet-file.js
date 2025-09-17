@@ -1108,6 +1108,16 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     flex: 0 0 auto;
                 }
 
+                .grouping-container {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+
+                .grouping-container h3 {
+                    margin: 0;
+                }
+
                 @media (min-width: 768px) {
                     .desc-stat,
                     .form,
@@ -1262,6 +1272,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                     </span>
                                 </h3>
                                 <br />
+                            </div>
+                            <div class="grouping-container">
+                                <h3>selected:</h3>
+                                <select>
+                                    <option>modified1</option>
+                                    <option>modified2</option>
+                                </select>
                             </div>
                         </div>
                         <div
