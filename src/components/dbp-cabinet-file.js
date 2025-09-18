@@ -1229,6 +1229,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const groupId = this.fileHitData.file.base.groupId;
         console.log('fetchGroupedHits groupId', groupId);
 
+        if (!groupId) {
+            // TODO: In the future maybe return a list with the current hit?
+            return [];
+        }
+
         try {
             // Could throw an exception if there was another error than 404
             this.versions = await this._getTypesenseService().fetchFileDocumentsByGroupId(groupId);
