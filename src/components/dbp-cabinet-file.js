@@ -178,6 +178,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async storeDocumentToBlob(formData) {
+        console.log('storeDocumentToBlob formData', formData);
         const fileData = await this.storeDocumentInBlob(formData);
         console.log('storeDocumentToBlob fileData', fileData);
 
@@ -380,8 +381,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         metaData['@type'] = 'DocumentFile';
         metaData['fileSource'] = 'blob-cabinetBucket';
         metaData['objectType'] = this.objectType;
+        metaData['base'] = {
+            isCurrent: true,
+        };
+        // TODO: How to set the groupId?
+        metaData['file'] = {
+            base: {
+                groupId: this.fileHitData.file.base.groupId,
+            },
+        };
         // metaData['dateCreated'] = new Date().toISOString().split('T')[0];
-        console.log('metaData to upload', metaData);
+        console.log('storeDocumentInBlob metaData', metaData);
 
         let formData = new FormData();
         formData.append('metadata', JSON.stringify(metaData));
@@ -851,7 +861,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         try {
             switch (action) {
                 case 'add':
-                    await this.addNewVersion?.();
+                    await this.addNewVersion();
                     break;
                 case 'edit':
                     await this.editFile();
@@ -1862,5 +1872,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.documentStatus = 'success';
             this.documentStatusDescription = `${i18n.t('status-badge-success')}`;
         }
+    }
+
+    async addNewVersion() {
+        console.log('addNewVersion');
+
+        // TODO: Ensure a new blob file will be created with the correct groupId
+        this.fileHitData.file.base.fileId = '';
+        this.isFileDirty = true;
+        this.mode = CabinetFile.Modes.EDIT;
     }
 }
