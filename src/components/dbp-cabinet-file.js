@@ -1226,23 +1226,31 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async fetchGroupedHits() {
+        // let versions = [this.fileHitData];
+        let versions = [];
+
         const groupId = this.fileHitData.file.base.groupId;
         console.log('fetchGroupedHits groupId', groupId);
 
         if (!groupId) {
             // TODO: In the future maybe return a list with the current hit?
-            return [];
+            return versions;
         }
 
         try {
             // Could throw an exception if there was another error than 404
-            this.versions = await this._getTypesenseService().fetchFileDocumentsByGroupId(groupId);
+            versions = [
+                ...versions,
+                ...(await this._getTypesenseService().fetchFileDocumentsByGroupId(groupId)),
+            ];
 
             console.log('fetchGroupedHits this.versions', this.versions);
         } catch (error) {
             this.documentModalNotification('Error', 'Could not load document versions!', 'danger');
             console.error(error);
         }
+
+        this.versions = versions;
     }
 
     async updateVersions() {
