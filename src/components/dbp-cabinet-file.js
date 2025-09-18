@@ -1243,13 +1243,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 ...versions,
                 ...(await this._getTypesenseService().fetchFileDocumentsByGroupId(groupId)),
             ];
-
-            console.log('fetchGroupedHits this.versions', this.versions);
         } catch (error) {
             this.documentModalNotification('Error', 'Could not load document versions!', 'danger');
             console.error(error);
         }
 
+        console.log('fetchGroupedHits versions', versions);
         this.versions = versions;
     }
 
@@ -1268,6 +1267,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 'de-DE',
                                 {dateStyle: 'medium', timeStyle: 'medium'},
                             )}
+                            (${item.base.isCurrent ? 'current' : 'not current'})
                         </option>
                     `,
                 )}
