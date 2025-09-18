@@ -1249,7 +1249,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         console.log('fetchGroupedHits versions', versions);
-        this.versions = versions;
+        return versions;
     }
 
     async updateVersions() {
@@ -1258,6 +1258,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     renderVersionsSelector() {
         console.log('renderVersionsSelector this.versions', this.versions);
+        if (!Array.isArray(this.versions)) {
+            return html``;
+        }
+
         return html`
             <select class="button" @change=${this._onUpdateVersion}>
                 ${Array.from(this.versions).map(
