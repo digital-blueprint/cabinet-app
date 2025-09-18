@@ -94,6 +94,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.allowStateReset = true;
         this.state = CabinetFile.States.NONE;
         this.showLineWhenDelete = '';
+        this.versions = [];
 
         // Will be used when canceling the form in EDIT mode, when the data was changed via this.fileHitDataCache
         this.fileHitDataBackup = {};
@@ -151,6 +152,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             ...super.properties,
             person: {type: Object, attribute: false},
             fileHitData: {type: Object, attribute: false},
+            versions: {type: Array, attribute: false},
             documentFile: {type: File, attribute: false},
             objectType: {type: String, attribute: false},
             additionalType: {type: String, attribute: false},
@@ -574,6 +576,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Set person from hit
         this.person = hit.person;
         this.objectType = hit.objectType;
+
+        await this.updateVersions();
 
         // Update deleteAtDateTime based on the fresh hit data
         const deleteAtTimestamp = hit?.file?.base?.deleteAtTimestamp;
@@ -1221,6 +1225,43 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
               `;
     }
 
+    async fetchGroupedHits() {
+        const groupId = this.fileHitData.file.base.groupId;
+        console.log('fetchGroupedHits groupId', groupId);
+
+        try {
+            // Could throw an exception if there was another error than 404
+            this.versions = await this._getTypesenseService().fetchFileDocumentsByGroupId(groupId);
+
+            console.log('fetchGroupedHits this.versions', this.versions);
+        } catch (error) {
+            this.documentModalNotification('Error', 'Could not load document versions!', 'danger');
+            console.error(error);
+        }
+    }
+
+    async updateVersions() {
+        this.versions = await this.fetchGroupedHits();
+    }
+
+    renderVersionsSelector() {
+        console.log('renderVersionsSelector this.versions', this.versions);
+        return html`
+            <select class="button" @change=${this._onUpdateVersion}>
+                ${Array.from(this.versions).map(
+                    (item) => html`
+                        <option value="${item.id}">
+                            ${new Date(item.file.base.createdTimestamp * 1000).toLocaleString(
+                                'de-DE',
+                                {dateStyle: 'medium', timeStyle: 'medium'},
+                            )}
+                        </option>
+                    `,
+                )}
+            </select>
+        `;
+    }
+
     /**
      * Returns the modal dialog for adding a document to a person after the document was selected
      * in the file source
@@ -1278,11 +1319,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 <br />
                             </div>
                             <div class="grouping-container">
-                                <h3>selected:</h3>
-                                <select>
-                                    <option>modified1</option>
-                                    <option>modified2</option>
-                                </select>
+                                <h3>Selected:</h3>
+                                ${this.renderVersionsSelector()}
                             </div>
                         </div>
                         <div

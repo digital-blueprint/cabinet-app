@@ -75,6 +75,36 @@ export class TypesenseService {
     }
 
     /**
+     * Fetches multiple items from the collection using the provided filter.
+     * @param {string} filter_by - The filter string to apply to the search query.
+     * @param {number} [per_page] - Number of results per page (default: 10).
+     * @param {number} [page] - Page number to fetch (default: 1).
+     * @returns {Promise<Array>} Array of found document objects, or empty array if no results are found.
+     */
+    async fetchItemsByFilter(filter_by, per_page = 10, page = 1) {
+        let searchRequests = {
+            searches: [
+                {
+                    collection: this.collectionName,
+                    q: '*',
+                    filter_by: filter_by,
+                    page: page,
+                    per_page: per_page,
+                },
+            ],
+        };
+
+        let response = await this.client.multiSearch.perform(searchRequests);
+        let result = response.results[0];
+
+        if (result.found === 0) {
+            return [];
+        } else {
+            return result.hits.map((hit) => hit.document);
+        }
+    }
+
+    /**
      * Fetch a file document by Blob fileId
      * @param {string} fileId
      * @returns {Promise<null|object>}
@@ -85,5 +115,18 @@ export class TypesenseService {
         }
 
         return await this.fetchItemByFilter('file.base.fileId:=[`' + fileId + '`]');
+    }
+
+    /**
+     * Fetch a file document by Blob fileId
+     * @param {string} groupId
+     * @returns {Promise<null|object>}
+     */
+    async fetchFileDocumentsByGroupId(groupId) {
+        if (!groupId) {
+            throw new Error('groupId is required');
+        }
+
+        return await this.fetchItemsByFilter('file.base.groupId:=[`' + groupId + '`]');
     }
 }
