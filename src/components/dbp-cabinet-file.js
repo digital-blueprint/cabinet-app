@@ -234,7 +234,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
             // eslint-disable-next-line no-unused-vars
         } catch (error) {
-            this.documentModalNotification('Error', 'Could not load file from Blob!', 'danger');
+            this.documentModalNotification(
+                'Error',
+                'Could not load document from Typesense!',
+                'danger',
+            );
             this.state = CabinetFile.States.LOADING_FILE_FAILED;
 
             // The save button will still be disabled and has a spinner, enabling it again doesn't
