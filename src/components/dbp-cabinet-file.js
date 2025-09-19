@@ -19,6 +19,7 @@ import {
     scopedElements as modalNotificationScopedElements,
     sendModalNotification,
 } from '../modules/modal-notification';
+import {createUUID} from '@dbp-toolkit/common/utils';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static Modes = {
@@ -377,19 +378,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const blobId = this.getFileHitDataBlobId();
         console.log('storeDocumentInBlob', 'blobId', blobId);
         const uploadUrl = await this.createBlobUploadUrl();
+        const groupId = this.fileHitData?.file?.base?.groupId;
 
         metaData['@type'] = 'DocumentFile';
         metaData['fileSource'] = 'blob-cabinetBucket';
         metaData['objectType'] = this.objectType;
-        metaData['base'] = {
-            isCurrent: true,
-        };
-        // TODO: How to set the groupId?
-        metaData['file'] = {
-            base: {
-                groupId: this.fileHitData.file.base.groupId,
-            },
-        };
+        metaData['isCurrent'] = true;
+        metaData['groupId'] = groupId || createUUID();
         // metaData['dateCreated'] = new Date().toISOString().split('T')[0];
         console.log('storeDocumentInBlob metaData', metaData);
 
