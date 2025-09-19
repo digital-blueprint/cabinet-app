@@ -233,6 +233,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 this.fileHitData = item;
                 this.fileHitDataBackup = this.fileHitData;
                 this.mode = CabinetFile.Modes.VIEW;
+                await this.updateVersions();
 
                 return;
             }
