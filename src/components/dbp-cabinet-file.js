@@ -58,6 +58,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.fileSinkRef = createRef();
         this.formRef = createRef();
         this.actionsMenuOpen = false;
+        this.uploadFailed = false;
         this._onDocPointerDown =
             this._onDocPointerDown?.bind(this) || this._onDocPointerDown.bind(this);
 
@@ -412,8 +413,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         let response = await fetch(uploadUrl, options);
         if (!response.ok) {
             let json = await response.json();
-            this.shadowRoot.querySelector('#document-pdf-viewer').remove();
             this.documentPdfValidationErrorList.value.errors = json['relay:errorDetails'];
+            this.uploadFailed = true;
+            this.shadowRoot.querySelector('.status-badge').classList.add('hidden');
+            this.requestUpdate();
             throw response;
         }
 
@@ -889,6 +892,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Don't allow the reset the state of the component when the document modal is closed
         this.allowStateReset = false;
 
+        // Enable the save button again in the form if upload failed previously
+        if (this.uploadFailed) {
+            /** @type {BaseFormElement} */
+            const form = this.formRef.value;
+            form.enableSaveButton();
+        }
+        this.uploadFailed = false;
+
         await this.openDocumentAddDialog(false);
     }
 
@@ -997,6 +1008,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 #document-modal .status .status-badge {
                     display: flex;
                     flex-direction: row;
+                }
+
+                #document-modal .status .status-badge.hidden {
+                    display: none;
                 }
 
                 #document-modal .status .status-badge::before {
@@ -1231,6 +1246,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         return html`
             <dbp-pdf-viewer
                 ${ref(this.documentPdfViewerRef)}
+                class="${classMap({
+                    hidden: this.uploadFailed,
+                })}"
                 id="document-pdf-viewer"
                 lang="${this.lang}"
                 style="width: 100%"
@@ -1435,7 +1453,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         </div>
                         <div
                             class="status ${classMap({
-                                hidden: this.mode === CabinetFile.Modes.ADD,
+                                hidden: this.mode === CabinetFile.Modes.ADD && !this.uploadFailed,
                             })}">
                             <div class="status-badge ${this.documentStatus}">
                                 <div class="status-description">
@@ -1448,11 +1466,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             <div class="fileButtons">
                                 <button
                                     class="button ${classMap({
-                                        hidden: this.mode !== CabinetFile.Modes.EDIT,
+                                        hidden: this.uploadFailed
+                                            ? false
+                                            : this.mode !== CabinetFile.Modes.EDIT,
                                     })}"
                                     aria-label="${i18n.t('buttons.replace-document')}"
                                     @click="${this.openReplacePdfDialog}"
-                                    ?disabled="${!id}">
+                                    ?disabled="${this.uploadFailed ? false : !id}">
                                     ${i18n.t('buttons.replace-document')}
                                     ${this.getMiniSpinnerHtml(id)}
                                 </button>
@@ -1621,6 +1641,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     onCloseDocumentModal() {
         this.documentPdfValidationErrorList.value.errors = []; // reset error list
+        this.shadowRoot.querySelector('.status-badge').classList.remove('hidden'); // show status-badge again
+        this.uploadFailed = false;
         // If the file was created, updated or deleted, we need to inform the parent component to refresh the search results
         if (this.dataWasChanged) {
             this.dispatchEvent(
