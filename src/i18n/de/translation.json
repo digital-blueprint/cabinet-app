@@ -16,6 +16,9 @@
     },
     "cabinet-file": {
         "at-time": " um",
+        "document-upload-failed-pdfa-details": "Details:",
+        "document-upload-failed-pdfa-summary": "Das Dokument ist nicht im PDF/A Format. Bitte ersetzen sie das Dokument. ",
+        "document-upload-failed-pdfa-title": "Upload fehlgeschlagen",
         "file-picker-context": "Dokument zum Hochladen auswählen",
         "notification-body-set-for-deletion": "Das Dokument wurde erfolgreich zur Löschung vorgemerkt. Die endgültige Löschung des Dokumentes erfolgt automatisch am {{deleteTime}}",
         "notification-title-set-for-deletion": "Zur Löschung vorgemerkt.",

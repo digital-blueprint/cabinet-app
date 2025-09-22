@@ -20,6 +20,7 @@ import {
     sendModalNotification,
 } from '../modules/modal-notification';
 import {createUUID} from '@dbp-toolkit/common/utils';
+import {PdfValidationErrorList} from './pdf-validation-error-list.js';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static Modes = {
@@ -48,6 +49,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.objectTypeViewComponents = {};
         this.documentModalRef = createRef();
         this.documentPdfViewerRef = createRef();
+        this.documentPdfValidationErrorList = createRef();
         this.fileDocumentTypeNames = {};
         // TODO: Do we need a prefix?
         this.blobDocumentPrefix = 'document-';
@@ -145,6 +147,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-file-sink': FileSink,
             'dbp-pdf-viewer': PdfViewer,
             'dbp-button': Button,
+            'dbp-pdf-validaiton-error-list': PdfValidationErrorList,
         };
     }
 
@@ -408,6 +411,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         let response = await fetch(uploadUrl, options);
         if (!response.ok) {
+            let json = await response.json();
+            this.shadowRoot.querySelector('#document-pdf-viewer').remove();
+            this.documentPdfValidationErrorList.value.errors = json['relay:errorDetails'];
             throw response;
         }
 
@@ -1199,6 +1205,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         ];
     }
 
+    getDocumentValidationErrorHtml() {
+        return html`
+            <dbp-pdf-validaiton-error-list
+                ${ref(this.documentPdfValidationErrorList)}></dbp-pdf-validaiton-error-list>
+        `;
+    }
+
     getPdfViewerHtml() {
         if (this.state === CabinetFile.States.LOADING_FILE_FAILED) {
             return html`
@@ -1581,7 +1594,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         </div>
                     </div>
 
-                    <div class="pdf-preview">${this.getPdfViewerHtml()}</div>
+                    <div class="pdf-preview">
+                        ${this.getPdfViewerHtml()} ${this.getDocumentValidationErrorHtml()}
+                    </div>
                     <div class="form">${this.getObjectTypeFormPartHtml()}</div>
                 </div>
             </dbp-modal>
@@ -1605,6 +1620,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     onCloseDocumentModal() {
+        this.documentPdfValidationErrorList.value.errors = []; // reset error list
         // If the file was created, updated or deleted, we need to inform the parent component to refresh the search results
         if (this.dataWasChanged) {
             this.dispatchEvent(

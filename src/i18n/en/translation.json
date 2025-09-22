@@ -16,6 +16,9 @@
     },
     "cabinet-file": {
         "at-time": " at",
+        "document-upload-failed-pdfa-details": "Details:",
+        "document-upload-failed-pdfa-summary": "The document is not a valid PDF/A. Please replace the file. ",
+        "document-upload-failed-pdfa-title": "Upload failed",
         "file-picker-context": "select document for uploading",
         "notification-body-set-for-deletion": "The document was successfully set for deletion. The final deletion of the document takes place automatically on {{deleteTime}}",
         "notification-title-set-for-deletion": "Set for deletion",
