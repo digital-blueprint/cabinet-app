@@ -1691,7 +1691,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         return html`
             <fieldset>
-                <label>${this._i18n.t('doc-modal-document-type')}</label>
+                <label>
+                    ${this._i18n.t('doc-modal-document-type')}
+                    <span class="red-marked-asterisk">
+                        ${this._i18n.t('required-files-asterisk')}
+                    </span>
+                </label>
                 <select
                     id="document-type"
                     class="doc-type-edit-view"
