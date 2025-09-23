@@ -1264,6 +1264,19 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.versions = await this.fetchGroupedHits();
     }
 
+    renderGroupingContainer() {
+        if (this.mode !== CabinetFile.Modes.VIEW) {
+            return html``;
+        }
+
+        return html`
+            <div class="grouping-container">
+                <h3>Selected:</h3>
+                ${this.renderVersionsSelector()}
+            </div>
+        `;
+    }
+
     renderVersionsSelector() {
         console.log('renderVersionsSelector this.versions', this.versions);
         if (!Array.isArray(this.versions)) {
@@ -1274,12 +1287,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             <select class="button" @change=${this.onChangeVersion}>
                 ${Array.from(this.versions).map(
                     (item) => html`
-                        <option value="${item.id}">
+                        <option value="${item.id}" ?selected=${item.id === this.fileHitData.id}>
                             ${new Date(item.file.base.createdTimestamp * 1000).toLocaleString(
                                 'de-DE',
                                 {dateStyle: 'medium', timeStyle: 'medium'},
                             )}
-                            (${item.base.isCurrent ? 'current' : 'not current'})
+                            (${item.base.isCurrent ? 'current' : 'obsolete'})
                         </option>
                     `,
                 )}
@@ -1362,10 +1375,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 </h3>
                                 <br />
                             </div>
-                            <div class="grouping-container">
-                                <h3>Selected:</h3>
-                                ${this.renderVersionsSelector()}
-                            </div>
+                            ${this.renderGroupingContainer()}
                         </div>
                         <div
                             class="status ${classMap({
