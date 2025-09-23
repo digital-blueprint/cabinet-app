@@ -555,7 +555,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         /** @type {Modal} */
         const modal = this.documentModalRef.value;
         console.log('openDialogWithHit modal', modal);
-        modal.open();
+        if (!modal.isOpen()) {
+            modal.open();
+        }
 
         this.state = CabinetFile.States.LOADING_FILE;
 
@@ -1269,7 +1271,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         return html`
-            <select class="button" @change=${this._onUpdateVersion}>
+            <select class="button" @change=${this.onChangeVersion}>
                 ${Array.from(this.versions).map(
                     (item) => html`
                         <option value="${item.id}">
@@ -1283,6 +1285,25 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 )}
             </select>
         `;
+    }
+
+    async onChangeVersion(e) {
+        console.log('onUpdateVersion e', e);
+        const selectorValue = e.target.value;
+        if (!selectorValue) {
+            return;
+        }
+
+        console.log('onUpdateVersion selectorValue', selectorValue);
+
+        const hit = this.versions.find((item) => item.id === selectorValue);
+        console.log('onUpdateVersion hit', hit);
+
+        if (!hit) {
+            return;
+        }
+
+        await this.openViewDialogWithFileHit(hit);
     }
 
     /**
