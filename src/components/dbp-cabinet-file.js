@@ -1225,6 +1225,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     getDocumentValidationErrorHtml() {
         return html`
             <dbp-pdf-validaiton-error-list
+                subscribe="lang"
                 ${ref(this.documentPdfValidationErrorList)}></dbp-pdf-validaiton-error-list>
         `;
     }

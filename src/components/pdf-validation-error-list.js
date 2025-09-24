@@ -49,18 +49,16 @@ export class PdfValidationErrorList extends LangMixin(DBPLitElement, createInsta
                       <h4 class="red-text-bold">
                           ${this._i18n.t('cabinet-file.document-upload-failed-pdfa-summary')}
                       </h4>
-                      <details>
-                          <summary class="red-text-bold">
-                              ${this._i18n.t('cabinet-file.document-upload-failed-pdfa-details')}
-                          </summary>
-                          <ul>
-                              ${this.errors.map(
-                                  (error) => html`
-                                      <li class="red-text">${error}</li>
-                                  `,
-                              )}
-                          </ul>
-                      </details>
+                      <h4 class="red-text-bold">
+                          ${this._i18n.t('cabinet-file.document-upload-failed-pdfa-details')}
+                      </h4>
+                      <ul>
+                          ${this.errors.map(
+                              (error) => html`
+                                  <li class="red-text">${error}</li>
+                              `,
+                          )}
+                      </ul>
                   </div>
               `
             : html``;
