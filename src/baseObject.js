@@ -312,12 +312,12 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                     class="button is-secondary"
                     type="button"
                     @click=${this.cancelForm}
-                    aria-labelledby="${i18n.t('buttons.cancel')}">
+                    aria-label="${i18n.t('buttons.cancel')}">
                     ${i18n.t('buttons.cancel')}
                 </button>
                 <button
                     class="button is-primary"
-                    aria-labelledby="${i18n.t('buttons.save')}"
+                    aria-label="${i18n.t('buttons.save')}"
                     type="submit"
                     ?disabled=${!this.saveButtonEnabled}
                     @click=${this.storeBlobItem}>
@@ -454,7 +454,7 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
             <button
                 class="button"
                 type="is-secondary"
-                aria-labelledby="${i18n.t('buttons.view-document')}: ${hit.person.familyName},${hit
+                aria-label="${i18n.t('buttons.view-document')}: ${hit.person.familyName},${hit
                     .person.givenName}"
                 @click=${(e) => {
                     this.documentViewButtonClick(hit, e);

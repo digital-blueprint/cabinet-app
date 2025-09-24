@@ -381,22 +381,23 @@ class CabinetHitElement extends BaseHitElement {
                             class="column-icon"
                             name="user"
                             aria-hidden="true"
+                            <!--  aria-label="Person hit box symbol"}-->
                             title="Person hit box symbol"></dbp-icon>
                     </div>
-                    <h2 class="person-name">
+                    <h2 class="person-name" aria-label="${i18n.t('full-family-name')} ${hit.person.familyName},${hit.person.givenName}">
                         <!-- familyName: ${hit.person.familyName}-->
                         ${renderFieldWithHighlight(hit, 'person.familyName')},
                         <!-- givenName: ${hit.person.givenName} -->
                         ${renderFieldWithHighlight(hit, 'person.givenName')}
                     </h2>
-                    <h3 class="person-birthdate">
+                    <h3 class="person-birthdate" aria-label="${i18n.t('birth-date')} ${hit.person.birthDateDe}">
                         <!-- birthDate: ${hit.person.birthDateDe}-->
                         ${renderFieldWithHighlight(hit, 'person.birthDateDe')}
                     </h3>
                 </div>
                 </div>
                 <div class="hit-right-wrapper">
-                    <h3 class="person-id">
+                    <h3 class="person-id" aria-label="${i18n.t('st-PersonNr')} ${hit.person.studId}">
                         <!-- studId: ${hit.person.studId}-->
                         <span>${renderFieldWithHighlight(hit, 'person.studId')}</span>
                         |
@@ -439,7 +440,7 @@ class CabinetHitElement extends BaseHitElement {
                 <footer class="hits-person-footer">
                     <button
                         class="button"
-                        aria-labelledby="${i18n.t('buttons.add.documents')}: ${hit.person.familyName},${hit.person.givenName}"
+                        aria-label="${i18n.t('buttons.add.documents')}: ${hit.person.familyName},${hit.person.givenName}"
                         @click=${() => {
                             this.dispatchEvent(
                                 new CustomEvent('DbpCabinetDocumentAdd', {
@@ -453,7 +454,7 @@ class CabinetHitElement extends BaseHitElement {
                     </button>
                     <button
                         class="button"
-                        aria-labelledby=" ${focusButtonLabel}: ${hit.person.familyName},${hit.person.givenName}"
+                        aria-label=" ${focusButtonLabel}: ${hit.person.familyName},${hit.person.givenName}"
                         @click="${(event) => {
                             this.dispatchEvent(
                                 new CustomEvent('DbpCabinetFilterPerson', {
@@ -467,7 +468,7 @@ class CabinetHitElement extends BaseHitElement {
                     </button>
                     <button
                         class="button is-secondary"
-                        aria-labelledby=" ${i18n.t('buttons.view')}: ${hit.person.familyName},${hit.person.givenName}"
+                        aria-label=" ${i18n.t('buttons.view')}: ${hit.person.familyName},${hit.person.givenName}"
                         @click=${() => {
                             this.dispatchEvent(
                                 new CustomEvent('DbpCabinetDocumentView', {
@@ -1041,7 +1042,7 @@ class CabinetViewElement extends BaseViewElement {
         </div>
         </div>
         <div class="button-container">   
-        <button class="button is-secondary sync-tu-button" aria-labelledby="${i18n.t('sync.button-title')}">
+        <button class="button is-secondary sync-tu-button" aria-label="${i18n.t('sync.button-title')}">
             ${
                 this._syncing
                     ? html`
@@ -1058,7 +1059,7 @@ class CabinetViewElement extends BaseViewElement {
                       `
             }
         </button>
-        <button class="button is-secondary edit-tu-button" aria-labelledby='${i18n.t('Edit-student-data')}'>
+        <button class="button is-secondary edit-tu-button" aria-label='${i18n.t('Edit-student-data')}'>
             <a href="${hit.person.coUrl}" @click=${this._onEdit}>
                 <dbp-icon  title='${i18n.t('Edit-student-data')}'
                 aria-hidden="true"
@@ -1067,7 +1068,7 @@ class CabinetViewElement extends BaseViewElement {
                 ${i18n.t('Edit-student-data')}
             </a>
         </button>
-        <button class="button is-secondary export-pdf-button" aria-labelledby="${i18n.t('export.button-label')}">
+        <button class="button is-secondary export-pdf-button" aria-label="${i18n.t('export.button-label')}">
             <a href="#" @click="${() => {
                 exportPersonPdf(i18n, hit);
                 return false;

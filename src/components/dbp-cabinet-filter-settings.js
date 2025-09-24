@@ -271,7 +271,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                     <dbp-icon
                         class="facet-filter-icon"
                         title="${i18n.t('filter-settings.filter-configuration')}"
-                        aria-labelledby="${i18n.t('filter-settings.filter-configuration')}"
+                        aria-label="${i18n.t('filter-settings.filter-configuration')}"
                         name="cog"></dbp-icon>
                     <h2>${i18n.t('filter-settings.filter-configuration')}</h2>
                 </div>
