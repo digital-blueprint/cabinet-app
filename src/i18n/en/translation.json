@@ -12,8 +12,7 @@
         "replace-document": "Replace file",
         "save": "Save",
         "scroll-to-top": "",
-        "view": "View",
-        "view-document": "View document from"
+        "view": "View"
     },
     "cabinet-file": {
         "at-time": " at",
