@@ -275,7 +275,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
             additionalType: {type: String, attribute: 'additional-type'},
             data: {type: Object},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
-            saveButtonEnabled: {type: Boolean, attribute: false},
+            saveButtonEnabled: {type: Boolean},
         };
     }
 

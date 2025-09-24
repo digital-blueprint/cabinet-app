@@ -16,7 +16,7 @@
     },
     "cabinet-file": {
         "at-time": " at",
-        "document-upload-failed-pdfa-details": "Details:",
+        "document-upload-failed-pdfa-details": "Problems detected:",
         "document-upload-failed-pdfa-summary": "The document is not a valid PDF/A. Please replace the file. ",
         "document-upload-failed-pdfa-title": "Upload failed",
         "file-picker-context": "select document for uploading",

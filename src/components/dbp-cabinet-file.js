@@ -467,6 +467,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         console.log('getDocumentEditFormHtml fileHitData', fileHitData);
         console.log('getDocumentEditFormHtml this.additionalType', this.additionalType);
+        console.log('getDocumentEditFormHtml this.uploadFailed', this.uploadFailed);
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "fileHitData" property from a variable too!
@@ -478,6 +479,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
              .data=${fileHitData}
              .person=${this.person}
              additional-type="${this.additionalType}"
+             .saveButtonEnabled=${!this.uploadFailed}
              object-type=></${unsafeStatic(tagName)}>
         `;
     }
@@ -897,8 +899,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             /** @type {BaseFormElement} */
             const form = this.formRef.value;
             form.enableSaveButton();
+            this.uploadFailed = false;
         }
-        this.uploadFailed = false;
 
         await this.openDocumentAddDialog(false);
     }

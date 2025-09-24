@@ -16,7 +16,7 @@
     },
     "cabinet-file": {
         "at-time": " um",
-        "document-upload-failed-pdfa-details": "Details:",
+        "document-upload-failed-pdfa-details": "Erkannte Probleme:",
         "document-upload-failed-pdfa-summary": "Das Dokument ist nicht im PDF/A Format. Bitte ersetzen Sie das Dokument. ",
         "document-upload-failed-pdfa-title": "Upload fehlgeschlagen",
         "file-picker-context": "Dokument zum Hochladen auswählen",
