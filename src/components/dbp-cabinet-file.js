@@ -1473,7 +1473,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                             ? false
                                             : this.mode !== CabinetFile.Modes.EDIT,
                                     })}"
-                                    aria-label="${i18n.t('buttons.replace-document')}"
                                     @click="${this.openReplacePdfDialog}"
                                     ?disabled="${this.uploadFailed ? false : !id}">
                                     ${i18n.t('buttons.replace-document')}

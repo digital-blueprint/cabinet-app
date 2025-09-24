@@ -191,7 +191,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
                 subscribe="lang"
                 @dbp-modal-closed="${this.onClosePersonModal}">
                 <div slot="title" class="modal-title modal-title-person">
-                    <dbp-icon name="user" class="person-modal-icon"></dbp-icon>
+                    <dbp-icon name="user" class="person-modal-icon" aria-hidden="true"></dbp-icon>
                     <h2 class="person-modal-title">${hit.person.fullName}</h2>
                 </div>
                 <div slot="header">

@@ -381,7 +381,6 @@ class CabinetHitElement extends BaseHitElement {
                             class="column-icon"
                             name="user"
                             aria-hidden="true"
-                            <!--  aria-label="Person hit box symbol"}-->
                             title="Person hit box symbol"></dbp-icon>
                     </div>
                     <h2 class="person-name">
@@ -1078,7 +1077,7 @@ class CabinetViewElement extends BaseViewElement {
         </div>
             <div class="modal-Gi-header-container">
                 <div class="modal-Gi-header-svg">
-                    <dbp-icon name="graduation"></dbp-icon>
+                    <dbp-icon name="graduation" aria-hidden="true"></dbp-icon>
                 </div>
                 <div class="modal-Gi-header-title">
                     <h3>${i18n.t('General-information')}</h3>
@@ -1130,7 +1129,7 @@ class CabinetViewElement extends BaseViewElement {
             <br />
             <div class="modal-Si-header-container">
                 <div class="modal-Si-header-svg">
-                    <dbp-icon name="book"></dbp-icon>
+                    <dbp-icon name="book" aria-hidden="true"></dbp-icon>
                 </div>
                 <div class="modal-Si-header-title">
                     <h3>${i18n.t('Study-information')}</h3>
@@ -1176,7 +1175,7 @@ class CabinetViewElement extends BaseViewElement {
             </br>
             <div class="modal-Ci-header-container">
                 <div class="modal-Ci-header-svg">
-                    <dbp-icon name="phone"></dbp-icon>
+                    <dbp-icon name="phone" aria-hidden="true"></dbp-icon>
                 </div>
                 <div class="modal-Ci-header-title"><h3>${i18n.t('Contact-information')}</h3></div>
             </div>
