@@ -148,7 +148,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-file-sink': FileSink,
             'dbp-pdf-viewer': PdfViewer,
             'dbp-button': Button,
-            'dbp-pdf-validaiton-error-list': PdfValidationErrorList,
+            'dbp-pdf-validation-error-list': PdfValidationErrorList,
         };
     }
 
@@ -1224,9 +1224,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     getDocumentValidationErrorHtml() {
         return html`
-            <dbp-pdf-validaiton-error-list
+            <dbp-pdf-validation-error-list
                 subscribe="lang"
-                ${ref(this.documentPdfValidationErrorList)}></dbp-pdf-validaiton-error-list>
+                ${ref(this.documentPdfValidationErrorList)}></dbp-pdf-validation-error-list>
         `;
     }
 
