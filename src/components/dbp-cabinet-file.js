@@ -186,6 +186,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('storeDocumentToBlob formData', formData);
         const fileData = await this.storeDocumentInBlob(formData);
         console.log('storeDocumentToBlob fileData', fileData);
+        const groupId = this.fileHitData?.file?.base?.groupId;
+
+        // Mark all other versions as obsolete in Blob
+        await this.markOtherVersionsObsoleteInBlob(groupId, fileData.identifier);
 
         if (fileData.identifier) {
             this.documentModalNotification(
@@ -285,7 +289,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         let method;
         switch (blobUrlType) {
             case CabinetFile.BlobUrlTypes.UPLOAD:
-                identifier = this.getFileHitDataBlobId();
+                if (!identifier) {
+                    identifier = this.getFileHitDataBlobId();
+                }
                 method = identifier === '' ? 'POST' : 'PATCH';
                 break;
             case CabinetFile.BlobUrlTypes.DOWNLOAD:
@@ -528,11 +534,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     async downloadFileFromBlob(fileId, includeData = false) {
         const url = await this.createBlobDownloadUrl(fileId, includeData);
         console.log('downloadFileFromBlob url', url);
-        let blobFile = await this.loadBlobItem(url);
-        console.log('downloadFileFromBlob blobFile', blobFile);
+        let blobItem = await this.loadBlobItem(url);
+        console.log('downloadFileFromBlob blobItem', blobItem);
 
         // TODO: Test if this really works
-        return dataURLtoFile(blobFile.contentUrl, blobFile.fileName);
+        return dataURLtoFile(blobItem.contentUrl, blobItem.fileName);
     }
 
     /**
@@ -1988,5 +1994,120 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.fileHitData.file.base.fileId = '';
         this.isFileDirty = true;
         this.mode = CabinetFile.Modes.EDIT;
+    }
+
+    async markOtherVersionsObsoleteInBlob(groupId, currentIdentifier) {
+        if (!groupId) {
+            console.warn('markOtherVersionsObsoleteInBlob: No groupId provided');
+            return;
+        }
+
+        try {
+            // Fetch all versions in the group from Typesense
+            const versions = await this._getTypesenseService().fetchFileDocumentsByGroupId(groupId);
+
+            // Filter out the current version that was just stored
+            const otherVersions = versions.filter(
+                (version) => version.file?.base?.fileId !== currentIdentifier,
+            );
+
+            if (otherVersions.length === 0) {
+                console.log(
+                    'markOtherVersionsObsoleteInBlob: No other versions to mark as obsolete',
+                );
+                return;
+            }
+
+            console.log(
+                `markOtherVersionsObsoleteInBlob: Marking ${otherVersions.length} versions as obsolete for group ${groupId}`,
+            );
+
+            // Mark each other version as obsolete
+            const updatePromises = otherVersions.map(async (version) => {
+                console.log('markOtherVersionsObsoleteInBlob: version', version);
+                const versionFileId = version.file?.base?.fileId;
+                if (!versionFileId) {
+                    console.warn('markOtherVersionsObsoleteInBlob: Version has no fileId', version);
+                    return;
+                }
+
+                console.log('markOtherVersionsObsoleteInBlob: versionFileId', versionFileId);
+
+                const url = await this.createBlobDownloadUrl(versionFileId);
+                console.log('markOtherVersionsObsoleteInBlob url', url);
+                let blobItem = await this.loadBlobItem(url);
+
+                if (!blobItem) {
+                    console.warn(
+                        'markOtherVersionsObsoleteInBlob: No blob item found for fileId',
+                        versionFileId,
+                    );
+                    return;
+                }
+
+                console.log('markOtherVersionsObsoleteInBlob: blobItem', blobItem);
+
+                try {
+                    // Create a PATCH URL for this specific version
+                    const patchUrl = await this.createBlobUrl(
+                        CabinetFile.BlobUrlTypes.UPLOAD,
+                        versionFileId,
+                    );
+                    // const patchUrl = await this.createBlobUploadUrl();
+
+                    // Prepare metadata to mark as obsolete
+                    // const obsoleteMetadata = {
+                    //     isCurrent: false
+                    // };
+                    let obsoleteMetadata = JSON.parse(blobItem.metadata);
+                    obsoleteMetadata.isCurrent = false;
+
+                    console.log(
+                        'markOtherVersionsObsoleteInBlob: obsoleteMetadata',
+                        obsoleteMetadata,
+                    );
+
+                    const formData = new FormData();
+                    formData.append('metadata', JSON.stringify(obsoleteMetadata));
+                    formData.append('prefix', this.blobDocumentPrefix);
+
+                    const options = {
+                        method: 'PATCH',
+                        headers: {
+                            Authorization: 'Bearer ' + this.auth.token,
+                        },
+                        body: formData,
+                    };
+
+                    const response = await fetch(patchUrl, options);
+                    if (!response.ok) {
+                        console.error(
+                            `markOtherVersionsObsoleteInBlob: Failed to mark version ${versionFileId} as obsolete:`,
+                            response.status,
+                            response.statusText,
+                        );
+                        return;
+                    }
+
+                    console.log(
+                        `markOtherVersionsObsoleteInBlob: Successfully marked version ${versionFileId} as obsolete`,
+                    );
+                } catch (error) {
+                    console.error(
+                        `markOtherVersionsObsoleteInBlob: Error marking version ${versionFileId} as obsolete:`,
+                        error,
+                    );
+                }
+            });
+
+            // Wait for all updates to complete
+            await Promise.allSettled(updatePromises);
+        } catch (error) {
+            console.error(
+                'markOtherVersionsObsoleteInBlob: Error fetching versions from Typesense:',
+                error,
+            );
+            // Don't throw the error as this is not critical for the main flow
+        }
     }
 }
