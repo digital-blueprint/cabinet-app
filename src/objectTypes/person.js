@@ -870,29 +870,26 @@ class CabinetViewElement extends BaseViewElement {
                 .button-container {
                     display: flex;
                     margin-right: 0.5em;
-                    gap: 10px;
+                    gap: 5px;
                     justify-self: end;
                 }
 
-                .edit-tu-button,
-                .export-pdf-button,
-                .sync-tu-button {
+                .header-person-button {
                     overflow: hidden;
-                    background-color: var(--dbp-background);
+                    background-color: var(--dbp-secondary-surface);
+                    color: var(--dbp-on-secondary-surface);
                     text-decoration: none;
-                }
-
-                .links {
-                    border-bottom-style: solid;
-                    border-color: var(--dbp-content);
-                    padding: 0;
-                    transition:
-                        background-color 0.15s,
-                        color 0.15s;
-                    color: var(--dbp-content);
+                    border: 1px solid var(--dbp-secondary-surface-border-color);
+                    border-radius: var(--dbp-border-radius);
                     cursor: pointer;
-                    text-decoration: none;
-                    border-bottom: var(--dbp-border);
+                    padding: calc(0.375em - 1px) 0.75em;
+                    text-align: center;
+                    font-size: inherit;
+                    font-family: inherit;
+                    transition:
+                        0.15s,
+                        color 0.15s;
+                    font-weight: bolder;
                 }
 
                 @media (max-width: 1280px) {
@@ -918,7 +915,7 @@ class CabinetViewElement extends BaseViewElement {
                         width: 100%;
                     }
 
-                    .button-container .button {
+                    .button-container .header-person-button {
                         grid-row: 1 / -1;
                     }
                 }
@@ -955,14 +952,14 @@ class CabinetViewElement extends BaseViewElement {
                         flex-direction: column;
                     }
 
-                    .button-container .button {
+                    .button-container .header-person-button {
                         display: grid;
                         grid-template-columns: 1fr minmax(auto, 1180px) 1fr;
                         grid-template-rows: auto;
                         white-space: nowrap;
                     }
 
-                    .button-container button a {
+                    .button-container .header-person-button a {
                         grid-column: 1 / -1;
                     }
                 }
@@ -1040,7 +1037,7 @@ class CabinetViewElement extends BaseViewElement {
         </div>
         </div>
         <div class="button-container">   
-        <button class="button is-secondary sync-tu-button">
+        <div class="header-person-button">
             ${
                 this._syncing
                     ? html`
@@ -1056,8 +1053,8 @@ class CabinetViewElement extends BaseViewElement {
                           </a>
                       `
             }
-        </button>
-        <button class="button is-secondary edit-tu-button">
+        </div>
+        <div class="header-person-button">
             <a href="${hit.person.coUrl}" @click=${this._onEdit}>
                 <dbp-icon  title='${i18n.t('Edit-student-data')}'
                 aria-hidden="true"
@@ -1065,8 +1062,8 @@ class CabinetViewElement extends BaseViewElement {
                 </dbp-icon>
                 ${i18n.t('Edit-student-data')}
             </a>
-        </button>
-        <button class="button is-secondary export-pdf-button">
+        </div>
+        <div class="header-person-button">
             <a href="#" @click="${() => {
                 exportPersonPdf(i18n, hit);
                 return false;
@@ -1076,7 +1073,7 @@ class CabinetViewElement extends BaseViewElement {
                 </dbp-icon>
                 ${i18n.t('export.button-label')}
             </a>
-        </button>
+        </div>
         </div>
         </div>
             <div class="modal-Gi-header-container">
