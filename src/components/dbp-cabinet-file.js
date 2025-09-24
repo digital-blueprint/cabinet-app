@@ -1456,7 +1456,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         </div>
                         <div
                             class="status ${classMap({
-                                hidden: this.mode === CabinetFile.Modes.ADD && !this.uploadFailed,
+                                hidden: this.mode === CabinetFile.Modes.ADD,
                             })}">
                             <div class="status-badge ${this.documentStatus}">
                                 <div class="status-description">
@@ -1490,9 +1490,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   @click="${this._toggleActionsMenu}"
                                                   @keydown="${this._onTriggerKeydown}"
                                                   ?disabled="${!file}"
+                                                  type="button"
                                                   aria-haspopup="menu"
                                                   aria-expanded="${String(this.actionsMenuOpen)}"
-                                                  aria-label="File actions">
+                                                  aria-controls="actions-menu"
+                                                  aria-labelledby="File actions">
                                                   <span>${i18n.t('doc-modal-Actions')}</span>
                                                   <dbp-icon
                                                       name="chevron-down"
@@ -1503,6 +1505,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   ? html`
                                                         <ul
                                                             class="actions-menu"
+                                                            id="actions-menu"
                                                             role="menu"
                                                             @keydown="${this._onMenuKeydown}">
                                                             ${this.mode === CabinetFile.Modes.VIEW
@@ -1566,17 +1569,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                           </div>
                                       `
                                     : null}
-
-                                <button
-                                    class="button ${classMap({
-                                        hidden: this.mode !== CabinetFile.Modes.EDIT,
-                                    })}"
-                                    aria-label="${i18n.t('buttons.replace-document')}"
-                                    @click="${this.openReplacePdfDialog}"
-                                    ?disabled="${!id}">
-                                    ${i18n.t('buttons.replace-document')}
-                                    ${this.getMiniSpinnerHtml(id)}
-                                </button>
                                 <button
                                     @click="${this.undeleteFile}"
                                     ?disabled="${!file}"
