@@ -1520,6 +1520,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                                               role="menuitem"
                                                                               class="actions-itemBtn"
                                                                               data-action="add"
+                                                                              .disabled=${!this
+                                                                                  .fileHitData.base
+                                                                                  .isCurrent}
                                                                               @click="${this
                                                                                   ._onActionButtonClick}">
                                                                               <dbp-icon
