@@ -26,6 +26,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     static Modes = {
         VIEW: 'view',
         EDIT: 'edit',
+        NEW_VERSION: 'new-version',
         ADD: 'add',
     };
 
@@ -187,9 +188,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const fileData = await this.storeDocumentInBlob(formData);
         console.log('storeDocumentToBlob fileData', fileData);
         const groupId = this.fileHitData?.file?.base?.groupId;
+        const isCurrent = this.fileHitData?.base?.isCurrent ?? true;
 
-        // Mark all other versions as obsolete in Blob
-        await this.markOtherVersionsObsoleteInBlob(groupId, fileData.identifier);
+        if (isCurrent) {
+            // Mark all other versions as obsolete in Blob
+            await this.markOtherVersionsObsoleteInBlob(groupId, fileData.identifier);
+        }
 
         if (fileData.identifier) {
             this.documentModalNotification(
@@ -390,11 +394,15 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('storeDocumentInBlob', 'blobId', blobId);
         const uploadUrl = await this.createBlobUploadUrl();
         const groupId = this.fileHitData?.file?.base?.groupId;
+        const isCurrent = this.fileHitData?.base?.isCurrent ?? false;
+        console.log('storeDocumentInBlob this.fileHitData', this.fileHitData);
+        // console.log('storeDocumentInBlob isCurrent', isCurrent);
+        console.log('storeDocumentInBlob this.mode', this.mode);
 
         metaData['@type'] = 'DocumentFile';
         metaData['fileSource'] = 'blob-cabinetBucket';
         metaData['objectType'] = this.objectType;
-        metaData['isCurrent'] = true;
+        metaData['isCurrent'] = this.mode === CabinetFile.Modes.NEW_VERSION || isCurrent;
         metaData['groupId'] = groupId || createUUID();
         // metaData['dateCreated'] = new Date().toISOString().split('T')[0];
         console.log('storeDocumentInBlob metaData', metaData);
@@ -1477,7 +1485,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                     class="button ${classMap({
                                         hidden: this.uploadFailed
                                             ? false
-                                            : this.mode !== CabinetFile.Modes.EDIT,
+                                            : this.mode !== CabinetFile.Modes.EDIT &&
+                                              this.mode !== CabinetFile.Modes.NEW_VERSION,
                                     })}"
                                     @click="${this.openReplacePdfDialog}"
                                     ?disabled="${this.uploadFailed ? false : !id}">
@@ -1487,6 +1496,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 <!-- Actions dropdown with icons -->
                                 ${this.mode !== CabinetFile.Modes.ADD &&
                                 this.mode !== CabinetFile.Modes.EDIT &&
+                                this.mode !== CabinetFile.Modes.NEW_VERSION &&
                                 !hit.base?.isScheduledForDeletion
                                     ? html`
                                           <div class="actions-dropdown">
@@ -1705,6 +1715,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     `;
                 }
             case CabinetFile.Modes.EDIT:
+            case CabinetFile.Modes.NEW_VERSION:
                 return html`
                     <h3>${this._i18n.t('Document-details-modal')}</h3>
                     <p>
@@ -1829,6 +1840,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         switch (this.mode) {
             case CabinetFile.Modes.EDIT:
+            case CabinetFile.Modes.NEW_VERSION:
             case CabinetFile.Modes.VIEW:
             case CabinetFile.Modes.ADD:
                 return this.getHtml();
@@ -1892,7 +1904,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Open the document modal dialog after the file source dialog was closed if we were in edit mode
         // Unfortunately, if Escape was pressed, all dialogs will be closed, so this only works with the "X" button
-        if (this.mode === CabinetFile.Modes.EDIT) {
+        if (this.mode === CabinetFile.Modes.EDIT || this.mode === CabinetFile.Modes.NEW_VERSION) {
             /** @type {Modal} */
             const modal = this.documentModalRef.value;
 
@@ -1991,6 +2003,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     async addNewVersion() {
         console.log('addNewVersion');
         this.fileHitData.file.base.fileId = '';
+        // this.fileHitData.file.base.isCurrent = true;
+        this.mode = CabinetFile.Modes.NEW_VERSION;
         await this.openReplacePdfDialog();
     }
 
