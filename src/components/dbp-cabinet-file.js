@@ -1841,10 +1841,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     getFileSourceHtml() {
-        if (this.mode === CabinetFile.Modes.VIEW) {
-            return html``;
-        }
-
+        // Beside in add mode, we need the file source in view mode (for creating new versions)
+        // and also in edit mode (for uploading a new file)
         const i18n = this._i18n;
         return html`
             <dbp-file-source
@@ -1992,11 +1990,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async addNewVersion() {
         console.log('addNewVersion');
-
-        // TODO: Ensure a new blob file will be created with the correct groupId
         this.fileHitData.file.base.fileId = '';
-        this.isFileDirty = true;
-        this.mode = CabinetFile.Modes.EDIT;
+        await this.openReplacePdfDialog();
     }
 
     async markOtherVersionsObsoleteInBlob(groupId, currentIdentifier) {
