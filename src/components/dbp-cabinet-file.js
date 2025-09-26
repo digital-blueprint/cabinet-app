@@ -341,6 +341,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             body: '{}',
         });
         if (!response.ok) {
+            this.documentModalNotification(
+                'Error while creating storage URL',
+                response.statusText,
+                'danger',
+            );
+
             throw response;
         }
         const url = await response.json();
