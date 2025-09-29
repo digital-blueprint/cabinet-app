@@ -26,11 +26,13 @@ export class PdfValidationErrorList extends LangMixin(DBPLitElement, createInsta
 
     static properties = {
         errors: {type: Array, attribute: false},
+        errorSummary: {type: String, attribute: false},
     };
 
     constructor() {
         super();
         this.errors = [];
+        this.errorSummary = null;
     }
 
     updated(changedProperties) {
@@ -41,26 +43,47 @@ export class PdfValidationErrorList extends LangMixin(DBPLitElement, createInsta
 
     render() {
         return this.errors.length > 0
-            ? html`
-                  <div id="dbp-cabinet-document-upload-failed">
-                      <h3 class="red-text-bold">
-                          ${this._i18n.t('cabinet-file.document-upload-failed-pdfa-title')}
-                      </h3>
-                      <h4 class="red-text-bold">
-                          ${this._i18n.t('cabinet-file.document-upload-failed-pdfa-summary')}
-                      </h4>
-                      <h4 class="red-text-bold">
-                          ${this._i18n.t('cabinet-file.document-upload-failed-pdfa-details')}
-                      </h4>
-                      <ul>
-                          ${this.errors.map(
-                              (error) => html`
-                                  <li class="red-text">${error}</li>
-                              `,
-                          )}
-                      </ul>
-                  </div>
-              `
+            ? this.errorSummary != null
+                ? html`
+                      <div id="dbp-cabinet-document-upload-failed">
+                          <h3 class="red-text-bold">
+                              ${this._i18n.t('cabinet-file.document-upload-failed-pdfa-title')}
+                          </h3>
+                          <h4 class="red-text-bold">${this.errorSummary}</h4>
+                          <h4 class="red-text-bold">
+                              ${this._i18n.t('cabinet-file.document-upload-failed-pdfa-details')}
+                          </h4>
+                          <ul>
+                              ${this.errors.map(
+                                  (error) => html`
+                                      <li class="red-text">${error}</li>
+                                  `,
+                              )}
+                          </ul>
+                      </div>
+                  `
+                : html`
+                      <div id="dbp-cabinet-document-upload-failed">
+                          <h3 class="red-text-bold">
+                              ${this._i18n.t('cabinet-file.document-upload-failed-pdfa-title')}
+                          </h3>
+                          <h4 class="red-text-bold">
+                              ${this._i18n.t(
+                                  'cabinet-file.document-upload-failed-pdfa-validation-summary',
+                              )}
+                          </h4>
+                          <h4 class="red-text-bold">
+                              ${this._i18n.t('cabinet-file.document-upload-failed-pdfa-details')}
+                          </h4>
+                          <ul>
+                              ${this.errors.map(
+                                  (error) => html`
+                                      <li class="red-text">${error}</li>
+                                  `,
+                              )}
+                          </ul>
+                      </div>
+                  `
             : html``;
     }
 }

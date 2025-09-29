@@ -438,7 +438,22 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         let response = await fetch(uploadUrl, options);
         if (!response.ok) {
             let json = await response.json();
-            this.documentPdfValidationErrorList.value.errors = json['relay:errorDetails'];
+
+            // if document is too big
+            if (json['relay:errorId'] === 'verity:create-report-backend-exception') {
+                this.documentPdfValidationErrorList.value.errors = [json['detail']];
+                this.documentPdfValidationErrorList.value.errorSummary = this._i18n.t(
+                    'cabinet-file.document-upload-failed-pdfa-too-big-summary',
+                );
+            }
+            // if document is not in a valid PDF/A format
+            if (
+                json['relay:errorId'] ===
+                'blob:create-file-data-file-does-not-validate-against-type'
+            ) {
+                this.documentPdfValidationErrorList.value.errors = json['relay:errorDetails'];
+            }
+
             this.uploadFailed = true;
             this.shadowRoot.querySelector('.status-badge').classList.add('hidden');
             this.requestUpdate();
@@ -1665,6 +1680,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     onCloseDocumentModal() {
         this.documentPdfValidationErrorList.value.errors = []; // reset error list
+        this.documentPdfValidationErrorList.value.errorSummary = null; // reset error summary
         this.shadowRoot.querySelector('.status-badge').classList.remove('hidden'); // show status-badge again
         this.uploadFailed = false;
         // If the file was created, updated or deleted, we need to inform the parent component to refresh the search results
