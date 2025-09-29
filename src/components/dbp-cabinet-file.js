@@ -1481,7 +1481,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         </div>
                         <div
                             class="status ${classMap({
-                                hidden: this.mode === CabinetFile.Modes.ADD,
+                                hidden: this.mode === CabinetFile.Modes.ADD && !this.uploadFailed,
                             })}">
                             <div class="status-badge ${this.documentStatus}">
                                 <div class="status-description">
