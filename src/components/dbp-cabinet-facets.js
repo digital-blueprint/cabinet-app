@@ -98,7 +98,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         let customConfigure = connectConfigure(renderConfig);
         return customConfigure({
-            searchParameters: {filters: 'base.isScheduledForDeletion:false'},
+            searchParameters: {filters: 'base.isScheduledForDeletion:false && base.isCurrent:true'},
             container: this._(`#custom-configure`),
         });
     }
