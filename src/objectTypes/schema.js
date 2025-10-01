@@ -590,6 +590,12 @@ class FileCommon extends FileBase {
      * @type {string}
      */
     semester;
+
+    /**
+     * Example: "archival" - Either "archival" or "deletion"
+     * @type {"archival"|"deletion"}
+     */
+    disposalType;
 }
 
 /**
