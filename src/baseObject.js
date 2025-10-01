@@ -524,6 +524,18 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         `;
     }
 
+    getRetentionDurationByDocumentType(type) {
+        let retentionDurations = {
+            Communication: 10,
+            DriversLicence: 3,
+            Passport: 3,
+            PersonalLicence: 3,
+            BirthCertificate: 3,
+            CitizenshipCertificate: 3,
+        };
+        return retentionDurations[type];
+    }
+
     setAdditionalTypes(types) {
         this.additionalTypes = types;
     }
@@ -567,13 +579,32 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .value=${baseData.isPartOf}
                 .items=${BaseFormElement.getIsPartOfItems(this._i18n)}></dbp-form-enum-view>
 
-            <dbp-form-date-view
-                .hidden=${baseData.recommendedDeletionTimestamp === undefined}
+            <dbp-form-string-view
+                .hidden=${baseData.recommendedDeletionTimestamp !== undefined ||
+                baseData.recommendedArchivalTimestamp !== undefined}
                 subscribe="lang"
-                label=${this._i18n.t('doc-modal-recommended-deletion')}
-                .value=${baseData.recommendedDeletionTimestamp === undefined
-                    ? ''
-                    : new Date(baseData.recommendedDeletionTimestamp * 1000)}></dbp-form-date-view>
+                label=${baseData.disposalType === 'archival'
+                    ? this._i18n.t('doc-modal-recommended-archival')
+                    : this._i18n.t('doc-modal-recommended-deletion')}
+                .value=${baseData.disposalType === 'archival'
+                    ? this._i18n.t('doc-modal-recommended-archival-summary')
+                    : this._i18n.t('doc-modal-recommended-deletion-summary', {
+                          years: this.getRetentionDurationByDocumentType(
+                              baseData.additionalType.key,
+                          ),
+                      })}></dbp-form-string-view>
+
+            <dbp-form-date-view
+                .hidden=${baseData.recommendedDeletionTimestamp === undefined &&
+                baseData.recommendedArchivalTimestamp === undefined}
+                subscribe="lang"
+                label=${baseData.disposalType === 'archival'
+                    ? this._i18n.t('doc-modal-recommended-archival')
+                    : this._i18n.t('doc-modal-recommended-deletion')}
+                .value=${baseData.disposalType === 'archival'
+                    ? new Date(baseData.recommendedArchivalTimestamp * 1000)
+                    : new Date(baseData.recommendedDeletionTimestamp * 1000)}
+                :></dbp-form-date-view>
 
             <dbp-form-datetime-view
                 subscribe="lang"
