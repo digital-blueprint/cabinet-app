@@ -32,6 +32,7 @@ export default [
             'no-multiple-empty-lines': ['error', {max: 1}],
             'padded-blocks': ['error', 'never'],
             'padding-line-between-statements': ['error', {blankLine: 'any', prev: '*', next: '*'}],
+            'jsdoc/reject-any-type': 0,
         },
     },
 ];
