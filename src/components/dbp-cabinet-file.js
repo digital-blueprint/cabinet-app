@@ -208,6 +208,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             // Try to fetch the document from Typesense again and again until it is found
             await this.fetchFileDocumentFromTypesense(fileData.identifier);
 
+            // TODO: Wait until versions are updated in Typesense if isCurrent was set
+
             // Update URL, especially if a new version was created
             this.sendSetPropertyEvent('routing-url', `/document/${this.fileHitData.id}`, true);
         }
