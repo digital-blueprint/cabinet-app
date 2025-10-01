@@ -539,6 +539,12 @@ class FileBase {
      * @type {?number}
      */
     recommendedDeletionTimestamp;
+
+    /**
+     * Example: 4854261742 - The unix timestamp for when the file should be archived
+     * @type {?number}
+     */
+    recommendedArchivalTimestamp;
 }
 
 /**
