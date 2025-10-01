@@ -5,7 +5,7 @@
     "version": "0.0.2",
     "main": "src/dbp-cabinet.js",
     "license": "LGPL-2.1-or-later",
-    "private": true,
+    "private": false,
     "dbp": {
         "assets": [
             {
@@ -40,7 +40,6 @@
         "@rollup/plugin-replace": "^6.0.0",
         "@rollup/plugin-terser": "^0.4.0",
         "@rollup/plugin-url": "^8.0.0",
-        "can-npm-publish": "^1.3.3",
         "chai": "^6.0.0",
         "eslint": "^9",
         "eslint-plugin-jsdoc": "^60.0.0",
@@ -104,7 +103,6 @@
         "watch-custom": "rollup -c --watch --environment APP_ENV:localCustom",
         "test": "rollup -c --environment APP_ENV:test && karma start karma.conf.cjs --singleRun",
         "test-full": "rollup -c --environment FORCE_FULL,APP_ENV:test && karma start karma.conf.cjs --singleRun",
-        "tsc": "tsc -p jsconfig.json",
-        "publish": "sed -i 's/\"private\": true/\"private\": false/' package.json && can-npm-publish --verbose 2>&1 && npm publish --access public 2>&1; sed -i 's/\"private\": false/\"private\": true/' package.json"
+        "tsc": "tsc -p jsconfig.json"
     }
 }
