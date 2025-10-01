@@ -67,6 +67,7 @@ export class ConfigureWidget extends LangMixin(DBPLitElement, createInstance) {
         super();
         this.configureRenderOptions = null;
         this.includeObsoleteCheckboxRef = createRef();
+        this.obsoleteCheckboxRef = createRef();
     }
 
     _handleShowActive(event) {
@@ -78,18 +79,21 @@ export class ConfigureWidget extends LangMixin(DBPLitElement, createInstance) {
     _handleShowDeletedOnly(event) {
         let filters = 'base.isScheduledForDeletion:true';
         this.includeObsoleteCheckboxRef.value.classList.add('hidden');
+        this.obsoleteCheckboxRef.value.checked = false;
         this.configureRenderOptions.refine({filters: filters});
     }
 
     _handleShowToDeleteOnly(event) {
         let filters = `file.base.recommendedDeletionTimestamp :< ${Math.floor(Date.now() / 1000)}`;
         this.includeObsoleteCheckboxRef.value.classList.add('hidden');
+        this.obsoleteCheckboxRef.value.checked = false;
         this.configureRenderOptions.refine({filters: filters});
     }
 
     _handleShowToArchiveOnly(event) {
-        let filters = ''; // TODO add filter when typesense property "recommendedArchivalDate" was added
+        let filters = `file.base.recommendedArchivalTimestamp :< ${Math.floor(Date.now() / 1000)}`; // TODO add filter when typesense property "recommendedArchivalDate" was added
         this.includeObsoleteCheckboxRef.value.classList.add('hidden');
+        this.obsoleteCheckboxRef.value.checked = false;
         this.configureRenderOptions.refine({filters: filters});
     }
 
@@ -121,6 +125,7 @@ export class ConfigureWidget extends LangMixin(DBPLitElement, createInstance) {
                             class="refinement-list-obsolete-checkbox">
                             <li class="refinement-list">
                                 <input
+                                    ${ref(this.obsoleteCheckboxRef)}
                                     type="checkbox"
                                     class="refinement-checkbox"
                                     @change=${this._handleShowObsolete}
@@ -147,16 +152,14 @@ export class ConfigureWidget extends LangMixin(DBPLitElement, createInstance) {
                             name="document-filter" />
                         <span class="refinement-text">${this._i18n.t('show-to-delete-only')}</span>
                     </li>
-                    <!--<li class="refinement-list">
+                    <li class="refinement-list">
                         <input
                             type="radio"
                             class="refinement-checkbox"
                             @change=${this._handleShowToArchiveOnly}
-                            name="document-filter">
-                        <span class="refinement-text">
-                            ${this._i18n.t('show-to-archive-only')}
-                        </span>
-                    </li>-->
+                            name="document-filter" />
+                        <span class="refinement-text">${this._i18n.t('show-to-archive-only')}</span>
+                    </li>
                 </ul>
             </div>
         `;
