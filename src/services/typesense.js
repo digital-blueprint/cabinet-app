@@ -122,7 +122,7 @@ export class TypesenseService {
      * When isCurrentOnly is true, only current versions are returned.
      * When false (default), all versions are returned.
      * @param {string} groupId
-     * @param {boolean} [isCurrentOnly=false]
+     * @param {boolean} [isCurrentOnly]
      * @returns {Promise<Array<object>>}
      */
     async fetchFileDocumentsByGroupId(groupId, isCurrentOnly = false) {
