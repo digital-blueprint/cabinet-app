@@ -95,6 +95,9 @@ function debounce(func, delay) {
     };
 }
 
+let isFirstOnPageSymbol = Symbol('isFirstOnPage');
+let isLastOnPageSymbol = Symbol('isLastOnPage');
+
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
@@ -813,6 +816,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         return hits({
             container: this._('#hits'),
             escapeHTML: true,
+            transformItems: (items) => {
+                return items.map((item, index) => {
+                    item[isFirstOnPageSymbol] = index === 0;
+                    item[isLastOnPageSymbol] = index === items.length - 1;
+
+                    return item;
+                });
+            },
+
             templates: {
                 empty: (results, {html}) => {
                     let emptyElement = cabinetSearch.createScopedElement(
@@ -835,6 +847,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     hitElement.setAttribute('subscribe', 'lang');
                     hitElement.data = hit;
                     hitElement.searchHelper = cabinetSearch.search.helper;
+                    hitElement.isFirstOnPage = hit[isFirstOnPageSymbol];
+                    hitElement.isLastOnPage = hit[isLastOnPageSymbol];
 
                     return html`
                         <span ref=${preactRefReplaceChildren(hitElement)}></span>

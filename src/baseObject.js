@@ -386,6 +386,14 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         super();
         this.data = {};
         this.searchHelper = null;
+        /**
+         * @property {boolean} isFirstOnPage - Indicates if this is the first item on the page.
+         */
+        this.isFirstOnPage = false;
+        /**
+         * @property {boolean} isLastOnPage - Indicates if this is the last item on the page.
+         */
+        this.isLastOnPage = false;
     }
 
     static get scopedElements() {
@@ -399,6 +407,8 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
             ...super.properties,
             data: {type: Object},
             searchHelper: {type: Object, state: true},
+            isFirstOnPage: {type: Boolean, state: true},
+            isLastOnPage: {type: Boolean, state: true},
         };
     }
 
