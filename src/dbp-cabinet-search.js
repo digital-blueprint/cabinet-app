@@ -813,24 +813,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         return hits({
             container: this._('#hits'),
             escapeHTML: true,
-            transformItems: (items) => {
-                const helper = this.search.helper;
-                const facetName = 'person.person';
-                const state = helper.state;
-
-                return items.map((item) => {
-                    const value = item.person.person;
-                    const active = (state.facetsRefinements?.[facetName] || []).concat(
-                        state.disjunctiveFacetsRefinements?.[facetName] || [],
-                    );
-
-                    return {
-                        ...item,
-                        isFiltered: active.includes(value),
-                    };
-                });
-            },
-
             templates: {
                 empty: (results, {html}) => {
                     let emptyElement = cabinetSearch.createScopedElement(
@@ -852,6 +834,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     let hitElement = cabinetSearch.createScopedElement(tagName);
                     hitElement.setAttribute('subscribe', 'lang');
                     hitElement.data = hit;
+                    hitElement.searchHelper = cabinetSearch.search.helper;
 
                     return html`
                         <span ref=${preactRefReplaceChildren(hitElement)}></span>

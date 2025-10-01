@@ -349,10 +349,18 @@ class CabinetHitElement extends BaseHitElement {
                 : Infinity;
             return dateB - dateA;
         });
+
+        const facetName = 'person.person';
+        const state = this.searchHelper.state;
+        const active = (state.facetsRefinements?.[facetName] || []).concat(
+            state.disjunctiveFacetsRefinements?.[facetName] || [],
+        );
+        let isFocused = active.includes(hit.person.person);
+
         const maxStudies = 3;
         const displayedStudies = studies.slice(0, maxStudies);
         const extraCount = sortedStudies.length - maxStudies;
-        const focusButtonLabel = this.data.isFiltered
+        const focusButtonLabel = isFocused
             ? i18n.t('unselect-button-name')
             : i18n.t('focus-button-name');
 
@@ -461,7 +469,7 @@ class CabinetHitElement extends BaseHitElement {
                                     composed: true,
                                 }),
                             );
-                        }}"><dbp-icon class="dbp-button-icon" name="${this.data.isFiltered ? 'source_icons_eye-off' : 'source_icons_eye-empty'}"" aria-hidden="true"></dbp-icon>
+                        }}"><dbp-icon class="dbp-button-icon" name="${isFocused ? 'source_icons_eye-off' : 'source_icons_eye-empty'}"" aria-hidden="true"></dbp-icon>
                         ${focusButtonLabel}
                     </button>
                     <button

@@ -385,6 +385,7 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
         this.data = {};
+        this.searchHelper = null;
     }
 
     static get scopedElements() {
@@ -397,6 +398,7 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         return {
             ...super.properties,
             data: {type: Object},
+            searchHelper: {type: Object, state: true},
         };
     }
 
