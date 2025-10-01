@@ -118,15 +118,26 @@ export class TypesenseService {
     }
 
     /**
-     * Fetch a file document by Blob fileId
+     * Fetch file documents by a groupId.
+     * When isCurrentOnly is true, only current versions are returned.
+     * When false (default), all versions are returned.
      * @param {string} groupId
-     * @returns {Promise<null|object>}
+     * @param {boolean} [isCurrentOnly=false]
+     * @returns {Promise<Array<object>>}
      */
-    async fetchFileDocumentsByGroupId(groupId) {
+    async fetchFileDocumentsByGroupId(groupId, isCurrentOnly = false) {
         if (!groupId) {
             throw new Error('groupId is required');
         }
 
-        return await this.fetchItemsByFilter('file.base.groupId:=[`' + groupId + '`]');
+        // Base filter: match the group
+        let filter = 'file.base.groupId:=[`' + groupId + '`]';
+
+        // If requested, restrict to current versions only
+        if (isCurrentOnly === true) {
+            filter += ' && base.isCurrent:=true';
+        }
+
+        return await this.fetchItemsByFilter(filter);
     }
 }

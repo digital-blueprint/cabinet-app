@@ -2042,8 +2042,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         try {
-            // Fetch all versions in the group from Typesense
-            const versions = await this._getTypesenseService().fetchFileDocumentsByGroupId(groupId);
+            // Fetch all current versions in the group from Typesense
+            const versions = await this._getTypesenseService().fetchFileDocumentsByGroupId(
+                groupId,
+                true,
+            );
 
             // Filter out the current version that was just stored
             const otherVersions = versions.filter(
