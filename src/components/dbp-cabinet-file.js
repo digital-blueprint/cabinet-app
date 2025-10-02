@@ -2093,6 +2093,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 const url = await this.createBlobDownloadUrl(versionFileId);
                 console.log('markOtherVersionsObsoleteInBlob url', url);
                 let blobItem = await this.loadBlobItem(url);
+                console.log('markOtherVersionsObsoleteInBlob blobItem', blobItem);
 
                 if (!blobItem) {
                     console.warn(
