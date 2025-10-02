@@ -415,7 +415,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         metaData['@type'] = 'DocumentFile';
         metaData['fileSource'] = 'blob-cabinetBucket';
         metaData['objectType'] = this.objectType;
-        metaData['isCurrent'] = this.mode === CabinetFile.Modes.NEW_VERSION || isCurrent;
+        metaData['isCurrent'] =
+            this.mode === CabinetFile.Modes.NEW_VERSION ||
+            this.mode === CabinetFile.Modes.ADD ||
+            isCurrent;
         metaData['groupId'] = groupId || createUUID();
         // metaData['dateCreated'] = new Date().toISOString().split('T')[0];
         console.log('storeDocumentInBlob metaData', metaData);
