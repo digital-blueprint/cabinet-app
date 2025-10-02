@@ -558,8 +558,8 @@ class FileCommon extends FileBase {
     additionalType;
 
     /**
-     * Example: "foobar" - ID for grouping multiple versions of the same document
-     * @type {?string}
+     * Example: "8794638a-c3f0-441c-a2b6-8e867980e71a" - UUID for grouping multiple versions of the same document
+     * @type {string}
      */
     groupId;
 
