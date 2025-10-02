@@ -189,11 +189,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('storeDocumentToBlob fileData', fileData);
         const groupId = this.fileHitData?.file?.base?.groupId;
         const isCurrent = this.fileHitData?.base?.isCurrent ?? true;
+        let obsoleteBlobIds = [];
 
         if (isCurrent) {
             // Mark all other versions as obsolete in Blob
-            await this.markOtherVersionsObsoleteInBlob(groupId, fileData.identifier);
+            obsoleteBlobIds = await this.markOtherVersionsObsoleteInBlob(
+                groupId,
+                fileData.identifier,
+            );
         }
+
+        console.log('storeDocumentToBlob obsoleteBlobIds', obsoleteBlobIds);
 
         if (fileData.identifier) {
             this.documentModalNotification(
@@ -208,7 +214,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             // Try to fetch the document from Typesense again and again until it is found
             await this.fetchFileDocumentFromTypesense(fileData.identifier);
 
-            // TODO: Wait until versions are updated in Typesense if isCurrent was set
+            if (isCurrent && obsoleteBlobIds.length > 0) {
+                // Wait until all versions from obsoleteBlobIds are updated to have isCurrent set the false in Typesense
+                await this.waitForVersionsUpdatedInTypesense(obsoleteBlobIds);
+            }
 
             // Update URL, especially if a new version was created
             this.sendSetPropertyEvent('routing-url', `/document/${this.fileHitData.id}`, true);
@@ -1313,16 +1322,15 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async fetchGroupedHits() {
-        // let versions = [this.fileHitData];
-        let versions = [];
-
         const groupId = this.fileHitData.file.base.groupId;
         console.log('fetchGroupedHits groupId', groupId);
 
         if (!groupId) {
-            // TODO: In the future maybe return a list with the current hit?
-            return versions;
+            // If there was no groupId set, return the current hit
+            return [this.fileHitData];
         }
+
+        let versions = [];
 
         try {
             // Could throw an exception if there was another error than 404
@@ -2069,6 +2077,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 `markOtherVersionsObsoleteInBlob: Marking ${otherVersions.length} versions as obsolete for group ${groupId}`,
             );
 
+            let updatedBlobIds = [];
+
             // Mark each other version as obsolete
             const updatePromises = otherVersions.map(async (version) => {
                 console.log('markOtherVersionsObsoleteInBlob: version', version);
@@ -2136,6 +2146,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         return;
                     }
 
+                    updatedBlobIds.push(versionFileId);
+
                     console.log(
                         `markOtherVersionsObsoleteInBlob: Successfully marked version ${versionFileId} as obsolete`,
                     );
@@ -2149,6 +2161,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             // Wait for all updates to complete
             await Promise.allSettled(updatePromises);
+
+            return updatedBlobIds;
         } catch (error) {
             console.error(
                 'markOtherVersionsObsoleteInBlob: Error fetching versions from Typesense:',
@@ -2156,5 +2170,81 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             );
             // Don't throw the error as this is not critical for the main flow
         }
+    }
+
+    /**
+     * Waits until versions from updatedBlobIds are updated in Typesense with isCurrent set to false
+     * @param {Array<string>} updatedBlobIds - Array of blob IDs that were marked as obsolete
+     * @param {number} increment - Current attempt counter (used for recursion)
+     * @returns {Promise<void>}
+     */
+    async waitForVersionsUpdatedInTypesense(updatedBlobIds, increment = 0) {
+        // Stop after 10 attempts
+        if (increment >= 10) {
+            console.warn(
+                'waitForVersionsUpdatedInTypesense: Could not verify all versions were updated in Typesense after 10 attempts',
+            );
+            this.documentModalNotification(
+                'Warning',
+                'Some document versions may not be immediately updated. Please refresh if needed.',
+                'warning',
+            );
+            return;
+        }
+
+        if (!updatedBlobIds || updatedBlobIds.length === 0) {
+            return;
+        }
+
+        console.log(
+            `waitForVersionsUpdatedInTypesense: Checking ${updatedBlobIds.length} versions (attempt ${increment + 1})`,
+        );
+
+        try {
+            // Check each updated blob ID to see if it's been updated in Typesense
+            const checkPromises = updatedBlobIds.map(async (blobId) => {
+                try {
+                    const item =
+                        await this._getTypesenseService().fetchFileDocumentByBlobId(blobId);
+
+                    // If the item exists and isCurrent is false, it has been updated
+                    if (item && item.base?.isCurrent === false) {
+                        return {blobId, updated: true};
+                    }
+
+                    return {blobId, updated: false};
+                } catch (error) {
+                    // If we can't fetch the item, assume it's not updated yet
+                    console.log(
+                        `waitForVersionsUpdatedInTypesense: Could not fetch ${blobId}:`,
+                        error,
+                    );
+                    return {blobId, updated: false};
+                }
+            });
+
+            const results = await Promise.all(checkPromises);
+            const notUpdatedYet = results.filter((result) => !result.updated);
+
+            // If all versions have been updated, we're done
+            if (notUpdatedYet.length === 0) {
+                console.log(
+                    'waitForVersionsUpdatedInTypesense: All versions have been updated in Typesense',
+                );
+                return;
+            }
+
+            console.log(
+                `waitForVersionsUpdatedInTypesense: ${notUpdatedYet.length} versions still not updated, waiting...`,
+            );
+        } catch (error) {
+            console.error('waitForVersionsUpdatedInTypesense: Error checking versions:', error);
+        }
+
+        // Wait for a second before trying again
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // Try again with incremented counter
+        await this.waitForVersionsUpdatedInTypesense(updatedBlobIds, increment + 1);
     }
 }
