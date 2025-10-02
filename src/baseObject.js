@@ -185,7 +185,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 subscribe="lang"
                 name="disposalType"
                 label=${this._i18n.t('doc-modal-disposal-type')}
-                .items=${BaseFormElement.getDisposalTypes(this._i18n)}
+                display-mode="list"
+                .items=${BaseFormElement.getDisposalTypes(this._i18n, additionalType)}
                 .value=${'archival'}
                 required
                 @change=${updateField('disposalType')}></dbp-form-enum-element>
@@ -351,7 +352,19 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         return studyFields;
     }
 
-    static getDisposalTypes(i18n) {
+    static getDisposalTypes(i18n, type) {
+        // these types only allow archival for disposal
+        if (
+            type === 'AdmissionNotice' ||
+            type === 'MaritalStatusCertificate' ||
+            type === 'SupervisionAcceptance'
+        ) {
+            return {
+                archival: i18n.t('doc-modal-disposal-type-archival'),
+            };
+        }
+
+        // all others also allow deletion as disposal
         return {
             archival: i18n.t('doc-modal-disposal-type-archival'),
             deletion: i18n.t('doc-modal-disposal-type-deletion'),
@@ -573,7 +586,10 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-disposal-type')}
                 .value=${baseData.disposalType}
-                .items=${BaseFormElement.getDisposalTypes(this._i18n)}></dbp-form-enum-view>
+                .items=${BaseFormElement.getDisposalTypes(
+                    this._i18n,
+                    baseData.additionalType.key,
+                )}></dbp-form-enum-view>
 
             <dbp-form-string-view
                 subscribe="lang"
