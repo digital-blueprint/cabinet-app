@@ -32,6 +32,7 @@ let useTerser = buildFull;
 let useBabel = buildFull;
 let checkLicenses = buildFull;
 let treeshake = buildFull;
+let isRollupDown = process.argv.some((arg) => arg.includes('rolldown'));
 
 // if true, app assets and configs are whitelabel
 let whitelabel;
@@ -198,9 +199,12 @@ export default (async () => {
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
-            chunkFileNames: 'shared/[name].[hash].[format].js',
+            chunkFileNames: 'shared/[name].[hash].js',
             format: 'esm',
             sourcemap: true,
+        },
+        moduleTypes: {
+            '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
         },
         treeshake: treeshake,
         onwarn: function (warning, warn) {
@@ -256,10 +260,11 @@ export default (async () => {
                 'process.env.NODE_ENV': JSON.stringify('production'),
                 preventAssignment: true,
             }),
-            resolve({
-                browser: true,
-                preferBuiltins: true,
-            }),
+            !isRollupDown &&
+                resolve({
+                    browser: true,
+                    preferBuiltins: true,
+                }),
             checkLicenses &&
                 license({
                     banner: {
@@ -296,11 +301,12 @@ Dependencies:
                         },
                     },
                 }),
-            commonjs({
-                include: 'node_modules/**',
-                strictRequires: 'auto',
-            }),
-            json(),
+            !isRollupDown &&
+                commonjs({
+                    include: 'node_modules/**',
+                    strictRequires: 'auto',
+                }),
+            !isRollupDown && json(),
             urlPlugin(await getUrlOptions(pkg.name, 'shared')),
             whitelabel &&
                 copy({

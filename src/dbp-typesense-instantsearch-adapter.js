@@ -1,7 +1,11 @@
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
 
-export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSearchAdapter {
+// rollup and rolldown resolve the import differently
+let TypesenseInstantSearchAdapterClass =
+    TypesenseInstantSearchAdapter.default ?? TypesenseInstantSearchAdapter;
+
+export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSearchAdapterClass {
     /** @type {CabinetFacets} */
     facetComponent = null;
 
