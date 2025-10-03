@@ -187,7 +187,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 label=${this._i18n.t('doc-modal-disposal-type')}
                 display-mode="list"
                 .items=${BaseFormElement.getDisposalTypes(this._i18n, additionalType)}
-                .value=${'archival'}
+                .value=${fileCommon.disposalType || 'archival'}
                 required
                 @change=${updateField('disposalType')}></dbp-form-enum-element>
 
@@ -596,16 +596,16 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 label=${this._i18n.t('doc-modal-semester')}
                 .value=${baseData.semester || ''}></dbp-form-string-view>
 
-            <dbp-form-string-view
-                subscribe="lang"
-                label=${this._i18n.t('doc-modal-comment')}
-                .value=${baseData.comment || ''}></dbp-form-string-view>
-
             <dbp-form-enum-view
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-storage-purpose-deletion')}
                 .value=${baseData.isPartOf}
                 .items=${BaseFormElement.getIsPartOfItems(this._i18n)}></dbp-form-enum-view>
+
+            <dbp-form-string-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-comment')}
+                .value=${baseData.comment || ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 .hidden=${baseData.recommendedDeletionTimestamp !== undefined ||
