@@ -198,9 +198,12 @@ export default (async () => {
         output: {
             dir: 'dist',
             entryFileNames: '[name].js',
-            chunkFileNames: 'shared/[name].[hash].[format].js',
+            chunkFileNames: 'shared/[name].[hash].esm.js',
             format: 'esm',
             sourcemap: true,
+        },
+        moduleTypes: {
+            '.css': 'js',
         },
         treeshake: treeshake,
         onwarn: function (warning, warn) {
