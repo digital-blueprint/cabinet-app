@@ -256,10 +256,10 @@ export default (async () => {
                 'process.env.NODE_ENV': JSON.stringify('production'),
                 preventAssignment: true,
             }),
-            resolve({
+           /* resolve({
                 browser: true,
                 preferBuiltins: true,
-            }),
+            }),*/
             checkLicenses &&
                 license({
                     banner: {
@@ -296,11 +296,11 @@ Dependencies:
                         },
                     },
                 }),
-            commonjs({
+            /*commonjs({
                 include: 'node_modules/**',
                 strictRequires: 'auto',
             }),
-            json(),
+            json(),*/
             urlPlugin(await getUrlOptions(pkg.name, 'shared')),
             whitelabel &&
                 copy({

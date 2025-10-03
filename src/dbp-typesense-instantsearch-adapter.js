@@ -1,7 +1,9 @@
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
 
-export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSearchAdapter {
+console.error(TypesenseInstantSearchAdapter);
+
+export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSearchAdapter.default {
     /** @type {CabinetFacets} */
     facetComponent = null;
 
