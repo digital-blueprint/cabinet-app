@@ -32,7 +32,7 @@ let useTerser = buildFull;
 let useBabel = buildFull;
 let checkLicenses = buildFull;
 let treeshake = buildFull;
-let isRollupDown = process.argv.some((arg) => arg.includes('rolldown'));
+let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
 
 // if true, app assets and configs are whitelabel
 let whitelabel;
@@ -260,7 +260,7 @@ export default (async () => {
                 'process.env.NODE_ENV': JSON.stringify('production'),
                 preventAssignment: true,
             }),
-            !isRollupDown &&
+            !isRolldown &&
                 resolve({
                     browser: true,
                     preferBuiltins: true,
@@ -301,12 +301,12 @@ Dependencies:
                         },
                     },
                 }),
-            !isRollupDown &&
+            !isRolldown &&
                 commonjs({
                     include: 'node_modules/**',
                     strictRequires: 'auto',
                 }),
-            !isRollupDown && json(),
+            !isRolldown && json(),
             urlPlugin(await getUrlOptions(pkg.name, 'shared')),
             whitelabel &&
                 copy({
