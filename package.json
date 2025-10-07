@@ -54,7 +54,7 @@
         "playwright": "^1.34.0",
         "playwright-core": "^1.21.0",
         "prettier": "^3.0.0",
-        "rolldown": "^1.0.0-beta.41",
+        "rolldown": "^1.0.0-beta.42",
         "rollup": "^4.0.0",
         "rollup-plugin-copy": "^3.3.0",
         "rollup-plugin-delete": "^3.0.0",
@@ -99,11 +99,11 @@
         "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check",
         "watch": "rolldown -c rollup.config.js --watch",
         "watch-local": "npm run watch",
-        "watch-full": "FORCE_FULL=1 rolldown -c rollup.config.js --watch",
-        "watch-bs": "APP_ENV=bs rolldown -c rollup.config.js --watch",
-        "watch-custom": "APP_ENV=localCustom rolldown -c rollup.config.js --watch",
-        "test": "APP_ENV=test rolldown -c rollup.config.js && karma start karma.conf.cjs --singleRun",
-        "test-full": "FORCE_FULL=1 APP_ENV=test rolldown -c rollup.config.js && karma start karma.conf.cjs --singleRun",
+        "watch-full": "rolldown -c rollup.config.js --watch --environment FORCE_FULL",
+        "watch-bs": "rolldown -c rollup.config.js --watch --environment APP_ENV:bs",
+        "watch-custom": "rolldown -c rollup.config.js --watch --environment APP_ENV:localCustom",
+        "test": "rolldown -c rollup.config.js --environment APP_ENV:test && karma start karma.conf.cjs --singleRun",
+        "test-full": "rolldown -c rollup.config.js --environment FORCE_FULL,APP_ENV:test && karma start karma.conf.cjs --singleRun",
         "tsc": "tsc -p jsconfig.json"
     }
 }
