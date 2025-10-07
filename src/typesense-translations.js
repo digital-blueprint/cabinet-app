@@ -1,6 +1,6 @@
 /*
 
-This is just needed to register the translation keys with i18next-parser
+This is just needed to register the translation keys with i18next-cli
 t('typesense-schema.file.base.additionalType.key.AdmissionNotice')
 t('typesense-schema.file.base.additionalType.key.CitizenshipCertificate')
 t('typesense-schema.file.base.additionalType.key.Communication')
