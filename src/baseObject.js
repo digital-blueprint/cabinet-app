@@ -591,21 +591,17 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                     baseData.additionalType.key,
                 )}></dbp-form-enum-view>
 
-            <dbp-form-string-view
+            <dbp-form-date-view
+                .hidden=${baseData.recommendedDeletionTimestamp === undefined &&
+                baseData.recommendedArchivalTimestamp === undefined}
                 subscribe="lang"
-                label=${this._i18n.t('doc-modal-semester')}
-                .value=${baseData.semester || ''}></dbp-form-string-view>
-
-            <dbp-form-enum-view
-                subscribe="lang"
-                label=${this._i18n.t('doc-modal-storage-purpose-deletion')}
-                .value=${baseData.isPartOf}
-                .items=${BaseFormElement.getIsPartOfItems(this._i18n)}></dbp-form-enum-view>
-
-            <dbp-form-string-view
-                subscribe="lang"
-                label=${this._i18n.t('doc-modal-comment')}
-                .value=${baseData.comment || ''}></dbp-form-string-view>
+                label=${baseData.disposalType === 'archival'
+                    ? this._i18n.t('doc-modal-recommended-archival')
+                    : this._i18n.t('doc-modal-recommended-deletion')}
+                .value=${baseData.disposalType === 'archival'
+                    ? new Date(baseData.recommendedArchivalTimestamp * 1000)
+                    : new Date(baseData.recommendedDeletionTimestamp * 1000)}
+                :></dbp-form-date-view>
 
             <dbp-form-string-view
                 .hidden=${baseData.recommendedDeletionTimestamp !== undefined ||
@@ -622,17 +618,21 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                           ),
                       })}></dbp-form-string-view>
 
-            <dbp-form-date-view
-                .hidden=${baseData.recommendedDeletionTimestamp === undefined &&
-                baseData.recommendedArchivalTimestamp === undefined}
+            <dbp-form-string-view
                 subscribe="lang"
-                label=${baseData.disposalType === 'archival'
-                    ? this._i18n.t('doc-modal-recommended-archival')
-                    : this._i18n.t('doc-modal-recommended-deletion')}
-                .value=${baseData.disposalType === 'archival'
-                    ? new Date(baseData.recommendedArchivalTimestamp * 1000)
-                    : new Date(baseData.recommendedDeletionTimestamp * 1000)}
-                :></dbp-form-date-view>
+                label=${this._i18n.t('doc-modal-semester')}
+                .value=${baseData.semester || ''}></dbp-form-string-view>
+
+            <dbp-form-enum-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-storage-purpose-deletion')}
+                .value=${baseData.isPartOf}
+                .items=${BaseFormElement.getIsPartOfItems(this._i18n)}></dbp-form-enum-view>
+
+            <dbp-form-string-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-comment')}
+                .value=${baseData.comment || ''}></dbp-form-string-view>
 
             <dbp-form-datetime-view
                 subscribe="lang"
