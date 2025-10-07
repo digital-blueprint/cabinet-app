@@ -591,6 +591,17 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                     baseData.additionalType.key,
                 )}></dbp-form-enum-view>
 
+            <dbp-form-string-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-semester')}
+                .value=${baseData.semester || ''}></dbp-form-string-view>
+
+            <dbp-form-enum-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-storage-purpose-deletion')}
+                .value=${baseData.isPartOf}
+                .items=${BaseFormElement.getIsPartOfItems(this._i18n)}></dbp-form-enum-view>
+
             <dbp-form-date-view
                 .hidden=${baseData.recommendedDeletionTimestamp === undefined &&
                 baseData.recommendedArchivalTimestamp === undefined}
@@ -617,17 +628,6 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                               baseData.additionalType.key,
                           ),
                       })}></dbp-form-string-view>
-
-            <dbp-form-string-view
-                subscribe="lang"
-                label=${this._i18n.t('doc-modal-semester')}
-                .value=${baseData.semester || ''}></dbp-form-string-view>
-
-            <dbp-form-enum-view
-                subscribe="lang"
-                label=${this._i18n.t('doc-modal-storage-purpose-deletion')}
-                .value=${baseData.isPartOf}
-                .items=${BaseFormElement.getIsPartOfItems(this._i18n)}></dbp-form-enum-view>
 
             <dbp-form-string-view
                 subscribe="lang"
