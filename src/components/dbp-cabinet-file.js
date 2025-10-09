@@ -712,6 +712,168 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     /**
+     * Sets isCurrent to true or false for this version in blob
+     * @param fileId
+     * @param enable
+     * @returns {Promise<void>}
+     */
+    async setIsCurrentVersion(fileId, enable = true) {
+        const i18n = this._i18n;
+
+        if (!fileId) {
+            console.error('setIsCurrentVersion: No fileId set');
+            return;
+        }
+
+        try {
+            // Load current blob item metadata
+            const downloadUrl = await this.createBlobDownloadUrl(fileId);
+            let blobItem = await this.loadBlobItem(downloadUrl);
+            if (!blobItem || !blobItem.metadata) {
+                console.warn('setIsCurrentVersion: No metadata found for fileId', fileId);
+                return;
+            }
+
+            let metadata;
+            try {
+                metadata = JSON.parse(blobItem.metadata);
+            } catch (e) {
+                console.error('setIsCurrentVersion: Failed to parse metadata JSON', e);
+                return;
+            }
+
+            if (metadata.isCurrent === enable) {
+                console.log('setIsCurrentVersion: isCurrent already', enable);
+                this.documentModalNotification(
+                    i18n.t('info') || 'Info',
+                    enable
+                        ? 'Version is already marked as current.'
+                        : 'Version is already marked as obsolete.',
+                    'info',
+                );
+                return;
+            }
+
+            metadata.isCurrent = enable;
+
+            // Prepare PATCH request to update metadata
+            const patchUrl = await this.createBlobUrl(CabinetFile.BlobUrlTypes.UPLOAD, fileId);
+
+            const formData = new FormData();
+            formData.append('metadata', JSON.stringify(metadata));
+            formData.append('prefix', this.blobDocumentPrefix);
+
+            const options = {
+                method: 'PATCH',
+                headers: {Authorization: 'Bearer ' + this.auth.token},
+                body: formData,
+            };
+
+            const response = await fetch(patchUrl, options);
+            if (!response.ok) {
+                console.error(
+                    'setIsCurrentVersion: Failed to patch isCurrent',
+                    response.status,
+                    response.statusText,
+                );
+                this.documentModalNotification(
+                    'Error',
+                    enable
+                        ? 'Failed to mark version as current.'
+                        : 'Failed to mark version as obsolete.',
+                    'danger',
+                );
+                return;
+            }
+
+            // // Optimistically update local state
+            // if (this.fileHitData?.base) {
+            //     this.fileHitData.base.isCurrent = enable;
+            // }
+
+            // Refresh from Typesense (will also wait for obsolete updates if needed)
+            try {
+                await this.fetchFileDocumentFromTypesense(fileId);
+                // await this.updateVersions();
+            } catch (e) {
+                console.warn('setIsCurrentVersion: Typesense refresh issue', e);
+            }
+
+            this.documentModalNotification(
+                enable ? 'Success' : 'Success',
+                enable
+                    ? 'Version successfully marked as current.'
+                    : 'Version successfully marked as obsolete.',
+                'success',
+            );
+        } catch (error) {
+            console.error('setIsCurrentVersion: Unexpected error', error);
+            this.documentModalNotification(
+                'Error',
+                enable
+                    ? 'Unexpected error while marking version as current.'
+                    : 'Unexpected error while marking version as obsolete.',
+                'danger',
+            );
+        }
+    }
+
+    /**
+     * Marks the next most current (newest by createdTimestamp) version as current, if available.
+     */
+    async markNextMostCurrentVersionAsCurrent() {
+        try {
+            const currentFileId = this.fileHitData?.file?.base?.fileId;
+            const groupId = this.fileHitData?.file?.base?.groupId;
+            if (!groupId) {
+                console.warn('markNextMostCurrentVersionAsCurrent: No groupId');
+                return;
+            }
+            // Fetch all versions (not only current ones)
+            let versions = await this._getTypesenseService().fetchFileDocumentsByGroupId(
+                groupId,
+                false,
+            );
+            if (!Array.isArray(versions) || versions.length === 0) {
+                console.warn('markNextMostCurrentVersionAsCurrent: No versions found');
+                return;
+            }
+            // Exclude the currently deleted version (current context) and those scheduled for deletion
+            versions = versions.filter(
+                (v) => v.file?.base?.fileId !== currentFileId && !v.base?.isScheduledForDeletion,
+            );
+            if (versions.length === 0) {
+                console.log('markNextMostCurrentVersionAsCurrent: No eligible versions to promote');
+                return;
+            }
+            // Sort by createdTimestamp desc, fallback to modifiedTimestamp
+            versions.sort((a, b) => {
+                const aCreated = a.file?.base?.createdTimestamp || 0;
+                const bCreated = b.file?.base?.createdTimestamp || 0;
+                if (bCreated !== aCreated) return bCreated - aCreated;
+                const aMod = a.file?.base?.modifiedTimestamp || 0;
+                const bMod = b.file?.base?.modifiedTimestamp || 0;
+                return bMod - aMod;
+            });
+            const next = versions[0];
+            if (!next?.file?.base?.fileId) {
+                console.warn('markNextMostCurrentVersionAsCurrent: Next version has no fileId');
+                return;
+            }
+            console.log(
+                'markNextMostCurrentVersionAsCurrent: Promoting version',
+                next.file.base.fileId,
+            );
+            const fileId = next.file?.base?.fileId;
+            console.log('markNextMostCurrentVersionAsCurrent fileId to set as current', fileId);
+            await this.setIsCurrentVersion(fileId, true);
+            // await this.updateVersions();
+        } catch (e) {
+            console.error('markNextMostCurrentVersionAsCurrent: Error', e);
+        }
+    }
+
+    /**
      * Deletes/Undeletes a file from the blob storage
      * @param undelete Whether to undelete the file
      * @returns {Promise<void>}
@@ -802,9 +964,18 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Switch delete/undelete buttons if the operation was successful
         if (success) {
             this.dataWasChanged = true;
-
+            const wasCurrent = this.fileHitData.base.isCurrent;
             // Mark the file as deleted/undeleted in the fileHitData
             this.fileHitData.base.isScheduledForDeletion = !undelete;
+            // If we deleted a current version, promote next most recent version
+            if (!undelete && wasCurrent) {
+                const fileId = this.fileHitData?.file?.base?.fileId;
+                console.log('handleFileDeletion fileId to delete', fileId);
+                // Finds and promotes the next most current version, if available
+                await this.markNextMostCurrentVersionAsCurrent();
+                // Mark current version as obsolete
+                await this.setIsCurrentVersion(fileId, false);
+            }
             // Update status manually, because we didn't trigger a this.fileHitData change
             this.updateStatus();
 
