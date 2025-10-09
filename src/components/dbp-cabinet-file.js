@@ -1546,7 +1546,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // 05.04.2023 08:45:00, modified 12.11.20223 (obsolete)
         // 31.01.2022 12:35:04 (obsolete)
         return html`
-            <select class="button" @change=${this.onChangeVersion}>
+            <select @change=${this.onChangeVersion}>
                 ${Array.from(this.versions).map((item) => {
                     const isModified =
                         item.file.base.modifiedTimestamp !== item.file.base.createdTimestamp;
