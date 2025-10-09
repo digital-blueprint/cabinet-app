@@ -830,21 +830,25 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 return;
             }
             // Fetch all versions (not only current ones)
-            let versions = await this._getTypesenseService().fetchFileDocumentsByGroupId(
+            const allVersions = await this._getTypesenseService().fetchFileDocumentsByGroupId(
                 groupId,
                 false,
             );
-            if (!Array.isArray(versions) || versions.length === 0) {
+            if (!Array.isArray(allVersions) || allVersions.length === 0) {
                 console.warn('markNextMostCurrentVersionAsCurrent: No versions found');
                 return;
             }
             // Exclude the currently deleted version (current context) and those scheduled for deletion
-            versions = versions.filter(
+            let versions = allVersions.filter(
                 (v) => v.file?.base?.fileId !== currentFileId && !v.base?.isScheduledForDeletion,
             );
             if (versions.length === 0) {
-                console.log('markNextMostCurrentVersionAsCurrent: No eligible versions to promote');
-                return;
+                console.log(
+                    'markNextMostCurrentVersionAsCurrent: No eligible versions (excluding scheduled deletions). Falling back to include scheduled ones.',
+                );
+
+                // Fall back to all versions if no version is eligible
+                versions = allVersions;
             }
             // Sort by createdTimestamp desc, fallback to modifiedTimestamp
             versions.sort((a, b) => {
@@ -856,16 +860,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 return bMod - aMod;
             });
             const next = versions[0];
-            if (!next?.file?.base?.fileId) {
+            const fileId = next.file?.base?.fileId;
+
+            if (!fileId) {
                 console.warn('markNextMostCurrentVersionAsCurrent: Next version has no fileId');
                 return;
             }
-            console.log(
-                'markNextMostCurrentVersionAsCurrent: Promoting version',
-                next.file.base.fileId,
-            );
-            const fileId = next.file?.base?.fileId;
-            console.log('markNextMostCurrentVersionAsCurrent fileId to set as current', fileId);
+            console.log('markNextMostCurrentVersionAsCurrent: Promoting version', fileId);
             await this.setIsCurrentVersion(fileId, true);
             // await this.updateVersions();
         } catch (e) {
