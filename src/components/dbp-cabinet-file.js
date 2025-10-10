@@ -23,6 +23,9 @@ import {createUUID} from '@dbp-toolkit/common/utils';
 import {PdfValidationErrorList} from './pdf-validation-error-list.js';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
+    // Always allow creating new versions if true
+    static DEV_MODE = false;
+
     static Modes = {
         VIEW: 'view',
         EDIT: 'edit',
@@ -1743,7 +1746,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                                               data-action="add"
                                                                               ?disabled=${!this
                                                                                   .fileHitData.base
-                                                                                  .isCurrent}
+                                                                                  .isCurrent &&
+                                                                              !CabinetFile.DEV_MODE}
                                                                               @click="${this
                                                                                   ._onActionButtonClick}">
                                                                               <dbp-icon
