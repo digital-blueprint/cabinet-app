@@ -74,6 +74,7 @@
     "doc-modal-all": "All",
     "doc-modal-comment": "Comment",
     "doc-modal-decision": "Decision",
+    "doc-modal-delete-all": "Delete all versions",
     "doc-modal-delete-document": "Delete this version",
     "doc-modal-disposal-type": "Disposal type",
     "doc-modal-disposal-type-archival": "Archival",

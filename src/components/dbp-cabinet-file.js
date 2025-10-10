@@ -1,11 +1,10 @@
 import {css, html} from 'lit';
 import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
 import {createRef, ref} from 'lit/directives/ref.js';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {Button, combineURLs, Icon, Modal, ScopedElementsMixin} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {Button, combineURLs, Icon, Modal} from '@dbp-toolkit/common';
-import {FileSource, FileSink} from '@dbp-toolkit/file-handling';
+import {FileSink, FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {dataURLtoFile, pascalToKebab} from '../utils';
 import {classMap} from 'lit/directives/class-map.js';
@@ -383,11 +382,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     /**
+     * @param fileId
      * @param undelete Whether to undelete the file
      * @returns {Promise<string>}
      */
-    async createBlobDeleteUrl(undelete = false) {
-        return this.createBlobUrl(CabinetFile.BlobUrlTypes.UPLOAD, '', false, {
+    async createBlobDeleteUrl(fileId, undelete = false) {
+        return this.createBlobUrl(CabinetFile.BlobUrlTypes.UPLOAD, fileId, false, {
             deleteIn: undelete ? 'null' : 'P7D',
         });
     }
@@ -566,8 +566,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.registry.define(tagName, this.objectTypeViewComponents[objectType]);
         }
 
-        // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
-        // a variable and need to set the "data" property from a variable too!
+        // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from a variable and need to set the "data" property from a variable too!
         return staticHtml`
             <h3>${this._i18n.t('Document-details-modal')}</h3>
             <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" .data=${hit}></${unsafeStatic(tagName)}>
@@ -708,6 +707,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async deleteFile() {
         await this.handleFileDeletion(false);
+    }
+
+    async deleteAllVersions() {
+        await this.handleDeleteAllVersions();
     }
 
     async undeleteFile() {
@@ -885,34 +888,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     async handleFileDeletion(undelete = false) {
         const i18n = this._i18n;
         const fileId = this.fileHitData.file.base.fileId;
-        console.log('deleteFile fileId', fileId);
-
-        const deleteUrl = await this.createBlobDeleteUrl(undelete);
-        console.log('downloadFileFromBlob deleteUrl', deleteUrl);
-
-        const options = {
-            // We are doing soft-delete here, so we need to use PATCH
-            method: 'PATCH',
-            headers: {
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-            // The API demands a multipart form data, so we need to send an empty body
-            body: new FormData(),
-        };
-
-        let response = await fetch(deleteUrl, options);
-        if (!response.ok) {
-            // TODO: Error handling
-            if (undelete) {
-                this.documentModalNotification('Failure', 'Document undeleting failed!', 'danger');
-            } else {
-                this.documentModalNotification('Failure', 'Document deleting failed!', 'danger');
-            }
-
-            throw response;
-        }
-
-        const data = await response.json();
+        const data = await this.doFileDeletionForFileId(fileId, undelete);
         let success = false;
 
         if (undelete) {
@@ -986,6 +962,44 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             // We need to request an update to re-render the view, because we only changed a property
             await this.requestUpdate();
         }
+    }
+
+    async doFileDeletionForFileId(fileId, undelete = false) {
+        console.log('doFileDeletionForFileId fileId', fileId);
+
+        const deleteUrl = await this.createBlobDeleteUrl(fileId, undelete);
+        console.log('doFileDeletionForFileId deleteUrl', deleteUrl);
+
+        const options = {
+            // We are doing soft-delete here, so we need to use PATCH
+            method: 'PATCH',
+            headers: {
+                Authorization: 'Bearer ' + this.auth.token,
+            },
+            // The API demands a multipart form data, so we need to send an empty body
+            body: new FormData(),
+        };
+
+        let response = await fetch(deleteUrl, options);
+        if (!response.ok) {
+            if (undelete) {
+                this.documentModalNotification(
+                    'Failure',
+                    `Could mark document ${fileId} as undeleted in blob!`,
+                    'danger',
+                );
+            } else {
+                this.documentModalNotification(
+                    'Failure',
+                    `Could mark document ${fileId} as deleted in blob!`,
+                    'danger',
+                );
+            }
+
+            throw response;
+        }
+
+        return await response.json();
     }
 
     /**
@@ -1106,6 +1120,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     break;
                 case 'delete':
                     await this.deleteFile();
+                    break;
+                case 'delete-all':
+                    await this.deleteAllVersions();
                     break;
                 default:
                     break;
@@ -1796,6 +1813,23 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                                     </span>
                                                                 </button>
                                                             </li>
+                                                            <li role="none">
+                                                                <button
+                                                                    role="menuitem"
+                                                                    class="actions-itemBtn"
+                                                                    data-action="delete-all"
+                                                                    @click="${this
+                                                                        ._onActionButtonClick}">
+                                                                    <dbp-icon
+                                                                        name="trash"
+                                                                        aria-hidden="true"></dbp-icon>
+                                                                    <span>
+                                                                        ${i18n.t(
+                                                                            'doc-modal-delete-all',
+                                                                        )}
+                                                                    </span>
+                                                                </button>
+                                                            </li>
                                                         </ul>
                                                     `
                                                   : null}
@@ -2423,5 +2457,166 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Try again with incremented counter
         await this.waitForVersionsUpdatedInTypesense(updatedBlobIds, increment + 1);
+    }
+
+    /**
+     * Waits until versions from deletedFileIds are updated in Typesense with isScheduledForDeletion set to true
+     * @param {Array<string>} deletedFileIds - Array of file IDs that were marked for deletion
+     * @param {number} increment - Current attempt counter (used for recursion)
+     * @returns {Promise<void>}
+     */
+    async waitForVersionsDeletionUpdatedInTypesense(deletedFileIds, increment = 0) {
+        // Stop after 10 attempts
+        if (increment >= 10) {
+            console.warn(
+                'waitForVersionsDeletionUpdatedInTypesense: Could not verify all versions were updated in Typesense after 10 attempts',
+            );
+            this.documentModalNotification(
+                'Warning',
+                'Some document versions may not be immediately updated. Please refresh if needed.',
+                'warning',
+            );
+            return;
+        }
+
+        if (!deletedFileIds || deletedFileIds.length === 0) {
+            return;
+        }
+
+        console.log(
+            `waitForVersionsDeletionUpdatedInTypesense: Checking ${deletedFileIds.length} deleted versions (attempt ${increment + 1})`,
+        );
+
+        try {
+            // Check each deleted file ID to see if it's been updated in Typesense
+            const checkPromises = deletedFileIds.map(async (fileId) => {
+                try {
+                    const item =
+                        await this._getTypesenseService().fetchFileDocumentByBlobId(fileId);
+
+                    // If the item exists and isScheduledForDeletion is true, it has been updated
+                    if (item && item.base?.isScheduledForDeletion === true) {
+                        return {fileId, updated: true};
+                    }
+
+                    return {fileId, updated: false};
+                } catch (error) {
+                    // If we can't fetch the item, assume it's not updated yet
+                    console.log(
+                        `waitForVersionsDeletionUpdatedInTypesense: Could not fetch ${fileId}:`,
+                        error,
+                    );
+                    return {fileId, updated: false};
+                }
+            });
+
+            const results = await Promise.all(checkPromises);
+            const notUpdatedYet = results.filter((result) => !result.updated);
+
+            // If all versions have been updated, we're done
+            if (notUpdatedYet.length === 0) {
+                console.log(
+                    'waitForVersionsDeletionUpdatedInTypesense: All deleted versions have been updated in Typesense',
+                );
+                return;
+            }
+
+            console.log(
+                `waitForVersionsDeletionUpdatedInTypesense: ${notUpdatedYet.length} versions still not updated, waiting...`,
+            );
+        } catch (error) {
+            console.error(
+                'waitForVersionsDeletionUpdatedInTypesense: Error checking versions:',
+                error,
+            );
+        }
+
+        // Wait for a second before trying again
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // Try again with incremented counter
+        await this.waitForVersionsDeletionUpdatedInTypesense(deletedFileIds, increment + 1);
+    }
+
+    async handleDeleteAllVersions() {
+        try {
+            // Fetch all versions
+            const allVersions = await this.fetchGroupedHits();
+
+            // Filter out versions that are already marked for deletion
+            const versionsToDelete = allVersions.filter(
+                (version) => !version.base?.isScheduledForDeletion,
+            );
+
+            console.log(
+                `handleDeleteAllVersions: Found ${versionsToDelete.length} versions to delete`,
+            );
+
+            if (versionsToDelete.length === 0) {
+                this.documentModalNotification(
+                    'Info',
+                    'All versions are already scheduled for deletion.',
+                    'info',
+                );
+                return;
+            }
+
+            // Collect fileIds for tracking
+            const deletedFileIds = [];
+
+            // Delete them with doFileDeletionForFileId
+            for (const version of versionsToDelete) {
+                const fileId = version.file?.base?.fileId;
+                if (fileId) {
+                    console.log(`handleDeleteAllVersions: Deleting version with fileId: ${fileId}`);
+                    await this.doFileDeletionForFileId(fileId);
+                    deletedFileIds.push(fileId);
+                } else {
+                    console.warn(
+                        'handleDeleteAllVersions: Version has no fileId, skipping:',
+                        version,
+                    );
+                }
+            }
+
+            console.log('handleDeleteAllVersions: All versions have been marked for deletion');
+
+            // Wait until all deleted versions are properly updated in Typesense
+            if (deletedFileIds.length > 0) {
+                await this.waitForVersionsDeletionUpdatedInTypesense(deletedFileIds);
+            }
+
+            // Refetch and set current hit data
+            const currentHitId = this.fileHitData?.id;
+            if (currentHitId) {
+                console.log('handleDeleteAllVersions: Refetching current hit data to update UI');
+                try {
+                    const updatedHit = await this._getTypesenseService().fetchItem(currentHitId);
+                    if (updatedHit) {
+                        this.fileHitData = updatedHit;
+                    }
+                } catch (error) {
+                    console.warn(
+                        'handleDeleteAllVersions: Could not refetch current hit data:',
+                        error,
+                    );
+                    // Don't fail the entire operation if we can't refetch - the deletion was successful
+                }
+            }
+
+            // Show success notification to user
+            this.documentModalNotification(
+                'Success',
+                `Successfully deleted ${versionsToDelete.length} version${versionsToDelete.length === 1 ? '' : 's'}. All versions have been scheduled for deletion.`,
+                'success',
+            );
+        } catch (error) {
+            console.error('handleDeleteAllVersions: Error deleting versions:', error);
+            this.documentModalNotification(
+                'Error',
+                'Failed to delete all versions. Please try again.',
+                'danger',
+            );
+        }
     }
 }
