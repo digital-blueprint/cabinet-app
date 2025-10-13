@@ -7,4 +7,5 @@ inputs:
     flake: false
 
 imports:
-  - shared/devenv
+  - shared/devenv/common.nix
+  - shared/devenv/javascript.nix

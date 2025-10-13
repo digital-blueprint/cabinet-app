@@ -3,10 +3,10 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1760117698,
+        "lastModified": 1760162706,
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "837fe70225656e2df8ce53edacc464189172acb6",
+        "rev": "0d5ad578728fe4bce66eb4398b8b1e66deceb4e4",
         "type": "github"
       },
       "original": {
@@ -101,10 +101,10 @@
     "shared": {
       "flake": false,
       "locked": {
-        "lastModified": 1760127556,
+        "lastModified": 1760340193,
         "owner": "digital-blueprint",
         "repo": "shared",
-        "rev": "dbd49f289ec743ff03a914edf9a2876818f521ff",
+        "rev": "44418fd9469eee51c53a92d92a017851030f7cec",
         "type": "github"
       },
       "original": {
