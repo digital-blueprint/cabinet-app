@@ -6,7 +6,7 @@ npm-debug.log
 .cert
 yarn.lock
 .direnv
-vendor/.shared
+.shared
 
 # Devenv
 .devenv*
