@@ -1,7 +1,7 @@
 # Use `just <recipe>` to run a recipe
 # https://just.systems/man/en/
 
-import "vendor/toolkit/shared/justfile"
+import "vendor/.shared/justfile"
 
 # By default, run the `--list` command
 default:

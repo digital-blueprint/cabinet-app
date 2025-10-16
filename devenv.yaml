@@ -7,5 +7,5 @@ inputs:
     flake: false
 
 imports:
-  - shared/devenv/common.nix
-  - shared/devenv/javascript.nix
+  - shared/common
+  - shared/dbp-app
