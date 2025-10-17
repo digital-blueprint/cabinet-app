@@ -1598,6 +1598,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 : i18n.t(`typesense-schema.file.base.additionalType.key.${additionalType}`);
         console.log('additionalType', additionalType);
         this.showLineWhenDelete = this.deleteAtDateTime ? ' | ' : '';
+        const isCurrent = hit?.base?.isCurrent ?? true;
+        const hasOnlyOneVersion = this.versions.length <= 1;
 
         // TODO: Check if PDF was uploaded
         return html`
@@ -1724,6 +1726,48 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                                               <span>
                                                                                   ${i18n.t(
                                                                                       'doc-modal-edit',
+                                                                                  )}
+                                                                              </span>
+                                                                          </button>
+                                                                      </li>
+                                                                  `
+                                                                : null}
+                                                            ${!hasOnlyOneVersion && !isCurrent
+                                                                ? html`
+                                                                      <li role="none">
+                                                                          <button
+                                                                              role="menuitem"
+                                                                              class="actions-itemBtn"
+                                                                              data-action="mark-current"
+                                                                              @click="${this
+                                                                                  ._onActionButtonClick}">
+                                                                              <dbp-icon
+                                                                                  name="flag"
+                                                                                  aria-hidden="true"></dbp-icon>
+                                                                              <span>
+                                                                                  ${i18n.t(
+                                                                                      'doc-modal-mark-document-current',
+                                                                                  )}
+                                                                              </span>
+                                                                          </button>
+                                                                      </li>
+                                                                  `
+                                                                : null}
+                                                            ${!hasOnlyOneVersion && isCurrent
+                                                                ? html`
+                                                                      <li role="none">
+                                                                          <button
+                                                                              role="menuitem"
+                                                                              class="actions-itemBtn"
+                                                                              data-action="mark-obsolete"
+                                                                              @click="${this
+                                                                                  ._onActionButtonClick}">
+                                                                              <dbp-icon
+                                                                                  name="flag"
+                                                                                  aria-hidden="true"></dbp-icon>
+                                                                              <span>
+                                                                                  ${i18n.t(
+                                                                                      'doc-modal-mark-document-obsolete',
                                                                                   )}
                                                                               </span>
                                                                           </button>
