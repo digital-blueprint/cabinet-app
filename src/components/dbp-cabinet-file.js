@@ -1598,8 +1598,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 : i18n.t(`typesense-schema.file.base.additionalType.key.${additionalType}`);
         console.log('additionalType', additionalType);
         this.showLineWhenDelete = this.deleteAtDateTime ? ' | ' : '';
-        const isCurrent = hit?.base?.isCurrent ?? true;
-        const hasOnlyOneVersion = this.versions.length <= 1;
 
         // TODO: Check if PDF was uploaded
         return html`
@@ -1660,162 +1658,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                     ${i18n.t('buttons.replace-document')}
                                     ${this.getMiniSpinnerHtml(id)}
                                 </button>
-                                <!-- Actions dropdown with icons -->
-                                ${this.mode !== CabinetFile.Modes.ADD &&
-                                this.mode !== CabinetFile.Modes.EDIT &&
-                                this.mode !== CabinetFile.Modes.NEW_VERSION &&
-                                !hit.base?.isScheduledForDeletion
-                                    ? html`
-                                          <div class="actions-dropdown">
-                                              <button
-                                                  class="actions-trigger"
-                                                  @click="${this._toggleActionsMenu}"
-                                                  @keydown="${this._onTriggerKeydown}"
-                                                  ?disabled="${!file}"
-                                                  type="button"
-                                                  aria-haspopup="menu"
-                                                  aria-expanded="${String(this.actionsMenuOpen)}"
-                                                  aria-controls="actions-menu"
-                                                  aria-labelledby="File actions">
-                                                  <span>${i18n.t('doc-modal-Actions')}</span>
-                                                  <dbp-icon
-                                                      name="chevron-down"
-                                                      aria-hidden="true"></dbp-icon>
-                                              </button>
-
-                                              ${this.actionsMenuOpen
-                                                  ? html`
-                                                        <ul
-                                                            class="actions-menu"
-                                                            id="actions-menu"
-                                                            role="menu"
-                                                            @keydown="${this._onMenuKeydown}">
-                                                            ${this.mode === CabinetFile.Modes.VIEW
-                                                                ? html`
-                                                                      <li role="none">
-                                                                          <button
-                                                                              role="menuitem"
-                                                                              class="actions-itemBtn"
-                                                                              data-action="edit"
-                                                                              @click="${this
-                                                                                  ._onActionButtonClick}">
-                                                                              <dbp-icon
-                                                                                  name="pencil"
-                                                                                  aria-hidden="true"></dbp-icon>
-                                                                              <span>
-                                                                                  ${i18n.t(
-                                                                                      'doc-modal-edit',
-                                                                                  )}
-                                                                              </span>
-                                                                          </button>
-                                                                      </li>
-                                                                      ${!hasOnlyOneVersion &&
-                                                                      !isCurrent
-                                                                          ? html`
-                                                                                <li role="none">
-                                                                                    <button
-                                                                                        role="menuitem"
-                                                                                        class="actions-itemBtn"
-                                                                                        data-action="mark-current"
-                                                                                        @click="${this
-                                                                                            ._onActionButtonClick}">
-                                                                                        <dbp-icon
-                                                                                            name="flag"
-                                                                                            aria-hidden="true"></dbp-icon>
-                                                                                        <span>
-                                                                                            ${i18n.t(
-                                                                                                'doc-modal-mark-document-current',
-                                                                                            )}
-                                                                                        </span>
-                                                                                    </button>
-                                                                                </li>
-                                                                            `
-                                                                          : null}
-                                                                      ${!hasOnlyOneVersion &&
-                                                                      isCurrent
-                                                                          ? html`
-                                                                                <li role="none">
-                                                                                    <button
-                                                                                        role="menuitem"
-                                                                                        class="actions-itemBtn"
-                                                                                        data-action="mark-obsolete"
-                                                                                        @click="${this
-                                                                                            ._onActionButtonClick}">
-                                                                                        <dbp-icon
-                                                                                            name="flag"
-                                                                                            aria-hidden="true"></dbp-icon>
-                                                                                        <span>
-                                                                                            ${i18n.t(
-                                                                                                'doc-modal-mark-document-obsolete',
-                                                                                            )}
-                                                                                        </span>
-                                                                                    </button>
-                                                                                </li>
-                                                                            `
-                                                                          : null}
-                                                                      <li role="none">
-                                                                          <button
-                                                                              role="menuitem"
-                                                                              class="actions-itemBtn"
-                                                                              data-action="add"
-                                                                              ?disabled=${!this
-                                                                                  .fileHitData.base
-                                                                                  .isCurrent &&
-                                                                              !CabinetFile.DEV_MODE}
-                                                                              @click="${this
-                                                                                  ._onActionButtonClick}">
-                                                                              <dbp-icon
-                                                                                  name="plus"
-                                                                                  aria-hidden="true"></dbp-icon>
-                                                                              <span>
-                                                                                  ${i18n.t(
-                                                                                      'doc-modal-Add-new-version',
-                                                                                  )}
-                                                                              </span>
-                                                                          </button>
-                                                                      </li>
-                                                                      <li role="none">
-                                                                          <button
-                                                                              role="menuitem"
-                                                                              class="actions-itemBtn"
-                                                                              data-action="delete"
-                                                                              @click="${this
-                                                                                  ._onActionButtonClick}">
-                                                                              <dbp-icon
-                                                                                  name="trash"
-                                                                                  aria-hidden="true"></dbp-icon>
-                                                                              <span>
-                                                                                  ${i18n.t(
-                                                                                      'doc-modal-delete-document',
-                                                                                  )}
-                                                                              </span>
-                                                                          </button>
-                                                                      </li>
-                                                                      <li role="none">
-                                                                          <button
-                                                                              role="menuitem"
-                                                                              class="actions-itemBtn"
-                                                                              data-action="delete-all"
-                                                                              @click="${this
-                                                                                  ._onActionButtonClick}">
-                                                                              <dbp-icon
-                                                                                  name="trash"
-                                                                                  aria-hidden="true"></dbp-icon>
-                                                                              <span>
-                                                                                  ${i18n.t(
-                                                                                      'doc-modal-delete-all',
-                                                                                  )}
-                                                                              </span>
-                                                                          </button>
-                                                                      </li>
-                                                                  `
-                                                                : null}
-                                                        </ul>
-                                                    `
-                                                  : null}
-                                          </div>
-                                      `
-                                    : null}
+                                ${this.renderActionDropDown(hit, file)}
                                 <button
                                     @click="${this.undeleteFile}"
                                     ?disabled="${!file}"
@@ -1862,6 +1705,138 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="form">${this.getObjectTypeFormPartHtml()}</div>
                 </div>
             </dbp-modal>
+        `;
+    }
+
+    renderActionDropDown(hit, file) {
+        if (this.mode !== CabinetFile.Modes.VIEW || hit.base?.isScheduledForDeletion) {
+            return null;
+        }
+
+        const i18n = this._i18n;
+        const isCurrent = hit?.base?.isCurrent ?? true;
+        const hasOnlyOneVersion = this.versions.length <= 1;
+
+        // Actions dropdown with icons
+        return html`
+            <div class="actions-dropdown">
+                <button
+                    class="actions-trigger"
+                    @click="${this._toggleActionsMenu}"
+                    @keydown="${this._onTriggerKeydown}"
+                    ?disabled="${!file}"
+                    type="button"
+                    aria-haspopup="menu"
+                    aria-expanded="${String(this.actionsMenuOpen)}"
+                    aria-controls="actions-menu"
+                    aria-labelledby="File actions">
+                    <span>${i18n.t('doc-modal-Actions')}</span>
+                    <dbp-icon name="chevron-down" aria-hidden="true"></dbp-icon>
+                </button>
+
+                ${this.actionsMenuOpen
+                    ? html`
+                          <ul
+                              class="actions-menu"
+                              id="actions-menu"
+                              role="menu"
+                              @keydown="${this._onMenuKeydown}">
+                              ${this.mode === CabinetFile.Modes.VIEW
+                                  ? html`
+                                        <li role="none">
+                                            <button
+                                                role="menuitem"
+                                                class="actions-itemBtn"
+                                                data-action="edit"
+                                                @click="${this._onActionButtonClick}">
+                                                <dbp-icon
+                                                    name="pencil"
+                                                    aria-hidden="true"></dbp-icon>
+                                                <span>${i18n.t('doc-modal-edit')}</span>
+                                            </button>
+                                        </li>
+                                        ${!hasOnlyOneVersion && !isCurrent
+                                            ? html`
+                                                  <li role="none">
+                                                      <button
+                                                          role="menuitem"
+                                                          class="actions-itemBtn"
+                                                          data-action="mark-current"
+                                                          @click="${this._onActionButtonClick}">
+                                                          <dbp-icon
+                                                              name="flag"
+                                                              aria-hidden="true"></dbp-icon>
+                                                          <span>
+                                                              ${i18n.t(
+                                                                  'doc-modal-mark-document-current',
+                                                              )}
+                                                          </span>
+                                                      </button>
+                                                  </li>
+                                              `
+                                            : null}
+                                        ${!hasOnlyOneVersion && isCurrent
+                                            ? html`
+                                                  <li role="none">
+                                                      <button
+                                                          role="menuitem"
+                                                          class="actions-itemBtn"
+                                                          data-action="mark-obsolete"
+                                                          @click="${this._onActionButtonClick}">
+                                                          <dbp-icon
+                                                              name="flag"
+                                                              aria-hidden="true"></dbp-icon>
+                                                          <span>
+                                                              ${i18n.t(
+                                                                  'doc-modal-mark-document-obsolete',
+                                                              )}
+                                                          </span>
+                                                      </button>
+                                                  </li>
+                                              `
+                                            : null}
+                                        <li role="none">
+                                            <button
+                                                role="menuitem"
+                                                class="actions-itemBtn"
+                                                data-action="add"
+                                                ?disabled=${!this.fileHitData.base.isCurrent &&
+                                                !CabinetFile.DEV_MODE}
+                                                @click="${this._onActionButtonClick}">
+                                                <dbp-icon name="plus" aria-hidden="true"></dbp-icon>
+                                                <span>${i18n.t('doc-modal-Add-new-version')}</span>
+                                            </button>
+                                        </li>
+                                        <li role="none">
+                                            <button
+                                                role="menuitem"
+                                                class="actions-itemBtn"
+                                                data-action="delete"
+                                                @click="${this._onActionButtonClick}">
+                                                <dbp-icon
+                                                    name="trash"
+                                                    aria-hidden="true"></dbp-icon>
+                                                <span>${i18n.t('doc-modal-delete-document')}</span>
+                                            </button>
+                                        </li>
+                                        <li role="none">
+                                            <button
+                                                role="menuitem"
+                                                class="actions-itemBtn"
+                                                data-action="delete-all"
+                                                @click="${this._onActionButtonClick}">
+                                                <dbp-icon
+                                                    name="trash"
+                                                    aria-hidden="true"></dbp-icon>
+                                                <span>${i18n.t('doc-modal-delete-all')}</span>
+                                            </button>
+                                        </li>
+                                    `
+                                  : null}
+                          </ul>
+                      `
+                    : null}
+            </div>
         `;
     }
 
