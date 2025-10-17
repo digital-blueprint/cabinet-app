@@ -319,6 +319,7 @@ Dependencies:
             urlPlugin(await getUrlOptions(pkg.name, 'shared')),
             whitelabel &&
                 copy({
+                    copySync: true,
                     targets: [
                         {
                             src: 'assets/translation_overrides/',
@@ -361,8 +362,9 @@ Dependencies:
                         },
                         {src: 'assets/silent-check-sso.html', dest: 'dist'},
                         {
-                            src: await getPackagePath('@fontsource/nunito-sans', '*'),
-                            dest: 'dist/' + (await getDistPath(pkg.name, 'fonts/nunito-sans')),
+                            src: await getPackagePath('@fontsource/nunito-sans', '.'),
+                            dest: 'dist/' + (await getDistPath(pkg.name, 'fonts')),
+                            rename: 'nunito-sans',
                         },
                         {
                             src: await getPackagePath('@dbp-toolkit/common', 'src/spinner.js'),
@@ -385,6 +387,7 @@ Dependencies:
                 }),
             !whitelabel &&
                 copy({
+                    copySync: true,
                     targets: [
                         {
                             src: `${assetsPath}/translation_overrides/`,
@@ -433,8 +436,8 @@ Dependencies:
                             dest: 'dist/' + (await getDistPath(pkg.name, 'images')),
                         },
                         {
-                            src: `${assetsPath}/icon/*`,
-                            dest: 'dist/' + (await getDistPath(pkg.name, 'icon')),
+                            src: `${assetsPath}/icon`,
+                            dest: 'dist/' + (await getDistPath(pkg.name, '.')),
                         },
                         {
                             src: `${assetsPath}/site.webmanifest`,
@@ -443,8 +446,9 @@ Dependencies:
                         },
                         {src: `${assetsPath}/silent-check-sso.html`, dest: 'dist'},
                         {
-                            src: await getPackagePath('@tugraz/font-source-sans-pro', 'files/*'),
-                            dest: 'dist/' + (await getDistPath(pkg.name, 'fonts/source-sans-pro')),
+                            src: await getPackagePath('@tugraz/font-source-sans-pro', 'files'),
+                            dest: 'dist/' + (await getDistPath(pkg.name, 'fonts')),
+                            rename: 'source-sans-pro',
                         },
                         {
                             src: await getPackagePath('@tugraz/web-components', 'src/spinner.js'),
