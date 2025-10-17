@@ -724,8 +724,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @returns {Promise<void>}
      */
     async setIsCurrentVersion(fileId, enable = true) {
-        const i18n = this._i18n;
-
         if (!fileId) {
             console.error('setIsCurrentVersion: No fileId set');
             return;
@@ -747,6 +745,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 console.error('setIsCurrentVersion: Failed to parse metadata JSON', e);
                 return;
             }
+
+            const i18n = this._i18n;
 
             if (metadata.isCurrent === enable) {
                 console.log('setIsCurrentVersion: isCurrent already', enable);
@@ -1044,6 +1044,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             action = el.value || el.dataset?.action;
         }
 
+        const fileId = this.getFileHitDataBlobId();
+
         try {
             switch (action) {
                 case 'add':
@@ -1051,6 +1053,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     break;
                 case 'edit':
                     await this.editFile();
+                    break;
+                case 'mark-current':
+                    await this.setIsCurrentVersion(fileId);
+                    break;
+                case 'mark-obsolete':
+                    await this.setIsCurrentVersion(fileId, false);
                     break;
                 case 'delete':
                     await this.deleteFile();
