@@ -825,62 +825,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     /**
-     * Marks the next most current (newest by createdTimestamp) version as current, if available.
-     */
-    async markNextMostCurrentVersionAsCurrent() {
-        try {
-            const currentFileId = this.fileHitData?.file?.base?.fileId;
-            const groupId = this.fileHitData?.file?.base?.groupId;
-            if (!groupId) {
-                console.warn('markNextMostCurrentVersionAsCurrent: No groupId');
-                return;
-            }
-            // Fetch all versions (not only current ones)
-            const allVersions = await this._getTypesenseService().fetchFileDocumentsByGroupId(
-                groupId,
-                false,
-            );
-            if (!Array.isArray(allVersions) || allVersions.length === 0) {
-                console.warn('markNextMostCurrentVersionAsCurrent: No versions found');
-                return;
-            }
-            // Exclude the currently deleted version (current context) and those scheduled for deletion
-            let versions = allVersions.filter(
-                (v) => v.file?.base?.fileId !== currentFileId && !v.base?.isScheduledForDeletion,
-            );
-            if (versions.length === 0) {
-                console.log(
-                    'markNextMostCurrentVersionAsCurrent: No eligible versions (excluding scheduled deletions). Falling back to include scheduled ones.',
-                );
-
-                // Fall back to all versions if no version is eligible
-                versions = allVersions;
-            }
-            // Sort by createdTimestamp desc, fallback to modifiedTimestamp
-            versions.sort((a, b) => {
-                const aCreated = a.file?.base?.createdTimestamp || 0;
-                const bCreated = b.file?.base?.createdTimestamp || 0;
-                if (bCreated !== aCreated) return bCreated - aCreated;
-                const aMod = a.file?.base?.modifiedTimestamp || 0;
-                const bMod = b.file?.base?.modifiedTimestamp || 0;
-                return bMod - aMod;
-            });
-            const next = versions[0];
-            const fileId = next.file?.base?.fileId;
-
-            if (!fileId) {
-                console.warn('markNextMostCurrentVersionAsCurrent: Next version has no fileId');
-                return;
-            }
-            console.log('markNextMostCurrentVersionAsCurrent: Promoting version', fileId);
-            await this.setIsCurrentVersion(fileId, true);
-            // await this.updateVersions();
-        } catch (e) {
-            console.error('markNextMostCurrentVersionAsCurrent: Error', e);
-        }
-    }
-
-    /**
      * Deletes/Undeletes a file from the blob storage
      * @param undelete Whether to undelete the file
      * @returns {Promise<void>}
@@ -944,18 +888,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Switch delete/undelete buttons if the operation was successful
         if (success) {
             this.dataWasChanged = true;
-            const wasCurrent = this.fileHitData.base.isCurrent;
             // Mark the file as deleted/undeleted in the fileHitData
             this.fileHitData.base.isScheduledForDeletion = !undelete;
-            // If we deleted a current version, promote next most recent version
-            if (!undelete && wasCurrent) {
-                const fileId = this.fileHitData?.file?.base?.fileId;
-                console.log('handleFileDeletion fileId to delete', fileId);
-                // Finds and promotes the next most current version, if available
-                await this.markNextMostCurrentVersionAsCurrent();
-                // Mark current version as obsolete
-                await this.setIsCurrentVersion(fileId, false);
-            }
             // Update status manually, because we didn't trigger a this.fileHitData change
             this.updateStatus();
 
