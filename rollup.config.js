@@ -5,6 +5,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 import replace from '@rollup/plugin-replace';
+import {replacePlugin as rolldownReplace} from 'rolldown/experimental';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
@@ -32,6 +33,7 @@ let useTerser = buildFull;
 let useBabel = buildFull;
 let checkLicenses = buildFull;
 let treeshake = buildFull;
+let nodeEnv = buildFull ? 'production' : 'development';
 let isRolldown = process.argv.some((arg) => arg.includes('rolldown'));
 
 // if true, app assets and configs are whitelabel
@@ -254,12 +256,19 @@ export default (async () => {
                     activities: activities,
                 },
             }),
-            replace({
-                // If you would like DEV messages, specify 'development'
-                // Otherwise use 'production'
-                'process.env.NODE_ENV': JSON.stringify('production'),
-                preventAssignment: true,
-            }),
+            isRolldown
+                ? rolldownReplace(
+                      {
+                          'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+                      },
+                      {
+                          preventAssignment: true,
+                      },
+                  )
+                : replace({
+                      'process.env.NODE_ENV': JSON.stringify(nodeEnv),
+                      preventAssignment: true,
+                  }),
             !isRolldown &&
                 resolve({
                     browser: true,
