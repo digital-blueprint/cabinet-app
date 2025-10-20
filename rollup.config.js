@@ -194,14 +194,6 @@ if (!whitelabel) {
     input = [...input, await getPackagePath('@tugraz/web-components', 'src/logo.js')];
 }
 
-let extraOutput = {};
-if (isRolldown) {
-    extraOutput = {
-        cleanDir: false,
-        minify: doMinify,
-    };
-}
-
 export default (async () => {
     let privatePath = await getDistPath(pkg.name);
     return {
@@ -212,7 +204,7 @@ export default (async () => {
             chunkFileNames: 'shared/[name].[hash].js',
             format: 'esm',
             sourcemap: true,
-            ...extraOutput,
+            ...(isRolldown ? {minify: doMinify} : {}),
         },
         moduleTypes: {
             '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
@@ -229,10 +221,9 @@ export default (async () => {
             warn(warning);
         },
         plugins: [
-            !isRolldown &&
-                del({
-                    targets: 'dist/*',
-                }),
+            del({
+                targets: 'dist/*',
+            }),
             emitEJS({
                 src: assetsPath,
                 include: ['**/*.ejs', '**/.*.ejs'],
