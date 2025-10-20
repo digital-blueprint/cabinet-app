@@ -29,7 +29,7 @@ const pkg = require('./package.json');
 const appEnv = typeof process.env.APP_ENV !== 'undefined' ? process.env.APP_ENV : 'local';
 const watch = process.env.ROLLUP_WATCH === 'true';
 const buildFull = (!watch && appEnv !== 'test') || process.env.FORCE_FULL !== undefined;
-let useTerser = buildFull;
+let doMinify = buildFull;
 let useBabel = buildFull;
 let checkLicenses = buildFull;
 let treeshake = buildFull;
@@ -194,6 +194,14 @@ if (!whitelabel) {
     input = [...input, await getPackagePath('@tugraz/web-components', 'src/logo.js')];
 }
 
+let extraOutput = {};
+if (isRolldown) {
+    extraOutput = {
+        cleanDir: false,
+        minify: doMinify,
+    };
+}
+
 export default (async () => {
     let privatePath = await getDistPath(pkg.name);
     return {
@@ -204,6 +212,7 @@ export default (async () => {
             chunkFileNames: 'shared/[name].[hash].js',
             format: 'esm',
             sourcemap: true,
+            ...extraOutput,
         },
         moduleTypes: {
             '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
@@ -220,9 +229,10 @@ export default (async () => {
             warn(warning);
         },
         plugins: [
-            del({
-                targets: 'dist/*',
-            }),
+            !isRolldown &&
+                del({
+                    targets: 'dist/*',
+                }),
             emitEJS({
                 src: assetsPath,
                 include: ['**/*.ejs', '**/.*.ejs'],
@@ -320,6 +330,7 @@ Dependencies:
             whitelabel &&
                 copy({
                     copySync: true,
+                    hook: 'writeBundle',
                     targets: [
                         {
                             src: 'assets/translation_overrides/',
@@ -488,7 +499,7 @@ Dependencies:
                         ],
                     ],
                 }),
-            useTerser ? terser() : false,
+            doMinify && !isRolldown ? terser() : false,
             watch
                 ? serve({
                       contentBase: '.',
