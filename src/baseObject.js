@@ -151,6 +151,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         // even if something was already set in the form
         const updateField = (field) => (e) => {
             const value = e.detail?.value ?? e.target?.value;
+
+            // Support nested fields using dot notation
             const keys = field.split('.');
             const lastKey = keys.pop();
 
