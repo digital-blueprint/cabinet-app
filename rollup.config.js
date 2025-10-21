@@ -9,7 +9,6 @@ import {replacePlugin as rolldownReplace} from 'rolldown/experimental';
 import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
-import urlPlugin from '@rollup/plugin-url';
 import license from 'rollup-plugin-license';
 import del from 'rollup-plugin-delete';
 import emitEJS from 'rollup-plugin-emit-ejs';
@@ -19,8 +18,7 @@ import {
     getBuildInfo,
     generateTLSConfig,
     getDistPath,
-    getCopyTargets,
-    getUrlOptions,
+    assetPlugin,
 } from '@dbp-toolkit/dev-utils';
 import {createRequire} from 'node:module';
 
@@ -317,7 +315,7 @@ Dependencies:
                     strictRequires: 'auto',
                 }),
             !isRolldown && json(),
-            urlPlugin(await getUrlOptions(pkg.name, 'shared')),
+            await assetPlugin(pkg.name, 'dist'),
             whitelabel &&
                 copy({
                     copySync: true,
@@ -384,7 +382,6 @@ Dependencies:
                             ),
                             dest: 'dist/' + (await getDistPath(pkg.name)),
                         },
-                        ...(await getCopyTargets(pkg.name, 'dist')),
                     ],
                 }),
             !whitelabel &&
@@ -468,7 +465,6 @@ Dependencies:
                             ),
                             dest: 'dist/' + (await getDistPath(pkg.name)),
                         },
-                        ...(await getCopyTargets(pkg.name, 'dist')),
                     ],
                 }),
             useBabel &&
