@@ -1724,6 +1724,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const i18n = this._i18n;
         const isCurrent = hit?.base?.isCurrent ?? true;
         const hasOnlyOneVersion = this.versions.length <= 1;
+        const showDeleteDocumentButton = hasOnlyOneVersion;
+        const showDeleteVersionButton = !hasOnlyOneVersion;
+        const showDeleteAllVersionsButton = !hasOnlyOneVersion;
 
         // Actions dropdown with icons
         return html`
@@ -1815,30 +1818,62 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                 <span>${i18n.t('doc-modal-Add-new-version')}</span>
                                             </button>
                                         </li>
-                                        <li role="none">
-                                            <button
-                                                role="menuitem"
-                                                class="actions-itemBtn"
-                                                data-action="delete"
-                                                @click="${this._onActionButtonClick}">
-                                                <dbp-icon
-                                                    name="trash"
-                                                    aria-hidden="true"></dbp-icon>
-                                                <span>${i18n.t('doc-modal-delete-document')}</span>
-                                            </button>
-                                        </li>
-                                        <li role="none">
-                                            <button
-                                                role="menuitem"
-                                                class="actions-itemBtn"
-                                                data-action="delete-all"
-                                                @click="${this._onActionButtonClick}">
-                                                <dbp-icon
-                                                    name="trash"
-                                                    aria-hidden="true"></dbp-icon>
-                                                <span>${i18n.t('doc-modal-delete-all')}</span>
-                                            </button>
-                                        </li>
+                                        ${showDeleteDocumentButton
+                                            ? html`
+                                                  <li role="none">
+                                                      <button
+                                                          role="menuitem"
+                                                          class="actions-itemBtn"
+                                                          data-action="delete"
+                                                          @click="${this._onActionButtonClick}">
+                                                          <dbp-icon
+                                                              name="trash"
+                                                              aria-hidden="true"></dbp-icon>
+                                                          <span>
+                                                              ${i18n.t('doc-modal-delete-document')}
+                                                          </span>
+                                                      </button>
+                                                  </li>
+                                              `
+                                            : null}
+                                        ${showDeleteVersionButton
+                                            ? html`
+                                                  <li role="none">
+                                                      <button
+                                                          role="menuitem"
+                                                          class="actions-itemBtn"
+                                                          data-action="delete"
+                                                          @click="${this._onActionButtonClick}">
+                                                          <dbp-icon
+                                                              name="trash"
+                                                              aria-hidden="true"></dbp-icon>
+                                                          <span>
+                                                              ${i18n.t('doc-modal-delete-version')}
+                                                          </span>
+                                                      </button>
+                                                  </li>
+                                              `
+                                            : null}
+                                        ${showDeleteAllVersionsButton
+                                            ? html`
+                                                  <li role="none">
+                                                      <button
+                                                          role="menuitem"
+                                                          class="actions-itemBtn"
+                                                          data-action="delete-all"
+                                                          @click="${this._onActionButtonClick}">
+                                                          <dbp-icon
+                                                              name="trash"
+                                                              aria-hidden="true"></dbp-icon>
+                                                          <span>
+                                                              ${i18n.t(
+                                                                  'doc-modal-delete-all-versions',
+                                                              )}
+                                                          </span>
+                                                      </button>
+                                                  </li>
+                                              `
+                                            : null}
                                     `
                                   : null}
                           </ul>
