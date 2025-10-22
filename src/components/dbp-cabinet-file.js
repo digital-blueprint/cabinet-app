@@ -2224,7 +2224,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     async markOtherVersionsObsoleteInBlob(groupId, currentIdentifier) {
         if (!groupId) {
             console.warn('markOtherVersionsObsoleteInBlob: No groupId provided');
-            return;
+            return [];
         }
 
         try {
@@ -2243,7 +2243,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 console.log(
                     'markOtherVersionsObsoleteInBlob: No other versions to mark as obsolete',
                 );
-                return;
+                return [];
             }
 
             console.log(
