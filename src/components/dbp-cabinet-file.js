@@ -1486,7 +1486,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     renderGroupingContainer() {
-        if (this.mode !== CabinetFile.Modes.VIEW) {
+        // Only show the grouping container in view mode if there are multiple versions
+        if (this.mode !== CabinetFile.Modes.VIEW || this.versions.length <= 1) {
             return html``;
         }
 
