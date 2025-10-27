@@ -202,7 +202,7 @@ export default (async () => {
             chunkFileNames: 'shared/[name].[hash].js',
             format: 'esm',
             sourcemap: true,
-            ...(isRolldown ? {minify: doMinify} : {}),
+            ...(isRolldown ? {minify: doMinify, cleanDir: true} : {}),
         },
         moduleTypes: {
             '.css': 'js', // work around rolldown handling the CSS import before the URL plugin cab
@@ -219,9 +219,10 @@ export default (async () => {
             warn(warning);
         },
         plugins: [
-            del({
-                targets: 'dist/*',
-            }),
+            !isRolldown &&
+                del({
+                    targets: 'dist/*',
+                }),
             emitEJS({
                 src: assetsPath,
                 include: ['**/*.ejs', '**/.*.ejs'],
@@ -319,7 +320,7 @@ Dependencies:
             whitelabel &&
                 copy({
                     copySync: true,
-                    hook: 'writeBundle',
+                    hook: 'generateBundle',
                     targets: [
                         {
                             src: 'assets/translation_overrides/',
@@ -387,6 +388,7 @@ Dependencies:
             !whitelabel &&
                 copy({
                     copySync: true,
+                    hook: 'generateBundle',
                     targets: [
                         {
                             src: `${assetsPath}/translation_overrides/`,
