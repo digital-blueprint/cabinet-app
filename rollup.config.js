@@ -3,7 +3,6 @@ import process from 'node:process';
 import {globSync} from 'glob';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import copy from 'rollup-plugin-copy';
 import replace from '@rollup/plugin-replace';
 import {replacePlugin as rolldownReplace} from 'rolldown/experimental';
 import terser from '@rollup/plugin-terser';
@@ -316,12 +315,9 @@ Dependencies:
                     strictRequires: 'auto',
                 }),
             !isRolldown && json(),
-            await assetPlugin(pkg.name, 'dist'),
             whitelabel &&
-                copy({
-                    copySync: true,
-                    hook: 'generateBundle',
-                    targets: [
+                (await assetPlugin(pkg.name, 'dist', {
+                    copyTargets: [
                         {
                             src: 'assets/translation_overrides/',
                             dest: 'dist/' + (await getDistPath(pkg.name)),
@@ -384,12 +380,10 @@ Dependencies:
                             dest: 'dist/' + (await getDistPath(pkg.name)),
                         },
                     ],
-                }),
+                })),
             !whitelabel &&
-                copy({
-                    copySync: true,
-                    hook: 'generateBundle',
-                    targets: [
+                (await assetPlugin(pkg.name, 'dist', {
+                    copyTargets: [
                         {
                             src: `${assetsPath}/translation_overrides/`,
                             dest: 'dist/' + (await getDistPath(pkg.name)),
@@ -468,7 +462,7 @@ Dependencies:
                             dest: 'dist/' + (await getDistPath(pkg.name)),
                         },
                     ],
-                }),
+                })),
             useBabel &&
                 getBabelOutputPlugin({
                     compact: false,
