@@ -1,7 +1,7 @@
 import process from 'node:process';
-import { playwrightLauncher } from '@web/test-runner-playwright';
+import {playwrightLauncher} from '@web/test-runner-playwright';
 
-import { installBrowsersForNpmInstall, registry } from 'playwright-core/lib/server';
+import {installBrowsersForNpmInstall, registry} from 'playwright-core/lib/server';
 
 async function setup() {
     const browsersToInstall = [];
