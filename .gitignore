@@ -5,7 +5,6 @@ npm-debug.log
 .vscode
 .cert
 yarn.lock
-.direnv
 .shared
 
 # Devenv
