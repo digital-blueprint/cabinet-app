@@ -45,6 +45,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         DELETE: 'delete',
     };
 
+    static Status = {
+        SUCCESS: 'success',
+        WARNING: 'warning',
+        DANGER: 'danger',
+    };
+
     constructor() {
         super();
         this.objectTypeFormComponents = {};
@@ -96,11 +102,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.isFileDirty = false;
         this.dataWasChanged = false;
         this.documentStatus = 'success';
-        this.documentStatusDescription = '';
+        this.statusMessageBlocks = [];
         this.deleteAtDateTime = '';
         this.allowStateReset = true;
         this.state = CabinetFile.States.NONE;
-        this.showLineWhenDelete = '';
         this.versions = [];
 
         // Will be used when canceling the form in EDIT mode, when the data was changed via this.fileHitDataCache
@@ -168,7 +173,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             deleteAtDateTime: {type: String, attribute: false},
             state: {type: String, attribute: false},
             mode: {type: String},
-            showLineWhenDelete: {type: String},
             actionsMenuOpen: {type: Boolean, attribute: false},
         };
     }
@@ -1200,38 +1204,26 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     flex-direction: row;
                 }
 
-                #document-modal .status .status-badge.hidden {
-                    display: none;
+                #document-modal .status .status-badge ul {
+                    margin: 0 0 2px 0;
                 }
 
-                #document-modal .status .status-badge::before {
-                    content: '\\2022';
-                    padding-right: 10px;
-                    margin-top: -1px;
-                    font-size: 20px;
-                }
-
-                #document-modal .status .status-badge .status-text {
-                    text-transform: capitalize;
-                    font-weight: bold;
-                }
-
-                #document-modal .status .status-badge.success {
+                #document-modal .status li.success {
                     color: var(--dbp-success);
                     font-weight: bold;
                 }
 
-                #document-modal .status .status-badge.warning {
+                #document-modal .status li.warning {
                     color: var(--dbp-warning);
                     font-weight: bold;
                 }
 
-                #document-modal .status .status-badge.danger {
+                #document-modal .status li.danger {
                     color: var(--dbp-danger);
                     font-weight: bold;
                 }
 
-                #document-modal .status .status-badge .delete-text {
+                #document-modal .status li span.extra-message {
                     color: var(--dbp-content);
                     font-weight: normal;
                 }
@@ -1606,7 +1598,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 ? 'Upload Document'
                 : i18n.t(`typesense-schema.file.base.additionalType.key.${additionalType}`);
         console.log('additionalType', additionalType);
-        this.showLineWhenDelete = this.deleteAtDateTime ? ' | ' : '';
+        this.updateStatus();
 
         // TODO: Check if PDF was uploaded
         return html`
@@ -1646,14 +1638,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             class="status ${classMap({
                                 hidden: this.mode === CabinetFile.Modes.ADD && !this.uploadFailed,
                             })}">
-                            <div class="status-badge ${this.documentStatus}">
-                                <div class="status-description">
-                                    ${this.documentStatusDescription}
-                                    <span class="delete-text">
-                                        ${this.showLineWhenDelete}${this.deleteAtDateTime}
-                                    </span>
-                                </div>
-                            </div>
+                            ${this.renderStatusBadge()}
                             <div class="fileButtons">
                                 <button
                                     class="button ${classMap({
@@ -1903,7 +1888,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     onCloseDocumentModal() {
         this.documentPdfValidationErrorList.value.errors = []; // reset error list
         this.documentPdfValidationErrorList.value.errorSummary = null; // reset error summary
-        this.shadowRoot.querySelector('.status-badge').classList.remove('hidden'); // show status-badge again
         this.uploadFailed = false;
         // If the file was created, updated or deleted, we need to inform the parent component to refresh the search results
         if (this.dataWasChanged) {
@@ -2226,26 +2210,39 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         super.update(changedProperties);
     }
 
+    addStatusMessageBlock(status, message, extraMessage = '') {
+        this.statusMessageBlocks.push({
+            status: status,
+            message: message,
+            extraMessage: extraMessage,
+        });
+    }
+
     updateStatus() {
         const i18n = this._i18n;
+        this.statusMessageBlocks = [];
         if (!this.fileHitData.base) {
             return;
         }
 
+        // this.addStatusMessageBlock(CabinetFile.Status.WARNING, 'Another message');
+
         if (this.fileHitData.base.isScheduledForDeletion) {
-            this.documentStatus = 'danger';
-            this.documentStatusDescription = `${i18n.t('status-badge-danger')}`;
+            this.addStatusMessageBlock(
+                CabinetFile.Status.DANGER,
+                i18n.t('status-scheduled-for-deletion'),
+                this.deleteAtDateTime,
+            );
         } else if (
             this.fileHitData.file.base.recommendedDeletionTimestamp < Math.floor(Date.now() / 1000)
         ) {
-            this.documentStatus = 'warning';
-            this.documentStatusDescription = `${i18n.t('status-badge-warning')}`;
-
-            // TODO: How to check for archival date reached?
-            // this.documentStatusDescription = 'Archival date reached';
+            this.addStatusMessageBlock(
+                CabinetFile.Status.WARNING,
+                i18n.t('status-deletion-date-reached'),
+                this.deleteAtDateTime,
+            );
         } else {
-            this.documentStatus = 'success';
-            this.documentStatusDescription = `${i18n.t('status-badge-success')}`;
+            this.addStatusMessageBlock(CabinetFile.Status.SUCCESS, i18n.t('status-no-problems'));
         }
     }
 
@@ -2617,5 +2614,30 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 'danger',
             );
         }
+    }
+
+    renderStatusBadge() {
+        if (this.statusMessageBlocks.length === 0) {
+            return null;
+        }
+
+        return html`
+            <div class="status-badge">
+                <ul>
+                    ${this.statusMessageBlocks.map(
+                        (block) => html`
+                            <li class="${block.status}">
+                                <span class="message">${block.message}</span>
+                                ${block.extraMessage
+                                    ? html`
+                                          <span class="extra-message">| ${block.extraMessage}</span>
+                                      `
+                                    : ''}
+                            </li>
+                        `,
+                    )}
+                </ul>
+            </div>
+        `;
     }
 }
