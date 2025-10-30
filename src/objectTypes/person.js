@@ -90,6 +90,12 @@ class CabinetHitElement extends BaseHitElement {
                     height: 100%;
                 }
 
+                .wrapper {
+                    padding: 5px;
+                    border: 1px solid var(--dbp-content);
+                    border-top-width: 0;
+                }
+
                 h2 {
                     color: #222120;
                 }
@@ -182,6 +188,14 @@ class CabinetHitElement extends BaseHitElement {
 
                 .count {
                     padding-top: 1em;
+                }
+
+                .spacing-top {
+                    margin-top: 1em;
+                }
+
+                .border-top {
+                    border-top-width: 1px;
                 }
 
                 .hit-person-row {
@@ -369,8 +383,10 @@ class CabinetHitElement extends BaseHitElement {
             return i18n.language === 'de' ? keyedText.text : keyedText.textEn;
         };
 
+        let spacingTop = this.isFirstOfGroupOnPage && !this.isFirstOnPage;
+        let borderTop = spacingTop || this.isFirstOnPage;
         return html`
-           
+           <div class="wrapper ${spacingTop ? 'spacing-top' : ''} ${borderTop ? 'border-top' : ''}">
             <header class="ais-Hits-header" tabindex="0" @keydown=${(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault(); // no scrolling with space
@@ -401,7 +417,6 @@ class CabinetHitElement extends BaseHitElement {
                         <!-- birthDate: ${hit.person.birthDateDe}-->
                         ${renderFieldWithHighlight(hit, 'person.birthDateDe')}
                     </h3>
-                </div>
                 </div>
                 <div class="hit-right-wrapper">
                     <h3 class="person-id">
@@ -486,6 +501,7 @@ class CabinetHitElement extends BaseHitElement {
                         ${i18n.t('buttons.view')}
                     </button>
                 </footer>
+            </div>
             </div>
         `;
     }

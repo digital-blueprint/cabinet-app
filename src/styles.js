@@ -88,10 +88,13 @@ export function getPaginationCSS() {
             color: var(--dbp-secondary-surface);
         }
 
-        .ais-Pagination-item--disabled {
+        .ais-Pagination-item--disabled .ais-Pagination-link {
             cursor: not-allowed;
-            border: 1px solid var(--dbp-muted);
             color: var(--dbp-muted);
+        }
+
+        .ais-Pagination-item--disabled .ais-Pagination-link:hover {
+            background-color: initial;
         }
 
         @media (max-width: 489px) {

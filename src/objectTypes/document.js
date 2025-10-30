@@ -13,9 +13,27 @@ export class BaseDocumentHitElement extends BaseHitElement {
                     font-size: 1em;
                 }
 
+                .wrapper {
+                    padding: 5px;
+                    border: 1px solid var(--dbp-content);
+                    border-top-width: 0px;
+                }
+
+                .spacing-top {
+                    margin-top: 1em;
+                }
+
+                .border-top {
+                    border-top-width: 1px;
+                }
+
                 .superseded {
                     text-decoration: line-through;
                     color: var(--dbp-muted);
+                }
+
+                .hidden {
+                    display: none;
                 }
             `,
         ];
@@ -34,9 +52,12 @@ export class BaseDocumentHitElement extends BaseHitElement {
             'de-DE',
             {dateStyle: 'medium', timeStyle: 'medium'},
         );
+        let spacingTop = this.isFirstOfGroupOnPage && !this.isFirstOnPage;
+        let borderTop = spacingTop || this.isFirstOnPage;
         return html`
-            <form>
-                <header class="ais-doc-Hits-header">
+            <form
+                class="wrapper ${spacingTop ? 'spacing-top' : ''} ${borderTop ? 'border-top' : ''}">
+                <header class="ais-doc-Hits-header ${!hit.base.isCurrent ? 'hidden' : ''}">
                     <div class="ais-doc-title-wrapper">
                         <dbp-icon class="icon-container" name="files" aria-hidden="true"></dbp-icon>
                         <h2 class="ais-doc-title ${!hit.base.isCurrent ? 'superseded' : ''}">

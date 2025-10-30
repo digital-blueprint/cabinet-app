@@ -6,15 +6,6 @@
     "main": "src/dbp-cabinet.js",
     "license": "LGPL-2.1-or-later",
     "private": false,
-    "dbp": {
-        "assets": [
-            {
-                "srcPackage": "instantsearch.css",
-                "src": "themes/algolia-min.css",
-                "dest": "."
-            }
-        ]
-    },
     "publishConfig": {
         "registry": "https://registry.npmjs.org",
         "access": "public"

@@ -409,6 +409,10 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
          * @property {boolean} isLastOnPage - Indicates if this is the last item on the page.
          */
         this.isLastOnPage = false;
+        /**
+         * @property {boolean} isLastOnPage - Indicates if this is the last item on the page.
+         */
+        this.isFirstOfGroupOnPage = false;
     }
 
     static get scopedElements() {
@@ -424,6 +428,7 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
             searchHelper: {type: Object, state: true},
             isFirstOnPage: {type: Boolean, state: true},
             isLastOnPage: {type: Boolean, state: true},
+            isFirstOfGroupOnPage: {type: Boolean, state: true},
         };
     }
 

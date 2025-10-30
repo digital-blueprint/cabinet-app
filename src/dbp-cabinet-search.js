@@ -97,6 +97,7 @@ function debounce(func, delay) {
 
 let isFirstOnPageSymbol = Symbol('isFirstOnPage');
 let isLastOnPageSymbol = Symbol('isLastOnPage');
+let isFirstOfGroupOnPageSymbol = Symbol('isFirstOfGroupOnPage');
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -405,6 +406,110 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             getPaginationCSS(),
             // language=css
             css`
+                [class^='ais-'] {
+                    box-sizing: border-box;
+                }
+
+                .ais-SearchBox-submit,
+                .ais-SearchBox-reset {
+                    padding: 0;
+                    overflow: visible;
+                    font: inherit;
+                    line-height: normal;
+                    color: inherit;
+                    background: none;
+                    border: 0;
+                    cursor: pointer;
+                    -webkit-user-select: none;
+                    -moz-user-select: none;
+                    user-select: none;
+                }
+
+                .ais-SearchBox-form {
+                    display: block;
+                    position: relative;
+                }
+
+                .ais-SearchBox-input {
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    padding: 0.3rem 1.7rem;
+                    width: 100%;
+                    position: relative;
+                    background-color: #fff;
+                    border: 1px solid #c4c8d8;
+                    border-radius: 5px;
+                }
+
+                .ais-SearchBox-input::-webkit-input-placeholder {
+                    color: #a5aed1;
+                }
+
+                .ais-SearchBox-input::-moz-placeholder {
+                    color: #a5aed1;
+                }
+
+                .ais-SearchBox-input:-ms-input-placeholder {
+                    color: #a5aed1;
+                }
+
+                .ais-SearchBox-input:-moz-placeholder {
+                    color: #a5aed1;
+                }
+
+                .ais-SearchBox-submit,
+                .ais-SearchBox-reset,
+                .ais-SearchBox-loadingIndicator {
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    position: absolute;
+                    z-index: 1;
+                    width: 20px;
+                    height: 20px;
+                    top: 50%;
+                    right: 0.3rem;
+                    transform: translateY(-50%);
+                }
+
+                .ais-SearchBox-submit {
+                    left: 0.3rem;
+                }
+
+                .ais-SearchBox-reset {
+                    right: 0.3rem;
+                }
+
+                .ais-SearchBox-submitIcon,
+                .ais-SearchBox-resetIcon,
+                .ais-SearchBox-loadingIcon {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translateX(-50%) translateY(-50%);
+                }
+
+                .ais-SearchBox-submitIcon path,
+                .ais-SearchBox-resetIcon path {
+                    fill: #495588;
+                }
+
+                .ais-SearchBox-submitIcon {
+                    width: 14px;
+                    height: 14px;
+                }
+
+                .ais-SearchBox-resetIcon {
+                    width: 12px;
+                    height: 12px;
+                }
+
+                .ais-SearchBox-loadingIcon {
+                    width: 16px;
+                    height: 16px;
+                }
+
                 .results.stalled {
                     opacity: 0.6;
                     pointer-events: none;
@@ -438,7 +543,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 dbp-cabinet-facets {
                     grid-area: sidebar;
-                    margin-top: 1em;
                 }
 
                 .results {
@@ -499,11 +603,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 .ais-Hits-item {
-                    padding: 5px;
-                    border: 1px solid var(--dbp-content);
                     list-style-type: none;
-                    overflow: hidden;
-                    min-height: calc(100px + 3vh);
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
@@ -519,7 +619,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     display: flex;
                     flex-direction: row;
                     justify-content: space-between;
-                    padding-top: 15px;
                 }
 
                 .ais-Stats {
@@ -556,6 +655,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .ais-Pagination-list {
                     padding-top: 0px;
+                    gap: 8px;
+                    margin-top: 0;
+                }
+
+                .ais-Stats-text {
+                    font-size: 0.8em;
                 }
 
                 .ais-Hits-item {
@@ -817,9 +922,18 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             container: this._('#hits'),
             escapeHTML: true,
             transformItems: (items) => {
+                let seenIds = new Set();
                 return items.map((item, index) => {
-                    item[isFirstOnPageSymbol] = index === 0;
-                    item[isLastOnPageSymbol] = index === items.length - 1;
+                    let isFirst = index === 0;
+                    let isLast = index === items.length - 1;
+                    // FIXME: make configurable which field to use for grouping
+                    let groupId = item?.file?.base?.groupId;
+                    let isFirstOfGroup = groupId == undefined || !seenIds.has(groupId);
+                    seenIds.add(groupId);
+
+                    item[isFirstOfGroupOnPageSymbol] = isFirstOfGroup;
+                    item[isFirstOnPageSymbol] = isFirst;
+                    item[isLastOnPageSymbol] = isLast;
 
                     return item;
                 });
@@ -849,6 +963,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     hitElement.searchHelper = cabinetSearch.search.helper;
                     hitElement.isFirstOnPage = hit[isFirstOnPageSymbol];
                     hitElement.isLastOnPage = hit[isLastOnPageSymbol];
+                    hitElement.isFirstOfGroupOnPage = hit[isFirstOfGroupOnPageSymbol];
 
                     return html`
                         <span ref=${preactRefReplaceChildren(hitElement)}></span>
@@ -956,12 +1071,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     render() {
         const i18n = this._i18n;
-        const algoliaCss = commonUtils.getAssetURL(pkgName, 'algolia-min.css');
 
         console.log('-- Render --');
 
         return html`
-            <link rel="stylesheet" href="${algoliaCss}" />
             <div
                 class="control ${classMap({
                     hidden: this.isLoggedIn() || !this.isAuthPending() || !this.loadingTranslations,
