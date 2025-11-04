@@ -107,6 +107,8 @@ export const getCommonStyles = () => css`
 
     .hit-content-item {
         color: var(--dbp-content);
+        display: flex;
+        flex-direction: column;
     }
 `;
 

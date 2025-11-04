@@ -93,20 +93,17 @@ export class BaseDocumentHitElement extends BaseHitElement {
                 <main class="ais-doc-Hits-content">
                     <div class="hit-content-item">
                         ${this._renderContent()}
-                        <br />
                         ${hit.file.base.subjectOf
                             ? html`
                                   <span>
                                       ${i18n.t('subject-of')}:
                                       ${renderFieldWithHighlight(hit, 'file.base.subjectOf')}
                                   </span>
-                                  <br />
                               `
                             : ''}
                         <span>${i18n.t('Added')}: ${dateCreated}</span>
-                        <br />
+
                         <span>${i18n.t('last-modified')}: ${lastModified}</span>
-                        <br />
                     </div>
                     ${this.renderViewButton(hit)}
                 </main>
