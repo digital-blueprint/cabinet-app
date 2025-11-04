@@ -14,13 +14,13 @@ export class BaseDocumentHitElement extends BaseHitElement {
                 }
 
                 .wrapper {
-                    padding: 5px;
+                    padding: 10px;
                     border: 1px solid var(--dbp-content);
                     border-top-width: 0px;
                 }
 
                 .spacing-top {
-                    margin-top: 1em;
+                    margin-top: 1.5em;
                 }
 
                 .border-top {
@@ -77,7 +77,9 @@ export class BaseDocumentHitElement extends BaseHitElement {
                                 .person.birthDateDe}">
                             ${renderFieldWithHighlight(hit, 'person.familyName')},
                             ${renderFieldWithHighlight(hit, 'person.givenName')}
-                            ${renderFieldWithHighlight(hit, 'person.birthDateDe')}
+                            <span class="text-normal">
+                                ${renderFieldWithHighlight(hit, 'person.birthDateDe')}
+                            </span>
                         </h3>
                         &nbsp
                         <div

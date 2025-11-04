@@ -47,8 +47,7 @@ export const getCommonStyles = () => css`
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        padding: 15px 5px;
-        margin-bottom: calc(7px + 1vh);
+
         flex-wrap: wrap;
     }
 
@@ -58,11 +57,16 @@ export const getCommonStyles = () => css`
         align-items: center;
         color: var(--dbp-content);
         flex-shrink: 1;
-        padding-top: 0.5em;
+        padding: 0.5em 0 1em 0;
+        font-size: 1em;
     }
 
-    .header-item1 {
-        font-weight: bold;
+    .text-container h3 {
+        margin: initial;
+        font-weight: 600;
+    }
+    .text-container .text-normal {
+        font-weight: normal;
     }
 
     .ais-doc-title-wrapper {
@@ -70,6 +74,9 @@ export const getCommonStyles = () => css`
         align-items: center;
         gap: 8px;
         flex-shrink: 0;
+    }
+    .ais-doc-title-wrapper h2 {
+        font-size: 1.2em;
     }
 
     .icon-container {

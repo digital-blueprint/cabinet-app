@@ -91,9 +91,12 @@ class CabinetHitElement extends BaseHitElement {
                 }
 
                 .wrapper {
-                    padding: 5px;
                     border: 1px solid var(--dbp-content);
                     border-top-width: 0;
+                }
+
+                .wrapper2 {
+                    padding: 10px;
                 }
 
                 h2 {
@@ -104,8 +107,7 @@ class CabinetHitElement extends BaseHitElement {
                     display: grid;
                     grid-template-columns: 2fr 1fr;
                     align-items: center;
-                    padding: 10px 5px;
-                    margin-bottom: calc(7px + 1vh);
+                    padding: 6px 10px;
                     background-color: var(--dbp-primary-surface);
                 }
 
@@ -172,12 +174,12 @@ class CabinetHitElement extends BaseHitElement {
                 .hit-person-content-item1 {
                     align-self: start;
                     color: var(--dbp-content);
-                    padding-bottom: 1em;
+                    padding: 0.5em 0;
                 }
 
                 .study-entry {
                     display: flex;
-                    margin-bottom: 4px;
+                    margin-bottom: 0px;
                 }
 
                 .study-icon {
@@ -191,7 +193,7 @@ class CabinetHitElement extends BaseHitElement {
                 }
 
                 .spacing-top {
-                    margin-top: 1em;
+                    margin-top: 1.5em;
                 }
 
                 .border-top {
@@ -427,6 +429,7 @@ class CabinetHitElement extends BaseHitElement {
                     </h3>
                 </div>
             </header>
+               <div class="wrapper2">
             <main class="ais-Hits-content">
                 <div class="hit-person-content-item1">
                     ${
@@ -502,6 +505,7 @@ class CabinetHitElement extends BaseHitElement {
                     </button>
                 </footer>
             </div>
+               </div>
             </div>
         `;
     }
