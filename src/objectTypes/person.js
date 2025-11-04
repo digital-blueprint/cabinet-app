@@ -160,7 +160,7 @@ class CabinetHitElement extends BaseHitElement {
                     background-size: contain;
                     background-position-x: right;
                     color: #ffffff;
-                    top: 3px;
+                    top: 4px;
                 }
 
                 .ais-Hits-content {

@@ -66,7 +66,7 @@ export const getCommonStyles = () => css`
         font-weight: 600;
     }
     .text-container .text-normal {
-        font-weight: normal;
+        font-weight: 300;
     }
 
     .ais-doc-title-wrapper {
