@@ -107,7 +107,7 @@ class CabinetHitElement extends BaseHitElement {
                     display: grid;
                     grid-template-columns: 2fr 1fr;
                     align-items: center;
-                    padding: 6px 10px;
+                    padding: 3px 10px;
                     background-color: var(--dbp-primary-surface);
                 }
 
@@ -160,6 +160,7 @@ class CabinetHitElement extends BaseHitElement {
                     background-size: contain;
                     background-position-x: right;
                     color: #ffffff;
+                    top: 3px;
                 }
 
                 .ais-Hits-content {
