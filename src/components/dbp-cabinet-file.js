@@ -1074,6 +1074,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     break;
             }
         } finally {
+            this.dataWasChanged = true;
             if (fromSelect) {
                 evOrAction.currentTarget.selectedIndex = 0;
                 evOrAction.currentTarget.value = '';
