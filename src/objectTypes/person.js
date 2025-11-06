@@ -2,8 +2,7 @@ import {css, html} from 'lit';
 import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from '../baseObject.js';
 import {renderFieldWithHighlight} from '../utils';
 import {formatDate} from '../utils.js';
-import {MiniSpinner, Icon} from '@dbp-toolkit/common';
-import {send} from '@dbp-toolkit/common/notification';
+import {MiniSpinner, Icon, sendNotification} from '@dbp-toolkit/common';
 import {Notification} from '@dbp-toolkit/notification';
 import {getPersonHit, PersonHit} from './schema.js';
 import {CabinetApi} from '../api.js';
@@ -1000,7 +999,7 @@ class CabinetViewElement extends BaseViewElement {
         try {
             let api = new CabinetApi(this.entryPointUrl, this.auth.token);
             this.data = await api.syncTypesenseDocument(this.data);
-            send({
+            sendNotification({
                 summary: this._i18n.t('sync.notification.success.title'),
                 body: this._i18n.t('sync.notification.success.body'),
                 type: 'success',
@@ -1010,7 +1009,7 @@ class CabinetViewElement extends BaseViewElement {
             });
         } catch (error) {
             console.error('Error during sync:', error);
-            send({
+            sendNotification({
                 summary: this._i18n.t('sync.notification.error.title'),
                 body: this._i18n.t('sync.notification.error.body', {error: error.message}),
                 type: 'danger',

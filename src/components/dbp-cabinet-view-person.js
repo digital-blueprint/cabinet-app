@@ -1,13 +1,12 @@
 import {css, html} from 'lit';
 import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
 import {ref, createRef} from 'lit/directives/ref.js';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, sendNotification} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal} from '@dbp-toolkit/common';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {pascalToKebab} from '../utils';
-import {send} from '@dbp-toolkit/common/notification';
 
 export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -49,7 +48,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
 
     async openDialogWithHit(hit = null) {
         if (!hit) {
-            send({
+            sendNotification({
                 summary: this._i18n.t('person.person-not-found-summary'),
                 body: this._i18n.t('person.person-not-found-body'),
                 type: 'danger',

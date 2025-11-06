@@ -5,7 +5,7 @@ import DBPCabinetLitElement from './dbp-cabinet-lit-element';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {getPaginationCSS} from './styles.js';
-import {Icon, InlineNotification, Modal} from '@dbp-toolkit/common';
+import {Icon, InlineNotification, Modal, sendNotification} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
 import {Activity} from './activity.js';
 import metadata from './dbp-cabinet-search.metadata.json';
@@ -26,7 +26,6 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from './i18n';
 import {createClearRefinements} from './clear-refinements.js';
 import {createCurrentRefinements} from './current-refinements';
-import {send} from '@dbp-toolkit/common/notification';
 
 class StatsWidget extends LangMixin(AuthMixin(DBPLitElement), createInstance) {
     constructor() {
@@ -373,7 +372,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         search.on('error', (error) => {
             console.error('Search error:', error);
 
-            send({
+            sendNotification({
                 summary: this._i18n.t('search.search-failed-summary'),
                 body: this._i18n.t('search.search-failed-body', {message: error.message}),
                 type: 'danger',

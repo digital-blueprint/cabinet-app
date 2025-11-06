@@ -1,5 +1,4 @@
-import {Modal} from '@dbp-toolkit/common';
-import {send} from '@dbp-toolkit/common/notification';
+import {Modal, sendNotification} from '@dbp-toolkit/common';
 import {Notification} from '@dbp-toolkit/notification';
 
 export const scopedElements = () => {
@@ -46,5 +45,5 @@ export const sendModalNotification = (
         delete options.timeout;
     }
 
-    send(options);
+    sendNotification(options);
 };

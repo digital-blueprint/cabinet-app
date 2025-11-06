@@ -1,7 +1,14 @@
 import {css, html} from 'lit';
 import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
 import {createRef, ref} from 'lit/directives/ref.js';
-import {Button, combineURLs, Icon, Modal, ScopedElementsMixin} from '@dbp-toolkit/common';
+import {
+    Button,
+    combineURLs,
+    Icon,
+    Modal,
+    ScopedElementsMixin,
+    sendNotification,
+} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {FileSink, FileSource} from '@dbp-toolkit/file-handling';
@@ -10,7 +17,6 @@ import {dataURLtoFile, pascalToKebab} from '../utils';
 import {classMap} from 'lit/directives/class-map.js';
 import * as formElements from '../objectTypes/formElements.js';
 import {BaseFormElement} from '../baseObject.js';
-import {send} from '@dbp-toolkit/common/notification';
 import {getSelectorFixCSS} from '../styles.js';
 import {formatDate} from '../utils.js';
 import {TypesenseService} from '../services/typesense.js';
@@ -638,7 +644,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (!hit) {
             modal.close();
 
-            send({
+            sendNotification({
                 summary: this._i18n.t('document.document-not-found-summary'),
                 body: this._i18n.t('document.document-not-found-body'),
                 type: 'danger',
