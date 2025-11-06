@@ -469,15 +469,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 );
             }
             // if document is not in a valid PDF/A format
-            if (
-                json['relay:errorId'] ===
-                'blob:create-file-data-file-does-not-validate-against-type'
-            ) {
+            if (json['relay:errorId'].includes('-file-data-file-does-not-validate-against-type')) {
                 this.documentPdfValidationErrorList.value.errors = json['relay:errorDetails'];
             }
 
             this.uploadFailed = true;
-            this.shadowRoot.querySelector('.status-badge').classList.add('hidden');
+            if (this.shadowRoot.querySelector('.status-badge')) {
+                this.shadowRoot.querySelector('.status-badge').classList.add('hidden');
+            }
             this.requestUpdate();
             throw response;
         }
@@ -1198,6 +1197,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 #document-modal .status.hidden {
+                    display: none;
+                }
+
+                #document-modal .status-badge.hidden {
                     display: none;
                 }
 
