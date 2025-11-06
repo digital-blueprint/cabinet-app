@@ -107,6 +107,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.allowStateReset = true;
         this.state = CabinetFile.States.NONE;
         this.versions = [];
+        this.currentVersionsCount = 0;
 
         // Will be used when canceling the form in EDIT mode, when the data was changed via this.fileHitDataCache
         this.fileHitDataBackup = {};
@@ -1476,6 +1477,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async updateVersions() {
         this.versions = await this.fetchGroupedHits();
+        this.currentVersionsCount = this.versions.filter(
+            (version) => version.base?.isCurrent,
+        ).length;
     }
 
     renderGroupingContainer() {
@@ -2226,6 +2230,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             return;
         }
 
+        const isDeletionDateReached =
+            this.fileHitData.file.base.recommendedDeletionTimestamp < Math.floor(Date.now() / 1000);
+
         // this.addStatusMessageBlock(CabinetFile.Status.WARNING, 'Another message');
 
         if (this.fileHitData.base.isScheduledForDeletion) {
@@ -2234,14 +2241,23 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 i18n.t('status-scheduled-for-deletion'),
                 this.deleteAtDateTime,
             );
-        } else if (
-            this.fileHitData.file.base.recommendedDeletionTimestamp < Math.floor(Date.now() / 1000)
-        ) {
-            this.addStatusMessageBlock(
-                CabinetFile.Status.WARNING,
-                i18n.t('status-deletion-date-reached'),
-                this.deleteAtDateTime,
-            );
+        } else if (isDeletionDateReached || this.currentVersionsCount !== 1) {
+            if (isDeletionDateReached) {
+                this.addStatusMessageBlock(
+                    CabinetFile.Status.WARNING,
+                    i18n.t('status-deletion-date-reached'),
+                    this.deleteAtDateTime,
+                );
+            }
+
+            if (this.currentVersionsCount === 0) {
+                this.addStatusMessageBlock(CabinetFile.Status.WARNING, i18n.t('status-no-current'));
+            } else if (this.currentVersionsCount > 1) {
+                this.addStatusMessageBlock(
+                    CabinetFile.Status.WARNING,
+                    i18n.t('status-too-many-current'),
+                );
+            }
         } else {
             this.addStatusMessageBlock(CabinetFile.Status.SUCCESS, i18n.t('status-no-problems'));
         }
