@@ -7,9 +7,8 @@
   # https://devenv.sh/git-hooks/
   git-hooks = {
     hooks = {
-      # Try using i18next with prek as pre-commit runner
-      # But it is still often blocking
-      i18next.enable = false;
+      # Try i18next with "env TERM=dumb"
+      i18next.enable = true;
 
       i18next2 = {
         enable = false;
