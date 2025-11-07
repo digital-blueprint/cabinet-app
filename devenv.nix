@@ -7,6 +7,9 @@
   # https://devenv.sh/git-hooks/
   git-hooks = {
     hooks = {
+      # Try using i18next with prek as pre-commit runner
+      i18next.enable = true;
+
       i18next2 = {
         enable = false;
         name = "i18next2";
