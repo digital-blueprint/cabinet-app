@@ -8,7 +8,8 @@
   git-hooks = {
     hooks = {
       # Try using i18next with prek as pre-commit runner
-      i18next.enable = true;
+      # But it is still often blocking
+      i18next.enable = false;
 
       i18next2 = {
         enable = false;
