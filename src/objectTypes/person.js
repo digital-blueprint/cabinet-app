@@ -402,6 +402,7 @@ class CabinetHitElement extends BaseHitElement {
                 }
             }}>
                 <div class="hit-person-info-header">
+                    <input type="checkbox" name="select" class="checkbox" @change=${this.selectCheckboxChanged} value="${hit.id}" />
                     <div class="right-column">
                         <dbp-icon
                             class="column-icon"
@@ -508,6 +509,12 @@ class CabinetHitElement extends BaseHitElement {
                </div>
             </div>
         `;
+    }
+
+    selectCheckboxChanged(e) {
+        const id = e.target.value;
+        const checked = e.target.checked;
+        this.sendHitSelectionEvent(this.constructor.HitSelectionType.PERSON, id, checked);
     }
 }
 

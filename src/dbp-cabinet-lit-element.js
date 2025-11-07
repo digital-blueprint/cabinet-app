@@ -31,6 +31,15 @@ export default class DBPCabinetLitElement extends LangMixin(
         };
     }
 
+    static HitSelectionType = {
+        PERSON: 'person',
+        DOCUMENT: 'document',
+    };
+
+    static EventType = {
+        HIT_SELECTION_CHANGED: 'hitSelectionChanged',
+    };
+
     update(changedProperties) {
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
@@ -103,5 +112,25 @@ export default class DBPCabinetLitElement extends LangMixin(
         this.settingsLocalStorageKey = `dbp-cabinet:${publicId}:facetVisibilityStates`;
 
         return true;
+    }
+
+    sendHitSelectionEvent(type, identifier, state) {
+        if (!Object.values(this.constructor.HitSelectionType).includes(type)) {
+            throw new Error(
+                `Invalid type: ${type}. Must be one of ${Object.values(this.constructor.HitSelectionType).join(', ')}`,
+            );
+        }
+
+        const customEvent = new CustomEvent(this.constructor.EventType.HIT_SELECTION_CHANGED, {
+            detail: {
+                type: type,
+                identifier: identifier,
+                state: state,
+            },
+            bubbles: true,
+            composed: true,
+        });
+
+        this.dispatchEvent(customEvent);
     }
 }

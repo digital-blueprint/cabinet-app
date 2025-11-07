@@ -109,6 +109,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             id: '',
             objectType: '',
         };
+        this.hitSelections = {
+            [this.constructor.HitSelectionType.PERSON]: {},
+            [this.constructor.HitSelectionType.DOCUMENT]: {},
+        };
         this.documentViewPersonModalRef = createRef();
         this.documentFileComponentRef = createRef();
         this.filterSettingsModalRef = createRef();
@@ -164,6 +168,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             documentFile: {type: File, attribute: false},
             search: {type: Object, attribute: false},
             facetConfigs: {type: Array, state: true},
+            hitSelections: {type: Object, state: true},
         };
     }
 
@@ -329,6 +334,18 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             const filterSettingsModal = this.filterSettingsModalRef.value;
 
             filterSettingsModal.open(this.facetConfigs);
+        });
+
+        // Listen to hitSelectionChanged events
+        this.addEventListener(this.constructor.EventType.HIT_SELECTION_CHANGED, (event) => {
+            console.log('Hit selection changed:', event.detail);
+            const {type, identifier, state} = event.detail;
+            if (state) {
+                this.hitSelections[type][identifier] = true;
+            } else {
+                delete this.hitSelections[type][identifier];
+            }
+            this.requestUpdate();
         });
     }
 
@@ -685,6 +702,19 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .ais-CurrentRefinements-categoryLabel {
                     color: var(--dbp-content);
                 }
+
+                .hit-selection-widget {
+                    display: flex;
+                    align-items: center;
+                    padding: 0.5em 1em;
+                    background-color: var(--dbp-background);
+                    color: var(--dbp-content);
+                    border-radius: 5px;
+                    font-size: 0.9em;
+                    font-weight: bold;
+                    gap: 1em;
+                }
+
                 @media (max-width: 1400px) {
                     .scroll-top-wrapper {
                         bottom: 1rem;
@@ -1106,6 +1136,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         </div>
                     </div>
                     <div id="searchbox" class="search-box-widget"></div>
+                    <div class="hit-selection-widget">
+                        Persons: ${Object.keys(this.hitSelections.person).length} | Documents: ${Object.keys(this.hitSelections.document).length}
+                    </div>
                     <div class="help-container">
                         <svg
                             version="1.1"

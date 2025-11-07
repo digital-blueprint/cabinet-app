@@ -59,6 +59,12 @@ export class BaseDocumentHitElement extends BaseHitElement {
                 class="wrapper ${spacingTop ? 'spacing-top' : ''} ${borderTop ? 'border-top' : ''}">
                 <header class="ais-doc-Hits-header ${!hit.base.isCurrent ? 'hidden' : ''}">
                     <div class="ais-doc-title-wrapper">
+                        <input
+                            type="checkbox"
+                            name="select"
+                            class="checkbox"
+                            @change=${this.selectCheckboxChanged}
+                            value="${hit.id}" />
                         <dbp-icon class="icon-container" name="files" aria-hidden="true"></dbp-icon>
                         <h2 class="ais-doc-title ${!hit.base.isCurrent ? 'superseded' : ''}">
                             ${renderFieldWithHighlight(
@@ -109,6 +115,12 @@ export class BaseDocumentHitElement extends BaseHitElement {
                 </main>
             </form>
         `;
+    }
+
+    selectCheckboxChanged(e) {
+        const id = e.target.value;
+        const checked = e.target.checked;
+        this.sendHitSelectionEvent(this.constructor.HitSelectionType.DOCUMENT, id, checked);
     }
 
     _renderContent() {
