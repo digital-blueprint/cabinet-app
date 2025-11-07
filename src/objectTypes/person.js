@@ -513,7 +513,7 @@ class CabinetHitElement extends BaseHitElement {
 
 /**
  * Generate a PDF document for a person hit.
- * The data meeds to be kept in sync with the view element.
+ * The data needs to be kept in sync with the view element.
  * @param {import('i18next').i18n} i18n
  * @param {PersonHit} hit
  * @param {boolean} withInternalData - Whether to include internal notes etc. in the PDF export.
