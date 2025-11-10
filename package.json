@@ -57,7 +57,6 @@
         "@tugraz/font-source-sans-pro": "^0.2.4",
         "@tugraz/web-components": "^0.3.6",
         "@webcomponents/scoped-custom-element-registry": "^0.0.10",
-        "instantsearch.css": "^8.1.0",
         "instantsearch.js": "^4.65.0",
         "jspdf": "^3.0.1",
         "jspdf-autotable": "^5.0.2",
