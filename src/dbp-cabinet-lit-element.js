@@ -32,8 +32,8 @@ export default class DBPCabinetLitElement extends LangMixin(
     }
 
     static HitSelectionType = {
-        PERSON: 'person',
-        DOCUMENT: 'document',
+        PERSON: 'Person',
+        DOCUMENT_FILE: 'DocumentFile',
     };
 
     static EventType = {

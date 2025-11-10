@@ -64,6 +64,7 @@ export class BaseDocumentHitElement extends BaseHitElement {
                             name="select"
                             class="checkbox"
                             @change=${this.selectCheckboxChanged}
+                            ?checked=${this.checked}
                             value="${hit.id}" />
                         <dbp-icon class="icon-container" name="files" aria-hidden="true"></dbp-icon>
                         <h2 class="ais-doc-title ${!hit.base.isCurrent ? 'superseded' : ''}">
@@ -120,7 +121,7 @@ export class BaseDocumentHitElement extends BaseHitElement {
     selectCheckboxChanged(e) {
         const id = e.target.value;
         const checked = e.target.checked;
-        this.sendHitSelectionEvent(this.constructor.HitSelectionType.DOCUMENT, id, checked);
+        this.sendHitSelectionEvent(this.constructor.HitSelectionType.DOCUMENT_FILE, id, checked);
     }
 
     _renderContent() {

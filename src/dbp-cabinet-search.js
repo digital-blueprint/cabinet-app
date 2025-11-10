@@ -111,7 +111,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         };
         this.hitSelections = {
             [this.constructor.HitSelectionType.PERSON]: {},
-            [this.constructor.HitSelectionType.DOCUMENT]: {},
+            [this.constructor.HitSelectionType.DOCUMENT_FILE]: {},
         };
         this.documentViewPersonModalRef = createRef();
         this.documentFileComponentRef = createRef();
@@ -984,11 +984,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     const tagPart = pascalToKebab(hit.objectType);
                     const tagName = 'dbp-cabinet-object-type-hit-' + tagPart;
                     const objectTypeHitComponent = this.objectTypeHitComponents[objectType];
+                    const type = hit['@type'];
 
                     cabinetSearch.defineScopedElement(tagName, objectTypeHitComponent);
                     let hitElement = cabinetSearch.createScopedElement(tagName);
                     hitElement.setAttribute('subscribe', 'lang');
+                    hitElement.setAttribute('objectType', objectType);
                     hitElement.data = hit;
+                    console.log('item objectType', objectType);
+                    console.log('item hit', hit);
+                    console.log('item type', hit['@type']);
+                    hitElement.checked = !!this.hitSelections[type][hit.id];
                     hitElement.searchHelper = cabinetSearch.search.helper;
                     hitElement.isFirstOnPage = hit[isFirstOnPageSymbol];
                     hitElement.isLastOnPage = hit[isLastOnPageSymbol];
@@ -1137,7 +1143,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </div>
                     <div id="searchbox" class="search-box-widget"></div>
                     <div class="hit-selection-widget">
-                        Persons: ${Object.keys(this.hitSelections.person).length} | Documents: ${Object.keys(this.hitSelections.document).length}
+                        Persons: ${Object.keys(this.hitSelections[this.constructor.HitSelectionType.PERSON]).length} |
+                        Documents: ${Object.keys(this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE]).length}
                     </div>
                     <div class="help-container">
                         <svg
