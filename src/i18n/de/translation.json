@@ -188,6 +188,7 @@
     "required-files-text": "kennzeichnet ein Pflichtfeld",
     "school-Certificate-Date": "Zeugnisdatum",
     "search": {
+        "incomplete-results": "Es können keine weiteren Ergebnisse angezeigt werden. Bitte grenzen Sie Ihre Suche mithilfe von Filtern oder spezifischeren Suchbegriffen ein.",
         "no-results": "Keine Ergebnisse gefunden",
         "search-failed-body": "Die Suchanfrage ist mit folgender Meldung fehlgeschlagen: {{message}}",
         "search-failed-summary": "Suchanfrage fehlgeschlagen",

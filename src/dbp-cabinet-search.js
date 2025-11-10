@@ -63,6 +63,7 @@ class EmptyWidget extends LangMixin(DBPLitElement, createInstance) {
         return {
             ...super.properties,
             results: {type: Object},
+            incompleteResults: {type: Boolean, attribute: false},
         };
     }
 
@@ -72,16 +73,27 @@ class EmptyWidget extends LangMixin(DBPLitElement, createInstance) {
         css`
             .no-results {
                 text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 padding: 1em;
+                min-height: 100px;
                 color: var(--dbp-content);
             }
         `,
     ];
 
     render() {
-        const text = this._i18n.t('search.no-results');
         return html`
-            <div class="no-results">${text}</div>
+            <div class="no-results">
+                ${this.incompleteResults
+                    ? html`
+                          ${this._i18n.t('search.incomplete-results')}
+                      `
+                    : html`
+                          ${this._i18n.t('search.no-results')}
+                      `}
+            </div>
         `;
     }
 }
@@ -975,6 +987,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     );
                     emptyElement.setAttribute('subscribe', 'lang');
                     emptyElement.results = results;
+                    // Result numbers are not exact, so we can't calculate if
+                    // there should be more results to show. Assume that if we
+                    // are beyond the first page, there could be more results.
+                    emptyElement.incompleteResults = results.page > 1;
                     return html`
                         <span ref=${preactRefReplaceChildren(emptyElement)}></span>
                     `;

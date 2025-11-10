@@ -188,6 +188,7 @@
     "required-files-text": "indicates a required field",
     "school-Certificate-Date": "Date of certificate",
     "search": {
+        "incomplete-results": "No more results can be displayed. Please narrow your search using filters or more specific keywords.",
         "no-results": "No results found",
         "search-failed-body": "The search request failed with the following message: {{message}}",
         "search-failed-summary": "Search request failed",
