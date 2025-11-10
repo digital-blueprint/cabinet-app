@@ -284,44 +284,43 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 </div>
                 <div slot="content" class="modal-content">${this.renderFacetList()}</div>
                 <div slot="footer" class="modal-footer">
-                   
-                        <dbp-button
-                            title="${i18n.t('filter-settings.abort')}"
-                            type="is-secondary"
-                            no-spinner-on-click
-                            @click="${this.close}">
-                            <dbp-icon
-                                class="dbp-button-icon"
-                                name="close"
-                                aria-hidden="true"></dbp-icon>
-                            ${i18n.t('filter-settings.abort')}
-                        </dbp-button>
-                    
-                        <dbp-button
-                            title="${i18n.t('filter-settings.all-filters-hide')}"
-                            type="is-secondary"
-                            no-spinner-on-click
-                            ?disabled="${buttonsDisabled}"
-                            @click="${this.hideAllFacets}">
-                            <dbp-icon
-                                class="dbp-button-icon"
-                                name="source_icons_eye-off"
-                                aria-hidden="true"></dbp-icon>
-                            ${i18n.t('filter-settings.all-filters-hide')}
-                        </dbp-button>
-                        <dbp-button
-                            title="${i18n.t('filter-settings.all-filters-show')}"
-                            type="is-secondary"
-                            no-spinner-on-click
-                            ?disabled=${buttonsDisabled}
-                            @click="${this.showAllFacets}">
-                            <dbp-icon
-                                class="dbp-button-icon"
-                                name="source_icons_eye-empty"
-                                aria-hidden="true"></dbp-icon>
-                            ${i18n.t('filter-settings.all-filters-show')}
-                        </dbp-button>
-                   
+                    <dbp-button
+                        title="${i18n.t('filter-settings.abort')}"
+                        type="is-secondary"
+                        no-spinner-on-click
+                        @click="${this.close}">
+                        <dbp-icon
+                            class="dbp-button-icon"
+                            name="close"
+                            aria-hidden="true"></dbp-icon>
+                        ${i18n.t('filter-settings.abort')}
+                    </dbp-button>
+
+                    <dbp-button
+                        title="${i18n.t('filter-settings.all-filters-hide')}"
+                        type="is-secondary"
+                        no-spinner-on-click
+                        ?disabled="${buttonsDisabled}"
+                        @click="${this.hideAllFacets}">
+                        <dbp-icon
+                            class="dbp-button-icon"
+                            name="source_icons_eye-off"
+                            aria-hidden="true"></dbp-icon>
+                        ${i18n.t('filter-settings.all-filters-hide')}
+                    </dbp-button>
+                    <dbp-button
+                        title="${i18n.t('filter-settings.all-filters-show')}"
+                        type="is-secondary"
+                        no-spinner-on-click
+                        ?disabled=${buttonsDisabled}
+                        @click="${this.showAllFacets}">
+                        <dbp-icon
+                            class="dbp-button-icon"
+                            name="source_icons_eye-empty"
+                            aria-hidden="true"></dbp-icon>
+                        ${i18n.t('filter-settings.all-filters-show')}
+                    </dbp-button>
+
                     <dbp-button
                         title="${i18n.t('filter-settings.save')}"
                         type="is-primary"
@@ -330,7 +329,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         <dbp-icon class="dbp-button-icon" name="save" aria-hidden="true"></dbp-icon>
                         ${i18n.t('filter-settings.save')}
                     </dbp-button>
-                
+                </div>
             </dbp-modal>
         `;
     }
