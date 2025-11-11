@@ -1179,7 +1179,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 #document-modal .doc-title {
                     display: flex;
+                    flex-direction: row;
+                    padding: 0 25px;
                     align-items: center;
+                    justify-content: flex-start;
                 }
 
                 #document-modal .view-modal-icon {
@@ -1275,11 +1278,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     width: calc(100% - 0.9em);
                 }
 
-                .desc-stat {
-                    position: sticky;
-                    top: 0;
-                    background-color: var(--dbp-background);
-                    z-index: 1;
+                #document-modal .desc-stat {
+                    padding: 10px 0;
                 }
 
                 .actions-dropdown {
@@ -1622,7 +1622,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 id="document-modal"
                 modal-id="document-modal"
                 subscribe="lang">
-                <div slot="title" class="modal-title doc-title">
+                <div slot="header" class="modal-title doc-title">
                     <dbp-icon name="files" class="view-modal-icon" aria-hidden="true"></dbp-icon>
                     <h2>${headline}</h2>
                 </div>
