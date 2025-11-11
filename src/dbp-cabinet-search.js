@@ -553,7 +553,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     padding-top: 1em;
                     display: grid;
                     grid-template-columns: 24em minmax(0, 1fr);
-                    grid-template-areas: 'empty header' 'sidebar main';
+                    grid-template-rows: auto auto 1fr;
+                    grid-template-areas: 'empty header' 'selection main' 'sidebar main';
                     gap: 0 2em;
                 }
 
@@ -563,7 +564,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .result-container.no-facets {
                     grid-template-columns: minmax(0, 1fr);
-                    grid-template-areas: 'header' 'main';
+                    grid-template-rows: auto auto 1fr;
+                    grid-template-areas: 'header' 'selection' 'main';
                 }
 
                 .refinement-container {
@@ -719,16 +721,29 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     color: var(--dbp-content);
                 }
 
-                .hit-selection-widget {
-                    display: flex;
-                    align-items: center;
-                    padding: 0.5em 1em;
-                    background-color: var(--dbp-background);
-                    color: var(--dbp-content);
-                    border-radius: 5px;
-                    font-size: 0.9em;
+                .hit-selection-container {
+                    grid-area: selection;
+                    margin-bottom: 1.5em;
+                }
+
+                .hit-selection-container h2 {
+                    font-size: 1.2em;
                     font-weight: bold;
-                    gap: 1em;
+                }
+
+                .hit-selection-container .button-area {
+                    margin: 0.5em 0;
+                    display: flex;
+                    gap: 0.5em;
+                }
+
+                .hit-selection-container .button-area .button {
+                    flex: 1;
+                }
+
+                .hit-selection-container .reset-area {
+                    display: flex;
+                    justify-content: flex-end;
                 }
 
                 @media (max-width: 1400px) {
@@ -1162,29 +1177,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         </div>
                     </div>
                     <div id="searchbox" class="search-box-widget"></div>
-                    <div class="hit-selection-widget">
-                        Persons: ${Object.keys(this.hitSelections[this.constructor.HitSelectionType.PERSON]).length} |
-                        Documents: ${Object.keys(this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE]).length}
-                        <button @click="${() => {
-                            // Feed all current hits into the selection
-                            const currentHits = this.search.helper.lastResults.hits;
-                            for (const hit of currentHits) {
-                                const type = hit['@type'];
-                                const id = hit.id;
-                                this.hitSelections[type][id] = true;
-                            }
-
-                            // Refresh the hits to update the selection state
-                            this.search.refresh();
-                            // Request update to update the hit selection counts
-                            this.requestUpdate();
-                        }}">Select all</button>
-                        <button @click="${() => {
-                            this.resetHitSelection();
-                            // Refresh the hits to update the selection state
-                            this.search.refresh();
-                        }}">Deselect all</button>
-                    </div>
                     <div class="help-container">
                         <svg
                             version="1.1"
@@ -1217,6 +1209,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div id="clear-filters" class="clear-filters"></div>
                 </div>
                 <div class="result-container ${this.facetConfigs.length === 0 ? 'no-facets' : ''}">
+                    ${this.renderHitSelectionContainer()}
                     <dbp-cabinet-facets
                         class="dbp-cabinet-facets"
                         ${ref(this.cabinetFacetsRef)}
@@ -1255,6 +1248,63 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     ${ref(this.filterSettingsModalRef)}
                     @settingsStored=${this.updateFacetVisibilityStates}
                     subscribe="lang,auth,entry-point-url"></dbp-cabinet-view-person>
+            </div>
+        `;
+    }
+
+    renderHitSelectionContainer() {
+        return html`
+            <div class="hit-selection-container">
+                <h2>Multiaction</h2>
+                <div>
+                    Persons selected:
+                    (${Object.keys(this.hitSelections[this.constructor.HitSelectionType.PERSON])
+                        .length})
+                </div>
+                <div>
+                    Documents selected:
+                    (${Object.keys(
+                        this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE],
+                    ).length})
+                </div>
+                <div class="button-area">
+                    <button
+                        class="button"
+                        @click="${() => {
+                            // Feed all current hits into the selection
+                            const currentHits = this.search.helper.lastResults.hits;
+                            for (const hit of currentHits) {
+                                const type = hit['@type'];
+                                const id = hit.id;
+                                this.hitSelections[type][id] = true;
+                            }
+
+                            // Refresh the hits to update the selection state
+                            this.search.refresh();
+                            // Request update to update the hit selection counts
+                            this.requestUpdate();
+                        }}">
+                        Select all
+                    </button>
+                    <button
+                        class="button"
+                        @click="${() => {
+                            this.search.refresh();
+                        }}">
+                        Open dialog
+                    </button>
+                </div>
+                <div class="reset-area">
+                    <button
+                        class="button"
+                        @click="${() => {
+                            this.resetHitSelection();
+                            // Refresh the hits to update the selection state
+                            this.search.refresh();
+                        }}">
+                        Deselect all
+                    </button>
+                </div>
             </div>
         `;
     }
