@@ -1166,7 +1166,22 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         Persons: ${Object.keys(this.hitSelections[this.constructor.HitSelectionType.PERSON]).length} |
                         Documents: ${Object.keys(this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE]).length}
                         <button @click="${() => {
+                            // Feed all current hits into the selection
+                            const currentHits = this.search.helper.lastResults.hits;
+                            for (const hit of currentHits) {
+                                const type = hit['@type'];
+                                const id = hit.id;
+                                this.hitSelections[type][id] = true;
+                            }
+
+                            // Refresh the hits to update the selection state
+                            this.search.refresh();
+                            // Request update to update the hit selection counts
+                            this.requestUpdate();
+                        }}">Select all</button>
+                        <button @click="${() => {
                             this.resetHitSelection();
+                            // Refresh the hits to update the selection state
                             this.search.refresh();
                         }}">Deselect all</button>
                     </div>
