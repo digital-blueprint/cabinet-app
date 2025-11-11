@@ -121,10 +121,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             id: '',
             objectType: '',
         };
-        this.hitSelections = {
-            [this.constructor.HitSelectionType.PERSON]: {},
-            [this.constructor.HitSelectionType.DOCUMENT_FILE]: {},
-        };
+        this.resetHitSelection();
         this.documentViewPersonModalRef = createRef();
         this.documentFileComponentRef = createRef();
         this.filterSettingsModalRef = createRef();
@@ -145,6 +142,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this._loadModulesPromise = null;
         this._initInstantsearchPromise = null;
         this._initialUiState = null;
+    }
+
+    resetHitSelection() {
+        this.hitSelections = {
+            [this.constructor.HitSelectionType.PERSON]: {},
+            [this.constructor.HitSelectionType.DOCUMENT_FILE]: {},
+        };
     }
 
     static get scopedElements() {
@@ -1161,6 +1165,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="hit-selection-widget">
                         Persons: ${Object.keys(this.hitSelections[this.constructor.HitSelectionType.PERSON]).length} |
                         Documents: ${Object.keys(this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE]).length}
+                        <button @click="${() => {
+                            this.resetHitSelection();
+                            this.search.refresh();
+                        }}">Deselect all</button>
                     </div>
                     <div class="help-container">
                         <svg
