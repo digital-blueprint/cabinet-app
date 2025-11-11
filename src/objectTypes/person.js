@@ -284,19 +284,15 @@ class CabinetHitElement extends BaseHitElement {
                     }
 
                     .hit-person-info-header {
-                        display: grid;
-                        grid-template-columns: auto auto;
-                        grid-template-rows: auto auto;
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
                     }
                     .right-column {
-                        grid-column: 1;
-                        grid-row: 1;
                     }
 
                     .person-name {
-                        grid-column: 1;
-                        grid-row: 1;
-                        padding-left: 2em;
+                        padding-left: 0.5em;
                     }
 
                     .person-birthdate {
