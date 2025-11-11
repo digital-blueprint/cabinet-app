@@ -402,7 +402,7 @@ class CabinetHitElement extends BaseHitElement {
                 }
             }}>
                 <div class="hit-person-info-header">
-                    <input type="checkbox" name="select" class="checkbox" ?checked=${this.checked} @change=${this.selectCheckboxChanged} value="${hit.id}" />
+                    <input type="checkbox" name="select" class="checkbox" ?checked=${this.selected} @change=${this.selectCheckboxChanged} value="${hit.id}" />
                     <div class="right-column">
                         <dbp-icon
                             class="column-icon"

@@ -1010,7 +1010,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     console.log('item objectType', objectType);
                     console.log('item hit', hit);
                     console.log('item type', hit['@type']);
-                    hitElement.checked = !!this.hitSelections[type][hit.id];
+                    hitElement.selected = !!this.hitSelections[type][hit.id];
                     hitElement.searchHelper = cabinetSearch.search.helper;
                     hitElement.isFirstOnPage = hit[isFirstOnPageSymbol];
                     hitElement.isLastOnPage = hit[isLastOnPageSymbol];
