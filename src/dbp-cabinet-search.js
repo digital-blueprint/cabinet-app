@@ -1284,7 +1284,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                             // Request update to update the hit selection counts
                             this.requestUpdate();
                         }}">
-                        Select all
+                        Select all visible
                     </button>
                     <button
                         class="button"
