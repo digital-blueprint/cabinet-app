@@ -26,6 +26,7 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from './i18n';
 import {createClearRefinements} from './clear-refinements.js';
 import {createCurrentRefinements} from './current-refinements';
+import {SelectionWidget} from './components/selection-widget.js';
 
 class StatsWidget extends LangMixin(AuthMixin(DBPLitElement), createInstance) {
     constructor() {
@@ -168,6 +169,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-cabinet-filter-settings': CabinetFilterSettings,
             'dbp-cabinet-stats-widget': StatsWidget,
             'dbp-cabinet-empty-widget': EmptyWidget,
+            'dbp-cabinet-selection-widget': SelectionWidget,
         };
     }
 
