@@ -111,6 +111,11 @@ let isLastOnPageSymbol = Symbol('isLastOnPage');
 let isFirstOfGroupOnPageSymbol = Symbol('isFirstOfGroupOnPage');
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
+    static HitSelectAllState = {
+        SELECT: 'select',
+        DESELECT: 'deselect',
+    };
+
     constructor() {
         super();
         this.activity = new Activity(metadata);
@@ -149,6 +154,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             [this.constructor.HitSelectionType.PERSON]: {},
             [this.constructor.HitSelectionType.DOCUMENT_FILE]: {},
         };
+        this.hitSelectAllState = this.constructor.HitSelectAllState.SELECT;
     }
 
     static get scopedElements() {
@@ -184,7 +190,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             documentFile: {type: File, attribute: false},
             search: {type: Object, attribute: false},
             facetConfigs: {type: Array, state: true},
-            hitSelections: {type: Object, state: true},
+            hitSelections: {type: Object, attribute: false},
+            hitSelectAllState: {type: Boolean, attribute: false},
         };
     }
 
@@ -361,6 +368,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             } else {
                 delete this.hitSelections[type][identifier];
             }
+            this.hitSelectAllState = this.constructor.HitSelectAllState.DESELECT;
             this.requestUpdate();
         });
     }
@@ -1271,12 +1279,26 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <button
                         class="button"
                         @click="${() => {
-                            // Feed all current hits into the selection
                             const currentHits = this.search.helper.lastResults.hits;
-                            for (const hit of currentHits) {
-                                const type = hit['@type'];
-                                const id = hit.id;
-                                this.hitSelections[type][id] = true;
+                            if (
+                                this.hitSelectAllState === this.constructor.HitSelectAllState.SELECT
+                            ) {
+                                // Add all current hits to the selection
+                                for (const hit of currentHits) {
+                                    const type = hit['@type'];
+                                    const id = hit.id;
+                                    this.hitSelections[type][id] = true;
+                                }
+                                this.hitSelectAllState =
+                                    this.constructor.HitSelectAllState.DESELECT;
+                            } else {
+                                // Remove all current hits from the selection
+                                for (const hit of currentHits) {
+                                    const type = hit['@type'];
+                                    const id = hit.id;
+                                    delete this.hitSelections[type][id];
+                                }
+                                this.hitSelectAllState = this.constructor.HitSelectAllState.SELECT;
                             }
 
                             // Refresh the hits to update the selection state
@@ -1284,7 +1306,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                             // Request update to update the hit selection counts
                             this.requestUpdate();
                         }}">
-                        Select all visible
+                        ${this.hitSelectAllState === this.constructor.HitSelectAllState.SELECT
+                            ? 'Select all visible'
+                            : 'Deselect all visible'}
                     </button>
                     <button
                         class="button"
