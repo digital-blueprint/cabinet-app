@@ -110,6 +110,32 @@ export const getCommonStyles = () => css`
         display: flex;
         flex-direction: column;
     }
+
+    .checkbox-label {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .checkbox-label::before {
+        content: '';
+        position: absolute;
+        top: -12px;
+        left: -12px;
+        right: -12px;
+        bottom: -12px;
+        min-width: 44px;
+        min-height: 44px;
+        cursor: pointer;
+    }
+
+    .checkbox {
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+    }
 `;
 
 export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {

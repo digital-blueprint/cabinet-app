@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkbox Click Area Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+
+        .test-container {
+            border: 2px dashed #ccc;
+            padding: 40px;
+            margin: 20px 0;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        /* Original checkbox */
+        .original-checkbox {
+            cursor: pointer;
+        }
+
+        /* Enhanced checkbox with label wrapper */
+        .checkbox-label {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid transparent; /* Visual aid for testing */
+        }
+
+        .checkbox-label:hover {
+            border-color: red; /* Shows the hover area */
+        }
+
+        .checkbox-label::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: -12px;
+            right: -12px;
+            bottom: -12px;
+            min-width: 44px;
+            min-height: 44px;
+            cursor: pointer;
+            /* Visual aid for testing - remove in production */
+            background: rgba(255, 0, 0, 0.1);
+        }
+
+        .checkbox {
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Checkbox Clickable Area Test</h1>
+
+    <div class="test-container">
+        <h2>Original Checkbox (Small clickable area)</h2>
+        <input type="checkbox" class="original-checkbox" id="checkbox1">
+        <label for="checkbox1">Click me (small area)</label>
+        <div class="status" id="status1">Clicks: 0</div>
+    </div>
+
+    <div class="test-container">
+        <h2>Enhanced Checkbox (Large clickable area - 44x44px)</h2>
+        <label class="checkbox-label">
+            <input type="checkbox" class="checkbox" id="checkbox2">
+        </label>
+        <span>Click around the checkbox (large area - red tinted shows clickable zone)</span>
+        <div class="status" id="status2">Clicks: 0</div>
+    </div>
+
+    <div class="test-container">
+        <h2>Instructions</h2>
+        <ul>
+            <li>Try clicking around the first checkbox - only the checkbox itself is clickable</li>
+            <li>Try clicking in the red-tinted area around the second checkbox - the entire area is clickable</li>
+            <li>The red tint shows the 44x44px minimum touch target area (remove in production)</li>
+        </ul>
+    </div>
+
+    <script>
+        let count1 = 0;
+        let count2 = 0;
+
+        document.getElementById('checkbox1').addEventListener('change', function() {
+            count1++;
+            document.getElementById('status1').textContent = 'Clicks: ' + count1 + ' - Checked: ' + this.checked;
+        });
+
+        document.getElementById('checkbox2').addEventListener('change', function() {
+            count2++;
+            document.getElementById('status2').textContent = 'Clicks: ' + count2 + ' - Checked: ' + this.checked;
+        });
+    </script>
+</body>
+</html>
+

@@ -1,5 +1,11 @@
 import {css, html} from 'lit';
-import {BaseObject, BaseFormElement, BaseHitElement, BaseViewElement} from '../baseObject.js';
+import {
+    BaseObject,
+    BaseFormElement,
+    BaseHitElement,
+    BaseViewElement,
+    getCommonStyles,
+} from '../baseObject.js';
 import {renderFieldWithHighlight} from '../utils';
 import {formatDate} from '../utils.js';
 import {MiniSpinner, Icon, sendNotification} from '@dbp-toolkit/common';
@@ -81,6 +87,7 @@ class CabinetHitElement extends BaseHitElement {
     static get styles() {
         return [
             ...super.styles,
+            getCommonStyles(),
             // language=css
             css`
                 :host {
@@ -398,7 +405,9 @@ class CabinetHitElement extends BaseHitElement {
                 }
             }}>
                 <div class="hit-person-info-header">
-                    <input type="checkbox" name="select" class="checkbox" ?checked=${this.selected} @change=${this.selectCheckboxChanged} value="${hit.id}" />
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="select" class="checkbox" ?checked=${this.selected} @change=${this.selectCheckboxChanged} value="${hit.id}" />
+                    </label>
                     <div class="right-column">
                         <dbp-icon
                             class="column-icon"
