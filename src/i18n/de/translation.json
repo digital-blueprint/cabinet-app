@@ -196,6 +196,9 @@
         "stats_other": "~{{count}} Ergebnisse gefunden in {{processingTimeMS}}ms"
     },
     "search-cabinet": "Suchen",
+    "selection-dialog": {
+        "batch-operations": "Mehrfachaktionen"
+    },
     "semester": "Semester",
     "show-active-only": "Alle aktiven Dokumente",
     "show-deleted-only": "Nur gelöschte Dokumente",

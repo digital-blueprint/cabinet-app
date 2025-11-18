@@ -26,7 +26,7 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from './i18n';
 import {createClearRefinements} from './clear-refinements.js';
 import {createCurrentRefinements} from './current-refinements';
-import {SelectionWidget} from './components/selection-widget.js';
+import {SelectionDialog} from './components/selection-dialog.js';
 
 class StatsWidget extends LangMixin(AuthMixin(DBPLitElement), createInstance) {
     constructor() {
@@ -132,6 +132,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.documentFileComponentRef = createRef();
         this.filterSettingsModalRef = createRef();
         this.cabinetFacetsRef = createRef();
+        this.selectionDialogRef = createRef();
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
         /** @type {InstantSearchModule} */
@@ -169,7 +170,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-cabinet-filter-settings': CabinetFilterSettings,
             'dbp-cabinet-stats-widget': StatsWidget,
             'dbp-cabinet-empty-widget': EmptyWidget,
-            'dbp-cabinet-selection-widget': SelectionWidget,
+            'dbp-cabinet-selection-dialog': SelectionDialog,
         };
     }
 
@@ -1315,7 +1316,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <button
                         class="button"
                         @click="${() => {
-                            this.search.refresh();
+                            /** @type {SelectionDialog} */
+                            const selectionDialog = this.selectionDialogRef.value;
+
+                            selectionDialog.open();
                         }}">
                         Open dialog
                     </button>
@@ -1332,6 +1336,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </button>
                 </div>
             </div>
+
+            <dbp-cabinet-selection-dialog
+                ${ref(this.selectionDialogRef)}
+                subscribe="lang,auth,entry-point-url"></dbp-cabinet-selection-dialog>
         `;
     }
 
