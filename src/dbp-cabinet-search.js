@@ -670,34 +670,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     color: var(--dbp-content);
                 }
 
-                .scroll-top-wrapper {
-                    position: fixed;
-                    display: flex;
-                    justify-content: flex-end;
-                    align-items: end;
-                    top: 85vh;
-                    z-index: 1000;
-                }
-
-                #scroll-top {
-                    padding: 0.5em;
-                    opacity: 0;
-                    pointer-events: none;
-                    color: var(--dbp-content);
-                    transition:
-                        opacity 0.3s ease,
-                        color 0.3s ease;
-                    cursor: pointer;
-                    background-color: var(--dbp-accent);
-                    border: none;
-                    transform: translateX(60em);
-                }
-
-                #scroll-top.visible {
-                    opacity: 1;
-                    pointer-events: auto;
-                }
-
                 .ais-Pagination-list {
                     padding-top: 0px;
                     gap: 8px;
@@ -755,21 +727,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .hit-selection-container .reset-area {
                     display: flex;
                     justify-content: flex-end;
-                }
-
-                @media (max-width: 1400px) {
-                    .scroll-top-wrapper {
-                        bottom: 1rem;
-                        right: 1rem;
-                    }
-
-                    #scroll-top {
-                        transform: translateX(1em);
-                    }
-
-                    #scroll-top.visible {
-                        transform: translateX(0);
-                    }
                 }
 
                 @media (max-width: 900px) {
@@ -1232,14 +1189,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <div id="hits-footer">
                             <div id="result-count"></div>
                             <div id="pagination-bottom"></div>
-                        </div>
-                        <div class="scroll-top-wrapper">
-                            <button id="scroll-top" class="button is-secondary" aria-label= ${i18n.t('buttons.scroll-to-top')}>
-                                <div class="scroll-top-button" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 106 58" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M5 53L53 5" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
-                                    <path d="M53 5L101 53" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
-                                </svg></div>
-                            </button>
                         </div>
                     </div>
                 </div>
