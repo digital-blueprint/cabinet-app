@@ -371,6 +371,19 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.hitSelectAllState = this.constructor.HitSelectAllState.DESELECT;
             this.requestUpdate();
         });
+
+        // Listen to selection-removed events from selection dialog
+        this.addEventListener('selection-removed', (event) => {
+            console.log('Selection removed:', event.detail);
+            const {type, id} = event.detail;
+            delete this.hitSelections[type][id];
+            this.hitSelectAllState = this.constructor.HitSelectAllState.DESELECT;
+            this.requestUpdate();
+            // Refresh the search to update checkbox states
+            if (this.search) {
+                this.search.refresh();
+            }
+        });
     }
 
     async ensureInstantsearch() {

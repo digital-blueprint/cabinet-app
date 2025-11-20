@@ -309,10 +309,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     width: 80,
                     hozAlign: 'center',
                     formatter: (cell) => {
-                        const button = document.createElement('dbp-icon-button');
+                        const button = this.createScopedElement('dbp-icon-button');
                         button.setAttribute('icon-name', 'trash');
                         button.setAttribute('title', i18n.t('selection-dialog.remove', 'Remove'));
-                        button.addEventListener('click', () => {
+                        button.addEventListener('click', (e) => {
+                            e.stopPropagation();
                             const rowData = cell.getRow().getData();
                             this.removeSelection(
                                 this.constructor.HitSelectionType.PERSON,
@@ -362,10 +363,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     width: 80,
                     hozAlign: 'center',
                     formatter: (cell) => {
-                        const button = document.createElement('dbp-icon-button');
+                        const button = this.createScopedElement('dbp-icon-button');
                         button.setAttribute('icon-name', 'trash');
                         button.setAttribute('title', i18n.t('selection-dialog.remove', 'Remove'));
-                        button.addEventListener('click', () => {
+                        button.addEventListener('click', (e) => {
+                            e.stopPropagation();
                             const rowData = cell.getRow().getData();
                             this.removeSelection(
                                 this.constructor.HitSelectionType.DOCUMENT_FILE,
@@ -497,8 +499,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         delete newSelections[type][id];
         this.hitSelections = newSelections;
 
-        // Request update to re-render with new data
-        this.requestUpdate();
+        // Update the table data immediately
+        this.updateTableData(type);
 
         // Dispatch event to notify parent component
         this.dispatchEvent(
@@ -508,6 +510,31 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 composed: true,
             }),
         );
+    }
+
+    updateTableData(type) {
+        // Get the selections for the type
+        const selections = Object.keys(this.hitSelections[type] || {});
+
+        // Prepare the new data
+        const tableData = selections.map((id, index) => ({
+            rowNumber: index + 1,
+            id: id,
+            actions: '',
+        }));
+
+        // Update the appropriate table
+        if (type === this.constructor.HitSelectionType.PERSON) {
+            const personTable = this.personTableRef.value;
+            if (personTable && personTable.tabulatorTable) {
+                personTable.tabulatorTable.setData(tableData);
+            }
+        } else if (type === this.constructor.HitSelectionType.DOCUMENT_FILE) {
+            const documentTable = this.documentTableRef.value;
+            if (documentTable && documentTable.tabulatorTable) {
+                documentTable.tabulatorTable.setData(tableData);
+            }
+        }
     }
 
     updated(changedProperties) {
