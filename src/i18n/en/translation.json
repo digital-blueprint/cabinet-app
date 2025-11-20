@@ -196,6 +196,7 @@
     },
     "search-cabinet": "Search",
     "selection-dialog": {
+        "actions": "Actions",
         "batch-operations": "Batch operations",
         "documents-tab": "Dokumente",
         "documents-title": "Selected Documents",

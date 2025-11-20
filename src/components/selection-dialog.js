@@ -4,6 +4,7 @@ import {IconButton, ScopedElementsMixin} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal} from '@dbp-toolkit/common';
+import {TabulatorTable} from '@dbp-toolkit/tabulator-table';
 import {
     scopedElements as modalNotificationScopedElements,
     sendModalNotification,
@@ -13,6 +14,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
         this.modalRef = createRef();
+        this.personTableRef = createRef();
+        this.documentTableRef = createRef();
         this.hitSelections = this.constructor.EmptyHitSelection;
         this.facetNumber = 0;
         this.activeTab = this.constructor.HitSelectionType.PERSON;
@@ -24,6 +27,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-icon': Icon,
             'dbp-button': Button,
             'dbp-icon-button': IconButton,
+            'dbp-tabulator-table': TabulatorTable,
         };
     }
 
@@ -254,6 +258,126 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {},
         );
 
+        // Prepare data for person table
+        const personTableData = personSelections.map((id, index) => ({
+            rowNumber: index + 1,
+            id: id,
+            actions: '',
+        }));
+
+        // Prepare data for document table
+        const documentTableData = documentSelections.map((id, index) => ({
+            rowNumber: index + 1,
+            id: id,
+            actions: '',
+        }));
+
+        // Table options for persons
+        const personTableOptions = {
+            layout: 'fitColumns',
+            langs: {
+                en: {
+                    columns: {
+                        rowNumber: '#',
+                        id: 'ID',
+                        actions: i18n.t('selection-dialog.actions', {lng: 'en'}),
+                    },
+                },
+                de: {
+                    columns: {
+                        rowNumber: '#',
+                        id: 'ID',
+                        actions: i18n.t('selection-dialog.actions', {lng: 'de'}),
+                    },
+                },
+            },
+            columns: [
+                {
+                    title: 'rowNumber',
+                    field: 'rowNumber',
+                    width: 60,
+                    hozAlign: 'center',
+                },
+                {
+                    title: 'id',
+                    field: 'id',
+                    widthGrow: 2,
+                },
+                {
+                    title: 'actions',
+                    field: 'actions',
+                    width: 80,
+                    hozAlign: 'center',
+                    formatter: (cell) => {
+                        const button = document.createElement('dbp-icon-button');
+                        button.setAttribute('icon-name', 'trash');
+                        button.setAttribute('title', i18n.t('selection-dialog.remove', 'Remove'));
+                        button.addEventListener('click', () => {
+                            const rowData = cell.getRow().getData();
+                            this.removeSelection(
+                                this.constructor.HitSelectionType.PERSON,
+                                rowData.id,
+                            );
+                        });
+                        return button;
+                    },
+                },
+            ],
+        };
+
+        // Table options for documents
+        const documentTableOptions = {
+            layout: 'fitColumns',
+            langs: {
+                en: {
+                    columns: {
+                        rowNumber: '#',
+                        id: 'ID',
+                        actions: i18n.t('selection-dialog.actions', {lng: 'en'}),
+                    },
+                },
+                de: {
+                    columns: {
+                        rowNumber: '#',
+                        id: 'ID',
+                        actions: i18n.t('selection-dialog.actions', {lng: 'de'}),
+                    },
+                },
+            },
+            columns: [
+                {
+                    title: 'rowNumber',
+                    field: 'rowNumber',
+                    width: 60,
+                    hozAlign: 'center',
+                },
+                {
+                    title: 'id',
+                    field: 'id',
+                    widthGrow: 2,
+                },
+                {
+                    title: 'actions',
+                    field: 'actions',
+                    width: 80,
+                    hozAlign: 'center',
+                    formatter: (cell) => {
+                        const button = document.createElement('dbp-icon-button');
+                        button.setAttribute('icon-name', 'trash');
+                        button.setAttribute('title', i18n.t('selection-dialog.remove', 'Remove'));
+                        button.addEventListener('click', () => {
+                            const rowData = cell.getRow().getData();
+                            this.removeSelection(
+                                this.constructor.HitSelectionType.DOCUMENT_FILE,
+                                rowData.id,
+                            );
+                        });
+                        return button;
+                    },
+                },
+            ],
+        };
+
         return html`
             <div class="modal-container">
                 <div class="modal-nav" role="tablist">
@@ -306,27 +430,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <h3>${i18n.t('selection-dialog.persons-title', 'Selected Persons')}</h3>
                         ${personSelections.length > 0
                             ? html`
-                                  <ul class="selection-list">
-                                      ${personSelections.map(
-                                          (id) => html`
-                                              <li>
-                                                  <span>${id}</span>
-                                                  <dbp-icon-button
-                                                      icon-name="trash"
-                                                      title="${i18n.t(
-                                                          'selection-dialog.remove',
-                                                          'Remove',
-                                                      )}"
-                                                      @click="${() =>
-                                                          this.removeSelection(
-                                                              this.constructor.HitSelectionType
-                                                                  .PERSON,
-                                                              id,
-                                                          )}"></dbp-icon-button>
-                                              </li>
-                                          `,
-                                      )}
-                                  </ul>
+                                  <dbp-tabulator-table
+                                      ${ref(this.personTableRef)}
+                                      lang="${this.lang}"
+                                      class="selection-table"
+                                      identifier="person-selection-table"
+                                      .data=${personTableData}
+                                      .options=${personTableOptions}></dbp-tabulator-table>
                               `
                             : html`
                                   <p>
@@ -348,27 +458,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <h3>${i18n.t('selection-dialog.documents-title', 'Selected Documents')}</h3>
                         ${documentSelections.length > 0
                             ? html`
-                                  <ul class="selection-list">
-                                      ${documentSelections.map(
-                                          (id) => html`
-                                              <li>
-                                                  <span>${id}</span>
-                                                  <dbp-icon-button
-                                                      icon-name="trash"
-                                                      title="${i18n.t(
-                                                          'selection-dialog.remove',
-                                                          'Remove',
-                                                      )}"
-                                                      @click="${() =>
-                                                          this.removeSelection(
-                                                              this.constructor.HitSelectionType
-                                                                  .DOCUMENT_FILE,
-                                                              id,
-                                                          )}"></dbp-icon-button>
-                                              </li>
-                                          `,
-                                      )}
-                                  </ul>
+                                  <dbp-tabulator-table
+                                      ${ref(this.documentTableRef)}
+                                      lang="${this.lang}"
+                                      class="selection-table"
+                                      identifier="document-selection-table"
+                                      .data=${documentTableData}
+                                      .options=${documentTableOptions}></dbp-tabulator-table>
                               `
                             : html`
                                   <p>
@@ -401,6 +497,9 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         delete newSelections[type][id];
         this.hitSelections = newSelections;
 
+        // Request update to re-render with new data
+        this.requestUpdate();
+
         // Dispatch event to notify parent component
         this.dispatchEvent(
             new CustomEvent('selection-removed', {
@@ -409,6 +508,27 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 composed: true,
             }),
         );
+    }
+
+    updated(changedProperties) {
+        super.updated(changedProperties);
+
+        // Build tables after render
+        if (changedProperties.has('hitSelections') || changedProperties.has('activeTab')) {
+            this.updateComplete.then(() => {
+                // Build person table if it exists and has content
+                const personTable = this.personTableRef.value;
+                if (personTable && !personTable.tableReady) {
+                    personTable.buildTable();
+                }
+
+                // Build document table if it exists and has content
+                const documentTable = this.documentTableRef.value;
+                if (documentTable && !documentTable.tableReady) {
+                    documentTable.buildTable();
+                }
+            });
+        }
     }
 
     render() {
