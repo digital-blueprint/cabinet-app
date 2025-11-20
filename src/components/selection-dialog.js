@@ -47,11 +47,15 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.hitSelections = hitSelections;
 
         // Rerender the modal content
-        this.requestUpdate();
+        await this.requestUpdate();
 
         console.log('open modal', modal);
         console.log('open this.hitSelections', this.hitSelections);
         modal.open();
+
+        // Build tables after modal is opened and content is rendered
+        await this.updateComplete;
+        this.buildTablesIfNeeded();
     }
 
     close() {
@@ -537,23 +541,29 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
     }
 
+    buildTablesIfNeeded() {
+        // Build person table if it exists and hasn't been built yet
+        const personTable = this.personTableRef.value;
+        if (personTable && !personTable.tableReady) {
+            console.log('Building person table');
+            personTable.buildTable();
+        }
+
+        // Build document table if it exists and hasn't been built yet
+        const documentTable = this.documentTableRef.value;
+        if (documentTable && !documentTable.tableReady) {
+            console.log('Building document table');
+            documentTable.buildTable();
+        }
+    }
+
     updated(changedProperties) {
         super.updated(changedProperties);
 
         // Build tables after render
         if (changedProperties.has('hitSelections') || changedProperties.has('activeTab')) {
             this.updateComplete.then(() => {
-                // Build person table if it exists and has content
-                const personTable = this.personTableRef.value;
-                if (personTable && !personTable.tableReady) {
-                    personTable.buildTable();
-                }
-
-                // Build document table if it exists and has content
-                const documentTable = this.documentTableRef.value;
-                if (documentTable && !documentTable.tableReady) {
-                    documentTable.buildTable();
-                }
+                this.buildTablesIfNeeded();
             });
         }
     }
