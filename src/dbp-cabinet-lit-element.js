@@ -37,8 +37,8 @@ export default class DBPCabinetLitElement extends LangMixin(
     };
 
     static EmptyHitSelection = {
-        [this.constructor.HitSelectionType.PERSON]: {},
-        [this.constructor.HitSelectionType.DOCUMENT_FILE]: {},
+        [DBPCabinetLitElement.HitSelectionType.PERSON]: {},
+        [DBPCabinetLitElement.HitSelectionType.DOCUMENT_FILE]: {},
     };
 
     static EventType = {
