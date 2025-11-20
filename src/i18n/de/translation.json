@@ -196,7 +196,14 @@
     },
     "search-cabinet": "Suchen",
     "selection-dialog": {
-        "batch-operations": "Mehrfachaktionen"
+        "batch-operations": "Mehrfachaktionen",
+        "documents-tab": "Dokumente",
+        "documents-title": "Ausgewählte Dokumente",
+        "no-documents": "Keine Dokumente ausgewählt.",
+        "no-persons": "Keine Personen ausgewählt.",
+        "persons-tab": "Personen",
+        "persons-title": "Ausgewählte Personen",
+        "remove": "Entfernen"
     },
     "semester": "Semester",
     "show-active-only": "Alle aktiven Dokumente",

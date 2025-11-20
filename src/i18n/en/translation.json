@@ -196,7 +196,14 @@
     },
     "search-cabinet": "Search",
     "selection-dialog": {
-        "batch-operations": "Batch operations"
+        "batch-operations": "Batch operations",
+        "documents-tab": "Dokumente",
+        "documents-title": "Selected Documents",
+        "no-documents": "No documents selected.",
+        "no-persons": "No persons selected.",
+        "persons-tab": "Personen",
+        "persons-title": "Selected Persons",
+        "remove": "Remove"
     },
     "semester": "Semester",
     "show-active-only": "All active documents",
