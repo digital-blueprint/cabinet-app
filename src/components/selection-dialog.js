@@ -13,7 +13,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
         this.modalRef = createRef();
-        this.hitSelections = [];
+        this.hitSelections = this.constructor.EmptyHitSelection;
         this.facetNumber = 0;
     }
 
@@ -29,16 +29,22 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     static get properties() {
         return {
             ...super.properties,
-            hitSelections: {type: Array, attribute: false},
+            hitSelections: {type: Object, attribute: false},
         };
     }
 
-    async open(facetConfigs) {
+    async open(hitSelections) {
         /**
          * @type {Modal}
          */
         const modal = this.modalRef.value;
-        console.log('modal', modal);
+        this.hitSelections = hitSelections;
+
+        // Rerender the modal content
+        this.requestUpdate();
+
+        console.log('open modal', modal);
+        console.log('open this.hitSelections', this.hitSelections);
         modal.open();
     }
 
@@ -121,13 +127,17 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     renderContent() {
-        if (!this.hitSelections || this.hitSelections.length === 0) {
+        console.log('renderContent hitSelections', this.hitSelections);
+
+        if (
+            !this.hitSelections ||
+            this.hitSelections[this.constructor.HitSelectionType.PERSON].length === 0 ||
+            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE].length === 0
+        ) {
             return html`
                 <p>No items found.</p>
             `;
         }
-
-        this.facetNumber = 0;
 
         return html`
             Items

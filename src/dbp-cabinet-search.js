@@ -152,10 +152,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     resetHitSelection() {
-        this.hitSelections = {
-            [this.constructor.HitSelectionType.PERSON]: {},
-            [this.constructor.HitSelectionType.DOCUMENT_FILE]: {},
-        };
+        this.hitSelections = this.constructor.EmptyHitSelection;
         this.hitSelectAllState = this.constructor.HitSelectAllState.SELECT;
     }
 
@@ -1268,7 +1265,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                             /** @type {SelectionDialog} */
                             const selectionDialog = this.selectionDialogRef.value;
 
-                            selectionDialog.open();
+                            selectionDialog.open(this.hitSelections);
                         }}">
                         Open dialog
                     </button>
