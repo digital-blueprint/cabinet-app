@@ -1766,7 +1766,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                 <span>${i18n.t('doc-modal-edit')}</span>
                                             </button>
                                         </li>
-                                        ${!hasOnlyOneVersion && !isCurrent
+                                        ${!isCurrent
                                             ? html`
                                                   <li role="none">
                                                       <button
