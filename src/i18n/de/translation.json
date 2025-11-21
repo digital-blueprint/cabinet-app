@@ -195,9 +195,17 @@
         "stats_other": "~{{count}} Ergebnisse gefunden in {{processingTimeMS}}ms"
     },
     "search-cabinet": "Suchen",
+    "selection-column-configuration": {
+        "close": "Schließen",
+        "description": "Konfigurieren Sie die Spalten, die in der {{type}}-Tabelle angezeigt werden",
+        "placeholder": "Konfigurationsoptionen werden hier angezeigt.",
+        "save": "Speichern",
+        "title": "Spaltenkonfiguration"
+    },
     "selection-dialog": {
         "actions": "Aktionen",
         "batch-operations": "Mehrfachaktionen",
+        "configure-columns": "Spalten konfigurieren",
         "documents-tab": "Dokumente",
         "documents-title": "Ausgewählte Dokumente",
         "no-documents": "Keine Dokumente ausgewählt.",

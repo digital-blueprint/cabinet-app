@@ -9,6 +9,7 @@ import {
     scopedElements as modalNotificationScopedElements,
     sendModalNotification,
 } from '../modules/modal-notification';
+import {SelectionColumnConfiguration} from './selection-column-configuration';
 
 export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -16,6 +17,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.modalRef = createRef();
         this.personTableRef = createRef();
         this.documentTableRef = createRef();
+        this.personColumnConfigRef = createRef();
+        this.documentColumnConfigRef = createRef();
         this.hitSelections = this.constructor.EmptyHitSelection;
         this.facetNumber = 0;
         this.activeTab = this.constructor.HitSelectionType.PERSON;
@@ -28,6 +31,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-button': Button,
             'dbp-icon-button': IconButton,
             'dbp-tabulator-table': TabulatorTable,
+            'dbp-selection-column-configuration': SelectionColumnConfiguration,
         };
     }
 
@@ -312,6 +316,20 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     field: 'actions',
                     width: 80,
                     hozAlign: 'center',
+                    headerSort: false,
+                    titleFormatter: () => {
+                        const gearButton = this.createScopedElement('dbp-icon-button');
+                        gearButton.setAttribute('icon-name', 'cog');
+                        gearButton.setAttribute(
+                            'title',
+                            i18n.t('selection-dialog.configure-columns', 'Configure Columns'),
+                        );
+                        gearButton.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            this.openColumnConfiguration('person');
+                        });
+                        return gearButton;
+                    },
                     formatter: (cell) => {
                         const button = this.createScopedElement('dbp-icon-button');
                         button.setAttribute('icon-name', 'trash');
@@ -366,6 +384,20 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     field: 'actions',
                     width: 80,
                     hozAlign: 'center',
+                    headerSort: false,
+                    titleFormatter: () => {
+                        const gearButton = this.createScopedElement('dbp-icon-button');
+                        gearButton.setAttribute('icon-name', 'cog');
+                        gearButton.setAttribute(
+                            'title',
+                            i18n.t('selection-dialog.configure-columns', 'Configure Columns'),
+                        );
+                        gearButton.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            this.openColumnConfiguration('document');
+                        });
+                        return gearButton;
+                    },
                     formatter: (cell) => {
                         const button = this.createScopedElement('dbp-icon-button');
                         button.setAttribute('icon-name', 'trash');
@@ -557,6 +589,21 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
     }
 
+    openColumnConfiguration(type) {
+        console.log('openColumnConfiguration', type);
+        if (type === 'person') {
+            const configDialog = this.personColumnConfigRef.value;
+            if (configDialog) {
+                configDialog.open(type);
+            }
+        } else if (type === 'document') {
+            const configDialog = this.documentColumnConfigRef.value;
+            if (configDialog) {
+                configDialog.open(type);
+            }
+        }
+    }
+
     updated(changedProperties) {
         super.updated(changedProperties);
 
@@ -574,6 +621,12 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         return html`
             ${this.getModalHtml()}
+            <dbp-selection-column-configuration
+                ${ref(this.personColumnConfigRef)}
+                lang="${this.lang}"></dbp-selection-column-configuration>
+            <dbp-selection-column-configuration
+                ${ref(this.documentColumnConfigRef)}
+                lang="${this.lang}"></dbp-selection-column-configuration>
         `;
     }
 }

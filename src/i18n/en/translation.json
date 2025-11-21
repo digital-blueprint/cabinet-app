@@ -195,9 +195,17 @@
         "stats_other": "~{{count}} results found in {{processingTimeMS}}ms"
     },
     "search-cabinet": "Search",
+    "selection-column-configuration": {
+        "close": "Close",
+        "description": "Configure the columns displayed in the {{type}} table",
+        "placeholder": "Configuration options will be displayed here.",
+        "save": "Save",
+        "title": "Column Configuration"
+    },
     "selection-dialog": {
         "actions": "Actions",
         "batch-operations": "Batch operations",
+        "configure-columns": "Configure Columns",
         "documents-tab": "Dokumente",
         "documents-title": "Selected Documents",
         "no-documents": "No documents selected.",
