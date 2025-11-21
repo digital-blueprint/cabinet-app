@@ -340,6 +340,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                             e.stopPropagation();
                             this.openColumnConfiguration('person');
                         });
+
+                        // Position adjustment to align with delete buttons
+                        this.personGearButton.style.position = 'relative';
+                        this.personGearButton.style.left = '16px';
+
                         return this.personGearButton;
                     },
                     formatter: (cell) => {
@@ -414,6 +419,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                             e.stopPropagation();
                             this.openColumnConfiguration('document');
                         });
+
+                        // Position adjustment to align with delete buttons
+                        this.documentGearButton.style.position = 'relative';
+                        this.documentGearButton.style.left = '16px';
+
                         return this.documentGearButton;
                     },
                     formatter: (cell) => {
