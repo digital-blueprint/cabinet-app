@@ -22,6 +22,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.hitSelections = this.constructor.EmptyHitSelection;
         this.facetNumber = 0;
         this.activeTab = this.constructor.HitSelectionType.PERSON;
+        this.personGearButton = null;
+        this.documentGearButton = null;
     }
 
     static get scopedElements() {
@@ -49,6 +51,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
          */
         const modal = this.modalRef.value;
         this.hitSelections = hitSelections;
+
+        // Reset gear buttons to ensure clean state
+        this.personGearButton = null;
+        this.documentGearButton = null;
 
         // Rerender the modal content
         await this.requestUpdate();
@@ -317,18 +323,24 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     width: 80,
                     hozAlign: 'center',
                     headerSort: false,
-                    titleFormatter: () => {
-                        const gearButton = this.createScopedElement('dbp-icon-button');
-                        gearButton.setAttribute('icon-name', 'cog');
-                        gearButton.setAttribute(
+                    titleFormatter: (cell) => {
+                        // Return cached gear button if it exists
+                        if (this.personGearButton) {
+                            return this.personGearButton;
+                        }
+
+                        // Create and cache the gear button
+                        this.personGearButton = this.createScopedElement('dbp-icon-button');
+                        this.personGearButton.setAttribute('icon-name', 'cog');
+                        this.personGearButton.setAttribute(
                             'title',
                             i18n.t('selection-dialog.configure-columns', 'Configure Columns'),
                         );
-                        gearButton.addEventListener('click', (e) => {
+                        this.personGearButton.addEventListener('click', (e) => {
                             e.stopPropagation();
                             this.openColumnConfiguration('person');
                         });
-                        return gearButton;
+                        return this.personGearButton;
                     },
                     formatter: (cell) => {
                         const button = this.createScopedElement('dbp-icon-button');
@@ -385,18 +397,24 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     width: 80,
                     hozAlign: 'center',
                     headerSort: false,
-                    titleFormatter: () => {
-                        const gearButton = this.createScopedElement('dbp-icon-button');
-                        gearButton.setAttribute('icon-name', 'cog');
-                        gearButton.setAttribute(
+                    titleFormatter: (cell) => {
+                        // Return cached gear button if it exists
+                        if (this.documentGearButton) {
+                            return this.documentGearButton;
+                        }
+
+                        // Create and cache the gear button
+                        this.documentGearButton = this.createScopedElement('dbp-icon-button');
+                        this.documentGearButton.setAttribute('icon-name', 'cog');
+                        this.documentGearButton.setAttribute(
                             'title',
                             i18n.t('selection-dialog.configure-columns', 'Configure Columns'),
                         );
-                        gearButton.addEventListener('click', (e) => {
+                        this.documentGearButton.addEventListener('click', (e) => {
                             e.stopPropagation();
                             this.openColumnConfiguration('document');
                         });
-                        return gearButton;
+                        return this.documentGearButton;
                     },
                     formatter: (cell) => {
                         const button = this.createScopedElement('dbp-icon-button');
