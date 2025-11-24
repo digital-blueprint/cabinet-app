@@ -466,7 +466,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         /**
          * @type {IconButton}
          */
-        const button = e.target;
+        const button = e.currentTarget;
         button.start();
 
         // Store the current facet visibility states in localStorage
