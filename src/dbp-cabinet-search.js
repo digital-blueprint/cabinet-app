@@ -406,7 +406,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         let facets = this.getCabinetFacets();
         search.addWidgets([
-            configure({hitsPerPage: 24}),
+            configure({}),
             facets.createConfigureWidget(),
             this.createSearchBox(),
             this.createHitsPerPageWidget(),
@@ -443,6 +443,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 this._('.results').classList.add('stalled');
             } else {
                 this._('.results').classList.remove('stalled');
+            }
+
+            // Store the hitsPerPage setting in localStorage
+            let prefix = this.getSettingsLocalStoragePrefix();
+            if (prefix !== null) {
+                localStorage.setItem(prefix + 'hitsPerPage', search.helper.state.hitsPerPage);
             }
         });
     }
@@ -975,14 +981,32 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     createHitsPerPageWidget() {
+        let availableHitsPerPage = [10, 20, 50, 100];
+        let defaultHitsPerPage = 20;
+
+        // Restore default hits per page from local storage
+        let prefix = this.getSettingsLocalStoragePrefix();
+        if (prefix !== null) {
+            let hitsPerPageString = localStorage.getItem(prefix + 'hitsPerPage');
+            if (hitsPerPageString !== null) {
+                let parsed = parseInt(hitsPerPageString);
+                if (availableHitsPerPage.includes(parsed)) {
+                    defaultHitsPerPage = parsed;
+                }
+            }
+        }
+
+        let items = availableHitsPerPage.map((value) => {
+            return {
+                label: value.toString(),
+                value: value,
+                default: value === defaultHitsPerPage,
+            };
+        });
+
         return hitsPerPage({
             container: this._('#hits-per-page'),
-            items: [
-                {label: '10', value: 10},
-                {label: '20', value: 20, default: true},
-                {label: '50', value: 50},
-                {label: '100', value: 100},
-            ],
+            items: items,
         });
     }
 
