@@ -681,6 +681,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     justify-content: flex-end;
                 }
 
+                .hits-per-page-widget {
+                    display: flex;
+                    gap: 0.5em;
+                    align-items: baseline;
+                }
+
                 #hits-footer {
                     display: flex;
                     flex-direction: row;
@@ -969,14 +975,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     createHitsPerPageWidget() {
-        const i18n = this._i18n;
         return hitsPerPage({
             container: this._('#hits-per-page'),
             items: [
-                {label: i18n.t('search-hits-per-page', {count: 10}), value: 10},
-                {label: i18n.t('search-hits-per-page', {count: 20}), value: 20, default: true},
-                {label: i18n.t('search-hits-per-page', {count: 50}), value: 50},
-                {label: i18n.t('search-hits-per-page', {count: 100}), value: 100},
+                {label: '10', value: 10},
+                {label: '20', value: 20, default: true},
+                {label: '50', value: 50},
+                {label: '100', value: 100},
             ],
         });
     }
@@ -1227,7 +1232,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <div id="hits-footer">
                             <div id="result-count"></div>
                             <div id="pagination-bottom"></div>
-                            <div id="hits-per-page" class="hits-per-page-widget"></div>
+                            <div class="hits-per-page-widget">
+                                ${i18n.t('search-hits-per-page')}
+                                <div id="hits-per-page"></div>
+                            </div>
                         </div>
                     </div>
                 </div>

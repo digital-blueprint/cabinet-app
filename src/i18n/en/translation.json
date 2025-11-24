@@ -195,8 +195,7 @@
         "stats_other": "~{{count}} results found in {{processingTimeMS}}ms"
     },
     "search-cabinet": "Search",
-    "search-hits-per-page_one": "One hit per page",
-    "search-hits-per-page_other": "{{count}} hits per page",
+    "search-hits-per-page": "Hits per page:",
     "selection-column-configuration": {
         "close": "Close",
         "description": "Configure the columns displayed in the {{type}} table",
