@@ -10,9 +10,9 @@ export default class DBPCabinetLitElement extends LangMixin(
         super();
         this.entryPointUrl = '';
         this.facetVisibilityStates = {};
-        this.settingsLocalStorageKey = '';
+        this.settingsLocalStoragePrefix = '';
 
-        // Try to load the facet visibility states from localStorage if the settingsLocalStorageKey is already set
+        // Try to load the facet visibility states from localStorage if the settingsLocalStoragePrefix is already set
         this.loadFacetVisibilityStates();
     }
 
@@ -27,7 +27,7 @@ export default class DBPCabinetLitElement extends LangMixin(
             nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
             nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
             facetVisibilityStates: {type: Object, attribute: false},
-            settingsLocalStorageKey: {type: String, attribute: false},
+            settingsLocalStoragePrefix: {type: String, attribute: false},
         };
     }
 
@@ -49,14 +49,14 @@ export default class DBPCabinetLitElement extends LangMixin(
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'auth':
-                    // If the auth has changed, and the user is authenticated and the settingsLocalStorageKey is not set, we need to generate it
+                    // If the auth has changed, and the user is authenticated and the settingsLocalStoragePrefix is not set, we need to generate it
                     // We assume that auth['user-id'] will never change, because the page would be reloaded
-                    if (!this.settingsLocalStorageKey) {
-                        this.generateSettingsLocalStorageKey();
+                    if (!this.settingsLocalStoragePrefix) {
+                        this.generateSettingsLocalStoragePrefix();
                     }
                     break;
-                case 'settingsLocalStorageKey':
-                    // If the settingsLocalStorageKey has changed, we need to load the facetVisibilityStates
+                case 'settingsLocalStoragePrefix':
+                    // If the settingsLocalStoragePrefix has changed, we need to load the facetVisibilityStates
                     // This should only happen one time after initialization
                     this.loadFacetVisibilityStates();
                     break;
@@ -78,15 +78,17 @@ export default class DBPCabinetLitElement extends LangMixin(
     }
 
     loadFacetVisibilityStates() {
-        // If the settingsLocalStorageKey is not set, we need to generate it
+        // If the settingsLocalStoragePrefix is not set, we need to generate it
         // If that fails, we cannot load the facet visibility states
-        if (!this.settingsLocalStorageKey && !this.generateSettingsLocalStorageKey()) {
+        if (!this.settingsLocalStoragePrefix && !this.generateSettingsLocalStoragePrefix()) {
             return false;
         }
 
         // Load the facet visibility states from localStorage
         this.setFacetVisibilityStates(
-            JSON.parse(localStorage.getItem(this.settingsLocalStorageKey)) || {},
+            JSON.parse(
+                localStorage.getItem(this.settingsLocalStoragePrefix + 'facetVisibilityStates'),
+            ) || {},
         );
 
         return true;
@@ -106,15 +108,15 @@ export default class DBPCabinetLitElement extends LangMixin(
         return Object.keys(facetStates).filter((facetName) => facetStates[facetName] === true);
     }
 
-    generateSettingsLocalStorageKey() {
-        // We need the publicId from the auth object to generate the settingsLocalStorageKey
+    generateSettingsLocalStoragePrefix() {
+        // We need the publicId from the auth object to generate the settingsLocalStoragePrefix
         const publicId = this.auth && this.auth['user-id'];
 
         if (!publicId) {
             return false;
         }
 
-        this.settingsLocalStorageKey = `dbp-cabinet:${publicId}:facetVisibilityStates`;
+        this.settingsLocalStoragePrefix = `dbp-cabinet:${publicId}:`;
 
         return true;
     }
