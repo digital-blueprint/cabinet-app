@@ -251,11 +251,10 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
      * in the file source
      */
     getModalHtml() {
+        let prefix = this.getSettingsLocalStoragePrefix();
         const i18n = this._i18n;
         const buttonsDisabled =
-            !this.facetConfigs ||
-            this.facetConfigs.length === 0 ||
-            !this.settingsLocalStoragePrefix;
+            !this.facetConfigs || this.facetConfigs.length === 0 || prefix === null;
 
         return html`
             <dbp-modal
@@ -458,7 +457,8 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
     }
 
     storeSettings(e) {
-        if (!this.settingsLocalStoragePrefix) {
+        let prefix = this.getSettingsLocalStoragePrefix();
+        if (prefix === null) {
             console.warn('No settingsLocalStoragePrefix set, cannot store settings.');
             return;
         }
@@ -471,7 +471,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
         // Store the current facet visibility states in localStorage
         localStorage.setItem(
-            this.settingsLocalStoragePrefix + 'facetVisibilityStates',
+            prefix + 'facetVisibilityStates',
             JSON.stringify(this.facetVisibilityStates),
         );
 

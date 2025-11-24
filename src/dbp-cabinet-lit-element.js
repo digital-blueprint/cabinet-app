@@ -10,7 +10,7 @@ export default class DBPCabinetLitElement extends LangMixin(
         super();
         this.entryPointUrl = '';
         this.facetVisibilityStates = {};
-        this.settingsLocalStoragePrefix = '';
+        this.settingsLocalStoragePrefix = null;
 
         // Try to load the facet visibility states from localStorage if the settingsLocalStoragePrefix is already set
         this.loadFacetVisibilityStates();
@@ -51,9 +51,7 @@ export default class DBPCabinetLitElement extends LangMixin(
                 case 'auth':
                     // If the auth has changed, and the user is authenticated and the settingsLocalStoragePrefix is not set, we need to generate it
                     // We assume that auth['user-id'] will never change, because the page would be reloaded
-                    if (!this.settingsLocalStoragePrefix) {
-                        this.generateSettingsLocalStoragePrefix();
-                    }
+                    this.getSettingsLocalStoragePrefix();
                     break;
                 case 'settingsLocalStoragePrefix':
                     // If the settingsLocalStoragePrefix has changed, we need to load the facetVisibilityStates
@@ -80,15 +78,14 @@ export default class DBPCabinetLitElement extends LangMixin(
     loadFacetVisibilityStates() {
         // If the settingsLocalStoragePrefix is not set, we need to generate it
         // If that fails, we cannot load the facet visibility states
-        if (!this.settingsLocalStoragePrefix && !this.generateSettingsLocalStoragePrefix()) {
+        let prefix = this.getSettingsLocalStoragePrefix();
+        if (prefix === null) {
             return false;
         }
 
         // Load the facet visibility states from localStorage
         this.setFacetVisibilityStates(
-            JSON.parse(
-                localStorage.getItem(this.settingsLocalStoragePrefix + 'facetVisibilityStates'),
-            ) || {},
+            JSON.parse(localStorage.getItem(prefix + 'facetVisibilityStates')) || {},
         );
 
         return true;
@@ -108,17 +105,17 @@ export default class DBPCabinetLitElement extends LangMixin(
         return Object.keys(facetStates).filter((facetName) => facetStates[facetName] === true);
     }
 
-    generateSettingsLocalStoragePrefix() {
+    getSettingsLocalStoragePrefix() {
         // We need the publicId from the auth object to generate the settingsLocalStoragePrefix
         const publicId = this.auth && this.auth['user-id'];
 
         if (!publicId) {
-            return false;
+            this.settingsLocalStoragePrefix = null;
+        } else {
+            this.settingsLocalStoragePrefix = `dbp-cabinet:${publicId}:`;
         }
 
-        this.settingsLocalStoragePrefix = `dbp-cabinet:${publicId}:`;
-
-        return true;
+        return this.settingsLocalStoragePrefix;
     }
 
     sendHitSelectionEvent(type, identifier, state) {
