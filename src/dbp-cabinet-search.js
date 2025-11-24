@@ -11,7 +11,7 @@ import {Activity} from './activity.js';
 import metadata from './dbp-cabinet-search.metadata.json';
 import instantsearch from 'instantsearch.js';
 import DbpTypesenseInstantSearchAdapter from './dbp-typesense-instantsearch-adapter.js';
-import {hits, searchBox, stats, pagination} from 'instantsearch.js/es/widgets';
+import {hits, searchBox, stats, pagination, hitsPerPage} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
 import {pascalToKebab, preactRefReplaceChildren} from './utils';
 import {CabinetFile} from './components/dbp-cabinet-file.js';
@@ -409,6 +409,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             configure({hitsPerPage: 24}),
             facets.createConfigureWidget(),
             this.createSearchBox(),
+            this.createHitsPerPageWidget(),
             this.createHits(),
             this.createStats(),
             this.createPagination('#pagination-bottom'),
@@ -558,6 +559,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     height: 12px;
                 }
 
+                .ais-HitsPerPage-select {
+                    min-height: 33px;
+                }
+
+                select:not(.select) {
+                    padding-right: 25px;
+                    padding-left: 6px;
+                    background-size: 1em;
+                }
+
                 .ais-SearchBox-loadingIcon {
                     width: 16px;
                     height: 16px;
@@ -674,6 +685,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     display: flex;
                     flex-direction: row;
                     justify-content: space-between;
+                    row-gap: 0.5em;
+                    align-items: center;
+                    gap: 1em;
                 }
 
                 .ais-Stats {
@@ -684,6 +698,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     padding-top: 0px;
                     gap: 8px;
                     margin-top: 0;
+                    padding-left: 0;
                 }
 
                 .ais-Stats-text {
@@ -953,6 +968,19 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
     }
 
+    createHitsPerPageWidget() {
+        const i18n = this._i18n;
+        return hitsPerPage({
+            container: this._('#hits-per-page'),
+            items: [
+                {label: i18n.t('search-hits-per-page', {count: 10}), value: 10},
+                {label: i18n.t('search-hits-per-page', {count: 20}), value: 20, default: true},
+                {label: i18n.t('search-hits-per-page', {count: 50}), value: 50},
+                {label: i18n.t('search-hits-per-page', {count: 100}), value: 100},
+            ],
+        });
+    }
+
     createHits() {
         let cabinetSearch = this;
 
@@ -1199,6 +1227,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <div id="hits-footer">
                             <div id="result-count"></div>
                             <div id="pagination-bottom"></div>
+                            <div id="hits-per-page" class="hits-per-page-widget"></div>
                         </div>
                     </div>
                 </div>

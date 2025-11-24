@@ -195,6 +195,8 @@
         "stats_other": "~{{count}} Ergebnisse gefunden in {{processingTimeMS}}ms"
     },
     "search-cabinet": "Suchen",
+    "search-hits-per-page_one": "Ein Ergebnis pro Seite",
+    "search-hits-per-page_other": "{{count}} Ergebnisse pro Seite",
     "selection-column-configuration": {
         "close": "Schließen",
         "description": "Konfigurieren Sie die Spalten, die in der {{type}}-Tabelle angezeigt werden",
