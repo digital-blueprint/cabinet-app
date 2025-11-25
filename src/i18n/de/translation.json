@@ -196,10 +196,14 @@
     },
     "search-cabinet": "Suchen",
     "search-hits-per-page": "Ergebnisse pro Seite:",
-    "selection-column-configuration": {
-        "close": "Schließen",
-        "description": "Konfigurieren Sie die Spalten, die in der {{type}}-Tabelle angezeigt werden",
-        "placeholder": "Konfigurationsoptionen werden hier angezeigt.",
+    "selection-column-config": {
+        "abort": "Abbrechen",
+        "all-columns-hide": "Alle ausblenden",
+        "all-columns-show": "Alle anzeigen",
+        "column-hide": "Spalte '{{name}}' ausblenden",
+        "column-show": "Spalte '{{name}}' anzeigen",
+        "description": "Konfigurieren Sie, welche Spalten angezeigt werden sollen",
+        "no-columns": "Keine Spalten konfiguriert.",
         "save": "Speichern",
         "title": "Spaltenkonfiguration"
     },

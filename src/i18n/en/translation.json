@@ -196,10 +196,14 @@
     },
     "search-cabinet": "Search",
     "search-hits-per-page": "Hits per page:",
-    "selection-column-configuration": {
-        "close": "Close",
-        "description": "Configure the columns displayed in the {{type}} table",
-        "placeholder": "Configuration options will be displayed here.",
+    "selection-column-config": {
+        "abort": "Cancel",
+        "all-columns-hide": "Hide all",
+        "all-columns-show": "Show all",
+        "column-hide": "Hide column '{{name}}'",
+        "column-show": "Show column '{{name}}'",
+        "description": "Configure which columns to display",
+        "no-columns": "No columns configured.",
         "save": "Save",
         "title": "Column Configuration"
     },

@@ -24,6 +24,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.activeTab = this.constructor.HitSelectionType.PERSON;
         this.personGearButton = null;
         this.documentGearButton = null;
+        this.personColumnVisibilityStates = {};
+        this.documentColumnVisibilityStates = {};
     }
 
     static get scopedElements() {
@@ -42,6 +44,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             ...super.properties,
             hitSelections: {type: Object, attribute: false},
             activeTab: {type: String, attribute: false},
+            personColumnVisibilityStates: {type: Object, attribute: false},
+            documentColumnVisibilityStates: {type: Object, attribute: false},
         };
     }
 
@@ -56,6 +60,9 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.personGearButton = null;
         this.documentGearButton = null;
 
+        // Load column visibility states
+        this.loadColumnVisibilityStates();
+
         // Rerender the modal content
         await this.requestUpdate();
 
@@ -66,6 +73,95 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Build tables after modal is opened and content is rendered
         await this.updateComplete;
         this.buildTablesIfNeeded();
+    }
+
+    /**
+     * Load column visibility states from localStorage
+     */
+    loadColumnVisibilityStates() {
+        if (!this.settingsLocalStoragePrefix) {
+            // Initialize with defaults
+            this.personColumnVisibilityStates = this.getDefaultColumnVisibility('person');
+            this.documentColumnVisibilityStates = this.getDefaultColumnVisibility('document');
+            return;
+        }
+
+        // Load person column visibility
+        const personKey = `${this.settingsLocalStoragePrefix}columnVisibilityStates:person`;
+        try {
+            const saved = JSON.parse(localStorage.getItem(personKey));
+            this.personColumnVisibilityStates = saved || this.getDefaultColumnVisibility('person');
+        } catch (e) {
+            console.warn('Failed to load person column visibility states', e);
+            this.personColumnVisibilityStates = this.getDefaultColumnVisibility('person');
+        }
+
+        // Load document column visibility
+        const documentKey = `${this.settingsLocalStoragePrefix}columnVisibilityStates:document`;
+        try {
+            const saved = JSON.parse(localStorage.getItem(documentKey));
+            this.documentColumnVisibilityStates =
+                saved || this.getDefaultColumnVisibility('document');
+        } catch (e) {
+            console.warn('Failed to load document column visibility states', e);
+            this.documentColumnVisibilityStates = this.getDefaultColumnVisibility('document');
+        }
+    }
+
+    /**
+     * Get default column visibility
+     * @param type
+     */
+    getDefaultColumnVisibility(type) {
+        const columns =
+            type === 'person'
+                ? SelectionColumnConfiguration.getPersonColumns()
+                : SelectionColumnConfiguration.getDocumentColumns();
+
+        return columns.reduce((acc, col) => {
+            if (col.defaultVisible) {
+                acc[col.id] = true;
+            }
+            return acc;
+        }, {});
+    }
+
+    /**
+     * Handle column settings stored event
+     * @param {CustomEvent} e - The column settings stored event
+     */
+    async onColumnSettingsStored(e) {
+        const {selectionType, columnVisibilityStates} = e.detail;
+
+        if (selectionType === 'person') {
+            this.personColumnVisibilityStates = columnVisibilityStates;
+        } else if (selectionType === 'document') {
+            this.documentColumnVisibilityStates = columnVisibilityStates;
+        }
+
+        // Rebuild the tables with new columns
+        await this.requestUpdate();
+        await this.updateComplete;
+
+        // Force rebuild the tables with new column configuration
+        const personTable = this.personTableRef.value;
+        const documentTable = this.documentTableRef.value;
+
+        if (selectionType === 'person' && personTable) {
+            if (personTable.tabulatorTable) {
+                // Destroy and rebuild the table with new columns
+                personTable.tabulatorTable.destroy();
+                personTable.tableReady = false;
+            }
+            personTable.buildTable();
+        } else if (selectionType === 'document' && documentTable) {
+            if (documentTable.tabulatorTable) {
+                // Destroy and rebuild the table with new columns
+                documentTable.tabulatorTable.destroy();
+                documentTable.tableReady = false;
+            }
+            documentTable.buildTable();
+        }
     }
 
     close() {
@@ -255,6 +351,181 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         );
     }
 
+    /**
+     * Get value from object using dot notation path
+     * @param obj
+     * @param path
+     */
+    getNestedValue(obj, path) {
+        return path.split('.').reduce((current, key) => current?.[key], obj);
+    }
+
+    /**
+     * Build table columns based on visibility configuration
+     * @param type
+     * @param gearButtonRef
+     * @param gearButtonCallback
+     */
+    buildTableColumns(type, gearButtonRef, gearButtonCallback) {
+        const i18n = this._i18n;
+        const columns = [];
+        const columnConfigs =
+            type === 'person'
+                ? SelectionColumnConfiguration.getPersonColumns()
+                : SelectionColumnConfiguration.getDocumentColumns();
+        const visibilityStates =
+            type === 'person'
+                ? this.personColumnVisibilityStates
+                : this.documentColumnVisibilityStates;
+
+        // Add row number column
+        columns.push({
+            title: 'rowNumber',
+            field: 'rowNumber',
+            width: 60,
+            hozAlign: 'center',
+        });
+
+        // Add visible data columns
+        columnConfigs.forEach((colConfig) => {
+            if (visibilityStates[colConfig.id] === true) {
+                columns.push({
+                    title: colConfig.id,
+                    field: colConfig.id,
+                    widthGrow: 1,
+                    formatter: (cell) => {
+                        const value = cell.getValue();
+                        if (value === null || value === undefined) {
+                            return '';
+                        }
+                        // Format dates if needed
+                        if (colConfig.field.includes('Timestamp')) {
+                            return new Date(value * 1000).toLocaleString(this.lang);
+                        }
+                        return value;
+                    },
+                });
+            }
+        });
+
+        // Add actions column with gear button and delete button
+        columns.push({
+            title: 'actions',
+            field: 'actions',
+            width: 80,
+            hozAlign: 'center',
+            headerSort: false,
+            titleFormatter: (cell) => {
+                if (gearButtonRef) {
+                    return gearButtonRef;
+                }
+
+                const button = this.createScopedElement('dbp-icon-button');
+                button.setAttribute('icon-name', 'cog');
+                button.setAttribute(
+                    'title',
+                    i18n.t('selection-dialog.configure-columns', 'Configure Columns'),
+                );
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    gearButtonCallback();
+                });
+                button.style.position = 'relative';
+                button.style.left = '16px';
+
+                if (type === 'person') {
+                    this.personGearButton = button;
+                } else {
+                    this.documentGearButton = button;
+                }
+
+                return button;
+            },
+            formatter: (cell) => {
+                const button = this.createScopedElement('dbp-icon-button');
+                button.setAttribute('icon-name', 'trash');
+                button.setAttribute('title', i18n.t('selection-dialog.remove', 'Remove'));
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const rowData = cell.getRow().getData();
+                    const selectionType =
+                        type === 'person'
+                            ? this.constructor.HitSelectionType.PERSON
+                            : this.constructor.HitSelectionType.DOCUMENT_FILE;
+                    this.removeSelection(selectionType, rowData.id);
+                });
+                return button;
+            },
+        });
+
+        return columns;
+    }
+
+    /**
+     * Build table data with all field values
+     * @param type
+     * @param selections
+     */
+    buildTableData(type, selections) {
+        const columnConfigs =
+            type === 'person'
+                ? SelectionColumnConfiguration.getPersonColumns()
+                : SelectionColumnConfiguration.getDocumentColumns();
+
+        return selections.map((id, index) => {
+            const hit =
+                this.hitSelections[
+                    type === 'person'
+                        ? this.constructor.HitSelectionType.PERSON
+                        : this.constructor.HitSelectionType.DOCUMENT_FILE
+                ][id];
+
+            const rowData = {
+                rowNumber: index + 1,
+                id: id,
+                actions: '',
+            };
+
+            // Add all field values
+            columnConfigs.forEach((colConfig) => {
+                if (hit) {
+                    rowData[colConfig.id] = this.getNestedValue(hit, colConfig.field);
+                }
+            });
+
+            return rowData;
+        });
+    }
+
+    /**
+     * Build table languages config
+     * @param type
+     */
+    buildTableLangs(type) {
+        const i18n = this._i18n;
+        const columnConfigs =
+            type === 'person'
+                ? SelectionColumnConfiguration.getPersonColumns()
+                : SelectionColumnConfiguration.getDocumentColumns();
+
+        const langs = {
+            en: {
+                columns: {rowNumber: '#', actions: i18n.t('selection-dialog.actions', {lng: 'en'})},
+            },
+            de: {
+                columns: {rowNumber: '#', actions: i18n.t('selection-dialog.actions', {lng: 'de'})},
+            },
+        };
+
+        // Add column names
+        columnConfigs.forEach((colConfig) => {
+            langs.en.columns[colConfig.id] = i18n.t(colConfig.name, {lng: 'en'});
+            langs.de.columns[colConfig.id] = i18n.t(colConfig.name, {lng: 'de'});
+        });
+
+        return langs;
+    }
+
     renderContent() {
         const i18n = this._i18n;
         console.log('renderContent hitSelections', this.hitSelections);
@@ -272,176 +543,26 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {},
         );
 
-        // Prepare data for person table
-        const personTableData = personSelections.map((id, index) => ({
-            rowNumber: index + 1,
-            id: id,
-            actions: '',
-        }));
+        // Build table data with all field values
+        const personTableData = this.buildTableData('person', personSelections);
+        const documentTableData = this.buildTableData('document', documentSelections);
 
-        // Prepare data for document table
-        const documentTableData = documentSelections.map((id, index) => ({
-            rowNumber: index + 1,
-            id: id,
-            actions: '',
-        }));
-
-        // Table options for persons
+        // Build table options for persons
         const personTableOptions = {
             layout: 'fitColumns',
-            langs: {
-                en: {
-                    columns: {
-                        rowNumber: '#',
-                        id: 'ID',
-                        actions: i18n.t('selection-dialog.actions', {lng: 'en'}),
-                    },
-                },
-                de: {
-                    columns: {
-                        rowNumber: '#',
-                        id: 'ID',
-                        actions: i18n.t('selection-dialog.actions', {lng: 'de'}),
-                    },
-                },
-            },
-            columns: [
-                {
-                    title: 'rowNumber',
-                    field: 'rowNumber',
-                    width: 60,
-                    hozAlign: 'center',
-                },
-                {
-                    title: 'id',
-                    field: 'id',
-                    widthGrow: 2,
-                },
-                {
-                    title: 'actions',
-                    field: 'actions',
-                    width: 80,
-                    hozAlign: 'center',
-                    headerSort: false,
-                    titleFormatter: (cell) => {
-                        // Return cached gear button if it exists
-                        if (this.personGearButton) {
-                            return this.personGearButton;
-                        }
-
-                        // Create and cache the gear button
-                        this.personGearButton = this.createScopedElement('dbp-icon-button');
-                        this.personGearButton.setAttribute('icon-name', 'cog');
-                        this.personGearButton.setAttribute(
-                            'title',
-                            i18n.t('selection-dialog.configure-columns', 'Configure Columns'),
-                        );
-                        this.personGearButton.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            this.openColumnConfiguration('person');
-                        });
-
-                        // Position adjustment to align with delete buttons
-                        this.personGearButton.style.position = 'relative';
-                        this.personGearButton.style.left = '16px';
-
-                        return this.personGearButton;
-                    },
-                    formatter: (cell) => {
-                        const button = this.createScopedElement('dbp-icon-button');
-                        button.setAttribute('icon-name', 'trash');
-                        button.setAttribute('title', i18n.t('selection-dialog.remove', 'Remove'));
-                        button.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            const rowData = cell.getRow().getData();
-                            this.removeSelection(
-                                this.constructor.HitSelectionType.PERSON,
-                                rowData.id,
-                            );
-                        });
-                        return button;
-                    },
-                },
-            ],
+            langs: this.buildTableLangs('person'),
+            columns: this.buildTableColumns('person', this.personGearButton, () =>
+                this.openColumnConfiguration('person'),
+            ),
         };
 
-        // Table options for documents
+        // Build table options for documents
         const documentTableOptions = {
             layout: 'fitColumns',
-            langs: {
-                en: {
-                    columns: {
-                        rowNumber: '#',
-                        id: 'ID',
-                        actions: i18n.t('selection-dialog.actions', {lng: 'en'}),
-                    },
-                },
-                de: {
-                    columns: {
-                        rowNumber: '#',
-                        id: 'ID',
-                        actions: i18n.t('selection-dialog.actions', {lng: 'de'}),
-                    },
-                },
-            },
-            columns: [
-                {
-                    title: 'rowNumber',
-                    field: 'rowNumber',
-                    width: 60,
-                    hozAlign: 'center',
-                },
-                {
-                    title: 'id',
-                    field: 'id',
-                    widthGrow: 2,
-                },
-                {
-                    title: 'actions',
-                    field: 'actions',
-                    width: 80,
-                    hozAlign: 'center',
-                    headerSort: false,
-                    titleFormatter: (cell) => {
-                        // Return cached gear button if it exists
-                        if (this.documentGearButton) {
-                            return this.documentGearButton;
-                        }
-
-                        // Create and cache the gear button
-                        this.documentGearButton = this.createScopedElement('dbp-icon-button');
-                        this.documentGearButton.setAttribute('icon-name', 'cog');
-                        this.documentGearButton.setAttribute(
-                            'title',
-                            i18n.t('selection-dialog.configure-columns', 'Configure Columns'),
-                        );
-                        this.documentGearButton.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            this.openColumnConfiguration('document');
-                        });
-
-                        // Position adjustment to align with delete buttons
-                        this.documentGearButton.style.position = 'relative';
-                        this.documentGearButton.style.left = '16px';
-
-                        return this.documentGearButton;
-                    },
-                    formatter: (cell) => {
-                        const button = this.createScopedElement('dbp-icon-button');
-                        button.setAttribute('icon-name', 'trash');
-                        button.setAttribute('title', i18n.t('selection-dialog.remove', 'Remove'));
-                        button.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            const rowData = cell.getRow().getData();
-                            this.removeSelection(
-                                this.constructor.HitSelectionType.DOCUMENT_FILE,
-                                rowData.id,
-                            );
-                        });
-                        return button;
-                    },
-                },
-            ],
+            langs: this.buildTableLangs('document'),
+            columns: this.buildTableColumns('document', this.documentGearButton, () =>
+                this.openColumnConfiguration('document'),
+            ),
         };
 
         return html`
@@ -580,12 +701,9 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Get the selections for the type
         const selections = Object.keys(this.hitSelections[type] || {});
 
-        // Prepare the new data
-        const tableData = selections.map((id, index) => ({
-            rowNumber: index + 1,
-            id: id,
-            actions: '',
-        }));
+        // Prepare the new data with all field values
+        const tableType = type === this.constructor.HitSelectionType.PERSON ? 'person' : 'document';
+        const tableData = this.buildTableData(tableType, selections);
 
         // Update the appropriate table
         if (type === this.constructor.HitSelectionType.PERSON) {
@@ -645,16 +763,25 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     render() {
         // const i18n = this._i18n;
-        console.log('-- Render --');
+        console.log('-- Render SelectionDialog --', {
+            auth: this.auth,
+            settingsLocalStoragePrefix: this.settingsLocalStoragePrefix,
+        });
 
         return html`
             ${this.getModalHtml()}
             <dbp-selection-column-configuration
                 ${ref(this.personColumnConfigRef)}
-                lang="${this.lang}"></dbp-selection-column-configuration>
+                lang="${this.lang}"
+                .auth="${this.auth}"
+                @columnSettingsStored="${this
+                    .onColumnSettingsStored}"></dbp-selection-column-configuration>
             <dbp-selection-column-configuration
                 ${ref(this.documentColumnConfigRef)}
-                lang="${this.lang}"></dbp-selection-column-configuration>
+                lang="${this.lang}"
+                .auth="${this.auth}"
+                @columnSettingsStored="${this
+                    .onColumnSettingsStored}"></dbp-selection-column-configuration>
         `;
     }
 }
