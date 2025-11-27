@@ -203,7 +203,31 @@
         "column-hide": "Hide column '{{name}}'",
         "column-show": "Show column '{{name}}'",
         "description": "Configure which columns to display",
+        "document": {
+            "additionalType": "Document type",
+            "createdTimestamp": "Created",
+            "fileName": "File name",
+            "modifiedTimestamp": "Modified",
+            "person": {
+                "familyName": "Family name",
+                "givenName": "Given name",
+                "studId": "Matriculation number"
+            },
+            "semester": "Semester",
+            "studyField": "Study field"
+        },
         "no-columns": "No columns configured.",
+        "person": {
+            "birthDate": "Birth date",
+            "emailAddressUniversity": "University email",
+            "familyName": "Family name",
+            "givenName": "Given name",
+            "nationality": "Citizenship",
+            "personalStatus": "Personal status",
+            "stPersonNr": "Identification number",
+            "studentStatus": "Student status",
+            "studId": "Matriculation number"
+        },
         "save": "Save",
         "title": "Column Configuration"
     },

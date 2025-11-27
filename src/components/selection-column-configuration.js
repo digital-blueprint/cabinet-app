@@ -5,6 +5,7 @@ import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, IconButton, Modal} from '@dbp-toolkit/common';
 import {scopedElements as modalNotificationScopedElements} from '../modules/modal-notification';
+import InstantSearchModule from '../modules/instantSearch.js';
 
 export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -38,124 +39,16 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
      * Get available columns for person type
      */
     static getPersonColumns() {
-        return [
-            {
-                id: 'person.studId',
-                name: 'selection-column-config.person.studId',
-                field: 'person.studId',
-                defaultVisible: true,
-            },
-            {
-                id: 'person.stPersonNr',
-                name: 'selection-column-config.person.stPersonNr',
-                field: 'person.stPersonNr',
-                defaultVisible: true,
-            },
-            {
-                id: 'person.givenName',
-                name: 'selection-column-config.person.givenName',
-                field: 'person.givenName',
-                defaultVisible: true,
-            },
-            {
-                id: 'person.familyName',
-                name: 'selection-column-config.person.familyName',
-                field: 'person.familyName',
-                defaultVisible: true,
-            },
-            {
-                id: 'person.birthDate',
-                name: 'selection-column-config.person.birthDate',
-                field: 'person.birthDate',
-                defaultVisible: true,
-            },
-            {
-                id: 'person.nationality',
-                name: 'selection-column-config.person.nationality',
-                field: 'person.nationality.text',
-                defaultVisible: false,
-            },
-            {
-                id: 'person.personalStatus',
-                name: 'selection-column-config.person.personalStatus',
-                field: 'person.personalStatus.text',
-                defaultVisible: false,
-            },
-            {
-                id: 'person.studentStatus',
-                name: 'selection-column-config.person.studentStatus',
-                field: 'person.studentStatus.text',
-                defaultVisible: false,
-            },
-            {
-                id: 'person.emailAddressUniversity',
-                name: 'selection-column-config.person.emailAddressUniversity',
-                field: 'person.emailAddressUniversity',
-                defaultVisible: false,
-            },
-        ];
+        const instantSearchModule = new InstantSearchModule();
+        return instantSearchModule.getPersonColumns();
     }
 
     /**
      * Get available columns for document type
      */
     static getDocumentColumns() {
-        return [
-            {
-                id: 'file.base.fileName',
-                name: 'selection-column-config.document.fileName',
-                field: 'file.base.fileName',
-                defaultVisible: true,
-            },
-            {
-                id: 'file.base.additionalType',
-                name: 'selection-column-config.document.additionalType',
-                field: 'file.base.additionalType.text',
-                defaultVisible: true,
-            },
-            {
-                id: 'person.familyName',
-                name: 'selection-column-config.document.person.familyName',
-                field: 'person.familyName',
-                defaultVisible: true,
-            },
-            {
-                id: 'person.givenName',
-                name: 'selection-column-config.document.person.givenName',
-                field: 'person.givenName',
-                defaultVisible: true,
-            },
-            {
-                id: 'person.studId',
-                name: 'selection-column-config.document.person.studId',
-                field: 'person.studId',
-                defaultVisible: true,
-            },
-            {
-                id: 'file.base.createdTimestamp',
-                name: 'selection-column-config.document.createdTimestamp',
-                field: 'file.base.createdTimestamp',
-                defaultVisible: false,
-            },
-            {
-                id: 'file.base.modifiedTimestamp',
-                name: 'selection-column-config.document.modifiedTimestamp',
-                field: 'file.base.modifiedTimestamp',
-                defaultVisible: false,
-            },
-            {
-                id: 'file.base.studyField',
-                name: 'selection-column-config.document.studyField',
-                field: 'file.base.studyField.text',
-                defaultVisible: false,
-            },
-            {
-                id: 'file.base.semester',
-                name: 'selection-column-config.document.semester',
-                field: 'file.base.semester',
-                defaultVisible: false,
-            },
-        ];
+        const instantSearchModule = new InstantSearchModule();
+        return instantSearchModule.getDocumentColumns();
     }
 
     async open(selectionType) {

@@ -410,4 +410,132 @@ export default class InstantSearchModule {
             },
         ];
     }
+
+    /**
+     * Get available columns for person type in selection dialogs
+     * @returns {Array} - Array of column configurations
+     */
+    getPersonColumns() {
+        // Use t() to ensure i18next detects these keys and doesn't remove them during tree-shaking
+        return [
+            {
+                id: 'person.studId',
+                name: t('selection-column-config.person.studId'),
+                field: 'person.studId',
+                defaultVisible: true,
+            },
+            {
+                id: 'person.stPersonNr',
+                name: t('selection-column-config.person.stPersonNr'),
+                field: 'person.stPersonNr',
+                defaultVisible: true,
+            },
+            {
+                id: 'person.givenName',
+                name: t('selection-column-config.person.givenName'),
+                field: 'person.givenName',
+                defaultVisible: true,
+            },
+            {
+                id: 'person.familyName',
+                name: t('selection-column-config.person.familyName'),
+                field: 'person.familyName',
+                defaultVisible: true,
+            },
+            {
+                id: 'person.birthDate',
+                name: t('selection-column-config.person.birthDate'),
+                field: 'person.birthDate',
+                defaultVisible: true,
+            },
+            {
+                id: 'person.nationality',
+                name: t('selection-column-config.person.nationality'),
+                field: 'person.nationality.text',
+                defaultVisible: false,
+            },
+            {
+                id: 'person.personalStatus',
+                name: t('selection-column-config.person.personalStatus'),
+                field: 'person.personalStatus.text',
+                defaultVisible: false,
+            },
+            {
+                id: 'person.studentStatus',
+                name: t('selection-column-config.person.studentStatus'),
+                field: 'person.studentStatus.text',
+                defaultVisible: false,
+            },
+            {
+                id: 'person.emailAddressUniversity',
+                name: t('selection-column-config.person.emailAddressUniversity'),
+                field: 'person.emailAddressUniversity',
+                defaultVisible: false,
+            },
+        ];
+    }
+
+    /**
+     * Get available columns for document type in selection dialogs
+     * @returns {Array} - Array of column configurations
+     */
+    getDocumentColumns() {
+        // Use t() to ensure i18next detects these keys and doesn't remove them during tree-shaking
+        return [
+            {
+                id: 'file.base.fileName',
+                name: t('selection-column-config.document.fileName'),
+                field: 'file.base.fileName',
+                defaultVisible: true,
+            },
+            {
+                id: 'file.base.additionalType',
+                name: t('selection-column-config.document.additionalType'),
+                field: 'file.base.additionalType.text',
+                defaultVisible: true,
+            },
+            {
+                id: 'person.familyName',
+                name: t('selection-column-config.document.person.familyName'),
+                field: 'person.familyName',
+                defaultVisible: true,
+            },
+            {
+                id: 'person.givenName',
+                name: t('selection-column-config.document.person.givenName'),
+                field: 'person.givenName',
+                defaultVisible: true,
+            },
+            {
+                id: 'person.studId',
+                name: t('selection-column-config.document.person.studId'),
+                field: 'person.studId',
+                defaultVisible: true,
+            },
+            {
+                id: 'file.base.createdTimestamp',
+                name: t('selection-column-config.document.createdTimestamp'),
+                field: 'file.base.createdTimestamp',
+                defaultVisible: false,
+            },
+            {
+                id: 'file.base.modifiedTimestamp',
+                name: t('selection-column-config.document.modifiedTimestamp'),
+                field: 'file.base.modifiedTimestamp',
+                defaultVisible: false,
+            },
+            {
+                id: 'file.base.studyField',
+                name: t('selection-column-config.document.studyField'),
+                field: 'file.base.studyField.text',
+                defaultVisible: false,
+            },
+            {
+                id: 'file.base.semester',
+                name: t('selection-column-config.document.semester'),
+                field: 'file.base.semester',
+                defaultVisible: false,
+            },
+        ];
+    }
 }

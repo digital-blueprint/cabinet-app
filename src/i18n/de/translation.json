@@ -203,7 +203,31 @@
         "column-hide": "Spalte '{{name}}' ausblenden",
         "column-show": "Spalte '{{name}}' anzeigen",
         "description": "Konfigurieren Sie, welche Spalten angezeigt werden sollen",
+        "document": {
+            "additionalType": "Dokumenttyp",
+            "createdTimestamp": "Erstellt",
+            "fileName": "Dateiname",
+            "modifiedTimestamp": "Geändert",
+            "person": {
+                "familyName": "Nachname",
+                "givenName": "Vorname",
+                "studId": "Matrikelnummer"
+            },
+            "semester": "Semester",
+            "studyField": "Studienfeld"
+        },
         "no-columns": "Keine Spalten konfiguriert.",
+        "person": {
+            "birthDate": "Geburtsdatum",
+            "emailAddressUniversity": "Universitäts-E-Mail",
+            "familyName": "Nachname",
+            "givenName": "Vorname",
+            "nationality": "Staatsangehörigkeit",
+            "personalStatus": "Personenstatus",
+            "stPersonNr": "Identifikationsnummer",
+            "studentStatus": "Hörerstatus",
+            "studId": "Matrikelnummer"
+        },
         "save": "Speichern",
         "title": "Spaltenkonfiguration"
     },

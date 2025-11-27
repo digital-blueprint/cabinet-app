@@ -390,7 +390,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         columnConfigs.forEach((colConfig) => {
             if (visibilityStates[colConfig.id] === true) {
                 columns.push({
-                    title: colConfig.id,
+                    title: i18n.t(colConfig.name),
                     field: colConfig.id,
                     widthGrow: 1,
                     formatter: (cell) => {
