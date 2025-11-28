@@ -446,11 +446,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     title: i18n.t(colConfig.name),
                     field: colConfig.id,
                     widthGrow: 1,
-                    // Use accessor function to handle field names with dots
-                    accessor: (value, data, type, params, column) => {
-                        return data[colConfig.id];
-                    },
-                    accessorDownload: (value, data) => data[colConfig.id],
+                    headerSort: true,
+                    sorter: 'string',
                     formatter: (cell) => {
                         const rowData = cell.getRow().getData();
                         const value = rowData[colConfig.id];
@@ -626,6 +623,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Build table options for persons
         const personTableOptions = {
             layout: 'fitColumns',
+            nestedFieldSeparator: false, // Treat dots in field names as literal characters
             langs: this.buildTableLangs('person'),
             columns: this.buildTableColumns('person', this.personGearButton, () =>
                 this.openColumnConfiguration('person'),
@@ -647,6 +645,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Build table options for documents
         const documentTableOptions = {
             layout: 'fitColumns',
+            nestedFieldSeparator: false, // Treat dots in field names as literal characters
             langs: this.buildTableLangs('document'),
             columns: this.buildTableColumns('document', this.documentGearButton, () =>
                 this.openColumnConfiguration('document'),
