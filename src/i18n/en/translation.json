@@ -206,7 +206,6 @@
         "document": {
             "additionalType": "Document type",
             "createdTimestamp": "Created",
-            "fileName": "File name",
             "modifiedTimestamp": "Modified",
             "person": {
                 "familyName": "Family name",

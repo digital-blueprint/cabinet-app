@@ -483,12 +483,6 @@ export default class InstantSearchModule {
         // Use t() to ensure i18next detects these keys and doesn't remove them during tree-shaking
         return [
             {
-                id: 'file.base.fileName',
-                name: t('selection-column-config.document.fileName'),
-                field: 'file.base.fileName',
-                defaultVisible: true,
-            },
-            {
                 id: 'file.base.additionalType',
                 name: t('selection-column-config.document.additionalType'),
                 field: 'file.base.additionalType.text',
