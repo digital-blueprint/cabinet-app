@@ -41,6 +41,7 @@ export class BaseDocumentHitElement extends BaseHitElement {
 
     render() {
         let hit = getDocumentHit(this.data);
+        this.hit = hit;
 
         const i18n = this._i18n;
 
@@ -123,7 +124,12 @@ export class BaseDocumentHitElement extends BaseHitElement {
     selectCheckboxChanged(e) {
         const id = e.target.value;
         const checked = e.target.checked;
-        this.sendHitSelectionEvent(this.constructor.HitSelectionType.DOCUMENT_FILE, id, checked);
+        this.sendHitSelectionEvent(
+            this.constructor.HitSelectionType.DOCUMENT_FILE,
+            id,
+            checked,
+            this.hit,
+        );
     }
 
     _renderContent() {

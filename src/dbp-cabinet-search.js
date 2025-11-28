@@ -362,9 +362,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Listen to hitSelectionChanged events
         this.addEventListener(this.constructor.EventType.HIT_SELECTION_CHANGED, (event) => {
             console.log('Hit selection changed:', event.detail);
-            const {type, identifier, state} = event.detail;
+            const {type, identifier, state, hit} = event.detail;
+            console.log('hit hit', hit);
             if (state) {
-                this.hitSelections[type][identifier] = true;
+                this.hitSelections[type][identifier] = hit || true;
             } else {
                 delete this.hitSelections[type][identifier];
             }
@@ -1310,7 +1311,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 for (const hit of currentHits) {
                                     const type = hit['@type'];
                                     const id = hit.id;
-                                    this.hitSelections[type][id] = true;
+                                    this.hitSelections[type][id] = hit;
                                 }
                                 this.hitSelectAllState =
                                     this.constructor.HitSelectAllState.DESELECT;

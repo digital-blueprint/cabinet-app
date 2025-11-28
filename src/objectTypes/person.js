@@ -357,6 +357,7 @@ class CabinetHitElement extends BaseHitElement {
 
     render() {
         let hit = getPersonHit(this.data);
+        this.hit = hit;
         const i18n = this._i18n;
         const studies = hit.person.studies || [];
         const sortedStudies = studies.sort((a, b) => {
@@ -519,7 +520,8 @@ class CabinetHitElement extends BaseHitElement {
     selectCheckboxChanged(e) {
         const id = e.target.value;
         const checked = e.target.checked;
-        this.sendHitSelectionEvent(this.constructor.HitSelectionType.PERSON, id, checked);
+        console.log('selectCheckboxChanged this.hit', this.hit);
+        this.sendHitSelectionEvent(this.constructor.HitSelectionType.PERSON, id, checked, this.hit);
     }
 }
 

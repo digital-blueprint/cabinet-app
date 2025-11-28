@@ -118,7 +118,7 @@ export default class DBPCabinetLitElement extends LangMixin(
         return this.settingsLocalStoragePrefix;
     }
 
-    sendHitSelectionEvent(type, identifier, state) {
+    sendHitSelectionEvent(type, identifier, state, hit = null) {
         if (!Object.values(this.constructor.HitSelectionType).includes(type)) {
             throw new Error(
                 `Invalid type: ${type}. Must be one of ${Object.values(this.constructor.HitSelectionType).join(', ')}`,
@@ -130,6 +130,7 @@ export default class DBPCabinetLitElement extends LangMixin(
                 type: type,
                 identifier: identifier,
                 state: state,
+                hit: hit,
             },
             bubbles: true,
             composed: true,

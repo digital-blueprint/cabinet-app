@@ -24,8 +24,9 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.activeTab = this.constructor.HitSelectionType.PERSON;
         this.personGearButton = null;
         this.documentGearButton = null;
-        this.personColumnVisibilityStates = {};
-        this.documentColumnVisibilityStates = {};
+        // Initialize with default visibility states so tables render correctly on first load
+        this.personColumnVisibilityStates = this.getDefaultColumnVisibility('person');
+        this.documentColumnVisibilityStates = this.getDefaultColumnVisibility('document');
     }
 
     static get scopedElements() {
@@ -56,6 +57,46 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const modal = this.modalRef.value;
         this.hitSelections = hitSelections;
 
+        // // Clean up old selections that only have 'true' instead of actual hit objects
+        // const cleanedSelections = {};
+        // let removedCount = 0;
+        // const removedItems = [];
+        //
+        // for (const type in hitSelections) {
+        //     cleanedSelections[type] = {};
+        //     for (const id in hitSelections[type]) {
+        //         const hit = hitSelections[type][id];
+        //         // Only keep selections that have actual hit objects
+        //         if (hit && typeof hit === 'object' && hit !== true) {
+        //             cleanedSelections[type][id] = hit;
+        //         } else {
+        //             removedCount++;
+        //             removedItems.push({type, id});
+        //             console.warn(`Removing old selection ${id} of type ${type} (no hit data)`);
+        //         }
+        //     }
+        // }
+        //
+        // if (removedCount > 0) {
+        //     console.warn(
+        //         `Removed ${removedCount} old selections without hit data. Please reselect these items.`,
+        //     );
+        //
+        //     // Notify parent to update its hitSelections
+        //     for (const item of removedItems) {
+        //         this.dispatchEvent(
+        //             new CustomEvent('selection-removed', {
+        //                 detail: {type: item.type, id: item.id},
+        //                 bubbles: true,
+        //                 composed: true,
+        //             }),
+        //         );
+        //     }
+        // }
+        //
+        // this.hitSelections = cleanedSelections;
+        // console.log('open cleanedSelections', cleanedSelections);
+
         // Reset gear buttons to ensure clean state
         this.personGearButton = null;
         this.documentGearButton = null;
@@ -63,15 +104,20 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Load column visibility states
         this.loadColumnVisibilityStates();
 
-        // Rerender the modal content
+        // Rerender the modal content with new data
         await this.requestUpdate();
 
         console.log('open modal', modal);
         console.log('open this.hitSelections', this.hitSelections);
         modal.open();
 
-        // Build tables after modal is opened and content is rendered
+        // Wait for the content to render and tables to receive their properties
         await this.updateComplete;
+
+        // Give the table components time to process their reactive property updates
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+
+        // Now build the tables
         this.buildTablesIfNeeded();
     }
 
@@ -378,6 +424,9 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 ? this.personColumnVisibilityStates
                 : this.documentColumnVisibilityStates;
 
+        console.log(`[${type}] buildTableColumns - visibilityStates:`, visibilityStates);
+        console.log(`[${type}] buildTableColumns - columnConfigs:`, columnConfigs);
+
         // Add row number column
         columns.push({
             title: 'rowNumber',
@@ -388,13 +437,23 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Add visible data columns
         columnConfigs.forEach((colConfig) => {
+            console.log(
+                `[${type}] Checking column ${colConfig.id}: visibility =`,
+                visibilityStates[colConfig.id],
+            );
             if (visibilityStates[colConfig.id] === true) {
                 columns.push({
                     title: i18n.t(colConfig.name),
                     field: colConfig.id,
                     widthGrow: 1,
+                    // Use accessor function to handle field names with dots
+                    accessor: (value, data, type, params, column) => {
+                        return data[colConfig.id];
+                    },
+                    accessorDownload: (value, data) => data[colConfig.id],
                     formatter: (cell) => {
-                        const value = cell.getValue();
+                        const rowData = cell.getRow().getData();
+                        const value = rowData[colConfig.id];
                         if (value === null || value === undefined) {
                             return '';
                         }
@@ -472,13 +531,22 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 ? SelectionColumnConfiguration.getPersonColumns()
                 : SelectionColumnConfiguration.getDocumentColumns();
 
-        return selections.map((id, index) => {
-            const hit =
-                this.hitSelections[
-                    type === 'person'
-                        ? this.constructor.HitSelectionType.PERSON
-                        : this.constructor.HitSelectionType.DOCUMENT_FILE
-                ][id];
+        const selectionEntries = Object.entries(selections);
+        console.log(`[${type}] Building table data for ${selectionEntries.length} selections`);
+        console.log(`[${type}] Column configs:`, columnConfigs);
+
+        return selectionEntries.map(([id, hit], index) => {
+            console.log(`[${type}] Hit object for ${id}:`, hit);
+            console.log(
+                `[${type}] Hit type:`,
+                typeof hit,
+                'Is object?',
+                typeof hit === 'object' && hit !== null,
+            );
+
+            if (hit && typeof hit === 'object' && hit !== null) {
+                console.log(`[${type}] Hit keys:`, Object.keys(hit));
+            }
 
             const rowData = {
                 rowNumber: index + 1,
@@ -488,11 +556,19 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             // Add all field values
             columnConfigs.forEach((colConfig) => {
-                if (hit) {
-                    rowData[colConfig.id] = this.getNestedValue(hit, colConfig.field);
+                if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
+                    const value = this.getNestedValue(hit, colConfig.field);
+                    rowData[colConfig.id] = value;
+                    console.log(
+                        `[${type}] Column ${colConfig.id} (field: ${colConfig.field}):`,
+                        value,
+                    );
+                } else {
+                    console.warn(`[${type}] Invalid hit for ${id}:`, hit);
                 }
             });
 
+            console.log(`[${type}] Row data for ${id}:`, rowData);
             return rowData;
         });
     }
@@ -536,12 +612,12 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             `;
         }
 
-        const personSelections = Object.keys(
-            this.hitSelections[this.constructor.HitSelectionType.PERSON] || {},
-        );
-        const documentSelections = Object.keys(
-            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {},
-        );
+        const personSelections = this.hitSelections[this.constructor.HitSelectionType.PERSON] || {};
+        const documentSelections =
+            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+
+        console.log('renderContent this.hitSelections', this.hitSelections);
+        console.log('renderContent personSelections', personSelections);
 
         // Build table data with all field values
         const personTableData = this.buildTableData('person', personSelections);
@@ -555,6 +631,18 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 this.openColumnConfiguration('person'),
             ),
         };
+
+        console.log('[person] Table options:', personTableOptions);
+        console.log('[person] Table columns:', personTableOptions.columns);
+        console.log(
+            '[person] Table columns detail:',
+            personTableOptions.columns.map((c) => ({title: c.title, field: c.field})),
+        );
+        console.log('[person] Table data:', personTableData);
+        console.log(
+            '[person] First row data keys:',
+            personTableData[0] ? Object.keys(personTableData[0]) : 'no data',
+        );
 
         // Build table options for documents
         const documentTableOptions = {
@@ -583,7 +671,9 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <dbp-icon class="nav-icon" name="user"></dbp-icon>
                         <p>
                             ${i18n.t('selection-dialog.persons-tab', 'Personen')}
-                            <span class="selection-count">${personSelections.length}</span>
+                            <span class="selection-count">
+                                ${Object.keys(personSelections).length}
+                            </span>
                         </p>
                     </button>
                     <button
@@ -601,7 +691,9 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <dbp-icon class="nav-icon" name="files"></dbp-icon>
                         <p>
                             ${i18n.t('selection-dialog.documents-tab', 'Dokumente')}
-                            <span class="selection-count">${documentSelections.length}</span>
+                            <span class="selection-count">
+                                ${Object.keys(documentSelections).length}
+                            </span>
                         </p>
                     </button>
                 </div>
@@ -615,7 +707,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                             ? 'active'
                             : ''}">
                         <h3>${i18n.t('selection-dialog.persons-title', 'Selected Persons')}</h3>
-                        ${personSelections.length > 0
+                        ${Object.keys(personSelections).length > 0
                             ? html`
                                   <dbp-tabulator-table
                                       ${ref(this.personTableRef)}
@@ -643,7 +735,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                             ? 'active'
                             : ''}">
                         <h3>${i18n.t('selection-dialog.documents-title', 'Selected Documents')}</h3>
-                        ${documentSelections.length > 0
+                        ${Object.keys(documentSelections).length > 0
                             ? html`
                                   <dbp-tabulator-table
                                       ${ref(this.documentTableRef)}
@@ -699,7 +791,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     updateTableData(type) {
         // Get the selections for the type
-        const selections = Object.keys(this.hitSelections[type] || {});
+        const selections = this.hitSelections[type] || {};
 
         // Prepare the new data with all field values
         const tableType = type === this.constructor.HitSelectionType.PERSON ? 'person' : 'document';
