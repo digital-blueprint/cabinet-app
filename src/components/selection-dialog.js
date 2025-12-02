@@ -17,13 +17,16 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.modalRef = createRef();
         this.personTableRef = createRef();
         this.documentTableRef = createRef();
+        this.deletedDocumentTableRef = createRef();
         this.personColumnConfigRef = createRef();
         this.documentColumnConfigRef = createRef();
         this.hitSelections = this.constructor.EmptyHitSelection;
         this.facetNumber = 0;
         this.activeTab = this.constructor.HitSelectionType.PERSON;
+        this.activeDocumentTab = 'active'; // 'active' or 'deleted'
         this.personGearButton = null;
         this.documentGearButton = null;
+        this.deletedDocumentGearButton = null;
         // Initialize with default visibility states so tables render correctly on first load
         this.personColumnVisibilityStates = this.getDefaultColumnVisibility('person');
         this.documentColumnVisibilityStates = this.getDefaultColumnVisibility('document');
@@ -45,6 +48,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             ...super.properties,
             hitSelections: {type: Object, attribute: false},
             activeTab: {type: String, attribute: false},
+            activeDocumentTab: {type: String, attribute: false},
             personColumnVisibilityStates: {type: Object, attribute: false},
             documentColumnVisibilityStates: {type: Object, attribute: false},
         };
@@ -100,6 +104,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Reset gear buttons to ensure clean state
         this.personGearButton = null;
         this.documentGearButton = null;
+        this.deletedDocumentGearButton = null;
+
+        // Reset to active documents tab
+        this.activeDocumentTab = 'active';
 
         // Load column visibility states
         this.loadColumnVisibilityStates();
@@ -192,6 +200,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Force rebuild the tables with new column configuration
         const personTable = this.personTableRef.value;
         const documentTable = this.documentTableRef.value;
+        const deletedDocumentTable = this.deletedDocumentTableRef.value;
 
         if (selectionType === 'person' && personTable) {
             if (personTable.tabulatorTable) {
@@ -200,13 +209,24 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 personTable.tableReady = false;
             }
             personTable.buildTable();
-        } else if (selectionType === 'document' && documentTable) {
-            if (documentTable.tabulatorTable) {
-                // Destroy and rebuild the table with new columns
-                documentTable.tabulatorTable.destroy();
-                documentTable.tableReady = false;
+        } else if (selectionType === 'document') {
+            // Rebuild active documents table
+            if (documentTable) {
+                if (documentTable.tabulatorTable) {
+                    documentTable.tabulatorTable.destroy();
+                    documentTable.tableReady = false;
+                }
+                documentTable.buildTable();
             }
-            documentTable.buildTable();
+
+            // Rebuild deleted documents table
+            if (deletedDocumentTable) {
+                if (deletedDocumentTable.tabulatorTable) {
+                    deletedDocumentTable.tabulatorTable.destroy();
+                    deletedDocumentTable.tableReady = false;
+                }
+                deletedDocumentTable.buildTable();
+            }
         }
     }
 
@@ -335,6 +355,54 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     font-weight: bold;
                     min-width: 20px;
                     text-align: center;
+                }
+
+                .document-sub-tabs {
+                    display: flex;
+                    gap: 10px;
+                    margin-bottom: 20px;
+                    border-bottom: 2px solid var(--dbp-muted);
+                }
+
+                .sub-tab {
+                    padding: 10px 20px;
+                    background-color: transparent;
+                    border: none;
+                    border-bottom: 3px solid transparent;
+                    cursor: pointer;
+                    color: var(--dbp-content);
+                    font-size: 1rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    transition: all 0.2s ease;
+                }
+
+                .sub-tab:hover {
+                    background-color: var(--dbp-hover-background-color, rgba(0, 0, 0, 0.05));
+                }
+
+                .sub-tab.active {
+                    border-bottom-color: var(--dbp-accent);
+                    font-weight: bold;
+                }
+
+                .sub-tab .selection-count {
+                    background-color: var(--dbp-muted);
+                    color: var(--dbp-content);
+                }
+
+                .sub-tab.active .selection-count {
+                    background-color: var(--dbp-accent);
+                    color: white;
+                }
+
+                .document-table-container {
+                    display: none;
+                }
+
+                .document-table-container.active {
+                    display: block;
                 }
             `,
         ];
@@ -616,9 +684,26 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('renderContent this.hitSelections', this.hitSelections);
         console.log('renderContent personSelections', personSelections);
 
+        // Separate active and deleted documents
+        const activeDocuments = {};
+        const deletedDocuments = {};
+
+        Object.entries(documentSelections).forEach(([id, hit]) => {
+            // Check if document has a deleteAtTimestamp (scheduled for deletion)
+            if (hit && typeof hit === 'object' && hit.file?.base?.deleteAtTimestamp) {
+                deletedDocuments[id] = hit;
+            } else {
+                activeDocuments[id] = hit;
+            }
+        });
+
+        console.log('renderContent activeDocuments', activeDocuments);
+        console.log('renderContent deletedDocuments', deletedDocuments);
+
         // Build table data with all field values
         const personTableData = this.buildTableData('person', personSelections);
-        const documentTableData = this.buildTableData('document', documentSelections);
+        const activeDocumentTableData = this.buildTableData('document', activeDocuments);
+        const deletedDocumentTableData = this.buildTableData('document', deletedDocuments);
 
         // Build table options for persons
         const personTableOptions = {
@@ -642,12 +727,22 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             personTableData[0] ? Object.keys(personTableData[0]) : 'no data',
         );
 
-        // Build table options for documents
+        // Build table options for active documents
         const documentTableOptions = {
             layout: 'fitColumns',
             nestedFieldSeparator: false, // Treat dots in field names as literal characters
             langs: this.buildTableLangs('document'),
             columns: this.buildTableColumns('document', this.documentGearButton, () =>
+                this.openColumnConfiguration('document'),
+            ),
+        };
+
+        // Build table options for deleted documents
+        const deletedDocumentTableOptions = {
+            layout: 'fitColumns',
+            nestedFieldSeparator: false, // Treat dots in field names as literal characters
+            langs: this.buildTableLangs('document'),
+            columns: this.buildTableColumns('document', this.deletedDocumentGearButton, () =>
                 this.openColumnConfiguration('document'),
             ),
         };
@@ -734,24 +829,84 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                             ? 'active'
                             : ''}">
                         <h3>${i18n.t('selection-dialog.documents-title', 'Selected Documents')}</h3>
-                        ${Object.keys(documentSelections).length > 0
-                            ? html`
-                                  <dbp-tabulator-table
-                                      ${ref(this.documentTableRef)}
-                                      lang="${this.lang}"
-                                      class="selection-table"
-                                      identifier="document-selection-table"
-                                      .data=${documentTableData}
-                                      .options=${documentTableOptions}></dbp-tabulator-table>
-                              `
-                            : html`
-                                  <p>
-                                      ${i18n.t(
-                                          'selection-dialog.no-documents',
-                                          'No documents selected.',
-                                      )}
-                                  </p>
-                              `}
+
+                        <!-- Sub-tabs for active and deleted documents -->
+                        <div class="document-sub-tabs">
+                            <button
+                                class="sub-tab ${this.activeDocumentTab === 'active'
+                                    ? 'active'
+                                    : ''}"
+                                @click="${() => {
+                                    this.activeDocumentTab = 'active';
+                                }}">
+                                ${i18n.t('selection-dialog.active-documents', 'Active')}
+                                <span class="selection-count">
+                                    ${Object.keys(activeDocuments).length}
+                                </span>
+                            </button>
+                            <button
+                                class="sub-tab ${this.activeDocumentTab === 'deleted'
+                                    ? 'active'
+                                    : ''}"
+                                @click="${() => {
+                                    this.activeDocumentTab = 'deleted';
+                                }}">
+                                ${i18n.t('selection-dialog.deleted-documents', 'Deleted')}
+                                <span class="selection-count">
+                                    ${Object.keys(deletedDocuments).length}
+                                </span>
+                            </button>
+                        </div>
+
+                        <!-- Active documents table -->
+                        <div
+                            class="document-table-container ${this.activeDocumentTab === 'active'
+                                ? 'active'
+                                : ''}">
+                            ${Object.keys(activeDocuments).length > 0
+                                ? html`
+                                      <dbp-tabulator-table
+                                          ${ref(this.documentTableRef)}
+                                          lang="${this.lang}"
+                                          class="selection-table"
+                                          identifier="document-selection-table"
+                                          .data=${activeDocumentTableData}
+                                          .options=${documentTableOptions}></dbp-tabulator-table>
+                                  `
+                                : html`
+                                      <p>
+                                          ${i18n.t(
+                                              'selection-dialog.no-active-documents',
+                                              'No active documents selected.',
+                                          )}
+                                      </p>
+                                  `}
+                        </div>
+
+                        <!-- Deleted documents table -->
+                        <div
+                            class="document-table-container ${this.activeDocumentTab === 'deleted'
+                                ? 'active'
+                                : ''}">
+                            ${Object.keys(deletedDocuments).length > 0
+                                ? html`
+                                      <dbp-tabulator-table
+                                          ${ref(this.deletedDocumentTableRef)}
+                                          lang="${this.lang}"
+                                          class="selection-table"
+                                          identifier="deleted-document-selection-table"
+                                          .data=${deletedDocumentTableData}
+                                          .options=${deletedDocumentTableOptions}></dbp-tabulator-table>
+                                  `
+                                : html`
+                                      <p>
+                                          ${i18n.t(
+                                              'selection-dialog.no-deleted-documents',
+                                              'No deleted documents selected.',
+                                          )}
+                                      </p>
+                                  `}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -794,18 +949,39 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Prepare the new data with all field values
         const tableType = type === this.constructor.HitSelectionType.PERSON ? 'person' : 'document';
-        const tableData = this.buildTableData(tableType, selections);
 
         // Update the appropriate table
         if (type === this.constructor.HitSelectionType.PERSON) {
+            const tableData = this.buildTableData(tableType, selections);
             const personTable = this.personTableRef.value;
             if (personTable && personTable.tabulatorTable) {
                 personTable.tabulatorTable.setData(tableData);
             }
         } else if (type === this.constructor.HitSelectionType.DOCUMENT_FILE) {
+            // Separate active and deleted documents
+            const activeDocuments = {};
+            const deletedDocuments = {};
+
+            Object.entries(selections).forEach(([id, hit]) => {
+                if (hit && typeof hit === 'object' && hit.file?.base?.deleteAtTimestamp) {
+                    deletedDocuments[id] = hit;
+                } else {
+                    activeDocuments[id] = hit;
+                }
+            });
+
+            // Update active documents table
+            const activeTableData = this.buildTableData(tableType, activeDocuments);
             const documentTable = this.documentTableRef.value;
             if (documentTable && documentTable.tabulatorTable) {
-                documentTable.tabulatorTable.setData(tableData);
+                documentTable.tabulatorTable.setData(activeTableData);
+            }
+
+            // Update deleted documents table
+            const deletedTableData = this.buildTableData(tableType, deletedDocuments);
+            const deletedDocumentTable = this.deletedDocumentTableRef.value;
+            if (deletedDocumentTable && deletedDocumentTable.tabulatorTable) {
+                deletedDocumentTable.tabulatorTable.setData(deletedTableData);
             }
         }
     }
@@ -823,6 +999,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (documentTable && !documentTable.tableReady) {
             console.log('Building document table');
             documentTable.buildTable();
+        }
+
+        // Build deleted document table if it exists and hasn't been built yet
+        const deletedDocumentTable = this.deletedDocumentTableRef.value;
+        if (deletedDocumentTable && !deletedDocumentTable.tableReady) {
+            console.log('Building deleted document table');
+            deletedDocumentTable.buildTable();
         }
     }
 
