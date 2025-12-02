@@ -689,8 +689,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const deletedDocuments = {};
 
         Object.entries(documentSelections).forEach(([id, hit]) => {
-            // Check if document has a deleteAtTimestamp (scheduled for deletion)
-            if (hit && typeof hit === 'object' && hit.file?.base?.deleteAtTimestamp) {
+            // Check if the document is scheduled for deletion
+            if (hit && typeof hit === 'object' && hit.base?.isScheduledForDeletion) {
                 deletedDocuments[id] = hit;
             } else {
                 activeDocuments[id] = hit;
@@ -963,7 +963,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             const deletedDocuments = {};
 
             Object.entries(selections).forEach(([id, hit]) => {
-                if (hit && typeof hit === 'object' && hit.file?.base?.deleteAtTimestamp) {
+                // Check if the document is scheduled for deletion
+                if (hit && typeof hit === 'object' && hit.base?.isScheduledForDeletion) {
                     deletedDocuments[id] = hit;
                 } else {
                     activeDocuments[id] = hit;
