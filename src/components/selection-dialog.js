@@ -238,6 +238,246 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         modal.close();
     }
 
+    /**
+     * Schedule all active documents for deletion
+     */
+    async scheduleActiveDocumentsForDeletion() {
+        const i18n = this._i18n;
+        const documentSelections =
+            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+
+        // Get active documents only
+        const activeDocuments = Object.entries(documentSelections).filter(
+            ([_id, hit]) => hit && typeof hit === 'object' && !hit.base?.isScheduledForDeletion,
+        );
+
+        if (activeDocuments.length === 0) {
+            return;
+        }
+
+        let successCount = 0;
+        let failCount = 0;
+
+        for (const [id, hit] of activeDocuments) {
+            try {
+                const fileId = hit.file?.base?.fileId;
+                const objectType = hit.objectType;
+                if (!fileId) {
+                    console.error('No file identifier found for document', id);
+                    failCount++;
+                    continue;
+                }
+                if (!objectType) {
+                    console.error('No objectType found for document', id);
+                    failCount++;
+                    continue;
+                }
+
+                await this.doFileDeletionForFileId(fileId, objectType, false);
+
+                // Update the hit data locally
+                hit.base.isScheduledForDeletion = true;
+                successCount++;
+            } catch (error) {
+                console.error('Failed to delete document', id, error);
+                failCount++;
+            }
+        }
+
+        // Show notification
+        if (successCount > 0) {
+            this.sendFilterModalNotification(
+                i18n.t('selection-dialog.deletion-success'),
+                i18n.t('selection-dialog.deletion-success-message', {
+                    count: successCount,
+                }),
+                'success',
+            );
+        }
+
+        if (failCount > 0) {
+            this.sendFilterModalNotification(
+                i18n.t('selection-dialog.deletion-error'),
+                i18n.t('selection-dialog.deletion-error-message', {
+                    count: failCount,
+                }),
+                'danger',
+            );
+        }
+
+        // Trigger a re-render
+        await this.requestUpdate();
+        this.updateTableData(this.constructor.HitSelectionType.DOCUMENT_FILE);
+    }
+
+    /**
+     * Undelete all deleted documents
+     */
+    async undeleteDeletedDocuments() {
+        const i18n = this._i18n;
+        const documentSelections =
+            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+
+        // Get deleted documents only
+        const deletedDocuments = Object.entries(documentSelections).filter(
+            ([_id, hit]) => hit && typeof hit === 'object' && hit.base?.isScheduledForDeletion,
+        );
+
+        if (deletedDocuments.length === 0) {
+            return;
+        }
+
+        let successCount = 0;
+        let failCount = 0;
+
+        for (const [id, hit] of deletedDocuments) {
+            try {
+                const fileId = hit.file?.base?.fileId;
+                const objectType = hit.objectType;
+                if (!fileId) {
+                    console.error('No file identifier found for document', id);
+                    failCount++;
+                    continue;
+                }
+                if (!objectType) {
+                    console.error('No objectType found for document', id);
+                    failCount++;
+                    continue;
+                }
+
+                await this.doFileDeletionForFileId(fileId, objectType, true);
+
+                // Update the hit data locally
+                hit.base.isScheduledForDeletion = false;
+                successCount++;
+            } catch (error) {
+                console.error('Failed to undelete document', id, error);
+                failCount++;
+            }
+        }
+
+        // Show notification
+        if (successCount > 0) {
+            this.sendFilterModalNotification(
+                i18n.t('selection-dialog.undeletion-success'),
+                i18n.t('selection-dialog.undeletion-success-message', {
+                    count: successCount,
+                }),
+                'success',
+            );
+        }
+
+        if (failCount > 0) {
+            this.sendFilterModalNotification(
+                i18n.t('selection-dialog.undeletion-error'),
+                i18n.t('selection-dialog.undeletion-error-message', {
+                    count: failCount,
+                }),
+                'danger',
+            );
+        }
+
+        // Trigger a re-render
+        await this.requestUpdate();
+        this.updateTableData(this.constructor.HitSelectionType.DOCUMENT_FILE);
+    }
+
+    /**
+     * Delete a file by ID (schedule for deletion)
+     * @param {string} fileId - The file identifier
+     * @param {string} objectType - The object type (e.g., 'file-cabinet-document')
+     * @param {boolean} undelete - Whether to undelete the file
+     */
+    async doFileDeletionForFileId(fileId, objectType, undelete = false) {
+        console.log('doFileDeletionForFileId fileId', fileId, 'objectType', objectType);
+
+        const deleteUrl = await this.createBlobDeleteUrl(fileId, objectType, undelete);
+        console.log('doFileDeletionForFileId deleteUrl', deleteUrl);
+
+        const options = {
+            // We are doing soft-delete here, so we need to use PATCH
+            method: 'PATCH',
+            headers: {
+                Authorization: 'Bearer ' + this.auth.token,
+            },
+            // The API demands a multipart form data, so we need to send an empty body
+            body: new FormData(),
+        };
+
+        let response = await fetch(deleteUrl, options);
+        if (!response.ok) {
+            if (undelete) {
+                throw new Error(`Could not mark document ${fileId} as undeleted in blob!`);
+            } else {
+                throw new Error(`Could not mark document ${fileId} as deleted in blob!`);
+            }
+        }
+
+        return await response.json();
+    }
+
+    /**
+     * Create a blob delete URL
+     * @param {string} fileId - The file identifier
+     * @param {string} objectType - The object type (e.g., 'file-cabinet-document')
+     * @param {boolean} undelete - Whether to undelete the file
+     * @returns {Promise<string>}
+     */
+    async createBlobDeleteUrl(fileId, objectType, undelete = false) {
+        return this.createBlobUrl(fileId, objectType, false, {
+            deleteIn: undelete ? 'null' : 'P7D',
+        });
+    }
+
+    /**
+     * Create a blob URL through the blob-urls API endpoint
+     * @param {string} identifier - The file identifier
+     * @param {string} objectType - The object type (e.g., 'file-cabinet-document')
+     * @param {boolean} includeData - Whether to include data
+     * @param {object} extraParams - Additional parameters
+     * @returns {Promise<string>}
+     */
+    async createBlobUrl(identifier, objectType, includeData = false, extraParams = {}) {
+        if (!this.entryPointUrl) {
+            throw new Error('Entry point URL is not set');
+        }
+
+        const baseUrl = `${this.entryPointUrl}/cabinet/blob-urls`;
+        const apiUrl = new URL(baseUrl);
+
+        let params = {
+            method: 'PATCH',
+            prefix: 'document-',
+            type: objectType.replace('file-cabinet-', ''),
+            identifier: identifier,
+        };
+
+        if (includeData) {
+            params['includeData'] = '1';
+        }
+
+        params = {...params, ...extraParams};
+        apiUrl.search = new URLSearchParams(params).toString();
+
+        let response = await fetch(apiUrl.toString(), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/ld+json',
+                Authorization: 'Bearer ' + this.auth.token,
+            },
+            body: '{}',
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error while creating storage URL: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log('createBlobUrl result', result);
+
+        return result['blobUrl'];
+    }
+
     static get styles() {
         return [
             commonStyles.getThemeCSS(),
@@ -865,6 +1105,21 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 : ''}">
                             ${Object.keys(activeDocuments).length > 0
                                 ? html`
+                                      <div style="margin-bottom: 15px;">
+                                          <dbp-button
+                                              value="${i18n.t(
+                                                  'selection-dialog.delete-all-active',
+                                                  'Delete All',
+                                              )}"
+                                              @click="${() =>
+                                                  this.scheduleActiveDocumentsForDeletion()}"
+                                              type="is-primary">
+                                              ${i18n.t(
+                                                  'selection-dialog.delete-all-active',
+                                                  'Delete All',
+                                              )}
+                                          </dbp-button>
+                                      </div>
                                       <dbp-tabulator-table
                                           ${ref(this.documentTableRef)}
                                           lang="${this.lang}"
@@ -890,6 +1145,20 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 : ''}">
                             ${Object.keys(deletedDocuments).length > 0
                                 ? html`
+                                      <div style="margin-bottom: 15px;">
+                                          <dbp-button
+                                              value="${i18n.t(
+                                                  'selection-dialog.undelete-all-deleted',
+                                                  'Undelete All',
+                                              )}"
+                                              @click="${() => this.undeleteDeletedDocuments()}"
+                                              type="is-primary">
+                                              ${i18n.t(
+                                                  'selection-dialog.undelete-all-deleted',
+                                                  'Undelete All',
+                                              )}
+                                          </dbp-button>
+                                      </div>
                                       <dbp-tabulator-table
                                           ${ref(this.deletedDocumentTableRef)}
                                           lang="${this.lang}"
@@ -914,9 +1183,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     onCloseModal() {
-        // Send a close event to the parent component
+        // Send a close event to the parent component and request a reload
         this.dispatchEvent(
             new CustomEvent('close', {
+                detail: {reloadSearch: true},
                 bubbles: true,
                 composed: true,
             }),

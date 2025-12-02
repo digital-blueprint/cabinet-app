@@ -385,6 +385,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 this.search.refresh();
             }
         });
+
+        // Listen to close events from selection dialog
+        this.addEventListener('close', (event) => {
+            console.log('Selection dialog closed:', event.detail);
+            // Reload instant search when dialog closes to reflect changes
+            if (event.detail?.reloadSearch && this.search) {
+                this.search.refresh();
+            }
+        });
     }
 
     async ensureInstantsearch() {
