@@ -26,6 +26,7 @@ import {
 } from '../modules/modal-notification';
 import {createUUID} from '@dbp-toolkit/common/utils';
 import {PdfValidationErrorList} from './pdf-validation-error-list.js';
+import {BlobOperations} from '../utils/blob-operations.js';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     // Always allow creating new versions if true
@@ -398,9 +399,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @returns {Promise<string>}
      */
     async createBlobDeleteUrl(fileId, undelete = false) {
-        return this.createBlobUrl(CabinetFile.BlobUrlTypes.UPLOAD, fileId, false, {
-            deleteIn: undelete ? 'null' : 'P7D',
-        });
+        return BlobOperations.createBlobDeleteUrl(
+            this.entryPointUrl,
+            this.auth.token,
+            fileId,
+            this.objectType,
+            undelete,
+        );
     }
 
     async loadBlobItem(url) {
@@ -911,21 +916,15 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     async doFileDeletionForFileId(fileId, undelete = false) {
         console.log('doFileDeletionForFileId fileId', fileId);
 
-        const deleteUrl = await this.createBlobDeleteUrl(fileId, undelete);
-        console.log('doFileDeletionForFileId deleteUrl', deleteUrl);
-
-        const options = {
-            // We are doing soft-delete here, so we need to use PATCH
-            method: 'PATCH',
-            headers: {
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-            // The API demands a multipart form data, so we need to send an empty body
-            body: new FormData(),
-        };
-
-        let response = await fetch(deleteUrl, options);
-        if (!response.ok) {
+        try {
+            return await BlobOperations.doFileDeletionForFileId(
+                this.entryPointUrl,
+                this.auth.token,
+                fileId,
+                this.objectType,
+                undelete,
+            );
+        } catch (error) {
             if (undelete) {
                 this.documentModalNotification(
                     'Failure',
@@ -939,11 +938,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     'danger',
                 );
             }
-
-            throw response;
+            throw error;
         }
-
-        return await response.json();
     }
 
     /**

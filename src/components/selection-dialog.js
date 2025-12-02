@@ -10,6 +10,7 @@ import {
     sendModalNotification,
 } from '../modules/modal-notification';
 import {SelectionColumnConfiguration} from './selection-column-configuration';
+import {BlobOperations} from '../utils/blob-operations';
 
 export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -389,93 +390,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @param {boolean} undelete - Whether to undelete the file
      */
     async doFileDeletionForFileId(fileId, objectType, undelete = false) {
-        console.log('doFileDeletionForFileId fileId', fileId, 'objectType', objectType);
-
-        const deleteUrl = await this.createBlobDeleteUrl(fileId, objectType, undelete);
-        console.log('doFileDeletionForFileId deleteUrl', deleteUrl);
-
-        const options = {
-            // We are doing soft-delete here, so we need to use PATCH
-            method: 'PATCH',
-            headers: {
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-            // The API demands a multipart form data, so we need to send an empty body
-            body: new FormData(),
-        };
-
-        let response = await fetch(deleteUrl, options);
-        if (!response.ok) {
-            if (undelete) {
-                throw new Error(`Could not mark document ${fileId} as undeleted in blob!`);
-            } else {
-                throw new Error(`Could not mark document ${fileId} as deleted in blob!`);
-            }
-        }
-
-        return await response.json();
-    }
-
-    /**
-     * Create a blob delete URL
-     * @param {string} fileId - The file identifier
-     * @param {string} objectType - The object type (e.g., 'file-cabinet-document')
-     * @param {boolean} undelete - Whether to undelete the file
-     * @returns {Promise<string>}
-     */
-    async createBlobDeleteUrl(fileId, objectType, undelete = false) {
-        return this.createBlobUrl(fileId, objectType, false, {
-            deleteIn: undelete ? 'null' : 'P7D',
-        });
-    }
-
-    /**
-     * Create a blob URL through the blob-urls API endpoint
-     * @param {string} identifier - The file identifier
-     * @param {string} objectType - The object type (e.g., 'file-cabinet-document')
-     * @param {boolean} includeData - Whether to include data
-     * @param {object} extraParams - Additional parameters
-     * @returns {Promise<string>}
-     */
-    async createBlobUrl(identifier, objectType, includeData = false, extraParams = {}) {
-        if (!this.entryPointUrl) {
-            throw new Error('Entry point URL is not set');
-        }
-
-        const baseUrl = `${this.entryPointUrl}/cabinet/blob-urls`;
-        const apiUrl = new URL(baseUrl);
-
-        let params = {
-            method: 'PATCH',
-            prefix: 'document-',
-            type: objectType.replace('file-cabinet-', ''),
-            identifier: identifier,
-        };
-
-        if (includeData) {
-            params['includeData'] = '1';
-        }
-
-        params = {...params, ...extraParams};
-        apiUrl.search = new URLSearchParams(params).toString();
-
-        let response = await fetch(apiUrl.toString(), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-            body: '{}',
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error while creating storage URL: ${response.statusText}`);
-        }
-
-        const result = await response.json();
-        console.log('createBlobUrl result', result);
-
-        return result['blobUrl'];
+        return BlobOperations.doFileDeletionForFileId(
+            this.entryPointUrl,
+            this.auth.token,
+            fileId,
+            objectType,
+            undelete,
+        );
     }
 
     static get styles() {
