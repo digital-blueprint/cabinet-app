@@ -1,16 +1,18 @@
 import {css, html} from 'lit';
 import {ref, createRef} from 'lit/directives/ref.js';
-import {IconButton, ScopedElementsMixin} from '@dbp-toolkit/common';
+import {IconButton, ScopedElementsMixin, combineURLs} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal} from '@dbp-toolkit/common';
 import {TabulatorTable} from '@dbp-toolkit/tabulator-table';
+import {FileSink} from '@dbp-toolkit/file-handling';
 import {
     scopedElements as modalNotificationScopedElements,
     sendModalNotification,
 } from '../modules/modal-notification';
 import {SelectionColumnConfiguration} from './selection-column-configuration';
 import {BlobOperations} from '../utils/blob-operations';
+import {dataURLtoFile} from '../utils';
 
 export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -21,6 +23,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.deletedDocumentTableRef = createRef();
         this.personColumnConfigRef = createRef();
         this.documentColumnConfigRef = createRef();
+        this.fileSinkRef = createRef();
         this.hitSelections = this.constructor.EmptyHitSelection;
         this.facetNumber = 0;
         this.activeTab = this.constructor.HitSelectionType.PERSON;
@@ -41,6 +44,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-icon-button': IconButton,
             'dbp-tabulator-table': TabulatorTable,
             'dbp-selection-column-configuration': SelectionColumnConfiguration,
+            'dbp-file-sink': FileSink,
         };
     }
 
@@ -399,6 +403,236 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         );
     }
 
+    /**
+     * Create a blob download URL for a file
+     * @param {string} identifier - The file identifier
+     * @param {boolean} includeData - Whether to include file data in the response
+     * @returns {Promise<string>}
+     */
+    async createBlobDownloadUrl(identifier, includeData = false) {
+        if (this.entryPointUrl === '') {
+            return '';
+        }
+
+        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/blob-urls`);
+        const apiUrl = new URL(baseUrl);
+        const params = {
+            method: 'GET',
+            identifier: identifier,
+        };
+
+        if (includeData) {
+            params['includeData'] = '1';
+        }
+
+        apiUrl.search = new URLSearchParams(params).toString();
+
+        let response = await fetch(apiUrl.toString(), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/ld+json',
+                Authorization: 'Bearer ' + this.auth.token,
+            },
+            body: '{}',
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to create download URL: ${response.statusText}`);
+        }
+
+        const url = await response.json();
+        return url['blobUrl'];
+    }
+
+    /**
+     * Load blob item from URL
+     * @param {string} url - The blob URL
+     * @returns {Promise<object>}
+     */
+    async loadBlobItem(url) {
+        const response = await fetch(url, {
+            headers: {
+                Authorization: 'Bearer ' + this.auth.token,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to load blob: ${response.statusText}`);
+        }
+
+        return await response.json();
+    }
+
+    /**
+     * Download a file from blob storage
+     * @param {string} fileId - The file identifier
+     * @returns {Promise<File>}
+     */
+    async downloadFileFromBlob(fileId) {
+        // Always include data to get the contentUrl
+        const url = await this.createBlobDownloadUrl(fileId, true);
+        let blobItem = await this.loadBlobItem(url);
+
+        if (!blobItem.contentUrl) {
+            throw new Error('No contentUrl in blob response');
+        }
+
+        return dataURLtoFile(blobItem.contentUrl, blobItem.fileName);
+    }
+
+    /**
+     * Export all active documents
+     * @param {Event} e - The change event from the selector
+     */
+    async exportActiveDocuments(e) {
+        const selectorValue = e.target.value;
+        if (!selectorValue) {
+            return;
+        }
+
+        // Reset selector immediately before async operations
+        e.target.selectedIndex = 0;
+
+        const i18n = this._i18n;
+        const documentSelections =
+            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+
+        // Filter active documents only
+        const activeDocuments = Object.entries(documentSelections).filter(
+            ([_id, hit]) => hit && typeof hit === 'object' && !hit.base?.isScheduledForDeletion,
+        );
+
+        if (activeDocuments.length === 0) {
+            this.sendFilterModalNotification(
+                i18n.t('selection-dialog.export-error'),
+                i18n.t('selection-dialog.no-active-documents-to-export'),
+                'warning',
+            );
+            return;
+        }
+
+        await this.exportDocuments(activeDocuments, selectorValue);
+    }
+
+    /**
+     * Export all deleted documents
+     * @param {Event} e - The change event from the selector
+     */
+    async exportDeletedDocuments(e) {
+        const selectorValue = e.target.value;
+        if (!selectorValue) {
+            return;
+        }
+
+        // Reset selector immediately before async operations
+        e.target.selectedIndex = 0;
+
+        const i18n = this._i18n;
+        const documentSelections =
+            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+
+        // Filter deleted documents only
+        const deletedDocuments = Object.entries(documentSelections).filter(
+            ([_id, hit]) => hit && typeof hit === 'object' && hit.base?.isScheduledForDeletion,
+        );
+
+        if (deletedDocuments.length === 0) {
+            this.sendFilterModalNotification(
+                i18n.t('selection-dialog.export-error'),
+                i18n.t('selection-dialog.no-deleted-documents-to-export'),
+                'warning',
+            );
+            return;
+        }
+
+        await this.exportDocuments(deletedDocuments, selectorValue);
+    }
+
+    /**
+     * Export documents based on selector value
+     * @param {Array} documents - Array of [id, hit] tuples
+     * @param {string} selectorValue - What to export (document-file-only, metadata-only, or all)
+     */
+    async exportDocuments(documents, selectorValue) {
+        const i18n = this._i18n;
+        let files = [];
+        let successCount = 0;
+        let failCount = 0;
+
+        for (const [id, hit] of documents) {
+            try {
+                const fileId = hit.file?.base?.fileId;
+                if (!fileId) {
+                    console.error('No file identifier found for document', id);
+                    failCount++;
+                    continue;
+                }
+
+                // Add metadata file if requested
+                if (selectorValue !== 'document-file-only') {
+                    const metadataFileName = `${hit.file?.base?.fileName || fileId}_metadata.json`;
+                    const metadataFile = new File(
+                        [JSON.stringify(hit, null, 2)],
+                        metadataFileName,
+                        {
+                            type: 'application/json',
+                        },
+                    );
+                    files.push(metadataFile);
+                }
+
+                // Add document file if requested
+                if (selectorValue !== 'metadata-only') {
+                    const documentFile = await this.downloadFileFromBlob(fileId);
+                    files.push(documentFile);
+                }
+
+                successCount++;
+            } catch (error) {
+                console.error('Failed to export document', id, error);
+                failCount++;
+            }
+        }
+
+        if (files.length > 0) {
+            // Use FileSink to download all files
+            this.fileSinkRef.value.files = files;
+
+            // Close the modal to show the FileSink dialog
+            const modal = this.modalRef.value;
+            modal.close();
+        }
+
+        // Show notification about results
+        if (successCount > 0) {
+            this.sendFilterModalNotification(
+                i18n.t('selection-dialog.export-success'),
+                i18n.t('selection-dialog.export-success-message', {
+                    count: successCount,
+                }),
+                'success',
+            );
+        }
+
+        if (failCount > 0) {
+            this.sendFilterModalNotification(
+                i18n.t('selection-dialog.export-error'),
+                i18n.t('selection-dialog.export-error-message', {
+                    count: failCount,
+                }),
+                'danger',
+            );
+        }
+    }
+
+    onFileSinkDialogClosed() {
+        // Reopen the modal after file sink dialog is closed
+        const modal = this.modalRef.value;
+        if (modal && !modal.isOpen()) {
+            modal.open();
+        }
+    }
+
     static get styles() {
         return [
             commonStyles.getThemeCSS(),
@@ -564,6 +798,26 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .document-table-container.active {
                     display: block;
+                }
+
+                .dropdown-menu {
+                    padding: 8px 12px;
+                    font-size: 1rem;
+                    border: 1px solid var(--dbp-muted, #ccc);
+                    border-radius: 4px;
+                    background-color: var(--dbp-background, white);
+                    color: var(--dbp-content, black);
+                    cursor: pointer;
+                    min-width: 200px;
+                }
+
+                .dropdown-menu:hover {
+                    background-color: var(--dbp-hover-background-color, rgba(0, 0, 0, 0.05));
+                }
+
+                .dropdown-menu:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
                 }
             `,
         ];
@@ -1026,7 +1280,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 : ''}">
                             ${Object.keys(activeDocuments).length > 0
                                 ? html`
-                                      <div style="margin-bottom: 15px;">
+                                      <div style="margin-bottom: 15px; display: flex; gap: 10px;">
                                           <dbp-button
                                               value="${i18n.t(
                                                   'selection-dialog.delete-all-active',
@@ -1040,6 +1294,29 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   'Delete All',
                                               )}
                                           </dbp-button>
+                                          <select
+                                              id="export-active-select"
+                                              class="dropdown-menu"
+                                              @change="${this.exportActiveDocuments}">
+                                              <option value="" disabled selected>
+                                                  ${i18n.t(
+                                                      'selection-dialog.export-documents',
+                                                      'Export Documents',
+                                                  )}
+                                              </option>
+                                              <option value="document-file-only">
+                                                  ${i18n.t(
+                                                      'doc-modal-document-only',
+                                                      'Document Only',
+                                                  )}
+                                              </option>
+                                              <option value="metadata-only">
+                                                  ${i18n.t('doc-modal-only-data', 'Metadata Only')}
+                                              </option>
+                                              <option value="all">
+                                                  ${i18n.t('doc-modal-all', 'All')}
+                                              </option>
+                                          </select>
                                       </div>
                                       <dbp-tabulator-table
                                           ${ref(this.documentTableRef)}
@@ -1066,7 +1343,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 : ''}">
                             ${Object.keys(deletedDocuments).length > 0
                                 ? html`
-                                      <div style="margin-bottom: 15px;">
+                                      <div style="margin-bottom: 15px; display: flex; gap: 10px;">
                                           <dbp-button
                                               value="${i18n.t(
                                                   'selection-dialog.undelete-all-deleted',
@@ -1079,6 +1356,29 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   'Undelete All',
                                               )}
                                           </dbp-button>
+                                          <select
+                                              id="export-deleted-select"
+                                              class="dropdown-menu"
+                                              @change="${this.exportDeletedDocuments}">
+                                              <option value="" disabled selected>
+                                                  ${i18n.t(
+                                                      'selection-dialog.export-documents',
+                                                      'Export Documents',
+                                                  )}
+                                              </option>
+                                              <option value="document-file-only">
+                                                  ${i18n.t(
+                                                      'doc-modal-document-only',
+                                                      'Document Only',
+                                                  )}
+                                              </option>
+                                              <option value="metadata-only">
+                                                  ${i18n.t('doc-modal-only-data', 'Metadata Only')}
+                                              </option>
+                                              <option value="all">
+                                                  ${i18n.t('doc-modal-all', 'All')}
+                                              </option>
+                                          </select>
                                       </div>
                                       <dbp-tabulator-table
                                           ${ref(this.deletedDocumentTableRef)}
@@ -1248,6 +1548,17 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .auth="${this.auth}"
                 @columnSettingsStored="${this
                     .onColumnSettingsStored}"></dbp-selection-column-configuration>
+            <dbp-file-sink
+                ${ref(this.fileSinkRef)}
+                subscribe="nextcloud-store-session:nextcloud-store-session"
+                lang="${this.lang}"
+                enabled-targets="${this.fileHandlingEnabledTargets}"
+                nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
+                nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
+                nextcloud-name="${this.nextcloudName}"
+                nextcloud-auth-info="${this.nextcloudAuthInfo}"
+                nextcloud-file-url="${this.nextcloudFileURL}"
+                @dbp-file-sink-dialog-closed="${this.onFileSinkDialogClosed}"></dbp-file-sink>
         `;
     }
 }
