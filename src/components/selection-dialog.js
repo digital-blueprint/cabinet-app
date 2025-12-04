@@ -13,6 +13,7 @@ import {
 import {SelectionColumnConfiguration} from './selection-column-configuration';
 import {BlobOperations} from '../utils/blob-operations';
 import {dataURLtoFile} from '../utils';
+import {getSelectorFixCSS} from '../styles.js';
 
 export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -580,6 +581,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         return [
             commonStyles.getThemeCSS(),
             commonStyles.getGeneralCSS(false),
+            commonStyles.getButtonCSS(),
+            getSelectorFixCSS(),
             // language=css
             css`
                 :host {
@@ -743,24 +746,23 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     display: block;
                 }
 
-                .dropdown-menu {
-                    padding: 8px 12px;
-                    font-size: 1rem;
-                    border: 1px solid var(--dbp-muted, #ccc);
-                    border-radius: 4px;
-                    background-color: var(--dbp-background, white);
-                    color: var(--dbp-content, black);
-                    cursor: pointer;
-                    min-width: 200px;
+                .export-controls {
+                    margin-bottom: 15px;
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+                    flex-wrap: wrap;
                 }
 
-                .dropdown-menu:hover {
-                    background-color: var(--dbp-hover-background-color, rgba(0, 0, 0, 0.05));
-                }
+                @media (max-width: 768px) {
+                    .export-controls {
+                        flex-direction: column;
+                        align-items: stretch;
+                    }
 
-                .dropdown-menu:disabled {
-                    opacity: 0.5;
-                    cursor: not-allowed;
+                    .dropdown-menu {
+                        width: 100%;
+                    }
                 }
             `,
         ];
@@ -1223,7 +1225,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 : ''}">
                             ${Object.keys(activeDocuments).length > 0
                                 ? html`
-                                      <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                                      <div class="export-controls">
                                           <dbp-button
                                               value="${i18n.t(
                                                   'selection-dialog.delete-all-active',
@@ -1286,7 +1288,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 : ''}">
                             ${Object.keys(deletedDocuments).length > 0
                                 ? html`
-                                      <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                                      <div class="export-controls">
                                           <dbp-button
                                               value="${i18n.t(
                                                   'selection-dialog.undelete-all-deleted',
