@@ -114,6 +114,21 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Reset to active documents tab
         this.activeDocumentTab = 'active';
 
+        // Set the active tab based on whether there are person selections
+        const personSelections = hitSelections[this.constructor.HitSelectionType.PERSON] || {};
+        const documentSelections =
+            hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+        const hasPersonSelections = Object.keys(personSelections).length > 0;
+        const hasDocumentSelections = Object.keys(documentSelections).length > 0;
+
+        // If no person was selected but there are documents, open the Documents tab
+        // Otherwise, default to Persons tab
+        if (!hasPersonSelections && hasDocumentSelections) {
+            this.activeTab = this.constructor.HitSelectionType.DOCUMENT_FILE;
+        } else {
+            this.activeTab = this.constructor.HitSelectionType.PERSON;
+        }
+
         // Load column visibility states
         this.loadColumnVisibilityStates();
 
