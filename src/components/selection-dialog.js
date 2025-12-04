@@ -249,6 +249,18 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 deletedDocumentTable.buildTable();
             }
         }
+
+        /**
+         * @type {Modal}
+         */
+        const modal = this.modalRef.value;
+
+        // This a very crude, yet effective workaround to prevent a horizontal scrollbar after column changes
+        // All more same methods seemed to fail
+        modal.close();
+        setTimeout(() => {
+            modal.open();
+        }, 100);
     }
 
     close() {
