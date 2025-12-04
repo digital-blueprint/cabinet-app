@@ -409,20 +409,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async loadBlobItem(url) {
-        let response = await fetch(url.toString(), {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-        });
-        if (!response.ok) {
-            throw response;
-        }
-        const json = await response.json();
-        console.log('json', json);
-
-        return json;
+        return BlobOperations.loadBlobItem(url, this.auth.token);
     }
 
     /**
@@ -597,13 +584,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async downloadFileFromBlob(fileId, includeData = false) {
-        const url = await this.createBlobDownloadUrl(fileId, includeData);
-        console.log('downloadFileFromBlob url', url);
-        let blobItem = await this.loadBlobItem(url);
-        console.log('downloadFileFromBlob blobItem', blobItem);
-
-        // TODO: Test if this really works
-        return dataURLtoFile(blobItem.contentUrl, blobItem.fileName);
+        return BlobOperations.downloadFileFromBlob(
+            this.entryPointUrl,
+            this.auth.token,
+            fileId,
+            dataURLtoFile,
+            includeData,
+        );
     }
 
     /**

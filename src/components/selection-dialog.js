@@ -1,6 +1,6 @@
 import {css, html} from 'lit';
 import {ref, createRef} from 'lit/directives/ref.js';
-import {IconButton, ScopedElementsMixin, combineURLs} from '@dbp-toolkit/common';
+import {IconButton, ScopedElementsMixin} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal} from '@dbp-toolkit/common';
@@ -404,83 +404,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     /**
-     * Create a blob download URL for a file
-     * @param {string} identifier - The file identifier
-     * @param {boolean} includeData - Whether to include file data in the response
-     * @returns {Promise<string>}
-     */
-    async createBlobDownloadUrl(identifier, includeData = false) {
-        if (this.entryPointUrl === '') {
-            return '';
-        }
-
-        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/blob-urls`);
-        const apiUrl = new URL(baseUrl);
-        const params = {
-            method: 'GET',
-            identifier: identifier,
-        };
-
-        if (includeData) {
-            params['includeData'] = '1';
-        }
-
-        apiUrl.search = new URLSearchParams(params).toString();
-
-        let response = await fetch(apiUrl.toString(), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-            body: '{}',
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to create download URL: ${response.statusText}`);
-        }
-
-        const url = await response.json();
-        return url['blobUrl'];
-    }
-
-    /**
-     * Load blob item from URL
-     * @param {string} url - The blob URL
-     * @returns {Promise<object>}
-     */
-    async loadBlobItem(url) {
-        const response = await fetch(url, {
-            headers: {
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to load blob: ${response.statusText}`);
-        }
-
-        return await response.json();
-    }
-
-    /**
-     * Download a file from blob storage
-     * @param {string} fileId - The file identifier
-     * @returns {Promise<File>}
-     */
-    async downloadFileFromBlob(fileId) {
-        // Always include data to get the contentUrl
-        const url = await this.createBlobDownloadUrl(fileId, true);
-        let blobItem = await this.loadBlobItem(url);
-
-        if (!blobItem.contentUrl) {
-            throw new Error('No contentUrl in blob response');
-        }
-
-        return dataURLtoFile(blobItem.contentUrl, blobItem.fileName);
-    }
-
-    /**
      * Export all active documents
      * @param {Event} e - The change event from the selector
      */
@@ -583,7 +506,12 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 // Add document file if requested
                 if (selectorValue !== 'metadata-only') {
-                    const documentFile = await this.downloadFileFromBlob(fileId);
+                    const documentFile = await BlobOperations.downloadFileFromBlob(
+                        this.entryPointUrl,
+                        this.auth.token,
+                        fileId,
+                        dataURLtoFile,
+                    );
                     files.push(documentFile);
                 }
 
