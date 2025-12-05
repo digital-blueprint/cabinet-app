@@ -6,6 +6,7 @@ import {
     combineURLs,
     Icon,
     Modal,
+    DBPSelect,
     ScopedElementsMixin,
     sendNotification,
 } from '@dbp-toolkit/common';
@@ -165,6 +166,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-pdf-viewer': PdfViewer,
             'dbp-button': Button,
             'dbp-pdf-validation-error-list': PdfValidationErrorList,
+            'dbp-select': DBPSelect,
         };
     }
 
@@ -1668,24 +1670,28 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                         this.state !== CabinetFile.States.LOADING_FILE,
                                     )}
                                 </button>
-                                <select
-                                    id="export-select"
-                                    class="dropdown-menu ${classMap({
+                                <dbp-select
+                                    id="action-dropdown"
+                                    class=" ${classMap({
                                         hidden: this.mode !== CabinetFile.Modes.VIEW,
                                     })}"
-                                    ?disabled="${!file}"
-                                    @change="${this.downloadFile}">
-                                    <option value="" disabled selected>
-                                        ${i18n.t('doc-modal-download-document')}
-                                    </option>
-                                    <option value="document-file-only">
-                                        ${i18n.t('doc-modal-document-only')}
-                                    </option>
-                                    <option value="metadata-only">
-                                        ${i18n.t('doc-modal-only-data')}
-                                    </option>
-                                    <option value="all">${i18n.t('doc-modal-all')}</option>
-                                </select>
+                                    ?disabled=${!file}
+                                    label="${i18n.t('download-button')}"
+                                    .options=${[
+                                        {
+                                            name: i18n.t('doc-modal-document-only'),
+                                            title: i18n.t('doc-modal-document-only'),
+                                        },
+                                        {
+                                            name: i18n.t('doc-modal-only-data'),
+                                            title: i18n.t('doc-modal-only-data'),
+                                        },
+                                        {
+                                            name: i18n.t('doc-modal-all'),
+                                            title: i18n.t('doc-modal-all'),
+                                        },
+                                    ]}
+                                    @change="${this.downloadFile}"></dbp-select>
                             </div>
                         </div>
                     </div>
