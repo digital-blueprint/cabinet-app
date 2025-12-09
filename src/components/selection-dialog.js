@@ -290,6 +290,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         let successCount = 0;
         let failCount = 0;
+        const successfulIds = [];
 
         for (const [id, hit] of activeDocuments) {
             try {
@@ -311,6 +312,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 // Update the hit data locally
                 hit.base.isScheduledForDeletion = true;
                 successCount++;
+                successfulIds.push(id);
             } catch (error) {
                 console.error('Failed to delete document', id, error);
                 failCount++;
@@ -325,6 +327,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     count: successCount,
                 }),
                 'success',
+            );
+            // Clear only successfully deleted items
+            this.clearSelectionItems(
+                this.constructor.HitSelectionType.DOCUMENT_FILE,
+                successfulIds,
             );
         }
 
@@ -362,6 +369,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         let successCount = 0;
         let failCount = 0;
+        const successfulIds = [];
 
         for (const [id, hit] of deletedDocuments) {
             try {
@@ -383,6 +391,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 // Update the hit data locally
                 hit.base.isScheduledForDeletion = false;
                 successCount++;
+                successfulIds.push(id);
             } catch (error) {
                 console.error('Failed to undelete document', id, error);
                 failCount++;
@@ -397,6 +406,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     count: successCount,
                 }),
                 'success',
+            );
+            // Clear only successfully undeleted items
+            this.clearSelectionItems(
+                this.constructor.HitSelectionType.DOCUMENT_FILE,
+                successfulIds,
             );
         }
 
@@ -509,6 +523,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         let files = [];
         let successCount = 0;
         let failCount = 0;
+        const successfulIds = [];
 
         for (const [id, hit] of documents) {
             try {
@@ -544,6 +559,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 successCount++;
+                successfulIds.push(id);
             } catch (error) {
                 console.error('Failed to export document', id, error);
                 failCount++;
@@ -567,6 +583,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     count: successCount,
                 }),
                 'success',
+            );
+            // Clear only successfully exported items
+            this.clearSelectionItems(
+                this.constructor.HitSelectionType.DOCUMENT_FILE,
+                successfulIds,
             );
         }
 
@@ -1371,6 +1392,26 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.dispatchEvent(
             new CustomEvent('close', {
                 detail: {reloadSearch: true},
+                bubbles: true,
+                composed: true,
+            }),
+        );
+    }
+
+    /**
+     * Clear specific selection items by their IDs
+     * @param {string} type - The selection type (e.g., DOCUMENT_FILE, PERSON)
+     * @param {Array<string>} ids - Array of IDs to clear from selection
+     */
+    clearSelectionItems(type, ids) {
+        if (!ids || ids.length === 0) {
+            return;
+        }
+
+        // Notify parent to clear specific selections
+        this.dispatchEvent(
+            new CustomEvent('clear-selection-items', {
+                detail: {type, ids},
                 bubbles: true,
                 composed: true,
             }),

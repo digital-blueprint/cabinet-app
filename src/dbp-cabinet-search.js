@@ -394,6 +394,23 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 this.search.refresh();
             }
         });
+
+        // Listen to clear-selection-items events from selection dialog
+        this.addEventListener('clear-selection-items', (event) => {
+            console.log('Clearing selection items:', event.detail);
+            const {type, ids} = event.detail;
+            if (ids && ids.length > 0) {
+                // Remove each successfully processed item from selection
+                ids.forEach((id) => {
+                    delete this.hitSelections[type][id];
+                });
+                this.requestUpdate();
+                // Refresh the search to update checkbox states
+                if (this.search) {
+                    this.search.refresh();
+                }
+            }
+        });
     }
 
     async ensureInstantsearch() {
