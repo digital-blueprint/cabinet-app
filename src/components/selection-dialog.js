@@ -1180,6 +1180,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                       lang="${this.lang}"
                                       class="selection-table"
                                       identifier="person-selection-table"
+                                      pagination-enabled
+                                      pagination-size="10"
                                       .data=${personTableData}
                                       .options=${personTableOptions}></dbp-tabulator-table>
                               `
@@ -1280,6 +1282,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                           lang="${this.lang}"
                                           class="selection-table"
                                           identifier="document-selection-table"
+                                          pagination-enabled
+                                          pagination-size="10"
                                           .data=${activeDocumentTableData}
                                           .options=${documentTableOptions}></dbp-tabulator-table>
                                   `
@@ -1342,6 +1346,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                           lang="${this.lang}"
                                           class="selection-table"
                                           identifier="deleted-document-selection-table"
+                                          pagination-enabled
+                                          pagination-size="10"
                                           .data=${deletedDocumentTableData}
                                           .options=${deletedDocumentTableOptions}></dbp-tabulator-table>
                                   `
