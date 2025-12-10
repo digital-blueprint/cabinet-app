@@ -629,24 +629,35 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
      */
     async exportPersonsAsPDF(persons) {
         const i18n = this._i18n;
+        const pdfFiles = [];
 
         // Generate PDFs for each person
         for (const [, hit] of persons) {
             if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
                 const personHit = getPersonHit(hit);
-                // Call the exportPersonPdf function which automatically downloads the PDF
-                await this.exportPersonPdf(i18n, personHit, false);
+                // Generate PDF and collect the file
+                const pdfFile = await this.generatePersonPdfFile(i18n, personHit);
+                pdfFiles.push(pdfFile);
             }
+        }
+
+        // Download all PDFs via FileSink
+        if (pdfFiles.length > 0) {
+            this.fileSinkRef.value.files = pdfFiles;
+
+            // Close modal to show FileSink dialog
+            const modal = this.modalRef.value;
+            modal.close();
         }
     }
 
     /**
-     * Export person as PDF using column configuration from InstantSearchModule
+     * Generate a PDF file for a person (returns File object instead of downloading)
      * @param {object} i18n
      * @param {object} hit
-     * @param {boolean} withInternalData - unused but kept for compatibility
+     * @returns {Promise<File>}
      */
-    async exportPersonPdf(i18n, hit, withInternalData = false) {
+    async generatePersonPdfFile(i18n, hit) {
         let jsPDF = (await import('jspdf')).jsPDF;
         let autoTable = (await import('jspdf-autotable')).autoTable;
 
@@ -697,8 +708,33 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             },
         });
 
-        const filename = `${encodeURIComponent(hit.person.familyName)}_${encodeURIComponent(hit.person.givenName)}_${encodeURIComponent(hit.person.studId)}.pdf`;
-        doc.save(filename);
+        const filename = `${hit.person.familyName}_${hit.person.givenName}_${hit.person.studId}.pdf`;
+
+        // Convert PDF to Blob and then to File
+        const pdfBlob = doc.output('blob');
+        const pdfFile = new File([pdfBlob], filename, {type: 'application/pdf'});
+
+        return pdfFile;
+    }
+
+    /**
+     * Export person as PDF (for backward compatibility - now uses generatePersonPdfFile)
+     * @param {object} i18n
+     * @param {object} hit
+     * @param {boolean} withInternalData - unused but kept for compatibility
+     */
+    async exportPersonPdf(i18n, hit, withInternalData = false) {
+        const pdfFile = await this.generatePersonPdfFile(i18n, hit);
+
+        // Create a temporary link to download the file
+        const url = URL.createObjectURL(pdfFile);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = pdfFile.name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     }
 
     /**
