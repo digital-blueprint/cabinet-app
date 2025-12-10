@@ -14,6 +14,8 @@ import {SelectionColumnConfiguration} from './selection-column-configuration';
 import {BlobOperations} from '../utils/blob-operations';
 import {dataURLtoFile} from '../utils';
 import {getSelectorFixCSS} from '../styles.js';
+import {TypesenseService} from '../services/typesense.js';
+import {getPersonHit} from '../objectTypes/schema.js';
 
 export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -443,6 +445,475 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             objectType,
             undelete,
         );
+    }
+
+    /**
+     * Export all persons based on selector value
+     * @param {Event} e - The change event from the selector
+     */
+    async exportPersons(e) {
+        const selectorValue = e.target.value;
+        if (!selectorValue) {
+            return;
+        }
+
+        // Reset selector immediately before async operations
+        e.target.selectedIndex = 0;
+
+        const i18n = this._i18n;
+        const personSelections = this.hitSelections[this.constructor.HitSelectionType.PERSON] || {};
+
+        const persons = Object.entries(personSelections);
+
+        if (persons.length === 0) {
+            this.sendFilterModalNotification(
+                i18n.t('selection-dialog.export-error'),
+                i18n.t('selection-dialog.no-persons-to-export'),
+                'warning',
+            );
+            return;
+        }
+
+        let successCount = 0;
+        let failCount = 0;
+
+        try {
+            switch (selectorValue) {
+                case 'csv':
+                    await this.exportPersonsAsCSV(persons);
+                    successCount = persons.length;
+                    break;
+                case 'excel':
+                    await this.exportPersonsAsExcel(persons);
+                    successCount = persons.length;
+                    break;
+                case 'pdf':
+                    await this.exportPersonsAsPDF(persons);
+                    successCount = persons.length;
+                    break;
+                case 'attachments': {
+                    const result = await this.exportPersonsAttachments(persons);
+                    successCount = result.successCount;
+                    failCount = result.failCount;
+                    break;
+                }
+                default:
+                    return;
+            }
+
+            if (successCount > 0) {
+                this.sendFilterModalNotification(
+                    i18n.t('selection-dialog.persons-export-success'),
+                    i18n.t('selection-dialog.persons-export-success-message', {
+                        count: successCount,
+                    }),
+                    'success',
+                );
+            }
+
+            if (failCount > 0) {
+                this.sendFilterModalNotification(
+                    i18n.t('selection-dialog.export-error'),
+                    i18n.t('selection-dialog.export-error-message', {
+                        count: failCount,
+                    }),
+                    'danger',
+                );
+            }
+        } catch (error) {
+            console.error('Failed to export persons', error);
+            this.sendFilterModalNotification(
+                i18n.t('selection-dialog.export-error'),
+                error.message,
+                'danger',
+            );
+        }
+    }
+
+    /**
+     * Export persons as CSV
+     * @param {Array} persons - Array of [id, hit] tuples
+     */
+    async exportPersonsAsCSV(persons) {
+        const i18n = this._i18n;
+        const columnConfigs = SelectionColumnConfiguration.getPersonColumns();
+
+        // CSV header
+        const headers = columnConfigs.map((col) => i18n.t(col.name));
+        let csvContent = headers.join(',') + '\n';
+
+        // CSV rows
+        persons.forEach(([, hit]) => {
+            if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
+                const row = columnConfigs.map((col) => {
+                    const value = this.getNestedValue(hit, col.field);
+                    if (value === null || value === undefined) {
+                        return '';
+                    }
+                    // Escape CSV values
+                    let strValue = String(value);
+                    if (
+                        strValue.includes(',') ||
+                        strValue.includes('"') ||
+                        strValue.includes('\n')
+                    ) {
+                        strValue = '"' + strValue.replace(/"/g, '""') + '"';
+                    }
+                    return strValue;
+                });
+                csvContent += row.join(',') + '\n';
+            }
+        });
+
+        // Download CSV
+        const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
+        const file = new File([blob], 'persons_export.csv', {type: 'text/csv'});
+        this.fileSinkRef.value.files = [file];
+
+        // Close modal to show FileSink dialog
+        const modal = this.modalRef.value;
+        modal.close();
+    }
+
+    /**
+     * Export persons as Excel
+     * @param {Array} persons - Array of [id, hit] tuples
+     */
+    async exportPersonsAsExcel(persons) {
+        const i18n = this._i18n;
+        const XLSX = await import('xlsx');
+        const columnConfigs = SelectionColumnConfiguration.getPersonColumns();
+
+        // Create worksheet data
+        const headers = columnConfigs.map((col) => i18n.t(col.name));
+        const rows = persons.map(([, hit]) => {
+            if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
+                return columnConfigs.map((col) => {
+                    const value = this.getNestedValue(hit, col.field);
+                    if (value === null || value === undefined) {
+                        return '';
+                    }
+                    return value;
+                });
+            }
+            return [];
+        });
+
+        const wsData = [headers, ...rows];
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Persons');
+
+        // Generate Excel file
+        const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'array'});
+        const blob = new Blob([wbout], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        const file = new File([blob], 'persons_export.xlsx', {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+
+        this.fileSinkRef.value.files = [file];
+
+        // Close modal to show FileSink dialog
+        const modal = this.modalRef.value;
+        modal.close();
+    }
+
+    /**
+     * Export persons as PDF (using the same format as in person.js)
+     * @param {Array} persons - Array of [id, hit] tuples
+     */
+    async exportPersonsAsPDF(persons) {
+        const i18n = this._i18n;
+
+        // Generate PDFs for each person
+        for (const [, hit] of persons) {
+            if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
+                const personHit = getPersonHit(hit);
+                // Call the exportPersonPdf function which automatically downloads the PDF
+                await this.exportPersonPdf(i18n, personHit, false);
+            }
+        }
+    }
+
+    /**
+     * Export person as PDF (copied from person.js exportPersonPdf function)
+     * @param {object} i18n
+     * @param {object} hit
+     * @param {boolean} withInternalData
+     */
+    async exportPersonPdf(i18n, hit, withInternalData = false) {
+        let jsPDF = (await import('jspdf')).jsPDF;
+        let autoTable = (await import('jspdf-autotable')).autoTable;
+
+        const doc = new jsPDF();
+
+        let subFillColor = 220;
+        let subTextColor = 30;
+        let subLeftMargin = 18;
+
+        const displayValue = (value) => {
+            return value === undefined || value === null || value === '' ? '-' : value;
+        };
+
+        const selectTranslation = (keyedText) => {
+            if (!keyedText) return keyedText;
+            return i18n.language === 'de' ? keyedText.text : keyedText.textEn;
+        };
+
+        const formatDate = (dateString) => {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString(i18n.language);
+        };
+
+        let formatter = Intl.DateTimeFormat('de', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
+
+        let syncDate = formatter.format(new Date(hit.person.syncTimestamp * 1000));
+        let exportDate = formatter.format(new Date());
+
+        autoTable(doc, {
+            showHead: 'firstPage',
+            head: [
+                [
+                    {
+                        content: i18n.t('export.table-title', {personName: hit.person.person}),
+                        colSpan: 2,
+                    },
+                ],
+            ],
+            body: [
+                [i18n.t('export.sync-date-label'), syncDate],
+                [i18n.t('export.export-date-label'), exportDate],
+            ],
+        });
+
+        let body = [
+            [i18n.t('academic-titles'), displayValue(hit.person.academicTitles.join(', '))],
+            [i18n.t('given-name'), displayValue(hit.person.givenName)],
+            [i18n.t('family-name'), displayValue(hit.person.familyName)],
+            [i18n.t('former-family-name'), displayValue(hit.person.formerFamilyName)],
+            [i18n.t('academic-title-following'), displayValue(hit.person.academicTitleFollowing)],
+            [i18n.t('stud-id'), displayValue(hit.person.studId)],
+            [i18n.t('st-PersonNr'), displayValue(hit.person.stPersonNr)],
+            [i18n.t('birth-date'), formatDate(hit.person.birthDate)],
+            [
+                i18n.t('nationalities'),
+                displayValue(hit.person.nationalities.map((n) => n.text).join(', ')),
+            ],
+            [i18n.t('gender'), displayValue(selectTranslation(hit.person.gender))],
+            [i18n.t('social-SecurityNr'), displayValue(hit.person.socialSecurityNr)],
+            [i18n.t('ssPIN'), displayValue(hit.person.bpk)],
+            [i18n.t('personal-Status'), displayValue(selectTranslation(hit.person.personalStatus))],
+            [i18n.t('student-Status'), displayValue(selectTranslation(hit.person.studentStatus))],
+            [i18n.t('tuitionStatus'), displayValue(hit.person.tuitionStatus)],
+            [i18n.t('immatriculation-Date'), formatDate(hit.person.immatriculationDate)],
+            [i18n.t('immatriculationSemester'), displayValue(hit.person.immatriculationSemester)],
+            [
+                i18n.t('exmatriculation-GI'),
+                `${displayValue(selectTranslation(hit.person.exmatriculationStatus))} ${formatDate(hit.person.exmatriculationDate)}`,
+            ],
+            [
+                i18n.t('admission-Qualification-Type'),
+                displayValue(selectTranslation(hit.person.admissionQualificationType)),
+            ],
+            [i18n.t('school-Certificate-Date'), formatDate(hit.person.schoolCertificateDate)],
+        ];
+
+        if (withInternalData) {
+            body.push([i18n.t('note'), displayValue(hit.person.note)]);
+        }
+
+        autoTable(doc, {
+            showHead: 'firstPage',
+            head: [[{content: i18n.t('General-information'), colSpan: 2}]],
+            body: body,
+        });
+
+        autoTable(doc, {
+            showHead: 'firstPage',
+            head: [[{content: i18n.t('Study-information')}]],
+        });
+
+        hit.person.studies
+            .slice()
+            .sort((a, b) => {
+                const dateA = a.immatriculationDate
+                    ? new Date(a.immatriculationDate).getTime()
+                    : Infinity;
+                const dateB = b.immatriculationDate
+                    ? new Date(b.immatriculationDate).getTime()
+                    : Infinity;
+                return dateB - dateA;
+            })
+            .forEach((study) => {
+                autoTable(doc, {
+                    showHead: 'firstPage',
+                    headStyles: {fillColor: subFillColor, textColor: subTextColor},
+                    margin: {left: subLeftMargin},
+                    head: [[{content: displayValue(study.name), colSpan: 2}]],
+                    body: [
+                        [i18n.t('semester'), displayValue(study.semester)],
+                        [i18n.t('status'), displayValue(selectTranslation(study.status))],
+                        [i18n.t('immatriculation-date'), formatDate(study.immatriculationDate)],
+                        [
+                            i18n.t('qualification-study'),
+                            `${displayValue(selectTranslation(study.qualificationType))} ${formatDate(study.qualificationDate)} ${selectTranslation(study.qualificationState)}`,
+                        ],
+                        [
+                            i18n.t('exmatriculation'),
+                            `${displayValue(selectTranslation(study.exmatriculationType))} ${formatDate(study.exmatriculationDate)}`,
+                        ],
+                        [i18n.t('curriculum-version'), displayValue(study.curriculumVersion)],
+                    ],
+                });
+            });
+
+        autoTable(doc, {
+            showHead: 'firstPage',
+            head: [[{content: i18n.t('Contact-information'), colSpan: 2}]],
+            body: [
+                [i18n.t('emailAddressUniversity'), displayValue(hit.person.emailAddressUniversity)],
+                [i18n.t('emailAddressConfirmed'), displayValue(hit.person.emailAddressConfirmed)],
+                [i18n.t('emailAddressTemporary'), displayValue(hit.person.emailAddressTemporary)],
+            ],
+        });
+
+        autoTable(doc, {
+            showHead: 'firstPage',
+            headStyles: {fillColor: subFillColor, textColor: subTextColor},
+            head: [[{content: i18n.t('homeAddress.heading'), colSpan: 2}]],
+            margin: {left: subLeftMargin},
+            body: [
+                [i18n.t('homeAddress.note'), displayValue(hit.person.homeAddress?.note)],
+                [i18n.t('homeAddress.street'), displayValue(hit.person.homeAddress?.street)],
+                [i18n.t('homeAddress.place'), displayValue(hit.person.homeAddress?.place)],
+                [i18n.t('homeAddress.region'), displayValue(hit.person.homeAddress?.region)],
+                [i18n.t('homeAddress.postCode'), displayValue(hit.person.homeAddress?.postCode)],
+                [
+                    i18n.t('homeAddress.country'),
+                    displayValue(selectTranslation(hit.person.homeAddress?.country)),
+                ],
+                [
+                    i18n.t('homeAddress.telephoneNumber'),
+                    displayValue(hit.person.homeAddress?.telephoneNumber),
+                ],
+            ],
+        });
+
+        autoTable(doc, {
+            showHead: 'firstPage',
+            headStyles: {fillColor: subFillColor, textColor: subTextColor},
+            head: [[{content: i18n.t('studyAddress.heading'), colSpan: 2}]],
+            margin: {left: subLeftMargin},
+            body: [
+                [i18n.t('studyAddress.note'), displayValue(hit.person.studyAddress?.note)],
+                [i18n.t('studyAddress.street'), displayValue(hit.person.studyAddress?.street)],
+                [i18n.t('studyAddress.place'), displayValue(hit.person.studyAddress?.place)],
+                [i18n.t('studyAddress.region'), displayValue(hit.person.studyAddress?.region)],
+                [i18n.t('studyAddress.postCode'), displayValue(hit.person.studyAddress?.postCode)],
+                [
+                    i18n.t('studyAddress.country'),
+                    displayValue(selectTranslation(hit.person.studyAddress?.country)),
+                ],
+                [
+                    i18n.t('studyAddress.telephoneNumber'),
+                    displayValue(hit.person.studyAddress?.telephoneNumber),
+                ],
+            ],
+        });
+
+        const filename = `${encodeURIComponent(hit.person.familyName)}_${encodeURIComponent(hit.person.givenName)}_${encodeURIComponent(hit.person.studId)}.pdf`;
+        doc.save(filename);
+    }
+
+    /**
+     * Export all documents/attachments for selected persons
+     * @param {Array} persons - Array of [id, hit] tuples
+     */
+    async exportPersonsAttachments(persons) {
+        let files = [];
+        let successCount = 0;
+        let failCount = 0;
+
+        // Get TypesenseService
+        let serverConfig = TypesenseService.getServerConfigForEntryPointUrl(
+            this.entryPointUrl,
+            this.auth.token,
+        );
+        let typesense = new TypesenseService(serverConfig);
+
+        for (const [id, hit] of persons) {
+            if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
+                try {
+                    const personHit = getPersonHit(hit);
+                    const personId = personHit.person.person;
+
+                    // Fetch all documents for this person
+                    const documents = await typesense.fetchItemsByFilter(
+                        `person.person:=[\`${personId}\`] && objectType:=file-cabinet-document`,
+                        250, // max documents per person
+                    );
+
+                    // Create a folder name for this person
+                    const folderName = `${personHit.person.familyName}_${personHit.person.givenName}_${personHit.person.studId}`;
+
+                    // Download each document
+                    for (const doc of documents) {
+                        try {
+                            const fileId = doc.file?.base?.fileId;
+                            if (!fileId) {
+                                console.warn('No fileId for document', doc.id);
+                                continue;
+                            }
+
+                            const documentFile = await BlobOperations.downloadFileFromBlob(
+                                this.entryPointUrl,
+                                this.auth.token,
+                                fileId,
+                                dataURLtoFile,
+                            );
+
+                            // Add folder structure to filename
+                            const fileName = `${folderName}/${documentFile.name}`;
+                            const fileWithPath = new File([documentFile], fileName, {
+                                type: documentFile.type,
+                            });
+                            files.push(fileWithPath);
+                        } catch (error) {
+                            console.error('Failed to download document', doc.id, error);
+                            failCount++;
+                        }
+                    }
+
+                    if (documents.length > 0) {
+                        successCount++;
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch documents for person', id, error);
+                    failCount++;
+                }
+            }
+        }
+
+        if (files.length > 0) {
+            // Use FileSink to download all files
+            this.fileSinkRef.value.files = files;
+
+            // Close the modal to show the FileSink dialog
+            const modal = this.modalRef.value;
+            modal.close();
+        }
+
+        return {successCount, failCount};
     }
 
     /**
@@ -1196,6 +1667,34 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <h3>${i18n.t('selection-dialog.persons-title', 'Selected Persons')}</h3>
                         ${Object.keys(personSelections).length > 0
                             ? html`
+                                  <div class="export-controls">
+                                      <select
+                                          id="export-persons-select"
+                                          class="dropdown-menu"
+                                          @change="${this.exportPersons}">
+                                          <option value="" disabled selected>
+                                              ${i18n.t(
+                                                  'selection-dialog.export-persons',
+                                                  'Export Persons',
+                                              )}
+                                          </option>
+                                          <option value="csv">
+                                              ${i18n.t('selection-dialog.export-csv', 'CSV')}
+                                          </option>
+                                          <option value="excel">
+                                              ${i18n.t('selection-dialog.export-excel', 'Excel')}
+                                          </option>
+                                          <option value="pdf">
+                                              ${i18n.t('selection-dialog.export-pdf', 'PDF')}
+                                          </option>
+                                          <option value="attachments">
+                                              ${i18n.t(
+                                                  'selection-dialog.export-attachments',
+                                                  'Attachments',
+                                              )}
+                                          </option>
+                                      </select>
+                                  </div>
                                   <dbp-tabulator-table
                                       ${ref(this.personTableRef)}
                                       lang="${this.lang}"

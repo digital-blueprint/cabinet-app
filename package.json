@@ -63,7 +63,8 @@
         "lit": "^3.0.0",
         "pdfjs-dist": "^4.3  <4.6",
         "typesense": "^2.0.0",
-        "typesense-instantsearch-adapter": "^2.8.0"
+        "typesense-instantsearch-adapter": "^2.8.0",
+        "xlsx": "^0.18.5"
     },
     "scripts": {
         "build": "rolldown -c rollup.config.js",
