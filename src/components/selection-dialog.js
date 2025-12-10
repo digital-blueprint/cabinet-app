@@ -16,6 +16,7 @@ import {dataURLtoFile} from '../utils';
 import {getSelectorFixCSS} from '../styles.js';
 import {TypesenseService} from '../services/typesense.js';
 import {getPersonHit} from '../objectTypes/schema.js';
+import InstantSearchModule from '../modules/instantSearch.js';
 
 export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -536,7 +537,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
      */
     async exportPersonsAsCSV(persons) {
         const i18n = this._i18n;
-        const columnConfigs = SelectionColumnConfiguration.getPersonColumns();
+        const instantSearchModule = new InstantSearchModule();
+        const columnConfigs = instantSearchModule.getPersonColumns();
 
         // CSV header
         const headers = columnConfigs.map((col) => i18n.t(col.name));
@@ -582,7 +584,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     async exportPersonsAsExcel(persons) {
         const i18n = this._i18n;
         const XLSX = await import('xlsx');
-        const columnConfigs = SelectionColumnConfiguration.getPersonColumns();
+        const instantSearchModule = new InstantSearchModule();
+        const columnConfigs = instantSearchModule.getPersonColumns();
 
         // Create worksheet data
         const headers = columnConfigs.map((col) => i18n.t(col.name));
@@ -638,10 +641,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     /**
-     * Export person as PDF (copied from person.js exportPersonPdf function)
+     * Export person as PDF using column configuration from InstantSearchModule
      * @param {object} i18n
      * @param {object} hit
-     * @param {boolean} withInternalData
+     * @param {boolean} withInternalData - unused but kept for compatibility
      */
     async exportPersonPdf(i18n, hit, withInternalData = false) {
         let jsPDF = (await import('jspdf')).jsPDF;
@@ -649,186 +652,49 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         const doc = new jsPDF();
 
-        let subFillColor = 220;
-        let subTextColor = 30;
-        let subLeftMargin = 18;
+        // Get column configuration from InstantSearchModule
+        const instantSearchModule = new InstantSearchModule();
+        const columnConfigs = instantSearchModule.getPersonColumns();
 
-        const displayValue = (value) => {
-            return value === undefined || value === null || value === '' ? '-' : value;
+        const formatValue = (value, field) => {
+            if (value === null || value === undefined || value === '') {
+                return '-';
+            }
+
+            // Format dates
+            if (field.includes('Date') || field.includes('Timestamp')) {
+                if (field.includes('Timestamp')) {
+                    return new Date(value * 1000).toLocaleDateString(i18n.language);
+                }
+                return new Date(value).toLocaleDateString(i18n.language);
+            }
+
+            // Handle text objects (for nationality, status fields)
+            if (typeof value === 'object' && value.text) {
+                return i18n.language === 'de' ? value.text : value.textEn || value.text;
+            }
+
+            return String(value);
         };
 
-        const selectTranslation = (keyedText) => {
-            if (!keyedText) return keyedText;
-            return i18n.language === 'de' ? keyedText.text : keyedText.textEn;
-        };
-
-        const formatDate = (dateString) => {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return date.toLocaleDateString(i18n.language);
-        };
-
-        let formatter = Intl.DateTimeFormat('de', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
+        // Build table body from column configuration
+        const body = columnConfigs.map((col) => {
+            const value = this.getNestedValue(hit, col.field);
+            return [i18n.t(col.name), formatValue(value, col.field)];
         });
 
-        let syncDate = formatter.format(new Date(hit.person.syncTimestamp * 1000));
-        let exportDate = formatter.format(new Date());
+        // Create PDF with person name as title
+        const personName = `${hit.person.familyName}, ${hit.person.givenName}`;
 
         autoTable(doc, {
             showHead: 'firstPage',
-            head: [
-                [
-                    {
-                        content: i18n.t('export.table-title', {personName: hit.person.person}),
-                        colSpan: 2,
-                    },
-                ],
-            ],
-            body: [
-                [i18n.t('export.sync-date-label'), syncDate],
-                [i18n.t('export.export-date-label'), exportDate],
-            ],
-        });
-
-        let body = [
-            [i18n.t('academic-titles'), displayValue(hit.person.academicTitles.join(', '))],
-            [i18n.t('given-name'), displayValue(hit.person.givenName)],
-            [i18n.t('family-name'), displayValue(hit.person.familyName)],
-            [i18n.t('former-family-name'), displayValue(hit.person.formerFamilyName)],
-            [i18n.t('academic-title-following'), displayValue(hit.person.academicTitleFollowing)],
-            [i18n.t('stud-id'), displayValue(hit.person.studId)],
-            [i18n.t('st-PersonNr'), displayValue(hit.person.stPersonNr)],
-            [i18n.t('birth-date'), formatDate(hit.person.birthDate)],
-            [
-                i18n.t('nationalities'),
-                displayValue(hit.person.nationalities.map((n) => n.text).join(', ')),
-            ],
-            [i18n.t('gender'), displayValue(selectTranslation(hit.person.gender))],
-            [i18n.t('social-SecurityNr'), displayValue(hit.person.socialSecurityNr)],
-            [i18n.t('ssPIN'), displayValue(hit.person.bpk)],
-            [i18n.t('personal-Status'), displayValue(selectTranslation(hit.person.personalStatus))],
-            [i18n.t('student-Status'), displayValue(selectTranslation(hit.person.studentStatus))],
-            [i18n.t('tuitionStatus'), displayValue(hit.person.tuitionStatus)],
-            [i18n.t('immatriculation-Date'), formatDate(hit.person.immatriculationDate)],
-            [i18n.t('immatriculationSemester'), displayValue(hit.person.immatriculationSemester)],
-            [
-                i18n.t('exmatriculation-GI'),
-                `${displayValue(selectTranslation(hit.person.exmatriculationStatus))} ${formatDate(hit.person.exmatriculationDate)}`,
-            ],
-            [
-                i18n.t('admission-Qualification-Type'),
-                displayValue(selectTranslation(hit.person.admissionQualificationType)),
-            ],
-            [i18n.t('school-Certificate-Date'), formatDate(hit.person.schoolCertificateDate)],
-        ];
-
-        if (withInternalData) {
-            body.push([i18n.t('note'), displayValue(hit.person.note)]);
-        }
-
-        autoTable(doc, {
-            showHead: 'firstPage',
-            head: [[{content: i18n.t('General-information'), colSpan: 2}]],
+            head: [[{content: personName, colSpan: 2}]],
             body: body,
-        });
-
-        autoTable(doc, {
-            showHead: 'firstPage',
-            head: [[{content: i18n.t('Study-information')}]],
-        });
-
-        hit.person.studies
-            .slice()
-            .sort((a, b) => {
-                const dateA = a.immatriculationDate
-                    ? new Date(a.immatriculationDate).getTime()
-                    : Infinity;
-                const dateB = b.immatriculationDate
-                    ? new Date(b.immatriculationDate).getTime()
-                    : Infinity;
-                return dateB - dateA;
-            })
-            .forEach((study) => {
-                autoTable(doc, {
-                    showHead: 'firstPage',
-                    headStyles: {fillColor: subFillColor, textColor: subTextColor},
-                    margin: {left: subLeftMargin},
-                    head: [[{content: displayValue(study.name), colSpan: 2}]],
-                    body: [
-                        [i18n.t('semester'), displayValue(study.semester)],
-                        [i18n.t('status'), displayValue(selectTranslation(study.status))],
-                        [i18n.t('immatriculation-date'), formatDate(study.immatriculationDate)],
-                        [
-                            i18n.t('qualification-study'),
-                            `${displayValue(selectTranslation(study.qualificationType))} ${formatDate(study.qualificationDate)} ${selectTranslation(study.qualificationState)}`,
-                        ],
-                        [
-                            i18n.t('exmatriculation'),
-                            `${displayValue(selectTranslation(study.exmatriculationType))} ${formatDate(study.exmatriculationDate)}`,
-                        ],
-                        [i18n.t('curriculum-version'), displayValue(study.curriculumVersion)],
-                    ],
-                });
-            });
-
-        autoTable(doc, {
-            showHead: 'firstPage',
-            head: [[{content: i18n.t('Contact-information'), colSpan: 2}]],
-            body: [
-                [i18n.t('emailAddressUniversity'), displayValue(hit.person.emailAddressUniversity)],
-                [i18n.t('emailAddressConfirmed'), displayValue(hit.person.emailAddressConfirmed)],
-                [i18n.t('emailAddressTemporary'), displayValue(hit.person.emailAddressTemporary)],
-            ],
-        });
-
-        autoTable(doc, {
-            showHead: 'firstPage',
-            headStyles: {fillColor: subFillColor, textColor: subTextColor},
-            head: [[{content: i18n.t('homeAddress.heading'), colSpan: 2}]],
-            margin: {left: subLeftMargin},
-            body: [
-                [i18n.t('homeAddress.note'), displayValue(hit.person.homeAddress?.note)],
-                [i18n.t('homeAddress.street'), displayValue(hit.person.homeAddress?.street)],
-                [i18n.t('homeAddress.place'), displayValue(hit.person.homeAddress?.place)],
-                [i18n.t('homeAddress.region'), displayValue(hit.person.homeAddress?.region)],
-                [i18n.t('homeAddress.postCode'), displayValue(hit.person.homeAddress?.postCode)],
-                [
-                    i18n.t('homeAddress.country'),
-                    displayValue(selectTranslation(hit.person.homeAddress?.country)),
-                ],
-                [
-                    i18n.t('homeAddress.telephoneNumber'),
-                    displayValue(hit.person.homeAddress?.telephoneNumber),
-                ],
-            ],
-        });
-
-        autoTable(doc, {
-            showHead: 'firstPage',
-            headStyles: {fillColor: subFillColor, textColor: subTextColor},
-            head: [[{content: i18n.t('studyAddress.heading'), colSpan: 2}]],
-            margin: {left: subLeftMargin},
-            body: [
-                [i18n.t('studyAddress.note'), displayValue(hit.person.studyAddress?.note)],
-                [i18n.t('studyAddress.street'), displayValue(hit.person.studyAddress?.street)],
-                [i18n.t('studyAddress.place'), displayValue(hit.person.studyAddress?.place)],
-                [i18n.t('studyAddress.region'), displayValue(hit.person.studyAddress?.region)],
-                [i18n.t('studyAddress.postCode'), displayValue(hit.person.studyAddress?.postCode)],
-                [
-                    i18n.t('studyAddress.country'),
-                    displayValue(selectTranslation(hit.person.studyAddress?.country)),
-                ],
-                [
-                    i18n.t('studyAddress.telephoneNumber'),
-                    displayValue(hit.person.studyAddress?.telephoneNumber),
-                ],
-            ],
+            headStyles: {
+                fillColor: [41, 128, 185],
+                fontSize: 14,
+                fontStyle: 'bold',
+            },
         });
 
         const filename = `${encodeURIComponent(hit.person.familyName)}_${encodeURIComponent(hit.person.givenName)}_${encodeURIComponent(hit.person.studId)}.pdf`;
