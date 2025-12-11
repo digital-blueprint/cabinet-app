@@ -583,33 +583,35 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
      */
     async exportPersonsAsExcel(persons) {
         const i18n = this._i18n;
-        const XLSX = await import('xlsx');
+        const ExcelJS = (await import('exceljs')).default;
         const instantSearchModule = new InstantSearchModule();
         const columnConfigs = instantSearchModule.getPersonColumns();
 
-        // Create worksheet data
+        // Create workbook and worksheet
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Persons');
+
+        // Add headers
         const headers = columnConfigs.map((col) => i18n.t(col.name));
-        const rows = persons.map(([, hit]) => {
+        worksheet.addRow(headers);
+
+        // Add data rows
+        persons.forEach(([, hit]) => {
             if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
-                return columnConfigs.map((col) => {
+                const row = columnConfigs.map((col) => {
                     const value = this.getNestedValue(hit, col.field);
                     if (value === null || value === undefined) {
                         return '';
                     }
                     return value;
                 });
+                worksheet.addRow(row);
             }
-            return [];
         });
 
-        const wsData = [headers, ...rows];
-        const ws = XLSX.utils.aoa_to_sheet(wsData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Persons');
-
         // Generate Excel file
-        const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'array'});
-        const blob = new Blob([wbout], {
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], {
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         });
         const file = new File([blob], 'persons_export.xlsx', {
