@@ -74,11 +74,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.fileSourceRef = createRef();
         this.fileSinkRef = createRef();
         this.formRef = createRef();
-        this.actionsMenuOpen = false;
         this.uploadFailed = false;
-        this._onDocPointerDown =
-            this._onDocPointerDown?.bind(this) || this._onDocPointerDown.bind(this);
-
         // Initialize the state in the beginning
         this.initializeState();
     }
@@ -183,7 +179,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             deleteAtDateTime: {type: String, attribute: false},
             state: {type: String, attribute: false},
             mode: {type: String},
-            actionsMenuOpen: {type: Boolean, attribute: false},
         };
     }
 
@@ -976,57 +971,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Make sure the document dialog is closed, so we can see the file sink dialog
         documentModal.close();
     }
-    _toggleActionsMenu() {
-        this.actionsMenuOpen ? this._closeActionsMenu() : this._openActionsMenu();
-    }
-    _openActionsMenu() {
-        if (this.actionsMenuOpen) return;
-        this.actionsMenuOpen = true;
-        document.addEventListener('pointerdown', this._onDocPointerDown, true);
-        this.updateComplete.then(() => {
-            const first = this.renderRoot.querySelector('.actions-menu .actions-itemBtn');
-            first?.focus();
-        });
-    }
-    _closeActionsMenu() {
-        if (!this.actionsMenuOpen) return;
-        this.actionsMenuOpen = false;
-        document.removeEventListener('pointerdown', this._onDocPointerDown, true);
-        const trigger = this.renderRoot.querySelector('.actions-trigger');
-        trigger?.focus();
-    }
-    _onDocPointerDown(e) {
-        const dropdown = this.renderRoot.querySelector('.actions-dropdown');
-        const path = e.composedPath?.() || [];
-        const inside = !!dropdown && path.includes(dropdown);
 
-        if (!inside) this._closeActionsMenu();
-    }
-    _onTriggerKeydown(e) {
-        if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            this._openActionsMenu();
-        }
-    }
-    _onMenuKeydown(e) {
-        const items = Array.from(this.renderRoot.querySelectorAll('.actions-itemBtn'));
-        const idx = items.indexOf(document.activeElement);
-        if (e.key === 'Escape') {
-            e.preventDefault();
-            this._closeActionsMenu();
-        } else if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            items[(idx + 1) % items.length]?.focus();
-        } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            items[(idx - 1 + items.length) % items.length]?.focus();
-        }
-    }
-    _onActionButtonClick(e) {
-        const action = e.currentTarget?.dataset?.action;
-        if (!action) return;
-        this.handleFileAction(action).finally(() => this._closeActionsMenu());
-    }
     async handleFileAction(evOrAction) {
         let action;
         let fromSelect = false;
@@ -1265,62 +1210,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 #document-modal .desc-stat {
                     padding: 10px 0;
-                }
-
-                .actions-dropdown {
-                    position: relative;
-                    display: inline-block;
-                }
-                .actions-trigger {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                    padding: 0.4rem 0.6rem;
-                    border: var(--dbp-border);
-                    background: var(--dbp-surface);
-                    cursor: pointer;
-                    font: inherit;
-                    color: var(--dbp-content);
-                }
-                .actions-trigger:disabled {
-                    opacity: 0.6;
-                    cursor: not-allowed;
-                }
-                .actions-menu {
-                    position: absolute;
-                    top: calc(100% + 0.25rem);
-                    min-width: 12rem;
-                    padding: 0.25rem;
-                    margin: 0;
-                    list-style: none;
-                    border: 1px solid var(--dbp-border, #ddd);
-                    background: var(--dbp-surface, #fff);
-                    box-shadow:
-                        0 6px 24px rgba(0, 0, 0, 0.08),
-                        0 2px 8px rgba(0, 0, 0, 0.06);
-                    z-index: 1000;
-                }
-                .actions-itemBtn {
-                    width: 90%;
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                    padding: 0.5rem 0.6rem;
-                    border: 0;
-                    background: transparent;
-                    font: inherit;
-                    text-align: left;
-                    cursor: pointer;
-                }
-                .actions-itemBtn:hover,
-                .actions-itemBtn:focus-visible {
-                    background: rgba(0, 0, 0, 0.06);
-                    outline: none;
-                }
-                .actions-dropdown dbp-icon {
-                    inline-size: 1rem;
-                    block-size: 1rem;
-                    flex: 0 0 auto;
                 }
 
                 .grouping-container {
@@ -1671,7 +1560,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                     )}
                                 </button>
                                 <dbp-select
-                                    id="action-dropdown"
+                                    id="download-dropdown"
                                     class=" ${classMap({
                                         hidden: this.mode !== CabinetFile.Modes.VIEW,
                                     })}"
@@ -1717,158 +1606,68 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const showDeleteVersionButton = !hasOnlyOneVersion;
         const showDeleteAllVersionsButton = !hasOnlyOneVersion;
 
-        // Actions dropdown with icons
-        return html`
-            <div class="actions-dropdown">
-                <button
-                    class="actions-trigger"
-                    @click="${this._toggleActionsMenu}"
-                    @keydown="${this._onTriggerKeydown}"
-                    ?disabled="${!file}"
-                    type="button"
-                    aria-haspopup="menu"
-                    aria-expanded="${String(this.actionsMenuOpen)}"
-                    aria-controls="actions-menu"
-                    aria-labelledby="File actions">
-                    <span>${i18n.t('doc-modal-Actions')}</span>
-                    <dbp-icon name="chevron-down" aria-hidden="true"></dbp-icon>
-                </button>
+        const options = [];
 
-                ${this.actionsMenuOpen
-                    ? html`
-                          <ul
-                              class="actions-menu"
-                              id="actions-menu"
-                              role="menu"
-                              @keydown="${this._onMenuKeydown}">
-                              ${this.mode === CabinetFile.Modes.VIEW
-                                  ? html`
-                                        <li role="none">
-                                            <button
-                                                role="menuitem"
-                                                class="actions-itemBtn"
-                                                data-action="edit"
-                                                @click="${this._onActionButtonClick}">
-                                                <dbp-icon
-                                                    name="pencil"
-                                                    aria-hidden="true"></dbp-icon>
-                                                <span>${i18n.t('doc-modal-edit')}</span>
-                                            </button>
-                                        </li>
-                                        ${!isCurrent
-                                            ? html`
-                                                  <li role="none">
-                                                      <button
-                                                          role="menuitem"
-                                                          class="actions-itemBtn"
-                                                          data-action="mark-current"
-                                                          @click="${this._onActionButtonClick}">
-                                                          <dbp-icon
-                                                              name="flag"
-                                                              aria-hidden="true"></dbp-icon>
-                                                          <span>
-                                                              ${i18n.t(
-                                                                  'doc-modal-mark-document-current',
-                                                              )}
-                                                          </span>
-                                                      </button>
-                                                  </li>
-                                              `
-                                            : null}
-                                        ${!hasOnlyOneVersion && isCurrent
-                                            ? html`
-                                                  <li role="none">
-                                                      <button
-                                                          role="menuitem"
-                                                          class="actions-itemBtn"
-                                                          data-action="mark-obsolete"
-                                                          @click="${this._onActionButtonClick}">
-                                                          <dbp-icon
-                                                              name="flag"
-                                                              aria-hidden="true"></dbp-icon>
-                                                          <span>
-                                                              ${i18n.t(
-                                                                  'doc-modal-mark-document-obsolete',
-                                                              )}
-                                                          </span>
-                                                      </button>
-                                                  </li>
-                                              `
-                                            : null}
-                                        <li role="none">
-                                            <button
-                                                role="menuitem"
-                                                class="actions-itemBtn"
-                                                data-action="add"
-                                                ?disabled=${!this.fileHitData.base.isCurrent &&
-                                                !CabinetFile.DEV_MODE}
-                                                @click="${this._onActionButtonClick}">
-                                                <dbp-icon name="plus" aria-hidden="true"></dbp-icon>
-                                                <span>${i18n.t('doc-modal-Add-new-version')}</span>
-                                            </button>
-                                        </li>
-                                        ${showDeleteDocumentButton
-                                            ? html`
-                                                  <li role="none">
-                                                      <button
-                                                          role="menuitem"
-                                                          class="actions-itemBtn"
-                                                          data-action="delete"
-                                                          @click="${this._onActionButtonClick}">
-                                                          <dbp-icon
-                                                              name="trash"
-                                                              aria-hidden="true"></dbp-icon>
-                                                          <span>
-                                                              ${i18n.t('doc-modal-delete-document')}
-                                                          </span>
-                                                      </button>
-                                                  </li>
-                                              `
-                                            : null}
-                                        ${showDeleteVersionButton
-                                            ? html`
-                                                  <li role="none">
-                                                      <button
-                                                          role="menuitem"
-                                                          class="actions-itemBtn"
-                                                          data-action="delete"
-                                                          @click="${this._onActionButtonClick}">
-                                                          <dbp-icon
-                                                              name="trash"
-                                                              aria-hidden="true"></dbp-icon>
-                                                          <span>
-                                                              ${i18n.t('doc-modal-delete-version')}
-                                                          </span>
-                                                      </button>
-                                                  </li>
-                                              `
-                                            : null}
-                                        ${showDeleteAllVersionsButton
-                                            ? html`
-                                                  <li role="none">
-                                                      <button
-                                                          role="menuitem"
-                                                          class="actions-itemBtn"
-                                                          data-action="delete-all"
-                                                          @click="${this._onActionButtonClick}">
-                                                          <dbp-icon
-                                                              name="trash"
-                                                              aria-hidden="true"></dbp-icon>
-                                                          <span>
-                                                              ${i18n.t(
-                                                                  'doc-modal-delete-all-versions',
-                                                              )}
-                                                          </span>
-                                                      </button>
-                                                  </li>
-                                              `
-                                            : null}
-                                    `
-                                  : null}
-                          </ul>
-                      `
-                    : null}
-            </div>
+        options.push({
+            name: 'edit',
+            label: i18n.t('doc-modal-edit'),
+            iconName: 'pencil',
+        });
+
+        if (!isCurrent) {
+            options.push({
+                name: 'mark-current',
+                label: i18n.t('doc-modal-mark-document-current'),
+                iconName: 'flag',
+            });
+        }
+
+        if (!hasOnlyOneVersion && isCurrent) {
+            options.push({
+                name: 'mark-obsolete',
+                label: i18n.t('doc-modal-mark-document-obsolete'),
+                iconName: 'flag',
+            });
+        }
+
+        options.push({
+            name: 'add',
+            label: i18n.t('doc-modal-Add-new-version'),
+            iconName: 'plus',
+            disabled: !isCurrent && !CabinetFile.DEV_MODE,
+        });
+
+        if (showDeleteDocumentButton) {
+            options.push({
+                name: 'delete',
+                label: i18n.t('doc-modal-delete-document'),
+                iconName: 'trash',
+            });
+        }
+
+        if (showDeleteVersionButton) {
+            options.push({
+                name: 'delete',
+                label: i18n.t('doc-modal-delete-version'),
+                iconName: 'trash',
+            });
+        }
+
+        if (showDeleteAllVersionsButton) {
+            options.push({
+                name: 'delete-all',
+                label: i18n.t('doc-modal-delete-all-versions'),
+                iconName: 'trash',
+            });
+        }
+
+        return html`
+            <dbp-select
+                id="action-dropdown"
+                ?disabled=${!file}
+                label="${i18n.t('doc-modal-Actions')}"
+                .options=${options}
+                @change="${(e) => this.handleFileAction(e.detail.value)}"></dbp-select>
         `;
     }
 
