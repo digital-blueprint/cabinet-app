@@ -966,11 +966,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }),
                 'success',
             );
-            // Clear only successfully exported items
-            this.clearSelectionItems(
-                this.constructor.HitSelectionType.DOCUMENT_FILE,
-                successfulIds,
-            );
         }
 
         if (failCount > 0) {
