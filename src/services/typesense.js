@@ -8,7 +8,7 @@ export class TypesenseService {
         this.collectionName = TYPESENSE_COLLECTION;
     }
 
-    static getServerConfigForEntryPointUrl(entryPointUrl, token) {
+    static getServerConfigForEntryPointUrl(entryPointUrl, token, connectionTimeoutSeconds = 10) {
         let typesenseUrl = new URL(entryPointUrl + '/cabinet/typesense');
         let serverConfig = {
             apiKey: '', // unused
@@ -28,6 +28,7 @@ export class TypesenseService {
             ],
             useServerSideSearchCache: true,
             cacheSearchResultsForSeconds: 0,
+            connectionTimeoutSeconds: connectionTimeoutSeconds,
             additionalHeaders: {Authorization: 'Bearer ' + token},
             sendApiKeyAsQueryParam: true,
         };
