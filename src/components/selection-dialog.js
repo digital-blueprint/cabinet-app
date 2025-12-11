@@ -905,7 +905,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         let files = [];
         let successCount = 0;
         let failCount = 0;
-        const successfulIds = [];
 
         for (const [id, hit] of documents) {
             try {
@@ -941,7 +940,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 successCount++;
-                successfulIds.push(id);
             } catch (error) {
                 console.error('Failed to export document', id, error);
                 failCount++;
@@ -1485,6 +1483,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const personTableOptions = {
             layout: 'fitColumns',
             nestedFieldSeparator: false, // Treat dots in field names as literal characters
+            index: 'id', // Use id field as unique row identifier
             langs: this.buildTableLangs('person'),
             columns: this.buildTableColumns('person', this.personGearButton, () =>
                 this.openColumnConfiguration('person'),
@@ -1507,6 +1506,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const documentTableOptions = {
             layout: 'fitColumns',
             nestedFieldSeparator: false, // Treat dots in field names as literal characters
+            index: 'id', // Use id field as unique row identifier
             langs: this.buildTableLangs('document'),
             columns: this.buildTableColumns('document', this.documentGearButton, () =>
                 this.openColumnConfiguration('document'),
@@ -1517,6 +1517,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const deletedDocumentTableOptions = {
             layout: 'fitColumns',
             nestedFieldSeparator: false, // Treat dots in field names as literal characters
+            index: 'id', // Use id field as unique row identifier
             langs: this.buildTableLangs('document'),
             columns: this.buildTableColumns('document', this.deletedDocumentGearButton, () =>
                 this.openColumnConfiguration('document'),
