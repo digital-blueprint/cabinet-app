@@ -245,6 +245,7 @@
         "deletion-success-message_other": "{{count}} documents scheduled for deletion.",
         "documents-tab": "Dokumente",
         "documents-title": "Selected Documents",
+        "export": "Export",
         "export-attachments": "Attachments",
         "export-csv": "CSV",
         "export-documents": "Export Documents",

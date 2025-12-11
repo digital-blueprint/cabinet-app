@@ -245,6 +245,7 @@
         "deletion-success-message_other": "{{count}} Dokumente wurden zum Löschen vorgemerkt.",
         "documents-tab": "Dokumente",
         "documents-title": "Ausgewählte Dokumente",
+        "export": "Exportieren",
         "export-attachments": "Anhänge",
         "export-csv": "CSV",
         "export-documents": "Dokumente exportieren",

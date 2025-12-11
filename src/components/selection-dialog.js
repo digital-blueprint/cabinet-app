@@ -1019,21 +1019,21 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     border-right: var(--dbp-border);
                     display: flex;
                     flex-direction: column;
+                    align-items: initial;
                 }
 
                 .modal-nav > button {
-                    padding: 15px 10px;
+                    padding: 20px 0;
                     text-align: center;
-                    width: 100%;
                     background-color: var(--dbp-background);
                     color: var(--dbp-content);
-                    border: 0;
-                    border-left: 3px solid transparent;
+                    border: none;
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    gap: 8px;
+                    gap: 1px;
                     cursor: pointer;
+                    margin-left: -1em;
                 }
 
                 .modal-nav > button:hover {
@@ -1045,12 +1045,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 .modal-nav .nav-icon {
-                    width: 35px;
-                    height: 35px;
+                    width: 24px;
+                    height: 24px;
                 }
 
                 .modal-nav .active {
-                    border-left-color: var(--dbp-accent);
                 }
 
                 .modal-nav .active p {
@@ -1073,6 +1072,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .tab-content {
                     display: none;
                     padding: 20px;
+                    padding-right: 10px;
                     overflow-y: auto;
                 }
 
@@ -1161,12 +1161,21 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     display: block;
                 }
 
+                .export-controls select {
+                    min-height: 1.74em;
+                }
+
                 .export-controls {
                     margin-bottom: 15px;
                     display: flex;
                     gap: 10px;
                     align-items: center;
                     flex-wrap: wrap;
+                    justify-content: space-between;
+                }
+
+                .export-controls-persons {
+                    justify-content: flex-end;
                 }
 
                 @media (max-width: 768px) {
@@ -1203,9 +1212,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 sticky-footer
                 @dbp-modal-closed="${this.onCloseModal}">
                 <div slot="title" class="modal-title">
-                    <dbp-icon
-                        title="${i18n.t('selection-dialog.batch-operations')}"
-                        name="cog"></dbp-icon>
                     <h2>${i18n.t('selection-dialog.batch-operations')}</h2>
                 </div>
                 <div slot="header" class="header">
@@ -1537,12 +1543,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         class="${this.activeTab === this.constructor.HitSelectionType.PERSON
                             ? 'active'
                             : ''}">
-                        <dbp-icon class="nav-icon" name="user"></dbp-icon>
+                        <dbp-icon class="nav-icon" name="user" aria-hidden="true"></dbp-icon>
                         <p>
                             ${i18n.t('selection-dialog.persons-tab', 'Personen')}
-                            <span class="selection-count">
-                                ${Object.keys(personSelections).length}
-                            </span>
+                            (${Object.keys(personSelections).length})
                         </p>
                     </button>
                     <button
@@ -1557,12 +1561,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         class="${this.activeTab === this.constructor.HitSelectionType.DOCUMENT_FILE
                             ? 'active'
                             : ''}">
-                        <dbp-icon class="nav-icon" name="files"></dbp-icon>
+                        <dbp-icon class="nav-icon" name="files" aria-hidden="true"></dbp-icon>
                         <p>
                             ${i18n.t('selection-dialog.documents-tab', 'Dokumente')}
-                            <span class="selection-count">
-                                ${Object.keys(documentSelections).length}
-                            </span>
+                            (${Object.keys(documentSelections).length})
                         </p>
                     </button>
                 </div>
@@ -1578,16 +1580,14 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <h3>${i18n.t('selection-dialog.persons-title', 'Selected Persons')}</h3>
                         ${Object.keys(personSelections).length > 0
                             ? html`
-                                  <div class="export-controls">
+                                  <div class="export-controls export-controls-persons">
                                       <select
                                           id="export-persons-select"
                                           class="dropdown-menu"
+                                          aria-label="${i18n.t('selection-dialog.export-persons')}"
                                           @change="${this.exportPersons}">
                                           <option value="" disabled selected>
-                                              ${i18n.t(
-                                                  'selection-dialog.export-persons',
-                                                  'Export Persons',
-                                              )}
+                                              ${i18n.t('selection-dialog.export', 'Export Persons')}
                                           </option>
                                           <option value="csv">
                                               ${i18n.t('selection-dialog.export-csv', 'CSV')}
@@ -1690,7 +1690,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                               @change="${this.exportActiveDocuments}">
                                               <option value="" disabled selected>
                                                   ${i18n.t(
-                                                      'selection-dialog.export-documents',
+                                                      'selection-dialog.export',
                                                       'Export Documents',
                                                   )}
                                               </option>
@@ -1751,6 +1751,9 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                           <select
                                               id="export-deleted-select"
                                               class="dropdown-menu"
+                                              aria-label="${i18n.t(
+                                                  'selection-dialog.export-documents',
+                                              )}"
                                               @change="${this.exportDeletedDocuments}">
                                               <option value="" disabled selected>
                                                   ${i18n.t(
