@@ -531,8 +531,10 @@ class CabinetHitElement extends BaseHitElement {
  * @param {import('i18next').i18n} i18n
  * @param {PersonHit} hit
  * @param {boolean} withInternalData - Whether to include internal notes etc. in the PDF export.
+ * @param {boolean} returnFile - If true, returns File object; if false, triggers download
+ * @returns {Promise<File|void>}
  */
-async function exportPersonPdf(i18n, hit, withInternalData = false) {
+export async function exportPersonPdf(i18n, hit, withInternalData = false, returnFile = false) {
     let jsPDF = (await import('jspdf')).jsPDF;
     let autoTable = (await import('jspdf-autotable')).autoTable;
 
@@ -710,7 +712,15 @@ async function exportPersonPdf(i18n, hit, withInternalData = false) {
     });
 
     const filename = `${encodeURIComponent(hit.person.familyName)}_${encodeURIComponent(hit.person.givenName)}_${encodeURIComponent(hit.person.studId)}.pdf`;
-    doc.save(filename);
+
+    if (returnFile) {
+        // Return as File object for use with FileSink
+        const pdfBlob = doc.output('blob');
+        return new File([pdfBlob], filename, {type: 'application/pdf'});
+    } else {
+        // Trigger download directly
+        doc.save(filename);
+    }
 }
 
 class CabinetViewElement extends BaseViewElement {

@@ -17,6 +17,7 @@ import {getSelectorFixCSS} from '../styles.js';
 import {TypesenseService} from '../services/typesense.js';
 import {getPersonHit} from '../objectTypes/schema.js';
 import InstantSearchModule from '../modules/instantSearch.js';
+import {exportPersonPdf} from '../objectTypes/person.js';
 
 export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -660,63 +661,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @returns {Promise<File>}
      */
     async generatePersonPdfFile(i18n, hit) {
-        let jsPDF = (await import('jspdf')).jsPDF;
-        let autoTable = (await import('jspdf-autotable')).autoTable;
-
-        const doc = new jsPDF();
-
-        // Get column configuration from InstantSearchModule
-        const instantSearchModule = new InstantSearchModule();
-        const columnConfigs = instantSearchModule.getPersonColumns();
-
-        const formatValue = (value, field) => {
-            if (value === null || value === undefined || value === '') {
-                return '-';
-            }
-
-            // Format dates
-            if (field.includes('Date') || field.includes('Timestamp')) {
-                if (field.includes('Timestamp')) {
-                    return new Date(value * 1000).toLocaleDateString(i18n.language);
-                }
-                return new Date(value).toLocaleDateString(i18n.language);
-            }
-
-            // Handle text objects (for nationality, status fields)
-            if (typeof value === 'object' && value.text) {
-                return i18n.language === 'de' ? value.text : value.textEn || value.text;
-            }
-
-            return String(value);
-        };
-
-        // Build table body from column configuration
-        const body = columnConfigs.map((col) => {
-            const value = this.getNestedValue(hit, col.field);
-            return [i18n.t(col.name), formatValue(value, col.field)];
-        });
-
-        // Create PDF with person name as title
-        const personName = `${hit.person.familyName}, ${hit.person.givenName}`;
-
-        autoTable(doc, {
-            showHead: 'firstPage',
-            head: [[{content: personName, colSpan: 2}]],
-            body: body,
-            headStyles: {
-                fillColor: [41, 128, 185],
-                fontSize: 14,
-                fontStyle: 'bold',
-            },
-        });
-
-        const filename = `${hit.person.familyName}_${hit.person.givenName}_${hit.person.studId}.pdf`;
-
-        // Convert PDF to Blob and then to File
-        const pdfBlob = doc.output('blob');
-        const pdfFile = new File([pdfBlob], filename, {type: 'application/pdf'});
-
-        return pdfFile;
+        return await exportPersonPdf(i18n, hit, false, true);
     }
 
     /**
