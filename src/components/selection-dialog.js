@@ -864,48 +864,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         await this.exportDocuments(activeDocuments, selectorValue);
     }
 
-    /**
-     * Export all deleted documents
-     * @param {Event} e - The change event from the selector
-     * @param i18n
-     */
-    normalizeSelectorEvent(e, i18n) {
-        const raw =
-            e?.target?.value ??
-            e?.detail?.value ??
-            e?.detail?.name ??
-            e?.detail?.label ??
-            e?.target?.name ??
-            (e?.target?.selectedOptions && e.target.selectedOptions[0]?.value) ??
-            null;
-
-        if (raw == null) return null;
-
-        let val =
-            typeof raw === 'object' ? (raw.value ?? raw.name ?? raw.label ?? '') : String(raw);
-        val = val.trim();
-
-        const map = {
-            [i18n.t('doc-modal-document-only', 'Document Only')]: 'document-file-only',
-            [i18n.t('doc-modal-only-data', 'Metadata Only')]: 'metadata-only',
-            [i18n.t('doc-modal-all', 'All')]: 'all',
-        };
-
-        const allowed = new Set([
-            'document-file-only',
-            'metadata-only',
-            'all',
-            'csv',
-            'excel',
-            'pdf',
-            'attachments',
-        ]);
-
-        if (map[val]) val = map[val];
-        else val = val.toLowerCase().replace(/\s+/g, '-');
-
-        return allowed.has(val) ? val : null;
-    }
     async exportDeletedDocuments(e) {
         const selectorValue = e.target.value;
         if (!selectorValue) {
