@@ -3,7 +3,7 @@ import {ref, createRef} from 'lit/directives/ref.js';
 import {IconButton, ScopedElementsMixin} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {Button, Icon, Modal} from '@dbp-toolkit/common';
+import {Button, Icon, Modal, DBPSelect} from '@dbp-toolkit/common';
 import {TabulatorTable} from '@dbp-toolkit/tabulator-table';
 import {FileSink} from '@dbp-toolkit/file-handling';
 import {
@@ -50,6 +50,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             'dbp-tabulator-table': TabulatorTable,
             'dbp-selection-column-configuration': SelectionColumnConfiguration,
             'dbp-file-sink': FileSink,
+            'dbp-select': DBPSelect,
         };
     }
 
@@ -831,6 +832,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Export all active documents
      * @param {Event} e - The change event from the selector
      */
+
     async exportActiveDocuments(e) {
         const selectorValue = e.target.value;
         if (!selectorValue) {
@@ -839,6 +841,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Reset selector immediately before async operations
         e.target.selectedIndex = 0;
+        console.log('Exporting active documents...');
 
         const i18n = this._i18n;
         const documentSelections =
@@ -864,7 +867,45 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     /**
      * Export all deleted documents
      * @param {Event} e - The change event from the selector
+     * @param i18n
      */
+    normalizeSelectorEvent(e, i18n) {
+        const raw =
+            e?.target?.value ??
+            e?.detail?.value ??
+            e?.detail?.name ??
+            e?.detail?.label ??
+            e?.target?.name ??
+            (e?.target?.selectedOptions && e.target.selectedOptions[0]?.value) ??
+            null;
+
+        if (raw == null) return null;
+
+        let val =
+            typeof raw === 'object' ? (raw.value ?? raw.name ?? raw.label ?? '') : String(raw);
+        val = val.trim();
+
+        const map = {
+            [i18n.t('doc-modal-document-only', 'Document Only')]: 'document-file-only',
+            [i18n.t('doc-modal-only-data', 'Metadata Only')]: 'metadata-only',
+            [i18n.t('doc-modal-all', 'All')]: 'all',
+        };
+
+        const allowed = new Set([
+            'document-file-only',
+            'metadata-only',
+            'all',
+            'csv',
+            'excel',
+            'pdf',
+            'attachments',
+        ]);
+
+        if (map[val]) val = map[val];
+        else val = val.toLowerCase().replace(/\s+/g, '-');
+
+        return allowed.has(val) ? val : null;
+    }
     async exportDeletedDocuments(e) {
         const selectorValue = e.target.value;
         if (!selectorValue) {
@@ -1524,6 +1565,24 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             ),
         };
 
+        const options = [];
+
+        options.push({
+            name: 'document-file-only',
+            label: i18n.t('doc-modal-document-only', 'Document Only'),
+            value: 'document-file-only',
+        });
+        options.push({
+            name: 'metadata-only',
+            label: i18n.t('doc-modal-only-data', 'Metadata Only'),
+            value: 'metadata-only',
+        });
+        options.push({
+            name: 'all',
+            label: i18n.t('doc-modal-all', 'All'),
+            value: 'all',
+        });
+
         return html`
             <div class="modal-container">
                 <div class="modal-nav" role="tablist">
@@ -1680,29 +1739,14 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   'Delete All',
                                               )}
                                           </dbp-button>
-                                          <select
+                                          <dbp-select
                                               id="export-active-select"
-                                              class="dropdown-menu"
-                                              @change="${this.exportActiveDocuments}">
-                                              <option value="" disabled selected>
-                                                  ${i18n.t(
-                                                      'selection-dialog.export',
-                                                      'Export Documents',
-                                                  )}
-                                              </option>
-                                              <option value="document-file-only">
-                                                  ${i18n.t(
-                                                      'doc-modal-document-only',
-                                                      'Document Only',
-                                                  )}
-                                              </option>
-                                              <option value="metadata-only">
-                                                  ${i18n.t('doc-modal-only-data', 'Metadata Only')}
-                                              </option>
-                                              <option value="all">
-                                                  ${i18n.t('doc-modal-all', 'All')}
-                                              </option>
-                                          </select>
+                                              label="${i18n.t(
+                                                  'selection-dialog.export',
+                                                  'Export Documents',
+                                              )}"
+                                              .options=${options}
+                                              @change=${this.exportActiveDocuments}></dbp-select>
                                       </div>
                                       <dbp-tabulator-table
                                           ${ref(this.documentTableRef)}
