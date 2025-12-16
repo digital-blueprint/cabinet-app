@@ -1490,7 +1490,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const options = [];
 
         options.push({
-            name: 'metadata-only',
+            name: 'document-file-only',
             label: i18n.t('doc-modal-document-only'),
             value: 'document-file-only',
         });
