@@ -1896,23 +1896,38 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     buildTablesIfNeeded() {
         // Build person table if it exists and hasn't been built yet
         const personTable = this.personTableRef.value;
-        if (personTable && !personTable.tableReady) {
-            console.log('Building person table');
-            personTable.buildTable();
+        if (personTable) {
+            if (!personTable.tableReady) {
+                console.log('Building person table');
+                personTable.buildTable();
+            } else {
+                // Table is already built, update its data
+                console.log('Updating person table data');
+                this.updateTableData(this.constructor.HitSelectionType.PERSON);
+            }
         }
 
         // Build document table if it exists and hasn't been built yet
         const documentTable = this.documentTableRef.value;
-        if (documentTable && !documentTable.tableReady) {
-            console.log('Building document table');
-            documentTable.buildTable();
+        if (documentTable) {
+            if (!documentTable.tableReady) {
+                console.log('Building document table');
+                documentTable.buildTable();
+            } else {
+                // Table is already built, update its data
+                console.log('Updating document table data');
+                this.updateTableData(this.constructor.HitSelectionType.DOCUMENT_FILE);
+            }
         }
 
         // Build deleted document table if it exists and hasn't been built yet
         const deletedDocumentTable = this.deletedDocumentTableRef.value;
-        if (deletedDocumentTable && !deletedDocumentTable.tableReady) {
-            console.log('Building deleted document table');
-            deletedDocumentTable.buildTable();
+        if (deletedDocumentTable) {
+            if (!deletedDocumentTable.tableReady) {
+                console.log('Building deleted document table');
+                deletedDocumentTable.buildTable();
+            }
+            // Note: deleted document table is updated via the DOCUMENT_FILE update above
         }
     }
 
