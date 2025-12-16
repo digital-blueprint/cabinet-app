@@ -117,15 +117,35 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.documentGearButton = null;
         this.deletedDocumentGearButton = null;
 
-        // Reset to active documents tab
-        this.activeDocumentTab = 'active';
-
         // Set the active tab based on whether there are person selections
         const personSelections = hitSelections[this.constructor.HitSelectionType.PERSON] || {};
         const documentSelections =
             hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
         const hasPersonSelections = Object.keys(personSelections).length > 0;
         const hasDocumentSelections = Object.keys(documentSelections).length > 0;
+
+        // Separate active and deleted documents to determine initial tab
+        const activeDocuments = {};
+        const deletedDocuments = {};
+
+        Object.entries(documentSelections).forEach(([id, hit]) => {
+            if (hit && typeof hit === 'object' && hit.base?.isScheduledForDeletion) {
+                deletedDocuments[id] = hit;
+            } else {
+                activeDocuments[id] = hit;
+            }
+        });
+
+        const hasActiveDocuments = Object.keys(activeDocuments).length > 0;
+        const hasDeletedDocuments = Object.keys(deletedDocuments).length > 0;
+
+        // Set initial document sub-tab: if no active documents, open deleted documents area
+        if (!hasActiveDocuments && hasDeletedDocuments) {
+            this.activeDocumentTab = 'deleted';
+        } else {
+            // Default to active documents tab (even if both are empty)
+            this.activeDocumentTab = 'active';
+        }
 
         // If no person was selected but there are documents, open the Documents tab
         // Otherwise, default to Persons tab
