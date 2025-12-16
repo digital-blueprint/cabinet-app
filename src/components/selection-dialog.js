@@ -1543,22 +1543,45 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             ),
         };
 
-        const options = [];
+        const docDownloadOptions = [];
 
-        options.push({
+        docDownloadOptions.push({
             name: 'document-file-only',
             label: i18n.t('doc-modal-document-only', 'Document Only'),
             value: 'document-file-only',
         });
-        options.push({
+        docDownloadOptions.push({
             name: 'metadata-only',
             label: i18n.t('doc-modal-only-data', 'Metadata Only'),
             value: 'metadata-only',
         });
-        options.push({
+        docDownloadOptions.push({
             name: 'all',
             label: i18n.t('doc-modal-all', 'All'),
             value: 'all',
+        });
+
+        const personDownloadOptions = [];
+
+        personDownloadOptions.push({
+            name: 'csv',
+            label: i18n.t('selection-dialog.export-csv', 'CSV'),
+            value: 'csv',
+        });
+        personDownloadOptions.push({
+            name: 'excel',
+            label: i18n.t('selection-dialog.export-excel', 'Excel'),
+            value: 'excel',
+        });
+        personDownloadOptions.push({
+            name: 'pdf',
+            label: i18n.t('selection-dialog.export-pdf', 'PDF'),
+            value: 'pdf',
+        });
+        personDownloadOptions.push({
+            name: 'attachments',
+            label: i18n.t('selection-dialog.export-attachments', 'Attachments'),
+            value: 'attachments',
         });
 
         return html`
@@ -1614,30 +1637,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         ${Object.keys(personSelections).length > 0
                             ? html`
                                   <div class="export-controls export-controls-persons">
-                                      <select
+                                      <dbp-select
                                           id="export-persons-select"
-                                          class="dropdown-menu"
-                                          aria-label="${i18n.t('selection-dialog.export-persons')}"
-                                          @change="${this.exportPersons}">
-                                          <option value="" disabled selected>
-                                              ${i18n.t('selection-dialog.export', 'Export Persons')}
-                                          </option>
-                                          <option value="csv">
-                                              ${i18n.t('selection-dialog.export-csv', 'CSV')}
-                                          </option>
-                                          <option value="excel">
-                                              ${i18n.t('selection-dialog.export-excel', 'Excel')}
-                                          </option>
-                                          <option value="pdf">
-                                              ${i18n.t('selection-dialog.export-pdf', 'PDF')}
-                                          </option>
-                                          <option value="attachments">
-                                              ${i18n.t(
-                                                  'selection-dialog.export-attachments',
-                                                  'Attachments',
-                                              )}
-                                          </option>
-                                      </select>
+                                          label="${i18n.t('selection-dialog.export')}"
+                                          .options=${personDownloadOptions}
+                                          @change="${this.exportPersons}"></dbp-select>
                                   </div>
                                   <dbp-tabulator-table
                                       ${ref(this.personTableRef)}
@@ -1723,7 +1727,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   'selection-dialog.export',
                                                   'Export Documents',
                                               )}"
-                                              .options=${options}
+                                              .options=${docDownloadOptions}
                                               @change=${this.exportActiveDocuments}></dbp-select>
                                       </div>
                                       <dbp-tabulator-table

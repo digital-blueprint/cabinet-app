@@ -255,7 +255,6 @@
         "export-excel": "Excel",
         "export-in-progress": "Export läuft",
         "export-pdf": "PDF",
-        "export-persons": "Personen exportieren",
         "export-success": "Export erfolgreich",
         "export-success-message_one": "{{count}} Dokument wurde für den Export vorbereitet.",
         "export-success-message_other": "{{count}} Dokumente wurden für den Export vorbereitet.",
