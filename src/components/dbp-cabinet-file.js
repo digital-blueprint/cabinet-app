@@ -1487,7 +1487,23 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 : i18n.t(`typesense-schema.file.base.additionalType.key.${additionalType}`);
         console.log('additionalType', additionalType);
         this.updateStatus();
+        const options = [];
 
+        options.push({
+            name: 'metadata-only',
+            label: i18n.t('doc-modal-document-only'),
+            value: 'document-file-only',
+        });
+        options.push({
+            name: 'metadata-only',
+            label: i18n.t('doc-modal-only-data'),
+            value: 'metadata-only',
+        });
+        options.push({
+            name: 'all',
+            label: i18n.t('doc-modal-all'),
+            value: 'all',
+        });
         // TODO: Check if PDF was uploaded
         return html`
             <dbp-modal
@@ -1566,20 +1582,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                     })}"
                                     ?disabled=${!file}
                                     label="${i18n.t('download-button')}"
-                                    .options=${[
-                                        {
-                                            name: i18n.t('doc-modal-document-only'),
-                                            title: i18n.t('doc-modal-document-only'),
-                                        },
-                                        {
-                                            name: i18n.t('doc-modal-only-data'),
-                                            title: i18n.t('doc-modal-only-data'),
-                                        },
-                                        {
-                                            name: i18n.t('doc-modal-all'),
-                                            title: i18n.t('doc-modal-all'),
-                                        },
-                                    ]}
+                                    .options=${options}
                                     @change="${this.downloadFile}"></dbp-select>
                             </div>
                         </div>
