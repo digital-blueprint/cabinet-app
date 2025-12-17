@@ -925,6 +925,17 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         let successCount = 0;
         let failCount = 0;
 
+        // Show notification that export is starting
+        this.sendFilterModalNotification(
+            i18n.t('selection-dialog.export-in-progress'),
+            i18n.t('selection-dialog.export-in-progress-message', {
+                count: documents.length,
+            }),
+            'info',
+            // Wait longer for more documents
+            documents.length * 0.2,
+        );
+
         for (const [id, hit] of documents) {
             try {
                 const fileId = hit.file?.base?.fileId;

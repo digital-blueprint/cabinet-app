@@ -254,6 +254,8 @@
         "export-error-message_other": "{{count}} Dokumente konnten nicht exportiert werden.",
         "export-excel": "Excel",
         "export-in-progress": "Export läuft",
+        "export-in-progress-message_one": "{{count}} Dokument wird exportiert. Bitte warten...",
+        "export-in-progress-message_other": "{{count}} Dokumente werden exportiert. Bitte warten...",
         "export-pdf": "PDF",
         "export-success": "Export erfolgreich",
         "export-success-message_one": "{{count}} Dokument wurde für den Export vorbereitet.",
