@@ -1305,9 +1305,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         columns.push({
             title: 'rowNumber',
             field: 'rowNumber',
-            width: 60,
-            hozAlign: 'left',
-            headerHozAlign: 'left',
+            width: 30,
+            hozAlign: 'center',
+            headerHozAlign: 'center',
+            headerSort: false,
+            frozen: true,
         });
 
         // Add visible data columns
@@ -1345,6 +1347,9 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             field: 'actions',
             width: 80,
             hozAlign: 'right',
+            vertAlign: 'middle',
+            minWidth: 64,
+            frozen: true,
             headerHozAlign: 'center',
             headerSort: false,
             titleFormatter: (cell) => {
