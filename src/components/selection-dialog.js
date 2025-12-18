@@ -1280,11 +1280,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     /**
      * Build table columns based on visibility configuration
-     * @param type
-     * @param gearButtonRef
-     * @param gearButtonCallback
+     * @param {string} type
+     * @param {HTMLElement|null} gearButtonRef
+     * @param {Function} gearButtonCallback
+     * @param {string|null} gearButtonRefName - Optional property name to store the gear button reference
+     * @returns {Array}
      */
-    buildTableColumns(type, gearButtonRef, gearButtonCallback) {
+    buildTableColumns(type, gearButtonRef, gearButtonCallback, gearButtonRefName = null) {
         const i18n = this._i18n;
         const columns = [];
         const columnConfigs =
@@ -1344,10 +1346,25 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             hozAlign: 'center',
             headerSort: false,
             titleFormatter: (cell) => {
-                if (gearButtonRef) {
-                    return gearButtonRef;
+                // Check if we already have a stored button reference
+                let existingButton = gearButtonRef;
+
+                // If not passed as parameter, check if we already created one
+                if (!existingButton) {
+                    if (gearButtonRefName && this[gearButtonRefName]) {
+                        existingButton = this[gearButtonRefName];
+                    } else if (type === 'person' && this.personGearButton) {
+                        existingButton = this.personGearButton;
+                    } else if (type === 'document' && this.documentGearButton) {
+                        existingButton = this.documentGearButton;
+                    }
                 }
 
+                if (existingButton) {
+                    return existingButton;
+                }
+
+                // Create new button only if we don't have one
                 const button = this.createScopedElement('dbp-icon-button');
                 button.setAttribute('icon-name', 'cog');
                 button.setAttribute(
@@ -1361,7 +1378,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 button.style.position = 'relative';
                 button.style.left = '16px';
 
-                if (type === 'person') {
+                // Store the button reference based on the provided name or type
+                if (gearButtonRefName) {
+                    this[gearButtonRefName] = button;
+                } else if (type === 'person') {
                     this.personGearButton = button;
                 } else {
                     this.documentGearButton = button;
@@ -1538,8 +1558,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             nestedFieldSeparator: false, // Treat dots in field names as literal characters
             index: 'id', // Use id field as unique row identifier
             langs: this.buildTableLangs('document'),
-            columns: this.buildTableColumns('document', this.documentGearButton, () =>
-                this.openColumnConfiguration('document'),
+            columns: this.buildTableColumns(
+                'document',
+                this.documentGearButton,
+                () => this.openColumnConfiguration('document'),
+                'documentGearButton',
             ),
         };
 
@@ -1549,8 +1572,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             nestedFieldSeparator: false, // Treat dots in field names as literal characters
             index: 'id', // Use id field as unique row identifier
             langs: this.buildTableLangs('document'),
-            columns: this.buildTableColumns('document', this.deletedDocumentGearButton, () =>
-                this.openColumnConfiguration('document'),
+            columns: this.buildTableColumns(
+                'document',
+                this.deletedDocumentGearButton,
+                () => this.openColumnConfiguration('document'),
+                'deletedDocumentGearButton',
             ),
         };
 
