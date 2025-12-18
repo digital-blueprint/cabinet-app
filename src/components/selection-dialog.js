@@ -1344,7 +1344,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             title: 'actions',
             field: 'actions',
             width: 80,
-            hozAlign: 'center',
+            hozAlign: 'right',
+            headerHozAlign: 'center',
             headerSort: false,
             titleFormatter: (cell) => {
                 // Check if we already have a stored button reference
