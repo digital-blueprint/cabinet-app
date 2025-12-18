@@ -1306,8 +1306,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             title: 'rowNumber',
             field: 'rowNumber',
             width: 60,
-            hozAlign: 'center',
-            headerHozAlign: 'center',
+            hozAlign: 'left',
+            headerHozAlign: 'left',
         });
 
         // Add visible data columns
