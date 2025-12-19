@@ -276,7 +276,7 @@
         "persons-export-success-message_other": "{{count}} persons prepared for export.",
         "persons-tab": "Personen",
         "persons-title": "Selected Persons",
-        "remove": "Remove",
+        "remove": "Remove selection",
         "undelete-all-deleted": "Undelete All",
         "undeletion-error": "Undeletion Error",
         "undeletion-error-message_one": "Failed to undelete {{count}} document.",
