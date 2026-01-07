@@ -1027,6 +1027,14 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     --dbp-modal-max-width: 900px;
                 }
 
+                /* To allow the horizontal scrolling in the tabulator table */
+                .tab-panels {
+                    width: 100%;
+                    max-width: 100%; /* prevents shrink-to-fit */
+                    overflow-x: auto;
+                    display: block;
+                }
+
                 .modal-container {
                     display: grid;
                     grid-template-columns: 150px 1fr;
@@ -1322,7 +1330,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 columns.push({
                     title: i18n.t(colConfig.name),
                     field: colConfig.id,
-                    widthGrow: 1,
                     headerSort: true,
                     sorter: 'string',
                     formatter: (cell) => {
@@ -1538,7 +1545,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Build table options for persons
         const personTableOptions = {
-            layout: 'fitColumns',
+            layout: 'fitDataStretch',
             nestedFieldSeparator: false, // Treat dots in field names as literal characters
             index: 'id', // Use id field as unique row identifier
             langs: this.buildTableLangs('person'),
@@ -1561,7 +1568,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Build table options for active documents
         const documentTableOptions = {
-            layout: 'fitColumns',
+            layout: 'fitDataStretch',
             nestedFieldSeparator: false, // Treat dots in field names as literal characters
             index: 'id', // Use id field as unique row identifier
             langs: this.buildTableLangs('document'),
@@ -1575,7 +1582,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Build table options for deleted documents
         const deletedDocumentTableOptions = {
-            layout: 'fitColumns',
+            layout: 'fitDataStretch',
             nestedFieldSeparator: false, // Treat dots in field names as literal characters
             index: 'id', // Use id field as unique row identifier
             langs: this.buildTableLangs('document'),
