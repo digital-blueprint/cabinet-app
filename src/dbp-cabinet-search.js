@@ -1312,7 +1312,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     renderHitSelectionContainer() {
-        console.log('renderHitSelectionContainer this.hitSelections', this.hitSelections);
         return html`
             <div class="hit-selection-container">
                 <h2>Multiaction</h2>
