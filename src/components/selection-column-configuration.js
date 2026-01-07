@@ -315,12 +315,6 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
                     font-weight: bold;
                 }
 
-                .dbp-button-icon {
-                    font-size: 1.2em;
-                    top: 0.2em;
-                    margin-right: 2px;
-                }
-
                 @media (max-width: 645px) {
                     .modal-footer {
                         grid-template-columns: 1fr 1fr;
@@ -482,7 +476,7 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
                         no-spinner-on-click
                         @click="${this.close}">
                         <dbp-icon
-                            class="dbp-button-icon"
+                        <dbp-icon
                             name="close"
                             aria-hidden="true"></dbp-icon>
                         ${i18n.t('selection-column-config.abort', 'Abort')}
@@ -495,7 +489,7 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
                         ?disabled="${buttonsDisabled}"
                         @click="${this.hideAllColumns}">
                         <dbp-icon
-                            class="dbp-button-icon"
+                            
                             name="source_icons_eye-off"
                             aria-hidden="true"></dbp-icon>
                         ${i18n.t('selection-column-config.all-columns-hide', 'Hide All')}
@@ -507,7 +501,7 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
                         ?disabled=${buttonsDisabled}
                         @click="${this.showAllColumns}">
                         <dbp-icon
-                            class="dbp-button-icon"
+                            
                             name="source_icons_eye-empty"
                             aria-hidden="true"></dbp-icon>
                         ${i18n.t('selection-column-config.all-columns-show', 'Show All')}
@@ -518,7 +512,7 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
                         type="is-primary"
                         ?disabled=${buttonsDisabled}
                         @click="${this.storeSettings}">
-                        <dbp-icon class="dbp-button-icon" name="save" aria-hidden="true"></dbp-icon>
+                        <dbp-icon  name="save" aria-hidden="true"></dbp-icon>
                         ${i18n.t('selection-column-config.save', 'Save')}
                     </dbp-button>
                 </div>

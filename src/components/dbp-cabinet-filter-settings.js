@@ -189,11 +189,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                     color: var(--dbp-on-muted-surface);
                     font-weight: bold;
                 }
-                .dbp-button-icon {
-                    font-size: 1.2em;
-                    top: 0.2em;
-                    margin-right: 2px;
-                }
 
                 @media (max-width: 645px) {
                     #filter-modal .modal-footer {
@@ -290,10 +285,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         type="is-secondary"
                         no-spinner-on-click
                         @click="${this.close}">
-                        <dbp-icon
-                            class="dbp-button-icon"
-                            name="close"
-                            aria-hidden="true"></dbp-icon>
+                        <dbp-icon name="close" aria-hidden="true"></dbp-icon>
                         ${i18n.t('filter-settings.abort')}
                     </dbp-button>
 
@@ -303,10 +295,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         no-spinner-on-click
                         ?disabled="${buttonsDisabled}"
                         @click="${this.hideAllFacets}">
-                        <dbp-icon
-                            class="dbp-button-icon"
-                            name="source_icons_eye-off"
-                            aria-hidden="true"></dbp-icon>
+                        <dbp-icon name="source_icons_eye-off" aria-hidden="true"></dbp-icon>
                         ${i18n.t('filter-settings.all-filters-hide')}
                     </dbp-button>
                     <dbp-button
@@ -315,10 +304,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         no-spinner-on-click
                         ?disabled=${buttonsDisabled}
                         @click="${this.showAllFacets}">
-                        <dbp-icon
-                            class="dbp-button-icon"
-                            name="source_icons_eye-empty"
-                            aria-hidden="true"></dbp-icon>
+                        <dbp-icon name="source_icons_eye-empty" aria-hidden="true"></dbp-icon>
                         ${i18n.t('filter-settings.all-filters-show')}
                     </dbp-button>
 
@@ -327,7 +313,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                         type="is-primary"
                         ?disabled=${buttonsDisabled}
                         @click="${this.storeSettings}">
-                        <dbp-icon class="dbp-button-icon" name="save" aria-hidden="true"></dbp-icon>
+                        <dbp-icon name="save" aria-hidden="true"></dbp-icon>
                         ${i18n.t('filter-settings.save')}
                     </dbp-button>
                 </div>

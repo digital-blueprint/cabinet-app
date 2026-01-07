@@ -480,12 +480,6 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                     margin: 0;
                     font-size: 1.2em;
                 }
-
-                .dbp-button-icon {
-                    font-size: 1.2em;
-                    top: 0.2em;
-                    margin-right: 2px;
-                }
             `,
             commonStyles.getGeneralCSS(false),
             commonStyles.getButtonCSS(),
@@ -524,10 +518,7 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 @click=${(e) => {
                     this.documentViewButtonClick(hit, e);
                 }}>
-                <dbp-icon
-                    class="dbp-button-icon"
-                    name="keyword-research"
-                    aria-hidden="true"></dbp-icon>
+                <dbp-icon name="keyword-research" aria-hidden="true"></dbp-icon>
                 ${i18n.t('buttons.view')}
             </button>
         `;

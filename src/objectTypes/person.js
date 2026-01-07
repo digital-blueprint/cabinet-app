@@ -229,12 +229,6 @@ class CabinetHitElement extends BaseHitElement {
                     display: none;
                 }
 
-                .dbp-button-icon {
-                    font-size: 1.2em;
-                    top: 0.2em;
-                    margin-right: 2px;
-                }
-
                 @media (max-width: 768px) {
                     .hit-person-info-header {
                         display: flex;
@@ -346,9 +340,6 @@ class CabinetHitElement extends BaseHitElement {
                     .hits-person-footer button:nth-child(3) {
                         grid-column: 2;
                         grid-row: 2;
-                    }
-                    .dbp-button-icon {
-                        margin-right: 2px;
                     }
                 }
             `,
@@ -481,7 +472,7 @@ class CabinetHitElement extends BaseHitElement {
                                     composed: true,
                                 }),
                             );
-                        }}><dbp-icon class="dbp-button-icon" name="plus" aria-hidden="true"></dbp-icon>
+                        }}><dbp-icon name="plus" aria-hidden="true"></dbp-icon>
                         ${i18n.t('buttons.add.documents')}
                     </button>
                     <button
@@ -494,7 +485,7 @@ class CabinetHitElement extends BaseHitElement {
                                     composed: true,
                                 }),
                             );
-                        }}"><dbp-icon class="dbp-button-icon" name="${isFocused ? 'source_icons_eye-off' : 'source_icons_eye-empty'}"" aria-hidden="true"></dbp-icon>
+                        }}"><dbp-icon  name="${isFocused ? 'source_icons_eye-off' : 'source_icons_eye-empty'}"" aria-hidden="true"></dbp-icon>
                         ${focusButtonLabel}
                     </button>
                     <button
@@ -507,7 +498,7 @@ class CabinetHitElement extends BaseHitElement {
                                     composed: true,
                                 }),
                             );
-                        }}><dbp-icon class="dbp-button-icon" name="keyword-research" aria-hidden="true"></dbp-icon>
+                        }}><dbp-icon  name="keyword-research" aria-hidden="true"></dbp-icon>
                         ${i18n.t('buttons.view')}
                     </button>
                 </footer>

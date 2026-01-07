@@ -236,13 +236,6 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     border: 1px solid;
                 }
 
-                .dbp-button-icon {
-                    font-size: 1.2em;
-                    top: 0.2em;
-                    margin-right: 2px;
-                    color: var(--dbp-secondary);
-                }
-
                 .display-none {
                     display: none !important;
                 }
@@ -463,7 +456,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                         title="${i18n.t('filter-settings.filter-configuration')}"
                         aria-label="${i18n.t('filter-settings.filter-configuration')}"
                         @click="${this.openFilterSettings}">
-                        <dbp-icon class="dbp-button-icon" name="cog" aria-hidden="true"></dbp-icon>
+                        <dbp-icon name="cog" aria-hidden="true"></dbp-icon>
                         ${i18n.t('filter-settings.configuration')}
                     </button>
                     <dbp-icon

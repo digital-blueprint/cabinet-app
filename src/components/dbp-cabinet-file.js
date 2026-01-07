@@ -1077,12 +1077,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     font-weight: 600;
                 }
 
-                .dbp-button-icon {
-                    font-size: 1.2em;
-                    top: 0.2em;
-                    margin-right: 2px;
-                }
-
                 .red-marked-asterisk {
                     color: var(--dbp-danger);
                     font-weight: bold;
@@ -1566,7 +1560,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                             !hit.base?.isScheduledForDeletion,
                                     })} button is-secondary undo-button">
                                     <dbp-icon
-                                        class="dbp-button-icon"
                                         title="${i18n.t('doc-modal-undelete-document')}"
                                         aria-label="${i18n.t('doc-modal-undelete-document')}"
                                         name="undo"></dbp-icon>
