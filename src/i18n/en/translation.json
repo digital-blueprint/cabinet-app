@@ -27,6 +27,7 @@
     },
     "cabinet-search": {
         "document-filter-group-title": "Document properties",
+        "filter-accessible-label": "The following categories were selected",
         "filter-file-base-additional-type-text-title": "Document type",
         "filter-file-base-created-timestamp-title": "Added",
         "filter-file-base-file-source-title": "Digital document source",
