@@ -29,7 +29,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.personColumnConfigRef = createRef();
         this.documentColumnConfigRef = createRef();
         this.fileSinkRef = createRef();
-        this.hitSelections = this.constructor.EmptyHitSelection;
+        this.hitSelections = this.constructor.createEmptyHitSelection();
         this.facetNumber = 0;
         this.activeTab = this.constructor.HitSelectionType.PERSON;
         this.activeDocumentTab = 'active'; // 'active' or 'deleted'

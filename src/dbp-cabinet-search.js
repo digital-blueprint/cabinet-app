@@ -152,7 +152,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     resetHitSelection() {
-        this.hitSelections = this.constructor.EmptyHitSelection;
+        // Use the static method to get a fresh copy and maintain single source of truth
+        this.hitSelections = this.constructor.createEmptyHitSelection();
         this.hitSelectAllState = this.constructor.HitSelectAllState.SELECT;
     }
 
@@ -1311,6 +1312,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     renderHitSelectionContainer() {
+        console.log('renderHitSelectionContainer this.hitSelections', this.hitSelections);
         return html`
             <div class="hit-selection-container">
                 <h2>Multiaction</h2>

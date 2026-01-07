@@ -36,10 +36,16 @@ export default class DBPCabinetLitElement extends LangMixin(
         DOCUMENT_FILE: 'DocumentFile',
     };
 
-    static EmptyHitSelection = {
-        [DBPCabinetLitElement.HitSelectionType.PERSON]: {},
-        [DBPCabinetLitElement.HitSelectionType.DOCUMENT_FILE]: {},
-    };
+    /**
+     * Returns a fresh copy of the empty hit selection object.
+     * Use this instead of directly accessing static EmptyHitSelection (now removed) to avoid mutation issues.
+     */
+    static createEmptyHitSelection() {
+        return {
+            [DBPCabinetLitElement.HitSelectionType.PERSON]: {},
+            [DBPCabinetLitElement.HitSelectionType.DOCUMENT_FILE]: {},
+        };
+    }
 
     static EventType = {
         HIT_SELECTION_CHANGED: 'hitSelectionChanged',
