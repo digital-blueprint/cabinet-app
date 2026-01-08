@@ -1948,7 +1948,17 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     removeAllPersonSelections() {
         const personSelections = this.hitSelections[this.constructor.HitSelectionType.PERSON] || {};
         const ids = Object.keys(personSelections);
+
+        // Create a new object to trigger reactivity
+        const newSelections = {...this.hitSelections};
+        newSelections[this.constructor.HitSelectionType.PERSON] = {};
+        this.hitSelections = newSelections;
+
+        // Notify parent to clear selections
         this.clearSelectionItems(this.constructor.HitSelectionType.PERSON, ids);
+
+        // Update the table data immediately
+        this.updateTableData(this.constructor.HitSelectionType.PERSON);
     }
 
     /**
@@ -1962,7 +1972,19 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 ([_id, hit]) => hit && typeof hit === 'object' && !hit.base?.isScheduledForDeletion,
             )
             .map(([id]) => id);
+
+        // Create a new object to trigger reactivity
+        const newSelections = {...this.hitSelections};
+        const newDocumentSelections = {...documentSelections};
+        activeIds.forEach((id) => delete newDocumentSelections[id]);
+        newSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] = newDocumentSelections;
+        this.hitSelections = newSelections;
+
+        // Notify parent to clear selections
         this.clearSelectionItems(this.constructor.HitSelectionType.DOCUMENT_FILE, activeIds);
+
+        // Update the table data immediately
+        this.updateTableData(this.constructor.HitSelectionType.DOCUMENT_FILE);
     }
 
     /**
@@ -1976,7 +1998,19 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 ([_id, hit]) => hit && typeof hit === 'object' && hit.base?.isScheduledForDeletion,
             )
             .map(([id]) => id);
+
+        // Create a new object to trigger reactivity
+        const newSelections = {...this.hitSelections};
+        const newDocumentSelections = {...documentSelections};
+        deletedIds.forEach((id) => delete newDocumentSelections[id]);
+        newSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] = newDocumentSelections;
+        this.hitSelections = newSelections;
+
+        // Notify parent to clear selections
         this.clearSelectionItems(this.constructor.HitSelectionType.DOCUMENT_FILE, deletedIds);
+
+        // Update the table data immediately
+        this.updateTableData(this.constructor.HitSelectionType.DOCUMENT_FILE);
     }
 
     removeSelection(type, id) {
