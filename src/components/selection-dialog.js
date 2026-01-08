@@ -1205,10 +1205,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     justify-content: space-between;
                 }
 
-                .export-controls-persons {
-                    justify-content: flex-end;
-                }
-
                 @media (max-width: 768px) {
                     .export-controls {
                         flex-direction: column;
@@ -1687,7 +1683,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <h3>${i18n.t('selection-dialog.persons-title', 'Selected Persons')}</h3>
                         ${Object.keys(personSelections).length > 0
                             ? html`
-                                  <div class="export-controls export-controls-persons">
+                                  <div class="export-controls">
                                       <dbp-button
                                           value="${i18n.t(
                                               'selection-dialog.remove-all-persons',
