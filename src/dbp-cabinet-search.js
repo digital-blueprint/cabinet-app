@@ -218,8 +218,23 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 case 'facetVisibilityStates':
                     this.updateFacetVisibility();
                     break;
+                case 'hitSelections':
+                    this.resetHitSelectAllStateIfNeeded();
+                    break;
             }
         });
+    }
+
+    resetHitSelectAllStateIfNeeded() {
+        console.log('resetHitSelectAllStateIfNeeded this.hitSelections', this.hitSelections);
+        const isEmptySelection = (v) =>
+            v == null || (typeof v === 'object' && Object.keys(v).length === 0);
+        if (
+            isEmptySelection(this.hitSelections[this.constructor.HitSelectionType.PERSON]) &&
+            isEmptySelection(this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE])
+        ) {
+            this.hitSelectAllState = this.constructor.HitSelectAllState.SELECT;
+        }
     }
 
     async handleAutomaticDocumentViewOpen() {
@@ -372,6 +387,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
             this.hitSelectAllState = this.constructor.HitSelectAllState.DESELECT;
             this.requestUpdate();
+            this.resetHitSelectAllStateIfNeeded();
         });
 
         // Listen to selection-removed events from selection dialog
@@ -381,6 +397,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             delete this.hitSelections[type][id];
             this.hitSelectAllState = this.constructor.HitSelectAllState.DESELECT;
             this.requestUpdate();
+            this.resetHitSelectAllStateIfNeeded();
             // Refresh the search to update checkbox states
             if (this.search) {
                 this.search.refresh();
@@ -406,6 +423,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     delete this.hitSelections[type][id];
                 });
                 this.requestUpdate();
+                this.resetHitSelectAllStateIfNeeded();
                 // Refresh the search to update checkbox states
                 if (this.search) {
                     this.search.refresh();
