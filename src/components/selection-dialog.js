@@ -1688,6 +1688,18 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         ${Object.keys(personSelections).length > 0
                             ? html`
                                   <div class="export-controls export-controls-persons">
+                                      <dbp-button
+                                          value="${i18n.t(
+                                              'selection-dialog.remove-all-persons',
+                                              'Remove selections',
+                                          )}"
+                                          @click="${() => this.removeAllPersonSelections()}"
+                                          type="is-primary">
+                                          ${i18n.t(
+                                              'selection-dialog.remove-all-persons',
+                                              'Remove selections',
+                                          )}
+                                      </dbp-button>
                                       <dbp-select
                                           id="export-persons-select"
                                           label="${i18n.t('selection-dialog.export')}"
@@ -1759,19 +1771,34 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                             ${Object.keys(activeDocuments).length > 0
                                 ? html`
                                       <div class="export-controls">
-                                          <dbp-button
-                                              value="${i18n.t(
-                                                  'selection-dialog.delete-all-active',
-                                                  'Delete All',
-                                              )}"
-                                              @click="${() =>
-                                                  this.scheduleActiveDocumentsForDeletion()}"
-                                              type="is-primary">
-                                              ${i18n.t(
-                                                  'selection-dialog.delete-all-active',
-                                                  'Delete All',
-                                              )}
-                                          </dbp-button>
+                                          <div>
+                                              <dbp-button
+                                                  value="${i18n.t(
+                                                      'selection-dialog.remove-all-active',
+                                                      'Remove selections',
+                                                  )}"
+                                                  @click="${() =>
+                                                      this.removeAllActiveDocumentSelections()}"
+                                                  type="is-primary">
+                                                  ${i18n.t(
+                                                      'selection-dialog.remove-all-active',
+                                                      'Remove selections',
+                                                  )}
+                                              </dbp-button>
+                                              <dbp-button
+                                                  value="${i18n.t(
+                                                      'selection-dialog.delete-all-active',
+                                                      'Delete All',
+                                                  )}"
+                                                  @click="${() =>
+                                                      this.scheduleActiveDocumentsForDeletion()}"
+                                                  type="is-primary">
+                                                  ${i18n.t(
+                                                      'selection-dialog.delete-all-active',
+                                                      'Delete All',
+                                                  )}
+                                              </dbp-button>
+                                          </div>
                                           <dbp-select
                                               id="export-active-select"
                                               label="${i18n.t(
@@ -1809,18 +1836,33 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                             ${Object.keys(deletedDocuments).length > 0
                                 ? html`
                                       <div class="export-controls">
-                                          <dbp-button
-                                              value="${i18n.t(
-                                                  'selection-dialog.undelete-all-deleted',
-                                                  'Undelete All',
-                                              )}"
-                                              @click="${() => this.undeleteDeletedDocuments()}"
-                                              type="is-primary">
-                                              ${i18n.t(
-                                                  'selection-dialog.undelete-all-deleted',
-                                                  'Undelete All',
-                                              )}
-                                          </dbp-button>
+                                          <div>
+                                              <dbp-button
+                                                  value="${i18n.t(
+                                                      'selection-dialog.remove-all-deleted',
+                                                      'Remove selections',
+                                                  )}"
+                                                  @click="${() =>
+                                                      this.removeAllDeletedDocumentSelections()}"
+                                                  type="is-primary">
+                                                  ${i18n.t(
+                                                      'selection-dialog.remove-all-deleted',
+                                                      'Remove selections',
+                                                  )}
+                                              </dbp-button>
+                                              <dbp-button
+                                                  value="${i18n.t(
+                                                      'selection-dialog.undelete-all-deleted',
+                                                      'Undelete All',
+                                                  )}"
+                                                  @click="${() => this.undeleteDeletedDocuments()}"
+                                                  type="is-primary">
+                                                  ${i18n.t(
+                                                      'selection-dialog.undelete-all-deleted',
+                                                      'Undelete All',
+                                                  )}
+                                              </dbp-button>
+                                          </div>
                                           <select
                                               id="export-deleted-select"
                                               class="dropdown-menu"
@@ -1902,6 +1944,43 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 composed: true,
             }),
         );
+    }
+
+    /**
+     * Remove all person selections
+     */
+    removeAllPersonSelections() {
+        const personSelections = this.hitSelections[this.constructor.HitSelectionType.PERSON] || {};
+        const ids = Object.keys(personSelections);
+        this.clearSelectionItems(this.constructor.HitSelectionType.PERSON, ids);
+    }
+
+    /**
+     * Remove all active document selections
+     */
+    removeAllActiveDocumentSelections() {
+        const documentSelections =
+            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+        const activeIds = Object.entries(documentSelections)
+            .filter(
+                ([_id, hit]) => hit && typeof hit === 'object' && !hit.base?.isScheduledForDeletion,
+            )
+            .map(([id]) => id);
+        this.clearSelectionItems(this.constructor.HitSelectionType.DOCUMENT_FILE, activeIds);
+    }
+
+    /**
+     * Remove all deleted document selections
+     */
+    removeAllDeletedDocumentSelections() {
+        const documentSelections =
+            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+        const deletedIds = Object.entries(documentSelections)
+            .filter(
+                ([_id, hit]) => hit && typeof hit === 'object' && hit.base?.isScheduledForDeletion,
+            )
+            .map(([id]) => id);
+        this.clearSelectionItems(this.constructor.HitSelectionType.DOCUMENT_FILE, deletedIds);
     }
 
     removeSelection(type, id) {
