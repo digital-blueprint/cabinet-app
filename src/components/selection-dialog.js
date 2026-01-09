@@ -1593,17 +1593,14 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const docDownloadOptions = [];
 
         docDownloadOptions.push({
-            name: 'document-file-only',
             label: i18n.t('doc-modal-document-only', 'Document Only'),
             value: 'document-file-only',
         });
         docDownloadOptions.push({
-            name: 'metadata-only',
             label: i18n.t('doc-modal-only-data', 'Metadata Only'),
             value: 'metadata-only',
         });
         docDownloadOptions.push({
-            name: 'all',
             label: i18n.t('doc-modal-all', 'All'),
             value: 'all',
         });
@@ -1611,22 +1608,18 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const personDownloadOptions = [];
 
         personDownloadOptions.push({
-            name: 'csv',
             label: i18n.t('selection-dialog.export-csv', 'CSV'),
             value: 'csv',
         });
         personDownloadOptions.push({
-            name: 'excel',
             label: i18n.t('selection-dialog.export-excel', 'Excel'),
             value: 'excel',
         });
         personDownloadOptions.push({
-            name: 'pdf',
             label: i18n.t('selection-dialog.export-pdf', 'PDF'),
             value: 'pdf',
         });
         personDownloadOptions.push({
-            name: 'attachments',
             label: i18n.t('selection-dialog.export-attachments', 'Attachments'),
             value: 'attachments',
         });

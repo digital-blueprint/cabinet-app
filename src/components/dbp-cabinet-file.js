@@ -1484,17 +1484,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const options = [];
 
         options.push({
-            name: 'document-file-only',
             label: i18n.t('doc-modal-document-only'),
             value: 'document-file-only',
         });
         options.push({
-            name: 'metadata-only',
             label: i18n.t('doc-modal-only-data'),
             value: 'metadata-only',
         });
         options.push({
-            name: 'all',
             label: i18n.t('doc-modal-all'),
             value: 'all',
         });
@@ -1605,14 +1602,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const options = [];
 
         options.push({
-            name: 'edit',
+            value: 'edit',
             label: i18n.t('doc-modal-edit'),
             iconName: 'pencil',
         });
 
         if (!isCurrent) {
             options.push({
-                name: 'mark-current',
+                value: 'mark-current',
                 label: i18n.t('doc-modal-mark-document-current'),
                 iconName: 'flag',
             });
@@ -1620,14 +1617,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         if (!hasOnlyOneVersion && isCurrent) {
             options.push({
-                name: 'mark-obsolete',
+                value: 'mark-obsolete',
                 label: i18n.t('doc-modal-mark-document-obsolete'),
                 iconName: 'flag',
             });
         }
 
         options.push({
-            name: 'add',
+            value: 'add',
             label: i18n.t('doc-modal-Add-new-version'),
             iconName: 'plus',
             disabled: !isCurrent && !CabinetFile.DEV_MODE,
@@ -1635,7 +1632,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         if (showDeleteDocumentButton) {
             options.push({
-                name: 'delete',
+                value: 'delete',
                 label: i18n.t('doc-modal-delete-document'),
                 iconName: 'trash',
             });
@@ -1643,7 +1640,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         if (showDeleteVersionButton) {
             options.push({
-                name: 'delete',
+                value: 'delete',
                 label: i18n.t('doc-modal-delete-version'),
                 iconName: 'trash',
             });
@@ -1651,7 +1648,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         if (showDeleteAllVersionsButton) {
             options.push({
-                name: 'delete-all',
+                value: 'delete-all',
                 label: i18n.t('doc-modal-delete-all-versions'),
                 iconName: 'trash',
             });
