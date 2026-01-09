@@ -707,7 +707,9 @@ export async function exportPersonPdf(i18n, hit, withInternalData = false, retur
     if (returnFile) {
         // Return as File object for use with FileSink
         const pdfBlob = doc.output('blob');
-        return new File([pdfBlob], filename, {type: 'application/pdf'});
+
+        // We don't need urlencoded filenames here as we are passing the files directly to file sink
+        return new File([pdfBlob], decodeURIComponent(filename), {type: 'application/pdf'});
     } else {
         // Trigger download directly
         doc.save(filename);
