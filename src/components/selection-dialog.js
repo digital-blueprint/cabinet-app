@@ -1620,7 +1620,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             value: 'pdf',
         });
         personDownloadOptions.push({
-            label: i18n.t('selection-dialog.export-attachments', 'Attachments'),
+            label: i18n.t('selection-dialog.export-attachments', 'PDF documents'),
             value: 'attachments',
         });
 
