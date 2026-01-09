@@ -206,15 +206,19 @@
         "description": "Configure which columns to display",
         "document": {
             "additionalType": "Document type",
+            "comment": "Comment",
             "createdTimestamp": "Created",
+            "disposalType": "Disposal type",
+            "fileId": "File ID",
+            "fileName": "File name",
+            "fileSource": "File source",
+            "groupId": "Group ID",
+            "isPartOf": "Part of",
+            "mimeType": "MIME type",
             "modifiedTimestamp": "Modified",
-            "person": {
-                "familyName": "Family name",
-                "givenName": "Given name",
-                "studId": "Matriculation number"
-            },
             "semester": "Semester",
-            "studyField": "Study field"
+            "studyField": "Study field",
+            "subjectOf": "Subject of"
         },
         "no-columns": "No columns configured.",
         "person": {

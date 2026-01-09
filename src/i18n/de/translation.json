@@ -206,15 +206,19 @@
         "description": "Konfigurieren Sie, welche Spalten angezeigt werden sollen",
         "document": {
             "additionalType": "Dokumenttyp",
+            "comment": "Kommentar",
             "createdTimestamp": "Erstellt",
+            "disposalType": "Aussonderungsart",
+            "fileId": "Datei-ID",
+            "fileName": "Dateiname",
+            "fileSource": "Dateiquelle",
+            "groupId": "Gruppen-ID",
+            "isPartOf": "Teil von",
+            "mimeType": "MIME-Typ",
             "modifiedTimestamp": "Geändert",
-            "person": {
-                "familyName": "Nachname",
-                "givenName": "Vorname",
-                "studId": "Matrikelnummer"
-            },
             "semester": "Semester",
-            "studyField": "Studienfeld"
+            "studyField": "Studienfeld",
+            "subjectOf": "Betrifft"
         },
         "no-columns": "Keine Spalten konfiguriert.",
         "person": {
