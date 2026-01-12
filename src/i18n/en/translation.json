@@ -96,6 +96,7 @@
     "doc-modal-recommended-archival-summary": "The archiving of this document is recommended 80 years after the student's deregistration from the university.",
     "doc-modal-recommended-deletion": "Recommended deletion",
     "doc-modal-recommended-deletion-summary": "The deletion of this document is recommended {{years}} years after the student's deregistration from the university.",
+    "doc-modal-select-version": "Select version",
     "doc-modal-semester": "Assignment to semester",
     "doc-modal-storage-purpose-deletion": "Purpose of storage",
     "doc-modal-study-field": "Assignment to study field",

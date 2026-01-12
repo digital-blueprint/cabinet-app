@@ -1367,7 +1367,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         return html`
             <div class="grouping-container">
-                <h3>Selected:</h3>
+                <h3>${this._i18n.t('doc-modal-select-version')}:</h3>
                 ${this.renderVersionsSelector()}
             </div>
         `;

@@ -96,6 +96,7 @@
     "doc-modal-recommended-archival-summary": "Die Archivierung dieses Dokumentes ist 80 Jahre nach der Abmeldung vom Studium vorgesehen.",
     "doc-modal-recommended-deletion": "Empfohlene Löschfrist",
     "doc-modal-recommended-deletion-summary": "Die Löschung dieses Dokumentes ist {{years}} Jahre nach der Abmeldung vom Studium vorgesehen.",
+    "doc-modal-select-version": "Version auswählen",
     "doc-modal-semester": "Zuordnung zum Semester",
     "doc-modal-storage-purpose-deletion": "Speicherzweck",
     "doc-modal-study-field": "Zuordnung zum Studienfach",
