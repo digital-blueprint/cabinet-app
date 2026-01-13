@@ -117,6 +117,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         DESELECT: 'deselect',
     };
 
+    // 3) Add toggle method for batch activity
+    toggleHitSelectionContainer() {
+        this.hitSelectionCollapsed = !this.hitSelectionCollapsed;
+        this.requestUpdate();
+    }
+
     constructor() {
         super();
         this.activity = new Activity(metadata);
@@ -149,6 +155,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this._loadModulesPromise = null;
         this._initInstantsearchPromise = null;
         this._initialUiState = null;
+        this.hitSelectionCollapsed = true;
     }
 
     resetHitSelection() {
@@ -193,6 +200,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             facetConfigs: {type: Array, state: true},
             hitSelections: {type: Object, attribute: false},
             hitSelectAllState: {type: Boolean, attribute: false},
+            hitSelectionCollapsed: {type: Boolean},
         };
     }
 
@@ -812,6 +820,45 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     justify-content: flex-end;
                 }
 
+                /* Hit selection collapse/expand */
+                .hit-selection-container {
+                    background: var(--dbp-background);
+                    transition:
+                        max-height 0.22s ease,
+                        padding 0.22s ease;
+                    overflow: hidden;
+                }
+                .hit-selection-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5em;
+                    cursor: pointer;
+                    user-select: none;
+                    border: none;
+                }
+                .hit-selection-header h2 {
+                    margin: 0;
+                    font-size: 1.1em;
+                    flex: 1;
+                }
+
+                .hit-selection-header dbp-icon.chev {
+                    color: var(--dbp-override-accent);
+                }
+                .hit-selection-body {
+                    padding: 0.5em;
+                }
+                .hit-selection-body[hidden] {
+                    display: none;
+                }
+                dbp-icon.chev {
+                    transition: transform 0.18s ease;
+                    --dbp-icon-size: 1.1em;
+                }
+                dbp-icon.chev.rotated {
+                    transform: rotate(180deg);
+                }
+
                 @media (max-width: 900px) {
                     #hits-footer {
                         flex-direction: column;
@@ -1332,74 +1379,89 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     renderHitSelectionContainer() {
         return html`
             <div class="hit-selection-container">
-                <h2>Multiaction</h2>
-                <div>
-                    Persons selected:
-                    (${Object.keys(this.hitSelections[this.constructor.HitSelectionType.PERSON])
-                        .length})
+                <div
+                    class="hit-selection-header"
+                    @click="${() => this.toggleHitSelectionContainer()}"
+                    role="button"
+                    aria-expanded="${!this.hitSelectionCollapsed}">
+                    <h2 @click="${() => this.toggleHitSelectionContainer()}">Multiaction</h2>
+                    <dbp-icon
+                        name="chevron-down"
+                        class="${classMap({
+                            chev: true,
+                            rotated: !this.hitSelectionCollapsed,
+                        })}"></dbp-icon>
                 </div>
-                <div>
-                    Documents selected:
-                    (${Object.keys(
-                        this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE],
-                    ).length})
-                </div>
-                <div class="button-area">
-                    <button
-                        class="button"
-                        @click="${() => {
-                            const currentHits = this.search.helper.lastResults.hits;
-                            if (
-                                this.hitSelectAllState === this.constructor.HitSelectAllState.SELECT
-                            ) {
-                                // Add all current hits to the selection
-                                for (const hit of currentHits) {
-                                    const type = hit['@type'];
-                                    const id = hit.id;
-                                    this.hitSelections[type][id] = hit;
-                                }
-                                this.hitSelectAllState =
-                                    this.constructor.HitSelectAllState.DESELECT;
-                            } else {
-                                // Remove all current hits from the selection
-                                for (const hit of currentHits) {
-                                    const type = hit['@type'];
-                                    const id = hit.id;
-                                    delete this.hitSelections[type][id];
-                                }
-                                this.hitSelectAllState = this.constructor.HitSelectAllState.SELECT;
-                            }
 
-                            // Refresh the hits to update the selection state
-                            this.search.refresh();
-                            // Request update to update the hit selection counts
-                            this.requestUpdate();
-                        }}">
-                        ${this.hitSelectAllState === this.constructor.HitSelectAllState.SELECT
-                            ? 'Select all visible'
-                            : 'Deselect all visible'}
-                    </button>
-                    <button
-                        class="button"
-                        @click="${() => {
-                            /** @type {SelectionDialog} */
-                            const selectionDialog = this.selectionDialogRef.value;
-
-                            selectionDialog.open(this.hitSelections);
-                        }}">
-                        Open dialog
-                    </button>
-                </div>
-                <div class="reset-area">
-                    <button
-                        class="button"
-                        @click="${() => {
-                            this.resetHitSelection();
-                            // Refresh the hits to update the selection state
-                            this.search.refresh();
-                        }}">
-                        Deselect all
-                    </button>
+                <div class="hit-selection-body" ?hidden="${this.hitSelectionCollapsed}">
+                    <div>
+                        Persons selected:
+                        (${Object.keys(this.hitSelections[this.constructor.HitSelectionType.PERSON])
+                            .length})
+                    </div>
+                    <div>
+                        Documents selected:
+                        (${Object.keys(
+                            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE],
+                        ).length})
+                    </div>
+                    <div class="button-area">
+                        <button
+                            class="button"
+                            @click="${() => {
+                                const currentHits = this.search.helper.lastResults.hits;
+                                if (
+                                    this.hitSelectAllState ===
+                                    this.constructor.HitSelectAllState.SELECT
+                                ) {
+                                    // Add all current hits to the selection
+                                    for (const hit of currentHits) {
+                                        const type = hit['@type'];
+                                        const id = hit.id;
+                                        this.hitSelections[type][id] = hit;
+                                    }
+                                    this.hitSelectAllState =
+                                        this.constructor.HitSelectAllState.DESELECT;
+                                } else {
+                                    // Remove all current hits from the selection
+                                    for (const hit of currentHits) {
+                                        const type = hit['@type'];
+                                        const id = hit.id;
+                                        delete this.hitSelections[type][id];
+                                    }
+                                    this.hitSelectAllState =
+                                        this.constructor.HitSelectAllState.SELECT;
+                                }
+                                // Refresh the hits to update the selection state
+                                this.search.refresh();
+                                // Request update to update the hit selection counts
+                                this.requestUpdate();
+                            }}">
+                            ${this.hitSelectAllState === this.constructor.HitSelectAllState.SELECT
+                                ? 'Select all visible'
+                                : 'Deselect all visible'}
+                        </button>
+                        <button
+                            class="button"
+                            @click="${() => {
+                                /** @type {SelectionDialog} */
+                                const selectionDialog = this.selectionDialogRef.value;
+                                selectionDialog.open(this.hitSelections);
+                            }}">
+                            Open dialog
+                        </button>
+                    </div>
+                    <div class="reset-area">
+                        <button
+                            class="button"
+                            @click="${() => {
+                                this.resetHitSelection();
+                                // Refresh the hits to update the selection state
+                                this.search.refresh();
+                            }}">
+                            Deselect all
+                        </button>
+                    </div>
                 </div>
             </div>
 
