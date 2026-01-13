@@ -63,7 +63,7 @@ class CurrentRefinements extends LangMixin(DBPLitElement, createInstance) {
             .ais-CurrentRefinements-category {
                 border: 1px solid var(--dbp-content);
                 display: flex;
-                white-space: nowrap;
+                word-break: keep-all;
             }
 
             .ais-CurrentRefinements-delete {
@@ -98,6 +98,8 @@ class CurrentRefinements extends LangMixin(DBPLitElement, createInstance) {
 
             .refinement-value {
                 padding: 4px 6px;
+                justify-content: space-between;
+                display: flex;
             }
         `;
     }
