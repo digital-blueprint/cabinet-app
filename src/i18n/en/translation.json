@@ -251,7 +251,7 @@
         "documents-tab": "Dokumente",
         "documents-title": "Selected Documents",
         "export": "Export",
-        "export-csv": "Table is CSV",
+        "export-csv": "Table in CSV",
         "export-documents": "Export Documents",
         "export-error": "Export Error",
         "export-error-message_one": "Failed to export {{count}} document.",
