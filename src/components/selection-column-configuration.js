@@ -168,6 +168,7 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
          * @type {Button}
          */
         const button = this.storeSettingsButtonRef.value;
+        console.assert(button instanceof Button, 'Store settings button not found');
         button.start();
 
         // Store the current column visibility states in localStorage
