@@ -14,7 +14,6 @@ import {SelectionColumnConfiguration} from './selection-column-configuration';
 import {BlobOperations} from '../utils/blob-operations';
 import {dataURLtoFile} from '../utils';
 import {getSelectorFixCSS} from '../styles.js';
-import {TypesenseService} from '../services/typesense.js';
 import {getPersonHit} from '../objectTypes/schema.js';
 import InstantSearchModule from '../modules/instantSearch.js';
 import {exportPersonPdf} from '../objectTypes/person.js';
@@ -514,12 +513,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     await this.exportPersonsAsPDF(persons);
                     successCount = persons.length;
                     break;
-                case 'attachments': {
-                    const result = await this.exportPersonsAttachments(persons);
-                    successCount = result.successCount;
-                    failCount = result.failCount;
-                    break;
-                }
                 default:
                     return;
             }
@@ -703,149 +696,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-    }
-
-    /**
-     * Export all documents/attachments for selected persons
-     * @param {Array} persons - Array of [id, hit] tuples
-     */
-    async exportPersonsAttachments(persons) {
-        const i18n = this._i18n;
-        let files = [];
-        let successCount = 0;
-        let failCount = 0;
-        let totalDocuments = 0;
-
-        // Get TypesenseService with increased timeout
-        let serverConfig = TypesenseService.getServerConfigForEntryPointUrl(
-            this.entryPointUrl,
-            this.auth.token,
-            30, // 30 seconds timeout
-        );
-
-        let typesense = new TypesenseService(serverConfig);
-
-        // Show progress notification
-        this.sendFilterModalNotification(
-            i18n.t('selection-dialog.export-in-progress', 'Export in Progress'),
-            i18n.t('selection-dialog.fetching-documents', {
-                defaultValue: 'Fetching documents for {{count}} person(s)...',
-                count: persons.length,
-            }),
-            'info',
-        );
-
-        for (const [id, hit] of persons) {
-            if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
-                try {
-                    const personHit = getPersonHit(hit);
-                    const personId = personHit.person.person;
-                    const personName = `${personHit.person.familyName}, ${personHit.person.givenName} (${personHit.person.birthDate})`;
-
-                    console.log(
-                        `Fetching documents for person ${personName}, ID: "${personId}" (type: ${typeof personId})`,
-                    );
-
-                    // Fetch all documents for this person
-                    // Use @type:=DocumentFile to get all document files regardless of specific objectType
-                    const filter = `person.person:=[\`${personId}\`] && @type:=DocumentFile`;
-                    console.log(`Using filter: ${filter}`);
-
-                    const documents = await typesense.fetchItemsByFilter(
-                        filter,
-                        250, // max documents per person
-                    );
-
-                    console.log(`Found ${documents.length} documents for ${personName}`);
-
-                    if (documents.length === 0) {
-                        console.log(`No documents found for person ${personName}`);
-                        continue;
-                    }
-
-                    totalDocuments += documents.length;
-
-                    // Create a folder name for this person
-                    const folderName = `${personHit.person.familyName}_${personHit.person.givenName}_${personHit.person.studId}`;
-
-                    // Download each document
-                    let personDocumentCount = 0;
-                    for (const doc of documents) {
-                        try {
-                            const fileId = doc.file?.base?.fileId;
-                            if (!fileId) {
-                                console.warn('No fileId for document', doc.id);
-                                continue;
-                            }
-
-                            const documentFile = await BlobOperations.downloadFileFromBlob(
-                                this.entryPointUrl,
-                                this.auth.token,
-                                fileId,
-                                dataURLtoFile,
-                            );
-
-                            // Add folder structure to filename
-                            const fileName = `${folderName}/${documentFile.name}`;
-                            const fileWithPath = new File([documentFile], fileName, {
-                                type: documentFile.type,
-                            });
-                            files.push(fileWithPath);
-                            personDocumentCount++;
-                        } catch (error) {
-                            console.error('Failed to download document', doc.id, error);
-                            failCount++;
-                        }
-                    }
-
-                    if (personDocumentCount > 0) {
-                        successCount++;
-                        console.log(
-                            `Successfully fetched ${personDocumentCount} documents for person ${personId}`,
-                        );
-                    }
-                } catch (error) {
-                    console.error('Failed to fetch documents for person', id, error);
-                    failCount++;
-
-                    // Check if it's a timeout error
-                    if (error.message && error.message.includes('timeout')) {
-                        this.sendFilterModalNotification(
-                            i18n.t('selection-dialog.export-timeout-warning', 'Timeout Warning'),
-                            i18n.t('selection-dialog.export-timeout-message', {
-                                defaultValue:
-                                    'Request timed out while fetching documents. The system may be under heavy load. Please try again with fewer persons selected.',
-                            }),
-                            'warning',
-                        );
-                    }
-                }
-            }
-        }
-
-        if (files.length > 0) {
-            // Use FileSink to download all files
-            this.fileSinkRef.value.files = files;
-
-            // Close the modal to show the FileSink dialog
-            const modal = this.modalRef.value;
-            modal.close();
-        } else {
-            // No files were collected
-            this.sendFilterModalNotification(
-                i18n.t('selection-dialog.export-error'),
-                i18n.t('selection-dialog.no-documents-found', {
-                    defaultValue: 'No documents were found for the selected persons.',
-                }),
-                'warning',
-            );
-        }
-
-        console.log(
-            `Export summary: ${successCount} persons, ${totalDocuments} total documents, ${files.length} files collected, ${failCount} failures`,
-        );
-
-        return {successCount, failCount};
     }
 
     /**
@@ -1618,10 +1468,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         personDownloadOptions.push({
             label: i18n.t('selection-dialog.export-pdf', 'PDF'),
             value: 'pdf',
-        });
-        personDownloadOptions.push({
-            label: i18n.t('selection-dialog.export-attachments', 'PDF documents'),
-            value: 'attachments',
         });
 
         return html`
