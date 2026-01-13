@@ -1366,10 +1366,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         return html`
-            <div class="grouping-container">
-                <h3>${this._i18n.t('doc-modal-select-version')}:</h3>
-                ${this.renderVersionsSelector()}
-            </div>
+            <div class="grouping-container">${this.renderVersionsSelector()}</div>
         `;
     }
 
@@ -1378,64 +1375,66 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (!Array.isArray(this.versions)) {
             return html``;
         }
-
+        const i18n = this._i18n;
         // Show dates like this:
         // 01.05.2025 08:00:00, modified 02.05.2025 09:13:45 (current)
         // 05.04.2023 08:45:00, modified 12.11.20223 (obsolete)
         // 31.01.2022 12:35:04 (obsolete)
+        const versionOptions = this.versions.map((item) => {
+            const isModified = item.file.base.modifiedTimestamp !== item.file.base.createdTimestamp;
+            const isCurrent = item.base.isCurrent;
+            // const isCurrent = false;
+            const modifiedDateOptions = isCurrent
+                ? {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                      hour12: false,
+                  }
+                : {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                  };
+
+            // Show full date and time for creation time
+            const createdDate = new Date(item.file.base.createdTimestamp * 1000)
+                .toLocaleString('de-DE', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                })
+                .replace(',', '');
+            // For the modified date, show only the date if the item is obsolete
+            const modifiedText = isModified
+                ? ', modified ' +
+                  new Date(item.file.base.modifiedTimestamp * 1000)
+                      .toLocaleString('de-DE', modifiedDateOptions)
+                      .replace(',', '')
+                : '';
+
+            const status = isCurrent ? 'current' : 'obsolete';
+
+            return {
+                value: item.id,
+                label: `${createdDate}${modifiedText} (${status})`,
+                selected: item.id === this.fileHitData?.id,
+            };
+        });
+
         return html`
-            <select @change=${this.onChangeVersion}>
-                ${Array.from(this.versions).map((item) => {
-                    const isModified =
-                        item.file.base.modifiedTimestamp !== item.file.base.createdTimestamp;
-                    const isCurrent = item.base.isCurrent;
-                    // const isCurrent = false;
-                    const modifiedDateOptions = isCurrent
-                        ? {
-                              day: '2-digit',
-                              month: '2-digit',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                              second: '2-digit',
-                              hour12: false,
-                          }
-                        : {
-                              day: '2-digit',
-                              month: '2-digit',
-                              year: 'numeric',
-                          };
-
-                    // Show full date and time for creation time
-                    const createdDate = new Date(item.file.base.createdTimestamp * 1000)
-                        .toLocaleString('de-DE', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            second: '2-digit',
-                            hour12: false,
-                        })
-                        .replace(',', '');
-
-                    // For the modified date, show only the date if the item is obsolete
-                    const modifiedText = isModified
-                        ? ', modified ' +
-                          new Date(item.file.base.modifiedTimestamp * 1000)
-                              .toLocaleString('de-DE', modifiedDateOptions)
-                              .replace(',', '')
-                        : '';
-
-                    const status = isCurrent ? 'current' : 'obsolete';
-
-                    return html`
-                        <option value="${item.id}" ?selected=${item.id === this.fileHitData.id}>
-                            ${createdDate}${modifiedText} (${status})
-                        </option>
-                    `;
-                })}
-            </select>
+            <dbp-select
+                align="right"
+                label=${i18n.t('doc-modal-select-version')}
+                .options=${versionOptions}
+                @change=${this.onChangeVersion}></dbp-select>
         `;
     }
 
