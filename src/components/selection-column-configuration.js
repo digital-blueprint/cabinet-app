@@ -11,6 +11,7 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
     constructor() {
         super();
         this.modalRef = createRef();
+        this.storeSettingsButtonRef = createRef();
         this.selectionType = '';
         this.columnConfigs = [];
         this.columnVisibilityStates = {};
@@ -163,7 +164,10 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
             return;
         }
 
-        const button = e.target;
+        /**
+         * @type {Button}
+         */
+        const button = this.storeSettingsButtonRef.value;
         button.start();
 
         // Store the current column visibility states in localStorage
@@ -510,6 +514,7 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
                     <dbp-button
                         title="${i18n.t('selection-column-config.save', 'Save')}"
                         type="is-primary"
+                        ${ref(this.storeSettingsButtonRef)}
                         ?disabled=${buttonsDisabled}
                         @click="${this.storeSettings}">
                         <dbp-icon  name="save" aria-hidden="true"></dbp-icon>
