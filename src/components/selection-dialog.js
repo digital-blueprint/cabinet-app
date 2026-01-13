@@ -694,7 +694,15 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Download all PDFs via FileSink
         if (pdfFiles.length > 0) {
-            this.fileSinkRef.value.files = pdfFiles;
+            /**
+             * @type {FileSink}
+             */
+            const fileSink = this.fileSinkRef.value;
+            console.assert(fileSink instanceof FileSink, 'FileSink not found');
+            fileSink.files = pdfFiles;
+
+            // Generate filename with current date and time
+            fileSink.filename = this.generateExportFilename('zip');
 
             // Close modal to show FileSink dialog
             const modal = this.modalRef.value;
