@@ -555,14 +555,19 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const instantSearchModule = new InstantSearchModule();
         const columnConfigs = instantSearchModule.getPersonColumns();
 
+        // Filter to only include visible columns
+        const visibleColumns = columnConfigs.filter(
+            (col) => this.personColumnVisibilityStates[col.id] === true,
+        );
+
         // CSV header
-        const headers = columnConfigs.map((col) => i18n.t(col.name));
+        const headers = visibleColumns.map((col) => i18n.t(col.name));
         let csvContent = headers.join(',') + '\n';
 
         // CSV rows
         persons.forEach(([, hit]) => {
             if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
-                const row = columnConfigs.map((col) => {
+                const row = visibleColumns.map((col) => {
                     const value = this.getNestedValue(hit, col.field);
                     if (value === null || value === undefined) {
                         return '';
@@ -602,18 +607,23 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const instantSearchModule = new InstantSearchModule();
         const columnConfigs = instantSearchModule.getPersonColumns();
 
+        // Filter to only include visible columns
+        const visibleColumns = columnConfigs.filter(
+            (col) => this.personColumnVisibilityStates[col.id] === true,
+        );
+
         // Create workbook and worksheet
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Persons');
 
         // Add headers
-        const headers = columnConfigs.map((col) => i18n.t(col.name));
+        const headers = visibleColumns.map((col) => i18n.t(col.name));
         worksheet.addRow(headers);
 
         // Add data rows
         persons.forEach(([, hit]) => {
             if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
-                const row = columnConfigs.map((col) => {
+                const row = visibleColumns.map((col) => {
                     const value = this.getNestedValue(hit, col.field);
                     if (value === null || value === undefined) {
                         return '';
