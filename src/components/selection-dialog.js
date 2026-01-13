@@ -547,6 +547,22 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     /**
+     * Generate export filename with current timestamp
+     * @param {string} extension - File extension (e.g., 'csv' or 'xlsx')
+     * @returns {string} - Filename in format: Elektronischer-Studierendenakt_YYYY-MM-DD-HHMMSS.{extension}
+     */
+    generateExportFilename(extension) {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        return `Elektronischer-Studierendenakt_${year}-${month}-${day}-${hours}${minutes}${seconds}.${extension}`;
+    }
+
+    /**
      * Export persons as CSV
      * @param {Array} persons - Array of [id, hit] tuples
      */
@@ -589,7 +605,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Download CSV
         const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
-        const file = new File([blob], 'persons_export.csv', {type: 'text/csv'});
+
+        // Generate filename with current date and time
+        const filename = this.generateExportFilename('csv');
+
+        const file = new File([blob], filename, {type: 'text/csv'});
         this.fileSinkRef.value.files = [file];
 
         // Close modal to show FileSink dialog
@@ -639,7 +659,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const blob = new Blob([buffer], {
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         });
-        const file = new File([blob], 'persons_export.xlsx', {
+
+        // Generate filename with current date and time
+        const filename = this.generateExportFilename('xlsx');
+
+        const file = new File([blob], filename, {
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         });
 
