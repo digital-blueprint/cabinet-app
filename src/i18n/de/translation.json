@@ -211,7 +211,6 @@
             "createdTimestamp": "Erstellt",
             "disposalType": "Aussonderungsart",
             "fileId": "Datei-ID",
-            "fileName": "Dateiname",
             "fileSource": "Dateiquelle",
             "groupId": "Gruppen-ID",
             "isPartOf": "Teil von",

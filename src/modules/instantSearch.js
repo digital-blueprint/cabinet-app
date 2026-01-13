@@ -489,12 +489,6 @@ export default class InstantSearchModule {
                 defaultVisible: true,
             },
             {
-                id: 'file.base.fileName',
-                name: t('selection-column-config.document.fileName'),
-                field: 'file.base.fileName',
-                defaultVisible: true,
-            },
-            {
                 id: 'file.base.createdTimestamp',
                 name: t('selection-column-config.document.createdTimestamp'),
                 field: 'file.base.createdTimestamp',

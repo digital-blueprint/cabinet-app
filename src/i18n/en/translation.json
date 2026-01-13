@@ -211,7 +211,6 @@
             "createdTimestamp": "Created",
             "disposalType": "Disposal type",
             "fileId": "File ID",
-            "fileName": "File name",
             "fileSource": "File source",
             "groupId": "Group ID",
             "isPartOf": "Part of",
