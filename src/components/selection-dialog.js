@@ -851,7 +851,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 // Extract document information for filename
                 const obfuscatedId = hit.person?.identNrObfuscated || 'unknown-id';
-                console.log('exportDocuments obfuscatedId', obfuscatedId);
                 const additionalType = hit.file?.base?.additionalType?.key || 'Document';
                 const createdTimestamp = hit.file?.base?.createdTimestamp || 0;
 
