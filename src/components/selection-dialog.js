@@ -773,7 +773,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             return;
         }
 
-        await this.exportDocuments(activeDocuments, selectorValue);
+        // Handle table exports (CSV/Excel)
+        if (selectorValue === 'csv' || selectorValue === 'excel') {
+            await this.exportDocumentsAsTable(activeDocuments, selectorValue);
+        } else {
+            // Handle document file exports
+            await this.exportDocuments(activeDocuments, selectorValue);
+        }
     }
 
     async exportDeletedDocuments(e) {
@@ -803,13 +809,19 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             return;
         }
 
-        await this.exportDocuments(deletedDocuments, selectorValue);
+        // Handle table exports (CSV/Excel)
+        if (selectorValue === 'csv' || selectorValue === 'excel') {
+            await this.exportDocumentsAsTable(deletedDocuments, selectorValue);
+        } else {
+            // Handle document file exports
+            await this.exportDocuments(deletedDocuments, selectorValue);
+        }
     }
 
     /**
      * Export documents based on selector value
      * @param {Array} documents - Array of [id, hit] tuples
-     * @param {string} selectorValue - What to export (document-file-only, metadata-only, or all)
+     * @param {string} selectorValue - What to export (document-file-only or all)
      */
     async exportDocuments(documents, selectorValue) {
         const i18n = this._i18n;
@@ -837,9 +849,47 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     continue;
                 }
 
-                // Add metadata file if requested
-                if (selectorValue !== 'document-file-only') {
-                    const metadataFileName = `${hit.file?.base?.fileName || fileId}_metadata.json`;
+                // Extract document information for filename
+                const obfuscatedId = hit.person?.identNrObfuscated || 'unknown-id';
+                console.log('exportDocuments obfuscatedId', obfuscatedId);
+                const additionalType = hit.file?.base?.additionalType?.key || 'Document';
+                const createdTimestamp = hit.file?.base?.createdTimestamp || 0;
+
+                // Format upload date as YYYY-MM-DD
+                const uploadDate =
+                    createdTimestamp > 0
+                        ? new Date(createdTimestamp * 1000).toISOString().split('T')[0]
+                        : 'unknown-date';
+
+                // Get the document file first to determine its extension
+                const documentFile = await BlobOperations.downloadFileFromBlob(
+                    this.entryPointUrl,
+                    this.auth.token,
+                    fileId,
+                    dataURLtoFile,
+                );
+
+                // Extract extension from original filename
+                const originalName = documentFile.name || '';
+                const extension = originalName.includes('.')
+                    ? originalName.substring(originalName.lastIndexOf('.'))
+                    : '.pdf';
+
+                // Construct the proper filename according to specification
+                const baseFilename = `${obfuscatedId}_${additionalType}_${uploadDate}`;
+
+                // Rename the document file with proper naming
+                const renamedDocumentFile = new File(
+                    [documentFile],
+                    `${baseFilename}${extension}`,
+                    {type: documentFile.type},
+                );
+                files.push(renamedDocumentFile);
+
+                // Add metadata file if requested (selectorValue === 'all')
+                if (selectorValue === 'all') {
+                    // For 'all' export, metadata uses [obfuscatedId]_[additionalType]_[upload_date].json
+                    const metadataFileName = `${obfuscatedId}_${additionalType}_${uploadDate}.json`;
                     const metadataFile = new File(
                         [JSON.stringify(hit, null, 2)],
                         metadataFileName,
@@ -848,17 +898,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         },
                     );
                     files.push(metadataFile);
-                }
-
-                // Add document file if requested
-                if (selectorValue !== 'metadata-only') {
-                    const documentFile = await BlobOperations.downloadFileFromBlob(
-                        this.entryPointUrl,
-                        this.auth.token,
-                        fileId,
-                        dataURLtoFile,
-                    );
-                    files.push(documentFile);
                 }
 
                 successCount++;
@@ -870,7 +909,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         if (files.length > 0) {
             // Use FileSink to download all files
-            this.fileSinkRef.value.files = files;
+            const fileSink = this.fileSinkRef.value;
+            fileSink.files = files;
+
+            // Set the ZIP filename to match specification: Elektronischer-Studierendenakt_YYYY-MM-DD-HHMMSS
+            fileSink.filename = this.generateExportFilename('zip');
 
             // Close the modal to show the FileSink dialog
             const modal = this.modalRef.value;
@@ -895,6 +938,120 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     count: failCount,
                 }),
                 'danger',
+            );
+        }
+    }
+
+    /**
+     * Export documents as table (CSV or Excel)
+     * @param {Array} documents - Array of [id, hit] tuples
+     * @param {string} format - Either 'csv' or 'excel'
+     */
+    async exportDocumentsAsTable(documents, format) {
+        const i18n = this._i18n;
+        const instantSearchModule = new InstantSearchModule();
+        const columnConfigs = instantSearchModule.getDocumentColumns();
+
+        // Filter to only include visible columns
+        const visibleColumns = columnConfigs.filter(
+            (col) => this.documentColumnVisibilityStates[col.id] === true,
+        );
+
+        if (format === 'csv') {
+            // CSV header
+            const headers = visibleColumns.map((col) => i18n.t(col.name));
+            let csvContent = headers.join(',') + '\n';
+
+            // CSV rows
+            documents.forEach(([, hit]) => {
+                if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
+                    const row = visibleColumns.map((col) => {
+                        const value = this.getNestedValue(hit, col.field);
+                        if (value === null || value === undefined) {
+                            return '';
+                        }
+                        // Escape CSV values
+                        let strValue = String(value);
+                        if (
+                            strValue.includes(',') ||
+                            strValue.includes('"') ||
+                            strValue.includes('\n')
+                        ) {
+                            strValue = '"' + strValue.replace(/"/g, '""') + '"';
+                        }
+                        return strValue;
+                    });
+                    csvContent += row.join(',') + '\n';
+                }
+            });
+
+            // Download CSV
+            const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
+            const filename = this.generateExportFilename('csv');
+            const file = new File([blob], filename, {type: 'text/csv'});
+            this.fileSinkRef.value.files = [file];
+
+            // Close modal to show FileSink dialog
+            const modal = this.modalRef.value;
+            modal.close();
+
+            // Show success notification
+            this.sendFilterModalNotification(
+                i18n.t('selection-dialog.export-success'),
+                i18n.t('selection-dialog.export-success-message', {
+                    count: documents.length,
+                }),
+                'success',
+            );
+        } else if (format === 'excel') {
+            const ExcelJS = (await import('exceljs')).default;
+
+            // Create workbook and worksheet
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Documents');
+
+            // Add headers
+            const headers = visibleColumns.map((col) => i18n.t(col.name));
+            worksheet.addRow(headers);
+
+            // Add data rows
+            documents.forEach(([, hit]) => {
+                if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
+                    const row = visibleColumns.map((col) => {
+                        const value = this.getNestedValue(hit, col.field);
+                        if (value === null || value === undefined) {
+                            return '';
+                        }
+                        return value;
+                    });
+                    worksheet.addRow(row);
+                }
+            });
+
+            // Generate Excel file
+            const buffer = await workbook.xlsx.writeBuffer();
+            const blob = new Blob([buffer], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            });
+
+            const filename = this.generateExportFilename('xlsx');
+            const file = new File([blob], filename, {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            });
+
+            this.fileSinkRef.value.files = [file];
+
+            // Close modal to show FileSink dialog
+            const modal = this.modalRef.value;
+            modal.close();
+
+            // Show success notification
+            this.sendFilterModalNotification(
+                i18n.t('selection-dialog.export-success'),
+                i18n.t('selection-dialog.export-success-message', {
+                    count: documents.length,
+                }),
+                'success',
             );
         }
     }
@@ -1485,15 +1642,19 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const docDownloadOptions = [];
 
         docDownloadOptions.push({
-            label: i18n.t('doc-modal-document-only', 'Document Only'),
+            label: i18n.t('selection-dialog.export-csv', 'Table in CSV'),
+            value: 'csv',
+        });
+        docDownloadOptions.push({
+            label: i18n.t('selection-dialog.export-excel', 'Table in Excel'),
+            value: 'excel',
+        });
+        docDownloadOptions.push({
+            label: i18n.t('doc-modal-document-only', 'Documents in PDF/A'),
             value: 'document-file-only',
         });
         docDownloadOptions.push({
-            label: i18n.t('doc-modal-only-data', 'Metadata Only'),
-            value: 'metadata-only',
-        });
-        docDownloadOptions.push({
-            label: i18n.t('doc-modal-all', 'All'),
+            label: i18n.t('doc-modal-all', 'Documents with metadata'),
             value: 'all',
         });
 
@@ -1740,32 +1901,14 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   )}
                                               </dbp-button>
                                           </div>
-                                          <select
+                                          <dbp-select
                                               id="export-deleted-select"
-                                              class="dropdown-menu"
-                                              aria-label="${i18n.t(
-                                                  'selection-dialog.export-documents',
+                                              label="${i18n.t(
+                                                  'selection-dialog.export',
+                                                  'Export Documents',
                                               )}"
-                                              @change="${this.exportDeletedDocuments}">
-                                              <option value="" disabled selected>
-                                                  ${i18n.t(
-                                                      'selection-dialog.export-documents',
-                                                      'Export Documents',
-                                                  )}
-                                              </option>
-                                              <option value="document-file-only">
-                                                  ${i18n.t(
-                                                      'doc-modal-document-only',
-                                                      'Document Only',
-                                                  )}
-                                              </option>
-                                              <option value="metadata-only">
-                                                  ${i18n.t('doc-modal-only-data', 'Metadata Only')}
-                                              </option>
-                                              <option value="all">
-                                                  ${i18n.t('doc-modal-all', 'All')}
-                                              </option>
-                                          </select>
+                                              .options=${docDownloadOptions}
+                                              @change="${this.exportDeletedDocuments}"></dbp-select>
                                       </div>
                                       <dbp-tabulator-table
                                           ${ref(this.deletedDocumentTableRef)}
