@@ -245,6 +245,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
     }
 
+    get hasHitSelections() {
+        const isEmptySelection = (v) =>
+            v == null || (typeof v === 'object' && Object.keys(v).length === 0);
+        return !(
+            isEmptySelection(this.hitSelections[this.constructor.HitSelectionType.PERSON]) &&
+            isEmptySelection(this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE])
+        );
+    }
+
     async handleAutomaticDocumentViewOpen() {
         // The first process that fulfills all needs to open the document view dialog will do so
         if (this.documentViewId && !this.lockDocumentViewDialog && this.auth.token) {
@@ -841,9 +850,19 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     font-size: 1.1em;
                     flex: 1;
                 }
-
                 .hit-selection-header dbp-icon.chev {
                     color: var(--dbp-override-accent);
+                }
+                .button.open-dialog {
+                    opacity: 0.4;
+                    pointer-events: none;
+                }
+                .button.open-dialog.enabled {
+                    opacity: 1;
+                    pointer-events: auto;
+                }
+                .button.open-dialog:hover {
+                    opacity: 1;
                 }
                 .hit-selection-body {
                     padding: 0.5em;
@@ -1442,12 +1461,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 : 'Deselect all visible'}
                         </button>
                         <button
-                            class="button"
+                            class="button is-primary open-dialog ${this.hasHitSelections
+                                ? 'enabled'
+                                : ''}"
                             @click="${() => {
                                 /** @type {SelectionDialog} */
                                 const selectionDialog = this.selectionDialogRef.value;
                                 selectionDialog.open(this.hitSelections);
                             }}">
+                            <dbp-icon name="open-new-window"></dbp-icon>
                             Open dialog
                         </button>
                     </div>
