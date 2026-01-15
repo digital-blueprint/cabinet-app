@@ -254,6 +254,18 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         );
     }
 
+    getSelectionCountsDisplay() {
+        const personCount = Object.keys(
+            this.hitSelections[this.constructor.HitSelectionType.PERSON] || {},
+        ).length;
+        const documentCount = Object.keys(
+            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {},
+        ).length;
+
+        const totalCount = personCount + documentCount;
+        return totalCount > 0 ? ` (${totalCount})` : '';
+    }
+
     async handleAutomaticDocumentViewOpen() {
         // The first process that fulfills all needs to open the document view dialog will do so
         if (this.documentViewId && !this.lockDocumentViewDialog && this.auth.token) {
@@ -1458,7 +1470,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                             }}">
                             ${this.hitSelectAllState === this.constructor.HitSelectAllState.SELECT
                                 ? 'Select all visible'
-                                : 'Deselect all visible'}
+                                : 'Deselect all visible'}${this.getSelectionCountsDisplay()}
                         </button>
                         <button
                             class="button is-primary open-dialog ${this.hasHitSelections
