@@ -222,15 +222,36 @@
         },
         "no-columns": "No columns configured.",
         "person": {
+            "admissionQualificationType": "Higher education entrance qualification",
             "birthDate": "Birth date",
             "emailAddressUniversity": "University email",
+            "exmatriculationSemester": "Semester of last exmatriculation",
+            "exmatriculationStatus": "Deregistration status",
             "familyName": "Family name",
+            "gender": "Gender",
             "givenName": "Given name",
+            "homeAddress": {
+                "country": "Home country",
+                "place": "Home place",
+                "region": "Home region"
+            },
+            "immatriculationSemester": "Semester of first matriculation",
+            "nationalities": "Citizenships",
             "nationality": "Citizenship",
             "personalStatus": "Personal status",
             "stPersonNr": "Identification number",
             "studentStatus": "Student status",
-            "studId": "Matriculation number"
+            "studId": "Matriculation number",
+            "study": {
+                "name": "Study field",
+                "status": "Study status",
+                "type": "Degree"
+            },
+            "studyAddress": {
+                "country": "Study country",
+                "place": "Study place",
+                "region": "Study region"
+            }
         },
         "save": "Save",
         "title": "Column Configuration"

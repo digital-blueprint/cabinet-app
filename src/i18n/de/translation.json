@@ -222,15 +222,36 @@
         },
         "no-columns": "Keine Spalten konfiguriert.",
         "person": {
+            "admissionQualificationType": "Hochschulzugangsform",
             "birthDate": "Geburtsdatum",
             "emailAddressUniversity": "Universitäts-E-Mail",
+            "exmatriculationSemester": "Abmeldesemester",
+            "exmatriculationStatus": "Abmeldestatus",
             "familyName": "Nachname",
+            "gender": "Geschlecht",
             "givenName": "Vorname",
+            "homeAddress": {
+                "country": "Land (Heimatadresse)",
+                "place": "Ort (Heimatadresse)",
+                "region": "Region (Heimatadresse)"
+            },
+            "immatriculationSemester": "Aufnahmesemester",
+            "nationalities": "Staatsbürgerschaften",
             "nationality": "Staatsangehörigkeit",
             "personalStatus": "Personenstatus",
             "stPersonNr": "Identifikationsnummer",
             "studentStatus": "Hörerstatus",
-            "studId": "Matrikelnummer"
+            "studId": "Matrikelnummer",
+            "study": {
+                "name": "Studienfach",
+                "status": "Studienstatus",
+                "type": "Abschlussziel"
+            },
+            "studyAddress": {
+                "country": "Land (Studienadresse)",
+                "place": "Ort (Studienadresse)",
+                "region": "Region (Studienadresse)"
+            }
         },
         "save": "Speichern",
         "title": "Spaltenkonfiguration"
