@@ -245,8 +245,8 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 .filter-header {
-                    padding-bottom: 0.8em;
-                    border-bottom: 5px solid var(--dbp-accent);
+                    padding-top: 1.2em;
+                    border-top: 5px solid var(--dbp-accent);
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
