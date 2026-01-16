@@ -1415,7 +1415,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     @click="${() => this.toggleHitSelectionContainer()}"
                     role="button"
                     aria-expanded="${!this.hitSelectionCollapsed}">
-                    <h2 @click="${() => this.toggleHitSelectionContainer()}">Multiaction</h2>
+                    <h2>Multiaction</h2>
                     <dbp-icon
                         name="chevron-down"
                         class="${classMap({
