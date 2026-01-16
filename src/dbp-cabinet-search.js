@@ -1500,7 +1500,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 this.search.refresh();
                             }}">
                             <dbp-icon name="close" class="deselect-all-icon"></dbp-icon>
-                            Deselect all
+                            Deselect all ${this.getSelectionCountsDisplay()}
                         </button>
                     </div>
                 </div>
