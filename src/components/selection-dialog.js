@@ -850,7 +850,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 // Extract document information for filename
-                const obfuscatedId = hit.person?.identNrObfuscated || 'unknown-id';
+                const studId = hit.person?.studId || hit.person?.identNrObfuscated || 'unknown-id';
                 const additionalType = hit.file?.base?.additionalType?.key || 'Document';
                 const createdTimestamp = hit.file?.base?.createdTimestamp || 0;
 
@@ -875,7 +875,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     : '.pdf';
 
                 // Construct the proper filename according to specification
-                const baseFilename = `${obfuscatedId}_${additionalType}_${uploadDate}`;
+                const baseFilename = `${studId}_${additionalType}_${uploadDate}`;
 
                 // Rename the document file with proper naming
                 const renamedDocumentFile = new File(
@@ -887,8 +887,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 // Add metadata file if requested (selectorValue === 'all')
                 if (selectorValue === 'all') {
-                    // For 'all' export, metadata uses [obfuscatedId]_[additionalType]_[upload_date].json
-                    const metadataFileName = `${obfuscatedId}_${additionalType}_${uploadDate}.json`;
+                    // For 'all' export, metadata uses [studId]_[additionalType]_[upload_date].json
+                    const metadataFileName = `${studId}_${additionalType}_${uploadDate}.json`;
                     const metadataFile = new File(
                         [JSON.stringify(hit, null, 2)],
                         metadataFileName,
