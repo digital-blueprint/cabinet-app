@@ -1641,15 +1641,15 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const docDownloadOptions = [];
 
         docDownloadOptions.push({
-            label: i18n.t('selection-dialog.export-csv', 'Table in CSV'),
+            label: i18n.t('selection-dialog.export-csv', 'Table as CSV'),
             value: 'csv',
         });
         docDownloadOptions.push({
-            label: i18n.t('selection-dialog.export-excel', 'Table in Excel'),
+            label: i18n.t('selection-dialog.export-excel', 'Table as Excel'),
             value: 'excel',
         });
         docDownloadOptions.push({
-            label: i18n.t('doc-modal-document-only', 'Documents in PDF'),
+            label: i18n.t('doc-modal-document-only', 'Documents as PDF'),
             value: 'document-file-only',
         });
         docDownloadOptions.push({
