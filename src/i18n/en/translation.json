@@ -26,7 +26,9 @@
         "upload-button-label": "Select documents"
     },
     "cabinet-search": {
+        "deselect-all": "Deselect all",
         "document-filter-group-title": "Document properties",
+        "documents-selected": "Documents selected",
         "filter-accessible-label": "The following categories were selected",
         "filter-file-base-additional-type-text-title": "Document type",
         "filter-file-base-created-timestamp-title": "Added",
@@ -58,7 +60,10 @@
         "filter-study-type-title": "Degree",
         "filter-type-title": "Category",
         "filters": "Filters",
+        "multiaction-batch": "Multiaction",
+        "open-dialog": "Open dialog",
         "person-filter-group-title": "Person properties",
+        "persons-selected": "Persons selected",
         "refinement-date-after-text": "from",
         "refinement-date-before-text": "to",
         "refinement-delete-all-filters": "Clear filters",

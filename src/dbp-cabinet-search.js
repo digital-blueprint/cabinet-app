@@ -1421,7 +1421,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     @click="${() => this.toggleHitSelectionContainer()}"
                     role="button"
                     aria-expanded="${!this.hitSelectionCollapsed}">
-                    <h2>Multiaction</h2>
+                    <h2>${this._i18n.t('cabinet-search.multiaction-batch')}</h2>
                     <dbp-icon
                         name="chevron-down"
                         class="${classMap({
@@ -1432,12 +1432,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 <div class="hit-selection-body" ?hidden="${this.hitSelectionCollapsed}">
                     <div>
-                        Persons selected:
+                        ${this._i18n.t('cabinet-search.persons-selected')}:
                         (${Object.keys(this.hitSelections[this.constructor.HitSelectionType.PERSON])
                             .length})
                     </div>
                     <div>
-                        Documents selected:
+                        ${this._i18n.t('cabinet-search.documents-selected')}:
                         (${Object.keys(
                             this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE],
                         ).length})
@@ -1488,7 +1488,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 selectionDialog.open(this.hitSelections);
                             }}">
                             <dbp-icon name="open-new-window"></dbp-icon>
-                            Open dialog
+                            ${this._i18n.t('cabinet-search.open-dialog')}
                         </button>
                     </div>
                     <div class="reset-area">
@@ -1500,7 +1500,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 this.search.refresh();
                             }}">
                             <dbp-icon name="close" class="deselect-all-icon"></dbp-icon>
-                            Deselect all ${this.getSelectionCountsDisplay()}
+                            ${this._i18n.t('cabinet-search.deselect-all')}
+                            ${this.getSelectionCountsDisplay()}
                         </button>
                     </div>
                 </div>
