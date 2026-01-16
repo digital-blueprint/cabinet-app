@@ -879,12 +879,18 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .hit-selection-body {
                     padding: 0.5em;
                 }
+                .button.deselect-all {
+                    text-decoration: underline;
+                    border: none;
+                }
+                dbp-icon.deselect-all-icon {
+                    padding-right: 0.2em;
+                }
                 .hit-selection-body[hidden] {
                     display: none;
                 }
                 dbp-icon.chev {
                     transition: transform 0.18s ease;
-                    --dbp-icon-size: 1.1em;
                 }
                 dbp-icon.chev.rotated {
                     transform: rotate(180deg);
@@ -1487,12 +1493,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </div>
                     <div class="reset-area">
                         <button
-                            class="button"
+                            class="button deselect-all"
                             @click="${() => {
                                 this.resetHitSelection();
                                 // Refresh the hits to update the selection state
                                 this.search.refresh();
                             }}">
+                            <dbp-icon name="close" class="deselect-all-icon"></dbp-icon>
                             Deselect all
                         </button>
                     </div>
