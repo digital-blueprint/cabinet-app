@@ -1475,8 +1475,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 this.requestUpdate();
                             }}">
                             ${this.hitSelectAllState === this.constructor.HitSelectAllState.SELECT
-                                ? 'Select all visible'
-                                : 'Deselect all visible'}${this.getSelectionCountsDisplay()}
+                                ? this._i18n.t('cabinet-search.select-all')
+                                : this._i18n.t(
+                                      'cabinet-search.deselect-all-visible',
+                                  )}${this.getSelectionCountsDisplay()}
                         </button>
                         <button
                             class="button is-primary open-dialog ${this.hasHitSelections

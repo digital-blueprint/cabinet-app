@@ -27,6 +27,7 @@
     },
     "cabinet-search": {
         "deselect-all": "Gesamtauswahl leeren",
+        "deselect-all-visible": "Zurücksetzen",
         "document-filter-group-title": "Dokumenteigenschaften",
         "documents-selected": "Dokumente ausgewählt",
         "filter-accessible-label": "Folgende Kategorien wurden ausgewählt",
@@ -68,6 +69,7 @@
         "refinement-date-before-text": "bis",
         "refinement-delete-all-filters": "Filter löschen",
         "refinement-delete-filter-button-text": "Auswahl löschen",
+        "select-all": "Alles auswählen",
         "type-filter-group-title": "Kategorie"
     },
     "communication-abstract": "Zusammenfassung",
