@@ -268,7 +268,7 @@
         "active-documents": "Active Documents",
         "batch-operations": "Batch operations",
         "configure-columns": "Configure Columns",
-        "delete-all-active": "Delete documents",
+        "delete-all-active": "Delete",
         "deleted-documents": "Deleted Documents",
         "deletion-error": "Deletion Error",
         "deletion-error-message_one": "Failed to schedule {{count}} document for deletion.",

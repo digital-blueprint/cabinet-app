@@ -1270,6 +1270,9 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     /**
      * Returns the modal dialog for adding a document to a person after the document was selected
      * in the file source
+     * <div slot="title" class="modal-title">
+     *                     <h2>${i18n.t('selection-dialog.batch-operations')}</h2>
+     *                 </div>
      */
     getModalHtml() {
         const i18n = this._i18n;
@@ -1449,7 +1452,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             },
             formatter: (cell) => {
                 const button = this.createScopedElement('dbp-icon-button');
-                button.setAttribute('icon-name', 'trash');
+                button.setAttribute('icon-name', 'close');
                 button.setAttribute('title', i18n.t('selection-dialog.remove', 'Remove'));
                 button.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -1725,18 +1728,18 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         ${Object.keys(personSelections).length > 0
                             ? html`
                                   <div class="export-controls">
-                                      <dbp-button
+                                      <!--<dbp-button
                                           value="${i18n.t(
-                                              'selection-dialog.remove-all-persons',
-                                              'Remove selections',
-                                          )}"
+                                          'selection-dialog.remove-all-persons',
+                                          'Remove selections',
+                                      )}"
                                           @click="${() => this.removeAllPersonSelections()}"
                                           type="is-primary">
                                           ${i18n.t(
-                                              'selection-dialog.remove-all-persons',
-                                              'Remove selections',
-                                          )}
-                                      </dbp-button>
+                                          'selection-dialog.remove-all-persons',
+                                          'Remove selections',
+                                      )}
+                                      </dbp-button>-->
                                       <dbp-select
                                           id="export-persons-select"
                                           label="${i18n.t('selection-dialog.export')}"
@@ -1809,19 +1812,19 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 ? html`
                                       <div class="export-controls">
                                           <div>
-                                              <dbp-button
+                                              <!--<dbp-button
                                                   value="${i18n.t(
-                                                      'selection-dialog.remove-all-active',
-                                                      'Remove selections',
-                                                  )}"
+                                                  'selection-dialog.remove-all-active',
+                                                  'Remove selections',
+                                              )}"
                                                   @click="${() =>
-                                                      this.removeAllActiveDocumentSelections()}"
+                                                  this.removeAllActiveDocumentSelections()}"
                                                   type="is-primary">
                                                   ${i18n.t(
-                                                      'selection-dialog.remove-all-active',
-                                                      'Remove selections',
-                                                  )}
-                                              </dbp-button>
+                                                  'selection-dialog.remove-all-active',
+                                                  'Remove selections',
+                                              )}
+                                              </dbp-button>-->
                                               <dbp-button
                                                   value="${i18n.t(
                                                       'selection-dialog.delete-all-active',
@@ -1829,11 +1832,14 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   )}"
                                                   @click="${() =>
                                                       this.scheduleActiveDocumentsForDeletion()}"
-                                                  type="is-primary">
+                                                  type="is-secondary">
+                                                  <dbp-icon
+                                                      name="trash"
+                                                      aria-hidden="true"></dbp-icon>
                                                   ${i18n.t(
                                                       'selection-dialog.delete-all-active',
                                                       'Delete All',
-                                                  )}
+                                                  )}&nbsp(${Object.keys(deletedDocuments).length})
                                               </dbp-button>
                                           </div>
                                           <dbp-select
