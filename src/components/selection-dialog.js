@@ -1417,7 +1417,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             vertAlign: 'middle',
             minWidth: 64,
             frozen: true,
-            headerHozAlign: 'center',
+            headerHozAlign: 'right',
             headerSort: false,
             titleFormatter: (cell) => {
                 // Check if we already have a stored button reference
@@ -1449,8 +1449,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     e.stopPropagation();
                     gearButtonCallback();
                 });
-                button.style.position = 'relative';
-                button.style.left = '16px';
 
                 // Store the button reference based on the provided name or type
                 if (gearButtonRefName) {
