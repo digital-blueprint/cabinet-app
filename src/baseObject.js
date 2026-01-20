@@ -6,6 +6,7 @@ import * as formElements from './objectTypes/formElements';
 import {getDocumentHit} from './objectTypes/schema.js';
 import {getSemesters, DEFAULT_FILE_COMMON} from './objectTypes/fileCommon.js';
 import {classMap} from 'lit/directives/class-map.js';
+import {until} from 'lit/directives/until.js';
 import {
     gatherFormDataFromElement,
     validateRequiredFields,
@@ -19,6 +20,7 @@ import {
     DbpStringElement,
     DbpStringView,
 } from '@dbp-toolkit/form-elements';
+import {CabinetApi} from './api.js';
 
 export class BaseObject {
     name = 'baseObject';
@@ -607,6 +609,14 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         const fileData = this.data?.file || {};
         const baseData = fileData.base || {};
 
+        let api = new CabinetApi(this.entryPointUrl, this.auth.token);
+        let userFullNamePromise = null;
+        if (baseData.lastModifiedBy) {
+            userFullNamePromise = api.getUserFullName(baseData.lastModifiedBy);
+        } else {
+            userFullNamePromise = Promise.resolve('-');
+        }
+
         return html`
             <dbp-form-string-view
                 subscribe="lang"
@@ -685,6 +695,11 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .value=${baseData.modifiedTimestamp === 0
                     ? ''
                     : new Date(baseData.modifiedTimestamp * 1000)}></dbp-form-datetime-view>
+
+            <dbp-form-string-view
+                subscribe="lang"
+                label=${this._i18n.t('doc-modal-last-modified-by')}
+                .value=${until(userFullNamePromise, '')}></dbp-form-string-view>
         `;
     }
 

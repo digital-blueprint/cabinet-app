@@ -27,6 +27,26 @@ export class CabinetApi {
     }
 
     /**
+     * @param {string} userId
+     * @returns {Promise<string>}
+     */
+    async getUserFullName(userId) {
+        const url = `${this._entryPointUrl}/base/people/${encodeURIComponent(userId)}`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/ld+json',
+                Authorization: 'Bearer ' + this._token,
+            },
+        });
+        if (!response.ok) {
+            throw new Error(`Error fetching user: ${response.statusText}`);
+        }
+        const data = await response.json();
+        return `${data.givenName} ${data.familyName}`;
+    }
+
+    /**
      * Synchronizes a person's data by triggering a sync operation and polling for updates.
      * @param {object} hit - The object containing person information.
      * @param {object} hit.person - The person object to be synchronized.

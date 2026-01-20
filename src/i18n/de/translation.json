@@ -92,6 +92,7 @@
     "doc-modal-edit": "Bearbeiten",
     "doc-modal-Identifier": "Identifikationsnummer des Dokuments",
     "doc-modal-issue-date": "Datum der Ausstellung",
+    "doc-modal-last-modified-by": "Zuletzt geändert von",
     "doc-modal-mark-document-current": "Diese Version als aktiv markieren",
     "doc-modal-mark-document-obsolete": "Diese Version als veraltet markieren",
     "doc-modal-modified": "Letzte Änderung",

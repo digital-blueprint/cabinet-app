@@ -431,6 +431,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.mode === CabinetFile.Modes.NEW_VERSION ||
             this.mode === CabinetFile.Modes.ADD ||
             isCurrent;
+        metaData['lastModifiedBy'] = this.auth['user-id'];
         metaData['groupId'] = groupId || createUUID();
         // metaData['dateCreated'] = new Date().toISOString().split('T')[0];
         console.log('storeDocumentInBlob metaData', metaData);
@@ -568,7 +569,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from a variable and need to set the "data" property from a variable too!
         return staticHtml`
             <h3>${this._i18n.t('Document-details-modal')}</h3>
-            <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang" .data=${hit}></${unsafeStatic(tagName)}>
+            <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang,auth,entry-point-url" .data=${hit}></${unsafeStatic(tagName)}>
         `;
     }
 
@@ -760,6 +761,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             metadata.isCurrent = enable;
+            metadata.lastModifiedBy = this.auth['user-id'];
 
             // Prepare PATCH request to update metadata
             const patchUrl = await this.createBlobUrl(CabinetFile.BlobUrlTypes.UPLOAD, fileId);
@@ -2131,6 +2133,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     // };
                     let obsoleteMetadata = JSON.parse(blobItem.metadata);
                     obsoleteMetadata.isCurrent = false;
+                    obsoleteMetadata.lastModifiedBy = this.auth['user-id'];
 
                     console.log(
                         'markOtherVersionsObsoleteInBlob: obsoleteMetadata',

@@ -92,6 +92,7 @@
     "doc-modal-edit": "Edit",
     "doc-modal-Identifier": "Document ID",
     "doc-modal-issue-date": "Document issue date",
+    "doc-modal-last-modified-by": "Last modified by",
     "doc-modal-mark-document-current": "Set this version as current",
     "doc-modal-mark-document-obsolete": "Set this version as obsolete",
     "doc-modal-modified": "Last modified",
