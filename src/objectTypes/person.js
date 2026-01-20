@@ -437,7 +437,7 @@ class CabinetHitElement extends BaseHitElement {
                                       (study) => html`
                                           <div class="study-entry">
                                               <dbp-icon
-                                                  name="chevron-right-circle"
+                                                  name="minus"
                                                   class="study-icon"
                                                   aria-hidden="true"
                                                   title="Study icon"></dbp-icon>

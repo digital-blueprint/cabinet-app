@@ -1474,6 +1474,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 // Request update to update the hit selection counts
                                 this.requestUpdate();
                             }}">
+                            <dbp-icon name="select-all"></dbp-icon>
                             ${this.hitSelectAllState === this.constructor.HitSelectAllState.SELECT
                                 ? this._i18n.t('cabinet-search.select-all')
                                 : this._i18n.t(
