@@ -1182,7 +1182,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 .selection-count {
-                    background-color: var(--dbp-accent);
                     color: white;
                     border-radius: 12px;
                     padding: 2px 8px;
@@ -1194,23 +1193,22 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .document-sub-tabs {
                     display: flex;
-                    gap: 10px;
+                    gap: 3px;
                     margin-bottom: 20px;
-                    border-bottom: 2px solid var(--dbp-muted);
+                    border-radius: 0;
                 }
 
                 .sub-tab {
                     padding: 10px 20px;
-                    background-color: transparent;
+                    background-color: var(--dbp-background);
                     border: none;
-                    border-bottom: 3px solid transparent;
                     cursor: pointer;
                     color: var(--dbp-content);
                     font-size: 1rem;
                     display: flex;
                     align-items: center;
-                    gap: 8px;
                     transition: all 0.2s ease;
+                    border-radius: 0;
                 }
 
                 .sub-tab:hover {
@@ -1218,18 +1216,25 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 .sub-tab.active {
-                    border-bottom-color: var(--dbp-accent);
+                    border-left: 3px solid var(--dbp-accent);
                     font-weight: bold;
+                    border-bottom: none;
+                    background-color: var(--dbp-background);
+                    box-shadow:
+                        2px 0 6px -2px rgba(0, 0, 0, 0.12),
+                        /* right */ 0 -2px 6px -2px rgba(0, 0, 0, 0.12); /* top */
+                }
+
+                .sub-tab:not(.active) {
+                    box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.12); /* bottom */
                 }
 
                 .sub-tab .selection-count {
-                    background-color: var(--dbp-muted);
                     color: var(--dbp-content);
                 }
 
                 .sub-tab.active .selection-count {
-                    background-color: var(--dbp-accent);
-                    color: white;
+                    color: var(--dbp-content);
                 }
 
                 .document-table-container {
@@ -1786,7 +1791,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 }}">
                                 ${i18n.t('selection-dialog.active-documents', 'Active')}
                                 <span class="selection-count">
-                                    ${Object.keys(activeDocuments).length}
+                                    (${Object.keys(activeDocuments).length})
                                 </span>
                             </button>
                             <button
@@ -1798,7 +1803,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 }}">
                                 ${i18n.t('selection-dialog.deleted-documents', 'Deleted')}
                                 <span class="selection-count">
-                                    ${Object.keys(deletedDocuments).length}
+                                    (${Object.keys(deletedDocuments).length})
                                 </span>
                             </button>
                         </div>
