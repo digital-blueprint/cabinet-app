@@ -23,7 +23,10 @@
         "notification-body-set-for-deletion": "Das Dokument wurde erfolgreich zur Löschung vorgemerkt. Die endgültige Löschung des Dokumentes erfolgt automatisch am {{deleteTime}}",
         "notification-title-set-for-deletion": "Zur Löschung vorgemerkt.",
         "upload-area-text": "",
-        "upload-button-label": "Dokumente auswählen"
+        "upload-button-label": "Dokumente auswählen",
+        "version-modified": "geändert",
+        "version-status-current": "aktiv",
+        "version-status-obsolete": "veraltet"
     },
     "cabinet-search": {
         "deselect-all": "Gesamtauswahl leeren",

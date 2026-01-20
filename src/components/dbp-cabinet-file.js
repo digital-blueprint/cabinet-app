@@ -1416,13 +1416,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .replace(',', '');
             // For the modified date, show only the date if the item is obsolete
             const modifiedText = isModified
-                ? ', modified ' +
+                ? ', ' +
+                  i18n.t('cabinet-file.version-modified') +
+                  ' ' +
                   new Date(item.file.base.modifiedTimestamp * 1000)
                       .toLocaleString('de-DE', modifiedDateOptions)
                       .replace(',', '')
                 : '';
 
-            const status = isCurrent ? 'current' : 'obsolete';
+            const status = isCurrent
+                ? i18n.t('cabinet-file.version-status-current')
+                : i18n.t('cabinet-file.version-status-obsolete');
 
             return {
                 value: item.id,

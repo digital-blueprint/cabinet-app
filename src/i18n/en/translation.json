@@ -23,7 +23,10 @@
         "notification-body-set-for-deletion": "The document was successfully set for deletion. The final deletion of the document takes place automatically on {{deleteTime}}",
         "notification-title-set-for-deletion": "Set for deletion",
         "upload-area-text": "",
-        "upload-button-label": "Select documents"
+        "upload-button-label": "Select documents",
+        "version-modified": "modified",
+        "version-status-current": "current",
+        "version-status-obsolete": "obsolete"
     },
     "cabinet-search": {
         "deselect-all": "Deselect all",
