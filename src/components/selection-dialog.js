@@ -1848,7 +1848,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   ${i18n.t(
                                                       'selection-dialog.delete-all-active',
                                                       'Delete All',
-                                                  )}&nbsp(${Object.keys(deletedDocuments).length})
+                                                  )}&nbsp(${Object.keys(activeDocuments).length})
                                               </dbp-button>
                                           </div>
                                           <dbp-select
