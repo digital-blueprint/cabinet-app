@@ -593,6 +593,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     color: #a5aed1;
                 }
 
+                /* Don't show the extra clear button in Chrome, Safari, Edge, Opera */
+                .ais-SearchBox-input::-webkit-search-cancel-button {
+                    display: none;
+                }
+
                 .ais-SearchBox-submit,
                 .ais-SearchBox-reset,
                 .ais-SearchBox-loadingIndicator {
