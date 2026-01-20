@@ -1258,6 +1258,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     justify-content: space-between;
                 }
 
+                .export-persons-select {
+                    margin-left: auto;
+                }
+
                 @media (max-width: 768px) {
                     .export-controls {
                         flex-direction: column;
@@ -1295,7 +1299,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 sticky-footer
                 @dbp-modal-closed="${this.onCloseModal}">
                 <div slot="title" class="modal-title">
-                    <h2>${i18n.t('selection-dialog.batch-operations')}</h2>
+                    <h2>
+                        ${this.activeTab === this.constructor.HitSelectionType.PERSON
+                            ? i18n.t('selection-dialog.batch-operations-person', '')
+                            : i18n.t('selection-dialog.batch-operations-document', '')}
+                    </h2>
                 </div>
                 <div slot="header" class="header">
                     <div class="modal-notification">
@@ -1729,7 +1737,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         this.constructor.HitSelectionType.PERSON
                             ? 'active'
                             : ''}">
-                        <h3>${i18n.t('selection-dialog.persons-title', 'Selected Persons')}</h3>
                         ${Object.keys(personSelections).length > 0
                             ? html`
                                   <div class="export-controls">
@@ -1747,6 +1754,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                       </dbp-button>-->
                                       <dbp-select
                                           id="export-persons-select"
+                                          class="export-persons-select"
                                           label="${i18n.t('selection-dialog.export')}"
                                           .options=${personDownloadOptions}
                                           @change="${this.exportPersons}"></dbp-select>
@@ -1778,8 +1786,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         this.constructor.HitSelectionType.DOCUMENT_FILE
                             ? 'active'
                             : ''}">
-                        <h3>${i18n.t('selection-dialog.documents-title', 'Selected Documents')}</h3>
-
                         <!-- Sub-tabs for active and deleted documents -->
                         <div class="document-sub-tabs">
                             <button
