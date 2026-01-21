@@ -61,10 +61,10 @@
         "jspdf": "^4.0.0",
         "jspdf-autotable": "^5.0.2",
         "lit": "^3.0.0",
-        "pdfjs-dist": "^4.3  <4.6",
         "typesense": "^2.0.0",
         "typesense-instantsearch-adapter": "^2.8.0",
-        "exceljs": "^4.4.0"
+        "exceljs": "^4.4.0",
+        "pdfjs-dist": "*"
     },
     "scripts": {
         "build": "rolldown -c rollup.config.js",
