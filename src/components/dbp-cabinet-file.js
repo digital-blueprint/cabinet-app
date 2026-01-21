@@ -1508,7 +1508,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 id="document-modal"
                 modal-id="document-modal"
                 subscribe="lang">
-                <div slot="header" class="modal-title doc-title">
+                <div slot="title" class="modal-title doc-title">
                     <dbp-icon name="files" class="view-modal-icon" aria-hidden="true"></dbp-icon>
                     <h2>${headline}</h2>
                 </div>
