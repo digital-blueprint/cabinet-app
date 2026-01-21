@@ -825,11 +825,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     color: var(--dbp-content);
                 }
 
-                .hit-selection-container {
-                    grid-area: selection;
-                    margin-bottom: 1.5em;
-                }
-
                 .hit-selection-container h2 {
                     font-size: 1.2em;
                     font-weight: bold;
@@ -904,6 +899,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 dbp-icon.chev.rotated {
                     transform: rotate(180deg);
                 }
+                .hit-selection-container-desktop {
+                    display: block;
+                    grid-area: selection;
+                    margin-bottom: 1.5em;
+                }
+                .hit-selection-container-mobile {
+                    display: none;
+                }
 
                 @media (max-width: 900px) {
                     #hits-footer {
@@ -915,6 +918,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     }
                 }
                 @media (max-width: 768px) {
+                    .hit-selection-container-desktop {
+                        display: none;
+                    }
+                    .hit-selection-container-mobile {
+                        display: block;
+                        width: 100%;
+                        border: 1px solid black;
+                        padding: 0.5em;
+                    }
                     .result-container {
                         margin-top: 0;
                         display: grid;
@@ -1381,9 +1393,13 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div id="refinement-container" class="refinement-container">
                     <div id="current-filters" class="current-filters"></div>
                     <div id="clear-filters" class="clear-filters"></div>
+                    <div id="hit-selection-container-mobile" class="hit-selection-container-mobile">
+                        ${this.renderHitSelectionContainer()}
+                    </div>
                 </div>
                 <div class="result-container ${this.facetConfigs.length === 0 ? 'no-facets' : ''}">
-                    ${this.renderHitSelectionContainer()}
+                    <div id="hit-selection-container-desktop" class="hit-selection-container-desktop">${this.renderHitSelectionContainer()}</div>
+                    
                     <dbp-cabinet-facets
                         class="dbp-cabinet-facets"
                         ${ref(this.cabinetFacetsRef)}
