@@ -11,7 +11,8 @@
         "cancel": "Cancel",
         "replace-document": "Replace file",
         "save": "Save",
-        "view": "View"
+        "view": "View",
+        "view-short": "View"
     },
     "cabinet-file": {
         "at-time": " at",
@@ -166,6 +167,12 @@
     "gender": "Gender",
     "General-information": "General information",
     "given-name": "First name",
+    "hitbox": {
+        "accessible-list": "The following results are displayedr",
+        "document-entry": "Document",
+        "document-of": "of",
+        "person-entry": "Person entry of"
+    },
     "homeAddress": {
         "country": "Country",
         "heading": "Home Address",

@@ -11,7 +11,8 @@
         "cancel": "Abbrechen",
         "replace-document": "Datei ersetzen",
         "save": "Speichern",
-        "view": "Anzeigen"
+        "view": "Anzeigen",
+        "view-short": "zeige"
     },
     "cabinet-file": {
         "at-time": " um",
@@ -166,6 +167,12 @@
     "gender": "Geschlecht",
     "General-information": "Allgemeine Informationen",
     "given-name": "Vorname",
+    "hitbox": {
+        "accessible-list": "Folgende Ergebnisse werden angezeigt",
+        "document-entry": "Dokument",
+        "document-of": "von",
+        "person-entry": "Personeneintrag von"
+    },
     "homeAddress": {
         "country": "Land",
         "heading": "Heimatadresse",

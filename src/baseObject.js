@@ -471,6 +471,7 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
             isLastOnPage: {type: Boolean, state: true},
             isFirstOfGroupOnPage: {type: Boolean, state: true},
             selected: {type: Boolean, state: true},
+            ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
         };
     }
 
@@ -517,6 +518,10 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
             <button
                 class="button"
                 type="is-secondary"
+                aria-label="${i18n.t('buttons.view-short')} ${this.lang === 'de'
+                    ? hit.file.base.additionalType.text
+                    : hit.file.base.additionalType.textEn} ${i18n.t('hitbox.document-of')} ${hit
+                    .person.familyName}, ${hit.person.givenName}"
                 @click=${(e) => {
                     this.documentViewButtonClick(hit, e);
                 }}>

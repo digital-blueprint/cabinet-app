@@ -382,9 +382,10 @@ class CabinetHitElement extends BaseHitElement {
 
         let spacingTop = this.isFirstOfGroupOnPage && !this.isFirstOnPage;
         let borderTop = spacingTop || this.isFirstOnPage;
+        this.ariaLabel = `${i18n.t('hitbox.person-entry')} ${hit.person.familyName}, ${hit.person.givenName}`;
         return html`
            <div class="wrapper ${spacingTop ? 'spacing-top' : ''} ${borderTop ? 'border-top' : ''}">
-            <header class="ais-Hits-header" tabindex="0" @keydown=${(e) => {
+            <header class="ais-Hits-header" @keydown=${(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault(); // no scrolling with space
                     this.dispatchEvent(
@@ -407,7 +408,7 @@ class CabinetHitElement extends BaseHitElement {
                             aria-hidden="true"
                             title="Person hit box symbol"></dbp-icon>
                     </div>
-                    <h2 class="person-name">
+                    <h2 id="person-name" class="person-name">
                         <!-- familyName: ${hit.person.familyName}-->
                         ${renderFieldWithHighlight(hit, 'person.familyName')},
                         <!-- givenName: ${hit.person.givenName} -->
@@ -464,6 +465,7 @@ class CabinetHitElement extends BaseHitElement {
                 <footer class="hits-person-footer">
                     <button
                         class="button"
+                        aria-label="${i18n.t('buttons.add.documents')}: ${hit.person.familyName}, ${hit.person.givenName}"
                         @click=${() => {
                             this.dispatchEvent(
                                 new CustomEvent('DbpCabinetDocumentAdd', {
@@ -477,6 +479,7 @@ class CabinetHitElement extends BaseHitElement {
                     </button>
                     <button
                         class="button"
+                        aria-label="${focusButtonLabel}: ${hit.person.familyName}, ${hit.person.givenName}"
                         @click="${(event) => {
                             this.dispatchEvent(
                                 new CustomEvent('DbpCabinetFilterPerson', {
@@ -490,6 +493,7 @@ class CabinetHitElement extends BaseHitElement {
                     </button>
                     <button
                         class="button is-secondary"
+                        aria-label="${i18n.t('buttons.view-short')} ${i18n.t('hitbox.person-entry')} ${hit.person.familyName}, ${hit.person.givenName}"
                         @click=${() => {
                             this.dispatchEvent(
                                 new CustomEvent('DbpCabinetDocumentView', {

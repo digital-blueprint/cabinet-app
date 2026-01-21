@@ -519,6 +519,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             } else {
                 this._('.results').classList.remove('stalled');
             }
+            this._('.ais-Hits-list').setAttribute(
+                'aria-label',
+                this._i18n.t('hitbox.accessible-list'),
+            );
 
             // Store the hitsPerPage setting in localStorage
             let prefix = this.getSettingsLocalStoragePrefix();
@@ -1190,11 +1194,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     const tagName = 'dbp-cabinet-object-type-hit-' + tagPart;
                     const objectTypeHitComponent = this.objectTypeHitComponents[objectType];
                     const type = hit['@type'];
-
                     cabinetSearch.defineScopedElement(tagName, objectTypeHitComponent);
                     let hitElement = cabinetSearch.createScopedElement(tagName);
                     hitElement.setAttribute('subscribe', 'lang');
                     hitElement.setAttribute('objectType', objectType);
+                    hitElement.setAttribute('role', 'group');
                     hitElement.data = hit;
                     console.log('item objectType', objectType);
                     console.log('item hit', hit);
