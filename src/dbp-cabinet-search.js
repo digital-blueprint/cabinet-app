@@ -880,9 +880,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .button.open-dialog:hover {
                     opacity: 1;
                 }
-                .hit-selection-body {
-                    padding: 0.5em;
-                }
                 .button.deselect-all {
                     text-decoration: underline;
                     border: none;
@@ -1003,6 +1000,22 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     .ais-Pagination-list {
                         justify-content: center;
                         gap: 0.001em;
+                    }
+                    .ais-Hits-list {
+                        padding: 0;
+                        grid-template-columns: auto;
+                    }
+                    .hit-selection-container .button-batch-container {
+                        display: grid;
+                        grid-template-rows: 1fr 1fr;
+                        align-items: center;
+                        gap: 0.5em;
+                    }
+                    .hit-selection-container .button-area {
+                        flex-direction: column;
+                    }
+                    .hit-selection-container .reset-area {
+                        justify-content: left;
                     }
                 }
             `,
@@ -1463,70 +1476,73 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                             this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE],
                         ).length})
                     </div>
-                    <div class="button-area">
-                        <button
-                            class="button"
-                            @click="${() => {
-                                const currentHits = this.search.helper.lastResults.hits;
-                                if (
-                                    this.hitSelectAllState ===
-                                    this.constructor.HitSelectAllState.SELECT
-                                ) {
-                                    // Add all current hits to the selection
-                                    for (const hit of currentHits) {
-                                        const type = hit['@type'];
-                                        const id = hit.id;
-                                        this.hitSelections[type][id] = hit;
+                    <div class="button-batch-container">
+                        <div class="button-area">
+                            <button
+                                class="button"
+                                @click="${() => {
+                                    const currentHits = this.search.helper.lastResults.hits;
+                                    if (
+                                        this.hitSelectAllState ===
+                                        this.constructor.HitSelectAllState.SELECT
+                                    ) {
+                                        // Add all current hits to the selection
+                                        for (const hit of currentHits) {
+                                            const type = hit['@type'];
+                                            const id = hit.id;
+                                            this.hitSelections[type][id] = hit;
+                                        }
+                                        this.hitSelectAllState =
+                                            this.constructor.HitSelectAllState.DESELECT;
+                                    } else {
+                                        // Remove all current hits from the selection
+                                        for (const hit of currentHits) {
+                                            const type = hit['@type'];
+                                            const id = hit.id;
+                                            delete this.hitSelections[type][id];
+                                        }
+                                        this.hitSelectAllState =
+                                            this.constructor.HitSelectAllState.SELECT;
                                     }
-                                    this.hitSelectAllState =
-                                        this.constructor.HitSelectAllState.DESELECT;
-                                } else {
-                                    // Remove all current hits from the selection
-                                    for (const hit of currentHits) {
-                                        const type = hit['@type'];
-                                        const id = hit.id;
-                                        delete this.hitSelections[type][id];
-                                    }
-                                    this.hitSelectAllState =
-                                        this.constructor.HitSelectAllState.SELECT;
-                                }
-                                // Refresh the hits to update the selection state
-                                this.search.refresh();
-                                // Request update to update the hit selection counts
-                                this.requestUpdate();
-                            }}">
-                            <dbp-icon name="select-all"></dbp-icon>
-                            ${this.hitSelectAllState === this.constructor.HitSelectAllState.SELECT
-                                ? this._i18n.t('cabinet-search.select-all')
-                                : this._i18n.t(
-                                      'cabinet-search.deselect-all-visible',
-                                  )}${this.getSelectionCountsDisplay()}
-                        </button>
-                        <button
-                            class="button is-primary open-dialog ${this.hasHitSelections
-                                ? 'enabled'
-                                : ''}"
-                            @click="${() => {
-                                /** @type {SelectionDialog} */
-                                const selectionDialog = this.selectionDialogRef.value;
-                                selectionDialog.open(this.hitSelections);
-                            }}">
-                            <dbp-icon name="open-new-window"></dbp-icon>
-                            ${this._i18n.t('cabinet-search.open-dialog')}
-                        </button>
-                    </div>
-                    <div class="reset-area">
-                        <button
-                            class="button deselect-all"
-                            @click="${() => {
-                                this.resetHitSelection();
-                                // Refresh the hits to update the selection state
-                                this.search.refresh();
-                            }}">
-                            <dbp-icon name="close" class="deselect-all-icon"></dbp-icon>
-                            ${this._i18n.t('cabinet-search.deselect-all')}
-                            ${this.getSelectionCountsDisplay()}
-                        </button>
+                                    // Refresh the hits to update the selection state
+                                    this.search.refresh();
+                                    // Request update to update the hit selection counts
+                                    this.requestUpdate();
+                                }}">
+                                <dbp-icon name="select-all"></dbp-icon>
+                                ${this.hitSelectAllState ===
+                                this.constructor.HitSelectAllState.SELECT
+                                    ? this._i18n.t('cabinet-search.select-all')
+                                    : this._i18n.t(
+                                          'cabinet-search.deselect-all-visible',
+                                      )}${this.getSelectionCountsDisplay()}
+                            </button>
+                            <button
+                                class="button is-primary open-dialog ${this.hasHitSelections
+                                    ? 'enabled'
+                                    : ''}"
+                                @click="${() => {
+                                    /** @type {SelectionDialog} */
+                                    const selectionDialog = this.selectionDialogRef.value;
+                                    selectionDialog.open(this.hitSelections);
+                                }}">
+                                <dbp-icon name="open-new-window"></dbp-icon>
+                                ${this._i18n.t('cabinet-search.open-dialog')}
+                            </button>
+                        </div>
+                        <div class="reset-area">
+                            <button
+                                class="button deselect-all"
+                                @click="${() => {
+                                    this.resetHitSelection();
+                                    // Refresh the hits to update the selection state
+                                    this.search.refresh();
+                                }}">
+                                <dbp-icon name="close" class="deselect-all-icon"></dbp-icon>
+                                ${this._i18n.t('cabinet-search.deselect-all')}
+                                ${this.getSelectionCountsDisplay()}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
