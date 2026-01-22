@@ -924,7 +924,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     .hit-selection-container-mobile {
                         display: block;
                         width: 100%;
-                        border: 1px solid black;
+                        border: var(--dbp-border);
                         padding: 0.5em;
                     }
                     .result-container {
@@ -968,10 +968,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         flex-wrap: nowrap;
                         justify-content: end;
                         padding-right: 0.4em;
-                    }
-
-                    .refinement-container {
-                        display: inline-block;
                     }
                 }
                 @media (min-width: 1100px) {
