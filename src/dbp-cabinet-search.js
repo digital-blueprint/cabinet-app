@@ -916,7 +916,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
                 @media (max-width: 768px) {
                     .hit-selection-container-desktop {
-                        display: none;
+                        width: 0;
+                        height: 0;
+                        overflow: hidden;
+                        opacity: 0;
                     }
                     .hit-selection-container-mobile {
                         display: block;
