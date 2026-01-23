@@ -271,10 +271,6 @@ class CabinetHitElement extends BaseHitElement {
                         grid-template-columns: 1fr;
                         grid-template-rows: auto auto;
                     }
-
-                    .hits-person-footer {
-                        justify-content: normal;
-                    }
                 }
 
                 @media (min-width: 769px) and (max-width: 1099px) {
