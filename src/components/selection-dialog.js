@@ -1193,12 +1193,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .document-sub-tabs {
                     display: flex;
-                    gap: 3px;
-                    margin-bottom: 20px;
+                    z-index: 3;
+                    position: relative;
                     border-radius: 0;
                 }
 
                 .sub-tab {
+                    width: 50%;
                     padding: 10px 20px;
                     background-color: var(--dbp-background);
                     border: none;
@@ -1222,19 +1223,23 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     background-color: var(--dbp-background);
                     box-shadow:
                         2px 0 6px -2px rgba(0, 0, 0, 0.12),
-                        /* right */ 0 -2px 6px -2px rgba(0, 0, 0, 0.12); /* top */
+                        /* right */ 1px -2px 6px -2px rgba(0, 0, 0, 0.12); /* top */
+                    z-index: 2;
                 }
 
                 .sub-tab:not(.active) {
-                    box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.12); /* bottom */
+                    box-shadow: rgb(0, 0, 0) 0px -6px 9px -11px inset; /* bottom */
                 }
 
                 .sub-tab .selection-count {
                     color: var(--dbp-content);
+                    font-size: 1em;
+                    font-weight: normal;
                 }
 
                 .sub-tab.active .selection-count {
                     color: var(--dbp-content);
+                    font-weight: bold;
                 }
 
                 .document-table-container {
@@ -1243,6 +1248,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .document-table-container.active {
                     display: block;
+                    padding-top: 1.5em;
+                    background-color: white;
+                    position: relative;
+                    z-index: 3;
                 }
 
                 .export-controls select {
