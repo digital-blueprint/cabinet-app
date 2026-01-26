@@ -921,9 +921,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         overflow: hidden;
                         opacity: 0;
                     }
+                    .refinement-container {
+                        flex-direction: column;
+                    }
+
+                    .clear-filters {
+                        display: flex;
+                        justify-content: flex-end;
+                    }
                     .hit-selection-container-mobile {
                         display: block;
-                        width: 100%;
+                        max-width: 100%;
                         border: var(--dbp-border);
                         padding: 0.5em;
                     }
