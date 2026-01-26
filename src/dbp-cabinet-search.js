@@ -1532,6 +1532,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 class="button is-primary open-dialog ${this.hasHitSelections
                                     ? 'enabled'
                                     : ''}"
+                                aria-disabled="true"
                                 @click="${() => {
                                     /** @type {SelectionDialog} */
                                     const selectionDialog = this.selectionDialogRef.value;
