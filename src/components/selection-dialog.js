@@ -1272,13 +1272,22 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 @media (max-width: 768px) {
-                    .export-controls {
-                        flex-direction: column;
-                        align-items: stretch;
-                    }
-
                     .dropdown-menu {
                         width: 100%;
+                    }
+                }
+
+                @media (max-width: 490px) {
+                    .modal-container {
+                        grid-template-columns: none;
+                        min-height: 0;
+                    }
+                    .modal-nav {
+                        flex-direction: row;
+                        justify-content: space-evenly;
+                        border-bottom: var(--dbp-border);
+                        border-top: var(--dbp-border);
+                        border-right: none;
                     }
                 }
             `,
