@@ -1245,9 +1245,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         word-wrap: break-word;
                         word-break: break-word;
                     }
-                    #document-modal .status {
-                        align-items: flex-start;
-                    }
                     #document-modal .form {
                         padding-left: 0;
                     }
@@ -1268,9 +1265,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         word-spacing: inherit;
                         word-wrap: break-word;
                         word-break: break-word;
-                    }
-                    #document-modal .status {
-                        align-items: flex-start;
                     }
                     #document-modal .form {
                         padding-left: 0;
