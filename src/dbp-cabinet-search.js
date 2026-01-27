@@ -999,7 +999,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                     .result-container {
                         gap: 0.5em;
-                        grid-template-columns: auto;
                     }
                 }
 
