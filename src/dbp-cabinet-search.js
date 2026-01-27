@@ -156,6 +156,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this._initInstantsearchPromise = null;
         this._initialUiState = null;
         this.hitSelectionCollapsed = true;
+        this.disabled = true;
     }
 
     resetHitSelection() {
@@ -201,6 +202,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             hitSelections: {type: Object, attribute: false},
             hitSelectAllState: {type: Boolean, attribute: false},
             hitSelectionCollapsed: {type: Boolean},
+            disabled: {type: Boolean, reflect: true},
         };
     }
 
@@ -697,7 +699,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     justify-content: space-between;
                 }
 
-                dbp-cabinet-facets {
+                .dbp-cabinet-facets {
                     grid-area: sidebar;
                 }
 
@@ -851,7 +853,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     transition:
                         max-height 0.22s ease,
                         padding 0.22s ease;
-                    overflow: hidden;
                 }
                 .hit-selection-header {
                     display: flex;
@@ -860,14 +861,23 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     cursor: pointer;
                     user-select: none;
                     border: none;
+                    width: 100%;
+                    width: 100%;
+                    justify-content: space-between;
+                    background-color: initial;
+                    padding: 0;
                 }
+
                 .hit-selection-header h2 {
                     margin: 0;
-                    font-size: 1.1em;
-                    flex: 1;
+                    font-size: 1.5em;
+                    font-weight: bold;
+                    color: var(--dbp-override-content);
                 }
                 .hit-selection-header dbp-icon.chev {
                     color: var(--dbp-override-accent);
+                    width: 16px;
+                    height: 16px;
                 }
                 .button.open-dialog {
                     opacity: 0.4;
@@ -887,6 +897,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 dbp-icon.deselect-all-icon {
                     padding-right: 0.2em;
                 }
+
                 .hit-selection-body[hidden] {
                     display: none;
                 }
@@ -1460,19 +1471,21 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     renderHitSelectionContainer() {
         return html`
             <div class="hit-selection-container">
-                <div
+                <button
                     class="hit-selection-header"
                     @click="${() => this.toggleHitSelectionContainer()}"
-                    role="button"
+                    tabindex="0"
+                    aria-label="${this._i18n.t('buttons.aria-label.multiselection')}"
                     aria-expanded="${!this.hitSelectionCollapsed}">
                     <h2>${this._i18n.t('cabinet-search.multiaction-batch')}</h2>
                     <dbp-icon
+                        aria-hidden="true"
                         name="chevron-down"
                         class="${classMap({
                             chev: true,
                             rotated: !this.hitSelectionCollapsed,
                         })}"></dbp-icon>
-                </div>
+                </button>
 
                 <div class="hit-selection-body" ?hidden="${this.hitSelectionCollapsed}">
                     <div>
@@ -1489,6 +1502,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="button-batch-container">
                         <div class="button-area">
                             <button
+                                aria-label="
+                                ${this.hitSelectAllState ===
+                                this.constructor.HitSelectAllState.SELECT
+                                    ? this._i18n.t('buttons.aria-label.select-all')
+                                    : this._i18n.t('buttons.aria-label.deselect-all-visible')}"
                                 class="button"
                                 @click="${() => {
                                     const currentHits = this.search.helper.lastResults.hits;
@@ -1519,37 +1537,44 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                                     // Request update to update the hit selection counts
                                     this.requestUpdate();
                                 }}">
-                                <dbp-icon name="select-all"></dbp-icon>
+                                <dbp-icon name="select-all" aria-hidden="true"></dbp-icon>
                                 ${this.hitSelectAllState ===
                                 this.constructor.HitSelectAllState.SELECT
                                     ? this._i18n.t('cabinet-search.select-all')
-                                    : this._i18n.t(
-                                          'cabinet-search.deselect-all-visible',
-                                      )}${this.getSelectionCountsDisplay()}
+                                    : this._i18n.t('cabinet-search.deselect-all-visible')}
                             </button>
                             <button
+                                aria-label="${this._i18n.t('buttons.aria-label.open-dialog')}"
                                 class="button is-primary open-dialog ${this.hasHitSelections
                                     ? 'enabled'
                                     : ''}"
-                                aria-disabled="true"
+                                id="open-dialog"
+                                ?disabled="${!this.hasHitSelections}"
                                 @click="${() => {
                                     /** @type {SelectionDialog} */
                                     const selectionDialog = this.selectionDialogRef.value;
                                     selectionDialog.open(this.hitSelections);
                                 }}">
-                                <dbp-icon name="open-new-window"></dbp-icon>
+                                <dbp-icon name="open-new-window" aria-hidden="true"></dbp-icon>
                                 ${this._i18n.t('cabinet-search.open-dialog')}
                             </button>
                         </div>
                         <div class="reset-area">
                             <button
+                                aria-label="${this._i18n.t(
+                                    'buttons.aria-label.deselect-all',
+                                )} ${this.getSelectionCountsDisplay()}"
                                 class="button deselect-all"
+                                ?disabled="${!this.hasHitSelections}"
                                 @click="${() => {
                                     this.resetHitSelection();
                                     // Refresh the hits to update the selection state
                                     this.search.refresh();
                                 }}">
-                                <dbp-icon name="close" class="deselect-all-icon"></dbp-icon>
+                                <dbp-icon
+                                    name="close"
+                                    class="deselect-all-icon"
+                                    aria-hidden="true"></dbp-icon>
                                 ${this._i18n.t('cabinet-search.deselect-all')}
                                 ${this.getSelectionCountsDisplay()}
                             </button>

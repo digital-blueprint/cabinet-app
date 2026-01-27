@@ -8,6 +8,13 @@
         "add": {
             "documents": "Dokument hinzufügen"
         },
+        "aria-label": {
+            "deselect-all": "Gesamtauswahl leeren",
+            "deselect-all-visible": "Alles Ausgewählte auf dieser Seite zurücksetzen",
+            "multiselection": "Menü für Mehrfachauswahl",
+            "open-dialog": "Fenster für Multiaktion öffnen",
+            "select-all": "Alles für Mehrfachaktion auswählen"
+        },
         "cancel": "Abbrechen",
         "replace-document": "Datei ersetzen",
         "save": "Speichern",

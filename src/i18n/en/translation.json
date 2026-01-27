@@ -8,6 +8,13 @@
         "add": {
             "documents": "Add document"
         },
+        "aria-label": {
+            "deselect-all": "Deselect all",
+            "deselect-all-visible": "Deselect all from this page",
+            "multiselection": "multiselection menu",
+            "open-dialog": "Open total selection for multi-action",
+            "select-all": "Select all"
+        },
         "cancel": "Cancel",
         "replace-document": "Replace file",
         "save": "Save",
