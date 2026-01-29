@@ -76,13 +76,11 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
                 #filter-modal .modal-title {
                     display: flex;
-                    align-items: center;
                     justify-content: center;
                     gap: 8px;
                 }
 
                 #filter-modal .modal-title h2 {
-                    padding-top: 0.5rem;
                     font-weight: 600;
                     font-size: 1.5em;
                     margin: 0;
@@ -116,7 +114,9 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 }
 
                 .facet-filter-icon {
-                    font-size: 1.5em;
+                    color: var(--dbp-accent);
+                    margin-top: 2px;
+                    font-size: 1.3em;
                 }
 
                 .facets {
