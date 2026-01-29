@@ -1514,7 +1514,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 subscribe="lang">
                 <div slot="title" class="modal-title doc-title">
                     <dbp-icon name="files" class="view-modal-icon" aria-hidden="true"></dbp-icon>
-                    <h2>${headline} of ${person.fullName}</h2>
+                    <h2>${headline} ${i18n.t('hitbox.document-of')} ${person.fullName}</h2>
                 </div>
                 <div slot="header" class="header">
                     <div class="modal-notification">
