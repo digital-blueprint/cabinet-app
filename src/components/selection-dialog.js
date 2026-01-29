@@ -1090,6 +1090,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     height: 100%;
                     min-height: 400px;
                 }
+                .modal-title h2 {
+                    margin: 0;
+                    font-weight: 600;
+                }
 
                 .modal-nav {
                     cursor: pointer;
