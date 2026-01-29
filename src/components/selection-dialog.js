@@ -1249,7 +1249,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .document-table-container.active {
                     display: block;
                     padding-top: 1.5em;
-                    background-color: white;
+                    background-color: var(--dbp-background);
                     position: relative;
                     z-index: 3;
                 }
