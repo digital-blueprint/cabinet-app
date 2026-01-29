@@ -251,13 +251,27 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
                     grid-auto-flow: row;
                     margin-right: 5px;
                 }
+                .modal-title {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 8px;
+                }
+                .modal-title h2 {
+                    margin: 0;
+                    font-weight: 600;
+                }
+
+                .column-config-modal-icon {
+                    color: var(--dbp-accent);
+                    margin-top: 2px;
+                    font-size: 1.3em;
+                }
 
                 .modal-content h3 {
                     font-size: 1.17em;
                     margin-top: 0;
                     margin-bottom: 10px;
                 }
-
                 .modal-content p {
                     color: var(--dbp-muted);
                     font-size: 0.875rem;
@@ -421,7 +435,6 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
 
         return html`
             <div class="config-section">
-                <h3>${i18n.t('selection-column-config.title', 'Column Configuration')}</h3>
                 <p>
                     ${i18n.t(
                         'selection-column-config.description',
@@ -462,8 +475,10 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
                 <div slot="title" class="modal-title">
                     <dbp-icon
                         title="${i18n.t('selection-column-config.title', 'Column Configuration')}"
+                        class="column-config-modal-icon"
                         name="cog"></dbp-icon>
                     <h2>${i18n.t('selection-column-config.title', 'Column Configuration')}</h2>
+                    
                 </div>
                 <div slot="header" class="header">
                     <div class="modal-notification">
