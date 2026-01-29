@@ -1096,7 +1096,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     grid-template-columns: 1fr 1fr;
                     gap: 10px 10px;
                     grid-auto-flow: row;
-                    padding: 0 25px;
+                    padding-right: 0.5em;
                 }
 
                 #document-modal .description {
@@ -1106,9 +1106,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 #document-modal .doc-title {
                     display: flex;
                     flex-direction: row;
-                    padding: 0 25px;
-                    align-items: center;
                     justify-content: flex-start;
+                }
+                #document-modal h3 {
+                    margin: 0;
+                }
+                .doc-title h2 {
+                    margin: 0;
+                    font-weight: bold;
                 }
 
                 #document-modal .view-modal-icon {
@@ -1120,8 +1125,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 #document-modal .student-info {
                     display: flex;
+                    flex-direction: column;
                     align-items: flex-start;
                     justify-content: flex-start;
+                    padding-bottom: 10px;
                 }
 
                 #document-modal .status {
@@ -1129,6 +1136,19 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     flex-direction: column;
                     justify-content: space-evenly;
                     align-items: flex-end;
+                }
+                .desc-stat,
+                .form,
+                .pdf-preview {
+                    grid-column: 1 / -1;
+                }
+
+                #document-modal .desc-stat {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: end;
+                    justify-content: space-between;
+                    padding-bottom: 15px;
                 }
 
                 #document-modal .status.hidden {
@@ -1204,10 +1224,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     width: calc(100% - 0.9em);
                 }
 
-                #document-modal .desc-stat {
-                    padding: 10px 0;
-                }
-
                 .grouping-container {
                     display: flex;
                     align-items: center;
@@ -1218,20 +1234,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     margin: 0;
                 }
 
-                @media (min-width: 768px) {
-                    .desc-stat,
-                    .form,
-                    .pdf-preview {
-                        grid-column: 1 / -1;
-                    }
-                    #document-modal .desc-stat {
-                        display: flex;
-                        flex-direction: row;
-                        align-items: normal;
-                        justify-content: space-between;
-                    }
-                }
-                @media (min-width: 490px) and (max-width: 767px) {
+                @media (max-width: 767px) {
                     #document-modal .content {
                         display: flex;
                         flex-direction: column;
@@ -1250,6 +1253,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     }
                     #document-modal .description {
                         flex-wrap: wrap;
+                    }
+
+                    #document-modal .status {
+                        align-items: flex-start;
+                    }
+                    #document-modal ul {
+                        padding: 10px 15px;
                     }
                 }
                 @media (max-width: 490px) {
@@ -1504,7 +1514,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 subscribe="lang">
                 <div slot="title" class="modal-title doc-title">
                     <dbp-icon name="files" class="view-modal-icon" aria-hidden="true"></dbp-icon>
-                    <h2>${headline}</h2>
+                    <h2>${headline} of ${person.fullName}</h2>
                 </div>
                 <div slot="header" class="header">
                     <div class="modal-notification">
@@ -1518,13 +1528,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="desc-stat">
                         <div class="description">
                             <div class="student-info">
-                                <h3>
-                                    ${person.fullName} ${formatDate(person.birthDate)}
-                                    <span style="font-weight:300">
-                                        &nbsp;(${person.studId} | ${person.stPersonNr})
-                                    </span>
-                                </h3>
-                                <br />
+                                <span>
+                                    ${i18n.t('birth-date')}: ${formatDate(person.birthDate)}
+                                </span>
+                                <span>
+                                    ${i18n.t('selection-column-config.person.stPersonNr')}:
+                                    &nbsp;(${person.studId} | ${person.stPersonNr})
+                                </span>
                             </div>
                             ${this.renderGroupingContainer()}
                         </div>
