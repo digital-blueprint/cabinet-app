@@ -621,6 +621,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .ais-SearchBox-submit {
                     left: 0.3rem;
+                    cursor: none;
                 }
 
                 .ais-SearchBox-reset {
