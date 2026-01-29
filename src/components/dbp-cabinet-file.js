@@ -1234,7 +1234,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     margin: 0;
                 }
 
-                @media (max-width: 767px) {
+                @media (min-width: 490px) and (max-width: 767px) {
                     #document-modal .content {
                         display: flex;
                         flex-direction: column;
