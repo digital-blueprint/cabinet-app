@@ -744,7 +744,11 @@ class CabinetViewElement extends BaseViewElement {
                 .modal-Ci-header-container {
                     display: flex;
                     align-items: center;
-                    margin-bottom: 1rem;
+                    margin-bottom: 0.1rem;
+                }
+
+                hr {
+                    margin-top: 0;
                 }
 
                 :is(.modal-Gi-header-svg, .modal-Si-header-svg, .modal-Ci-header-svg) {
@@ -754,7 +758,7 @@ class CabinetViewElement extends BaseViewElement {
 
                 :is(.modal-Gi-header-title, .modal-Si-header-title, .modal-Ci-header-title) h3 {
                     margin: 0;
-                    font-size: 1.17em;
+                    font-size: 1em;
                     font-weight: 600;
                     padding-top: 0.2em;
                 }
@@ -779,7 +783,7 @@ class CabinetViewElement extends BaseViewElement {
                 .info-row {
                     display: flex;
                     justify-content: space-between;
-                    padding: 8px 0;
+                    padding: 5px 0;
                 }
 
                 .info-row div {
@@ -886,11 +890,11 @@ class CabinetViewElement extends BaseViewElement {
 
                 .header-container {
                     display: flex;
-                    align-items: center;
+                    align-items: flex-end;
                     justify-content: space-between;
                     gap: 10px;
-                    padding-bottom: 0.5em;
-                    margin-bottom: 1.7em;
+                    margin-bottom: 15px;
+
                     position: sticky;
                     z-index: 1;
                     top: 0;
@@ -905,6 +909,7 @@ class CabinetViewElement extends BaseViewElement {
 
                 .last-sync-title {
                     font-weight: 600;
+                    margin: 0;
                 }
 
                 .button-container {

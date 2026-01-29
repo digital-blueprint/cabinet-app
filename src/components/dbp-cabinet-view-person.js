@@ -126,18 +126,16 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
 
                 #view-modal .modal-title-person {
                     display: flex;
-                    align-items: center;
                 }
 
                 #view-modal .person-modal-icon {
                     color: var(--dbp-accent);
-                    margin-top: 0px;
+                    margin-top: 2px;
                     font-size: 1.3em;
                 }
 
                 #view-modal .person-modal-title {
-                    margin-left: 10px;
-                    padding-top: 0.4rem;
+                    margin: 0 10px;
                     font-weight: bold;
                     font-size: 1.5em;
                 }
