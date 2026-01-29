@@ -1528,11 +1528,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="desc-stat">
                         <div class="description">
                             <div class="student-info">
-                                <span>
+                                <span class="birth-date">
                                     ${i18n.t('birth-date')}: ${formatDate(person.birthDate)}
                                 </span>
                                 <span>
-                                    ${i18n.t('selection-column-config.person.stPersonNr')}:
+                                    ls ${i18n.t('selection-column-config.person.stPersonNr')}:
                                     &nbsp;(${person.studId} | ${person.stPersonNr})
                                 </span>
                             </div>
