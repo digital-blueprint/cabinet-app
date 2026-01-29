@@ -151,7 +151,6 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
         const hit = this.hitData;
         console.log('hit', hit);
         const objectType = hit.objectType;
-
         if (objectType === '') {
             console.log('objectType empty', objectType);
             return html`
@@ -177,6 +176,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "data" property from a variable too!
         return staticHtml`
+        
             <dbp-modal
                 ${ref(this.modalRef)}
                 id="view-modal"
@@ -189,7 +189,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
                 @dbp-modal-closed="${this.onClosePersonModal}">
                 <div slot="title" class="modal-title modal-title-person">
                     <dbp-icon name="user" class="person-modal-icon" aria-hidden="true"></dbp-icon>
-                    <h2 class="person-modal-title">${hit.person.fullName}</h2>
+                    <h2 class="person-modal-title" aria-label="${this._i18n.t('hitbox.person-entry')} ${hit.person.fullName}"> ${hit.person.fullName}</h2>
                 </div>
                 <div slot="header">
                 </div>
