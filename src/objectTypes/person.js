@@ -745,6 +745,7 @@ class CabinetViewElement extends BaseViewElement {
                     display: flex;
                     align-items: center;
                     margin-bottom: 0.1rem;
+                    margin-top: 2em;
                 }
 
                 hr {
@@ -758,7 +759,7 @@ class CabinetViewElement extends BaseViewElement {
 
                 :is(.modal-Gi-header-title, .modal-Si-header-title, .modal-Ci-header-title) h3 {
                     margin: 0;
-                    font-size: 1em;
+                    font-size: 1.17em;
                     font-weight: 600;
                     padding-top: 0.2em;
                 }
@@ -894,7 +895,6 @@ class CabinetViewElement extends BaseViewElement {
                     justify-content: space-between;
                     gap: 10px;
                     margin-bottom: 15px;
-
                     position: sticky;
                     z-index: 1;
                     top: 0;
@@ -1172,7 +1172,6 @@ class CabinetViewElement extends BaseViewElement {
                     </ul>
                 </div>
             </div>
-            <br />
             <div class="modal-Si-header-container">
                 <div class="modal-Si-header-svg">
                     <dbp-icon name="book" aria-hidden="true"></dbp-icon>
@@ -1195,30 +1194,63 @@ class CabinetViewElement extends BaseViewElement {
                     })
                     .map(
                         (study) => html`
-                <li>
-                    <ul class="study-info">
-                        <div class="study-key-group">
-                            <li class="study-row"><b><span> ${displayValue(study.name)}</span></b></li>
-                        </div>
-                        <li class="study-row"><div>${i18n.t('semester')}</div><span>${displayValue(study.semester)}</span></li>
-                        <li class="study-row"><div>${i18n.t('status')}</div><span> ${displayValue(selectTranslation(study.status))}</span></li>
-                        <li class="study-row"><div>${i18n.t('immatriculation-date')}</div><span> ${formatDate(study.immatriculationDate)}</span></li>
-                        <li class="study-row"><div>${i18n.t('qualification-study')}</div><span> ${displayValue(selectTranslation(study.qualificationType))} ${formatDate(study.qualificationDate)} ${selectTranslation(study.qualificationState)}</span></li>
-                        <li class="study-row"><div>${i18n.t('exmatriculation')}</div><span> ${displayValue(selectTranslation(study.exmatriculationType))} ${formatDate(study.exmatriculationDate)}</span></li>
-                        <li class="study-row"><div>${i18n.t('curriculum-version')}</div><span> ${displayValue(study.curriculumVersion)}</span></li>
-                        </br>
-                        </br>
-                        <!--<li><b>coUrl:</b> <a href="${study.coUrl}">${study.coUrl}</a></li>
+                            <li>
+                                <ul class="study-info">
+                                    <div class="study-key-group">
+                                        <li class="study-row">
+                                            <b><span>${displayValue(study.name)}</span></b>
+                                        </li>
+                                    </div>
+                                    <li class="study-row">
+                                        <div>${i18n.t('semester')}</div>
+                                        <span>${displayValue(study.semester)}</span>
+                                    </li>
+                                    <li class="study-row">
+                                        <div>${i18n.t('status')}</div>
+                                        <span>
+                                            ${displayValue(selectTranslation(study.status))}
+                                        </span>
+                                    </li>
+                                    <li class="study-row">
+                                        <div>${i18n.t('immatriculation-date')}</div>
+                                        <span>${formatDate(study.immatriculationDate)}</span>
+                                    </li>
+                                    <li class="study-row">
+                                        <div>${i18n.t('qualification-study')}</div>
+                                        <span>
+                                            ${displayValue(
+                                                selectTranslation(study.qualificationType),
+                                            )}
+                                            ${formatDate(study.qualificationDate)}
+                                            ${selectTranslation(study.qualificationState)}
+                                        </span>
+                                    </li>
+                                    <li class="study-row">
+                                        <div>${i18n.t('exmatriculation')}</div>
+                                        <span>
+                                            ${displayValue(
+                                                selectTranslation(study.exmatriculationType),
+                                            )}
+                                            ${formatDate(study.exmatriculationDate)}
+                                        </span>
+                                    </li>
+                                    <li class="study-row">
+                                        <div>${i18n.t('curriculum-version')}</div>
+                                        <span>${displayValue(study.curriculumVersion)}</span>
+                                    </li>
+
+                                    <!--<li><b>coUrl:</b> <a href="${study.coUrl}">${study.coUrl}</a></li>
                         <li><b>id:</b> ${study.id}</li>
                         <li><b>exmatriculationSemester</b> ${study.exmatriculationSemester}</li>
                         <li><b>immatriculationSemester</b> ${study.immatriculationSemester}</li>
                         <li><b>type</b> ${study.type}</li>
-                        <li><b>additionalCertificates</b> ${study.additionalCertificates.map((c) => selectTranslation(c)).join(', ')}</li>-->
-                    </ul>
-                </li>
-                `,
+                        <li><b>additionalCertificates</b> ${study.additionalCertificates
+                                        .map((c) => selectTranslation(c))
+                                        .join(', ')}</li>-->
+                                </ul>
+                            </li>
+                        `,
                     )}
-            </br>
             <div class="modal-Ci-header-container">
                 <div class="modal-Ci-header-svg">
                     <dbp-icon name="phone" aria-hidden="true"></dbp-icon>
