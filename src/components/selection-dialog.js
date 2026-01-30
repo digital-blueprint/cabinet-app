@@ -1186,7 +1186,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 .selection-count {
-                    color: white;
+                    color: var(--dbp-content);
                     border-radius: 12px;
                     padding: 2px 8px;
                     font-size: 0.75rem;
