@@ -873,10 +873,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     margin: 0;
                     font-size: 1.5em;
                     font-weight: bold;
-                    color: var(--dbp-override-content);
+                    color: var(--dbp-content);
                 }
                 .hit-selection-header dbp-icon.chev {
-                    color: var(--dbp-override-accent);
+                    color: var(--dbp-accent);
                     width: 16px;
                     height: 16px;
                 }
@@ -966,11 +966,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     .results {
                         grid-area: main;
                         width: 100%;
-                    }
-
-                    .facet-filter-button-icon {
-                        color: #9e1e4d;
-                        padding-bottom: 0.2em;
                     }
 
                     .filter-header-button {
