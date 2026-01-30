@@ -810,7 +810,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .button-view {
                     padding: 0.3em 2em;
-                    font-size: 18px;
+                    font-size: 1em;
                     background-color: var(--dbp-primary-surface);
                     color: var(--dbp-on-primary-surface);
                     text-align: center;

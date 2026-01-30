@@ -96,7 +96,7 @@ export const getCommonStyles = () => css`
 
     .ais-doc-title {
         color: var(--dbp-content);
-        font-size: 24px;
+        font-size: 1.5em;
         display: inline-block;
         white-space: nowrap;
     }

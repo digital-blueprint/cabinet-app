@@ -191,7 +191,7 @@ class CabinetHitElement extends BaseHitElement {
 
                 .study-icon {
                     margin-right: 6px;
-                    font-size: 16px;
+                    font-size: 1em;
                     flex-shrink: 0;
                 }
 

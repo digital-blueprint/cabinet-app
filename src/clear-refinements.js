@@ -25,7 +25,7 @@ class ClearRefinements extends LangMixin(DBPLitElement, createInstance) {
                 color: var(--dbp-content);
                 padding: 7px 7px 7px 30px;
                 border-radius: 0;
-                font-size: 13px;
+                font-size: 0.8em;
                 position: relative;
                 cursor: pointer;
             }
