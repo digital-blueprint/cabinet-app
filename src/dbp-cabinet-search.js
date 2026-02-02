@@ -1473,7 +1473,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     tabindex="0"
                     aria-label="${this._i18n.t('buttons.aria-label.multiselection')}"
                     aria-expanded="${!this.hitSelectionCollapsed}">
-                    <h2>${this._i18n.t('cabinet-search.multiaction-batch')}</h2>
+                    <h2>${this._i18n.t('cabinet-search.multiselection-batch')}</h2>
                     <dbp-icon
                         aria-hidden="true"
                         name="chevron-down"
