@@ -1843,19 +1843,19 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 ? html`
                                       <div class="export-controls">
                                           <div>
-                                              <!--<dbp-button
+                                              <dbp-button
                                                   value="${i18n.t(
-                                                  'selection-dialog.remove-all-active',
-                                                  'Remove selections',
-                                              )}"
+                                                      'selection-dialog.remove-all-active',
+                                                      'Remove selections',
+                                                  )}"
                                                   @click="${() =>
-                                                  this.removeAllActiveDocumentSelections()}"
-                                                  type="is-primary">
+                                                      this.removeAllActiveDocumentSelections()}"
+                                                  type="is-secondary">
                                                   ${i18n.t(
-                                                  'selection-dialog.remove-all-active',
-                                                  'Remove selections',
-                                              )}
-                                              </dbp-button>-->
+                                                      'selection-dialog.remove-all-active',
+                                                      'Remove selections',
+                                                  )}
+                                              </dbp-button>
                                               <dbp-button
                                                   value="${i18n.t(
                                                       'selection-dialog.delete-all-active',
@@ -1918,7 +1918,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   )}"
                                                   @click="${() =>
                                                       this.removeAllDeletedDocumentSelections()}"
-                                                  type="is-primary">
+                                                  type="is-secondary">
                                                   ${i18n.t(
                                                       'selection-dialog.remove-all-deleted',
                                                       'Remove selections',
@@ -1930,11 +1930,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                       'Undelete All',
                                                   )}"
                                                   @click="${() => this.undeleteDeletedDocuments()}"
-                                                  type="is-primary">
+                                                  type="is-secondary">
                                                   ${i18n.t(
                                                       'selection-dialog.undelete-all-deleted',
                                                       'Undelete All',
-                                                  )}
+                                                  )}&nbsp(${Object.keys(deletedDocuments).length})
                                               </dbp-button>
                                           </div>
                                           <dbp-select
