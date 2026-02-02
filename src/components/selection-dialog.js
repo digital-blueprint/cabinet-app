@@ -1229,10 +1229,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         2px 0 6px -2px rgba(0, 0, 0, 0.12),
                         /* right */ 1px -2px 6px -2px rgba(0, 0, 0, 0.12); /* top */
                     z-index: 2;
+                    border-top: 1px solid #ffffff;
+                    border-right: 1px solid #ffffff;
                 }
 
                 .sub-tab:not(.active) {
                     box-shadow: rgb(0, 0, 0) 0px -6px 9px -11px inset; /* bottom */
+                    border-bottom: 1px solid #ffffff;
                 }
 
                 .sub-tab .selection-count {
