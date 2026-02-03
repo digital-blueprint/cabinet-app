@@ -1854,10 +1854,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   @click="${() =>
                                                       this.removeAllActiveDocumentSelections()}"
                                                   type="is-secondary">
+                                                  <dbp-icon
+                                                      name="close"
+                                                      aria-hidden="true"></dbp-icon>
                                                   ${i18n.t(
                                                       'selection-dialog.remove-all-active',
                                                       'Remove selections',
-                                                  )}
+                                                  )}&nbsp(${Object.keys(activeDocuments).length})
                                               </dbp-button>
                                               <dbp-button
                                                   value="${i18n.t(
@@ -1922,10 +1925,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   @click="${() =>
                                                       this.removeAllDeletedDocumentSelections()}"
                                                   type="is-secondary">
+                                                  <dbp-icon
+                                                      name="close"
+                                                      aria-hidden="true"></dbp-icon>
                                                   ${i18n.t(
                                                       'selection-dialog.remove-all-deleted',
                                                       'Remove selections',
-                                                  )}
+                                                  )}&nbsp(${Object.keys(deletedDocuments).length})
                                               </dbp-button>
                                               <dbp-button
                                                   value="${i18n.t(
