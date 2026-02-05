@@ -452,7 +452,7 @@ export default class InstantSearchModule {
                 id: 'person.nationality',
                 name: t('selection-column-config.person.nationality'),
                 field: 'person.nationality.text',
-                defaultVisible: false,
+                defaultVisible: true,
             },
             {
                 id: 'person.personalStatus',
