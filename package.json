@@ -64,7 +64,7 @@
         "typesense": "^2.0.0",
         "typesense-instantsearch-adapter": "^2.8.0",
         "exceljs": "^4.4.0",
-        "pdfjs-dist": "5.4.530"
+        "pdfjs-dist": "*"
     },
     "scripts": {
         "build": "rolldown -c rollup.config.js",
