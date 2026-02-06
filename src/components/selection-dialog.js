@@ -2209,9 +2209,16 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 // for whatever reason, tables dont seem to be ready after building here
                 // probably a rerender invalidates them
                 // this _sometimes_ leads to table loading inconsistencies, indicated by tabulator-tables warnings and errors
-                this.personTableRef.value.tableReady = false;
-                this.documentTableRef.value.tableReady = false;
-                this.deletedDocumentTableRef.value.tableReady = false;
+
+                if (this.personTableRef.value) {
+                    this.personTableRef.value.tableReady = false;
+                }
+                if (this.documentTableRef.value) {
+                    this.documentTableRef.value.tableReady = false;
+                }
+                if (this.deletedDocumentTableRef.value) {
+                    this.deletedDocumentTableRef.value.tableReady = false;
+                }
             });
         }
     }
