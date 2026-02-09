@@ -1486,14 +1486,14 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div class="hit-selection-body" ?hidden="${this.hitSelectionCollapsed}">
                     <div>
                         ${this._i18n.t('cabinet-search.persons-selected')}:
-                        (${Object.keys(this.hitSelections[this.constructor.HitSelectionType.PERSON])
-                            .length})
+                        ${Object.keys(this.hitSelections[this.constructor.HitSelectionType.PERSON])
+                            .length}
                     </div>
                     <div>
                         ${this._i18n.t('cabinet-search.documents-selected')}:
-                        (${Object.keys(
+                        ${Object.keys(
                             this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE],
-                        ).length})
+                        ).length}
                     </div>
                     <div class="button-batch-container">
                         <div class="button-area">
