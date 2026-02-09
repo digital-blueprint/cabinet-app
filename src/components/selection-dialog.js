@@ -1762,18 +1762,18 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         ${Object.keys(personSelections).length > 0
                             ? html`
                                   <div class="export-controls">
-                                      <!--<dbp-button
+                                      <dbp-button
                                           value="${i18n.t(
-                                          'selection-dialog.remove-all-persons',
-                                          'Remove selections',
-                                      )}"
+                                              'selection-dialog.remove-all-persons',
+                                              'Remove selections',
+                                          )}"
                                           @click="${() => this.removeAllPersonSelections()}"
-                                          type="is-primary">
+                                          type="is-secondary">
                                           ${i18n.t(
-                                          'selection-dialog.remove-all-persons',
-                                          'Remove selections',
-                                      )}
-                                      </dbp-button>-->
+                                              'selection-dialog.remove-all-persons',
+                                              'Remove selections',
+                                          )}
+                                      </dbp-button>
                                       <dbp-select
                                           id="export-persons-select"
                                           class="export-persons-select"
