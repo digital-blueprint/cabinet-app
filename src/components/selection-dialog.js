@@ -2149,10 +2149,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Build person table if it exists and hasn't been built yet
         const personTable = this.personTableRef.value;
         if (personTable) {
-            if (!personTable.tableReady) {
+            if (!personTable.tableReady && !personTable.tableBuilding) {
                 console.log('Building person table');
                 personTable.buildTable();
-            } else {
+            } else if (!personTable.tableBuilding) {
                 // Table is already built, update its data
                 console.log('Updating person table data');
                 this.updateTableData(this.constructor.HitSelectionType.PERSON);
@@ -2162,10 +2162,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Build document table if it exists and hasn't been built yet
         const documentTable = this.documentTableRef.value;
         if (documentTable) {
-            if (!documentTable.tableReady) {
+            if (!documentTable.tableReady && !documentTable.tableBuilding) {
                 console.log('Building document table');
                 documentTable.buildTable();
-            } else {
+            } else if (!documentTable.tableBuilding) {
                 // Table is already built, update its data
                 console.log('Updating document table data');
                 this.updateTableData(this.constructor.HitSelectionType.DOCUMENT_FILE);
@@ -2205,19 +2205,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (changedProperties.has('hitSelections') || changedProperties.has('activeTab')) {
             this.updateComplete.then(() => {
                 this.buildTablesIfNeeded();
-                // for whatever reason, tables dont seem to be ready after building here
-                // probably a rerender invalidates them
-                // this _sometimes_ leads to table loading inconsistencies, indicated by tabulator-tables warnings and errors
-
-                if (this.personTableRef.value) {
-                    this.personTableRef.value.tableReady = false;
-                }
-                if (this.documentTableRef.value) {
-                    this.documentTableRef.value.tableReady = false;
-                }
-                if (this.deletedDocumentTableRef.value) {
-                    this.deletedDocumentTableRef.value.tableReady = false;
-                }
             });
         }
     }
