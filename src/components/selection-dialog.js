@@ -1212,7 +1212,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     font-size: 1rem;
                     display: flex;
                     align-items: center;
-                    transition: all 0.2s ease;
                     border-radius: 0;
                 }
 
