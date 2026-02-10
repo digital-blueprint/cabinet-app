@@ -521,7 +521,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             } else {
                 this._('.results').classList.remove('stalled');
             }
-            this._('.ais-Hits-list').setAttribute(
+            this._('.ais-Hits-list')?.setAttribute(
                 'aria-label',
                 this._i18n.t('hitbox.accessible-list'),
             );
