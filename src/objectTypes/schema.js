@@ -661,6 +661,44 @@ class EnglMasterApplication {
     previousEnrolmentInAustria;
 }
 
+class EnglMasterDataSheet {
+    /**
+     * Example: "Graz University of Technology" - Name of the institution where the applicant has previously graduated from
+     * @type {string}
+     */
+    previousHigherEducationInstitution;
+
+    /**
+     * Example: "Graz" - Name of the place where the institution is located
+     * @type {string}
+     */
+    previousHigherEducationPlace;
+
+    /**
+     * Example: "Computer Science" - Name of the educational field the applicant has previously graduated in
+     * @type {string}
+     */
+    previousHigherEducationField;
+
+    /**
+     * Example: "https://example.com" - Link to the curriculum
+     * @type {string}
+     */
+    previousHigherEducationCurriculum;
+
+    /**
+     * Example: "-" - Name of the educational grading system, or a URL to it
+     * @type {string}
+     */
+    previousHigherEducationGrading;
+
+    /**
+     * Example: "8.9" - Float that indicated the CPGA
+     * @type {string}
+     */
+    previousHigherEducationCPGA;
+}
+
 class Agent {
     /**
      * Example: "James" - Person's first name
@@ -874,4 +912,13 @@ export function getAdmissionNotice(hit) {
 export function getEnglMasterApplication(hit) {
     console.assert(hit.objectType === 'file-cabinet-englMasterApplication');
     return hit.file['file-cabinet-englMasterApplication'];
+}
+
+/**
+ * @param {DocumentHit} hit
+ * @returns {EnglMasterDataSheet}
+ */
+export function getEnglMasterDataSheet(hit) {
+    console.assert(hit.objectType === 'file-cabinet-englMasterDataSheet');
+    return hit.file['file-cabinet-englMasterDataSheet'];
 }
