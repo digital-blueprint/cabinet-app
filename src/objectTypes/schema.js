@@ -647,6 +647,20 @@ class AdmissionNotice {
     decision;
 }
 
+class EnglMasterApplication {
+    /**
+     * Example: "English" - Name of the native language of the applicant
+     * @type {string}
+     */
+    nativeLanguage;
+
+    /**
+     * "false" - true if the student has been previously enroled in austria (required)
+     * @type {boolean}
+     */
+    previousEnrolmentInAustria;
+}
+
 class Agent {
     /**
      * Example: "James" - Person's first name
@@ -744,6 +758,8 @@ class File {
         this['file-cabinet-communication'] = undefined;
         /** @type {?AdmissionNotice} */
         this['file-cabinet-admissionNotice'] = undefined;
+        /** @type {?EnglMasterApplication} */
+        this['file-cabinet-englMasterApplication'] = undefined;
     }
 
     /** @type {FileCommon} */
@@ -849,4 +865,13 @@ export function getCommunication(hit) {
 export function getAdmissionNotice(hit) {
     console.assert(hit.objectType === 'file-cabinet-admissionNotice');
     return hit.file['file-cabinet-admissionNotice'];
+}
+
+/**
+ * @param {DocumentHit} hit
+ * @returns {EnglMasterApplication}
+ */
+export function getEnglMasterApplication(hit) {
+    console.assert(hit.objectType === 'file-cabinet-englMasterApplication');
+    return hit.file['file-cabinet-englMasterApplication'];
 }

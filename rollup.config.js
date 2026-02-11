@@ -147,6 +147,7 @@ let activities = {
         'src/objectTypes/fileIdentityDocument.js',
         'src/objectTypes/fileMinimalSchema.js',
         'src/objectTypes/fileCitizenshipCertificate.js',
+        'src/objectTypes/fileEnglMasterApplication.js',
         'src/objectTypes/person.js',
         'src/modules/instantSearch.js',
     ],
