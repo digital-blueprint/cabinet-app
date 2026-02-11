@@ -61,48 +61,68 @@ export class BaseDocumentHitElement extends BaseHitElement {
         return html`
             <form
                 class="wrapper ${spacingTop ? 'spacing-top' : ''} ${borderTop ? 'border-top' : ''}">
-                <header class="ais-doc-Hits-header ${!hit.base.isCurrent ? 'hidden' : ''}">
-                    <div class="ais-doc-title-wrapper">
-                        <label class="checkbox-label">
-                            <input
-                                type="checkbox"
-                                name="select"
-                                class="checkbox"
-                                @change=${this.selectCheckboxChanged}
-                                ?checked=${this.selected}
-                                value="${hit.id}" />
-                        </label>
-                        <dbp-icon class="icon-container" name="files" aria-hidden="true"></dbp-icon>
-                        <h2 class="ais-doc-title ${!hit.base.isCurrent ? 'superseded' : ''}">
-                            ${renderFieldWithHighlight(
-                                hit,
-                                this.lang === 'de'
-                                    ? 'file.base.additionalType.text'
-                                    : 'file.base.additionalType.textEn',
-                            )}
-                        </h2>
-                    </div>
-                    <div class="text-container">
-                        <h3
-                            class="ais-doc-Hits-header-items header-item1"
-                            aria-label="${i18n.t('full-family-name')} ${hit.person
-                                .familyName}, ${hit.person.givenName} ${i18n.t('birth-date')} ${hit
-                                .person.birthDateDe}">
-                            ${renderFieldWithHighlight(hit, 'person.familyName')},
-                            ${renderFieldWithHighlight(hit, 'person.givenName')}
-                            <span class="text-normal">
-                                ${renderFieldWithHighlight(hit, 'person.birthDateDe')}
-                            </span>
-                        </h3>
-                        &nbsp
-                        <div
-                            class="ais-doc-Hits-header-items header-item2"
-                            aria-label="${i18n.t('st-PersonNr')} ${hit.person.studId}">
-                            ${renderFieldWithHighlight(hit, 'person.studId')} |
-                            ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
-                        </div>
-                    </div>
-                </header>
+                ${hit.base.isCurrent
+                    ? html`
+                          <header class="ais-doc-Hits-header">
+                              <div class="ais-doc-title-wrapper">
+                                  <label class="checkbox-label">
+                                      <input
+                                          type="checkbox"
+                                          name="select"
+                                          class="checkbox"
+                                          @change=${this.selectCheckboxChanged}
+                                          ?checked=${this.selected}
+                                          value="${hit.id}" />
+                                  </label>
+                                  <dbp-icon
+                                      class="icon-container"
+                                      name="files"
+                                      aria-hidden="true"></dbp-icon>
+                                  <h2 class="ais-doc-title">
+                                      ${renderFieldWithHighlight(
+                                          hit,
+                                          this.lang === 'de'
+                                              ? 'file.base.additionalType.text'
+                                              : 'file.base.additionalType.textEn',
+                                      )}
+                                  </h2>
+                              </div>
+                              <div class="text-container">
+                                  <h3
+                                      class="ais-doc-Hits-header-items header-item1"
+                                      aria-label="${i18n.t('full-family-name')} ${hit.person
+                                          .familyName}, ${hit.person.givenName} ${i18n.t(
+                                          'birth-date',
+                                      )} ${hit.person.birthDateDe}">
+                                      ${renderFieldWithHighlight(hit, 'person.familyName')},
+                                      ${renderFieldWithHighlight(hit, 'person.givenName')}
+                                      <span class="text-normal">
+                                          ${renderFieldWithHighlight(hit, 'person.birthDateDe')}
+                                      </span>
+                                  </h3>
+                                  &nbsp
+                                  <div
+                                      class="ais-doc-Hits-header-items header-item2"
+                                      aria-label="${i18n.t('st-PersonNr')} ${hit.person.studId}">
+                                      ${renderFieldWithHighlight(hit, 'person.studId')} |
+                                      ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
+                                  </div>
+                              </div>
+                          </header>
+                      `
+                    : html`
+                          <div class="ais-doc-obsolete-selector">
+                              <label class="checkbox-label">
+                                  <input
+                                      type="checkbox"
+                                      name="select"
+                                      class="checkbox"
+                                      @change=${this.selectCheckboxChanged}
+                                      ?checked=${this.selected}
+                                      value="${hit.id}" />
+                              </label>
+                          </div>
+                      `}
                 <main class="ais-doc-Hits-content">
                     <div class="hit-content-item">
                         ${this._renderContent()}
