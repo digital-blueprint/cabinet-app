@@ -845,7 +845,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .hit-selection-container .reset-area {
                     display: flex;
-                    justify-content: flex-end;
+                    justify-content: flex-start;
+                }
+
+                .reset-area .button {
+                    padding: 0;
                 }
 
                 /* Hit selection collapse/expand */
@@ -875,6 +879,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     font-weight: bold;
                     color: var(--dbp-content);
                 }
+
                 .hit-selection-header dbp-icon.chev {
                     color: var(--dbp-accent);
                     width: 16px;
@@ -911,17 +916,37 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .hit-selection-container-desktop {
                     display: block;
                     grid-area: selection;
-                    margin-bottom: 1.5em;
+                    margin-bottom: 1.1em;
                 }
                 .hit-selection-container-mobile {
                     display: none;
                 }
 
+                .cabinet-search-selection {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 3px;
+                }
+                .hit-selection-body {
+                    gap: 4px;
+                    display: grid;
+                }
+                .hit-selection-container .button-batch-container {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    align-items: center;
+                    gap: 0.7em;
+                    margin-top: 0.5em;
+                }
+                .hit-selection-container .open-dialog-button-container {
+                    display: grid;
+                    grid-template-row: 1fr;
+                    margin: 0.5em 0;
+                }
                 @media (max-width: 900px) {
                     #hits-footer {
                         flex-direction: column;
                     }
-
                     #result-count {
                         justify-items: right;
                     }
@@ -1022,17 +1047,26 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         padding: 0;
                         grid-template-columns: auto;
                     }
+
                     .hit-selection-container .button-batch-container {
                         display: grid;
-                        grid-template-rows: 1fr 1fr;
+                        grid-template-rows: 1fr;
                         align-items: center;
                         gap: 0.5em;
                     }
+
                     .hit-selection-container .button-area {
                         flex-direction: column;
                     }
                     .hit-selection-container .reset-area {
                         justify-content: left;
+                    }
+                    .hit-selection-container .button-batch-container {
+                        display: grid;
+                        grid-template-columns: 1fr;
+                        align-items: center;
+                        gap: 0.7em;
+                        margin-top: 0.5em;
                     }
                 }
             `,
@@ -1482,109 +1516,106 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                             rotated: !this.hitSelectionCollapsed,
                         })}"></dbp-icon>
                 </button>
-
                 <div class="hit-selection-body" ?hidden="${this.hitSelectionCollapsed}">
-                    <div>
-                        ${this._i18n.t('cabinet-search.persons-selected')}:
-                        ${Object.keys(this.hitSelections[this.constructor.HitSelectionType.PERSON])
-                            .length}
-                    </div>
-                    <div>
-                        ${this._i18n.t('cabinet-search.documents-selected')}:
-                        ${Object.keys(
-                            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE],
-                        ).length}
-                    </div>
                     <div class="button-batch-container">
-                        <div class="button-area">
-                            <button
-                                aria-label="
-                                ${this.hitSelectAllState ===
-                                this.constructor.HitSelectAllState.SELECT
-                                    ? this._i18n.t('buttons.aria-label.select-all')
-                                    : this._i18n.t('buttons.aria-label.deselect-all-visible')}"
-                                class="button"
-                                @click="${() => {
-                                    const currentHits = this.search.helper.lastResults.hits;
-                                    if (
-                                        this.hitSelectAllState ===
-                                        this.constructor.HitSelectAllState.SELECT
-                                    ) {
-                                        // Add all current hits to the selection
-                                        for (const hit of currentHits) {
-                                            const type = hit['@type'];
-                                            const id = hit.id;
-                                            this.hitSelections[type][id] = hit;
-                                        }
-                                        this.hitSelectAllState =
-                                            this.constructor.HitSelectAllState.DESELECT;
-                                    } else {
-                                        // Remove all current hits from the selection
-                                        for (const hit of currentHits) {
-                                            const type = hit['@type'];
-                                            const id = hit.id;
-                                            delete this.hitSelections[type][id];
-                                        }
-                                        this.hitSelectAllState =
-                                            this.constructor.HitSelectAllState.SELECT;
-                                    }
-                                    // Refresh the hits to update the selection state
-                                    this.search.refresh();
-                                    // Request update to update the hit selection counts
-                                    this.requestUpdate();
-                                }}">
-                                <dbp-icon name="select-all" aria-hidden="true"></dbp-icon>
-                                ${this.hitSelectAllState ===
-                                this.constructor.HitSelectAllState.SELECT
-                                    ? this._i18n.t('cabinet-search.select-all')
-                                    : this._i18n.t('cabinet-search.deselect-all-visible')}
-                            </button>
-                            <button
-                                aria-label="${this._i18n.t('buttons.aria-label.open-dialog')}"
-                                class="button is-primary open-dialog ${this.hasHitSelections
-                                    ? 'enabled'
-                                    : ''}"
-                                id="open-dialog"
-                                ?disabled="${!this.hasHitSelections}"
-                                @click="${() => {
-                                    /** @type {SelectionDialog} */
-                                    const selectionDialog = this.selectionDialogRef.value;
-                                    selectionDialog.open(this.hitSelections);
-                                }}">
-                                <dbp-icon name="open-new-window" aria-hidden="true"></dbp-icon>
-                                ${this._i18n.t('cabinet-search.open-dialog')}
-                            </button>
-                        </div>
-                        <div class="reset-area">
-                            <button
-                                aria-label="${this._i18n.t(
-                                    'buttons.aria-label.deselect-all',
-                                )} ${this.getSelectionCountsDisplay()}"
-                                class="button deselect-all"
-                                ?disabled="${!this.hasHitSelections}"
-                                @click="${() => {
-                                    this.resetHitSelection();
-                                    // Refresh the hits to update the selection state
-                                    this.search.refresh();
-                                }}">
-                                <dbp-icon
-                                    name="close"
-                                    class="deselect-all-icon"
-                                    aria-hidden="true"></dbp-icon>
-                                ${this._i18n.t('cabinet-search.deselect-all')}
-                                ${this.getSelectionCountsDisplay()}
-                            </button>
-                        </div>
+                        <button
+                            aria-label="
+                                ${this._i18n.t('buttons.aria-label.select-visible')}"
+                            class="button"
+                            @click="${() => {
+                                const currentHits = this.search.helper.lastResults.hits;
+                                for (const hit of currentHits) {
+                                    const type = hit['@type'];
+                                    const id = hit.id;
+                                    this.hitSelections[type][id] = hit;
+                                }
+                                // Refresh the hits to update the selection state
+                                this.search.refresh();
+                                // Request update to update the hit selection counts
+                                this.requestUpdate();
+                            }}">
+                            <dbp-icon name="select-all" aria-hidden="true"></dbp-icon>
+                            ${this._i18n.t('cabinet-search.select-visible')}
+                        </button>
+                        <button
+                            aria-label="
+                                ${this._i18n.t('buttons.aria-label.deselect-visible')}"
+                            class="button"
+                            ?disabled="${!this.hasHitSelections}"
+                            @click="${() => {
+                                const currentHits = this.search.helper.lastResults.hits;
+                                for (const hit of currentHits) {
+                                    const type = hit['@type'];
+                                    const id = hit.id;
+                                    delete this.hitSelections[type][id];
+                                }
+                                // Refresh the hits to update the selection state
+                                this.search.refresh();
+                                // Request update to update the hit selection counts
+                                this.requestUpdate();
+                            }}">
+                            <dbp-icon name="deselect-all" aria-hidden="true"></dbp-icon>
+                            ${this._i18n.t('cabinet-search.deselect-visible')}
+                        </button>
+                    </div>
+                    <div class="open-dialog-button-container">
+                        <button
+                            aria-label="${this._i18n.t('buttons.aria-label.open-dialog')}"
+                            class="button is-primary open-dialog ${this.hasHitSelections
+                                ? 'enabled'
+                                : ''}"
+                            id="open-dialog"
+                            ?disabled="${!this.hasHitSelections}"
+                            @click="${() => {
+                                /** @type {SelectionDialog} */
+                                const selectionDialog = this.selectionDialogRef.value;
+                                selectionDialog.open(this.hitSelections);
+                            }}">
+                            <dbp-icon name="open-new-window" aria-hidden="true"></dbp-icon>
+                            ${this._i18n.t('cabinet-search.open-dialog')}
+                        </button>
+                    </div>
+                    <div class="cabinet-search-selection">
+                        <span>
+                            ${this._i18n.t('cabinet-search.persons-selected')}:
+                            ${Object.keys(
+                                this.hitSelections[this.constructor.HitSelectionType.PERSON],
+                            ).length}
+                        </span>
+                        <span>
+                            ${this._i18n.t('cabinet-search.documents-selected')}:
+                            ${Object.keys(
+                                this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE],
+                            ).length}
+                        </span>
+                    </div>
+                    <div class="reset-area">
+                        <button
+                            aria-label="${this._i18n.t(
+                                'buttons.aria-label.deselect-all',
+                            )} ${this.getSelectionCountsDisplay()}"
+                            class="button deselect-all"
+                            ?disabled="${!this.hasHitSelections}"
+                            @click="${() => {
+                                this.resetHitSelection();
+                                // Refresh the hits to update the selection state
+                                this.search.refresh();
+                            }}">
+                            <dbp-icon
+                                name="spinner-arrow-mirrored"
+                                class="deselect-all-icon"
+                                aria-hidden="true"></dbp-icon>
+                            ${this._i18n.t('cabinet-search.deselect-all')}
+                            ${this.getSelectionCountsDisplay()}
+                        </button>
                     </div>
                 </div>
             </div>
-
             <dbp-cabinet-selection-dialog
                 ${ref(this.selectionDialogRef)}
                 subscribe="lang,auth,entry-point-url"></dbp-cabinet-selection-dialog>
         `;
     }
-
     resetRoutingUrlIfNeeded() {
         if (this.resetRoutingUrl) {
             this.sendSetPropertyEvent('routing-url', '/', true);

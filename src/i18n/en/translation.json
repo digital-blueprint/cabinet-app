@@ -10,10 +10,10 @@
         },
         "aria-label": {
             "deselect-all": "Deselect all",
-            "deselect-all-visible": "Deselect all from this page",
+            "deselect-visible": "Deselect all from this page",
             "multiselection": "multiselection menu",
             "open-dialog": "Open total selection for multi-action",
-            "select-all": "Select all"
+            "select-visible": "Select all"
         },
         "cancel": "Cancel",
         "replace-document": "Replace file",
@@ -37,8 +37,8 @@
         "version-status-obsolete": "obsolete"
     },
     "cabinet-search": {
-        "deselect-all": "Deselect all",
-        "deselect-all-visible": "Deselect all visible",
+        "deselect-all": "Empty whole selection",
+        "deselect-visible": "Deselect visible",
         "document-filter-group-title": "Document properties",
         "documents-selected": "Documents selected",
         "filter-accessible-label": "The following categories were selected",
@@ -80,7 +80,7 @@
         "refinement-date-before-text": "to",
         "refinement-delete-all-filters": "Clear filters",
         "refinement-delete-filter-button-text": "Delete filter",
-        "select-all": "Select all",
+        "select-visible": "Select visible",
         "type-filter-group-title": "Category"
     },
     "communication-abstract": "Summary",

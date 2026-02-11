@@ -10,10 +10,10 @@
         },
         "aria-label": {
             "deselect-all": "Gesamtauswahl leeren",
-            "deselect-all-visible": "Alles Ausgewählte auf dieser Seite zurücksetzen",
+            "deselect-visible": "Alles Ausgewählte auf dieser Seite abwählen",
             "multiselection": "Menü für Mehrfachauswahl",
             "open-dialog": "Fenster für Multiaktion öffnen",
-            "select-all": "Alles für Mehrfachaktion auswählen"
+            "select-visible": "Alles für Mehrfachaktion auswählen"
         },
         "cancel": "Abbrechen",
         "replace-document": "Datei ersetzen",
@@ -37,8 +37,8 @@
         "version-status-obsolete": "veraltet"
     },
     "cabinet-search": {
-        "deselect-all": "Gesamtauswahl leeren",
-        "deselect-all-visible": "Zurücksetzen",
+        "deselect-all": "Gesamte Auswahl leeren",
+        "deselect-visible": "Sichtbare abwählen",
         "document-filter-group-title": "Dokumenteigenschaften",
         "documents-selected": "Dokumente ausgewählt",
         "filter-accessible-label": "Folgende Kategorien wurden ausgewählt",
@@ -80,7 +80,7 @@
         "refinement-date-before-text": "bis",
         "refinement-delete-all-filters": "Filter löschen",
         "refinement-delete-filter-button-text": "Auswahl löschen",
-        "select-all": "Alles auswählen",
+        "select-visible": "Sichtbare auswählen",
         "type-filter-group-title": "Kategorie"
     },
     "communication-abstract": "Zusammenfassung",
