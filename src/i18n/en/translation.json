@@ -196,6 +196,7 @@
     "info": "info",
     "last-modified": "Last modified",
     "loading-message": "",
+    "modified": "modified",
     "nationalities": "Citizenship(s)",
     "nationality-input": {
         "invalid-code-format": "Invalid format. Please enter 1-3 uppercase letters.",
@@ -203,6 +204,7 @@
         "placeholder": "Enter code or search for a country"
     },
     "note": "Comment",
+    "obsolete": "obsolete",
     "person": {
         "person-not-found-body": "The requested person could not be found!",
         "person-not-found-summary": "Person not found"

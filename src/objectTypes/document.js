@@ -58,6 +58,8 @@ export class BaseDocumentHitElement extends BaseHitElement {
 
         this.ariaLabel = `${i18n.t('hitbox.document-entry')} ${this.lang === 'de' ? hit.file.base.additionalType.text : hit.file.base.additionalType.textEn} ${i18n.t('hitbox.document-of')} ${hit.person.familyName}, ${hit.person.givenName}`;
 
+        // Prettier is messing with commas in the template literal, so we disable it for this part
+        // prettier-ignore
         return html`
             <form
                 class="wrapper ${spacingTop ? 'spacing-top' : ''} ${borderTop ? 'border-top' : ''}">
@@ -109,37 +111,59 @@ export class BaseDocumentHitElement extends BaseHitElement {
                                   </div>
                               </div>
                           </header>
+                          <main class="ais-doc-Hits-content">
+                              <div class="hit-content-item">
+                                  ${this._renderContent()}
+                                  ${hit.file.base.subjectOf
+                                      ? html`
+                                            <span>
+                                                ${i18n.t('subject-of')}:
+                                                ${renderFieldWithHighlight(
+                                                    hit,
+                                                    'file.base.subjectOf',
+                                                )}
+                                            </span>
+                                        `
+                                      : ''}
+                                  <span>${i18n.t('Added')}: ${dateCreated}</span>
+                                  <span>${i18n.t('last-modified')}: ${lastModified}</span>
+                              </div>
+                              ${this.renderViewButton(hit)}
+                          </main>
                       `
                     : html`
-                          <div class="ais-doc-obsolete-selector">
-                              <label class="checkbox-label">
-                                  <input
-                                      type="checkbox"
-                                      name="select"
-                                      class="checkbox"
-                                      @change=${this.selectCheckboxChanged}
-                                      ?checked=${this.selected}
-                                      value="${hit.id}" />
-                              </label>
-                          </div>
+                          <main class="ais-doc-Hits-content">
+                              <div>
+                                  <label class="checkbox-label">
+                                      <input
+                                          type="checkbox"
+                                          name="select"
+                                          class="checkbox"
+                                          @change=${this.selectCheckboxChanged}
+                                          ?checked=${this.selected}
+                                          value="${hit.id}" />
+                                  </label>
+                                  <strong>${dateCreated}</strong>,
+                                  <span>${i18n.t('modified')} ${lastModified}</span>
+                                  (${i18n.t('obsolete')})
+                                  <div class="hit-content-item">
+                                      ${this._renderContent()}
+                                      ${hit.file.base.subjectOf
+                                          ? html`
+                                                <span>
+                                                    ${i18n.t('subject-of')}:
+                                                    ${renderFieldWithHighlight(
+                                                        hit,
+                                                        'file.base.subjectOf',
+                                                    )}
+                                                </span>
+                                            `
+                                          : ''}
+                                  </div>
+                              </div>
+                              ${this.renderViewButton(hit)}
+                          </main>
                       `}
-                <main class="ais-doc-Hits-content">
-                    <div class="hit-content-item">
-                        ${this._renderContent()}
-                        ${hit.file.base.subjectOf
-                            ? html`
-                                  <span>
-                                      ${i18n.t('subject-of')}:
-                                      ${renderFieldWithHighlight(hit, 'file.base.subjectOf')}
-                                  </span>
-                              `
-                            : ''}
-                        <span>${i18n.t('Added')}: ${dateCreated}</span>
-
-                        <span>${i18n.t('last-modified')}: ${lastModified}</span>
-                    </div>
-                    ${this.renderViewButton(hit)}
-                </main>
             </form>
         `;
     }

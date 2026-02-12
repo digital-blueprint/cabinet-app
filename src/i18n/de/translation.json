@@ -196,6 +196,7 @@
     "info": "",
     "last-modified": "Letzte Änderung",
     "loading-message": "",
+    "modified": "geändert",
     "nationalities": "Staatsbürgerschaft",
     "nationality-input": {
         "invalid-code-format": "Ungültiges Format. Bitte tragen sie 1-3 Großbuchstaben ein.",
@@ -203,6 +204,7 @@
         "placeholder": "Code eingeben, oder nach einem Land suchen"
     },
     "note": "Anmerkung",
+    "obsolete": "veraltert",
     "person": {
         "person-not-found-body": "Die angeforderte Person konnte nicht gefunden werden!",
         "person-not-found-summary": "Person nicht gefunden"
