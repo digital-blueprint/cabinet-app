@@ -699,6 +699,20 @@ class EnglMasterDataSheet {
     previousHigherEducationCPGA;
 }
 
+class EntranceQualificationApplication {
+    /**
+     * Example: "HTL" - The students previous education (required)
+     * @type {string}
+     */
+    previousEducation;
+
+    /**
+     * "Medival Literature" - The suggested elective subject for the entrance qualification exam
+     * @type {string}
+     */
+    electiveSubject;
+}
+
 class Agent {
     /**
      * Example: "James" - Person's first name
@@ -921,4 +935,13 @@ export function getEnglMasterApplication(hit) {
 export function getEnglMasterDataSheet(hit) {
     console.assert(hit.objectType === 'file-cabinet-englMasterDataSheet');
     return hit.file['file-cabinet-englMasterDataSheet'];
+}
+
+/**
+ * @param {DocumentHit} hit
+ * @returns {EntranceQualificationApplication}
+ */
+export function getEntranceQualificationApplication(hit) {
+    console.assert(hit.objectType === 'file-cabinet-entranceQualificationApplication');
+    return hit.file['file-cabinet-entranceQualificationApplication'];
 }

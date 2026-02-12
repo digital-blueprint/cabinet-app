@@ -149,6 +149,7 @@ let activities = {
         'src/objectTypes/fileCitizenshipCertificate.js',
         'src/objectTypes/fileEnglMasterApplication.js',
         'src/objectTypes/fileEnglMasterDataSheet.js',
+        'src/objectTypes/fileEntranceQualificationApplication.js',
         'src/objectTypes/person.js',
         'src/modules/instantSearch.js',
     ],

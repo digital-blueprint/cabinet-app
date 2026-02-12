@@ -398,7 +398,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
             type === 'MaritalStatusCertificate' ||
             type === 'SupervisionAcceptance' ||
             type === 'EnglMasterApplication' ||
-            type === 'EnglMasterDataSheet'
+            type === 'EnglMasterDataSheet' ||
+            type === 'EntranceQualificationApplication'
         ) {
             return {
                 archival: i18n.t('doc-modal-disposal-type-archival'),

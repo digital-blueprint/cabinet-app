@@ -7,6 +7,7 @@
         "file-cabinet-citizenshipCertificate": "./fileCitizenshipCertificate.js",
         "file-cabinet-englMasterApplication": "./fileEnglMasterApplication.js",
         "file-cabinet-englMasterDataSheet": "./fileEnglMasterDataSheet.js",
+        "file-cabinet-entranceQualificationApplication": "./fileEntranceQualificationApplication.js",
         "person": "./person.js"
     },
     "instantSearch": "./instantSearch.js"
