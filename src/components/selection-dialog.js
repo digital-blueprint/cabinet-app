@@ -17,6 +17,7 @@ import {getSelectorFixCSS} from '../styles.js';
 import {getPersonHit} from '../objectTypes/schema.js';
 import InstantSearchModule from '../modules/instantSearch.js';
 import {exportPersonPdf} from '../objectTypes/person.js';
+import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
 
 export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -38,6 +39,19 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Initialize with default visibility states so tables render correctly on first load
         this.personColumnVisibilityStates = this.getDefaultColumnVisibility('person');
         this.documentColumnVisibilityStates = this.getDefaultColumnVisibility('document');
+
+        // used for translation overrides
+        this.langDir = undefined;
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        if (this.langDir) {
+            const that = this;
+            setOverridesByGlobalCache(this._i18n, this).then(() => {
+                that.requestUpdate();
+            });
+        }
     }
 
     static get scopedElements() {
@@ -61,6 +75,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             activeDocumentTab: {type: String, attribute: false},
             personColumnVisibilityStates: {type: Object, attribute: false},
             documentColumnVisibilityStates: {type: Object, attribute: false},
+            langDir: {type: String, attribute: 'lang-dir'},
         };
     }
 
@@ -1420,11 +1435,65 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         const rowData = cell.getRow().getData();
                         const value = rowData[colConfig.id];
                         if (value === null || value === undefined) {
-                            return '';
+                            return '-';
                         }
                         // Format dates if needed
                         if (colConfig.field.includes('Timestamp')) {
                             return new Date(value * 1000).toLocaleString(this.lang);
+                        }
+                        if (colConfig.field.includes('file.base.fileSource')) {
+                            if (value === 'cabinet-bucket') {
+                                return i18n.t('selection-column-config.document.cabinet-bucket');
+                            } else {
+                                return i18n.t('selection-column-config.document.online-system');
+                            }
+                        }
+                        if (colConfig.field.includes('file.base.isPartOf')) {
+                            if (value === 'admission-archive-80') {
+                                return i18n.t(
+                                    'typesense-schema.file.base.isPartOf.admission-archive-80',
+                                );
+                            }
+                            if (value === 'communication-archive-10') {
+                                return i18n.t(
+                                    'typesense-schema.file.base.isPartOf.communication-archive-10',
+                                );
+                            }
+                            if (value === 'financial-archive-7') {
+                                return i18n.t(
+                                    'typesense-schema.file.base.isPartOf.financial-archive-7',
+                                );
+                            }
+                            if (value === 'generalApplications-archive-3') {
+                                return i18n.t(
+                                    'typesense-schema.file.base.isPartOf.generalApplications-archive-3',
+                                );
+                            }
+                            if (value === 'other-archive-3') {
+                                return i18n.t(
+                                    'typesense-schema.file.base.isPartOf.other-archive-3',
+                                );
+                            }
+                            if (value === 'other-delete-3') {
+                                return i18n.t('typesense-schema.file.base.isPartOf.other-delete-3');
+                            }
+                            if (value === 'study-archive-80') {
+                                return i18n.t(
+                                    'typesense-schema.file.base.isPartOf.study-archive-80',
+                                );
+                            }
+                            if (value === 'subordination-delete-3') {
+                                return i18n.t(
+                                    'typesense-schema.file.base.isPartOf.subordination-delete-3',
+                                );
+                            }
+                            if (value === 'vacation-archive-3') {
+                                return i18n.t(
+                                    'typesense-schema.file.base.isPartOf.vacation-archive-3',
+                                );
+                            } else {
+                                return '-';
+                            }
                         }
                         return value;
                     },

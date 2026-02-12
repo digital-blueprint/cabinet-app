@@ -246,6 +246,7 @@
         "description": "Configure which columns to display",
         "document": {
             "additionalType": "Document type",
+            "cabinet-bucket": "Manually uploaded",
             "comment": "Comment",
             "createdTimestamp": "Created",
             "disposalType": "Disposal type",
@@ -255,6 +256,8 @@
             "isPartOf": "Part of",
             "mimeType": "MIME type",
             "modifiedTimestamp": "Modified",
+            "online-system": "CAMPUSonline",
+            "recommendedDeletionTimestamp": "Recommended deletion",
             "semester": "Semester",
             "studyField": "Study field",
             "subjectOf": "Subject of"

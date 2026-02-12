@@ -157,6 +157,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this._initialUiState = null;
         this.hitSelectionCollapsed = true;
         this.disabled = true;
+
+        // used for translation overrides
+        this.langDir = undefined;
     }
 
     resetHitSelection() {
@@ -203,6 +206,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             hitSelectAllState: {type: Boolean, attribute: false},
             hitSelectionCollapsed: {type: Boolean},
             disabled: {type: Boolean, reflect: true},
+            langDir: {type: String, attribute: 'lang-dir'},
         };
     }
 
@@ -1613,7 +1617,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             </div>
             <dbp-cabinet-selection-dialog
                 ${ref(this.selectionDialogRef)}
-                subscribe="lang,auth,entry-point-url"></dbp-cabinet-selection-dialog>
+                subscribe="lang,lang-dir,auth,entry-point-url"></dbp-cabinet-selection-dialog>
         `;
     }
     resetRoutingUrlIfNeeded() {

@@ -604,7 +604,7 @@ export default class InstantSearchModule {
                 id: 'file.base.createdTimestamp',
                 name: t('selection-column-config.document.createdTimestamp'),
                 field: 'file.base.createdTimestamp',
-                defaultVisible: false,
+                defaultVisible: true,
             },
             {
                 id: 'file.base.modifiedTimestamp',
@@ -613,16 +613,22 @@ export default class InstantSearchModule {
                 defaultVisible: false,
             },
             {
+                id: 'file.base.recommendedDeletionTimestamp',
+                name: t('selection-column-config.document.recommendedDeletionTimestamp'),
+                field: 'file.base.recommendedDeletionTimestamp',
+                defaultVisible: true,
+            },
+            {
                 id: 'file.base.studyField',
                 name: t('selection-column-config.document.studyField'),
                 field: 'file.base.studyField.text',
-                defaultVisible: false,
+                defaultVisible: true,
             },
             {
                 id: 'file.base.semester',
                 name: t('selection-column-config.document.semester'),
                 field: 'file.base.semester',
-                defaultVisible: false,
+                defaultVisible: true,
             },
             {
                 id: 'file.base.fileId',
@@ -634,7 +640,7 @@ export default class InstantSearchModule {
                 id: 'file.base.fileSource',
                 name: t('selection-column-config.document.fileSource'),
                 field: 'file.base.fileSource',
-                defaultVisible: false,
+                defaultVisible: true,
             },
             {
                 id: 'file.base.mimeType',
@@ -652,7 +658,7 @@ export default class InstantSearchModule {
                 id: 'file.base.isPartOf',
                 name: t('selection-column-config.document.isPartOf'),
                 field: 'file.base.isPartOf',
-                defaultVisible: false,
+                defaultVisible: true,
             },
             {
                 id: 'file.base.groupId',
@@ -670,7 +676,7 @@ export default class InstantSearchModule {
                 id: 'file.base.subjectOf',
                 name: t('selection-column-config.document.subjectOf'),
                 field: 'file.base.subjectOf',
-                defaultVisible: false,
+                defaultVisible: true,
             },
         ];
     }

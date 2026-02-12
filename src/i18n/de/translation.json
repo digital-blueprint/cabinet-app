@@ -246,6 +246,7 @@
         "description": "Konfigurieren Sie, welche Spalten angezeigt werden sollen",
         "document": {
             "additionalType": "Dokumenttyp",
+            "cabinet-bucket": "Manuell hochgeladen",
             "comment": "Kommentar",
             "createdTimestamp": "Erstellt",
             "disposalType": "Aussonderungsart",
@@ -255,6 +256,8 @@
             "isPartOf": "Teil von",
             "mimeType": "MIME-Typ",
             "modifiedTimestamp": "Geändert",
+            "online-system": "CAMPUSonline",
+            "recommendedDeletionTimestamp": "Empfohlene Löschfrist",
             "semester": "Semester",
             "studyField": "Studienfeld",
             "subjectOf": "Betrifft"
