@@ -113,6 +113,7 @@
     "doc-modal-nationality": "Citizenship according to the document",
     "doc-modal-native-language": "Native Language",
     "doc-modal-no": "No",
+    "doc-modal-of": "of",
     "doc-modal-only-data": "Only data",
     "doc-modal-previous-education": "Previous education",
     "doc-modal-previous-enrolment-in-austria": "Has visited an austrian university",
@@ -137,6 +138,7 @@
     "doc-modal-subject-of": "Registry number",
     "doc-modal-subject-of-placeholder": "e.g. {{-id}}",
     "doc-modal-undelete-document": "Undelete",
+    "doc-modal-upload-document": "Upload document",
     "doc-modal-yes": "Yes",
     "document": {
         "document-not-found-body": "The requested document could not be found!",

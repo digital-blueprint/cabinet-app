@@ -113,6 +113,7 @@
     "doc-modal-nationality": "Staatsbürgerschaft laut Dokument",
     "doc-modal-native-language": "Muttersprache",
     "doc-modal-no": "Nein",
+    "doc-modal-of": "für",
     "doc-modal-only-data": "Nur Daten",
     "doc-modal-previous-education": "Vorbildung",
     "doc-modal-previous-enrolment-in-austria": "Österreichische Universität besucht",
@@ -137,6 +138,7 @@
     "doc-modal-subject-of": "Geschäftszahl",
     "doc-modal-subject-of-placeholder": "z.b. {{-id}}",
     "doc-modal-undelete-document": "Wiederherstellen",
+    "doc-modal-upload-document": "Dokument hochladen",
     "doc-modal-yes": "Ja",
     "document": {
         "document-not-found-body": "Das angeforderte Dokument konnte nicht gefunden werden!",

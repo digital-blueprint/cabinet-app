@@ -1486,7 +1486,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         let additionalType = this.additionalType || hit?.file?.base.additionalType.key;
         const headline =
             this.mode === CabinetFile.Modes.ADD
-                ? 'Upload Document'
+                ? i18n.t('doc-modal-upload-document')
                 : i18n.t(`typesense-schema.file.base.additionalType.key.${additionalType}`);
         console.log('additionalType', additionalType);
         this.updateStatus();
@@ -1514,7 +1514,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 subscribe="lang">
                 <div slot="title" class="modal-title doc-title">
                     <dbp-icon name="files" class="view-modal-icon" aria-hidden="true"></dbp-icon>
-                    <h2>${headline} ${i18n.t('hitbox.document-of')} ${person.fullName}</h2>
+                    <h2>${headline} ${i18n.t('doc-modal-of')} ${person.fullName}</h2>
                 </div>
                 <div slot="header" class="header">
                     <div class="modal-notification">
