@@ -112,53 +112,69 @@ export class ConfigureWidget extends LangMixin(DBPLitElement, createInstance) {
             <div class="refinement-list-container">
                 <ul class="refinement-list">
                     <li class="refinement-list">
-                        <input
-                            id="inputShowActiveOnly"
-                            type="radio"
-                            class="refinement-checkbox"
-                            @change=${this._handleShowActive}
-                            name="document-filter"
-                            checked />
-                        <span class="refinement-text">${this._i18n.t('show-active-only')}</span>
+                        <label class="refinement-label">
+                            <input
+                                id="inputShowActiveOnly"
+                                type="radio"
+                                class="refinement-checkbox"
+                                @change=${this._handleShowActive}
+                                name="document-filter"
+                                checked />
+                            <span class="refinement-text">${this._i18n.t('show-active-only')}</span>
+                        </label>
                         <ul
                             ${ref(this.includeObsoleteCheckboxRef)}
                             class="refinement-list-obsolete-checkbox">
                             <li class="refinement-list">
-                                <input
-                                    ${ref(this.obsoleteCheckboxRef)}
-                                    type="checkbox"
-                                    class="refinement-checkbox"
-                                    @change=${this._handleShowObsolete}
-                                    name="document-filter" />
-                                <span class="refinement-text">
-                                    ${this._i18n.t('show-obsolete-also')}
-                                </span>
+                                <label class="refinement-label">
+                                    <input
+                                        ${ref(this.obsoleteCheckboxRef)}
+                                        type="checkbox"
+                                        class="refinement-checkbox"
+                                        @change=${this._handleShowObsolete}
+                                        name="document-filter" />
+                                    <span class="refinement-text">
+                                        ${this._i18n.t('show-obsolete-also')}
+                                    </span>
+                                </label>
                             </li>
                         </ul>
                     </li>
                     <li class="refinement-list">
-                        <input
-                            type="radio"
-                            class="refinement-checkbox"
-                            @change=${this._handleShowDeletedOnly}
-                            name="document-filter" />
-                        <span class="refinement-text">${this._i18n.t('show-deleted-only')}</span>
+                        <label class="refinement-label">
+                            <input
+                                type="radio"
+                                class="refinement-checkbox"
+                                @change=${this._handleShowDeletedOnly}
+                                name="document-filter" />
+                            <span class="refinement-text">
+                                ${this._i18n.t('show-deleted-only')}
+                            </span>
+                        </label>
                     </li>
                     <li class="refinement-list">
-                        <input
-                            type="radio"
-                            class="refinement-checkbox"
-                            @change=${this._handleShowToDeleteOnly}
-                            name="document-filter" />
-                        <span class="refinement-text">${this._i18n.t('show-to-delete-only')}</span>
+                        <label class="refinement-label">
+                            <input
+                                type="radio"
+                                class="refinement-checkbox"
+                                @change=${this._handleShowToDeleteOnly}
+                                name="document-filter" />
+                            <span class="refinement-text">
+                                ${this._i18n.t('show-to-delete-only')}
+                            </span>
+                        </label>
                     </li>
                     <li class="refinement-list">
-                        <input
-                            type="radio"
-                            class="refinement-checkbox"
-                            @change=${this._handleShowToArchiveOnly}
-                            name="document-filter" />
-                        <span class="refinement-text">${this._i18n.t('show-to-archive-only')}</span>
+                        <label class="refinement-label">
+                            <input
+                                type="radio"
+                                class="refinement-checkbox"
+                                @change=${this._handleShowToArchiveOnly}
+                                name="document-filter" />
+                            <span class="refinement-text">
+                                ${this._i18n.t('show-to-archive-only')}
+                            </span>
+                        </label>
                     </li>
                 </ul>
             </div>
