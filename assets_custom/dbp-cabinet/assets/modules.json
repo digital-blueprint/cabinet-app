@@ -5,6 +5,8 @@
         "file-cabinet-identityDocument": "./fileIdentityDocument.js",
         "file-cabinet-minimalSchema": "./fileMinimalSchema.js",
         "file-cabinet-citizenshipCertificate": "./fileCitizenshipCertificate.js",
+        "file-cabinet-englMasterApplication": "./fileEnglMasterApplication.js",
+        "file-cabinet-englMasterDataSheet": "./fileEnglMasterDataSheet.js",
         "person": "./person.js"
     },
     "instantSearch": "./instantSearch.js"
