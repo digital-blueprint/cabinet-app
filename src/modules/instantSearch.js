@@ -635,12 +635,6 @@ export default class InstantSearchModule {
                 defaultVisible: true,
             },
             {
-                id: 'file.base.fileId',
-                name: t('selection-column-config.document.fileId'),
-                field: 'file.base.fileId',
-                defaultVisible: false,
-            },
-            {
                 id: 'file.base.fileSource',
                 name: t('selection-column-config.document.fileSource'),
                 field: 'file.base.fileSource',
@@ -663,12 +657,6 @@ export default class InstantSearchModule {
                 name: t('selection-column-config.document.isPartOf'),
                 field: 'file.base.isPartOf',
                 defaultVisible: true,
-            },
-            {
-                id: 'file.base.groupId',
-                name: t('selection-column-config.document.groupId'),
-                field: 'file.base.groupId',
-                defaultVisible: false,
             },
             {
                 id: 'file.base.comment',
