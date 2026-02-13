@@ -599,10 +599,12 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         persons.forEach(([, hit]) => {
             if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
                 const row = visibleColumns.map((col) => {
-                    const value = this.getNestedValue(hit, col.field);
+                    let value = this.getNestedValue(hit, col.field);
                     if (value === null || value === undefined) {
                         return '';
                     }
+                    // Format value for export (apply translations)
+                    value = this.formatExportValue(value, col);
                     // Escape CSV values
                     let strValue = String(value);
                     if (
@@ -659,11 +661,12 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         persons.forEach(([, hit]) => {
             if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
                 const row = visibleColumns.map((col) => {
-                    const value = this.getNestedValue(hit, col.field);
+                    let value = this.getNestedValue(hit, col.field);
                     if (value === null || value === undefined) {
                         return '';
                     }
-                    return value;
+                    // Format value for export (apply translations)
+                    return this.formatExportValue(value, col);
                 });
                 worksheet.addRow(row);
             }
@@ -980,10 +983,12 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             documents.forEach(([, hit]) => {
                 if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
                     const row = visibleColumns.map((col) => {
-                        const value = this.getNestedValue(hit, col.field);
+                        let value = this.getNestedValue(hit, col.field);
                         if (value === null || value === undefined) {
                             return '';
                         }
+                        // Format value for export (apply translations)
+                        value = this.formatExportValue(value, col);
                         // Escape CSV values
                         let strValue = String(value);
                         if (
@@ -1032,11 +1037,12 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             documents.forEach(([, hit]) => {
                 if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
                     const row = visibleColumns.map((col) => {
-                        const value = this.getNestedValue(hit, col.field);
+                        let value = this.getNestedValue(hit, col.field);
                         if (value === null || value === undefined) {
                             return '';
                         }
-                        return value;
+                        // Format value for export (apply translations)
+                        return this.formatExportValue(value, col);
                     });
                     worksheet.addRow(row);
                 }
@@ -1386,6 +1392,64 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     /**
+     * Format a value for export based on column configuration
+     * Applies the same translations as the table formatter
+     * @param value
+     * @param colConfig
+     */
+    formatExportValue(value, colConfig) {
+        const i18n = this._i18n;
+
+        if (value === null || value === undefined) {
+            return '';
+        }
+
+        // Handle arrays (like multiple isPartOf values)
+        if (Array.isArray(value)) {
+            return value.map((v) => this.formatExportValue(v, colConfig)).join(', ');
+        }
+
+        // Format timestamps
+        if (colConfig.field.includes('Timestamp')) {
+            return new Date(value * 1000).toLocaleString(this.lang);
+        }
+
+        // Translate fileSource values
+        if (colConfig.field.includes('file.base.fileSource')) {
+            if (value === 'cabinet-bucket') {
+                return i18n.t('selection-column-config.document.cabinet-bucket');
+            } else {
+                return i18n.t('selection-column-config.document.online-system');
+            }
+        }
+
+        // Translate isPartOf values (Purpose of Storage)
+        if (colConfig.field.includes('file.base.isPartOf')) {
+            const translationKey = `typesense-schema.file.base.isPartOf.${value}`;
+            const translated = i18n.t(translationKey);
+            // If translation returns the key itself, the translation wasn't found
+            if (translated !== translationKey) {
+                return translated;
+            }
+            // Fallback: return the value as-is if no translation found
+            return value;
+        }
+
+        // Translate disposalType values (Disposal type)
+        if (colConfig.field.includes('file.base.disposalType')) {
+            if (value === 'archival') {
+                return i18n.t('doc-modal-disposal-type-archival');
+            } else if (value === 'deletion') {
+                return i18n.t('doc-modal-disposal-type-deletion');
+            }
+            // Fallback: return the value as-is if no translation found
+            return value;
+        }
+
+        return value;
+    }
+
+    /**
      * Build table columns based on visibility configuration
      * @param {string} type
      * @param {HTMLElement|null} gearButtonRef
@@ -1437,65 +1501,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         if (value === null || value === undefined) {
                             return '-';
                         }
-                        // Format dates if needed
-                        if (colConfig.field.includes('Timestamp')) {
-                            return new Date(value * 1000).toLocaleString(this.lang);
-                        }
-                        if (colConfig.field.includes('file.base.fileSource')) {
-                            if (value === 'cabinet-bucket') {
-                                return i18n.t('selection-column-config.document.cabinet-bucket');
-                            } else {
-                                return i18n.t('selection-column-config.document.online-system');
-                            }
-                        }
-                        if (colConfig.field.includes('file.base.isPartOf')) {
-                            if (value === 'admission-archive-80') {
-                                return i18n.t(
-                                    'typesense-schema.file.base.isPartOf.admission-archive-80',
-                                );
-                            }
-                            if (value === 'communication-archive-10') {
-                                return i18n.t(
-                                    'typesense-schema.file.base.isPartOf.communication-archive-10',
-                                );
-                            }
-                            if (value === 'financial-archive-7') {
-                                return i18n.t(
-                                    'typesense-schema.file.base.isPartOf.financial-archive-7',
-                                );
-                            }
-                            if (value === 'generalApplications-archive-3') {
-                                return i18n.t(
-                                    'typesense-schema.file.base.isPartOf.generalApplications-archive-3',
-                                );
-                            }
-                            if (value === 'other-archive-3') {
-                                return i18n.t(
-                                    'typesense-schema.file.base.isPartOf.other-archive-3',
-                                );
-                            }
-                            if (value === 'other-delete-3') {
-                                return i18n.t('typesense-schema.file.base.isPartOf.other-delete-3');
-                            }
-                            if (value === 'study-archive-80') {
-                                return i18n.t(
-                                    'typesense-schema.file.base.isPartOf.study-archive-80',
-                                );
-                            }
-                            if (value === 'subordination-delete-3') {
-                                return i18n.t(
-                                    'typesense-schema.file.base.isPartOf.subordination-delete-3',
-                                );
-                            }
-                            if (value === 'vacation-archive-3') {
-                                return i18n.t(
-                                    'typesense-schema.file.base.isPartOf.vacation-archive-3',
-                                );
-                            } else {
-                                return '-';
-                            }
-                        }
-                        return value;
+                        // Use the formatExportValue helper to apply consistent formatting
+                        return this.formatExportValue(value, colConfig);
                     },
                 });
             }
