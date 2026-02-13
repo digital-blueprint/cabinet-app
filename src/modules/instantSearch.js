@@ -589,15 +589,19 @@ export default class InstantSearchModule {
 
     /**
      * Get available columns for document type in selection dialogs
+     * @param lang
      * @returns {Array} - Array of column configurations
      */
-    getDocumentColumns() {
+    getDocumentColumns(lang = 'de') {
+        const selectField = (parentField) => {
+            return lang === 'de' ? `${parentField}.text` : `${parentField}.textEn`;
+        };
         // Use t() to ensure i18next detects these keys and doesn't remove them during tree-shaking
         return [
             {
                 id: 'file.base.additionalType',
                 name: t('selection-column-config.document.additionalType'),
-                field: 'file.base.additionalType.text',
+                field: selectField('file.base.additionalType'),
                 defaultVisible: true,
             },
             {
@@ -621,7 +625,7 @@ export default class InstantSearchModule {
             {
                 id: 'file.base.studyField',
                 name: t('selection-column-config.document.studyField'),
-                field: 'file.base.studyField.text',
+                field: selectField('file.base.studyField'),
                 defaultVisible: true,
             },
             {

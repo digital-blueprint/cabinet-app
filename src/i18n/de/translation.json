@@ -251,20 +251,20 @@
         "document": {
             "additionalType": "Dokumenttyp",
             "cabinet-bucket": "Manuell hochgeladen",
-            "comment": "Kommentar",
-            "createdTimestamp": "Erstellt",
+            "comment": "Notiz",
+            "createdTimestamp": "Hinzugefügt am",
             "disposalType": "Aussonderungsart",
             "fileId": "Datei-ID",
-            "fileSource": "Dateiquelle",
+            "fileSource": "Digitalisatsquelle",
             "groupId": "Gruppen-ID",
-            "isPartOf": "Teil von",
+            "isPartOf": "Speicherzweck",
             "mimeType": "MIME-Typ",
-            "modifiedTimestamp": "Geändert",
+            "modifiedTimestamp": "Letzte Änderung",
             "online-system": "CAMPUSonline",
             "recommendedDeletionTimestamp": "Empfohlene Löschfrist",
             "semester": "Semester",
-            "studyField": "Studienfeld",
-            "subjectOf": "Betrifft"
+            "studyField": "Studienfach",
+            "subjectOf": "Geschäftszahl"
         },
         "no-columns": "Keine Spalten konfiguriert.",
         "person": {

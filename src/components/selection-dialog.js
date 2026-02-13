@@ -230,7 +230,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const columns =
             type === 'person'
                 ? SelectionColumnConfiguration.getPersonColumns()
-                : SelectionColumnConfiguration.getDocumentColumns();
+                : SelectionColumnConfiguration.getDocumentColumns(this.lang);
 
         return columns.reduce((acc, col) => {
             if (col.defaultVisible) {
@@ -964,7 +964,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     async exportDocumentsAsTable(documents, format) {
         const i18n = this._i18n;
         const instantSearchModule = new InstantSearchModule();
-        const columnConfigs = instantSearchModule.getDocumentColumns();
+        const columnConfigs = instantSearchModule.getDocumentColumns(this.lang);
 
         // Filter to only include visible columns
         const visibleColumns = columnConfigs.filter(
@@ -1399,7 +1399,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const columnConfigs =
             type === 'person'
                 ? SelectionColumnConfiguration.getPersonColumns()
-                : SelectionColumnConfiguration.getDocumentColumns();
+                : SelectionColumnConfiguration.getDocumentColumns(this.lang);
         const visibilityStates =
             type === 'person'
                 ? this.personColumnVisibilityStates
@@ -1583,7 +1583,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const columnConfigs =
             type === 'person'
                 ? SelectionColumnConfiguration.getPersonColumns()
-                : SelectionColumnConfiguration.getDocumentColumns();
+                : SelectionColumnConfiguration.getDocumentColumns(this.lang);
 
         const selectionEntries = Object.entries(selections);
         console.log(`[${type}] Building table data for ${selectionEntries.length} selections`);
@@ -1636,7 +1636,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const columnConfigs =
             type === 'person'
                 ? SelectionColumnConfiguration.getPersonColumns()
-                : SelectionColumnConfiguration.getDocumentColumns();
+                : SelectionColumnConfiguration.getDocumentColumns(this.lang);
 
         const langs = {
             en: {

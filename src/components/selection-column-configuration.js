@@ -46,10 +46,11 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
 
     /**
      * Get available columns for document type
+     * @param lang
      */
-    static getDocumentColumns() {
+    static getDocumentColumns(lang = 'de') {
         const instantSearchModule = new InstantSearchModule();
-        return instantSearchModule.getDocumentColumns();
+        return instantSearchModule.getDocumentColumns(lang);
     }
 
     async open(selectionType) {
@@ -75,7 +76,7 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
         if (selectionType === 'person') {
             this.columnConfigs = this.constructor.getPersonColumns();
         } else if (selectionType === 'document') {
-            this.columnConfigs = this.constructor.getDocumentColumns();
+            this.columnConfigs = this.constructor.getDocumentColumns(this.lang);
         }
 
         // Load saved column visibility states from localStorage
