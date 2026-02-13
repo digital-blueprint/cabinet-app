@@ -184,6 +184,11 @@ class CabinetHitElement extends BaseHitElement {
                     padding: 0.5em 0;
                 }
 
+                .study-entry::before {
+                    content: '\\25E6';
+                    margin-right: 0.5rem;
+                }
+
                 .study-entry {
                     display: flex;
                     margin-bottom: 0px;
@@ -429,11 +434,6 @@ class CabinetHitElement extends BaseHitElement {
                                   ${displayedStudies.map(
                                       (study) => html`
                                           <div class="study-entry">
-                                              <dbp-icon
-                                                  name="minus"
-                                                  class="study-icon"
-                                                  aria-hidden="true"
-                                                  title="Study icon"></dbp-icon>
                                               <span>
                                                   ${study.name} (${selectTranslation(study.status)})
                                               </span>
