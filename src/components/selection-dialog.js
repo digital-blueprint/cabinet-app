@@ -1178,10 +1178,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     padding: 20px;
                     padding-right: 10px;
                     overflow-y: auto;
+                    flex: 1;
+                    min-height: 0;
                 }
 
                 .tab-content.active {
-                    display: block;
+                    display: flex;
+                    flex-direction: column;
                 }
 
                 .tab-content h3 {
@@ -1204,6 +1207,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .selection-list li:last-child {
                     border-bottom: none;
+                }
+
+                /* Make the table container flexible */
+                .selection-table {
+                    flex: 1;
+                    min-height: 0;
+                    overflow: hidden;
                 }
 
                 .selection-count {
@@ -1274,11 +1284,14 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 .document-table-container.active {
-                    display: block;
+                    display: flex;
+                    flex-direction: column;
                     padding-top: 1.5em;
                     background-color: var(--dbp-background);
                     position: relative;
                     z-index: 3;
+                    flex: 1;
+                    min-height: 0;
                 }
 
                 .export-controls select {
@@ -1704,6 +1717,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Build table options for persons
         const personTableOptions = {
             layout: 'fitDataStretch',
+            maxHeight: '100%', // Allow table to fill container height
             nestedFieldSeparator: false, // Treat dots in field names as literal characters
             index: 'id', // Use id field as unique row identifier
             langs: this.buildTableLangs('person'),
@@ -1727,6 +1741,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Build table options for active documents
         const documentTableOptions = {
             layout: 'fitDataStretch',
+            maxHeight: '100%', // Allow table to fill container height
             nestedFieldSeparator: false, // Treat dots in field names as literal characters
             index: 'id', // Use id field as unique row identifier
             langs: this.buildTableLangs('document'),
@@ -1741,6 +1756,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Build table options for deleted documents
         const deletedDocumentTableOptions = {
             layout: 'fitDataStretch',
+            maxHeight: '100%', // Allow table to fill container height
             nestedFieldSeparator: false, // Treat dots in field names as literal characters
             index: 'id', // Use id field as unique row identifier
             langs: this.buildTableLangs('document'),
