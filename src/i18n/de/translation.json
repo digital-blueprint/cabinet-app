@@ -256,7 +256,6 @@
             "disposalType": "Aussonderungsart",
             "fileSource": "Digitalisatsquelle",
             "isPartOf": "Speicherzweck",
-            "mimeType": "MIME-Typ",
             "modifiedTimestamp": "Letzte Änderung",
             "online-system": "CAMPUSonline",
             "recommendedDeletionTimestamp": "Empfohlene Löschfrist",

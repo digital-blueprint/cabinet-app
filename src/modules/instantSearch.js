@@ -641,12 +641,6 @@ export default class InstantSearchModule {
                 defaultVisible: true,
             },
             {
-                id: 'file.base.mimeType',
-                name: t('selection-column-config.document.mimeType'),
-                field: 'file.base.mimeType',
-                defaultVisible: false,
-            },
-            {
                 id: 'file.base.disposalType',
                 name: t('selection-column-config.document.disposalType'),
                 field: 'file.base.disposalType',

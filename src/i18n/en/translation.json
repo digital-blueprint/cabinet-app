@@ -256,7 +256,6 @@
             "disposalType": "Disposal type",
             "fileSource": "Digital document source",
             "isPartOf": "Purpose of Storage",
-            "mimeType": "MIME type",
             "modifiedTimestamp": "Last modified",
             "online-system": "CAMPUSonline",
             "recommendedDeletionTimestamp": "Recommended deletion",
