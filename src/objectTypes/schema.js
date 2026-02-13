@@ -713,6 +713,14 @@ class EntranceQualificationApplication {
     electiveSubject;
 }
 
+class EntranceQualificationRecognition {
+    /**
+     * Example: "Michael Scott" - Name of the dean that approved the recognition (required)
+     * @type {string}
+     */
+    signedBy;
+}
+
 class Agent {
     /**
      * Example: "James" - Person's first name
@@ -944,4 +952,13 @@ export function getEnglMasterDataSheet(hit) {
 export function getEntranceQualificationApplication(hit) {
     console.assert(hit.objectType === 'file-cabinet-entranceQualificationApplication');
     return hit.file['file-cabinet-entranceQualificationApplication'];
+}
+
+/**
+ * @param {DocumentHit} hit
+ * @returns {EntranceQualificationRecognition}
+ */
+export function getEntranceQualificationRecognition(hit) {
+    console.assert(hit.objectType === 'file-cabinet-entranceQualificationRecognition');
+    return hit.file['file-cabinet-entranceQualificationRecognition'];
 }

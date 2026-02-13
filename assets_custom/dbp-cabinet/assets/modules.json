@@ -8,6 +8,7 @@
         "file-cabinet-englMasterApplication": "./fileEnglMasterApplication.js",
         "file-cabinet-englMasterDataSheet": "./fileEnglMasterDataSheet.js",
         "file-cabinet-entranceQualificationApplication": "./fileEntranceQualificationApplication.js",
+        "file-cabinet-entranceQualificationRecognition": "./fileEntranceQualificationRecognition.js",
         "person": "./person.js"
     },
     "instantSearch": "./instantSearch.js"
