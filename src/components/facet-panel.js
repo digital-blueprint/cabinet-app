@@ -27,7 +27,7 @@ export class FacetPanel extends LangMixin(ScopedElementsMixin(DBPLitElement), cr
 
     static styles = css`
         .chevron-container {
-            color: var(--dbp-accent);
+            color: var(--dbp-content);
             width: 16px;
             height: 16px;
         }
