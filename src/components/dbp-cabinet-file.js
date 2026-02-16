@@ -294,7 +294,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // Then try another attempt to load the file document from typesense
-        await this.fetchFileDocumentFromTypesense(fileId, ++increment);
+        await this.fetchFileDocumentFromTypesense(fileId, increment + 1);
     }
 
     /**

@@ -511,7 +511,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             return;
         }
 
-        let successCount = 0;
+        let successCount;
         let failCount = 0;
 
         try {
