@@ -46,6 +46,8 @@ export class ConfigureWidget extends LangMixin(DBPLitElement, createInstance) {
             .refinement-checkbox {
                 margin-right: 8px;
                 cursor: pointer;
+                width: 1rem;
+                height: 1rem;
             }
 
             .refinement-text {

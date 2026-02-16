@@ -143,6 +143,8 @@ export const getCommonStyles = () => css`
         cursor: pointer;
         position: relative;
         z-index: 1;
+        width: 1rem;
+        height: 1rem;
     }
 
     @media only screen and (max-width: 768px) {
