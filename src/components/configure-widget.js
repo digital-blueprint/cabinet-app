@@ -98,7 +98,7 @@ export class ConfigureWidget extends LangMixin(DBPLitElement, createInstance) {
     }
 
     _handleShowObsolete(event) {
-        let filters = '';
+        let filters;
         if (event.target.checked) {
             filters = 'base.isScheduledForDeletion:false'; // TODO add filter
         } else {

@@ -48,7 +48,7 @@ if (
 }
 
 // load devconfig for local development if present
-let devConfig = require('./app.config.json');
+let devConfig;
 try {
     console.log('Loading ' + './' + devPath + 'app.config.json ...');
     devConfig = require('./' + devPath + 'app.config.json');
