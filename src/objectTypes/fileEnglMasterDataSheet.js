@@ -91,7 +91,8 @@ class CabinetFormElement extends BaseFormElement {
                     subscribe="lang"
                     name="previousHigherEducationCurriculum"
                     label=${this._i18n.t('doc-modal-previous-higher-education-curriculum')}
-                    .value=${datasheet.previousHigherEducationCurriculum}></dbp-form-string-element>
+                    .value=${datasheet.previousHigherEducationCurriculum}
+                    type="url"></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
