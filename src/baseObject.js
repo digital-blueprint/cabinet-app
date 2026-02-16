@@ -49,7 +49,6 @@ export const getCommonStyles = () => css`
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-
         flex-wrap: wrap;
     }
 
@@ -61,6 +60,8 @@ export const getCommonStyles = () => css`
         flex-shrink: 1;
         padding: 0.5em 0 1em 0;
         font-size: 1em;
+        flex-wrap: wrap;
+        gap: 5px;
     }
 
     .text-container h3 {
@@ -105,6 +106,11 @@ export const getCommonStyles = () => css`
         display: flex;
         align-items: end;
         justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .ais-doc-Hits-content button {
+        margin: 0 0 0 auto;
     }
 
     .hit-content-item {
@@ -137,6 +143,19 @@ export const getCommonStyles = () => css`
         cursor: pointer;
         position: relative;
         z-index: 1;
+    }
+
+    @media only screen and (max-width: 768px) {
+        .ais-doc-Hits-content {
+            align-items: end;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .text-container {
+            flex-wrap: wrap;
+            gap: 5px;
+        }
     }
 `;
 

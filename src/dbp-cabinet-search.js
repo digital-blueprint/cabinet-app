@@ -1049,7 +1049,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     }
                     .ais-Hits-list {
                         padding: 0;
-                        grid-template-columns: auto;
+                        display: initial;
                     }
 
                     .hit-selection-container .button-batch-container {
