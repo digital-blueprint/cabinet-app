@@ -80,7 +80,7 @@ export class BaseDocumentHitElement extends BaseHitElement {
                                       class="icon-container"
                                       name="files"
                                       aria-hidden="true"></dbp-icon>
-                                  <h2 class="ais-doc-title">
+                                  <h2 class="ais-doc-title"> 
                                       ${renderFieldWithHighlight(
                                           hit,
                                           this.lang === 'de'

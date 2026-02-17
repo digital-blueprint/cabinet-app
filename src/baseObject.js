@@ -74,9 +74,7 @@ export const getCommonStyles = () => css`
 
     .ais-doc-title-wrapper {
         display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-shrink: 0;
+        flex-wrap: wrap;
     }
     .ais-doc-title-wrapper h2 {
         font-size: 1.2em;
@@ -93,6 +91,8 @@ export const getCommonStyles = () => css`
         width: 25px;
         height: 25px;
         flex-shrink: 0;
+        top: -1px;
+        margin: 0 5px;
     }
 
     .ais-doc-title {
