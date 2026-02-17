@@ -1838,13 +1838,23 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const objectType = this.fileHitData.objectType || this.objectType || '';
         const fileDocumentType =
             additionalType !== '' && objectType !== '' ? objectType + '---' + additionalType : '';
-        const options = Object.keys(fileDocumentTypeNames).map((key) => {
-            return html`
-                <option value="${key}" ?selected=${key === fileDocumentType}>
-                    ${this._i18n.t(fileDocumentTypeNames[key])}
-                </option>
-            `;
-        });
+
+        const options = Object.keys(fileDocumentTypeNames)
+            .map((key) => {
+                return {
+                    key: key,
+                    translatedText: this._i18n.t(fileDocumentTypeNames[key]),
+                    selected: key === fileDocumentType
+                };
+            })
+            .sort((a, b) => a.translatedText.localeCompare(b.translatedText))
+            .map((item) => {
+                return html`
+                    <option value="${item.key}" ?selected=${item.selected}>
+                        ${item.translatedText}
+                    </option>
+                `;
+            });
 
         if (fileDocumentType === '') {
             options.unshift(html`
