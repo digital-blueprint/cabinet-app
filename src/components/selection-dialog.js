@@ -1701,13 +1701,18 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const activeDocumentTableData = this.buildTableData('document', activeDocuments);
         const deletedDocumentTableData = this.buildTableData('document', deletedDocuments);
 
-        // Build table options for persons
-        const personTableOptions = {
+        // Common table options used by all tables
+        const commonTableOptions = {
             layout: 'fitDataStretch',
             // Allow scrolling of rows inside "content" area of table
             height: '526px',
             nestedFieldSeparator: false, // Treat dots in field names as literal characters
             index: 'id', // Use id field as unique row identifier
+        };
+
+        // Build table options for persons
+        const personTableOptions = {
+            ...commonTableOptions,
             langs: this.buildTableLangs('person'),
             columns: this.buildTableColumns('person', this.personGearButton, () =>
                 this.openColumnConfiguration('person'),
@@ -1728,11 +1733,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Build table options for active documents
         const documentTableOptions = {
-            layout: 'fitDataStretch',
-            // Allow scrolling of rows inside "content" area of table
-            height: '526px',
-            nestedFieldSeparator: false, // Treat dots in field names as literal characters
-            index: 'id', // Use id field as unique row identifier
+            ...commonTableOptions,
             langs: this.buildTableLangs('document'),
             columns: this.buildTableColumns(
                 'document',
@@ -1744,11 +1745,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Build table options for deleted documents
         const deletedDocumentTableOptions = {
-            layout: 'fitDataStretch',
-            // Allow scrolling of rows inside "content" area of table
-            height: '526px',
-            nestedFieldSeparator: false, // Treat dots in field names as literal characters
-            index: 'id', // Use id field as unique row identifier
+            ...commonTableOptions,
             langs: this.buildTableLangs('document'),
             columns: this.buildTableColumns(
                 'document',
