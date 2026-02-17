@@ -422,6 +422,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
             type === 'AdmissionNotice' ||
             type === 'MaritalStatusCertificate' ||
             type === 'SupervisionAcceptance' ||
+            type === 'Graduation' ||
+            type === 'Recognition' ||
             type === 'EnglMasterApplication' ||
             type === 'EnglMasterDataSheet' ||
             type === 'EntranceQualificationApplication' ||

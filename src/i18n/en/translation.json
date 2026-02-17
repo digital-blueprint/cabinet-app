@@ -414,9 +414,11 @@
                         "EnglMasterDataSheet": "English master data sheet",
                         "EntranceQualificationApplication": "Entrance qualification application",
                         "EntranceQualificationRecognition": "Entrance qualification recognition",
+                        "Graduation": "Graduation",
                         "MaritalStatusCertificate": "Marital status certificate",
                         "Passport": "Passport",
                         "PersonalLicence": "Personal licence",
+                        "Recognition": "Recognition",
                         "SupervisionAcceptance": "Supervision acceptance"
                     }
                 },

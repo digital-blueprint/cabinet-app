@@ -414,9 +414,11 @@
                         "EnglMasterDataSheet": "Datenblatt für Master Englisch",
                         "EntranceQualificationApplication": "Antrag für Studienberechtigungsprüfung",
                         "EntranceQualificationRecognition": "Anerkennung für Studienberechtigungsprüfung",
+                        "Graduation": "Abschluss",
                         "MaritalStatusCertificate": "Heiratsurkunde",
                         "Passport": "Reisepass",
                         "PersonalLicence": "Personalausweis",
+                        "Recognition": "Anerkennung",
                         "SupervisionAcceptance": "Betreuungszusage"
                     }
                 },

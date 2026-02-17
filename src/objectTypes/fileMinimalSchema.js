@@ -42,6 +42,8 @@ class CabinetFormElement extends BaseFormElement {
                 'typesense-schema.file.base.additionalType.key.MaritalStatusCertificate',
             SupervisionAcceptance:
                 'typesense-schema.file.base.additionalType.key.SupervisionAcceptance',
+            Recognition: 'typesense-schema.file.base.additionalType.key.Recognition',
+            Graduation: 'typesense-schema.file.base.additionalType.key.Graduation',
         };
     }
 
