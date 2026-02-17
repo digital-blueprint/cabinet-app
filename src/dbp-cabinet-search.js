@@ -941,6 +941,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     align-items: center;
                     gap: 0.7em;
                     margin-top: 0.5em;
+                    font-size: 0.96em;
                 }
                 .hit-selection-container .open-dialog-button-container {
                     display: grid;
