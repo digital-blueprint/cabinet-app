@@ -99,7 +99,7 @@ export const getCommonStyles = () => css`
         color: var(--dbp-content);
         font-size: 1.5em;
         display: inline-block;
-        white-space: nowrap;
+        white-space: wrap;
     }
 
     .ais-doc-Hits-content {
@@ -159,6 +159,10 @@ export const getCommonStyles = () => css`
             gap: 5px;
         }
     }
+
+    /*.ais-doc-title {
+        white-space: wrap;
+    }*/
 `;
 
 export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
