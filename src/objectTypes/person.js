@@ -110,11 +110,21 @@ class CabinetHitElement extends BaseHitElement {
                 }
 
                 .ais-Hits-header {
-                    display: grid;
-                    grid-template-columns: 2fr 1fr;
                     align-items: center;
-                    padding: 3px 10px;
+                    padding: 8px 10px;
                     background-color: var(--dbp-primary-surface);
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-between;
+                }
+
+                .ais-Hits-header h2 {
+                    padding: 0;
+                }
+
+                .hit-person-header {
+                    display: flex;
+                    flex-wrap: wrap;
                 }
 
                 .hit-person-info-header {
@@ -123,6 +133,7 @@ class CabinetHitElement extends BaseHitElement {
                     font-size: 18px;
                     font-weight: bold;
                     color: white;
+                    flex-wrap: wrap;
                 }
 
                 .hit-person-info-header .person-name,
@@ -150,23 +161,15 @@ class CabinetHitElement extends BaseHitElement {
                     gap: 0.5em;
                     margin: 0;
                     font-size: 1em;
-                }
-
-                .right-column {
-                    display: flex;
                     align-items: center;
-                    padding-right: 0.5em;
-                    padding-bottom: 0.5em;
+                    display: flex;
                 }
 
                 .column-icon {
-                    width: 25px;
-                    height: 25px;
-                    background-repeat: no-repeat;
-                    background-size: contain;
-                    background-position-x: right;
-                    color: #ffffff;
-                    top: 4px;
+                    width: 24px;
+                    height: 24px;
+                    top: -2px;
+                    margin: 0 5px;
                 }
 
                 .ais-Hits-content {
@@ -239,12 +242,8 @@ class CabinetHitElement extends BaseHitElement {
                 @media (max-width: 768px) {
                     .hit-person-info-header {
                         display: flex;
-                        align-items: center;
+                        align-items: start;
                         flex-wrap: wrap;
-                    }
-
-                    .right-column {
-                        order: 0;
                     }
 
                     .person-name {
@@ -253,8 +252,6 @@ class CabinetHitElement extends BaseHitElement {
 
                     .person-birthdate {
                         order: 2;
-                        flex-basis: 100%;
-                        font-weight: normal;
                     }
 
                     .hit-right-wrapper {
@@ -276,11 +273,17 @@ class CabinetHitElement extends BaseHitElement {
                         grid-template-columns: 1fr;
                         grid-template-rows: auto auto;
                     }
+                    .column-icon {
+                        width: 25px;
+                    }
                 }
 
                 @media (min-width: 769px) and (max-width: 1099px) {
                     .ais-Hits-header {
-                        align-items: normal;
+                        flex-wrap: wrap;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
                     }
 
                     .hit-right-wrapper {
@@ -291,6 +294,7 @@ class CabinetHitElement extends BaseHitElement {
                         display: flex;
                         flex-direction: row;
                         align-items: center;
+                        flex-wrap: wrap;
                     }
 
                     .person-name {
@@ -393,29 +397,30 @@ class CabinetHitElement extends BaseHitElement {
                         }),
                     );
                 }
-            }}>
-                <div class="hit-person-info-header">
-                    <label class="checkbox-label">
-                        <input type="checkbox" name="select" class="checkbox" ?checked=${this.selected} @change=${this.selectCheckboxChanged} value="${hit.id}" />
-                    </label>
-                    <div class="right-column">
-                        <dbp-icon
-                            class="column-icon"
-                            name="user"
-                            aria-hidden="true"
-                            title="Person hit box symbol"></dbp-icon>
-                    </div>
-                    <h2 id="person-name" class="person-name">
-                        <!-- familyName: ${hit.person.familyName}-->
-                        ${renderFieldWithHighlight(hit, 'person.familyName')},
-                        <!-- givenName: ${hit.person.givenName} -->
-                        ${renderFieldWithHighlight(hit, 'person.givenName')}
-                    </h2>
+            }}><div class="hit-person-header">
+                        <div class="hit-person-info-header">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="select" class="checkbox" ?checked=${this.selected} @change=${this.selectCheckboxChanged} value="${hit.id}" />
+                            </label>
+                                <dbp-icon
+                                    class="column-icon"
+                                    name="user"
+                                    aria-hidden="true"
+                                    title="Person hit box symbol"></dbp-icon>
+                                <h2 id="person-name" class="person-name">
+                                        <!-- familyName: ${hit.person.familyName}-->
+                                    ${renderFieldWithHighlight(hit, 'person.familyName')},
+                                        <!-- givenName: ${hit.person.givenName} -->
+                                    ${renderFieldWithHighlight(hit, 'person.givenName')}
+                                </h2>
+                            </div>
+                    
                     <h3 class="person-birthdate">
-                        <!-- birthDate: ${hit.person.birthDateDe}-->
+                            <!-- birthDate: ${hit.person.birthDateDe}-->
                         ${renderFieldWithHighlight(hit, 'person.birthDateDe')}
                     </h3>
-                </div>
+                    </div>
+
                 <div class="hit-right-wrapper">
                     <h3 class="person-id">
                         <!-- studId: ${hit.person.studId}-->
