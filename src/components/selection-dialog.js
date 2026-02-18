@@ -1613,7 +1613,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 rowNumber: index + 1,
                 id: id,
                 actions: '',
-                layout: 'fitColumns',
             };
 
             // Add all field values
