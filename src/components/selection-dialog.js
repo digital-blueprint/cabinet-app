@@ -1118,16 +1118,16 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .modal-nav {
                     cursor: pointer;
-                    overflow: hidden;
+                    overflow: initial;
                     background-color: var(--dbp-background);
                     border-right: var(--dbp-border);
                     display: flex;
                     flex-direction: column;
-                    align-items: initial;
+                    align-items: center;
                 }
 
                 .modal-nav > button {
-                    padding: 20px 0;
+                    padding: 0px 9px;
                     text-align: center;
                     background-color: var(--dbp-background);
                     color: var(--dbp-content);
@@ -1138,10 +1138,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     gap: 1px;
                     cursor: pointer;
                     margin-left: -1em;
+                    margin-bottom: 40px;
                 }
 
                 .modal-nav > button:hover {
-                    background-color: var(--dbp-hover-background-color, rgba(0, 0, 0, 0.05));
+                    background-color: var(--dbp-override-hover-background-color);
                 }
 
                 .modal-nav > button:focus-visible {
@@ -1154,10 +1155,12 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 .modal-nav .active {
+                    border-left: 3px solid var(--dbp-accent);
                 }
 
                 .modal-nav .active p {
                     font-weight: bold;
+                    font-size: 1em;
                 }
 
                 .modal-nav .active .nav-icon {
@@ -1237,7 +1240,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 .sub-tab:hover {
-                    background-color: var(--dbp-hover-background-color, rgba(0, 0, 0, 0.05));
+                    background-color: var(--dbp-override-hover-background-color);
                 }
 
                 .sub-tab.active {
