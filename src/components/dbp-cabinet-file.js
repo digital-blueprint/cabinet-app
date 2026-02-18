@@ -1844,7 +1844,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 return {
                     key: key,
                     translatedText: this._i18n.t(fileDocumentTypeNames[key]),
-                    selected: key === fileDocumentType
+                    selected: key === fileDocumentType,
                 };
             })
             .sort((a, b) => a.translatedText.localeCompare(b.translatedText))
