@@ -42,6 +42,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // used for translation overrides
         this.langDir = undefined;
+
+        this.useStreamedFileHandling = false;
     }
 
     connectedCallback() {
@@ -76,6 +78,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             personColumnVisibilityStates: {type: Object, attribute: false},
             documentColumnVisibilityStates: {type: Object, attribute: false},
             langDir: {type: String, attribute: 'lang-dir'},
+            useStreamedFileHandling: {type: Boolean, attribute: false},
         };
     }
 
@@ -878,35 +881,61 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         ? new Date(createdTimestamp * 1000).toISOString().split('T')[0]
                         : 'unknown-date';
 
-                // Get the document file first to determine its extension
-                const documentFile = await BlobOperations.downloadFileFromBlob(
-                    this.entryPointUrl,
-                    this.auth.token,
-                    fileId,
-                    dataURLtoFile,
-                );
+                // TODO: Make mixing real files and file urls work with streamed file handling
+                if (selectorValue === 'all') {
+                    this.useStreamedFileHandling = false;
 
-                // Extract extension from original filename
-                const originalName = documentFile.name || '';
-                const extension = originalName.includes('.')
-                    ? originalName.substring(originalName.lastIndexOf('.'))
-                    : '.pdf';
+                    // Get the document file first to determine its extension
+                    const documentFile = await BlobOperations.downloadFileFromBlob(
+                        this.entryPointUrl,
+                        this.auth.token,
+                        fileId,
+                        dataURLtoFile,
+                    );
 
-                // Construct the proper filename according to specification
-                const baseFilename = `${studId}_${additionalType}_${uploadDate}`;
+                    // Construct the proper filename according to specification
+                    const baseFilename = `${studId}_${additionalType}_${uploadDate}`;
 
-                // Rename the document file with proper naming
-                const renamedDocumentFile = new File(
-                    [documentFile],
-                    `${baseFilename}${extension}`,
-                    {type: documentFile.type},
-                );
-                files.push(renamedDocumentFile);
+                    // Rename the document file with proper naming
+                    const renamedDocumentFile = new File([documentFile], `${baseFilename}.pdf`, {
+                        type: documentFile.type,
+                    });
+                    files.push(renamedDocumentFile);
+                } else {
+                    this.useStreamedFileHandling = true;
+
+                    // Get the document blob URL (without downloading the file content)
+                    const blobUrl = await BlobOperations.createBlobDownloadUrl(
+                        this.entryPointUrl,
+                        this.auth.token,
+                        fileId,
+                    );
+
+                    // Construct the proper filename according to specification
+                    const baseFilename = `${studId}_${additionalType}_${uploadDate}`;
+
+                    // Add file info object for streamed download (not a File object)
+                    files.push({
+                        name: `${baseFilename}.pdf`,
+                        url: blobUrl,
+                    });
+                }
 
                 // Add metadata file if requested (selectorValue === 'all')
                 if (selectorValue === 'all') {
                     // For 'all' export, metadata uses [studId]_[additionalType]_[upload_date].json
                     const metadataFileName = `${studId}_${additionalType}_${uploadDate}.json`;
+
+                    // TODO: Make mixing real files and file urls work with streamed file handling
+                    // const metadataBlob = new Blob([JSON.stringify(hit, null, 2)], {
+                    //     type: 'application/json',
+                    // });
+                    // const metadataUrl = URL.createObjectURL(metadataBlob);
+                    // files.push({
+                    //     name: metadataFileName,
+                    //     url: metadataUrl,
+                    // });
+
                     const metadataFile = new File(
                         [JSON.stringify(hit, null, 2)],
                         metadataFileName,
@@ -925,6 +954,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         if (files.length > 0) {
+            // TODO: In the end we want to use streamed file handling for all exports
+            this.useStreamedFileHandling = selectorValue !== 'all';
+
+            console.log('exportDocuments files', files);
             // Use FileSink to download all files
             const fileSink = this.fileSinkRef.value;
             fileSink.files = files;
@@ -935,6 +968,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             // Close the modal to show the FileSink dialog
             const modal = this.modalRef.value;
             modal.close();
+
+            this.useStreamedFileHandling = false;
         }
 
         // Show notification about results
@@ -2315,8 +2350,9 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     .onColumnSettingsStored}"></dbp-selection-column-configuration>
             <dbp-file-sink
                 ${ref(this.fileSinkRef)}
-                subscribe="nextcloud-store-session:nextcloud-store-session"
+                subscribe="nextcloud-store-session:nextcloud-store-session,auth"
                 lang="${this.lang}"
+                .streamed="${this.useStreamedFileHandling}"
                 enabled-targets="${this.fileHandlingEnabledTargets}"
                 nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
                 nextcloud-web-dav-url="${this.nextcloudWebDavURL}"

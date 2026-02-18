@@ -63,14 +63,14 @@ export class BlobOperations {
     }
 
     /**
-     * Create a blob download URL for a file
+     * Create a blob GET URL for a file
      * @param {string} entryPointUrl - The API entry point URL
      * @param {string} authToken - The authentication token
      * @param {string} identifier - The file identifier
      * @param {boolean} includeData - Whether to include file data in the response
      * @returns {Promise<string>} - The blob download URL
      */
-    static async createBlobDownloadUrl(entryPointUrl, authToken, identifier, includeData = false) {
+    static async createBlobGetUrl(entryPointUrl, authToken, identifier, includeData = false) {
         if (!entryPointUrl) {
             return '';
         }
@@ -85,6 +85,44 @@ export class BlobOperations {
         if (includeData) {
             params['includeData'] = '1';
         }
+
+        apiUrl.search = new URLSearchParams(params).toString();
+
+        let response = await fetch(apiUrl.toString(), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/ld+json',
+                Authorization: 'Bearer ' + authToken,
+            },
+            body: '{}',
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to create download URL: ${response.statusText}`);
+        }
+
+        const url = await response.json();
+        return url['blobUrl'];
+    }
+
+    /**
+     * Create a blob download URL for a file
+     * @param {string} entryPointUrl - The API entry point URL
+     * @param {string} authToken - The authentication token
+     * @param {string} identifier - The file identifier
+     * @returns {Promise<string>} - The blob download URL
+     */
+    static async createBlobDownloadUrl(entryPointUrl, authToken, identifier) {
+        if (!entryPointUrl) {
+            return '';
+        }
+
+        const baseUrl = `${entryPointUrl}/cabinet/blob-urls`;
+        const apiUrl = new URL(baseUrl);
+        const params = {
+            method: 'DOWNLOAD',
+            identifier: identifier,
+        };
 
         apiUrl.search = new URLSearchParams(params).toString();
 
@@ -141,7 +179,7 @@ export class BlobOperations {
         dataURLtoFile,
         includeData = true,
     ) {
-        const url = await this.createBlobDownloadUrl(entryPointUrl, authToken, fileId, includeData);
+        const url = await this.createBlobGetUrl(entryPointUrl, authToken, fileId, includeData);
         let blobItem = await this.loadBlobItem(url, authToken);
 
         if (!blobItem.contentUrl) {
