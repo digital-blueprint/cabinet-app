@@ -1476,11 +1476,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         columns.push({
             title: 'rowNumber',
             field: 'rowNumber',
-            width: 30,
             hozAlign: 'center',
             headerHozAlign: 'center',
             headerSort: false,
             frozen: true,
+            resizable: false,
         });
 
         // Add visible data columns
@@ -1494,6 +1494,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     title: i18n.t(colConfig.name),
                     field: colConfig.id,
                     headerSort: true,
+                    resizable: false,
                     sorter: 'string',
                     formatter: (cell) => {
                         const rowData = cell.getRow().getData();
@@ -1512,10 +1513,9 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         columns.push({
             title: 'actions',
             field: 'actions',
-            width: 80,
             hozAlign: 'right',
             vertAlign: 'middle',
-            minWidth: 64,
+            Width: 50,
             frozen: true,
             headerHozAlign: 'right',
             headerSort: false,
@@ -1613,6 +1613,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 rowNumber: index + 1,
                 id: id,
                 actions: '',
+                layout: 'fitColumns',
             };
 
             // Add all field values
@@ -1703,9 +1704,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Common table options used by all tables
         const commonTableOptions = {
-            layout: 'fitDataStretch',
+            layout: 'fitDataTable',
             // Allow scrolling of rows inside "content" area of table
             height: '526px',
+            rowHeight: 50,
             nestedFieldSeparator: false, // Treat dots in field names as literal characters
             index: 'id', // Use id field as unique row identifier
         };
