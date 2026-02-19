@@ -1222,6 +1222,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 #document-modal .doc-type-edit-view {
                     padding: 0.14rem 1rem 0.14rem 0.14rem;
                     width: calc(100% - 0.9em);
+                    background-color: var(--dbp-background);
                 }
 
                 .grouping-container {

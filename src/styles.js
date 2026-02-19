@@ -116,6 +116,7 @@ export function getSelectorFixCSS() {
         .dropdown-menu {
             background-size: 1em;
             padding: 0.14rem 2rem 0.14rem 1rem;
+            background-color: var(--dbp-background);
         }
     `;
 }
