@@ -29,6 +29,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.personColumnConfigRef = createRef();
         this.documentColumnConfigRef = createRef();
         this.fileSinkRef = createRef();
+        this.fileSinkStreamedRef = createRef();
         this.hitSelections = this.constructor.createEmptyHitSelection();
         this.facetNumber = 0;
         this.activeTab = this.constructor.HitSelectionType.PERSON;
@@ -42,8 +43,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // used for translation overrides
         this.langDir = undefined;
-
-        this.useStreamedFileHandling = false;
     }
 
     connectedCallback() {
@@ -78,7 +77,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             personColumnVisibilityStates: {type: Object, attribute: false},
             documentColumnVisibilityStates: {type: Object, attribute: false},
             langDir: {type: String, attribute: 'lang-dir'},
-            useStreamedFileHandling: {type: Boolean, attribute: false},
         };
     }
 
@@ -883,8 +881,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 // TODO: Make mixing real files and file urls work with streamed file handling
                 if (selectorValue === 'all') {
-                    this.useStreamedFileHandling = false;
-
                     // Get the document file first to determine its extension
                     const documentFile = await BlobOperations.downloadFileFromBlob(
                         this.entryPointUrl,
@@ -902,8 +898,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     });
                     files.push(renamedDocumentFile);
                 } else {
-                    this.useStreamedFileHandling = true;
-
                     // Get the document blob URL (without downloading the file content)
                     const blobUrl = await BlobOperations.createBlobDownloadUrl(
                         this.entryPointUrl,
@@ -954,12 +948,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         }
 
         if (files.length > 0) {
-            // TODO: In the end we want to use streamed file handling for all exports
-            this.useStreamedFileHandling = selectorValue !== 'all';
-
             console.log('exportDocuments files', files);
             // Use FileSink to download all files
-            const fileSink = this.fileSinkRef.value;
+            const fileSink =
+                selectorValue === 'all' ? this.fileSinkRef.value : this.fileSinkStreamedRef.value;
             fileSink.files = files;
 
             // Set the ZIP filename to match specification: Elektronischer-Studierendenakt_YYYY-MM-DD-HHMMSS
@@ -968,8 +960,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             // Close the modal to show the FileSink dialog
             const modal = this.modalRef.value;
             modal.close();
-
-            this.useStreamedFileHandling = false;
         }
 
         // Show notification about results
@@ -2350,9 +2340,20 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     .onColumnSettingsStored}"></dbp-selection-column-configuration>
             <dbp-file-sink
                 ${ref(this.fileSinkRef)}
+                subscribe="nextcloud-store-session:nextcloud-store-session"
+                lang="${this.lang}"
+                enabled-targets="${this.fileHandlingEnabledTargets}"
+                nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
+                nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
+                nextcloud-name="${this.nextcloudName}"
+                nextcloud-auth-info="${this.nextcloudAuthInfo}"
+                nextcloud-file-url="${this.nextcloudFileURL}"
+                @dbp-file-sink-dialog-closed="${this.onFileSinkDialogClosed}"></dbp-file-sink>
+            <dbp-file-sink
+                ${ref(this.fileSinkStreamedRef)}
                 subscribe="nextcloud-store-session:nextcloud-store-session,auth"
                 lang="${this.lang}"
-                .streamed="${this.useStreamedFileHandling}"
+                streamed
                 enabled-targets="${this.fileHandlingEnabledTargets}"
                 nextcloud-auth-url="${this.nextcloudWebAppPasswordURL}"
                 nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
