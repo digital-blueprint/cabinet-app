@@ -73,7 +73,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
     /**
      * Returns the facet widget hash, which contains the facet widgets by their schema field name
      * We need this to remove facets from the search state later
-     * @returns {*|{}}
+     * @returns {*|object}
      */
     getFacetWidgetHash() {
         return this.facetWidgetHash;

@@ -1481,7 +1481,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Build table columns based on visibility configuration
      * @param {string} type
      * @param {HTMLElement|null} gearButtonRef
-     * @param {Function} gearButtonCallback
+     * @param {function(): void} gearButtonCallback
      * @param {string|null} gearButtonRefName - Optional property name to store the gear button reference
      * @returns {Array}
      */

@@ -168,7 +168,7 @@ export class BlobOperations {
      * @param {string} entryPointUrl - The API entry point URL
      * @param {string} authToken - The authentication token
      * @param {string} fileId - The file identifier
-     * @param {Function} dataURLtoFile - Function to convert data URL to File object
+     * @param {function(string): File} dataURLtoFile - Function to convert data URL to File object
      * @param {boolean} includeData - Whether to include data in the response
      * @returns {Promise<File>} - The downloaded file
      */
