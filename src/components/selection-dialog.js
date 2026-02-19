@@ -2283,7 +2283,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // Build deleted document table if it exists and hasn't been built yet
         const deletedDocumentTable = this.deletedDocumentTableRef.value;
         if (deletedDocumentTable) {
-            if (!deletedDocumentTable.tableReady) {
+            if (!deletedDocumentTable.tableReady && !deletedDocumentTable.tableBuilding) {
                 console.log('Building deleted document table');
                 deletedDocumentTable.buildTable();
             }
