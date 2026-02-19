@@ -1,4 +1,4 @@
-import {css, html} from 'lit';
+import {css, html, unsafeCSS} from 'lit';
 import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
 import {createRef, ref} from 'lit/directives/ref.js';
 import {
@@ -9,6 +9,7 @@ import {
     DBPSelect,
     ScopedElementsMixin,
     sendNotification,
+    getIconSVGURL,
 } from '@dbp-toolkit/common';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -1219,9 +1220,40 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     font-weight: normal;
                 }
 
+                .select-wrapper-doc-type select {
+                    background: none;
+                }
+
+                :host(:not([multiple])) .select-wrapper-doc-type {
+                    width: 100%;
+                    position: relative;
+                    display: inline-block;
+                }
+
+                :host(:not([multiple])) .select-wrapper-doc-type select {
+                    appearance: none;
+                    padding-right: 1em;
+                }
+
+                :host(:not([multiple])) .select-wrapper-doc-type::after {
+                    content: '';
+                    position: absolute;
+                    transform: translateY(-50%);
+                    right: 0.5rem;
+                    top: 1rem;
+                    width: 1em;
+                    height: 1em;
+                    pointer-events: none;
+                    background-color: var(--select-wrapper-icon-color, currentColor);
+                    mask: url('${unsafeCSS(getIconSVGURL('chevron-down'))}') center/contain
+                        no-repeat;
+                    -webkit-mask: url('${unsafeCSS(getIconSVGURL('chevron-down'))}') center/contain
+                        no-repeat;
+                }
+
                 #document-modal .doc-type-edit-view {
                     padding: 0.14rem 1rem 0.14rem 0.14rem;
-                    width: calc(100% - 0.9em);
+                    width: calc(100% - 1.2em);
                     background-color: var(--dbp-background);
                 }
 
@@ -1871,14 +1903,16 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         ${this._i18n.t('required-files-asterisk')}
                     </span>
                 </label>
-                <select
-                    id="document-type"
-                    class="doc-type-edit-view"
-                    name="object-type"
-                    required
-                    @change="${this.onDocumentTypeSelected}">
-                    ${options}
-                </select>
+                <div class="select-wrapper-doc-type">
+                    <select
+                        id="document-type"
+                        class="doc-type-edit-view"
+                        name="object-type"
+                        required
+                        @change="${this.onDocumentTypeSelected}">
+                        ${options}
+                    </select>
+                </div>
             </fieldset>
         `;
     }
