@@ -1167,7 +1167,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 .modal-nav > button:hover {
-                    background-color: var(--dbp-override-hover-background-color);
+                    background-color: var(--dbp-hover-background-color);
                 }
 
                 .modal-nav > button:focus-visible {
@@ -1265,7 +1265,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 .sub-tab:hover {
-                    background-color: var(--dbp-override-hover-background-color);
+                    background-color: var(--dbp-hover-background-color);
                 }
 
                 .sub-tab.active {
@@ -1343,6 +1343,25 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         border-bottom: var(--dbp-border);
                         border-top: var(--dbp-border);
                         border-right: none;
+                    }
+                }
+                .document-sub-tabs {
+                    container-type: inline-size;
+                    container-name: subTabs;
+
+                    display: flex;
+                    min-width: 0;
+                    width: 100%;
+                }
+
+                .document-sub-tabs > .sub-tab {
+                    min-width: 0;
+                    white-space: normal;
+                }
+
+                @container subTabs (max-width: 200px) {
+                    .document-sub-tabs > .sub-tab {
+                        padding: 100px 20px !important;
                     }
                 }
             `,
