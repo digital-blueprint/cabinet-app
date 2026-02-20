@@ -12,7 +12,6 @@ import {
 } from '../modules/modal-notification';
 import {SelectionColumnConfiguration} from './selection-column-configuration';
 import {BlobOperations} from '../utils/blob-operations';
-import {dataURLtoFile} from '../utils';
 import {getSelectorFixCSS} from '../styles.js';
 import {getPersonHit} from '../objectTypes/schema.js';
 import InstantSearchModule from '../modules/instantSearch.js';
@@ -879,65 +878,64 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         ? new Date(createdTimestamp * 1000).toISOString().split('T')[0]
                         : 'unknown-date';
 
-                // TODO: Make mixing real files and file urls work with streamed file handling
-                if (selectorValue === 'all') {
-                    // Get the document file first to determine its extension
-                    const documentFile = await BlobOperations.downloadFileFromBlob(
-                        this.entryPointUrl,
-                        this.auth.token,
-                        fileId,
-                        dataURLtoFile,
-                    );
+                // Get the document blob URL (without downloading the file content)
+                const blobUrl = await BlobOperations.createBlobDownloadUrl(
+                    this.entryPointUrl,
+                    this.auth.token,
+                    fileId,
+                );
 
-                    // Construct the proper filename according to specification
-                    const baseFilename = `${studId}_${additionalType}_${uploadDate}`;
+                // Construct the proper filename according to specification
+                const baseFilename = `${studId}_${additionalType}_${uploadDate}`;
 
-                    // Rename the document file with proper naming
-                    const renamedDocumentFile = new File([documentFile], `${baseFilename}.pdf`, {
-                        type: documentFile.type,
-                    });
-                    files.push(renamedDocumentFile);
-                } else {
-                    // Get the document blob URL (without downloading the file content)
-                    const blobUrl = await BlobOperations.createBlobDownloadUrl(
-                        this.entryPointUrl,
-                        this.auth.token,
-                        fileId,
-                    );
+                let randomStr = undefined;
+                files.forEach((file, i) => {
+                    if (
+                        (file instanceof File && file.name === `${baseFilename}.json`) ||
+                        file.name === `${baseFilename}.pdf`
+                    ) {
+                        randomStr = Math.random().toString(36).substring(7);
+                    }
+                });
 
-                    // Construct the proper filename according to specification
-                    const baseFilename = `${studId}_${additionalType}_${uploadDate}`;
-
-                    // Add file info object for streamed download (not a File object)
-                    files.push({
-                        name: `${baseFilename}.pdf`,
-                        url: blobUrl,
-                    });
-                }
+                // Add file info object for streamed download (not a File object)
+                files.push({
+                    name: randomStr ? `${baseFilename}-${randomStr}.pdf` : `${baseFilename}.pdf`,
+                    url: blobUrl,
+                });
 
                 // Add metadata file if requested (selectorValue === 'all')
                 if (selectorValue === 'all') {
+                    let metadataFileName;
                     // For 'all' export, metadata uses [studId]_[additionalType]_[upload_date].json
-                    const metadataFileName = `${studId}_${additionalType}_${uploadDate}.json`;
+                    if (randomStr) {
+                        metadataFileName = `${baseFilename}-${randomStr}.json`;
+                    } else {
+                        metadataFileName = `${baseFilename}.json`;
+                    }
 
-                    // TODO: Make mixing real files and file urls work with streamed file handling
-                    // const metadataBlob = new Blob([JSON.stringify(hit, null, 2)], {
-                    //     type: 'application/json',
-                    // });
-                    // const metadataUrl = URL.createObjectURL(metadataBlob);
-                    // files.push({
-                    //     name: metadataFileName,
-                    //     url: metadataUrl,
-                    // });
-
-                    const metadataFile = new File(
-                        [JSON.stringify(hit, null, 2)],
-                        metadataFileName,
-                        {
-                            type: 'application/json',
-                        },
+                    // Get the document blob URL (without downloading the file content)
+                    const blobUrl = await BlobOperations.createBlobGetUrl(
+                        this.entryPointUrl,
+                        this.auth.token,
+                        fileId,
                     );
-                    files.push(metadataFile);
+
+                    // get relevant json data
+                    let blobItem = await BlobOperations.loadBlobItem(blobUrl, this.auth.token);
+
+                    // parse and stringify json to format it with 4 spaces indentation
+                    let jsonMini = JSON.parse(blobItem['metadata']);
+                    const json = JSON.stringify(jsonMini, null, 4);
+
+                    // convert json string to json file
+                    const jsonFile = new File([json], metadataFileName, {
+                        type: 'application/json',
+                        lastModified: Date.now(),
+                    });
+
+                    // Add file object for streamed download
+                    files.push(jsonFile);
                 }
 
                 successCount++;
@@ -950,8 +948,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         if (files.length > 0) {
             console.log('exportDocuments files', files);
             // Use FileSink to download all files
-            const fileSink =
-                selectorValue === 'all' ? this.fileSinkRef.value : this.fileSinkStreamedRef.value;
+            const fileSink = this.fileSinkStreamedRef.value;
             fileSink.files = files;
 
             // Set the ZIP filename to match specification: Elektronischer-Studierendenakt_YYYY-MM-DD-HHMMSS
