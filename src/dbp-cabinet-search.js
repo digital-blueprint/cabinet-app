@@ -732,10 +732,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .ais-SearchBox-input {
                     flex-grow: 1;
-                    height: 2em;
                     border: var(--dbp-border);
                     padding-inline: 0.5em;
-                    padding: 0 1.2em 0 2.2em;
+                    padding: calc(0.375em - 1px) 0.75em;
+                    padding-left: 1.7em;
                     border-radius: 0 !important;
                     color: var(--dbp-content);
                     background-color: var(--dbp-background);
@@ -1002,10 +1002,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         gap: 0.5em;
                         display: flex;
                         align-items: center;
-                        border: var(--dbp-border);
-                        height: 1.9em;
-                        padding: 0 1em 0 1em;
-                        cursor: pointer;
                     }
 
                     .deleted-only {
@@ -1417,7 +1413,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     hidden: !this.isLoggedIn() || this.isAuthPending() || this.loadingTranslations,
                 })}">
                 <div class="search-box-container">
-                    <div id="filter-header-button" class="filter-header-button"
+                    <button id="filter-header-button" class="button filter-header-button"
                         @click="${() => {
                             const cabinetFacets = this.cabinetFacetsRef.value;
                             cabinetFacets.toggleFilters();
@@ -1426,7 +1422,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                         <div class="filter-header-button__title">
                             ${i18n.t('cabinet-search.filters')}
                         </div>
-                    </div>
+                    </button>
                     <div id="searchbox" class="search-box-widget"></div>
                     <div class="help-container">
                         <svg

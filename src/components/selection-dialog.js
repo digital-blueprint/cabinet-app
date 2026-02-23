@@ -1149,7 +1149,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 .modal-nav > button {
-                    padding: 0px 9px;
+                    padding: 0 0 8px 5px;
                     text-align: center;
                     background-color: var(--dbp-background);
                     color: var(--dbp-content);
@@ -1246,10 +1246,14 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     z-index: 3;
                     position: relative;
                     border-radius: 0;
+                    container-name: subtabs;
+                    container-type: inline-size;
+                    min-width: 0;
                 }
 
                 .sub-tab {
                     width: 50%;
+                    min-width: 0;
                     padding: 10px 20px;
                     background-color: var(--dbp-background);
                     border: none;
@@ -1259,6 +1263,21 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     display: flex;
                     align-items: center;
                     border-radius: 0;
+                }
+
+                @container subtabs (max-width: 500px) {
+                    .sub-tab {
+                        padding: 2px 6px;
+                        text-align: center;
+                    }
+                    .sub-tab.active {
+                        width: 75%;
+                        padding-left: 15px;
+                    }
+                    .sub-tab:not(.active) {
+                        line-height: 1.2;
+                        font-size: 15px;
+                    }
                 }
 
                 .sub-tab:hover {
@@ -1327,6 +1346,21 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     .dropdown-menu {
                         width: 100%;
                     }
+
+                    .tab-content {
+                    }
+
+                    .export-buttons {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 9px;
+                    }
+
+                    .export-buttons > * {
+                        width: 100%;
+                        display: grid;
+                        justify-self: stretch;
+                    }
                 }
 
                 @media (max-width: 490px) {
@@ -1338,28 +1372,21 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         flex-direction: row;
                         justify-content: space-evenly;
                         border-bottom: var(--dbp-border);
-                        border-top: var(--dbp-border);
+                        border-top: none;
                         border-right: none;
                     }
-                }
-                .document-sub-tabs {
-                    container-type: inline-size;
-                    container-name: subTabs;
-
-                    display: flex;
-                    min-width: 0;
-                    width: 100%;
-                }
-
-                .document-sub-tabs > .sub-tab {
-                    min-width: 0;
-                    white-space: normal;
-                }
-
-                @container subTabs (max-width: 200px) {
-                    .document-sub-tabs > .sub-tab {
-                        padding: 100px 20px !important;
+                    .tab-content {
+                        padding: 20px 0px;
                     }
+                    .export-buttons {
+                        display: grid;
+                        grid-template-columns: 1fr;
+                        gap: 9px;
+                    }
+                }
+                .modal-nav > button {
+                    margin: 10px;
+                    padding: 0px 0px 2px 8px;
                 }
             `,
         ];
@@ -1747,7 +1774,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Common table options used by all tables
         const commonTableOptions = {
-            layout: 'fitDataTable',
+            layout: 'fitDataStretch',
             // Allow scrolling of rows inside "content" area of table
             height: '526px',
             rowHeight: 50,
@@ -1968,7 +1995,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                             ${Object.keys(activeDocuments).length > 0
                                 ? html`
                                       <div class="export-controls">
-                                          <div>
+                                          <div class="export-buttons">
                                               <dbp-button
                                                   value="${i18n.t(
                                                       'selection-dialog.remove-all-active',
