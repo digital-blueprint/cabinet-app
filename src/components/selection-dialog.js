@@ -2307,6 +2307,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 // Table is already built, update its data
                 console.log('Updating person table data');
                 this.updateTableData(this.constructor.HitSelectionType.PERSON);
+                personTable.tabulatorTable.redraw();
             }
         }
 
@@ -2320,6 +2321,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 // Table is already built, update its data
                 console.log('Updating document table data');
                 this.updateTableData(this.constructor.HitSelectionType.DOCUMENT_FILE);
+                documentTable.tabulatorTable.redraw();
             }
         }
 
