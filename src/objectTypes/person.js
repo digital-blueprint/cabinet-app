@@ -326,6 +326,7 @@ class CabinetHitElement extends BaseHitElement {
                         grid-template-rows: auto auto;
                         gap: 0.5em;
                         align-items: center;
+                        justify-content: normal;
                     }
 
                     .hits-person-footer button:nth-child(1) {
