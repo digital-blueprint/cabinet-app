@@ -1402,8 +1402,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     }
                 }
                 .modal-nav > button {
-                    margin: 10px;
-                    padding: 0px 0px 2px 8px;
+                    margin: 10px 0;
+                    padding: 0px 0px 2px 5px;
                 }
             `,
         ];
