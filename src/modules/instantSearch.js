@@ -401,28 +401,6 @@ export default class InstantSearchModule {
                 facetOptions: {facet: {searchable: false}},
             },
             {
-                id: 'file.file-cabinet-englMasterApplication.nativeLanguage',
-                groupId: 'file',
-                schemaField: 'file.file-cabinet-englMasterApplication.nativeLanguage',
-                schemaFieldType: 'checkbox',
-                renderFunction: translationRenderFunction,
-                name: t(
-                    'cabinet-search.filter-file-file-cabinet-englMasterApplication-native-language-title',
-                ),
-                facetOptions: {facet: {searchable: false}},
-            },
-            {
-                id: 'file.file-cabinet-englMasterApplication.previousEnrolmentInAustria',
-                groupId: 'file',
-                schemaField: 'file.file-cabinet-englMasterApplication.previousEnrolmentInAustria',
-                schemaFieldType: 'checkbox',
-                renderFunction: translationRenderFunction,
-                name: t(
-                    'cabinet-search.filter-file-file-cabinet-englMasterApplication-previous-enrolment-in-austria-title',
-                ),
-                facetOptions: {facet: {searchable: false}},
-            },
-            {
                 id: 'file.shared.nationality',
                 groupId: 'file',
                 schemaField: selectField('file.shared.nationality'),
