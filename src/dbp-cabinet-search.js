@@ -906,6 +906,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
                 dbp-icon.deselect-all-icon {
                     padding-right: 0.2em;
+                    width: 14px;
+                    height: 14px;
+                    min-width: 3px;
+                    min-height: 4px;
                 }
 
                 .hit-selection-body[hidden] {
@@ -1603,7 +1607,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 this.search.refresh();
                             }}">
                             <dbp-icon
-                                name="spinner-arrow-mirrored"
+                                name="close"
                                 class="deselect-all-icon"
                                 aria-hidden="true"></dbp-icon>
                             ${this._i18n.t('cabinet-search.deselect-all')}

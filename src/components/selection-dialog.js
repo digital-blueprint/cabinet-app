@@ -1330,16 +1330,44 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 .export-controls {
-                    margin-bottom: 15px;
                     display: flex;
                     gap: 10px;
-                    align-items: center;
                     flex-wrap: wrap;
                     justify-content: space-between;
                 }
 
+                .col-right {
+                    justify-content: flex-end;
+                }
                 .export-persons-select {
                     margin-left: auto;
+                }
+
+                .button.deselect-all {
+                    text-decoration: underline;
+                    border: none;
+                    padding: 0;
+                    font-size: 15px;
+                    display: inline;
+                }
+
+                .button.deselect-all > dbp-icon {
+                    padding-right: 0.2em;
+                    width: 13px;
+                    height: 13px;
+                    min-width: 7px;
+                    min-height: 7px;
+                }
+
+                .export-buttons {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 15px;
+                    align-self: end;
+                }
+
+                .export-buttons > * {
+                    justify-self: end;
                 }
 
                 @media (max-width: 768px) {
@@ -1348,12 +1376,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     }
 
                     .tab-content {
-                    }
-
-                    .export-buttons {
-                        display: grid;
-                        grid-template-columns: 1fr 1fr;
-                        gap: 9px;
                     }
 
                     .export-buttons > * {
@@ -1377,11 +1399,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     }
                     .tab-content {
                         padding: 20px 0px;
-                    }
-                    .export-buttons {
-                        display: grid;
-                        grid-template-columns: 1fr;
-                        gap: 9px;
                     }
                 }
                 .modal-nav > button {
@@ -1635,6 +1652,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             formatter: (cell) => {
                 const button = this.createScopedElement('dbp-icon-button');
                 button.setAttribute('icon-name', 'close');
+                button.setAttribute('class', 'deselect-all');
                 button.setAttribute('title', i18n.t('selection-dialog.remove', 'Remove'));
                 button.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -1912,25 +1930,29 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                             : ''}">
                         ${Object.keys(personSelections).length > 0
                             ? html`
-                                  <div class="export-controls">
-                                      <dbp-button
-                                          value="${i18n.t(
-                                              'selection-dialog.remove-all-persons',
-                                              'Remove selections',
-                                          )}"
-                                          @click="${() => this.removeAllPersonSelections()}"
-                                          type="is-secondary">
-                                          ${i18n.t(
-                                              'selection-dialog.remove-all-persons',
-                                              'Remove selections',
-                                          )}
-                                      </dbp-button>
-                                      <dbp-select
-                                          id="export-persons-select"
-                                          class="export-persons-select"
-                                          label="${i18n.t('selection-dialog.export')}"
-                                          .options=${personDownloadOptions}
-                                          @change="${this.exportPersons}"></dbp-select>
+                                  <div class="export-controls col-right">
+                                      <div class="export-buttons">
+                                          <dbp-select
+                                              id="export-persons-select"
+                                              class="export-persons-select"
+                                              label="${i18n.t('selection-dialog.export')}"
+                                              .options=${personDownloadOptions}
+                                              @change="${this.exportPersons}"></dbp-select>
+                                          <button
+                                              class="button deselect-all"
+                                              value="${i18n.t(
+                                                  'selection-dialog.remove-all-persons',
+                                                  'Remove selections',
+                                              )}"
+                                              @click="${() => this.removeAllPersonSelections()}"
+                                              type="is-secondary">
+                                              <dbp-icon name="close" aria-hidden="true"></dbp-icon>
+                                              ${i18n.t(
+                                                  'selection-dialog.remove-all-persons',
+                                                  'Remove selections',
+                                              )}
+                                          </button>
+                                      </div>
                                   </div>
                                   <dbp-tabulator-table
                                       ${ref(this.personTableRef)}
@@ -1995,8 +2017,32 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                             ${Object.keys(activeDocuments).length > 0
                                 ? html`
                                       <div class="export-controls">
+                                          <dbp-button
+                                              value="${i18n.t(
+                                                  'selection-dialog.delete-all-active',
+                                                  'Delete All',
+                                              )}"
+                                              @click="${() =>
+                                                  this.scheduleActiveDocumentsForDeletion()}"
+                                              type="is-secondary">
+                                              <dbp-icon name="trash" aria-hidden="true"></dbp-icon>
+                                              ${i18n.t(
+                                                  'selection-dialog.delete-all-active',
+                                                  'Delete All',
+                                              )}&nbsp(${Object.keys(activeDocuments).length})
+                                          </dbp-button>
                                           <div class="export-buttons">
-                                              <dbp-button
+                                              <dbp-select
+                                                  id="export-active-select"
+                                                  label="${i18n.t(
+                                                      'selection-dialog.export',
+                                                      'Export Documents',
+                                                  )}"
+                                                  .options=${docDownloadOptions}
+                                                  @change=${this
+                                                      .exportActiveDocuments}></dbp-select>
+                                              <button
+                                                  class="button deselect-all"
                                                   value="${i18n.t(
                                                       'selection-dialog.remove-all-active',
                                                       'Remove selections',
@@ -2011,32 +2057,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                       'selection-dialog.remove-all-active',
                                                       'Remove selections',
                                                   )}&nbsp(${Object.keys(activeDocuments).length})
-                                              </dbp-button>
-                                              <dbp-button
-                                                  value="${i18n.t(
-                                                      'selection-dialog.delete-all-active',
-                                                      'Delete All',
-                                                  )}"
-                                                  @click="${() =>
-                                                      this.scheduleActiveDocumentsForDeletion()}"
-                                                  type="is-secondary">
-                                                  <dbp-icon
-                                                      name="trash"
-                                                      aria-hidden="true"></dbp-icon>
-                                                  ${i18n.t(
-                                                      'selection-dialog.delete-all-active',
-                                                      'Delete All',
-                                                  )}&nbsp(${Object.keys(activeDocuments).length})
-                                              </dbp-button>
+                                              </button>
                                           </div>
-                                          <dbp-select
-                                              id="export-active-select"
-                                              label="${i18n.t(
-                                                  'selection-dialog.export',
-                                                  'Export Documents',
-                                              )}"
-                                              .options=${docDownloadOptions}
-                                              @change=${this.exportActiveDocuments}></dbp-select>
                                       </div>
                                       <dbp-tabulator-table
                                           ${ref(this.documentTableRef)}
@@ -2066,54 +2088,62 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                             ${Object.keys(deletedDocuments).length > 0
                                 ? html`
                                       <div class="export-controls">
-                                          <div>
-                                              <dbp-button
-                                                  value="${i18n.t(
-                                                      'selection-dialog.remove-all-deleted',
-                                                      'Remove selections',
-                                                  )}"
-                                                  @click="${() =>
-                                                      this.removeAllDeletedDocumentSelections()}"
-                                                  type="is-secondary">
-                                                  <dbp-icon
-                                                      name="close"
-                                                      aria-hidden="true"></dbp-icon>
-                                                  ${i18n.t(
-                                                      'selection-dialog.remove-all-deleted',
-                                                      'Remove selections',
-                                                  )}&nbsp(${Object.keys(deletedDocuments).length})
-                                              </dbp-button>
+                                         
+                                              
                                               <dbp-button
                                                   value="${i18n.t(
                                                       'selection-dialog.undelete-all-deleted',
                                                       'Undelete All',
                                                   )}"
                                                   @click="${() => this.undeleteDeletedDocuments()}"
-                                                  type="is-secondary">
+                                                  type="is-secondary"> <dbp-icon
+                                                      name="checkmark"
+                                                      aria-hidden="true"></dbp-icon>
                                                   ${i18n.t(
                                                       'selection-dialog.undelete-all-deleted',
                                                       'Undelete All',
                                                   )}&nbsp(${Object.keys(deletedDocuments).length})
                                               </dbp-button>
+                                              <div class="export-buttons">
+                                                  <dbp-select
+                                                      id="export-deleted-select"
+                                                      label="${i18n.t(
+                                                          'selection-dialog.export',
+                                                          'Export Documents',
+                                                      )}"
+                                                      .options=${docDownloadOptions}
+                                                      @change="${
+                                                          this.exportDeletedDocuments
+                                                      }"></dbp-select>
+                                                  <button
+                                                          class="button deselect-all"
+                                                          value="${i18n.t(
+                                                              'selection-dialog.remove-all-deleted',
+                                                              'Remove selections',
+                                                          )}"
+                                                          @click="${() =>
+                                                              this.removeAllDeletedDocumentSelections()}"
+                                                          type="is-secondary">
+                                                      <dbp-icon
+                                                              name="close"
+                                                              aria-hidden="true"></dbp-icon>
+                                                      ${i18n.t(
+                                                          'selection-dialog.remove-all-deleted',
+                                                          'Remove selections',
+                                                      )}&nbsp(${Object.keys(deletedDocuments).length})
+                                                  </button>
+                                              </div>
+                                              <dbp-tabulator-table
+                                                  ${ref(this.deletedDocumentTableRef)}
+                                                  lang="${this.lang}"
+                                                  class="selection-table"
+                                                  identifier="deleted-document-selection-table"
+                                                  pagination-enabled
+                                                  pagination-size="10"
+                                                  .data=${deletedDocumentTableData}
+                                                  .options=${deletedDocumentTableOptions}></dbp-tabulator-table>
                                           </div>
-                                          <dbp-select
-                                              id="export-deleted-select"
-                                              label="${i18n.t(
-                                                  'selection-dialog.export',
-                                                  'Export Documents',
-                                              )}"
-                                              .options=${docDownloadOptions}
-                                              @change="${this.exportDeletedDocuments}"></dbp-select>
                                       </div>
-                                      <dbp-tabulator-table
-                                          ${ref(this.deletedDocumentTableRef)}
-                                          lang="${this.lang}"
-                                          class="selection-table"
-                                          identifier="deleted-document-selection-table"
-                                          pagination-enabled
-                                          pagination-size="10"
-                                          .data=${deletedDocumentTableData}
-                                          .options=${deletedDocumentTableOptions}></dbp-tabulator-table>
                                   `
                                 : html`
                                       <p>
