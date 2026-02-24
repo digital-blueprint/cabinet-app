@@ -305,7 +305,7 @@
         "batch-operations-document": "Mehrfachaktionen für Dokumente",
         "batch-operations-person": "Mehrfachaktionen für Personen",
         "configure-columns": "Spalten konfigurieren",
-        "delete-all-active": "Dokumente Löschen",
+        "delete-all-active": "Dokumente löschen",
         "deleted-documents": "Gelöschte Dokumente",
         "deletion-error": "Löschfehler",
         "deletion-error-message_one": "{{count}} Dokument konnte nicht zum Löschen vorgemerkt werden.",

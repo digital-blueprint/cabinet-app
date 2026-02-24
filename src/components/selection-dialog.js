@@ -1951,6 +1951,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   'selection-dialog.remove-all-persons',
                                                   'Remove selections',
                                               )}
+                                              <span>(${Object.keys(personSelections).length})</span>
                                           </button>
                                       </div>
                                   </div>
@@ -2097,7 +2098,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   )}"
                                                   @click="${() => this.undeleteDeletedDocuments()}"
                                                   type="is-secondary"> <dbp-icon
-                                                      name="checkmark"
+                                                      name="undo"
                                                       aria-hidden="true"></dbp-icon>
                                                   ${i18n.t(
                                                       'selection-dialog.undelete-all-deleted',
