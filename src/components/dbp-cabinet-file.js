@@ -1074,6 +1074,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             commonStyles.getRadioAndCheckboxCss(),
             formElements.getFieldsetCSS(),
             getSelectorFixCSS(),
+
             // language=css
             css`
                 h3 {
@@ -1267,7 +1268,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     margin: 0;
                 }
 
-                @media (min-width: 490px) and (max-width: 767px) {
+                @media (min-width: 490px) and (max-width: 768px) {
                     #document-modal .content {
                         display: flex;
                         flex-direction: column;
@@ -1294,6 +1295,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     #document-modal ul {
                         padding: 10px 15px;
                     }
+                    #document-modal dbp-select.actions-dropdown-doc-edit {
+                        --dbp-select-menu-left: 0;
+                        --dbp-select-menu-right: auto;
+                    }
+                    #document-modal dbp-select.download-dropdown {
+                        --dbp-select-menu-left: 0;
+                        --dbp-select-menu-right: auto;
+                    }
                 }
                 @media (max-width: 490px) {
                     #document-modal .content {
@@ -1314,6 +1323,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     }
                     #document-modal .description {
                         flex-wrap: wrap;
+                    }
+                    #document-modal dbp-select.download-dropdown {
+                        --dbp-select-menu-left: auto;
+                        --dbp-select-menu-right: 0;
+                    }
+                    #document-modal dbp-select.actions-dropdown-doc-edit {
+                        --dbp-select-menu-left: 0;
+                        --dbp-select-menu-right: auto;
                     }
                 }
             `,
@@ -1474,7 +1491,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         return html`
             <dbp-select
-                align="right"
                 label=${i18n.t('doc-modal-select-version')}
                 .options=${versionOptions}
                 @change=${this.onChangeVersion}></dbp-select>
@@ -1610,6 +1626,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 <dbp-select
                                     id="download-dropdown"
                                     class=" ${classMap({
+                                        'download-dropdown': true,
                                         hidden: this.mode !== CabinetFile.Modes.VIEW,
                                     })}"
                                     ?disabled=${!file}
@@ -1699,6 +1716,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         return html`
             <dbp-select
                 id="action-dropdown"
+                class="actions-dropdown-doc-edit"
                 ?disabled=${!file}
                 label="${i18n.t('doc-modal-Actions')}"
                 .options=${options}
