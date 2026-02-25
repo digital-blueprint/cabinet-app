@@ -1960,6 +1960,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                       lang="${this.lang}"
                                       class="selection-table"
                                       identifier="person-selection-table"
+                                      overflow-y-scroll-enabled
                                       pagination-enabled
                                       pagination-size="10"
                                       .data=${personTableData}
@@ -2066,6 +2067,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                           lang="${this.lang}"
                                           class="selection-table"
                                           identifier="document-selection-table"
+                                          overflow-y-scroll-enabled
                                           pagination-enabled
                                           pagination-size="10"
                                           .data=${activeDocumentTableData}
@@ -2139,6 +2141,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                                   lang="${this.lang}"
                                                   class="selection-table"
                                                   identifier="deleted-document-selection-table"
+                                                  overflow-y-scroll-enabled
                                                   pagination-enabled
                                                   pagination-size="10"
                                                   .data=${deletedDocumentTableData}
