@@ -73,7 +73,7 @@ export function getPaginationCSS() {
 
         .ais-Pagination-link:hover {
             color: var(--dbp-content);
-            background-color: #e4154b;
+            background-color: --dbp-hover-background-color;
         }
 
         .ais-Pagination-link {
