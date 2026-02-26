@@ -1375,9 +1375,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         width: 100%;
                     }
 
-                    .tab-content {
-                    }
-
                     .export-buttons > * {
                         width: 100%;
                         display: grid;
@@ -1390,6 +1387,12 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         grid-template-columns: none;
                         min-height: 0;
                     }
+
+                    .export-active-select {
+                        --dbp-select-menu-left: 0;
+                        --dbp-select-menu-right: auto;
+                    }
+
                     .modal-nav {
                         flex-direction: row;
                         justify-content: space-evenly;
@@ -1397,6 +1400,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         border-top: none;
                         border-right: none;
                     }
+
                     .tab-content {
                         padding: 20px 0px;
                     }
@@ -2036,6 +2040,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                           <div class="export-buttons">
                                               <dbp-select
                                                   id="export-active-select"
+                                                  class="export-active-select"
                                                   label="${i18n.t(
                                                       'selection-dialog.export',
                                                       'Export Documents',
