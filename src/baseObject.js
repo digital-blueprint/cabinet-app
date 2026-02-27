@@ -454,12 +454,10 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
             'study-archive-80',
         ];
 
-        return items.reduce(
-            (acc, item) => ({
-                ...acc,
-                [item]: i18n.t(`typesense-schema.file.base.isPartOf.${item}`),
-            }),
-            {},
+        return Object.fromEntries(
+            items
+                .map((item) => [item, i18n.t(`typesense-schema.file.base.isPartOf.${item}`)])
+                .sort((a, b) => a[1].localeCompare(b[1])),
         );
     }
 }
