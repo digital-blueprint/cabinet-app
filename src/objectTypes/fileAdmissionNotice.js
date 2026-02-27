@@ -64,7 +64,7 @@ class CabinetFormElement extends BaseFormElement {
     }
 
     getDecisions() {
-        return {
+        const decisions = {
             rejected: this._i18n.t(
                 'typesense-schema.file.file-cabinet-admissionNotice.decision.rejected',
             ),
@@ -75,6 +75,10 @@ class CabinetFormElement extends BaseFormElement {
                 'typesense-schema.file.file-cabinet-admissionNotice.decision.granted',
             ),
         };
+
+        return Object.fromEntries(
+            Object.entries(decisions).sort((a, b) => a[1].localeCompare(b[1])),
+        );
     }
 
     render() {
