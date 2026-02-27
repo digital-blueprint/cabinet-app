@@ -120,6 +120,10 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     // 3) Add toggle method for batch activity
     toggleHitSelectionContainer() {
         this.hitSelectionCollapsed = !this.hitSelectionCollapsed;
+        this.showHitCheckboxes = !this.hitSelectionCollapsed;
+        if (this.search) {
+            this.search.refresh();
+        }
         this.requestUpdate();
     }
 
@@ -156,6 +160,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this._initInstantsearchPromise = null;
         this._initialUiState = null;
         this.hitSelectionCollapsed = true;
+        this.showHitCheckboxes = false;
         this.disabled = true;
 
         // used for translation overrides
@@ -205,6 +210,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             hitSelections: {type: Object, attribute: false},
             hitSelectAllState: {type: Boolean, attribute: false},
             hitSelectionCollapsed: {type: Boolean},
+            showHitCheckboxes: {type: Boolean},
             disabled: {type: Boolean, reflect: true},
             langDir: {type: String, attribute: 'lang-dir'},
         };
@@ -1281,6 +1287,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     console.log('item hit', hit);
                     console.log('item type', hit['@type']);
                     hitElement.selected = !!this.hitSelections[type][hit.id];
+                    hitElement.showHitCheckboxes = this.showHitCheckboxes;
                     hitElement.searchHelper = cabinetSearch.search.helper;
                     hitElement.isFirstOnPage = hit[isFirstOnPageSymbol];
                     hitElement.isLastOnPage = hit[isLastOnPageSymbol];

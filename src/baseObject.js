@@ -147,6 +147,10 @@ export const getCommonStyles = () => css`
         height: 1rem;
     }
 
+    .checkbox-label[hidden] {
+        display: none;
+    }
+
     @media only screen and (max-width: 768px) {
         .ais-doc-Hits-content {
             align-items: end;

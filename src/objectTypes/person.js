@@ -400,7 +400,7 @@ class CabinetHitElement extends BaseHitElement {
                 }
             }}><div class="hit-person-header">
                         <div class="hit-person-info-header">
-                            <label class="checkbox-label">
+                            <label class="checkbox-label" ?hidden="${!this.showHitCheckboxes}">
                                 <input type="checkbox" name="select" class="checkbox" ?checked=${this.selected} @change=${this.selectCheckboxChanged} value="${hit.id}" />
                             </label>
                                 <dbp-icon
@@ -722,12 +722,16 @@ class CabinetViewElement extends BaseViewElement {
     constructor() {
         super();
         this._syncing = false;
+        this.showHitCheckboxes = false;
+        this.selected = false;
     }
 
     static get properties() {
         return {
             ...super.properties,
             _syncing: {type: Boolean, state: true},
+            showHitCheckboxes: {type: Boolean},
+            selected: {type: Boolean},
         };
     }
 
