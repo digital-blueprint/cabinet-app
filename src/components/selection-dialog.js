@@ -42,6 +42,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // used for translation overrides
         this.langDir = undefined;
+
+        // workaround for firefox to correctly build tables when opening the modal for the first time
+        this.addEventListener('dbp-tabulator-table-built', (e) => {
+            setTimeout(() => {
+                this.buildTablesIfNeeded();
+            }, 100);
+        });
     }
 
     connectedCallback() {
@@ -1607,7 +1614,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             field: 'actions',
             hozAlign: 'right',
             vertAlign: 'middle',
-            Width: 50,
+            width: 50,
             frozen: true,
             headerHozAlign: 'right',
             headerSort: false,
@@ -2370,6 +2377,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             if (!deletedDocumentTable.tableReady && !deletedDocumentTable.tableBuilding) {
                 console.log('Building deleted document table');
                 deletedDocumentTable.buildTable();
+            } else if (!deletedDocumentTable.tableBuilding) {
+                deletedDocumentTable.tabulatorTable.redraw();
             }
             // Note: deleted document table is updated via the DOCUMENT_FILE update above
         }
