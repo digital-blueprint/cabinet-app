@@ -47,7 +47,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.addEventListener('dbp-tabulator-table-built', (e) => {
             setTimeout(() => {
                 this.buildTablesIfNeeded();
-            }, 100);
+            }, 250);
         });
     }
 
