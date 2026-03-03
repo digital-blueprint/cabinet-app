@@ -136,7 +136,9 @@ export class BaseDocumentHitElement extends BaseHitElement {
                     : html`
                           <main class="ais-doc-Hits-content">
                               <div>
-                                  <label class="checkbox-label">
+                                  <label
+                                      class="checkbox-label"
+                                      ?hidden="${!this.showHitCheckboxes}">
                                       <input
                                           type="checkbox"
                                           name="select"
