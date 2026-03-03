@@ -67,7 +67,9 @@ export class BaseDocumentHitElement extends BaseHitElement {
                     ? html`
                           <header class="ais-doc-Hits-header">
                               <div class="ais-doc-title-wrapper">
-                                  <label class="checkbox-label">
+                                  <label
+                                      class="checkbox-label"
+                                      ?hidden="${!this.showHitCheckboxes}">
                                       <input
                                           type="checkbox"
                                           name="select"
@@ -80,7 +82,7 @@ export class BaseDocumentHitElement extends BaseHitElement {
                                       class="icon-container"
                                       name="files"
                                       aria-hidden="true"></dbp-icon>
-                                  <h2 class="ais-doc-title"> 
+                                  <h2 class="ais-doc-title">
                                       ${renderFieldWithHighlight(
                                           hit,
                                           this.lang === 'de'
@@ -143,7 +145,8 @@ export class BaseDocumentHitElement extends BaseHitElement {
                                           ?checked=${this.selected}
                                           value="${hit.id}" />
                                   </label>
-                                  <strong>${dateCreated}</strong>,
+                                  <strong>${dateCreated}</strong>
+                                  ,
                                   <span>${i18n.t('modified')} ${lastModified}</span>
                                   (${i18n.t('obsolete')})
                                   <div class="hit-content-item">
