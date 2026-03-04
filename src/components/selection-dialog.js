@@ -2373,9 +2373,9 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 console.log('Building deleted document table');
                 deletedDocumentTable.buildTable();
             } else if (!deletedDocumentTable.tableBuilding) {
+                this.updateTableData(this.constructor.HitSelectionType.DOCUMENT_FILE);
                 deletedDocumentTable.tabulatorTable.redraw();
             }
-            // Note: deleted document table is updated via the DOCUMENT_FILE update above
         }
     }
 
