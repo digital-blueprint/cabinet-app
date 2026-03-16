@@ -1,10 +1,8 @@
 import {html} from 'lit';
 import {BaseObject, BaseFormElement, BaseViewElement} from '../baseObject.js';
 import {getDocumentHit, getEntranceQualificationRecognition} from './schema.js';
-import {DbpStringElement} from '@dbp-toolkit/form-elements';
+import {DbpStringElement, DbpStringView} from '@dbp-toolkit/form-elements';
 import {BaseDocumentHitElement} from './document.js';
-import {DbpPersonSelectElement} from '@dbp-toolkit/form-elements/src/elements/person-select.js';
-import {DbpPersonSelectView} from '@dbp-toolkit/form-elements/src/views/person-select.js';
 
 export default class extends BaseObject {
     name = 'file-cabinet-entranceQualificationRecognition';
@@ -52,7 +50,6 @@ class CabinetFormElement extends BaseFormElement {
         return {
             ...super.scopedElements,
             'dbp-form-string-element': DbpStringElement,
-            'dbp-form-person-select-element': DbpPersonSelectElement,
         };
     }
 
@@ -67,13 +64,12 @@ class CabinetFormElement extends BaseFormElement {
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/EntranceQualificationRecognition_example.json
         return html`
             <form>
-                <dbp-form-person-select-element
-                    subscribe="lang,auth"
-                    name="signedBy"
-                    label=${this._i18n.t('doc-modal-signed-by')}
-                    entry-point-url="${this.entryPointUrl}"
-                    .value=${recognition.signedBy}
-                    required></dbp-form-person-select-element>
+                <dbp-form-string-element
+                        subscribe="lang"
+                        name="signedBy"
+                        label=${this._i18n.t('doc-modal-signed-by')}
+                        .value=${recognition.signedBy}
+                        required></dbp-form-string-element>
 
                 ${this.getCommonFormElements()}
             </form>
@@ -96,7 +92,7 @@ class CabinetViewElement extends BaseViewElement {
     static get scopedElements() {
         return {
             ...super.scopedElements,
-            'dbp-form-person-select-view': DbpPersonSelectView,
+            'dbp-form-string-view': DbpStringView,
         };
     }
 
@@ -107,12 +103,11 @@ class CabinetViewElement extends BaseViewElement {
         const i18n = this._i18n;
 
         return html`
-            <dbp-form-person-select-view
-                subscribe="lang,auth"
-                label=${i18n.t('doc-modal-signed-by')}
-                entry-point-url="${this.entryPointUrl}"
-                .value=${recognition.signedBy || ''}
-                required></dbp-form-person-select-view>
+            <dbp-form-string-view
+                    subscribe="lang"
+                    label=${i18n.t('doc-modal-signed-by')}
+                    .value=${recognition.signedBy || ''}
+                    required></dbp-form-string-view>
         `;
     }
 }
