@@ -254,6 +254,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 name="disposalType"
                 label=${this._i18n.t('doc-modal-disposal-type')}
                 display-mode="list"
+                .disabledItems=${BaseFormElement.getDisposalTypesDisabled(additionalType)}
                 .items=${BaseFormElement.getDisposalTypes(this._i18n, additionalType)}
                 .value=${fileCommon.disposalType || 'archival'}
                 required
@@ -421,6 +422,14 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     static getDisposalTypes(i18n, type) {
+        // all others also allow deletion as disposal
+        return {
+            archival: i18n.t('doc-modal-disposal-type-archival'),
+            deletion: i18n.t('doc-modal-disposal-type-deletion'),
+        };
+    }
+
+    static getDisposalTypesDisabled(type) {
         // these types only allow archival for disposal
         if (
             type === 'AdmissionNotice' ||
@@ -433,16 +442,10 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
             type === 'EntranceQualificationApplication' ||
             type === 'EntranceQualificationRecognition'
         ) {
-            return {
-                archival: i18n.t('doc-modal-disposal-type-archival'),
-            };
+            return ['deletion'];
         }
 
-        // all others also allow deletion as disposal
-        return {
-            archival: i18n.t('doc-modal-disposal-type-archival'),
-            deletion: i18n.t('doc-modal-disposal-type-deletion'),
-        };
+        return [];
     }
 
     static getIsPartOfItems(i18n) {

@@ -65,11 +65,11 @@ class CabinetFormElement extends BaseFormElement {
         return html`
             <form>
                 <dbp-form-string-element
-                        subscribe="lang"
-                        name="signedBy"
-                        label=${this._i18n.t('doc-modal-signed-by')}
-                        .value=${recognition.signedBy}
-                        required></dbp-form-string-element>
+                    subscribe="lang"
+                    name="signedBy"
+                    label=${this._i18n.t('doc-modal-signed-by')}
+                    .value=${recognition.signedBy}
+                    required></dbp-form-string-element>
 
                 ${this.getCommonFormElements()}
             </form>
@@ -104,10 +104,10 @@ class CabinetViewElement extends BaseViewElement {
 
         return html`
             <dbp-form-string-view
-                    subscribe="lang"
-                    label=${i18n.t('doc-modal-signed-by')}
-                    .value=${recognition.signedBy || ''}
-                    required></dbp-form-string-view>
+                subscribe="lang"
+                label=${i18n.t('doc-modal-signed-by')}
+                .value=${recognition.signedBy || ''}
+                required></dbp-form-string-view>
         `;
     }
 }
