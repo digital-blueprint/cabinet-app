@@ -211,6 +211,11 @@
     "info": "",
     "last-modified": "Letzte Änderung",
     "loading-message": "",
+    "logo": {
+        "word1": "",
+        "word2": "",
+        "word3": ""
+    },
     "modified": "geändert",
     "nationalities": "Staatsbürgerschaft",
     "nationality-input": {

@@ -211,6 +211,11 @@
     "info": "info",
     "last-modified": "Last modified",
     "loading-message": "",
+    "logo": {
+        "word1": "logo.word1",
+        "word2": "logo.word2",
+        "word3": "logo.word3"
+    },
     "modified": "modified",
     "nationalities": "Citizenship(s)",
     "nationality-input": {
