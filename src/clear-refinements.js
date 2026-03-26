@@ -28,6 +28,8 @@ class ClearRefinements extends LangMixin(DBPLitElement, createInstance) {
                 font-size: 0.8em;
                 position: relative;
                 cursor: pointer;
+                display: flex;
+                align-items: center;
             }
 
             .clear-refinements-button:before {
