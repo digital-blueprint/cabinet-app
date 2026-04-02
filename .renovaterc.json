@@ -1,6 +1,5 @@
 {
     "extends": ["config:base", "group:allNonMajor", "schedule:weekly", "docker:disable"],
-    "ignorePresets": [":prHourlyLimit2"],
     "rangeStrategy": "update-lockfile",
     "postUpdateOptions": ["npmDedupe"],
     "composer": {
@@ -10,7 +9,13 @@
         "enabled": true
     },
     "cloneSubmodules": true,
+    "internalChecksFilter": "strict",
+    "minimumReleaseAge": "5 days",
     "packageRules": [
+        {
+            "matchUpdateTypes": ["lockFileMaintenance"],
+            "minimumReleaseAge": null
+        },
         {
             "matchPackageNames": ["pdfjs-dist"],
             "allowedVersions": "<4.6"
