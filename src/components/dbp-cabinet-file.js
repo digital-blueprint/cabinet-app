@@ -1416,13 +1416,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     renderGroupingContainer() {
+        const i18n = this._i18n;
         // Only show the grouping container in view mode if there are multiple versions
         if (this.mode !== CabinetFile.Modes.VIEW || this.versions.length <= 1) {
             return html``;
         }
 
         return html`
-            <div class="grouping-container">${this.renderVersionsSelector()}</div>
+            <div class="grouping-container">
+                <div class="version-select-label">${i18n.t('doc-modal-select-version')} :</div>
+                ${this.renderVersionsSelector()}
+            </div>
         `;
     }
 
