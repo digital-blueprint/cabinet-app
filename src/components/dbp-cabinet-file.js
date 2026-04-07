@@ -1493,6 +1493,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             <dbp-select
                 label=${i18n.t('doc-modal-select-version')}
                 .options=${versionOptions}
+                class="select-version"
+                align="left"
                 @change=${this.onChangeVersion}></dbp-select>
         `;
     }
