@@ -1095,7 +1095,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 #document-modal .content {
                     display: grid;
-                    grid-template-columns: 1fr 1fr;
+                    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
                     gap: 10px 10px;
                     grid-auto-flow: row;
                     padding-right: 0.5em;
@@ -1143,6 +1143,18 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .form,
                 .pdf-preview {
                     grid-column: 1 / -1;
+                    min-width: 0;
+                }
+
+                #document-modal .description,
+                #document-modal .status,
+                #document-modal .fileButtons {
+                    min-width: 0;
+                }
+
+                #document-modal .description {
+                    overflow-wrap: anywhere;
+                    word-break: break-word;
                 }
 
                 #document-modal .desc-stat {
@@ -1207,6 +1219,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     display: flex;
                     gap: 5px;
                     justify-content: flex-end;
+                    flex-wrap: wrap;
+                }
+
+                #document-modal .fileButtons > * {
+                    max-width: 100%;
                 }
 
                 #document-modal .delete-button {
@@ -1266,6 +1283,23 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .grouping-container h3 {
                     margin: 0;
+                }
+
+                @media (max-width: 1100px) {
+                    #document-modal .content {
+                        grid-template-columns: 1fr;
+                    }
+
+                    #document-modal .pdf-preview {
+                        grid-area: auto;
+                        grid-column: 1 / -1;
+                    }
+
+                    #document-modal .form {
+                        grid-area: auto;
+                        grid-column: 1 / -1;
+                        padding-left: 0;
+                    }
                 }
 
                 @media (min-width: 490px) and (max-width: 768px) {
@@ -1642,7 +1676,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                             </div>
                         </div>
                     </div>
-
                     <div class="pdf-preview">
                         ${this.getPdfViewerHtml()} ${this.getDocumentValidationErrorHtml()}
                     </div>
