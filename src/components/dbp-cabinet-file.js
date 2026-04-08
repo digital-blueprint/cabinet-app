@@ -1523,13 +1523,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             return {
                 value: item.id,
                 label: `${createdDate}${modifiedText} (${status})`,
-                selected: item.id === this.fileHitData?.id,
             };
         });
-
+        const selectedOption =
+            versionOptions.find((option) => option.value === this.selectedVersionId) ||
+            versionOptions.find((option) => option.value === this.fileHitData?.id) ||
+            versionOptions[0];
         return html`
             <dbp-select
-                label=${i18n.t('doc-modal-select-version')}
+                id="version-select"
+                .value=${selectedOption?.value ?? ''}
+                label=${selectedOption?.label ?? i18n.t('doc-modal-select-version')}
                 .options=${versionOptions}
                 class="select-version"
                 align="left"
@@ -1538,6 +1542,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async onChangeVersion(e) {
+        this.selectedVersionId = e.detail.value;
         console.log('onUpdateVersion e', e);
         const selectorValue = e.target.value;
         if (!selectorValue) {
