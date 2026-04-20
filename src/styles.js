@@ -84,8 +84,8 @@ export function getPaginationCSS() {
 
         .ais-Pagination-item--selected .ais-Pagination-link {
             font-weight: bold;
-            background-color: var(--dbp-muted);
-            color: var(--dbp-secondary-surface);
+            background-color: var(--dbp-selected);
+            color: var(--dbp-on-selected-surface);
         }
 
         .ais-Pagination-item--disabled .ais-Pagination-link {
