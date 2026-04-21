@@ -215,11 +215,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         if (fileData.identifier) {
             this.documentModalNotification(
-                'Document stored successfully',
-                'Document stored successfully with id ' +
-                    fileData.identifier +
-                    '! ' +
-                    'Document will now be fetched from Typesense.',
+                this._i18n.t('cabinet-file.notification-title-stored'),
+                this._i18n.t('cabinet-file.notification-body-stored'),
                 'success',
             );
 
@@ -239,10 +236,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     async fetchFileDocumentFromTypesense(fileId, increment = 0) {
         // Stop after 10 attempts
         if (increment >= 10) {
-            // TODO: Setup some kind of error message and decide what to do
             this.documentModalNotification(
-                'Error',
-                'Could not fetch file document from Typesense after 10 attempts!',
+                this._i18n.t('cabinet-file.notification-title-fetch-failed'),
+                this._i18n.t('cabinet-file.notification-body-fetch-failed'),
                 'danger',
             );
 
@@ -278,8 +274,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             // eslint-disable-next-line no-unused-vars
         } catch (error) {
             this.documentModalNotification(
-                'Error',
-                'Could not load document from Typesense!',
+                this._i18n.t('cabinet-file.notification-title-fetch-failed'),
+                this._i18n.t('cabinet-file.notification-body-fetch-failed'),
                 'danger',
             );
             this.state = CabinetFile.States.LOADING_FILE_FAILED;
@@ -365,8 +361,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
         if (!response.ok) {
             this.documentModalNotification(
-                'Error while creating storage URL',
-                response.statusText,
+                this._i18n.t('cabinet-file.notification-title-storage-error'),
+                this._i18n.t('cabinet-file.notification-body-storage-error'),
                 'danger',
             );
 
@@ -696,7 +692,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 // We need to wait until rendering is complete after this.documentFile has changed
                 await this.updateComplete;
             } catch {
-                this.documentModalNotification('Error', 'Could not load file from Blob!', 'danger');
+                this.documentModalNotification(
+                    this._i18n.t('cabinet-file.notification-title-file-load-failed'),
+                    this._i18n.t('cabinet-file.notification-body-file-load-failed'),
+                    'danger',
+                );
                 this.state = CabinetFile.States.LOADING_FILE_FAILED;
             }
         }
@@ -752,10 +752,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             if (metadata.isCurrent === enable) {
                 console.log('setIsCurrentVersion: isCurrent already', enable);
                 this.documentModalNotification(
-                    i18n.t('info') || 'Info',
+                    i18n.t('info'),
                     enable
-                        ? 'Version is already marked as current.'
-                        : 'Version is already marked as obsolete.',
+                        ? i18n.t('cabinet-file.notification-body-version-already-current')
+                        : i18n.t('cabinet-file.notification-body-version-already-obsolete'),
                     'info',
                 );
                 return;
@@ -785,10 +785,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     response.statusText,
                 );
                 this.documentModalNotification(
-                    'Error',
+                    i18n.t('cabinet-file.notification-title-version-update-failed'),
                     enable
-                        ? 'Failed to mark version as current.'
-                        : 'Failed to mark version as obsolete.',
+                        ? i18n.t('cabinet-file.notification-body-version-mark-current-failed')
+                        : i18n.t('cabinet-file.notification-body-version-mark-obsolete-failed'),
                     'danger',
                 );
                 return;
@@ -808,19 +808,19 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             }
 
             this.documentModalNotification(
-                enable ? 'Success' : 'Success',
+                i18n.t('cabinet-file.notification-title-version-updated'),
                 enable
-                    ? 'Version successfully marked as current.'
-                    : 'Version successfully marked as obsolete.',
+                    ? i18n.t('cabinet-file.notification-body-version-marked-current')
+                    : i18n.t('cabinet-file.notification-body-version-marked-obsolete'),
                 'success',
             );
         } catch (error) {
             console.error('setIsCurrentVersion: Unexpected error', error);
             this.documentModalNotification(
-                'Error',
+                this._i18n.t('cabinet-file.notification-title-version-update-failed'),
                 enable
-                    ? 'Unexpected error while marking version as current.'
-                    : 'Unexpected error while marking version as obsolete.',
+                    ? this._i18n.t('cabinet-file.notification-body-version-mark-current-error')
+                    : this._i18n.t('cabinet-file.notification-body-version-mark-obsolete-error'),
                 'danger',
             );
         }
@@ -841,16 +841,16 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             // Check if the document was marked as undeleted in the response
             if (data.deleteAt === null) {
                 this.documentModalNotification(
-                    'Document undeleted',
-                    'Document was successfully undeleted!',
+                    i18n.t('cabinet-file.notification-title-undeleted'),
+                    i18n.t('cabinet-file.notification-body-undeleted'),
                     'success',
                 );
                 this.deleteAtDateTime = '';
                 success = true;
             } else {
                 this.documentModalNotification(
-                    'Error',
-                    'Document was not marked as undeleted!',
+                    i18n.t('cabinet-file.notification-title-undelete-failed'),
+                    i18n.t('cabinet-file.notification-body-undelete-failed'),
                     'danger',
                 );
             }
@@ -880,8 +880,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 success = true;
             } else {
                 this.documentModalNotification(
-                    'Error',
-                    'Document was not marked as deleted!',
+                    i18n.t('cabinet-file.notification-title-deletion-failed'),
+                    i18n.t('cabinet-file.notification-body-deletion-failed'),
                     'danger',
                 );
             }
@@ -914,14 +914,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         } catch (error) {
             if (undelete) {
                 this.documentModalNotification(
-                    'Failure',
-                    `Could mark document ${fileId} as undeleted in blob!`,
+                    this._i18n.t('cabinet-file.notification-title-undelete-failed'),
+                    this._i18n.t('cabinet-file.notification-body-undelete-exception'),
                     'danger',
                 );
             } else {
                 this.documentModalNotification(
-                    'Failure',
-                    `Could mark document ${fileId} as deleted in blob!`,
+                    this._i18n.t('cabinet-file.notification-title-deletion-failed'),
+                    this._i18n.t('cabinet-file.notification-body-deletion-exception'),
                     'danger',
                 );
             }
@@ -1434,7 +1434,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 ...(await this._getTypesenseService().fetchFileDocumentsByGroupId(groupId)),
             ];
         } catch (error) {
-            this.documentModalNotification('Error', 'Could not load document versions!', 'danger');
+            this.documentModalNotification(
+                this._i18n.t('cabinet-file.notification-title-versions-load-failed'),
+                this._i18n.t('cabinet-file.notification-body-versions-load-failed'),
+                'danger',
+            );
             console.error(error);
         }
 
@@ -2316,8 +2320,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 'waitForVersionsUpdatedInTypesense: Could not verify all versions were updated in Typesense after 10 attempts',
             );
             this.documentModalNotification(
-                'Warning',
-                'Some document versions may not be immediately updated. Please refresh if needed.',
+                this._i18n.t('cabinet-file.notification-title-versions-sync-warning'),
+                this._i18n.t('cabinet-file.notification-body-versions-sync-warning'),
                 'warning',
             );
             return;
@@ -2392,8 +2396,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 'waitForVersionsDeletionUpdatedInTypesense: Could not verify all versions were updated in Typesense after 10 attempts',
             );
             this.documentModalNotification(
-                'Warning',
-                'Some document versions may not be immediately updated. Please refresh if needed.',
+                this._i18n.t('cabinet-file.notification-title-versions-sync-warning'),
+                this._i18n.t('cabinet-file.notification-body-versions-sync-warning'),
                 'warning',
             );
             return;
@@ -2474,8 +2478,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             if (versionsToDelete.length === 0) {
                 this.documentModalNotification(
-                    'Info',
-                    'All versions are already scheduled for deletion.',
+                    this._i18n.t('cabinet-file.notification-title-all-versions-already-deleted'),
+                    this._i18n.t('cabinet-file.notification-body-all-versions-already-deleted'),
                     'info',
                 );
                 return;
@@ -2526,15 +2530,17 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             // Show success notification to user
             this.documentModalNotification(
-                'Success',
-                `Successfully deleted ${versionsToDelete.length} version${versionsToDelete.length === 1 ? '' : 's'}. All versions have been scheduled for deletion.`,
+                this._i18n.t('cabinet-file.notification-title-all-versions-deleted'),
+                this._i18n.t('cabinet-file.notification-body-all-versions-deleted', {
+                    count: versionsToDelete.length,
+                }),
                 'success',
             );
         } catch (error) {
             console.error('handleDeleteAllVersions: Error deleting versions:', error);
             this.documentModalNotification(
-                'Error',
-                'Failed to delete all versions. Please try again.',
+                this._i18n.t('cabinet-file.notification-title-all-versions-deletion-failed'),
+                this._i18n.t('cabinet-file.notification-body-all-versions-deletion-failed'),
                 'danger',
             );
         }
