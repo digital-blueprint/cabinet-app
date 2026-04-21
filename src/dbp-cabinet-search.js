@@ -21,7 +21,7 @@ import {TypesenseService, TYPESENSE_COLLECTION} from './services/typesense.js';
 import {BaseObject} from './baseObject.js';
 import {name as pkgName} from '../package.json';
 import {CabinetFilterSettings} from './components/dbp-cabinet-filter-settings.js';
-import InstantSearchModule from './modules/instantSearch.js';
+import InstantSearchModule, {getSortSpec} from './modules/instantSearch.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from './i18n';
 import {createClearRefinements} from './clear-refinements.js';
@@ -1089,12 +1089,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @param lang
      */
     getSearchParameters(lang) {
-        let sortBy;
-        if (lang === 'de') {
-            sortBy = 'sortKey:asc,sortKey2:asc,sortKey3:desc';
-        } else {
-            sortBy = 'sortKey:asc,sortKey2En:asc,sortKey3:desc';
-        }
+        const sortBy = getSortSpec(lang);
 
         let queryBy;
         if (lang === 'de') {

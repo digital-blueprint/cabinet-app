@@ -15,7 +15,8 @@ import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {FileSink, FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
-import {dataURLtoFile, pascalToKebab} from '../utils';
+import {dataURLtoFile, pascalToKebab, createTypesenseSortFunction} from '../utils';
+import {getSortSpec} from '../modules/instantSearch.js';
 import {classMap} from 'lit/directives/class-map.js';
 import * as formElements from '../objectTypes/formElements.js';
 import {BaseFormElement} from '../baseObject.js';
@@ -1474,11 +1475,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             return html``;
         }
         const i18n = this._i18n;
+        const sortedVersions = [...this.versions].sort(
+            createTypesenseSortFunction(getSortSpec(this.lang)),
+        );
         // Show dates like this:
         // 01.05.2025 08:00:00, modified 02.05.2025 09:13:45 (current)
         // 05.04.2023 08:45:00, modified 12.11.20223 (obsolete)
         // 31.01.2022 12:35:04 (obsolete)
-        const versionOptions = this.versions.map((item) => {
+        const versionOptions = sortedVersions.map((item) => {
             const isModified = item.file.base.modifiedTimestamp !== item.file.base.createdTimestamp;
             const isCurrent = item.base.isCurrent;
             // const isCurrent = false;

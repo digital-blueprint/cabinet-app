@@ -32,6 +32,17 @@ function datePickerUTCRenderFunction(i18n, schemaField, value, operator) {
     return _renderDate(i18n, value, operator, 'UTC');
 }
 
+/**
+ * Returns the Typesense sort_by spec string for the given language.
+ * @param {string} lang
+ * @returns {string}
+ */
+export function getSortSpec(lang) {
+    return lang === 'de'
+        ? 'sortKey:asc,sortKey2:asc,sortKey3:desc'
+        : 'sortKey:asc,sortKey2En:asc,sortKey3:desc';
+}
+
 export default class InstantSearchModule {
     constructor() {
         this._i18n = createInstance();
