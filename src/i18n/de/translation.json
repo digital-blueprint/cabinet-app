@@ -380,7 +380,7 @@
     },
     "subject-of": "Geschäftszahl",
     "sync": {
-        "button-title": "Daten Synchronisieren",
+        "button-title": "Daten synchronisieren",
         "notification": {
             "error": {
                 "body": "Bei der Synchronisation der Studierendendaten ist ein Fehler aufgetreten: {{error}}",
