@@ -75,48 +75,6 @@ export function formatDate(value) {
           });
 }
 
-/**
- * Create a comparator function from a Typesense sort_by spec string.
- * For example: "sortKey:asc,sortKey2:asc,sortKey3:desc"
- *
- * The comparator operates directly on plain document objects (dot-path navigation).
- * @param {string} sortSpec - Typesense sort_by string
- * @returns {function(object, object): number} - comparator suitable for Array.prototype.sort
- */
-export function createTypesenseSortFunction(sortSpec) {
-    const sortFields = sortSpec.split(',').map((part) => {
-        const colonIdx = part.lastIndexOf(':');
-        const field = part.slice(0, colonIdx);
-        const direction = part.slice(colonIdx + 1);
-        return {field, ascending: direction.toLowerCase() === 'asc'};
-    });
-
-    const getNestedValue = (obj, path) => {
-        return path
-            .split('.')
-            .reduce((current, key) => (current != null ? current[key] : undefined), obj);
-    };
-
-    return (a, b) => {
-        for (const {field, ascending} of sortFields) {
-            const valueA = getNestedValue(a, field);
-            const valueB = getNestedValue(b, field);
-
-            if (valueA === valueB) continue;
-
-            let result;
-            if (typeof valueA === 'string' && typeof valueB === 'string') {
-                result = valueA.localeCompare(valueB);
-            } else {
-                result = valueA < valueB ? -1 : 1;
-            }
-
-            return ascending ? result : -result;
-        }
-        return 0;
-    };
-}
-
 export function debounce(func, delay) {
     let timeout;
     return function (...args) {

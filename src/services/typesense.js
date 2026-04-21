@@ -80,19 +80,22 @@ export class TypesenseService {
      * @param {string} filter_by - The filter string to apply to the search query.
      * @param {number} [per_page] - Number of results per page (default: 10).
      * @param {number} [page] - Page number to fetch (default: 1).
+     * @param {string} [sort_by] - Optional Typesense sort_by string.
      * @returns {Promise<Array>} Array of found document objects, or empty array if no results are found.
      */
-    async fetchItemsByFilter(filter_by, per_page = 10, page = 1) {
+    async fetchItemsByFilter(filter_by, per_page = 10, page = 1, sort_by = undefined) {
+        let search = {
+            collection: this.collectionName,
+            q: '*',
+            filter_by: filter_by,
+            page: page,
+            per_page: per_page,
+        };
+        if (sort_by !== undefined) {
+            search.sort_by = sort_by;
+        }
         let searchRequests = {
-            searches: [
-                {
-                    collection: this.collectionName,
-                    q: '*',
-                    filter_by: filter_by,
-                    page: page,
-                    per_page: per_page,
-                },
-            ],
+            searches: [search],
         };
 
         let response = await this.client.multiSearch.perform(searchRequests);
@@ -124,9 +127,10 @@ export class TypesenseService {
      * When false (default), all versions are returned.
      * @param {string} groupId
      * @param {boolean} [isCurrentOnly]
+     * @param {string} [sort_by] - Optional Typesense sort_by string.
      * @returns {Promise<Array<object>>}
      */
-    async fetchFileDocumentsByGroupId(groupId, isCurrentOnly = false) {
+    async fetchFileDocumentsByGroupId(groupId, isCurrentOnly = false, sort_by = undefined) {
         if (!groupId) {
             throw new Error('groupId is required');
         }
@@ -139,6 +143,6 @@ export class TypesenseService {
             filter += ' && base.isCurrent:=true';
         }
 
-        return await this.fetchItemsByFilter(filter);
+        return await this.fetchItemsByFilter(filter, 10, 1, sort_by);
     }
 }
