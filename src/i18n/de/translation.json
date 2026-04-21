@@ -219,7 +219,7 @@
         "placeholder": "Code eingeben, oder nach einem Land suchen"
     },
     "note": "Anmerkung",
-    "obsolete": "veraltert",
+    "obsolete": "veraltet",
     "person": {
         "person-not-found-body": "Die angeforderte Person konnte nicht gefunden werden!",
         "person-not-found-summary": "Person nicht gefunden"
