@@ -351,7 +351,7 @@
     },
     "semester": "Semester",
     "show-active-only": "All active documents",
-    "show-deleted-only": "Only deleted documents",
+    "show-deleted-only": "Recycle Bin",
     "show-obsolete-also": "Include obsolete versions",
     "show-to-archive-only": "Only documents to archive",
     "show-to-delete-only": "Only documents to delete",
