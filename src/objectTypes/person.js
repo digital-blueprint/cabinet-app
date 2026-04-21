@@ -382,7 +382,7 @@ class CabinetHitElement extends BaseHitElement {
             return i18n.language === 'de' ? keyedText.text : keyedText.textEn;
         };
 
-        let spacingTop = this.isFirstOfGroupOnPage && !this.isFirstOnPage;
+        let spacingTop = this.isFirstOfGroup && !this.isFirstOnPage;
         let borderTop = spacingTop || this.isFirstOnPage;
         this.ariaLabel = `${i18n.t('hitbox.person-entry')} ${hit.person.familyName}, ${hit.person.givenName}`;
         return html`

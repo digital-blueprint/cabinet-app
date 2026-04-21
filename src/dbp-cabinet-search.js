@@ -109,7 +109,7 @@ function debounce(func, delay) {
 
 let isFirstOnPageSymbol = Symbol('isFirstOnPage');
 let isLastOnPageSymbol = Symbol('isLastOnPage');
-let isFirstOfGroupOnPageSymbol = Symbol('isFirstOfGroupOnPage');
+let isFirstOfGroupSymbol = Symbol('isFirstOfGroup');
 
 class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     static HitSelectAllState = {
@@ -1239,16 +1239,16 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             container: this._('#hits'),
             escapeHTML: true,
             transformItems: (items) => {
-                let seenIds = new Set();
+                let lastGroupId = undefined;
                 return items.map((item, index) => {
                     let isFirst = index === 0;
                     let isLast = index === items.length - 1;
                     // FIXME: make configurable which field to use for grouping
                     let groupId = item?.file?.base?.groupId;
-                    let isFirstOfGroup = groupId == undefined || !seenIds.has(groupId);
-                    seenIds.add(groupId);
+                    let isFirstOfGroup = groupId === undefined || groupId !== lastGroupId;
+                    lastGroupId = groupId;
 
-                    item[isFirstOfGroupOnPageSymbol] = isFirstOfGroup;
+                    item[isFirstOfGroupSymbol] = isFirstOfGroup;
                     item[isFirstOnPageSymbol] = isFirst;
                     item[isLastOnPageSymbol] = isLast;
 
@@ -1291,7 +1291,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     hitElement.searchHelper = cabinetSearch.search.helper;
                     hitElement.isFirstOnPage = hit[isFirstOnPageSymbol];
                     hitElement.isLastOnPage = hit[isLastOnPageSymbol];
-                    hitElement.isFirstOfGroupOnPage = hit[isFirstOfGroupOnPageSymbol];
+                    hitElement.isFirstOfGroup = hit[isFirstOfGroupSymbol];
 
                     return html`
                         <span ref=${preactRefReplaceChildren(hitElement)}></span>

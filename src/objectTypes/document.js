@@ -53,7 +53,7 @@ export class BaseDocumentHitElement extends BaseHitElement {
             'de-DE',
             {dateStyle: 'medium', timeStyle: 'medium'},
         );
-        let spacingTop = this.isFirstOfGroupOnPage && !this.isFirstOnPage;
+        let spacingTop = this.isFirstOfGroup && !this.isFirstOnPage;
         let borderTop = spacingTop || this.isFirstOnPage;
 
         this.ariaLabel = `${i18n.t('hitbox.document-entry')} ${this.lang === 'de' ? hit.file.base.additionalType.text : hit.file.base.additionalType.textEn} ${i18n.t('hitbox.document-of')} ${hit.person.familyName}, ${hit.person.givenName}`;

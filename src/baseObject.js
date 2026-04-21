@@ -483,9 +483,9 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
          */
         this.isLastOnPage = false;
         /**
-         * @property {boolean} isLastOnPage - Indicates if this is the last item on the page.
+         * @property {boolean} isFirstOfGroup - Indicates if this is the first item of a group.
          */
-        this.isFirstOfGroupOnPage = false;
+        this.isFirstOfGroup = false;
         /**
          * @property {boolean} selected - Indicates if this the item was selected.
          */
@@ -505,7 +505,7 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
             searchHelper: {type: Object, state: true},
             isFirstOnPage: {type: Boolean, state: true},
             isLastOnPage: {type: Boolean, state: true},
-            isFirstOfGroupOnPage: {type: Boolean, state: true},
+            isFirstOfGroup: {type: Boolean, state: true},
             selected: {type: Boolean, state: true},
             ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
         };
