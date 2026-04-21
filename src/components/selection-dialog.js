@@ -1864,11 +1864,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             value: 'excel',
         });
         docDownloadOptions.push({
-            label: i18n.t('doc-modal-document-only', 'Documents as PDF'),
+            label: i18n.t('doc-modal-document-only'),
             value: 'document-file-only',
         });
         docDownloadOptions.push({
-            label: i18n.t('doc-modal-all', 'Documents with metadata'),
+            label: i18n.t('doc-modal-all'),
             value: 'all',
         });
 

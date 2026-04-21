@@ -950,7 +950,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         let files = [];
 
         if (selectorValue !== 'document-file-only') {
-            const file = new File([JSON.stringify(this.fileHitData)], 'metadata.json', {
+            const file = new File([JSON.stringify(this.fileHitData, null, 2)], 'metadata.json', {
                 type: 'application/json',
             });
 
