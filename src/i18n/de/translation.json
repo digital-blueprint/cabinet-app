@@ -16,7 +16,7 @@
             "select-visible": "Alles für Mehrfachaktion auswählen"
         },
         "cancel": "Abbrechen",
-        "replace-document": "Dokument ersetzes",
+        "replace-document": "Dokument ersetzen",
         "save": "Speichern",
         "view": "Anzeigen",
         "view-short": "zeige"
@@ -112,7 +112,7 @@
     "doc-modal-native-language": "Muttersprache",
     "doc-modal-no": "Nein",
     "doc-modal-of": "für",
-    "doc-modal-only-data": "Nur metadaten",
+    "doc-modal-only-data": "Nur Metadaten",
     "doc-modal-previous-education": "Vorbildung",
     "doc-modal-previous-enrolment-in-austria": "Österreichische Universität besucht",
     "doc-modal-previous-higher-education-cpga": "CPGA",
@@ -135,7 +135,7 @@
     "doc-modal-study-field-unknown": "Unbekanntes Studienfach ({{studyFieldKey}})",
     "doc-modal-study-field-unspecified": "Unspezifiziert",
     "doc-modal-subject-of": "Geschäftszahl",
-    "doc-modal-subject-of-placeholder": "z.b. {{-id}}",
+    "doc-modal-subject-of-placeholder": "z.B. {{-id}}",
     "doc-modal-undelete-document": "Wiederherstellen",
     "doc-modal-upload-document": "Dokument hochladen",
     "doc-modal-yes": "Ja",
@@ -214,7 +214,7 @@
     "modified": "geändert",
     "nationalities": "Staatsbürgerschaft",
     "nationality-input": {
-        "invalid-code-format": "Ungültiges Format. Bitte tragen sie 1-3 Großbuchstaben ein.",
+        "invalid-code-format": "Ungültiges Format. Bitte tragen Sie 1-3 Großbuchstaben ein.",
         "no-matches-found": "Keine Übereinstimmung gefunden",
         "placeholder": "Code eingeben, oder nach einem Land suchen"
     },
@@ -301,7 +301,6 @@
     "selection-dialog": {
         "actions": "Aktionen",
         "active-documents": "Aktive Dokumente",
-        "batch-operations": "",
         "batch-operations-document": "Mehrfachaktionen für Dokumente",
         "batch-operations-person": "Mehrfachaktionen für Personen",
         "configure-columns": "Spalten konfigurieren",
@@ -425,7 +424,7 @@
                     "TUGraz": ""
                 },
                 "isPartOf": {
-                    "admission-archive-80": "Ansuchen um Zulassung ",
+                    "admission-archive-80": "Ansuchen um Zulassung",
                     "communication-archive-10": "Kommunikation",
                     "financial-archive-7": "Finanzielles",
                     "generalApplications-archive-3": "Allgemeine Anträge",

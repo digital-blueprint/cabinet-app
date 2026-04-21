@@ -1423,9 +1423,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     /**
      * Returns the modal dialog for adding a document to a person after the document was selected
      * in the file source
-     * <div slot="title" class="modal-title">
-     *                     <h2>${i18n.t('selection-dialog.batch-operations')}</h2>
-     *                 </div>
      */
     getModalHtml() {
         const i18n = this._i18n;
