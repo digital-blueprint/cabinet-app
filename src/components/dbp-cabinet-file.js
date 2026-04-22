@@ -1968,7 +1968,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         return html`
             <fieldset>
-                <label>
+                <label for="document-type">
                     ${this._i18n.t('doc-modal-document-type')}
                     <span class="red-marked-asterisk">
                         ${this._i18n.t('required-files-asterisk')}
