@@ -594,6 +594,18 @@ export default class InstantSearchModule {
                 defaultVisible: true,
             },
             {
+                id: 'person.familyName',
+                name: t('selection-column-config.person.familyName'),
+                field: 'person.familyName',
+                defaultVisible: true,
+            },
+            {
+                id: 'person.givenName',
+                name: t('selection-column-config.person.givenName'),
+                field: 'person.givenName',
+                defaultVisible: true,
+            },
+            {
                 id: 'file.base.createdTimestamp',
                 name: t('selection-column-config.document.createdTimestamp'),
                 field: 'file.base.createdTimestamp',

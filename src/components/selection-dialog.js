@@ -1674,7 +1674,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 const firstName = rowData['person.givenName'] ?? '';
                 const lastName = rowData['person.familyName'] ?? '';
                 const documentType = rowData['file.base.additionalType'] ?? '';
-                const ariaLabel = `${i18n.t('selection-dialog.remove-table-row')} ${id} ${firstName} ${lastName} ${documentType}`;
+                const ariaLabel = `${i18n.t('selection-dialog.remove-table-row')} ${id} ${documentType} ${lastName} ${firstName}`;
                 button.setAttribute('aria-label', ariaLabel);
                 button.setAttribute('title', ariaLabel);
 
