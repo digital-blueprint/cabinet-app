@@ -1126,6 +1126,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 /* To allow the horizontal scrolling in the tabulator table */
+
                 .tab-panels {
                     width: 100%;
                     max-width: 100%; /* prevents shrink-to-fit */
@@ -1257,7 +1258,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     container-type: inline-size;
                     min-width: 0;
                 }
-
+                .sub-tab:focus-visible {
+                    outline: 0px !important;
+                    box-shadow: inset 0px 0px 3px 1px var(--dbp-primary) !important;
+                }
                 .sub-tab {
                     width: 50%;
                     min-width: 0;
@@ -1635,8 +1639,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
 
                 // Create new button only if we don't have one
+                const i18n = this._i18n;
                 const button = this.createScopedElement('dbp-icon-button');
                 button.setAttribute('icon-name', 'cog');
+                button.setAttribute('aria-label', i18n.t('selection-column-config.description'));
                 button.setAttribute(
                     'title',
                     i18n.t('selection-dialog.configure-columns', 'Configure Columns'),
@@ -1658,10 +1664,20 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 return button;
             },
             formatter: (cell) => {
+                const i18n = this._i18n;
                 const button = this.createScopedElement('dbp-icon-button');
                 button.setAttribute('icon-name', 'close');
                 button.setAttribute('class', 'deselect-all');
-                button.setAttribute('title', i18n.t('selection-dialog.remove', 'Remove'));
+
+                const rowData = cell.getRow().getData();
+                const id = rowData.rowNumber ?? '';
+                const firstName = rowData['person.givenName'] ?? '';
+                const lastName = rowData['person.familyName'] ?? '';
+                const documentType = rowData['file.base.additionalType'] ?? '';
+                const ariaLabel = `${i18n.t('selection-dialog.remove-table-row')} ${id} ${firstName} ${lastName} ${documentType}`;
+                button.setAttribute('aria-label', ariaLabel);
+                button.setAttribute('title', ariaLabel);
+
                 button.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const rowData = cell.getRow().getData();
@@ -1944,10 +1960,16 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                                               id="export-persons-select"
                                               class="export-persons-select"
                                               label="${i18n.t('selection-dialog.export')}"
+                                              aria-label="${i18n.t(
+                                                  'buttons.aria-label.export-persons',
+                                              )}"
                                               .options=${personDownloadOptions}
                                               @change="${this.exportPersons}"></dbp-select>
                                           <button
                                               class="button deselect-all"
+                                              aria-label="${i18n.t(
+                                                  'buttons.aria-label.deselect-all-persons',
+                                              )}${Object.keys(personSelections).length}"
                                               value="${i18n.t(
                                                   'selection-dialog.remove-all-persons',
                                                   'Remove selections',

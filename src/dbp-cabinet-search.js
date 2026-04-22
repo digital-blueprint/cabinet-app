@@ -1567,7 +1567,9 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </div>
                     <div class="open-dialog-button-container">
                         <button
-                            aria-label="${this._i18n.t('buttons.aria-label.open-dialog')}"
+                            aria-label="${this._i18n.t(
+                                'buttons.aria-label.open-dialog',
+                            )}${this.getSelectionCountsDisplay()}"
                             class="button is-primary open-dialog ${this.hasHitSelections
                                 ? 'enabled'
                                 : ''}"
