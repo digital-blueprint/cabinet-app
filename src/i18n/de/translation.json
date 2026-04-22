@@ -337,7 +337,7 @@
     },
     "selection-dialog": {
         "actions": "Aktionen",
-        "active-documents": "Aktuell Dokumente",
+        "active-documents": "Aktive Dokumente",
         "batch-operations-document": "Mehrfachaktionen für Dokumente",
         "batch-operations-person": "Mehrfachaktionen für Personen",
         "configure-columns": "Spalten konfigurieren",
