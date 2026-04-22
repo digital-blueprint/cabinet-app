@@ -13,8 +13,10 @@
             "deselect-all-persons": "Alle Personen aus Auswahl entfernen",
             "deselect-visible": "Alles Ausgewählte auf dieser Seite abwählen",
             "export-persons": "Personendaten von allen Ausgewählten exportieren",
+            "from-table": "aus Tabelle",
             "multiselection": "Menü für Mehrfachauswahl",
             "open-dialog": "Auswahl für Mehrfachaktion anzeigen",
+            "remove-selection": "Entferne Auswahl:",
             "select-visible": "Alles für Mehrfachaktion auswählen"
         },
         "cancel": "Abbrechen",
@@ -378,7 +380,6 @@
         "remove-all-active": "Auswahl leeren",
         "remove-all-deleted": "Auswahl leeren",
         "remove-all-persons": "Auswahl leeren",
-        "remove-table-row": "Entferne Tabellenzeile",
         "undelete-all-deleted": "Dokumente wiederherstellen",
         "undeletion-error": "Wiederherstellungsfehler",
         "undeletion-error-message_one": "{{count}} Dokument konnte nicht wiederhergestellt werden.",

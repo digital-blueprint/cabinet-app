@@ -13,8 +13,10 @@
             "deselect-all-persons": "Deselect all persons",
             "deselect-visible": "Deselect all from this page",
             "export-persons": "buttons.aria-label.export-persons",
+            "from-table": "from table",
             "multiselection": "multiselection menu",
             "open-dialog": "Open dialog for batch operations",
+            "remove-selection": "Remove selection",
             "select-visible": "Select all"
         },
         "cancel": "Cancel",
@@ -378,7 +380,6 @@
         "remove-all-active": "Empty selection",
         "remove-all-deleted": "Empty selection",
         "remove-all-persons": "Empty selection",
-        "remove-table-row": "Remove table row",
         "undelete-all-deleted": "Undelete Documents",
         "undeletion-error": "Undeletion Error",
         "undeletion-error-message_one": "Failed to undelete {{count}} document.",

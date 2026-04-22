@@ -1670,11 +1670,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 button.setAttribute('class', 'deselect-all');
 
                 const rowData = cell.getRow().getData();
-                const id = rowData.rowNumber ?? '';
                 const firstName = rowData['person.givenName'] ?? '';
                 const lastName = rowData['person.familyName'] ?? '';
                 const documentType = rowData['file.base.additionalType'] ?? '';
-                const ariaLabel = `${i18n.t('selection-dialog.remove-table-row')} ${id} ${documentType} ${lastName} ${firstName}`;
+                const ariaLabel = `${i18n.t('buttons.aria-label.remove-selection')} ${documentType} ${lastName} ${firstName} ${i18n.t('buttons.aria-label.from-table')}`;
                 button.setAttribute('aria-label', ariaLabel);
                 button.setAttribute('title', ariaLabel);
 
