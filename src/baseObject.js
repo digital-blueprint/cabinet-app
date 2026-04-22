@@ -184,9 +184,9 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         return {
             'dbp-form-string-element': DbpStringElement,
             'dbp-form-enum-element': DbpEnumElement,
+            'dbp-icon': Icon,
         };
     }
-
     _getData() {
         // Return the hit if set, otherwise null
         // FIXME: make this.data nullable
@@ -379,6 +379,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         return html`
             <div class="button-row">
                 <button class="button is-secondary" type="button" @click=${this.cancelForm}>
+                    <dbp-icon name="close" aria-hidden="true"></dbp-icon>
                     ${i18n.t('buttons.cancel')}
                 </button>
                 <button
@@ -386,6 +387,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                     type="submit"
                     ?disabled=${!this.saveButtonEnabled}
                     @click=${this.storeBlobItem}>
+                    <dbp-icon name="save" aria-hidden="true"></dbp-icon>
                     ${i18n.t('buttons.save')}
                     <dbp-mini-spinner
                         class="${classMap({hidden: this.saveButtonEnabled})}"></dbp-mini-spinner>
