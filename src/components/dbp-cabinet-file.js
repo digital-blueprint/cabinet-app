@@ -1301,6 +1301,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         grid-column: 1 / -1;
                         padding-left: 0;
                     }
+
+                    .grouping-container {
+                        flex-direction: column;
+                        align-items: normal;
+                    }
                 }
 
                 @media (min-width: 490px) and (max-width: 768px) {
@@ -1366,6 +1371,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     #document-modal dbp-select.actions-dropdown-doc-edit {
                         --dbp-select-menu-left: 0;
                         --dbp-select-menu-right: auto;
+                    }
+                    #document-modal .status {
+                        align-items: flex-start;
+                    }
+                    #document-modal ul {
+                        padding: 10px 15px;
                     }
                 }
             `,
