@@ -1258,8 +1258,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                     content: '';
                     position: absolute;
                     transform: translateY(-50%);
+                    top: 50%;
                     right: 0.5rem;
-                    top: 1rem;
                     width: 1em;
                     height: 1em;
                     pointer-events: none;
