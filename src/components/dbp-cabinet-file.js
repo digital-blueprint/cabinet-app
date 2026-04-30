@@ -121,27 +121,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     connectedCallback() {
         super.connectedCallback();
-
-        this.updateComplete.then(() => {
-            this.addEventListener('DbpCabinetDocumentAddSave', async (event) => {
-                console.log('JSON.stringify(event.detail)', JSON.stringify(event.detail));
-                const data = event.detail;
-                await this.storeDocumentToBlob(data.formData);
-            });
-
-            this.addEventListener('DbpCabinetDocumentFormCancel', async (event) => {
-                if (this.mode === CabinetFile.Modes.ADD) {
-                    this.objectType = '';
-                } else {
-                    this.fileHitData = this.fileHitDataBackup;
-                    // Reset this.objectType if it was changed by the objectType selector
-                    this.objectType = this.fileHitData.objectType;
-
-                    // Switch back to view mode
-                    this.mode = CabinetFile.Modes.VIEW;
-                }
-            });
-        });
     }
 
     onFileSinkDialogClosed() {
@@ -490,6 +469,53 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         return data;
     }
+    async scrollDocumentModalToTop() {
+        await this.updateComplete;
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+        console.log('scrollDocumentModalToTop this.documentModalRef', this.documentModalRef);
+        const modal = this.documentModalRef.value;
+        if (!modal) {
+            return;
+        }
+
+        const candidates = [
+            modal.shadowRoot?.querySelector('.content'),
+            modal.shadowRoot?.querySelector('.modal-content'),
+            this.shadowRoot?.querySelector('#document-modal .content'),
+            modal,
+        ].filter(Boolean);
+        console.log('scrollDocumentModalToTop candidates', candidates);
+
+        const scrollTarget = candidates.find((el) => el.scrollHeight > el.clientHeight) || modal;
+        console.log('scrollDocumentModalToTop scrollTarget', scrollTarget);
+        scrollTarget.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    }
+
+    async handleDocumentAddSave(event) {
+        console.log('JSON.stringify(event.detail)', JSON.stringify(event.detail));
+
+        await this.scrollDocumentModalToTop();
+
+        const data = event.detail;
+        await this.storeDocumentToBlob(data.formData);
+        console.log('handleDocumentAddSave data', data);
+    }
+
+    async handleDocumentFormCancel(event) {
+        if (this.mode === CabinetFile.Modes.ADD) {
+            this.objectType = '';
+        } else {
+            this.fileHitData = this.fileHitDataBackup;
+            this.objectType = this.fileHitData.objectType;
+            this.mode = CabinetFile.Modes.VIEW;
+        }
+
+        await this.updateComplete;
+        await this.scrollDocumentModalToTop();
+    }
 
     getDocumentEditFormHtml(useFileHitDataCache = false) {
         const objectType = this.objectType;
@@ -535,6 +561,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
              .person=${this.person}
              additional-type="${this.additionalType}"
              .saveButtonEnabled=${!this.uploadFailed}
+             @DbpCabinetDocumentFormCancel=${(event) => {
+                 void this.handleDocumentFormCancel(event);
+                 console.log('handleDocumentFormCancel event', event);
+             }}
+             @DbpCabinetDocumentAddSave=${(event) => {
+                 void this.handleDocumentAddSave(event);
+             }}
              object-type=></${unsafeStatic(tagName)}>
         `;
     }
