@@ -239,6 +239,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             if (
                 item !== null &&
                 (this.mode === CabinetFile.Modes.ADD ||
+                    this.mode === CabinetFile.Modes.NEW_VERSION ||
+                    this.mode === CabinetFile.Modes.EDIT ||
+                    !this.fileHitData?.file?.base?.modifiedTimestamp ||
                     this.fileHitData.file.base.modifiedTimestamp < item.file.base.modifiedTimestamp)
             ) {
                 console.log('fetchFileDocumentFromTypesense this.fileHitData', this.fileHitData);
@@ -1060,20 +1063,23 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async openReplacePdfDialog() {
-        // Don't allow the reset the state of the component when the document modal is closed
+        // Don't allow resetting state while switching from document modal to file picker
         this.allowStateReset = false;
 
         // Enable the save button again in the form if upload failed previously
         if (this.uploadFailed) {
-            /** @type {BaseFormElement} */
+            /** @type {BaseFormElement | undefined} */
             const form = this.formRef.value;
-            form.enableSaveButton();
+
+            if (form?.enableSaveButton) {
+                form.enableSaveButton();
+            }
+
             this.uploadFailed = false;
         }
 
         await this.openDocumentAddDialog(false);
     }
-
     async openDocumentAddDialog(resetObjectType = true) {
         if (resetObjectType) {
             this.objectType = '';
@@ -1701,7 +1707,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                                             : this.mode !== CabinetFile.Modes.EDIT &&
                                               this.mode !== CabinetFile.Modes.NEW_VERSION,
                                     })}"
-                                    @click="${this.openReplacePdfDialog}"
+                                    @click="${() => this.openReplacePdfDialog()}"
                                     ?disabled="${this.uploadFailed ? false : !id}">
                                     ${i18n.t('buttons.replace-document')}
                                     ${this.getMiniSpinnerHtml(id)}
