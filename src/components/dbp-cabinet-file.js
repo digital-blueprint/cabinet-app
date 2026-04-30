@@ -497,11 +497,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     async handleDocumentAddSave(event) {
         console.log('JSON.stringify(event.detail)', JSON.stringify(event.detail));
 
-        await this.scrollDocumentModalToTop();
-
         const data = event.detail;
-        await this.storeDocumentToBlob(data.formData);
-        console.log('handleDocumentAddSave data', data);
+
+        try {
+            await this.storeDocumentToBlob(data.formData);
+            console.log('handleDocumentAddSave data', data);
+        } finally {
+            await this.scrollDocumentModalToTop();
+        }
     }
 
     async handleDocumentFormCancel(event) {
