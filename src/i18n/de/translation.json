@@ -389,7 +389,7 @@
         "undeletion-success-message_other": "{{count}} Dokumente wurden wiederhergestellt."
     },
     "semester": "Semester",
-    "show-active-only": "Alle aktuell Dokumente",
+    "show-active-only": "Alle aktuelle Dokumente",
     "show-deleted-only": "Papierkorb",
     "show-obsolete-also": "Veraltete Versionen einbeziehen",
     "show-to-archive-only": "Nur zu archivierende Dokumente",
