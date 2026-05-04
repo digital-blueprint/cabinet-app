@@ -108,6 +108,22 @@
         "appDomain": "https://cabinet.tugraz.at/",
         "enableAnnotations": true
     },
+    "staging": {
+        "basePath": "/",
+        "entryPointURL": "https://api-test.tugraz.at",
+        "keyCloakBaseURL": "https://auth-dev.tugraz.at/auth",
+        "keyCloakRealm": "tugraz-vpu",
+        "keyCloakClientId": "dbp-cabinet-test",
+        "matomoUrl": "https://analytics.tugraz.at/",
+        "matomoSiteId": 131,
+        "nextcloudBaseURL": "https://cloud-demo.tugraz.at",
+        "nextcloudName": "TU Graz cloud",
+        "pdfAsQualifiedlySigningServer": "https://sig-test.tugraz.at",
+        "hiddenActivities": [],
+        "shortName": "TU Graz",
+        "appDomain": "https://studakt-test.tugraz.at/",
+        "enableAnnotations": true
+    },
     "production": {
         "basePath": "/",
         "entryPointURL": "https://api.tugraz.at",
