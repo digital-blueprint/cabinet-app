@@ -1028,7 +1028,7 @@ class CabinetViewElement extends BaseViewElement {
     async _onSync() {
         this._syncing = true;
         try {
-            let api = new CabinetApi(this.entryPointUrl, this.auth.token);
+            let api = new CabinetApi(this);
             this.data = await api.syncTypesenseDocument(this.data);
             sendNotification({
                 summary: this._i18n.t('sync.notification.success.title'),

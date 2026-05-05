@@ -652,7 +652,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         const fileData = this.data?.file || {};
         const baseData = fileData.base || {};
 
-        let api = new CabinetApi(this.entryPointUrl, this.auth.token);
+        let api = new CabinetApi(this);
         let userFullNamePromise;
         if (baseData.lastModifiedBy) {
             userFullNamePromise = api.getUserFullName(baseData.lastModifiedBy);

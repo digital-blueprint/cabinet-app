@@ -1,9 +1,8 @@
 import {TypesenseService} from './services/typesense.js';
 
 export class CabinetApi {
-    constructor(entryPointUrl, token) {
-        this._entryPointUrl = entryPointUrl;
-        this._token = token;
+    constructor(element) {
+        this._element = element;
     }
 
     /**
@@ -11,12 +10,12 @@ export class CabinetApi {
      * @param {string} documentId - The ID of the typesense document.
      */
     async triggerPersonSync(documentId) {
-        const url = `${this._entryPointUrl}/cabinet/sync-person-actions?documentId=${encodeURIComponent(documentId)}`;
+        const url = `${this._element.entryPointUrl}/cabinet/sync-person-actions?documentId=${encodeURIComponent(documentId)}`;
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this._token,
+                Authorization: 'Bearer ' + this._element.auth.token,
             },
             body: JSON.stringify({}),
         });
@@ -31,12 +30,12 @@ export class CabinetApi {
      * @returns {Promise<string>}
      */
     async getUserFullName(userId) {
-        const url = `${this._entryPointUrl}/base/people/${encodeURIComponent(userId)}`;
+        const url = `${this._element.entryPointUrl}/base/people/${encodeURIComponent(userId)}`;
         const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this._token,
+                Authorization: 'Bearer ' + this._element.auth.token,
             },
         });
         if (!response.ok) {
@@ -62,8 +61,8 @@ export class CabinetApi {
         await this.triggerPersonSync(documentId);
 
         let serverConfig = TypesenseService.getServerConfigForEntryPointUrl(
-            this._entryPointUrl,
-            this._token,
+            this._element.entryPointUrl,
+            this._element.auth.token,
         );
         let typesense = new TypesenseService(serverConfig);
 
