@@ -194,14 +194,14 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('storeDocumentToBlob obsoleteBlobIds', obsoleteBlobIds);
 
         if (fileData.identifier) {
+            // Try to fetch the document from Typesense again and again until it is found
+            await this.fetchFileDocumentFromTypesense(fileData.identifier);
+
             this.documentModalNotification(
                 this._i18n.t('cabinet-file.notification-title-stored'),
                 this._i18n.t('cabinet-file.notification-body-stored'),
                 'success',
             );
-
-            // Try to fetch the document from Typesense again and again until it is found
-            await this.fetchFileDocumentFromTypesense(fileData.identifier);
 
             if (isCurrent && obsoleteBlobIds.length > 0) {
                 // Wait until all versions from obsoleteBlobIds are updated to have isCurrent set the false in Typesense
