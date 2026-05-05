@@ -29,7 +29,7 @@ import {
 } from '../modules/modal-notification';
 import {createUUID} from '@dbp-toolkit/common/utils';
 import {PdfValidationErrorList} from './pdf-validation-error-list.js';
-import {BlobOperations} from '../utils/blob-operations.js';
+import {CabinetApi} from '../api.js';
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     // Always allow creating new versions if true
@@ -376,17 +376,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @returns {Promise<string>}
      */
     async createBlobDeleteUrl(fileId, undelete = false) {
-        return BlobOperations.createBlobDeleteUrl(
-            this.entryPointUrl,
-            this.auth.token,
-            fileId,
-            this.objectType,
-            undelete,
-        );
+        let api = new CabinetApi(this);
+        return api.createBlobDeleteUrl(fileId, this.objectType, undelete);
     }
 
     async loadBlobItem(url) {
-        return BlobOperations.loadBlobItem(url, this.auth.token);
+        let api = new CabinetApi(this);
+        return api.loadBlobItem(url);
     }
 
     /**
@@ -619,13 +615,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     async downloadFileFromBlob(fileId, includeData = false) {
-        return BlobOperations.downloadFileFromBlob(
-            this.entryPointUrl,
-            this.auth.token,
-            fileId,
-            dataURLtoFile,
-            includeData,
-        );
+        let api = new CabinetApi(this);
+        return api.downloadFileFromBlob(fileId, dataURLtoFile, includeData);
     }
 
     /**
@@ -943,14 +934,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
     async doFileDeletionForFileId(fileId, undelete = false) {
         console.log('doFileDeletionForFileId fileId', fileId);
 
+        let api = new CabinetApi(this);
+
         try {
-            return await BlobOperations.doFileDeletionForFileId(
-                this.entryPointUrl,
-                this.auth.token,
-                fileId,
-                this.objectType,
-                undelete,
-            );
+            return await api.doFileDeletionForFileId(fileId, this.objectType, undelete);
         } catch (error) {
             if (undelete) {
                 this.documentModalNotification(

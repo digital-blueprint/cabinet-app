@@ -85,4 +85,210 @@ export class CabinetApi {
 
         return document;
     }
+
+    /**
+     * Create a blob URL through the blob-urls API endpoint
+     * @param {string} identifier - The file identifier
+     * @param {string} objectType - The object type (e.g., 'file-cabinet-document')
+     * @param {string} method - HTTP method for the blob operation (e.g., 'PATCH', 'GET')
+     * @param {boolean} includeData - Whether to include data
+     * @param {object} extraParams - Additional parameters
+     * @returns {Promise<string>} - The blob URL
+     */
+    async _createBlobUrl(
+        identifier,
+        objectType,
+        method = 'PATCH',
+        includeData = false,
+        extraParams = {},
+    ) {
+        const baseUrl = `${this._element.entryPointUrl}/cabinet/blob-urls`;
+        const apiUrl = new URL(baseUrl);
+
+        let params = {
+            method: method,
+            prefix: 'document-',
+            type: objectType.replace('file-cabinet-', ''),
+            identifier: identifier,
+        };
+
+        if (includeData) {
+            params['includeData'] = '1';
+        }
+
+        params = {...params, ...extraParams};
+        apiUrl.search = new URLSearchParams(params).toString();
+
+        let response = await fetch(apiUrl.toString(), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/ld+json',
+                Authorization: 'Bearer ' + this._element.auth.token,
+            },
+            body: '{}',
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error while creating storage URL: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log('createBlobUrl result', result);
+
+        return result['blobUrl'];
+    }
+
+    /**
+     * Create a blob delete URL
+     * @param {string} fileId - The file identifier
+     * @param {string} objectType - The object type (e.g., 'file-cabinet-document')
+     * @param {boolean} undelete - Whether to undelete the file
+     * @returns {Promise<string>} - The blob URL for deletion
+     */
+    async createBlobDeleteUrl(fileId, objectType, undelete = false) {
+        return this._createBlobUrl(fileId, objectType, 'PATCH', false, {
+            deleteIn: undelete ? 'null' : 'P7D',
+        });
+    }
+
+    /**
+     * Delete or undelete a file by ID (schedule for deletion)
+     * @param {string} fileId - The file identifier
+     * @param {string} objectType - The object type (e.g., 'file-cabinet-document')
+     * @param {boolean} undelete - Whether to undelete the file
+     * @returns {Promise<object>} - The response data
+     */
+    async doFileDeletionForFileId(fileId, objectType, undelete = false) {
+        console.log('doFileDeletionForFileId fileId', fileId, 'objectType', objectType);
+
+        const deleteUrl = await this.createBlobDeleteUrl(fileId, objectType, undelete);
+        console.log('doFileDeletionForFileId deleteUrl', deleteUrl);
+
+        const options = {
+            // We are doing soft-delete here, so we need to use PATCH
+            method: 'PATCH',
+            headers: {
+                Authorization: 'Bearer ' + this._element.auth.token,
+            },
+            // The API demands a multipart form data, so we need to send an empty body
+            body: new FormData(),
+        };
+
+        let response = await fetch(deleteUrl, options);
+        if (!response.ok) {
+            if (undelete) {
+                throw new Error(`Could not mark document ${fileId} as undeleted in blob!`);
+            } else {
+                throw new Error(`Could not mark document ${fileId} as deleted in blob!`);
+            }
+        }
+
+        return await response.json();
+    }
+
+    /**
+     * Load blob item from URL
+     * @param {string} url - The blob URL
+     * @returns {Promise<object>} - The blob item data
+     */
+    async loadBlobItem(url) {
+        const response = await fetch(url, {
+            headers: {
+                Authorization: 'Bearer ' + this._element.auth.token,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to load blob: ${response.statusText}`);
+        }
+
+        return await response.json();
+    }
+
+    /**
+     * Create a blob GET URL for a file
+     * @param {string} identifier - The file identifier
+     * @param {boolean} includeData - Whether to include file data in the response
+     * @returns {Promise<string>} - The blob download URL
+     */
+    async createBlobGetUrl(identifier, includeData = false) {
+        const baseUrl = `${this._element.entryPointUrl}/cabinet/blob-urls`;
+        const apiUrl = new URL(baseUrl);
+        const params = {
+            method: 'GET',
+            identifier: identifier,
+        };
+
+        if (includeData) {
+            params['includeData'] = '1';
+        }
+
+        apiUrl.search = new URLSearchParams(params).toString();
+
+        let response = await fetch(apiUrl.toString(), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/ld+json',
+                Authorization: 'Bearer ' + this._element.auth.token,
+            },
+            body: '{}',
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to create download URL: ${response.statusText}`);
+        }
+
+        const url = await response.json();
+        return url['blobUrl'];
+    }
+
+    /**
+     * Download a file from blob storage
+     * @param {string} fileId - The file identifier
+     * @param {function(string): File} dataURLtoFile - Function to convert data URL to File object
+     * @param {boolean} includeData - Whether to include data in the response
+     * @returns {Promise<File>} - The downloaded file
+     */
+    async downloadFileFromBlob(fileId, dataURLtoFile, includeData = true) {
+        const url = await this.createBlobGetUrl(fileId, includeData);
+        let blobItem = await this.loadBlobItem(url);
+
+        if (!blobItem.contentUrl) {
+            throw new Error('No contentUrl in blob response');
+        }
+
+        return dataURLtoFile(blobItem.contentUrl, blobItem.fileName);
+    }
+
+    /**
+     * Create a blob download URL for a file
+     * @param {string} identifier - The file identifier
+     * @returns {Promise<string>} - The blob download URL
+     */
+    async createBlobDownloadUrl(identifier) {
+        const baseUrl = `${this._element.entryPointUrl}/cabinet/blob-urls`;
+        const apiUrl = new URL(baseUrl);
+        const params = {
+            method: 'DOWNLOAD',
+            identifier: identifier,
+        };
+
+        apiUrl.search = new URLSearchParams(params).toString();
+
+        let response = await fetch(apiUrl.toString(), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/ld+json',
+                Authorization: 'Bearer ' + this._element.auth.token,
+            },
+            body: '{}',
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to create download URL: ${response.statusText}`);
+        }
+
+        const url = await response.json();
+        return url['blobUrl'];
+    }
 }

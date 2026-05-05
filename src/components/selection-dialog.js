@@ -11,12 +11,12 @@ import {
     sendModalNotification,
 } from '../modules/modal-notification';
 import {SelectionColumnConfiguration} from './selection-column-configuration';
-import {BlobOperations} from '../utils/blob-operations';
 import {getSelectorFixCSS} from '../styles.js';
 import {getPersonHit} from '../objectTypes/schema.js';
 import InstantSearchModule from '../modules/instantSearch.js';
 import {exportPersonPdf} from '../objectTypes/person.js';
 import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
+import {CabinetApi} from '../api.js';
 
 export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -482,13 +482,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @param {boolean} undelete - Whether to undelete the file
      */
     async doFileDeletionForFileId(fileId, objectType, undelete = false) {
-        return BlobOperations.doFileDeletionForFileId(
-            this.entryPointUrl,
-            this.auth.token,
-            fileId,
-            objectType,
-            undelete,
-        );
+        let api = new CabinetApi(this);
+        return api.doFileDeletionForFileId(fileId, objectType, undelete);
     }
 
     /**
@@ -865,6 +860,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             documents.length * 0.2,
         );
 
+        let api = new CabinetApi(this);
+
         for (const [id, hit] of documents) {
             try {
                 const fileId = hit.file?.base?.fileId;
@@ -886,11 +883,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                         : 'unknown-date';
 
                 // Get the document blob URL (without downloading the file content)
-                const blobUrl = await BlobOperations.createBlobDownloadUrl(
-                    this.entryPointUrl,
-                    this.auth.token,
-                    fileId,
-                );
+                const blobUrl = await api.createBlobDownloadUrl(fileId);
 
                 // Construct the proper filename according to specification
                 const baseFilename = `${studId}_${additionalType}_${uploadDate}`;
@@ -922,14 +915,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     }
 
                     // Get the document blob URL (without downloading the file content)
-                    const blobUrl = await BlobOperations.createBlobGetUrl(
-                        this.entryPointUrl,
-                        this.auth.token,
-                        fileId,
-                    );
+                    const blobUrl = await api.createBlobGetUrl(fileId);
 
                     // get relevant json data
-                    let blobItem = await BlobOperations.loadBlobItem(blobUrl, this.auth.token);
+                    let blobItem = await api.loadBlobItem(blobUrl);
 
                     // parse and stringify json to format it with 4 spaces indentation
                     let jsonMini = JSON.parse(blobItem['metadata']);
