@@ -22,8 +22,8 @@ import {CabinetFilterSettings} from './components/dbp-cabinet-filter-settings.js
 import InstantSearchModule, {getSortSpec} from './modules/instantSearch.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from './i18n';
-import {createClearRefinements} from './clear-refinements.js';
-import {createCurrentRefinements} from './current-refinements';
+import {createClearRefinements} from './components/clear-refinements.js';
+import {createCurrentRefinements} from './components/current-refinements.js';
 import {SelectionDialog} from './components/selection-dialog.js';
 
 class StatsWidget extends LangMixin(AuthMixin(DBPLitElement), createInstance) {

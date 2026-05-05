@@ -1,7 +1,7 @@
 import {LangMixin} from '@dbp-toolkit/common';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {connectClearRefinements} from 'instantsearch.js/es/connectors';
-import {createInstance} from './i18n.js';
+import {createInstance} from '../i18n.js';
 import {css, html} from 'lit';
 import {Icon, ScopedElementsMixin} from '@dbp-toolkit/common';
 class ClearRefinements extends ScopedElementsMixin(LangMixin(DBPLitElement, createInstance)) {

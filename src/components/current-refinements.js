@@ -1,7 +1,7 @@
 import {LangMixin} from '@dbp-toolkit/common';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {connectCurrentRefinements} from 'instantsearch.js/es/connectors';
-import {createInstance} from './i18n';
+import {createInstance} from '../i18n.js';
 import {css, html} from 'lit';
 
 class CurrentRefinements extends LangMixin(DBPLitElement, createInstance) {
