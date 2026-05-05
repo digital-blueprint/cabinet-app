@@ -7,8 +7,6 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {getPaginationCSS} from './styles.js';
 import {Icon, InlineNotification, Modal, sendNotification} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
-import {Activity} from './activity.js';
-import metadata from './dbp-cabinet-search.metadata.json';
 import instantsearch from 'instantsearch.js';
 import DbpTypesenseInstantSearchAdapter from './dbp-typesense-instantsearch-adapter.js';
 import {hits, searchBox, stats, pagination, hitsPerPage} from 'instantsearch.js/es/widgets';
@@ -129,7 +127,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     constructor() {
         super();
-        this.activity = new Activity(metadata);
         this.objectTypeFormComponents = {};
         this.objectTypeHitComponents = {};
         this.objectTypeViewComponents = {};
