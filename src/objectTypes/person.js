@@ -757,6 +757,9 @@ class CabinetViewElement extends BaseViewElement {
                     margin-bottom: 0.1rem;
                     margin-top: 2em;
                 }
+                a {
+                    color: inherit;
+                }
 
                 hr {
                     margin-top: 0;
@@ -1092,7 +1095,7 @@ class CabinetViewElement extends BaseViewElement {
         </div>
         </div>
         <div class="button-container">   
-        <div class="header-person-button">
+        <button class="button is-secondary header-person-button">
             ${
                 this._syncing
                     ? html`
@@ -1108,8 +1111,8 @@ class CabinetViewElement extends BaseViewElement {
                           </a>
                       `
             }
-        </div>
-        <div class="header-person-button">
+        </button>
+        <button class=" button is-secondary header-person-button">
             <a href="${hit.person.coUrl}" @click=${this._onEdit}>
                 <dbp-icon  title='${i18n.t('Edit-student-data')}'
                 aria-hidden="true"
@@ -1117,8 +1120,8 @@ class CabinetViewElement extends BaseViewElement {
                 </dbp-icon>
                 ${i18n.t('Edit-student-data')}
             </a>
-        </div>
-        <div class="header-person-button">
+        </button>
+        <button class="button is-secondary header-person-button">
             <a href="#" @click="${() => {
                 exportPersonPdf(i18n, hit);
                 return false;
@@ -1128,7 +1131,7 @@ class CabinetViewElement extends BaseViewElement {
                 </dbp-icon>
                 ${i18n.t('export.button-label')}
             </a>
-        </div>
+        </button>
         </div>
         </div>
             <div class="modal-Gi-header-container">

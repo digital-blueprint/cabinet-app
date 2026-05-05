@@ -72,8 +72,8 @@ export function getPaginationCSS() {
         }
 
         .ais-Pagination-link:hover {
-            color: var(--dbp-content);
-            background-color: --dbp-hover-background-color;
+            color: var(--dbp-hover-color);
+            background-color: var(--dbp-hover-background-color);
         }
 
         .ais-Pagination-link {
@@ -94,7 +94,8 @@ export function getPaginationCSS() {
         }
 
         .ais-Pagination-item--disabled .ais-Pagination-link:hover {
-            background-color: initial;
+            background-color: var(--dbp-hover-background-color);
+            color: var(--dbp-hover-color);
         }
 
         @media (max-width: 489px) {

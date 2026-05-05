@@ -1173,6 +1173,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
                 .modal-nav > button:hover {
                     background-color: var(--dbp-hover-background-color);
+                    color: var(--dbp-hover-color);
                 }
 
                 .modal-nav > button:focus-visible {

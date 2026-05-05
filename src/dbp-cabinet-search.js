@@ -905,6 +905,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 }
                 .button.open-dialog:hover {
                     opacity: 1;
+                    background: var(--dbp-hover-background-color);
+                    color: var(--dbp-hover-color);
                 }
                 .button.deselect-all {
                     text-decoration: underline;

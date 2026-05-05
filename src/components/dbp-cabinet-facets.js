@@ -235,6 +235,18 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                     border-color: var(--dbp-secondary-surface-border-color);
                     border: 1px solid;
                 }
+                button.button:hover:enabled,
+                .button:hover:enabled {
+                    color: var(--dbp-hover-color, var(--dbp-on-secondary-surface));
+                    background-color: var(
+                        --dbp-hover-background-color,
+                        var(--dbp-secondary-surface)
+                    );
+                    border-color: var(
+                        --dbp-hover-background-color,
+                        var(--dbp-secondary-surface-border-color)
+                    );
+                }
 
                 .display-none {
                     display: none !important;
