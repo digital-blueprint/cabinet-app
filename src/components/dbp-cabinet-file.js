@@ -1584,7 +1584,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
 
             return {
                 value: item.id,
-                label: `${createdDate}${modifiedText} (${status})`,
+                label: html`
+                    <span>
+                        <strong>${createdDate}</strong>
+                        <span style="font-weight: normal;">${modifiedText} (${status})</span>
+                    </span>
+                `,
             };
         });
         const selectedOption =
@@ -1595,7 +1600,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             <dbp-select
                 id="version-select"
                 .value=${selectedOption?.value ?? ''}
-                label=${selectedOption?.label ?? i18n.t('doc-modal-select-version')}
+                .label=${selectedOption?.label ?? i18n.t('doc-modal-select-version')}
                 .options=${versionOptions}
                 class="select-version"
                 align="left"
