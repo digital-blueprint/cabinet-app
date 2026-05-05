@@ -7,7 +7,7 @@ import {Button, Icon, Modal} from '@dbp-toolkit/common';
 import {
     scopedElements as modalNotificationScopedElements,
     sendModalNotification,
-} from '../modules/modal-notification';
+} from './modal-notification.js';
 
 export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {

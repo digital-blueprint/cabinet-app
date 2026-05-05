@@ -4,7 +4,7 @@ import {ScopedElementsMixin} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, IconButton, Modal} from '@dbp-toolkit/common';
-import {scopedElements as modalNotificationScopedElements} from '../modules/modal-notification';
+import {scopedElements as modalNotificationScopedElements} from './modal-notification.js';
 import InstantSearchModule from '../modules/instantSearch.js';
 
 export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinetLitElement) {

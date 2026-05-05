@@ -9,7 +9,7 @@ import {FileSink} from '@dbp-toolkit/file-handling';
 import {
     scopedElements as modalNotificationScopedElements,
     sendModalNotification,
-} from '../modules/modal-notification';
+} from './modal-notification.js';
 import {SelectionColumnConfiguration} from './selection-column-configuration';
 import {getSelectorFixCSS} from '../styles.js';
 import {getPersonHit} from '../objectTypes/schema.js';

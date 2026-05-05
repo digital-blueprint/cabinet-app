@@ -26,7 +26,7 @@ import {TypesenseService} from '../services/typesense.js';
 import {
     scopedElements as modalNotificationScopedElements,
     sendModalNotification,
-} from '../modules/modal-notification';
+} from './modal-notification.js';
 import {createUUID} from '@dbp-toolkit/common/utils';
 import {PdfValidationErrorList} from './pdf-validation-error-list.js';
 import {CabinetApi} from '../api.js';
