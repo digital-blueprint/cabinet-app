@@ -127,7 +127,10 @@ export class BaseDocumentHitElement extends BaseHitElement {
                                             </span>
                                         `
                                       : ''}
-                                  <span>${i18n.t('Added')}: ${dateCreated}</span>
+                                  <span>
+                                      ${i18n.t('Added')}:
+                                      <strong>${dateCreated}</strong>
+                                  </span>
                                   <span>${i18n.t('last-modified')}: ${lastModified}</span>
                               </div>
                               ${this.renderViewButton(hit)}
