@@ -1134,6 +1134,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 #document-modal .description {
                     grid-area: 1 / 1 / 2 / 2;
                 }
+                .modal-notification {
+                    --dbp-notification-max-width: 40rem;
+                }
 
                 #document-modal .doc-title {
                     display: flex;
