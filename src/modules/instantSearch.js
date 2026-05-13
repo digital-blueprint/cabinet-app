@@ -1,4 +1,4 @@
-import {createInstance} from '../i18n.js';
+import {createInstance} from '../tugraz/i18n.js';
 
 // Dummy function to make translations
 function t(key) {
@@ -6,7 +6,7 @@ function t(key) {
 }
 
 function translationRenderFunction(i18n, schemaField, value, operator = null) {
-    let text = i18n.t(`typesense-schema.${schemaField}.${value}`, value);
+    let text = i18n.t(`tugraz:typesense-schema.${schemaField}.${value}`, value);
     return text;
 }
 
@@ -19,8 +19,8 @@ function _renderDate(i18n, value, operator, timeZone = undefined) {
     });
     let operatorLabel =
         operator === '>='
-            ? i18n.t('cabinet-search.refinement-date-after-text')
-            : i18n.t('cabinet-search.refinement-date-before-text');
+            ? i18n.t('tugraz:cabinet-search.refinement-date-after-text')
+            : i18n.t('tugraz:cabinet-search.refinement-date-before-text');
     return `${operatorLabel} ${date}`;
 }
 

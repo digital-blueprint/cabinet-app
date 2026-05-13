@@ -46,7 +46,7 @@ const DEFAULT_ADMISSION_NOTICE = {
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
-            AdmissionNotice: 'typesense-schema.file.base.additionalType.key.AdmissionNotice',
+            AdmissionNotice: 'tugraz:typesense-schema.file.base.additionalType.key.AdmissionNotice',
         };
     }
 
@@ -65,14 +65,14 @@ class CabinetFormElement extends BaseFormElement {
 
     getDecisions() {
         const decisions = {
-            rejected: this._i18n.t(
-                'typesense-schema.file.file-cabinet-admissionNotice.decision.rejected',
+            rejected: this._i18nTugraz.t(
+                'tugraz:typesense-schema.file.file-cabinet-admissionNotice.decision.rejected',
             ),
-            refused: this._i18n.t(
-                'typesense-schema.file.file-cabinet-admissionNotice.decision.refused',
+            refused: this._i18nTugraz.t(
+                'tugraz:typesense-schema.file.file-cabinet-admissionNotice.decision.refused',
             ),
-            granted: this._i18n.t(
-                'typesense-schema.file.file-cabinet-admissionNotice.decision.granted',
+            granted: this._i18nTugraz.t(
+                'tugraz:typesense-schema.file.file-cabinet-admissionNotice.decision.granted',
             ),
         };
 
@@ -95,20 +95,20 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-date-element
                     subscribe="lang"
                     name="dateCreated"
-                    label=${this._i18n.t('doc-modal-issue-date')}
+                    label=${this._i18nTugraz.t('tugraz:doc-modal-issue-date')}
                     .value=${admissionNotice.dateCreated}
                     required></dbp-form-date-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousStudy"
-                    label=${this._i18n.t('doc-modal-previousStudy')}
+                    label=${this._i18nTugraz.t('tugraz:doc-modal-previousStudy')}
                     .value=${admissionNotice.previousStudy}></dbp-form-string-element>
 
                 <dbp-form-enum-element
                     subscribe="lang"
                     name="decision"
-                    label=${this._i18n.t('doc-modal-decision')}
+                    label=${this._i18nTugraz.t('tugraz:doc-modal-decision')}
                     .items=${this.getDecisions()}
                     .value=${admissionNotice.decision}></dbp-form-enum-element>
 
@@ -122,7 +122,7 @@ class CabinetHitElement extends BaseDocumentHitElement {
     _renderContent() {
         let hit = getDocumentHit(this.data);
         let admissionNotice = getAdmissionNotice(hit);
-        const i18n = this._i18n;
+        const i18n = this._i18nTugraz;
         const issueDate = admissionNotice.dateCreated;
         const dateObject = new Date(issueDate);
         let formattedDate = issueDate
@@ -135,7 +135,7 @@ class CabinetHitElement extends BaseDocumentHitElement {
         return html`
             ${issueDate
                 ? html`
-                      ${i18n.t('document-issue-date')}: ${formattedDate}
+                      ${i18n.t('tugraz:document-issue-date')}: ${formattedDate}
                   `
                 : ''}
         `;
@@ -159,14 +159,14 @@ class CabinetViewElement extends BaseViewElement {
 
     getDecisions() {
         return {
-            rejected: this._i18n.t(
-                'typesense-schema.file.file-cabinet-admissionNotice.decision.rejected',
+            rejected: this._i18nTugraz.t(
+                'tugraz:typesense-schema.file.file-cabinet-admissionNotice.decision.rejected',
             ),
-            refused: this._i18n.t(
-                'typesense-schema.file.file-cabinet-admissionNotice.decision.refused',
+            refused: this._i18nTugraz.t(
+                'tugraz:typesense-schema.file.file-cabinet-admissionNotice.decision.refused',
             ),
-            granted: this._i18n.t(
-                'typesense-schema.file.file-cabinet-admissionNotice.decision.granted',
+            granted: this._i18nTugraz.t(
+                'tugraz:typesense-schema.file.file-cabinet-admissionNotice.decision.granted',
             ),
         };
     }
@@ -175,24 +175,24 @@ class CabinetViewElement extends BaseViewElement {
         let hit = getDocumentHit(this.data);
         let admissionNotice = getAdmissionNotice(hit);
 
-        const i18n = this._i18n;
+        const i18n = this._i18nTugraz;
 
         return html`
             <dbp-form-date-view
                 subscribe="lang"
-                label=${i18n.t('doc-modal-issue-date')}
+                label=${i18n.t('tugraz:doc-modal-issue-date')}
                 .value=${admissionNotice.dateCreated
                     ? new Date(admissionNotice.dateCreated)
                     : ''}></dbp-form-date-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${i18n.t('doc-modal-previousStudy')}
+                label=${i18n.t('tugraz:doc-modal-previousStudy')}
                 .value=${admissionNotice.previousStudy || ''}></dbp-form-string-view>
 
             <dbp-form-enum-view
                 subscribe="lang"
-                label=${i18n.t('doc-modal-decision')}
+                label=${i18n.t('tugraz:doc-modal-decision')}
                 .value=${admissionNotice.decision || ''}
                 .items=${this.getDecisions()}></dbp-form-enum-view>
         `;

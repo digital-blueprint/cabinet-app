@@ -11,7 +11,7 @@ import {
     sendNotification,
     getIconSVGURL,
 } from '@dbp-toolkit/common';
-import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
+import DBPCabinetTugrazLitElement from '../tugraz/dbp-cabinet-tugraz-lit-element.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {FileSink, FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
@@ -31,7 +31,7 @@ import {createUUID} from '@dbp-toolkit/common/utils';
 import {PdfValidationErrorList} from './pdf-validation-error-list.js';
 import {CabinetApi} from '../api.js';
 
-export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
+export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement) {
     // Always allow creating new versions if true
     static DEV_MODE = false;
 
@@ -1647,7 +1647,9 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
         const headline =
             this.mode === CabinetFile.Modes.ADD
                 ? i18n.t('doc-modal-upload-document')
-                : i18n.t(`typesense-schema.file.base.additionalType.key.${additionalType}`);
+                : this._i18nTugraz.t(
+                      `tugraz:typesense-schema.file.base.additionalType.key.${additionalType}`,
+                  );
         console.log('additionalType', additionalType);
         this.updateStatus();
         const options = [];
@@ -2004,7 +2006,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
             .map((key) => {
                 return {
                     key: key,
-                    translatedText: this._i18n.t(fileDocumentTypeNames[key]),
+                    translatedText: this._i18nTugraz.t(fileDocumentTypeNames[key]),
                     selected: key === fileDocumentType,
                 };
             })

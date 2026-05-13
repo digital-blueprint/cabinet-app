@@ -11,7 +11,7 @@ import {
     gatherFormDataFromElement,
     validateRequiredFields,
 } from '@dbp-toolkit/form-elements/src/utils.js';
-import DBPCabinetLitElement from './dbp-cabinet-lit-element.js';
+import DBPCabinetTugrazLitElement from './tugraz/dbp-cabinet-tugraz-lit-element.js';
 import {
     DbpDateTimeView,
     DbpDateView,
@@ -169,7 +169,7 @@ export const getCommonStyles = () => css`
     }*/
 `;
 
-export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
+export class BaseFormElement extends ScopedElementsMixin(DBPCabinetTugrazLitElement) {
     constructor() {
         super();
         this.data = {};
@@ -273,7 +273,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 subscribe="lang"
                 name="isPartOf"
                 label=${this._i18n.t('doc-modal-purpose-storage')}
-                .items=${BaseFormElement.getIsPartOfItems(this._i18n)}
+                .items=${BaseFormElement.getIsPartOfItems(this._i18nTugraz)}
                 .value=${fileCommon.isPartOf}
                 multiple
                 display-mode="tags"
@@ -465,13 +465,13 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         return Object.fromEntries(
             items
-                .map((item) => [item, i18n.t(`typesense-schema.file.base.isPartOf.${item}`)])
+                .map((item) => [item, i18n.t(`tugraz:typesense-schema.file.base.isPartOf.${item}`)])
                 .sort((a, b) => a[1].localeCompare(b[1])),
         );
     }
 }
 
-export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
+export class BaseHitElement extends ScopedElementsMixin(DBPCabinetTugrazLitElement) {
     constructor() {
         super();
         this.data = {};
@@ -570,7 +570,7 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 }
 
-export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
+export class BaseViewElement extends ScopedElementsMixin(DBPCabinetTugrazLitElement) {
     constructor() {
         super();
         this.auth = {};
@@ -682,7 +682,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
                 subscribe="lang"
                 label=${this._i18n.t('doc-modal-storage-purpose-deletion')}
                 .value=${baseData.isPartOf}
-                .items=${BaseFormElement.getIsPartOfItems(this._i18n)}></dbp-form-enum-view>
+                .items=${BaseFormElement.getIsPartOfItems(this._i18nTugraz)}></dbp-form-enum-view>
 
             <dbp-form-enum-view
                 subscribe="lang"
@@ -769,7 +769,10 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetLitElement) {
         const baseData = fileData.base || {};
 
         const translatedTypes = Object.fromEntries(
-            Object.entries(this.additionalTypes).map(([key, value]) => [key, this._i18n.t(value)]),
+            Object.entries(this.additionalTypes).map(([key, value]) => [
+                key,
+                this._i18nTugraz.t(value),
+            ]),
         );
 
         return html`
