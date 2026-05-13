@@ -5,8 +5,6 @@ import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, IconButton, Modal} from '@dbp-toolkit/common';
 import {scopedElements as modalNotificationScopedElements} from './modal-notification.js';
-import CabinetConfig from '../tugraz/cabinetConfig.js';
-
 export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
@@ -34,23 +32,6 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
             columnConfigs: {type: Array, attribute: false},
             columnVisibilityStates: {type: Object, attribute: false},
         };
-    }
-
-    /**
-     * Get available columns for person type
-     */
-    static getPersonColumns() {
-        const cabinetConfigModule = new CabinetConfig();
-        return cabinetConfigModule.getPersonColumns();
-    }
-
-    /**
-     * Get available columns for document type
-     * @param lang
-     */
-    static getDocumentColumns(lang = 'de') {
-        const cabinetConfigModule = new CabinetConfig();
-        return cabinetConfigModule.getDocumentColumns(lang);
     }
 
     async open(selectionType) {

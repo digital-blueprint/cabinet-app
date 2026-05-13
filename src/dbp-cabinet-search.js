@@ -19,7 +19,6 @@ import {TypesenseService, TYPESENSE_COLLECTION} from './services/typesense.js';
 import {BaseObject} from './baseObject.js';
 import {name as pkgName} from '../package.json';
 import {CabinetFilterSettings} from './components/dbp-cabinet-filter-settings.js';
-import CabinetConfig, {getSortSpec} from './tugraz/cabinetConfig.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from './i18n';
 import {createClearRefinements} from './components/clear-refinements.js';
@@ -143,7 +142,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
         /** @type {CabinetConfig} */
-        this.cabinetConfigModule = null;
+        this.cabinetConfig = null;
         this.facetConfigs = [];
         this.typesenseInstantsearchAdapter = null;
         this.search = null;
@@ -201,6 +200,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         return {
             ...super.properties,
             hitData: {type: Object, attribute: false},
+            cabinetConfig: {type: Object, attribute: false},
             documentFile: {type: File, attribute: false},
             search: {type: Object, attribute: false},
             facetConfigs: {type: Array, state: true},
@@ -1088,7 +1088,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @param lang
      */
     getSearchParameters(lang) {
-        const sortBy = getSortSpec(lang);
+        const sortBy = this.cabinetConfig.getSortSpec(lang);
 
         let queryBy;
         if (lang === 'de') {
@@ -1154,7 +1154,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Create the Instantsearch instance
      */
     createInstantsearch() {
-        this.facetConfigs = this.cabinetConfigModule.getFacetsConfig(this.lang);
+        this.facetConfigs = this.cabinetConfig.getFacetsConfig(this.lang);
 
         const typesenseInstantsearchAdapter = new DbpTypesenseInstantSearchAdapter(
             this.getTypesenseInstantsearchAdapterConfig(),
@@ -1493,6 +1493,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <dbp-cabinet-file
                     mode="${CabinetFile.Modes.ADD}"
                     ${ref(this.documentFileComponentRef)}
+                    .cabinetConfig="${this.cabinetConfig}"
                     @close="${this.resetRoutingUrlIfNeeded}"
                     subscribe="lang,auth,entry-point-url,file-handling-enabled-targets,nextcloud-web-app-password-url,nextcloud-webdav-url,nextcloud-name,nextcloud-file-url,nextcloud-auth-info"></dbp-cabinet-file>
 
@@ -1621,6 +1622,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             </div>
             <dbp-cabinet-selection-dialog
                 ${ref(this.selectionDialogRef)}
+                .cabinetConfig="${this.cabinetConfig}"
                 subscribe="lang,lang-dir,auth,entry-point-url"></dbp-cabinet-selection-dialog>
         `;
     }
@@ -1702,7 +1704,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             console.log('fileDocumentTypeNames', this.fileDocumentTypeNames);
 
             const cabinetConfigModule = await import(data['cabinetConfig']);
-            this.cabinetConfigModule = new cabinetConfigModule.default();
+            this.cabinetConfig = new cabinetConfigModule.default();
 
             await this.updateComplete;
             /**
