@@ -11,5 +11,5 @@
         "file-cabinet-entranceQualificationRecognition": "./fileEntranceQualificationRecognition.js",
         "person": "./person.js"
     },
-    "instantSearch": "./instantSearch.js"
+    "cabinetConfig": "./cabinetConfig.js"
 }

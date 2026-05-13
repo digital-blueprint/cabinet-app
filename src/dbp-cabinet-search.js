@@ -19,7 +19,7 @@ import {TypesenseService, TYPESENSE_COLLECTION} from './services/typesense.js';
 import {BaseObject} from './baseObject.js';
 import {name as pkgName} from '../package.json';
 import {CabinetFilterSettings} from './components/dbp-cabinet-filter-settings.js';
-import InstantSearchModule, {getSortSpec} from './modules/instantSearch.js';
+import CabinetConfig, {getSortSpec} from './tugraz/cabinetConfig.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from './i18n';
 import {createClearRefinements} from './components/clear-refinements.js';
@@ -142,8 +142,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.selectionDialogRef = createRef();
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
-        /** @type {InstantSearchModule} */
-        this.instantSearchModule = null;
+        /** @type {CabinetConfig} */
+        this.cabinetConfigModule = null;
         this.facetConfigs = [];
         this.typesenseInstantsearchAdapter = null;
         this.search = null;
@@ -1154,7 +1154,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Create the Instantsearch instance
      */
     createInstantsearch() {
-        this.facetConfigs = this.instantSearchModule.getFacetsConfig(this.lang);
+        this.facetConfigs = this.cabinetConfigModule.getFacetsConfig(this.lang);
 
         const typesenseInstantsearchAdapter = new DbpTypesenseInstantSearchAdapter(
             this.getTypesenseInstantsearchAdapterConfig(),
@@ -1701,8 +1701,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             console.log('viewComponents', viewComponents);
             console.log('fileDocumentTypeNames', this.fileDocumentTypeNames);
 
-            const instantSearchModule = await import(data['instantSearch']);
-            this.instantSearchModule = new instantSearchModule.default();
+            const cabinetConfigModule = await import(data['cabinetConfig']);
+            this.cabinetConfigModule = new cabinetConfigModule.default();
 
             await this.updateComplete;
             /**
