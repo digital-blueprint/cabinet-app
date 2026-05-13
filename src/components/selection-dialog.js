@@ -1,7 +1,7 @@
 import {css, html} from 'lit';
 import {ref, createRef} from 'lit/directives/ref.js';
 import {IconButton, ScopedElementsMixin} from '@dbp-toolkit/common';
-import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
+import DBPCabinetTugrazLitElement from '../tugraz/dbp-cabinet-tugraz-lit-element.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal, DBPSelect} from '@dbp-toolkit/common';
 import {TabulatorTable} from '@dbp-toolkit/tabulator-table';
@@ -18,7 +18,7 @@ import {exportPersonPdf} from '../objectTypes/person.js';
 import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
 import {CabinetApi} from '../api.js';
 
-export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
+export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElement) {
     constructor() {
         super();
         this.modalRef = createRef();
@@ -1515,8 +1515,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Translate isPartOf values (Purpose of Storage)
         if (colConfig.field.includes('file.base.isPartOf')) {
-            const translationKey = `typesense-schema.file.base.isPartOf.${value}`;
-            const translated = i18n.t(translationKey);
+            const translationKey = `tugraz:typesense-schema.file.base.isPartOf.${value}`;
+            const translated = this._i18nTugraz.t(translationKey);
             // If translation returns the key itself, the translation wasn't found
             if (translated !== translationKey) {
                 return translated;

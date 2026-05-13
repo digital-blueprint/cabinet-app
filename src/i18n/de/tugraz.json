@@ -1,0 +1,76 @@
+{
+    "cabinet-search": {
+        "refinement-date-after-text": "von",
+        "refinement-date-before-text": "bis"
+    },
+    "doc-modal-decision": "Entscheidung",
+    "doc-modal-elective-subject": "Wahlfach",
+    "doc-modal-Identifier": "Identifikationsnummer des Dokuments",
+    "doc-modal-issue-date": "Datum der Ausstellung",
+    "doc-modal-nationality": "Staatsbürgerschaft laut Dokument",
+    "doc-modal-native-language": "Muttersprache",
+    "doc-modal-no": "Nein",
+    "doc-modal-previous-education": "Vorbildung",
+    "doc-modal-previous-enrolment-in-austria": "Österreichische Universität besucht",
+    "doc-modal-previous-higher-education-cpga": "CPGA",
+    "doc-modal-previous-higher-education-curriculum": "Link zum Curriculum der vorangegangenen Hochschule",
+    "doc-modal-previous-higher-education-field": "Studium an der vorangegangenen Hochschule",
+    "doc-modal-previous-higher-education-grading": "Information und Beschreibung Credits/Stunden",
+    "doc-modal-previous-higher-education-institution": "Vorangegangene Hochschule",
+    "doc-modal-previous-higher-education-place": "Land und Ort der vorangegangenen Hochschule",
+    "doc-modal-previousStudy": "Abgeschlossenes Studium",
+    "doc-modal-signed-by": "Unterschreibender Studiendekan",
+    "doc-modal-yes": "Ja",
+    "document-issue-date": "Datum der Ausstellung",
+    "typesense-schema": {
+        "@type": {
+            "DocumentFile": "Dokument",
+            "Person": "Person"
+        },
+        "file": {
+            "base": {
+                "additionalType": {
+                    "key": {
+                        "AdmissionNotice": "Zulassungsbescheid",
+                        "BirthCertificate": "Geburtsurkunde",
+                        "CitizenshipCertificate": "Staatsbürgerschaftsnachweis",
+                        "Communication": "Kontaktaufnahme",
+                        "DriversLicence": "Führerschein",
+                        "EnglMasterApplication": "Ansuchen für Master Englisch",
+                        "EnglMasterDataSheet": "Datenblatt für Master Englisch",
+                        "EntranceQualificationApplication": "Antrag für Studienberechtigungsprüfung",
+                        "EntranceQualificationRecognition": "Anerkennung für Studienberechtigungsprüfung",
+                        "Graduation": "Abschluss",
+                        "MaritalStatusCertificate": "Heiratsurkunde",
+                        "Passport": "Reisepass",
+                        "PersonalLicence": "Personalausweis",
+                        "Recognition": "Anerkennung",
+                        "SupervisionAcceptance": "Betreuungszusage"
+                    }
+                },
+                "fileSource": {
+                    "cabinet-bucket": "Manuell hochgeladen",
+                    "TUGraz": ""
+                },
+                "isPartOf": {
+                    "admission-archive-80": "Ansuchen um Zulassung",
+                    "communication-archive-10": "Kommunikation",
+                    "financial-archive-7": "Finanzielles",
+                    "generalApplications-archive-3": "Allgemeine Anträge",
+                    "other-archive-3": "Sonstige Dokumente (Archivierung)",
+                    "other-delete-3": "Sonstige Dokumente",
+                    "study-archive-80": "Student-Life-Cycle-Dokumente",
+                    "subordination-delete-3": "Unterstellung",
+                    "vacation-archive-3": "Beurlaubung"
+                }
+            },
+            "file-cabinet-admissionNotice": {
+                "decision": {
+                    "granted": "Genehmigt",
+                    "refused": "Abgewiesen",
+                    "rejected": "Abgelehnt"
+                }
+            }
+        }
+    }
+}

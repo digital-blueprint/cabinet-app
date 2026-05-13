@@ -1,0 +1,76 @@
+{
+    "cabinet-search": {
+        "refinement-date-after-text": "from",
+        "refinement-date-before-text": "to"
+    },
+    "doc-modal-decision": "Decision",
+    "doc-modal-elective-subject": "Elective subject",
+    "doc-modal-Identifier": "Document ID",
+    "doc-modal-issue-date": "Document issue date",
+    "doc-modal-nationality": "Citizenship according to the document",
+    "doc-modal-native-language": "Native Language",
+    "doc-modal-no": "No",
+    "doc-modal-previous-education": "Previous education",
+    "doc-modal-previous-enrolment-in-austria": "Has visited an Austrian university",
+    "doc-modal-previous-higher-education-cpga": "CPGA",
+    "doc-modal-previous-higher-education-curriculum": "URL to the curriculum of the previous education",
+    "doc-modal-previous-higher-education-field": "Study field of previous education",
+    "doc-modal-previous-higher-education-grading": "Information about the grading system",
+    "doc-modal-previous-higher-education-institution": "Previous university",
+    "doc-modal-previous-higher-education-place": "Previous university's country and place",
+    "doc-modal-previousStudy": "Completed study",
+    "doc-modal-signed-by": "Signed by dean of studies",
+    "doc-modal-yes": "Yes",
+    "document-issue-date": "Document issue date",
+    "typesense-schema": {
+        "@type": {
+            "DocumentFile": "Document",
+            "Person": "Person"
+        },
+        "file": {
+            "base": {
+                "additionalType": {
+                    "key": {
+                        "AdmissionNotice": "Admission notice",
+                        "BirthCertificate": "Birth certificate",
+                        "CitizenshipCertificate": "Citizenship certificate",
+                        "Communication": "Communication",
+                        "DriversLicence": "Driver's licence",
+                        "EnglMasterApplication": "English master application",
+                        "EnglMasterDataSheet": "English master data sheet",
+                        "EntranceQualificationApplication": "Entrance qualification application",
+                        "EntranceQualificationRecognition": "Entrance qualification recognition",
+                        "Graduation": "Graduation",
+                        "MaritalStatusCertificate": "Marital status certificate",
+                        "Passport": "Passport",
+                        "PersonalLicence": "Personal licence",
+                        "Recognition": "Recognition",
+                        "SupervisionAcceptance": "Supervision acceptance"
+                    }
+                },
+                "fileSource": {
+                    "cabinet-bucket": "Manually uploaded",
+                    "TUGraz": ""
+                },
+                "isPartOf": {
+                    "admission-archive-80": "Application for registration",
+                    "communication-archive-10": "Communication",
+                    "financial-archive-7": "Financial",
+                    "generalApplications-archive-3": "General application",
+                    "other-archive-3": "Other documents (archive)",
+                    "other-delete-3": "Other documents",
+                    "study-archive-80": "Student life cycle documents",
+                    "subordination-delete-3": "Subordination",
+                    "vacation-archive-3": "Vacation"
+                }
+            },
+            "file-cabinet-admissionNotice": {
+                "decision": {
+                    "granted": "Granted",
+                    "refused": "Refused",
+                    "rejected": "Rejected"
+                }
+            }
+        }
+    }
+}

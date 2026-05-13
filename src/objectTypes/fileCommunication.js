@@ -47,7 +47,7 @@ const DEFAULT_COMMUNICATION = {
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
-            Communication: 'typesense-schema.file.base.additionalType.key.Communication',
+            Communication: 'tugraz:typesense-schema.file.base.additionalType.key.Communication',
         };
     }
 
@@ -99,7 +99,7 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-datetime-element
                     subscribe="lang"
                     name="dateCreated"
-                    label=${this._i18n.t('doc-modal-issue-date')}
+                    label=${this._i18nTugraz.t('tugraz:doc-modal-issue-date')}
                     value=${communication.dateCreated}
                     required></dbp-form-datetime-element>
 
@@ -113,7 +113,7 @@ class CabinetHitElement extends BaseDocumentHitElement {
     _renderContent() {
         let hit = getDocumentHit(this.data);
         let communication = getCommunication(hit);
-        const i18n = this._i18n;
+        const i18n = this._i18nTugraz;
         const issueDate = communication.dateCreated;
         let formattedDate = new Intl.DateTimeFormat('de', {
             day: '2-digit',
@@ -123,7 +123,7 @@ class CabinetHitElement extends BaseDocumentHitElement {
         return html`
             ${issueDate
                 ? html`
-                      ${i18n.t('document-issue-date')}: ${formattedDate}
+                      ${i18n.t('tugraz:document-issue-date')}: ${formattedDate}
                   `
                 : ''}
         `;
@@ -170,7 +170,7 @@ class CabinetViewElement extends BaseViewElement {
 
             <dbp-form-datetime-view
                 subscribe="lang"
-                label=${this._i18n.t('doc-modal-issue-date')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-issue-date')}
                 .value=${communication.dateCreated
                     ? new Date(communication.dateCreated)
                     : ''}></dbp-form-datetime-view>

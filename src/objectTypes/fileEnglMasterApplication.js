@@ -39,7 +39,7 @@ class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
             EnglMasterApplication:
-                'typesense-schema.file.base.additionalType.key.EnglMasterApplication',
+                'tugraz:typesense-schema.file.base.additionalType.key.EnglMasterApplication',
         };
     }
 
@@ -57,8 +57,8 @@ class CabinetFormElement extends BaseFormElement {
 
     getEnrolmentOptions() {
         return {
-            false: this._i18n.t('doc-modal-no'),
-            true: this._i18n.t('doc-modal-yes'),
+            false: this._i18nTugraz.t('tugraz:doc-modal-no'),
+            true: this._i18nTugraz.t('tugraz:doc-modal-yes'),
         };
     }
 
@@ -89,13 +89,13 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-string-element
                     subscribe="lang"
                     name="nativeLanguage"
-                    label=${this._i18n.t('doc-modal-native-language')}
+                    label=${this._i18nTugraz.t('tugraz:doc-modal-native-language')}
                     .value=${application.nativeLanguage}></dbp-form-string-element>
 
                 <dbp-form-enum-element
                     subscribe="lang"
                     name="previousEnrolmentInAustria"
-                    label=${this._i18n.t('doc-modal-previous-enrolment-in-austria')}
+                    label=${this._i18nTugraz.t('tugraz:doc-modal-previous-enrolment-in-austria')}
                     .items=${this.getEnrolmentOptions()}
                     @change=${updateField('previousEnrolmentInAustria')}
                     .value="${application.previousEnrolmentInAustria.toString()}"
@@ -130,20 +130,20 @@ class CabinetViewElement extends BaseViewElement {
         let hit = getDocumentHit(this.data);
         let application = getEnglMasterApplication(hit);
 
-        const i18n = this._i18n;
+        const i18n = this._i18nTugraz;
 
         return html`
             <dbp-form-string-view
                 subscribe="lang"
-                label=${i18n.t('doc-modal-native-language')}
+                label=${i18n.t('tugraz:doc-modal-native-language')}
                 .value=${application.nativeLanguage || ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${i18n.t('doc-modal-previous-enrolment-in-austria')}
+                label=${i18n.t('tugraz:doc-modal-previous-enrolment-in-austria')}
                 .value=${application.previousEnrolmentInAustria
-                    ? i18n.t('doc-modal-yes')
-                    : i18n.t('doc-modal-no')}></dbp-form-string-view>
+                    ? i18n.t('tugraz:doc-modal-yes')
+                    : i18n.t('tugraz:doc-modal-no')}></dbp-form-string-view>
         `;
     }
 }
