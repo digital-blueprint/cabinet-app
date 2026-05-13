@@ -1209,6 +1209,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 #document-modal .status .status-badge {
                     display: flex;
                     flex-direction: row;
+                    text-wrap-mode: nowrap;
                 }
 
                 #document-modal .status .status-badge ul {
@@ -1411,6 +1412,13 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                         padding: 10px 15px;
                     }
                 }
+
+                @media (max-width: 290px) {
+                    #document-modal dbp-select.actions-dropdown-doc-edit {
+                        --dbp-select-menu-left: auto;
+                        --dbp-select-menu-right: 0;
+                    }
+                }
             `,
         ];
     }
@@ -1594,6 +1602,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetLitElement) {
                 .options=${versionOptions}
                 class="select-version"
                 align="left"
+                wrap-label
                 @change=${this.onChangeVersion}></dbp-select>
         `;
     }
