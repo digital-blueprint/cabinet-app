@@ -16,7 +16,6 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {FileSink, FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {dataURLtoFile, pascalToKebab} from '../utils';
-import {getSortSpec} from '../tugraz/cabinetConfig.js';
 import {classMap} from 'lit/directives/class-map.js';
 import * as formElements from '../objectTypes/formElements.js';
 import {BaseFormElement} from '../baseObject.js';
@@ -160,6 +159,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
             deleteAtDateTime: {type: String, attribute: false},
             state: {type: String, attribute: false},
             mode: {type: String},
+            cabinetConfig: {type: Object, attribute: false},
         };
     }
 
@@ -1486,7 +1486,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
                 ...(await this._getTypesenseService().fetchFileDocumentsByGroupId(
                     groupId,
                     false,
-                    getSortSpec(this.lang),
+                    this.cabinetConfig.getSortSpec(this.lang),
                 )),
             ];
         } catch (error) {

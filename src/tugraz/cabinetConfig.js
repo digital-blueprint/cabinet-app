@@ -6,8 +6,7 @@ function t(key) {
 }
 
 function translationRenderFunction(i18n, schemaField, value, operator = null) {
-    let text = i18n.t(`tugraz:typesense-schema.${schemaField}.${value}`, value);
-    return text;
+    return i18n.t(`tugraz:typesense-schema.${schemaField}.${value}`, value);
 }
 
 function _renderDate(i18n, value, operator, timeZone = undefined) {
@@ -32,21 +31,21 @@ function datePickerUTCRenderFunction(i18n, schemaField, value, operator) {
     return _renderDate(i18n, value, operator, 'UTC');
 }
 
-/**
- * Returns the Typesense sort_by spec string for the given language.
- * @param {string} lang
- * @returns {string}
- */
-export function getSortSpec(lang) {
-    return lang === 'de'
-        ? 'sortKey:asc,sortKey2:asc,sortKey3:desc'
-        : 'sortKey:asc,sortKey2En:asc,sortKey3:desc';
-}
-
 export default class CabinetConfig {
     constructor() {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
+    }
+
+    /**
+     * Returns the Typesense sort_by spec string for the given language.
+     * @param {string} lang
+     * @returns {string}
+     */
+    getSortSpec(lang) {
+        return lang === 'de'
+            ? 'sortKey:asc,sortKey2:asc,sortKey3:desc'
+            : 'sortKey:asc,sortKey2En:asc,sortKey3:desc';
     }
 
     /**

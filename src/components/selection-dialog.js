@@ -13,7 +13,6 @@ import {
 import {SelectionColumnConfiguration} from './selection-column-configuration';
 import {getSelectorFixCSS} from '../styles.js';
 import {getPersonHit} from '../objectTypes/schema.js';
-import CabinetConfig from '../tugraz/cabinetConfig.js';
 import {exportPersonPdf} from '../objectTypes/person.js';
 import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
 import {CabinetApi} from '../api.js';
@@ -36,9 +35,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
         this.personGearButton = null;
         this.documentGearButton = null;
         this.deletedDocumentGearButton = null;
-        // Initialize with default visibility states so tables render correctly on first load
-        this.personColumnVisibilityStates = this.getDefaultColumnVisibility('person');
-        this.documentColumnVisibilityStates = this.getDefaultColumnVisibility('document');
+        // Initialized to empty; populated by loadColumnVisibilityStates() when open() is called
+        // (cabinetConfig is not available yet in the constructor)
+        this.personColumnVisibilityStates = {};
+        this.documentColumnVisibilityStates = {};
 
         // used for translation overrides
         this.langDir = undefined;
@@ -83,10 +83,16 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
             personColumnVisibilityStates: {type: Object, attribute: false},
             documentColumnVisibilityStates: {type: Object, attribute: false},
             langDir: {type: String, attribute: 'lang-dir'},
+            cabinetConfig: {type: Object, attribute: false},
         };
     }
 
     async open(hitSelections) {
+        if (!this.cabinetConfig) {
+            console.warn('SelectionDialog.open: cabinetConfig not set yet');
+            return;
+        }
+
         /**
          * @type {Modal}
          */
@@ -236,8 +242,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
     getDefaultColumnVisibility(type) {
         const columns =
             type === 'person'
-                ? SelectionColumnConfiguration.getPersonColumns()
-                : SelectionColumnConfiguration.getDocumentColumns(this.lang);
+                ? this.cabinetConfig.getPersonColumns()
+                : this.cabinetConfig.getDocumentColumns(this.lang);
 
         return columns.reduce((acc, col) => {
             if (col.defaultVisible) {
@@ -585,8 +591,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
      */
     async exportPersonsAsCSV(persons) {
         const i18n = this._i18n;
-        const cabinetConfigModule = new CabinetConfig();
-        const columnConfigs = cabinetConfigModule.getPersonColumns();
+        const columnConfigs = this.cabinetConfig.getPersonColumns();
 
         // Filter to only include visible columns
         const visibleColumns = columnConfigs.filter(
@@ -643,8 +648,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
     async exportPersonsAsExcel(persons) {
         const i18n = this._i18n;
         const ExcelJS = (await import('exceljs')).default;
-        const cabinetConfigModule = new CabinetConfig();
-        const columnConfigs = cabinetConfigModule.getPersonColumns();
+        const columnConfigs = this.cabinetConfig.getPersonColumns();
 
         // Filter to only include visible columns
         const visibleColumns = columnConfigs.filter(
@@ -984,8 +988,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
      */
     async exportDocumentsAsTable(documents, format) {
         const i18n = this._i18n;
-        const cabinetConfigModule = new CabinetConfig();
-        const columnConfigs = cabinetConfigModule.getDocumentColumns(this.lang);
+        const columnConfigs = this.cabinetConfig.getDocumentColumns(this.lang);
 
         // Filter to only include visible columns
         const visibleColumns = columnConfigs.filter(
@@ -1552,8 +1555,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
         const columns = [];
         const columnConfigs =
             type === 'person'
-                ? SelectionColumnConfiguration.getPersonColumns()
-                : SelectionColumnConfiguration.getDocumentColumns(this.lang);
+                ? this.cabinetConfig.getPersonColumns()
+                : this.cabinetConfig.getDocumentColumns(this.lang);
         const visibilityStates =
             type === 'person'
                 ? this.personColumnVisibilityStates
@@ -1691,8 +1694,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
     buildTableData(type, selections) {
         const columnConfigs =
             type === 'person'
-                ? SelectionColumnConfiguration.getPersonColumns()
-                : SelectionColumnConfiguration.getDocumentColumns(this.lang);
+                ? this.cabinetConfig.getPersonColumns()
+                : this.cabinetConfig.getDocumentColumns(this.lang);
 
         const selectionEntries = Object.entries(selections);
         console.log(`[${type}] Building table data for ${selectionEntries.length} selections`);
@@ -1744,8 +1747,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
         const i18n = this._i18n;
         const columnConfigs =
             type === 'person'
-                ? SelectionColumnConfiguration.getPersonColumns()
-                : SelectionColumnConfiguration.getDocumentColumns(this.lang);
+                ? this.cabinetConfig.getPersonColumns()
+                : this.cabinetConfig.getDocumentColumns(this.lang);
 
         const langs = {
             en: {
@@ -2419,6 +2422,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
             auth: this.auth,
             settingsLocalStoragePrefix: this.settingsLocalStoragePrefix,
         });
+
+        if (!this.cabinetConfig) {
+            return html``;
+        }
 
         return html`
             ${this.getModalHtml()}
