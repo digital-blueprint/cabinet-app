@@ -13,7 +13,7 @@ import {
 import {SelectionColumnConfiguration} from './selection-column-configuration';
 import {getSelectorFixCSS} from '../styles.js';
 import {getPersonHit} from '../objectTypes/schema.js';
-import InstantSearchModule from '../modules/instantSearch.js';
+import CabinetConfig from '../tugraz/cabinetConfig.js';
 import {exportPersonPdf} from '../objectTypes/person.js';
 import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
 import {CabinetApi} from '../api.js';
@@ -585,8 +585,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
      */
     async exportPersonsAsCSV(persons) {
         const i18n = this._i18n;
-        const instantSearchModule = new InstantSearchModule();
-        const columnConfigs = instantSearchModule.getPersonColumns();
+        const cabinetConfigModule = new CabinetConfig();
+        const columnConfigs = cabinetConfigModule.getPersonColumns();
 
         // Filter to only include visible columns
         const visibleColumns = columnConfigs.filter(
@@ -643,8 +643,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
     async exportPersonsAsExcel(persons) {
         const i18n = this._i18n;
         const ExcelJS = (await import('exceljs')).default;
-        const instantSearchModule = new InstantSearchModule();
-        const columnConfigs = instantSearchModule.getPersonColumns();
+        const cabinetConfigModule = new CabinetConfig();
+        const columnConfigs = cabinetConfigModule.getPersonColumns();
 
         // Filter to only include visible columns
         const visibleColumns = columnConfigs.filter(
@@ -984,8 +984,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
      */
     async exportDocumentsAsTable(documents, format) {
         const i18n = this._i18n;
-        const instantSearchModule = new InstantSearchModule();
-        const columnConfigs = instantSearchModule.getDocumentColumns(this.lang);
+        const cabinetConfigModule = new CabinetConfig();
+        const columnConfigs = cabinetConfigModule.getDocumentColumns(this.lang);
 
         // Filter to only include visible columns
         const visibleColumns = columnConfigs.filter(

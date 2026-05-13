@@ -5,7 +5,7 @@ import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, IconButton, Modal} from '@dbp-toolkit/common';
 import {scopedElements as modalNotificationScopedElements} from './modal-notification.js';
-import InstantSearchModule from '../modules/instantSearch.js';
+import CabinetConfig from '../tugraz/cabinetConfig.js';
 
 export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -40,8 +40,8 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
      * Get available columns for person type
      */
     static getPersonColumns() {
-        const instantSearchModule = new InstantSearchModule();
-        return instantSearchModule.getPersonColumns();
+        const cabinetConfigModule = new CabinetConfig();
+        return cabinetConfigModule.getPersonColumns();
     }
 
     /**
@@ -49,8 +49,8 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
      * @param lang
      */
     static getDocumentColumns(lang = 'de') {
-        const instantSearchModule = new InstantSearchModule();
-        return instantSearchModule.getDocumentColumns(lang);
+        const cabinetConfigModule = new CabinetConfig();
+        return cabinetConfigModule.getDocumentColumns(lang);
     }
 
     async open(selectionType) {

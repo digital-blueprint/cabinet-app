@@ -153,7 +153,7 @@ let activities = {
         'src/objectTypes/fileEntranceQualificationApplication.js',
         'src/objectTypes/fileEntranceQualificationRecognition.js',
         'src/objectTypes/person.js',
-        'src/modules/instantSearch.js',
+        'src/tugraz/cabinetConfig.js',
     ],
     'dbp-create-request': ['vendor/dispatch/src/dbp-create-request.js'],
     'dbp-show-requests': ['vendor/dispatch/src/dbp-show-requests.js'],

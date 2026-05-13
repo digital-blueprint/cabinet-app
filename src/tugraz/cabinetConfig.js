@@ -43,7 +43,7 @@ export function getSortSpec(lang) {
         : 'sortKey:asc,sortKey2En:asc,sortKey3:desc';
 }
 
-export default class InstantSearchModule {
+export default class CabinetConfig {
     constructor() {
         this._i18n = createInstance();
         this.lang = this._i18n.language;
