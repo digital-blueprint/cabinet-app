@@ -16,8 +16,6 @@ import {CabinetFile} from './components/dbp-cabinet-file.js';
 import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
 import {TypesenseService, TYPESENSE_COLLECTION} from './services/typesense.js';
-import {BaseObject} from './baseObject.js';
-import {name as pkgName} from '../package.json';
 import {CabinetFilterSettings} from './components/dbp-cabinet-filter-settings.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from './i18n';
@@ -1650,28 +1648,23 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     async _performLoadModules() {
         try {
-            // Fetch the JSON file containing module paths
-            const response = await fetch(commonUtils.getAssetURL(pkgName, 'modules.json'));
-            const data = await response.json();
+            let path = './cabinetConfig.js';
+            const cabinetConfigModule = await import(path);
+            this.cabinetConfig = new cabinetConfigModule.default();
 
-            console.log('data', data);
             let formComponents = {};
             let hitComponents = {};
             let viewComponents = {};
 
-            // Iterate over the module paths and dynamically import each module
-            // TODO: In a real-life scenario, you would probably want access only those keys that are needed (but we will need them all)
-            for (const [schemaKey, path] of Object.entries(data['objectTypes'])) {
-                const module = await import(path);
+            // Load all object types in parallel
+            const objects = await Promise.all(
+                this.cabinetConfig
+                    .getObjectTypeNames()
+                    .map((name) => this.cabinetConfig.loadObjectType(name)),
+            );
 
-                console.log('schemaKey', schemaKey);
-                console.log('path', path);
-                console.log('module', module);
-
-                /**
-                 * @type {BaseObject}
-                 */
-                const object = new module.default();
+            for (const object of objects) {
+                console.log('object', object);
 
                 if (object.name) {
                     const name = object.name;
@@ -1702,9 +1695,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.objectTypeViewComponents = viewComponents;
             console.log('viewComponents', viewComponents);
             console.log('fileDocumentTypeNames', this.fileDocumentTypeNames);
-
-            const cabinetConfigModule = await import(data['cabinetConfig']);
-            this.cabinetConfig = new cabinetConfigModule.default();
 
             await this.updateComplete;
             /**

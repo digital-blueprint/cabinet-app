@@ -38,6 +38,69 @@ export default class CabinetConfig {
     }
 
     /**
+     * Returns an array of all available object type names.
+     * @returns {string[]}
+     */
+    getObjectTypeNames() {
+        return [
+            'file-admission-notice',
+            'file-cabinet-communication',
+            'file-cabinet-identityDocument',
+            'file-cabinet-minimalSchema',
+            'file-cabinet-citizenshipCertificate',
+            'file-cabinet-englMasterApplication',
+            'file-cabinet-englMasterDataSheet',
+            'file-cabinet-entranceQualificationApplication',
+            'file-cabinet-entranceQualificationRecognition',
+            'person',
+        ];
+    }
+
+    /**
+     * Dynamically loads and instantiates the object type for the given name.
+     * @param {string} name
+     * @returns {Promise<BaseObject>}
+     */
+    async loadObjectType(name) {
+        let module;
+        switch (name) {
+            case 'file-admission-notice':
+                module = await import('../objectTypes/fileAdmissionNotice.js');
+                break;
+            case 'file-cabinet-communication':
+                module = await import('../objectTypes/fileCommunication.js');
+                break;
+            case 'file-cabinet-identityDocument':
+                module = await import('../objectTypes/fileIdentityDocument.js');
+                break;
+            case 'file-cabinet-minimalSchema':
+                module = await import('../objectTypes/fileMinimalSchema.js');
+                break;
+            case 'file-cabinet-citizenshipCertificate':
+                module = await import('../objectTypes/fileCitizenshipCertificate.js');
+                break;
+            case 'file-cabinet-englMasterApplication':
+                module = await import('../objectTypes/fileEnglMasterApplication.js');
+                break;
+            case 'file-cabinet-englMasterDataSheet':
+                module = await import('../objectTypes/fileEnglMasterDataSheet.js');
+                break;
+            case 'file-cabinet-entranceQualificationApplication':
+                module = await import('../objectTypes/fileEntranceQualificationApplication.js');
+                break;
+            case 'file-cabinet-entranceQualificationRecognition':
+                module = await import('../objectTypes/fileEntranceQualificationRecognition.js');
+                break;
+            case 'person':
+                module = await import('../objectTypes/person.js');
+                break;
+            default:
+                throw new Error(`Unknown object type: ${name}`);
+        }
+        return new module.default();
+    }
+
+    /**
      * Returns the Typesense sort_by spec string for the given language.
      * @param {string} lang
      * @returns {string}
