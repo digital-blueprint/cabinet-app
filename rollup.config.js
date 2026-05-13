@@ -141,20 +141,7 @@ img-src * blob: data:`;
 let input = ['src/' + pkg.internalName + '.js'];
 
 let activities = {
-    'dbp-cabinet-search': [
-        'src/dbp-cabinet-search.js',
-        'src/objectTypes/fileAdmissionNotice.js',
-        'src/objectTypes/fileCommunication.js',
-        'src/objectTypes/fileIdentityDocument.js',
-        'src/objectTypes/fileMinimalSchema.js',
-        'src/objectTypes/fileCitizenshipCertificate.js',
-        'src/objectTypes/fileEnglMasterApplication.js',
-        'src/objectTypes/fileEnglMasterDataSheet.js',
-        'src/objectTypes/fileEntranceQualificationApplication.js',
-        'src/objectTypes/fileEntranceQualificationRecognition.js',
-        'src/objectTypes/person.js',
-        'src/tugraz/cabinetConfig.js',
-    ],
+    'dbp-cabinet-search': ['src/dbp-cabinet-search.js', 'src/tugraz/cabinetConfig.js'],
     'dbp-create-request': ['vendor/dispatch/src/dbp-create-request.js'],
     'dbp-show-requests': ['vendor/dispatch/src/dbp-show-requests.js'],
     'dbp-qualified-signature-pdf-upload': [
@@ -303,7 +290,7 @@ Dependencies:
                         },
                         {src: 'assets/*.metadata.json', dest: 'dist'},
                         {src: 'src/*.metadata.json', dest: 'dist'},
-                        {src: 'assets/modules.json', dest: 'dist/' + (await getDistPath(pkg.name))},
+
                         {
                             src: await getPackagePath(
                                 '@digital-blueprint/esign-app',
@@ -369,10 +356,7 @@ Dependencies:
                         },
                         {src: `${assetsPath}/*.metadata.json`, dest: 'dist'},
                         {src: 'src/*.metadata.json', dest: 'dist'},
-                        {
-                            src: `${assetsPath}/modules.json`,
-                            dest: 'dist/' + (await getDistPath(pkg.name)),
-                        },
+
                         {
                             src: await getPackagePath(
                                 '@digital-blueprint/esign-app',
