@@ -15,7 +15,7 @@ import {pascalToKebab, preactRefReplaceChildren} from './utils';
 import {CabinetFile} from './components/dbp-cabinet-file.js';
 import {CabinetViewPerson} from './components/dbp-cabinet-view-person.js';
 import {CabinetFacets} from './components/dbp-cabinet-facets.js';
-import {TypesenseService, TYPESENSE_COLLECTION} from './services/typesense.js';
+import {TypesenseService, TYPESENSE_COLLECTION} from './typesense.js';
 import {CabinetFilterSettings} from './components/dbp-cabinet-filter-settings.js';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from './i18n';

@@ -21,7 +21,7 @@ import * as formElements from '../objectTypes/formElements.js';
 import {BaseFormElement} from '../baseObject.js';
 import {getSelectorFixCSS} from '../styles.js';
 import {formatDate} from '../utils.js';
-import {TypesenseService} from '../services/typesense.js';
+import {TypesenseService} from '../typesense.js';
 import {
     scopedElements as modalNotificationScopedElements,
     sendModalNotification,

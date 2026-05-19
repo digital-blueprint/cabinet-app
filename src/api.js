@@ -1,4 +1,4 @@
-import {TypesenseService} from './services/typesense.js';
+import {TypesenseService} from './typesense.js';
 
 export class CabinetApi {
     constructor(element) {
