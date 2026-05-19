@@ -139,7 +139,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.selectionDialogRef = createRef();
         this.documentFile = null;
         this.fileDocumentTypeNames = {};
-        /** @type {CabinetConfig} */
         this.cabinetConfig = null;
         this.facetConfigs = [];
         this.typesenseInstantsearchAdapter = null;

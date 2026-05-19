@@ -57,7 +57,7 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
 
         // Load column configurations based on type
         if (selectionType === 'person') {
-            this.columnConfigs = this.cabinetConfig.getPersonColumns();
+            this.columnConfigs = this.cabinetConfig.getPersonColumns(this.lang);
         } else if (selectionType === 'document') {
             this.columnConfigs = this.cabinetConfig.getDocumentColumns(this.lang);
         }
@@ -361,7 +361,7 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
 
     renderColumnVisibilityIconButton(column) {
         const visible = this.columnVisibilityStates[column.id] === true;
-        const name = this._i18n.t(column.name);
+        const name = column.name;
 
         return html`
             <dbp-icon-button
@@ -388,13 +388,11 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
     }
 
     renderColumnListItem(column, index) {
-        const i18n = this._i18n;
-
         return html`
             <li class="column-fields ${column.id}" data-index="${index}">
                 <div class="column-field">
                     <span class="column-button column-order">${index + 1}</span>
-                    <span class="column-title"><strong>${i18n.t(column.name)}</strong></span>
+                    <span class="column-title"><strong>${column.name}</strong></span>
                     ${this.renderColumnVisibilityIconButton(column)}
                 </div>
             </li>

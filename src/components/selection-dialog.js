@@ -242,7 +242,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
     getDefaultColumnVisibility(type) {
         const columns =
             type === 'person'
-                ? this.cabinetConfig.getPersonColumns()
+                ? this.cabinetConfig.getPersonColumns(this.lang)
                 : this.cabinetConfig.getDocumentColumns(this.lang);
 
         return columns.reduce((acc, col) => {
@@ -590,8 +590,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
      * @param {Array} persons - Array of [id, hit] tuples
      */
     async exportPersonsAsCSV(persons) {
-        const i18n = this._i18n;
-        const columnConfigs = this.cabinetConfig.getPersonColumns();
+        const columnConfigs = this.cabinetConfig.getPersonColumns(this.lang);
 
         // Filter to only include visible columns
         const visibleColumns = columnConfigs.filter(
@@ -599,7 +598,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
         );
 
         // CSV header
-        const headers = visibleColumns.map((col) => i18n.t(col.name));
+        const headers = visibleColumns.map((col) => col.name);
         let csvContent = headers.join(',') + '\n';
 
         // CSV rows
@@ -646,9 +645,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
      * @param {Array} persons - Array of [id, hit] tuples
      */
     async exportPersonsAsExcel(persons) {
-        const i18n = this._i18n;
         const ExcelJS = (await import('exceljs')).default;
-        const columnConfigs = this.cabinetConfig.getPersonColumns();
+        const columnConfigs = this.cabinetConfig.getPersonColumns(this.lang);
 
         // Filter to only include visible columns
         const visibleColumns = columnConfigs.filter(
@@ -660,7 +658,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
         const worksheet = workbook.addWorksheet('Persons');
 
         // Add headers
-        const headers = visibleColumns.map((col) => i18n.t(col.name));
+        const headers = visibleColumns.map((col) => col.name);
         worksheet.addRow(headers);
 
         // Add data rows
@@ -997,7 +995,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
 
         if (format === 'csv') {
             // CSV header
-            const headers = visibleColumns.map((col) => i18n.t(col.name));
+            const headers = visibleColumns.map((col) => col.name);
             let csvContent = headers.join(',') + '\n';
 
             // CSV rows
@@ -1051,7 +1049,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
             const worksheet = workbook.addWorksheet('Documents');
 
             // Add headers
-            const headers = visibleColumns.map((col) => i18n.t(col.name));
+            const headers = visibleColumns.map((col) => col.name);
             worksheet.addRow(headers);
 
             // Add data rows
@@ -1551,11 +1549,10 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
      * @returns {Array}
      */
     buildTableColumns(type, gearButtonRef, gearButtonCallback, gearButtonRefName = null) {
-        const i18n = this._i18n;
         const columns = [];
         const columnConfigs =
             type === 'person'
-                ? this.cabinetConfig.getPersonColumns()
+                ? this.cabinetConfig.getPersonColumns(this.lang)
                 : this.cabinetConfig.getDocumentColumns(this.lang);
         const visibilityStates =
             type === 'person'
@@ -1584,7 +1581,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
             );
             if (visibilityStates[colConfig.id] === true) {
                 columns.push({
-                    title: i18n.t(colConfig.name),
+                    title: colConfig.name,
                     field: colConfig.id,
                     headerSort: true,
                     resizable: false,
@@ -1694,7 +1691,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
     buildTableData(type, selections) {
         const columnConfigs =
             type === 'person'
-                ? this.cabinetConfig.getPersonColumns()
+                ? this.cabinetConfig.getPersonColumns(this.lang)
                 : this.cabinetConfig.getDocumentColumns(this.lang);
 
         const selectionEntries = Object.entries(selections);
@@ -1745,25 +1742,25 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
      */
     buildTableLangs(type) {
         const i18n = this._i18n;
-        const columnConfigs =
-            type === 'person'
-                ? this.cabinetConfig.getPersonColumns()
-                : this.cabinetConfig.getDocumentColumns(this.lang);
 
-        const langs = {
-            en: {
-                columns: {rowNumber: '#', actions: i18n.t('selection-dialog.actions', {lng: 'en'})},
-            },
-            de: {
-                columns: {rowNumber: '#', actions: i18n.t('selection-dialog.actions', {lng: 'de'})},
-            },
-        };
+        const langs = {};
+        for (const lang of i18n.languages) {
+            langs[lang] = {};
+            langs[lang].columns = {
+                rowNumber: '#',
+                actions: i18n.t('selection-dialog.actions', {lng: lang}),
+            };
 
-        // Add column names
-        columnConfigs.forEach((colConfig) => {
-            langs.en.columns[colConfig.id] = i18n.t(colConfig.name, {lng: 'en'});
-            langs.de.columns[colConfig.id] = i18n.t(colConfig.name, {lng: 'de'});
-        });
+            const columnConfigs =
+                type === 'person'
+                    ? this.cabinetConfig.getPersonColumns(lang)
+                    : this.cabinetConfig.getDocumentColumns(lang);
+
+            // Add column names
+            columnConfigs.forEach((colConfig) => {
+                langs[lang].columns[colConfig.id] = colConfig.name;
+            });
+        }
 
         return langs;
     }

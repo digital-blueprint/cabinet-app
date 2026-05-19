@@ -490,152 +490,154 @@ export default class CabinetConfig {
 
     /**
      * Get available columns for person type in selection dialogs
+     * @param lang
      * @returns {Array} - Array of column configurations
      */
-    getPersonColumns() {
-        // Use t() to ensure i18next detects these keys and doesn't remove them during tree-shaking
+    getPersonColumns(lang = 'de') {
+        let i18n = createInstance();
+        i18n.changeLanguage(lang);
         return [
             {
                 id: 'person.studId',
-                name: t('selection-column-config.person.studId'),
+                name: i18n.t('tugraz:selection-column-config.person.studId'),
                 field: 'person.studId',
                 defaultVisible: true,
             },
             {
                 id: 'person.stPersonNr',
-                name: t('selection-column-config.person.stPersonNr'),
+                name: i18n.t('tugraz:selection-column-config.person.stPersonNr'),
                 field: 'person.stPersonNr',
                 defaultVisible: true,
             },
             {
                 id: 'person.givenName',
-                name: t('selection-column-config.person.givenName'),
+                name: i18n.t('tugraz:selection-column-config.person.givenName'),
                 field: 'person.givenName',
                 defaultVisible: true,
             },
             {
                 id: 'person.familyName',
-                name: t('selection-column-config.person.familyName'),
+                name: i18n.t('tugraz:selection-column-config.person.familyName'),
                 field: 'person.familyName',
                 defaultVisible: true,
             },
             {
                 id: 'person.birthDate',
-                name: t('selection-column-config.person.birthDate'),
+                name: i18n.t('tugraz:selection-column-config.person.birthDate'),
                 field: 'person.birthDate',
                 defaultVisible: true,
             },
             {
                 id: 'person.nationality',
-                name: t('selection-column-config.person.nationality'),
+                name: i18n.t('tugraz:selection-column-config.person.nationality'),
                 field: 'person.nationality.text',
                 defaultVisible: true,
             },
             {
                 id: 'person.personalStatus',
-                name: t('selection-column-config.person.personalStatus'),
+                name: i18n.t('tugraz:selection-column-config.person.personalStatus'),
                 field: 'person.personalStatus.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.studentStatus',
-                name: t('selection-column-config.person.studentStatus'),
+                name: i18n.t('tugraz:selection-column-config.person.studentStatus'),
                 field: 'person.studentStatus.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.exmatriculationStatus',
-                name: t('selection-column-config.person.exmatriculationStatus'),
+                name: i18n.t('tugraz:selection-column-config.person.exmatriculationStatus'),
                 field: 'person.exmatriculationStatus.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.admissionQualificationType',
-                name: t('selection-column-config.person.admissionQualificationType'),
+                name: i18n.t('tugraz:selection-column-config.person.admissionQualificationType'),
                 field: 'person.admissionQualificationType.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.nationalities',
-                name: t('selection-column-config.person.nationalities'),
+                name: i18n.t('tugraz:selection-column-config.person.nationalities'),
                 field: 'person.nationalities.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.gender',
-                name: t('selection-column-config.person.gender'),
+                name: i18n.t('tugraz:selection-column-config.person.gender'),
                 field: 'person.gender.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.immatriculationSemester',
-                name: t('selection-column-config.person.immatriculationSemester'),
+                name: i18n.t('tugraz:selection-column-config.person.immatriculationSemester'),
                 field: 'person.immatriculationSemester',
                 defaultVisible: false,
             },
             {
                 id: 'person.exmatriculationSemester',
-                name: t('selection-column-config.person.exmatriculationSemester'),
+                name: i18n.t('tugraz:selection-column-config.person.exmatriculationSemester'),
                 field: 'person.exmatriculationSemester',
                 defaultVisible: false,
             },
             {
                 id: 'person.homeAddress.country',
-                name: t('selection-column-config.person.homeAddress.country'),
+                name: i18n.t('tugraz:selection-column-config.person.homeAddress.country'),
                 field: 'person.homeAddress.country.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.homeAddress.region',
-                name: t('selection-column-config.person.homeAddress.region'),
+                name: i18n.t('tugraz:selection-column-config.person.homeAddress.region'),
                 field: 'person.homeAddress.region',
                 defaultVisible: false,
             },
             {
                 id: 'person.homeAddress.place',
-                name: t('selection-column-config.person.homeAddress.place'),
+                name: i18n.t('tugraz:selection-column-config.person.homeAddress.place'),
                 field: 'person.homeAddress.place',
                 defaultVisible: false,
             },
             {
                 id: 'person.studyAddress.country',
-                name: t('selection-column-config.person.studyAddress.country'),
+                name: i18n.t('tugraz:selection-column-config.person.studyAddress.country'),
                 field: 'person.studyAddress.country.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.studyAddress.region',
-                name: t('selection-column-config.person.studyAddress.region'),
+                name: i18n.t('tugraz:selection-column-config.person.studyAddress.region'),
                 field: 'person.studyAddress.region',
                 defaultVisible: false,
             },
             {
                 id: 'person.studyAddress.place',
-                name: t('selection-column-config.person.studyAddress.place'),
+                name: i18n.t('tugraz:selection-column-config.person.studyAddress.place'),
                 field: 'person.studyAddress.place',
                 defaultVisible: false,
             },
             {
                 id: 'person.emailAddressUniversity',
-                name: t('selection-column-config.person.emailAddressUniversity'),
+                name: i18n.t('tugraz:selection-column-config.person.emailAddressUniversity'),
                 field: 'person.emailAddressUniversity',
                 defaultVisible: false,
             },
             {
                 id: 'person.study.name',
-                name: t('selection-column-config.person.study.name'),
+                name: i18n.t('tugraz:selection-column-config.person.study.name'),
                 field: 'study.name',
                 defaultVisible: false,
             },
             {
                 id: 'person.study.type',
-                name: t('selection-column-config.person.study.type'),
+                name: i18n.t('tugraz:selection-column-config.person.study.type'),
                 field: 'study.type',
                 defaultVisible: false,
             },
             {
                 id: 'person.study.status',
-                name: t('selection-column-config.person.study.status'),
+                name: i18n.t('tugraz:selection-column-config.person.study.status'),
                 field: 'study.status.text',
                 defaultVisible: false,
             },
@@ -651,83 +653,87 @@ export default class CabinetConfig {
         const selectField = (parentField) => {
             return lang === 'de' ? `${parentField}.text` : `${parentField}.textEn`;
         };
+        let i18n = createInstance();
+        i18n.changeLanguage(lang);
         // Use t() to ensure i18next detects these keys and doesn't remove them during tree-shaking
         return [
             {
                 id: 'file.base.additionalType',
-                name: t('selection-column-config.document.additionalType'),
+                name: i18n.t('tugraz:selection-column-config.document.additionalType'),
                 field: selectField('file.base.additionalType'),
                 defaultVisible: true,
             },
             {
                 id: 'person.familyName',
-                name: t('selection-column-config.person.familyName'),
+                name: i18n.t('tugraz:selection-column-config.person.familyName'),
                 field: 'person.familyName',
                 defaultVisible: true,
             },
             {
                 id: 'person.givenName',
-                name: t('selection-column-config.person.givenName'),
+                name: i18n.t('tugraz:selection-column-config.person.givenName'),
                 field: 'person.givenName',
                 defaultVisible: true,
             },
             {
                 id: 'file.base.createdTimestamp',
-                name: t('selection-column-config.document.createdTimestamp'),
+                name: i18n.t('tugraz:selection-column-config.document.createdTimestamp'),
                 field: 'file.base.createdTimestamp',
                 defaultVisible: true,
             },
             {
                 id: 'file.base.modifiedTimestamp',
-                name: t('selection-column-config.document.modifiedTimestamp'),
+                name: i18n.t('tugraz:selection-column-config.document.modifiedTimestamp'),
                 field: 'file.base.modifiedTimestamp',
                 defaultVisible: false,
             },
             {
                 id: 'file.base.recommendedDeletionTimestamp',
-                name: t('selection-column-config.document.recommendedDeletionTimestamp'),
+                name: i18n.t(
+                    'tugraz:selection-column-config.document.recommendedDeletionTimestamp',
+                ),
                 field: 'file.base.recommendedDeletionTimestamp',
                 defaultVisible: true,
             },
             {
                 id: 'file.base.studyField',
-                name: t('selection-column-config.document.studyField'),
+                name: i18n.t('tugraz:selection-column-config.document.studyField'),
                 field: selectField('file.base.studyField'),
                 defaultVisible: true,
             },
             {
                 id: 'file.base.semester',
-                name: t('selection-column-config.document.semester'),
+                name: i18n.t('tugraz:selection-column-config.document.semester'),
                 field: 'file.base.semester',
                 defaultVisible: true,
             },
             {
                 id: 'file.base.fileSource',
-                name: t('selection-column-config.document.fileSource'),
+                name: i18n.t('tugraz:selection-column-config.document.fileSource'),
                 field: 'file.base.fileSource',
                 defaultVisible: true,
             },
             {
                 id: 'file.base.disposalType',
-                name: t('selection-column-config.document.disposalType'),
+                name: i18n.t('tugraz:selection-column-config.document.disposalType'),
                 field: 'file.base.disposalType',
                 defaultVisible: false,
             },
             {
                 id: 'file.base.isPartOf',
-                name: t('selection-column-config.document.isPartOf'),
+                name: i18n.t('tugraz:selection-column-config.document.isPartOf'),
                 field: 'file.base.isPartOf',
                 defaultVisible: true,
             },
             {
                 id: 'file.base.comment',
-                name: t('selection-column-config.document.comment'),
+                name: i18n.t('tugraz:selection-column-config.document.comment'),
                 field: 'file.base.comment',
                 defaultVisible: false,
             },
             {
                 id: 'file.base.subjectOf',
-                name: t('selection-column-config.document.subjectOf'),
+                name: i18n.t('tugraz:selection-column-config.document.subjectOf'),
                 field: 'file.base.subjectOf',
                 defaultVisible: true,
             },

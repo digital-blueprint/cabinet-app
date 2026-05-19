@@ -268,52 +268,12 @@
         "column-show": "Spalte '{{name}}' anzeigen",
         "description": "Konfigurieren Sie, welche Spalten angezeigt werden sollen",
         "document": {
-            "additionalType": "Dokumenttyp",
             "cabinet-bucket": "Manuell hochgeladen",
-            "comment": "Notiz",
-            "createdTimestamp": "Hinzugefügt am",
-            "disposalType": "Aussonderungsart",
-            "fileSource": "Digitalisatsquelle",
-            "isPartOf": "Speicherzweck",
-            "modifiedTimestamp": "Letzte Änderung",
-            "online-system": "CAMPUSonline",
-            "recommendedDeletionTimestamp": "Empfohlene Löschfrist",
-            "semester": "Semester",
-            "studyField": "Studienfach",
-            "subjectOf": "Geschäftszahl"
+            "online-system": "CAMPUSonline"
         },
         "no-columns": "Keine Spalten konfiguriert.",
         "person": {
-            "admissionQualificationType": "Hochschulzugangsform",
-            "birthDate": "Geburtsdatum",
-            "emailAddressUniversity": "Universitäts-E-Mail",
-            "exmatriculationSemester": "Abmeldesemester",
-            "exmatriculationStatus": "Abmeldestatus",
-            "familyName": "Nachname",
-            "gender": "Geschlecht",
-            "givenName": "Vorname",
-            "homeAddress": {
-                "country": "Land (Heimatadresse)",
-                "place": "Ort (Heimatadresse)",
-                "region": "Region (Heimatadresse)"
-            },
-            "immatriculationSemester": "Aufnahmesemester",
-            "nationalities": "Staatsbürgerschaften",
-            "nationality": "Staatsangehörigkeit",
-            "personalStatus": "Personenstatus",
-            "stPersonNr": "Identifikationsnummer",
-            "studentStatus": "Hörerstatus",
-            "studId": "Matrikelnummer",
-            "study": {
-                "name": "Studienfach",
-                "status": "Studienstatus",
-                "type": "Abschlussziel"
-            },
-            "studyAddress": {
-                "country": "Land (Studienadresse)",
-                "place": "Ort (Studienadresse)",
-                "region": "Region (Studienadresse)"
-            }
+            "stPersonNr": "Identifikationsnummer"
         },
         "save": "Speichern",
         "title": "Spaltenkonfiguration"

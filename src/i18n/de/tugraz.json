@@ -22,6 +22,53 @@
     "doc-modal-signed-by": "Unterschreibender Studiendekan",
     "doc-modal-yes": "Ja",
     "document-issue-date": "Datum der Ausstellung",
+    "selection-column-config": {
+        "document": {
+            "additionalType": "Dokumenttyp",
+            "comment": "Notiz",
+            "createdTimestamp": "Hinzugefügt am",
+            "disposalType": "Aussonderungsart",
+            "fileSource": "Digitalisatsquelle",
+            "isPartOf": "Speicherzweck",
+            "modifiedTimestamp": "Letzte Änderung",
+            "recommendedDeletionTimestamp": "Empfohlene Löschfrist",
+            "semester": "Semester",
+            "studyField": "Studienfach",
+            "subjectOf": "Geschäftszahl"
+        },
+        "person": {
+            "admissionQualificationType": "Hochschulzugangsform",
+            "birthDate": "Geburtsdatum",
+            "emailAddressUniversity": "Universitäts-E-Mail",
+            "exmatriculationSemester": "Abmeldesemester",
+            "exmatriculationStatus": "Abmeldestatus",
+            "familyName": "Nachname",
+            "gender": "Geschlecht",
+            "givenName": "Vorname",
+            "homeAddress": {
+                "country": "Land (Heimatadresse)",
+                "place": "Ort (Heimatadresse)",
+                "region": "Region (Heimatadresse)"
+            },
+            "immatriculationSemester": "Aufnahmesemester",
+            "nationalities": "Staatsbürgerschaften",
+            "nationality": "Staatsangehörigkeit",
+            "personalStatus": "Personenstatus",
+            "stPersonNr": "Identifikationsnummer",
+            "studentStatus": "Hörerstatus",
+            "studId": "Matrikelnummer",
+            "study": {
+                "name": "Studienfach",
+                "status": "Studienstatus",
+                "type": "Abschlussziel"
+            },
+            "studyAddress": {
+                "country": "Land (Studienadresse)",
+                "place": "Ort (Studienadresse)",
+                "region": "Region (Studienadresse)"
+            }
+        }
+    },
     "typesense-schema": {
         "@type": {
             "DocumentFile": "Dokument",
