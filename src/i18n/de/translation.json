@@ -1,5 +1,4 @@
 {
-    "Added": "Hinzugefügt am",
     "birth-date": "Geburtsdatum",
     "buttons": {
         "aria-label": {
@@ -116,7 +115,6 @@
         "select-visible": "Sichtbare auswählen",
         "type-filter-group-title": "Kategorie"
     },
-    "communication-abstract": "Zusammenfassung",
     "doc-modal-Actions": "Aktionen",
     "doc-modal-Add-new-version": "Neue Version hinzufügen",
     "doc-modal-added": "Hinzugefügt am",
@@ -170,7 +168,6 @@
         "show-less": "Weniger anzeigen",
         "show-more": "Mehr anzeigen"
     },
-    "family-name": "Nachname",
     "filter-settings": {
         "abort": "Abbrechen",
         "all-filters-hide": "Alle verstecken",
@@ -183,24 +180,13 @@
         "group-show": "Alle Filter in Gruppe '{{name}}' anzeigen",
         "save": "Speichern"
     },
-    "full-family-name": "Name",
-    "given-name": "Vorname",
     "hitbox": {
         "accessible-list": "Folgende Ergebnisse werden angezeigt",
-        "document-entry": "Dokument",
         "document-of": "von",
         "person-entry": "Personeneintrag von"
     },
     "info": "Info",
-    "last-modified": "Letzte Änderung",
     "loading-message": "",
-    "modified": "geändert",
-    "nationality-input": {
-        "invalid-code-format": "Ungültiges Format. Bitte tragen Sie 1-3 Großbuchstaben ein.",
-        "no-matches-found": "Keine Übereinstimmung gefunden",
-        "placeholder": "Code eingeben, oder nach einem Land suchen"
-    },
-    "obsolete": "veraltet",
     "person": {
         "person-not-found-body": "Die angeforderte Person konnte nicht gefunden werden!",
         "person-not-found-summary": "Person nicht gefunden"
@@ -289,12 +275,10 @@
     "show-obsolete-also": "Veraltete Versionen einbeziehen",
     "show-to-archive-only": "Nur zu archivierende Dokumente",
     "show-to-delete-only": "Nur zu löschende Dokumente",
-    "st-PersonNr": "Identifikationsnummer",
     "start-date-label": "Von",
     "status-deletion-date-reached": "Löschdatum erreicht",
     "status-no-current": "Keine aktuell Version vorhanden",
     "status-no-problems": "Keine Probleme festgestellt",
     "status-scheduled-for-deletion": "Geplante Löschung",
-    "status-too-many-current": "Mehr als eine aktuelle Version vorhanden",
-    "subject-of": "Geschäftszahl"
+    "status-too-many-current": "Mehr als eine aktuelle Version vorhanden"
 }

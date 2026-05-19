@@ -77,22 +77,22 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-string-element
                     subscribe="lang"
                     name="agent[givenName]"
-                    label=${this._i18n.t('given-name')}
-                    placeholder=${this._i18n.t('given-name')}
+                    label=${this._i18nTugraz.t('tugraz:person.given-name')}
+                    placeholder=${this._i18nTugraz.t('tugraz:person.given-name')}
                     .value=${communication.agent.givenName}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="agent[familyName]"
-                    label=${this._i18n.t('family-name')}
-                    placeholder=${this._i18n.t('family-name')}
+                    label=${this._i18nTugraz.t('tugraz:person.family-name')}
+                    placeholder=${this._i18nTugraz.t('tugraz:person.family-name')}
                     .value=${communication.agent.familyName}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="abstract"
-                    label=${this._i18n.t('communication-abstract')}
-                    placeholder=${this._i18n.t('communication-abstract')}
+                    label=${this._i18nTugraz.t('tugraz:person.communication-abstract')}
+                    placeholder=${this._i18nTugraz.t('tugraz:person.communication-abstract')}
                     rows="10"
                     .value=${communication.abstract}></dbp-form-string-element>
 
@@ -151,21 +151,21 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18n.t('given-name')}
+                label=${this._i18nTugraz.t('tugraz:person.given-name')}
                 .value=${communication.agent
                     ? communication.agent.givenName
                     : ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18n.t('family-name')}
+                label=${this._i18nTugraz.t('tugraz:person.family-name')}
                 .value=${communication.agent
                     ? communication.agent.familyName
                     : ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18n.t('communication-abstract')}
+                label=${this._i18nTugraz.t('tugraz:person.communication-abstract')}
                 .value=${communication.abstract || ''}></dbp-form-string-view>
 
             <dbp-form-datetime-view
