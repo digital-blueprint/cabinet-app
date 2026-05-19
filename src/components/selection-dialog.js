@@ -2433,12 +2433,14 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
                 ${ref(this.personColumnConfigRef)}
                 lang="${this.lang}"
                 .auth="${this.auth}"
+                .cabinetConfig="${this.cabinetConfig}"
                 @columnSettingsStored="${this
                     .onColumnSettingsStored}"></dbp-selection-column-configuration>
             <dbp-selection-column-configuration
                 ${ref(this.documentColumnConfigRef)}
                 lang="${this.lang}"
                 .auth="${this.auth}"
+                .cabinetConfig="${this.cabinetConfig}"
                 @columnSettingsStored="${this
                     .onColumnSettingsStored}"></dbp-selection-column-configuration>
             <dbp-file-sink

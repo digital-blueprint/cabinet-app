@@ -13,6 +13,7 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
         this.selectionType = '';
         this.columnConfigs = [];
         this.columnVisibilityStates = {};
+        this.cabinetConfig = null;
     }
 
     static get scopedElements() {
@@ -31,6 +32,7 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
             selectionType: {type: String, attribute: false},
             columnConfigs: {type: Array, attribute: false},
             columnVisibilityStates: {type: Object, attribute: false},
+            cabinetConfig: {type: Object, attribute: false},
         };
     }
 
@@ -55,9 +57,9 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
 
         // Load column configurations based on type
         if (selectionType === 'person') {
-            this.columnConfigs = this.constructor.getPersonColumns();
+            this.columnConfigs = this.cabinetConfig.getPersonColumns();
         } else if (selectionType === 'document') {
-            this.columnConfigs = this.constructor.getDocumentColumns(this.lang);
+            this.columnConfigs = this.cabinetConfig.getDocumentColumns(this.lang);
         }
 
         // Load saved column visibility states from localStorage
