@@ -2,29 +2,6 @@
 
 This is just needed to register the translation keys with i18next-cli
 
-t('tugraz:cabinet-search.refinement-date-after-text')
-t('tugraz:cabinet-search.refinement-date-before-text')
-
-t('tugraz:doc-modal-decision')
-t('tugraz:doc-modal-elective-subject')
-t('tugraz:doc-modal-Identifier')
-t('tugraz:doc-modal-issue-date')
-t('tugraz:doc-modal-nationality')
-t('tugraz:doc-modal-native-language')
-t('tugraz:doc-modal-no')
-t('tugraz:doc-modal-previous-education')
-t('tugraz:doc-modal-previous-enrolment-in-austria')
-t('tugraz:doc-modal-previous-higher-education-cpga')
-t('tugraz:doc-modal-previous-higher-education-curriculum')
-t('tugraz:doc-modal-previous-higher-education-field')
-t('tugraz:doc-modal-previous-higher-education-grading')
-t('tugraz:doc-modal-previous-higher-education-institution')
-t('tugraz:doc-modal-previous-higher-education-place')
-t('tugraz:doc-modal-previousStudy')
-t('tugraz:doc-modal-signed-by')
-t('tugraz:doc-modal-yes')
-t('tugraz:document-issue-date')
-
 t('tugraz:typesense-schema.file.base.additionalType.key.AdmissionNotice')
 t('tugraz:typesense-schema.file.base.additionalType.key.CitizenshipCertificate')
 t('tugraz:typesense-schema.file.base.additionalType.key.Communication')
