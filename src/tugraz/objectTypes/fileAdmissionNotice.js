@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {BaseObject, BaseFormElement, BaseViewElement} from '../baseObject.js';
+import {BaseObject, BaseFormElement, BaseViewElement} from '../../baseObject.js';
 import {getDocumentHit, getAdmissionNotice} from './schema.js';
 import {
     DbpDateElement,

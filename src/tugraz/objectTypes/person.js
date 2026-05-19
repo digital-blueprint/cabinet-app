@@ -5,13 +5,13 @@ import {
     BaseHitElement,
     BaseViewElement,
     getCommonStyles,
-} from '../baseObject.js';
-import {renderFieldWithHighlight} from '../utils';
-import {formatDate} from '../utils.js';
+} from '../../baseObject.js';
+import {renderFieldWithHighlight} from '../../utils';
+import {formatDate} from '../../utils.js';
 import {MiniSpinner, Icon, sendNotification} from '@dbp-toolkit/common';
 import {Notification} from '@dbp-toolkit/notification';
 import {getPersonHit, PersonHit} from './schema.js';
-import {CabinetApi} from '../api.js';
+import {CabinetApi} from '../../api.js';
 
 export default class extends BaseObject {
     name = 'person';

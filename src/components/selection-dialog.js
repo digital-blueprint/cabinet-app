@@ -12,8 +12,8 @@ import {
 } from './modal-notification.js';
 import {SelectionColumnConfiguration} from './selection-column-configuration';
 import {getSelectorFixCSS} from '../styles.js';
-import {getPersonHit} from '../objectTypes/schema.js';
-import {exportPersonPdf} from '../objectTypes/person.js';
+import {getPersonHit} from '../tugraz/objectTypes/schema.js';
+import {exportPersonPdf} from '../tugraz/objectTypes/person.js';
 import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
 import {CabinetApi} from '../api.js';
 

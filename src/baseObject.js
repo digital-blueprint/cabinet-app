@@ -2,9 +2,9 @@ import {ScopedElementsMixin, Icon} from '@dbp-toolkit/common';
 import {css, html} from 'lit';
 import '@dbp-toolkit/form-elements';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import * as formElements from './objectTypes/formElements';
-import {getDocumentHit} from './objectTypes/schema.js';
-import {getSemesters, DEFAULT_FILE_COMMON} from './objectTypes/fileCommon.js';
+import * as formElements from './tugraz/objectTypes/formElements';
+import {getDocumentHit} from './tugraz/objectTypes/schema.js';
+import {getSemesters, DEFAULT_FILE_COMMON} from './tugraz/objectTypes/fileCommon.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {until} from 'lit/directives/until.js';
 import {

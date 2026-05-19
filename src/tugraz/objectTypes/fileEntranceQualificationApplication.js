@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {BaseObject, BaseFormElement, BaseViewElement} from '../baseObject.js';
+import {BaseObject, BaseFormElement, BaseViewElement} from '../../baseObject.js';
 import {getDocumentHit, getEntranceQualificationApplication} from './schema.js';
 import {DbpStringElement, DbpStringView} from '@dbp-toolkit/form-elements';
 import {BaseDocumentHitElement} from './document.js';
