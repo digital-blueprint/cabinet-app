@@ -12,8 +12,6 @@ import {
 } from './modal-notification.js';
 import {SelectionColumnConfiguration} from './selection-column-configuration';
 import {getSelectorFixCSS} from '../styles.js';
-import {getPersonHit} from '../tugraz/objectTypes/schema.js';
-import {exportPersonPdf} from '../tugraz/objectTypes/person.js';
 import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
 import {CabinetApi} from '../api.js';
 
@@ -701,15 +699,17 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
      * @param {Array} persons - Array of [id, hit] tuples
      */
     async exportPersonsAsPDF(persons) {
-        const i18n = this._i18n;
         const pdfFiles = [];
 
         // Generate PDFs for each person
         for (const [, hit] of persons) {
             if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
-                const personHit = getPersonHit(hit);
                 // Generate PDF and collect the file
-                const pdfFile = await this.generatePersonPdfFile(i18n, personHit);
+                const pdfFile = await this.cabinetConfig.generateExportPersonPdf(
+                    hit,
+                    this.lang,
+                    false,
+                );
                 pdfFiles.push(pdfFile);
             }
         }
@@ -730,16 +730,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             const modal = this.modalRef.value;
             modal.close();
         }
-    }
-
-    /**
-     * Generate a PDF file for a person (returns File object instead of downloading)
-     * @param {object} i18n
-     * @param {object} hit
-     * @returns {Promise<File>}
-     */
-    async generatePersonPdfFile(i18n, hit) {
-        return await exportPersonPdf(i18n, hit, false, true);
     }
 
     /**

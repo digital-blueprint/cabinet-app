@@ -123,6 +123,13 @@ export default class CabinetConfig {
             : 'sortKey:asc,sortKey2En:asc,sortKey3:desc';
     }
 
+    async generateExportPersonPdf(hit, lang, withInternalData = false) {
+        let module = await import('./objectTypes/export.js');
+        let i18n = createInstance();
+        i18n.changeLanguage(lang);
+        return await module.generateExportPersonPdf(i18n, hit, withInternalData);
+    }
+
     /**
      * Customize facets config. These attributes are merged with the default config.
      * Each configuration object in the returned array can have the following properties:
