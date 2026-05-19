@@ -13,8 +13,6 @@
     "doc-modal-comment": "Notiz",
     "doc-modal-decision": "Entscheidung",
     "doc-modal-disposal-type": "Entsorgungsart",
-    "doc-modal-disposal-type-archival": "Archivierung",
-    "doc-modal-disposal-type-deletion": "Löschung",
     "doc-modal-document-type": "Dokumenttyp",
     "doc-modal-elective-subject": "Wahlfach",
     "doc-modal-Identifier": "Identifikationsnummer des Dokuments",
@@ -226,6 +224,10 @@
                         "Recognition": "Anerkennung",
                         "SupervisionAcceptance": "Betreuungszusage"
                     }
+                },
+                "disposalType": {
+                    "archival": "Archivierung",
+                    "deletion": "Löschung"
                 },
                 "fileSource": {
                     "cabinet-bucket": "Manuell hochgeladen",

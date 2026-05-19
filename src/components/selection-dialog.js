@@ -1,7 +1,7 @@
 import {css, html} from 'lit';
 import {ref, createRef} from 'lit/directives/ref.js';
 import {IconButton, ScopedElementsMixin} from '@dbp-toolkit/common';
-import DBPCabinetTugrazLitElement from '../tugraz/dbp-cabinet-tugraz-lit-element.js';
+import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal, DBPSelect} from '@dbp-toolkit/common';
 import {TabulatorTable} from '@dbp-toolkit/tabulator-table';
@@ -17,7 +17,7 @@ import {exportPersonPdf} from '../tugraz/objectTypes/person.js';
 import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
 import {CabinetApi} from '../api.js';
 
-export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElement) {
+export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
         this.modalRef = createRef();
@@ -1489,8 +1489,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
      * @param colConfig
      */
     formatExportValue(value, colConfig) {
-        const i18n = this._i18n;
-
         if (value === null || value === undefined) {
             return '';
         }
@@ -1500,41 +1498,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetTugrazLitElem
             return value.map((v) => this.formatExportValue(v, colConfig)).join(', ');
         }
 
-        // Format timestamps
-        if (colConfig.field.includes('Timestamp')) {
-            return new Date(value * 1000).toLocaleString(this.lang);
-        }
-
-        // Translate fileSource values
-        if (colConfig.field.includes('file.base.fileSource')) {
-            if (value === 'cabinet-bucket') {
-                return i18n.t('selection-column-config.document.cabinet-bucket');
-            } else {
-                return i18n.t('selection-column-config.document.online-system');
-            }
-        }
-
-        // Translate isPartOf values (Purpose of Storage)
-        if (colConfig.field.includes('file.base.isPartOf')) {
-            const translationKey = `tugraz:typesense-schema.file.base.isPartOf.${value}`;
-            const translated = this._i18nTugraz.t(translationKey);
-            // If translation returns the key itself, the translation wasn't found
-            if (translated !== translationKey) {
-                return translated;
-            }
-            // Fallback: return the value as-is if no translation found
-            return value;
-        }
-
-        // Translate disposalType values (Disposal type)
-        if (colConfig.field.includes('file.base.disposalType')) {
-            if (value === 'archival') {
-                return i18n.t('doc-modal-disposal-type-archival');
-            } else if (value === 'deletion') {
-                return i18n.t('doc-modal-disposal-type-deletion');
-            }
-            // Fallback: return the value as-is if no translation found
-            return value;
+        if (colConfig.renderFunction) {
+            return colConfig.renderFunction(this.lang, colConfig.field, value);
         }
 
         return value;

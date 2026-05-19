@@ -13,8 +13,6 @@
     "doc-modal-comment": "Comment",
     "doc-modal-decision": "Decision",
     "doc-modal-disposal-type": "Disposal type",
-    "doc-modal-disposal-type-archival": "Archival",
-    "doc-modal-disposal-type-deletion": "Deletion",
     "doc-modal-document-type": "Document type",
     "doc-modal-elective-subject": "Elective subject",
     "doc-modal-Identifier": "Document ID",
@@ -226,6 +224,10 @@
                         "Recognition": "Recognition",
                         "SupervisionAcceptance": "Supervision acceptance"
                     }
+                },
+                "disposalType": {
+                    "archival": "Archival",
+                    "deletion": "Deletion"
                 },
                 "fileSource": {
                     "cabinet-bucket": "Manually uploaded",

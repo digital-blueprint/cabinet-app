@@ -117,8 +117,6 @@
     "doc-modal-delete-all-versions": "Alle Versionen löschen",
     "doc-modal-delete-document": "Löschen",
     "doc-modal-delete-version": "Version löschen",
-    "doc-modal-disposal-type-archival": "Archivierung",
-    "doc-modal-disposal-type-deletion": "Löschung",
     "doc-modal-document-only": "Dokument als PDF",
     "doc-modal-document-type": "Dokumenttyp",
     "doc-modal-edit": "Bearbeiten",
@@ -188,10 +186,6 @@
         "column-hide": "Spalte '{{name}}' ausblenden",
         "column-show": "Spalte '{{name}}' anzeigen",
         "description": "Konfigurieren Sie, welche Spalten angezeigt werden sollen",
-        "document": {
-            "cabinet-bucket": "Manuell hochgeladen",
-            "online-system": "CAMPUSonline"
-        },
         "no-columns": "Keine Spalten konfiguriert.",
         "person": {
             "stPersonNr": "Identifikationsnummer"

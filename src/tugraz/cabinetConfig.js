@@ -20,11 +20,19 @@ function _renderDate(lang, value, operator, timeZone = undefined) {
         month: 'short',
         year: 'numeric',
     });
+    if (operator === undefined) {
+        return `${date}`;
+    }
     let operatorLabel =
         operator === '>='
             ? i18n.t('tugraz:cabinet-search.refinement-date-after-text')
             : i18n.t('tugraz:cabinet-search.refinement-date-before-text');
     return `${operatorLabel} ${date}`;
+}
+
+function renderDateForExport(lang, schemaField, value) {
+    let date = new Date(value * 1000).toLocaleString(lang);
+    return `${date}`;
 }
 
 function datePickerLocalRenderFunction(lang, schemaField, value, operator) {
@@ -662,6 +670,7 @@ export default class CabinetConfig {
                 name: i18n.t('tugraz:selection-column-config.document.additionalType'),
                 field: selectField('file.base.additionalType'),
                 defaultVisible: true,
+                renderFunction: translationRenderFunction,
             },
             {
                 id: 'person.familyName',
@@ -680,12 +689,14 @@ export default class CabinetConfig {
                 name: i18n.t('tugraz:selection-column-config.document.createdTimestamp'),
                 field: 'file.base.createdTimestamp',
                 defaultVisible: true,
+                renderFunction: renderDateForExport,
             },
             {
                 id: 'file.base.modifiedTimestamp',
                 name: i18n.t('tugraz:selection-column-config.document.modifiedTimestamp'),
                 field: 'file.base.modifiedTimestamp',
                 defaultVisible: false,
+                renderFunction: renderDateForExport,
             },
             {
                 id: 'file.base.recommendedDeletionTimestamp',
@@ -694,6 +705,7 @@ export default class CabinetConfig {
                 ),
                 field: 'file.base.recommendedDeletionTimestamp',
                 defaultVisible: true,
+                renderFunction: renderDateForExport,
             },
             {
                 id: 'file.base.studyField',
@@ -712,18 +724,21 @@ export default class CabinetConfig {
                 name: i18n.t('tugraz:selection-column-config.document.fileSource'),
                 field: 'file.base.fileSource',
                 defaultVisible: true,
+                renderFunction: translationRenderFunction,
             },
             {
                 id: 'file.base.disposalType',
                 name: i18n.t('tugraz:selection-column-config.document.disposalType'),
                 field: 'file.base.disposalType',
                 defaultVisible: false,
+                renderFunction: translationRenderFunction,
             },
             {
                 id: 'file.base.isPartOf',
                 name: i18n.t('tugraz:selection-column-config.document.isPartOf'),
                 field: 'file.base.isPartOf',
                 defaultVisible: true,
+                renderFunction: translationRenderFunction,
             },
             {
                 id: 'file.base.comment',

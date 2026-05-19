@@ -426,8 +426,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
     static getDisposalTypes(i18n, type) {
         // all others also allow deletion as disposal
         return {
-            archival: i18n.t('tugraz:doc-modal-disposal-type-archival'),
-            deletion: i18n.t('tugraz:doc-modal-disposal-type-deletion'),
+            archival: i18n.t(`tugraz:typesense-schema.file.base.disposalType.archival`),
+            deletion: i18n.t(`tugraz:typesense-schema.file.base.disposalType.deletion`),
         };
     }
 
