@@ -17,7 +17,6 @@ import {FileSink, FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {dataURLtoFile, pascalToKebab} from '../utils';
 import {classMap} from 'lit/directives/class-map.js';
-import * as formElements from '../tugraz/objectTypes/formElements.js';
 import {getSelectorFixCSS} from '../styles.js';
 import {formatDate} from '../utils.js';
 import {TypesenseService} from '../typesense.js';
@@ -28,6 +27,28 @@ import {
 import {createUUID} from '@dbp-toolkit/common/utils';
 import {PdfValidationErrorList} from './pdf-validation-error-list.js';
 import {CabinetApi} from '../api.js';
+
+const getFieldsetCSS = () => {
+    // language=css
+    return css`
+        fieldset {
+            border: none;
+            margin: 15px 0;
+            padding: 0;
+        }
+
+        fieldset label {
+            font-weight: bold;
+            display: block;
+        }
+
+        fieldset input,
+        fieldset select,
+        fieldset textarea {
+            width: 95%;
+        }
+    `;
+};
 
 export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement) {
     // Always allow creating new versions if true
@@ -1099,7 +1120,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
             commonStyles.getGeneralCSS(false),
             commonStyles.getButtonCSS(),
             commonStyles.getRadioAndCheckboxCss(),
-            formElements.getFieldsetCSS(),
+            getFieldsetCSS(),
             getSelectorFixCSS(),
 
             // language=css
