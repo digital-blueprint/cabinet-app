@@ -1,5 +1,5 @@
 import {html} from 'lit';
-import {BaseObject, BaseFormElement, BaseViewElement} from '../../baseObject.js';
+import {BaseObject, BaseFormElement, BaseViewElement} from './baseObject.js';
 import {getDocumentHit, getIdentityDocument} from './schema.js';
 import {getNationalityDisplayName} from './nationalityCodes.js';
 import {

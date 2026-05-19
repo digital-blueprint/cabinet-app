@@ -5,7 +5,7 @@ import {
     BaseHitElement,
     BaseViewElement,
     getCommonStyles,
-} from '../../baseObject.js';
+} from './baseObject.js';
 import {renderFieldWithHighlight} from '../../utils';
 import {formatDate} from '../../utils.js';
 import {MiniSpinner, Icon, sendNotification} from '@dbp-toolkit/common';

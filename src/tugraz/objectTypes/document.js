@@ -1,5 +1,5 @@
 import {css, html} from 'lit';
-import {BaseHitElement, getCommonStyles} from '../../baseObject.js';
+import {BaseHitElement, getCommonStyles} from './baseObject.js';
 import {renderFieldWithHighlight} from '../../utils.js';
 import {getDocumentHit} from './schema.js';
 

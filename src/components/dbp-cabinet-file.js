@@ -18,7 +18,6 @@ import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {dataURLtoFile, pascalToKebab} from '../utils';
 import {classMap} from 'lit/directives/class-map.js';
 import * as formElements from '../tugraz/objectTypes/formElements.js';
-import {BaseFormElement} from '../baseObject.js';
 import {getSelectorFixCSS} from '../styles.js';
 import {formatDate} from '../utils.js';
 import {TypesenseService} from '../typesense.js';
@@ -222,7 +221,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
                 'danger',
             );
 
-            /** @type {BaseFormElement} */
             const form = this.formRef.value;
             // Enable the save button again in the form
             form.enableSaveButton();
@@ -1055,7 +1053,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
 
         // Enable the save button again in the form if upload failed previously
         if (this.uploadFailed) {
-            /** @type {BaseFormElement | undefined} */
             const form = this.formRef.value;
 
             if (form?.enableSaveButton) {

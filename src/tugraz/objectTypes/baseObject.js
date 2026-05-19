@@ -2,16 +2,16 @@ import {ScopedElementsMixin, Icon} from '@dbp-toolkit/common';
 import {css, html} from 'lit';
 import '@dbp-toolkit/form-elements';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import * as formElements from './tugraz/objectTypes/formElements';
-import {getDocumentHit} from './tugraz/objectTypes/schema.js';
-import {getSemesters, DEFAULT_FILE_COMMON} from './tugraz/objectTypes/fileCommon.js';
+import * as formElements from './formElements';
+import {getDocumentHit} from './schema.js';
+import {getSemesters, DEFAULT_FILE_COMMON} from './fileCommon.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {until} from 'lit/directives/until.js';
 import {
     gatherFormDataFromElement,
     validateRequiredFields,
 } from '@dbp-toolkit/form-elements/src/utils.js';
-import DBPCabinetTugrazLitElement from './tugraz/dbp-cabinet-tugraz-lit-element.js';
+import DBPCabinetTugrazLitElement from '../dbp-cabinet-tugraz-lit-element.js';
 import {
     DbpDateTimeView,
     DbpDateView,
@@ -20,7 +20,7 @@ import {
     DbpStringElement,
     DbpStringView,
 } from '@dbp-toolkit/form-elements';
-import {CabinetApi} from './api.js';
+import {CabinetApi} from '../../api.js';
 
 export class BaseObject {
     name = 'baseObject';
