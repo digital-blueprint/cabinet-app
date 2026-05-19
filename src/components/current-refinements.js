@@ -117,7 +117,7 @@ class CurrentRefinements extends LangMixin(DBPLitElement, createInstance) {
                 let label;
                 if (facetConfig.renderFunction) {
                     label = facetConfig.renderFunction(
-                        i18n,
+                        this.lang,
                         refinement.attribute,
                         refinement.value,
                         refinement.operator,

@@ -182,7 +182,7 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
         let renderRefinementText = (item) => {
             if (this.renderFunction) {
                 let value = this.renderFunction(
-                    this._i18n,
+                    this.lang,
                     widgetParams.attribute,
                     item.value,
                     null,

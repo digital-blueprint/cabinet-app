@@ -5,11 +5,15 @@ function t(key) {
     return key;
 }
 
-function translationRenderFunction(i18n, schemaField, value, operator = null) {
+function translationRenderFunction(lang, schemaField, value, operator = null) {
+    let i18n = createInstance();
+    i18n.changeLanguage(lang);
     return i18n.t(`tugraz:typesense-schema.${schemaField}.${value}`, value);
 }
 
-function _renderDate(i18n, value, operator, timeZone = undefined) {
+function _renderDate(lang, value, operator, timeZone = undefined) {
+    let i18n = createInstance();
+    i18n.changeLanguage(lang);
     let date = new Date(value * 1000).toLocaleDateString('de-AT', {
         timeZone: timeZone,
         day: '2-digit',
@@ -23,12 +27,12 @@ function _renderDate(i18n, value, operator, timeZone = undefined) {
     return `${operatorLabel} ${date}`;
 }
 
-function datePickerLocalRenderFunction(i18n, schemaField, value, operator) {
-    return _renderDate(i18n, value, operator);
+function datePickerLocalRenderFunction(lang, schemaField, value, operator) {
+    return _renderDate(lang, value, operator);
 }
 
-function datePickerUTCRenderFunction(i18n, schemaField, value, operator) {
-    return _renderDate(i18n, value, operator, 'UTC');
+function datePickerUTCRenderFunction(lang, schemaField, value, operator) {
+    return _renderDate(lang, value, operator, 'UTC');
 }
 
 export default class CabinetConfig {
