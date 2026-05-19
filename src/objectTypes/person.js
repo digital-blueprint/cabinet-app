@@ -1171,17 +1171,6 @@ class CabinetViewElement extends BaseViewElement {
                         <li class="info-row"><div>${i18n.t('admission-Qualification-Type')}</div><span> ${displayValue(selectTranslation(hit.person.admissionQualificationType))}</span></li>
                         <li class="info-row"><div>${i18n.t('school-Certificate-Date')}</div><span> ${formatDate(hit.person.schoolCertificateDate)}</span></li>
                         <li class="info-row"><div>${i18n.t('note')}</div><span> ${displayValue(hit.person.note)}</span></li>
-
-
-                        <!--<li><b>nationality:</b> ${selectTranslation(hit.person.nationality)}</li>-->
-                        <!--<li><b>nationality Secondary:</b> ${selectTranslation(hit.person.nationalitySecondary)}</li>-->
-                        <!--<li><b>fullName:</b> {hit.person.fullName}</li>-->
-                        <!--<li><b>person:</b> {hit.person.person}</li>-->
-                        <!--<li><b>identNrObfuscated:</b> {hit.person.identNrObfuscated}</li>-->
-                        <!--<li><b>telephoneNumber:</b> {hit.person.telephoneNumber}</li>-->
-                        <!--<li><b>tuitionExemptionType:</b> {hit.person.tuitionExemptionType}</li>-->
-                        <!-- <li><b>studyLimitStartSemester:</b> hit.person.studyLimitStartSemester </li> -->
-                        <!--<li><b>studyLimitEndSemester:</b> {hit.person.studyLimitEndSemester}</li>-->
                     </ul>
                 </div>
             </div>
@@ -1251,15 +1240,6 @@ class CabinetViewElement extends BaseViewElement {
                                         <div>${i18n.t('curriculum-version')}</div>
                                         <span>${displayValue(study.curriculumVersion)}</span>
                                     </li>
-
-                                    <!--<li><b>coUrl:</b> <a href="${study.coUrl}">${study.coUrl}</a></li>
-                        <li><b>id:</b> ${study.id}</li>
-                        <li><b>exmatriculationSemester</b> ${study.exmatriculationSemester}</li>
-                        <li><b>immatriculationSemester</b> ${study.immatriculationSemester}</li>
-                        <li><b>type</b> ${study.type}</li>
-                        <li><b>additionalCertificates</b> ${study.additionalCertificates
-                                        .map((c) => selectTranslation(c))
-                                        .join(', ')}</li>-->
                                 </ul>
                             </li>
                         `,
@@ -1300,58 +1280,7 @@ class CabinetViewElement extends BaseViewElement {
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.telephoneNumber)}</li>
                     </ul>
                 </li>
-
-                <!--<li><b>exmatriculationSemester:</b> ${hit.person.exmatriculationSemester}</li>
-                <li><b>academicTitlePreceding</b> ${hit.person.academicTitlePreceding}</li>
-                <li><b>coUrl</b> <a href="${hit.person.coUrl}">${hit.person.coUrl}</a></li>-->
             </ul>
-            <!--<h4>Applications</h4>-->
-            <!--<ul>
-                ${hit.person.applications.map(
-                    (application) => html`
-                        <li>
-                            <ul>
-                                <li>
-                                    <b>id</b>
-                                    ${application.id}
-                                </li>
-                                <li>
-                                    <b>studyId</b>
-                                    ${application.studyId}
-                                </li>
-                                <li>
-                                    <b>studyKey</b>
-                                    ${application.studyKey}
-                                </li>
-                                <li>
-                                    <b>studyName</b>
-                                    ${application.studyName}
-                                </li>
-                                <li>
-                                    <b>studyType</b>
-                                    ${application.studyType}
-                                </li>
-                                <li>
-                                    <b>startSemester</b>
-                                    ${application.startSemester}
-                                </li>
-                                <li>
-                                    <b>qualificationCertificateDate</b>
-                                    ${application.qualificationCertificateDate}
-                                </li>
-                                <li>
-                                    <b>qualificationIssuingCountry</b>
-                                    ${selectTranslation(application.qualificationIssuingCountry)}
-                                </li>
-                                <li>
-                                    <b>qualificationType</b>
-                                    ${selectTranslation(application.qualificationType)}
-                                </li>
-                            </ul>
-                        </li>
-                    `,
-                )}
-            </ul>-->
         `;
     }
 }
