@@ -233,8 +233,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
             <dbp-form-string-element
                 subscribe="lang"
                 name="subjectOf"
-                label=${this._i18n.t('doc-modal-subject-of')}
-                placeholder=${this._i18n.t('doc-modal-subject-of-placeholder', {
+                label=${this._i18nTugraz.t('tugraz:doc-modal-subject-of')}
+                placeholder=${this._i18nTugraz.t('tugraz:doc-modal-subject-of-placeholder', {
                     id: '987654-AB/2023',
                 })}
                 .value=${fileCommon.subjectOf || ''}
@@ -243,7 +243,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
             <dbp-form-enum-element
                 subscribe="lang"
                 name="studyField"
-                label=${this._i18n.t('doc-modal-study-field')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-study-field')}
                 .items=${this.getStudyFields()}
                 .value=${fileCommon.studyField.key}
                 required
@@ -252,7 +252,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
             <dbp-form-enum-element
                 subscribe="lang"
                 name="disposalType"
-                label=${this._i18n.t('doc-modal-disposal-type')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-disposal-type')}
                 display-mode="list"
                 .disabledItems=${BaseFormElement.getDisposalTypesDisabled(additionalType)}
                 .items=${BaseFormElement.getDisposalTypes(this._i18n, additionalType)}
@@ -263,7 +263,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
             <dbp-form-enum-element
                 subscribe="lang"
                 name="semester"
-                label=${this._i18n.t('doc-modal-semester')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-semester')}
                 .items=${getSemesters()}
                 .value=${fileCommon.semester}
                 required
@@ -272,7 +272,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
             <dbp-form-enum-element
                 subscribe="lang"
                 name="isPartOf"
-                label=${this._i18n.t('doc-modal-purpose-storage')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-purpose-storage')}
                 .items=${BaseFormElement.getIsPartOfItems(this._i18nTugraz)}
                 .value=${fileCommon.isPartOf}
                 multiple
@@ -283,8 +283,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
             <dbp-form-string-element
                 subscribe="lang"
                 name="comment"
-                label=${this._i18n.t('doc-modal-comment')}
-                placeholder=${this._i18n.t('doc-modal-comment')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-comment')}
+                placeholder=${this._i18nTugraz.t('tugraz:doc-modal-comment')}
                 rows="5"
                 .value=${fileCommon.comment || ''}
                 @change=${updateField('comment')}></dbp-form-string-element>
@@ -375,12 +375,12 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
     }
 
     getButtonRowHtml() {
-        const i18n = this._i18n;
+        const i18n = this._i18nTugraz;
         return html`
             <div class="button-row">
                 <button class="button is-secondary" type="button" @click=${this.cancelForm}>
                     <dbp-icon name="close" aria-hidden="true"></dbp-icon>
-                    ${i18n.t('buttons.cancel')}
+                    ${i18n.t('tugraz:buttons.cancel')}
                 </button>
                 <button
                     class="button is-primary"
@@ -388,7 +388,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
                     ?disabled=${!this.saveButtonEnabled}
                     @click=${this.storeBlobItem}>
                     <dbp-icon name="save" aria-hidden="true"></dbp-icon>
-                    ${i18n.t('buttons.save')}
+                    ${i18n.t('tugraz:buttons.save')}
                     <dbp-mini-spinner
                         class="${classMap({hidden: this.saveButtonEnabled})}"></dbp-mini-spinner>
                 </button>
@@ -411,8 +411,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
     getStudyFields() {
         const personData = this.data?.person || this.person || {};
         const studies = personData.studies;
-        let i18n = this._i18n;
-        let studyFields = {Unspecified: i18n.t('doc-modal-study-field-unspecified')};
+        let i18n = this._i18nTugraz;
+        let studyFields = {Unspecified: i18n.t('tugraz:doc-modal-study-field-unspecified')};
 
         if (studies) {
             for (const study of studies) {
@@ -426,8 +426,8 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
     static getDisposalTypes(i18n, type) {
         // all others also allow deletion as disposal
         return {
-            archival: i18n.t('doc-modal-disposal-type-archival'),
-            deletion: i18n.t('doc-modal-disposal-type-deletion'),
+            archival: i18n.t('tugraz:doc-modal-disposal-type-archival'),
+            deletion: i18n.t('tugraz:doc-modal-disposal-type-deletion'),
         };
     }
 
@@ -550,21 +550,22 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetTugrazLitEleme
     }
 
     renderViewButton(hit) {
-        const i18n = this._i18n;
+        const i18n = this._i18nTugraz;
 
         return html`
             <button
                 class="button"
                 type="is-secondary"
-                aria-label="${i18n.t('buttons.view-short')} ${this.lang === 'de'
+                aria-label="${i18n.t('tugraz:buttons.view-short')} ${this.lang === 'de'
                     ? hit.file.base.additionalType.text
-                    : hit.file.base.additionalType.textEn} ${i18n.t('hitbox.document-of')} ${hit
-                    .person.familyName}, ${hit.person.givenName}"
+                    : hit.file.base.additionalType.textEn} ${i18n.t(
+                    'tugraz:hitbox.document-of',
+                )} ${hit.person.familyName}, ${hit.person.givenName}"
                 @click=${(e) => {
                     this.documentViewButtonClick(hit, e);
                 }}>
                 <dbp-icon name="keyword-research" aria-hidden="true"></dbp-icon>
-                ${i18n.t('buttons.view')}
+                ${i18n.t('tugraz:buttons.view')}
             </button>
         `;
     }
@@ -663,30 +664,30 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
         return html`
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18n.t('doc-modal-subject-of')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-subject-of')}
                 .value=${baseData.subjectOf || ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18n.t('doc-modal-study-field')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-study-field')}
                 .value=${this.getStudyFieldNameForKey(
                     baseData.studyField.key,
                 )}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18n.t('doc-modal-semester')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-semester')}
                 .value=${baseData.semester || ''}></dbp-form-string-view>
 
             <dbp-form-enum-view
                 subscribe="lang"
-                label=${this._i18n.t('doc-modal-storage-purpose-deletion')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-storage-purpose-deletion')}
                 .value=${baseData.isPartOf}
                 .items=${BaseFormElement.getIsPartOfItems(this._i18nTugraz)}></dbp-form-enum-view>
 
             <dbp-form-enum-view
                 subscribe="lang"
-                label=${this._i18n.t('doc-modal-disposal-type')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-disposal-type')}
                 .value=${baseData.disposalType}
                 .items=${BaseFormElement.getDisposalTypes(
                     this._i18n,
@@ -698,8 +699,8 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
                 baseData.recommendedArchivalTimestamp === undefined}
                 subscribe="lang"
                 label=${baseData.disposalType === 'archival'
-                    ? this._i18n.t('doc-modal-recommended-archival')
-                    : this._i18n.t('doc-modal-recommended-deletion')}
+                    ? this._i18nTugraz.t('tugraz:doc-modal-recommended-archival')
+                    : this._i18nTugraz.t('tugraz:doc-modal-recommended-deletion')}
                 .value=${baseData.disposalType === 'archival'
                     ? new Date(baseData.recommendedArchivalTimestamp * 1000)
                     : new Date(baseData.recommendedDeletionTimestamp * 1000)}
@@ -710,11 +711,11 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
                 baseData.recommendedArchivalTimestamp !== undefined}
                 subscribe="lang"
                 label=${baseData.disposalType === 'archival'
-                    ? this._i18n.t('doc-modal-recommended-archival')
-                    : this._i18n.t('doc-modal-recommended-deletion')}
+                    ? this._i18nTugraz.t('tugraz:doc-modal-recommended-archival')
+                    : this._i18nTugraz.t('tugraz:doc-modal-recommended-deletion')}
                 .value=${baseData.disposalType === 'archival'
-                    ? this._i18n.t('doc-modal-recommended-archival-summary')
-                    : this._i18n.t('doc-modal-recommended-deletion-summary', {
+                    ? this._i18nTugraz.t('tugraz:doc-modal-recommended-archival-summary')
+                    : this._i18nTugraz.t('tugraz:doc-modal-recommended-deletion-summary', {
                           years: this.getRetentionDurationByDocumentType(
                               baseData.additionalType.key,
                           ),
@@ -722,36 +723,36 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18n.t('doc-modal-comment')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-comment')}
                 .value=${baseData.comment || ''}></dbp-form-string-view>
 
             <dbp-form-datetime-view
                 subscribe="lang"
-                label=${this._i18n.t('doc-modal-added')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-added')}
                 .value=${baseData.createdTimestamp === 0
                     ? ''
                     : new Date(baseData.createdTimestamp * 1000)}></dbp-form-datetime-view>
 
             <dbp-form-datetime-view
                 subscribe="lang"
-                label=${this._i18n.t('doc-modal-modified')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-modified')}
                 .value=${baseData.modifiedTimestamp === 0
                     ? ''
                     : new Date(baseData.modifiedTimestamp * 1000)}></dbp-form-datetime-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18n.t('doc-modal-last-modified-by')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-last-modified-by')}
                 .value=${until(userFullNamePromise, '')}></dbp-form-string-view>
         `;
     }
 
     getStudyFieldNameForKey(key) {
-        let i18n = this._i18n;
+        let i18n = this._i18nTugraz;
         let keyUnspecified = 'Unspecified';
         const personData = this.data?.person || {};
         const studies = [
-            {key: keyUnspecified, name: i18n.t('doc-modal-study-field-unspecified')},
+            {key: keyUnspecified, name: i18n.t('tugraz:doc-modal-study-field-unspecified')},
             ...(personData.studies || []),
         ];
 
@@ -761,7 +762,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
             }
         }
 
-        return i18n.t('doc-modal-study-field-unknown', {studyFieldKey: key});
+        return i18n.t('tugraz:doc-modal-study-field-unknown', {studyFieldKey: key});
     }
 
     render() {
@@ -778,7 +779,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
         return html`
             <dbp-form-enum-view
                 subscribe="lang"
-                label=${this._i18n.t('doc-modal-document-type')}
+                label=${this._i18nTugraz.t('tugraz:doc-modal-document-type')}
                 .value=${baseData.additionalType?.key || ''}
                 .items=${translatedTypes}></dbp-form-enum-view>
             ${this._getCustomViewElements()} ${this._getCommonViewElements()}
