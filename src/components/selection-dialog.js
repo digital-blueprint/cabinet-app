@@ -743,26 +743,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     /**
-     * Export person as PDF (for backward compatibility - now uses generatePersonPdfFile)
-     * @param {object} i18n
-     * @param {object} hit
-     * @param {boolean} withInternalData - unused but kept for compatibility
-     */
-    async exportPersonPdf(i18n, hit, withInternalData = false) {
-        const pdfFile = await this.generatePersonPdfFile(i18n, hit);
-
-        // Create a temporary link to download the file
-        const url = URL.createObjectURL(pdfFile);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = pdfFile.name;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-    }
-
-    /**
      * Export all active documents
      * @param {Event} e - The change event from the selector
      */
