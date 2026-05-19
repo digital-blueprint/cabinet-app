@@ -97,46 +97,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const modal = this.modalRef.value;
         this.hitSelections = hitSelections;
 
-        // // Clean up old selections that only have 'true' instead of actual hit objects
-        // const cleanedSelections = {};
-        // let removedCount = 0;
-        // const removedItems = [];
-        //
-        // for (const type in hitSelections) {
-        //     cleanedSelections[type] = {};
-        //     for (const id in hitSelections[type]) {
-        //         const hit = hitSelections[type][id];
-        //         // Only keep selections that have actual hit objects
-        //         if (hit && typeof hit === 'object' && hit !== true) {
-        //             cleanedSelections[type][id] = hit;
-        //         } else {
-        //             removedCount++;
-        //             removedItems.push({type, id});
-        //             console.warn(`Removing old selection ${id} of type ${type} (no hit data)`);
-        //         }
-        //     }
-        // }
-        //
-        // if (removedCount > 0) {
-        //     console.warn(
-        //         `Removed ${removedCount} old selections without hit data. Please reselect these items.`,
-        //     );
-        //
-        //     // Notify parent to update its hitSelections
-        //     for (const item of removedItems) {
-        //         this.dispatchEvent(
-        //             new CustomEvent('selection-removed', {
-        //                 detail: {type: item.type, id: item.id},
-        //                 bubbles: true,
-        //                 composed: true,
-        //             }),
-        //         );
-        //     }
-        // }
-        //
-        // this.hitSelections = cleanedSelections;
-        // console.log('open cleanedSelections', cleanedSelections);
-
         // Reset gear buttons to ensure clean state
         this.personGearButton = null;
         this.documentGearButton = null;
