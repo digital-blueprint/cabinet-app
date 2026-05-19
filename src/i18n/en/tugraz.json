@@ -22,6 +22,94 @@
     "doc-modal-signed-by": "Signed by dean of studies",
     "doc-modal-yes": "Yes",
     "document-issue-date": "Document issue date",
+    "person": {
+        "academic-title-following": "Following academic title",
+        "academic-titles": "Preceding academic title",
+        "admission-Qualification-Type": "Higher education entrance qualification",
+        "birth-date": "Birthdate",
+        "buttons": {
+            "add": {
+                "documents": "Add document"
+            },
+            "view": "View",
+            "view-short": "View"
+        },
+        "Contact-information": "Contact information",
+        "curriculum-version": "Curriculum version",
+        "Edit-student-data": "Edit data in TUGO",
+        "emailAddressConfirmed": "Confirmed email address",
+        "emailAddressTemporary": "Temporary email address",
+        "emailAddressUniversity": "TU email address",
+        "exmatriculation": "Exmatriculation status",
+        "exmatriculation-GI": "Deregistration status",
+        "export": {
+            "button-label": "Download",
+            "export-date-label": "Exported on",
+            "sync-date-label": "Last synchronized",
+            "table-title": "Export: {{personName}}"
+        },
+        "family-name": "Surname",
+        "focus-button-name": "Focus",
+        "former-family-name": "Former family name",
+        "gender": "Gender",
+        "General-information": "General information",
+        "given-name": "First name",
+        "hitbox": {
+            "person-entry": "Person entry of"
+        },
+        "homeAddress": {
+            "country": "Country",
+            "heading": "Home Address",
+            "note": "Note",
+            "place": "City/Place",
+            "postCode": "Postal Code",
+            "region": "Region",
+            "street": "Street",
+            "telephoneNumber": "Phone Number"
+        },
+        "immatriculation-date": "Immatriculation date",
+        "immatriculationSemester": "Immatriculation semester",
+        "nationalities": "Citizenship(s)",
+        "note": "Comment",
+        "person-hit": "more",
+        "personal-Status": "Personal status",
+        "qualification-study": "Study qualification",
+        "school-Certificate-Date": "Date of certificate",
+        "semester": "Semester",
+        "social-SecurityNr": "Social security number",
+        "ssPIN": "bPK",
+        "st-PersonNr": "Identification number",
+        "status": "Study status",
+        "stud-id": "Matriculation number",
+        "student-Status": "Student status",
+        "Study-information": "Study information",
+        "studyAddress": {
+            "country": "Country",
+            "heading": "Study Address",
+            "note": "Note",
+            "place": "City/Place",
+            "postCode": "Postal Code",
+            "region": "Region",
+            "street": "Street",
+            "telephoneNumber": "Phone Number"
+        },
+        "sync": {
+            "button-title": "Synchronize data",
+            "notification": {
+                "error": {
+                    "body": "An error occurred during student data synchronization: {{error}}",
+                    "title": "Student data synchronization failed"
+                },
+                "success": {
+                    "body": "The student data has been successfully synchronized.",
+                    "title": "Student data synchronized"
+                }
+            },
+            "status-label": "Last synchronized"
+        },
+        "tuitionStatus": "Status of tuition fees",
+        "unselect-button-name": "Remove focus"
+    },
     "selection-column-config": {
         "document": {
             "additionalType": "Document type",

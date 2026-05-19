@@ -1,13 +1,7 @@
 {
-    "academic-title-following": "Akad. Grad nach dem Namen",
-    "academic-titles": "Akad. Grad vor dem Namen",
     "Added": "Hinzugefügt am",
-    "admission-Qualification-Type": "Hochschulzugangsform",
     "birth-date": "Geburtsdatum",
     "buttons": {
-        "add": {
-            "documents": "Dokument hinzufügen"
-        },
         "aria-label": {
             "deselect-all": "Gesamtauswahl leeren",
             "deselect-all-persons": "Alle Personen aus Auswahl entfernen",
@@ -123,8 +117,6 @@
         "type-filter-group-title": "Kategorie"
     },
     "communication-abstract": "Zusammenfassung",
-    "Contact-information": "Kontaktinformationen",
-    "curriculum-version": "Curriculumsversion",
     "doc-modal-Actions": "Aktionen",
     "doc-modal-Add-new-version": "Neue Version hinzufügen",
     "doc-modal-added": "Hinzugefügt am",
@@ -166,21 +158,9 @@
     },
     "Document-details-modal": "Dokumentinformationen",
     "download-button": "Herunterladen",
-    "Edit-student-data": "Daten in TUGO bearbeiten",
-    "emailAddressConfirmed": "Bestätigte E-Mailadresse",
-    "emailAddressTemporary": "Temporäre E-Mailadresse",
-    "emailAddressUniversity": "E-Mailadresse an der TU",
     "end-date-label": "Bis",
     "error-login-link": "Zur Anmeldung",
     "error-login-message": "Bitte melden Sie sich an, um diese Funktion nutzen zu können.",
-    "exmatriculation": "Abmeldestatus",
-    "exmatriculation-GI": "Abmeldedatum",
-    "export": {
-        "button-label": "Herunterladen",
-        "export-date-label": "Exportiert am",
-        "sync-date-label": "Zuletzt synchronisiert",
-        "table-title": "Export: {{personName}}"
-    },
     "facets": {
         "no-items-found": "Keine Ergebnisse gefunden",
         "no-refinements": "Keine Verfeinerungen verfügbar",
@@ -203,11 +183,7 @@
         "group-show": "Alle Filter in Gruppe '{{name}}' anzeigen",
         "save": "Speichern"
     },
-    "focus-button-name": "Eingrenzen",
-    "former-family-name": "Früherer Nachname",
     "full-family-name": "Name",
-    "gender": "Geschlecht",
-    "General-information": "Allgemeine Informationen",
     "given-name": "Vorname",
     "hitbox": {
         "accessible-list": "Folgende Ergebnisse werden angezeigt",
@@ -215,41 +191,22 @@
         "document-of": "von",
         "person-entry": "Personeneintrag von"
     },
-    "homeAddress": {
-        "country": "Land",
-        "heading": "Heimatadresse",
-        "note": "Hinweis",
-        "place": "Ort",
-        "postCode": "Postleitzahl",
-        "region": "Region",
-        "street": "Straße",
-        "telephoneNumber": "Telefonnummer"
-    },
-    "immatriculation-date": "Aufnahmedatum",
-    "immatriculation-Date": "Aufnahmedatum",
-    "immatriculationSemester": "Aufnahmesemester",
     "info": "Info",
     "last-modified": "Letzte Änderung",
     "loading-message": "",
     "modified": "geändert",
-    "nationalities": "Staatsbürgerschaft",
     "nationality-input": {
         "invalid-code-format": "Ungültiges Format. Bitte tragen Sie 1-3 Großbuchstaben ein.",
         "no-matches-found": "Keine Übereinstimmung gefunden",
         "placeholder": "Code eingeben, oder nach einem Land suchen"
     },
-    "note": "Anmerkung",
     "obsolete": "veraltet",
     "person": {
         "person-not-found-body": "Die angeforderte Person konnte nicht gefunden werden!",
         "person-not-found-summary": "Person nicht gefunden"
     },
-    "person-hit": "weitere",
-    "personal-Status": "Personenstatus",
-    "qualification-study": "Hochschulzugangsform",
     "required-files-asterisk": "* ",
     "required-files-text": "kennzeichnet ein Pflichtfeld",
-    "school-Certificate-Date": "Zeugnisdatum",
     "search": {
         "incomplete-results": "Es können keine weiteren Ergebnisse angezeigt werden. Bitte grenzen Sie Ihre Suche mithilfe von Filtern oder spezifischeren Suchbegriffen ein.",
         "no-results": "Keine Ergebnisse gefunden",
@@ -327,50 +284,17 @@
         "undeletion-success-message_one": "{{count}} Dokument wurde wiederhergestellt.",
         "undeletion-success-message_other": "{{count}} Dokumente wurden wiederhergestellt."
     },
-    "semester": "Semester",
     "show-active-only": "Alle aktuelle Dokumente",
     "show-deleted-only": "Papierkorb",
     "show-obsolete-also": "Veraltete Versionen einbeziehen",
     "show-to-archive-only": "Nur zu archivierende Dokumente",
     "show-to-delete-only": "Nur zu löschende Dokumente",
-    "social-SecurityNr": "Sozialversicherungsnummer",
-    "ssPIN": "bPK",
     "st-PersonNr": "Identifikationsnummer",
     "start-date-label": "Von",
-    "status": "Studienstatus",
     "status-deletion-date-reached": "Löschdatum erreicht",
     "status-no-current": "Keine aktuell Version vorhanden",
     "status-no-problems": "Keine Probleme festgestellt",
     "status-scheduled-for-deletion": "Geplante Löschung",
     "status-too-many-current": "Mehr als eine aktuelle Version vorhanden",
-    "stud-id": "Matrikelnummer",
-    "student-Status": "Hörerstatus",
-    "Study-information": "Studiumbezogene Informationen",
-    "studyAddress": {
-        "country": "Land",
-        "heading": "Studienadresse",
-        "note": "Hinweis",
-        "place": "Ort",
-        "postCode": "Postleitzahl",
-        "region": "Region",
-        "street": "Straße",
-        "telephoneNumber": "Telefonnummer"
-    },
-    "subject-of": "Geschäftszahl",
-    "sync": {
-        "button-title": "Daten synchronisieren",
-        "notification": {
-            "error": {
-                "body": "Bei der Synchronisation der Studierendendaten ist ein Fehler aufgetreten: {{error}}",
-                "title": "Synchronisation der Studierendendaten fehlgeschlagen"
-            },
-            "success": {
-                "body": "Die Studierendendaten wurden erfolgreich synchronisiert.",
-                "title": "Studierendendaten synchronisiert"
-            }
-        },
-        "status-label": "Zuletzt synchronisiert"
-    },
-    "tuitionStatus": "Beitragsstatus",
-    "unselect-button-name": "Eingrenzung entfernen"
+    "subject-of": "Geschäftszahl"
 }
