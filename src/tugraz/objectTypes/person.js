@@ -775,14 +775,14 @@ export async function exportPersonPdf(i18n, hit, withInternalData = false, retur
         ],
     });
 
-    const filename = `${encodeURIComponent(hit.person.familyName)}_${encodeURIComponent(hit.person.givenName)}_${encodeURIComponent(hit.person.studId)}.pdf`;
+    const filename = `${hit.person.familyName}_${hit.person.givenName}_${hit.person.studId}.pdf`;
 
     if (returnFile) {
         // Return as File object for use with FileSink
         const pdfBlob = doc.output('blob');
 
         // We don't need urlencoded filenames here as we are passing the files directly to file sink
-        return new File([pdfBlob], decodeURIComponent(filename), {type: 'application/pdf'});
+        return new File([pdfBlob], filename, {type: 'application/pdf'});
     } else {
         // Trigger download directly
         doc.save(filename);
