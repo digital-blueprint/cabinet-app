@@ -255,7 +255,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
                 label=${this._i18nTugraz.t('tugraz:doc-modal-disposal-type')}
                 display-mode="list"
                 .disabledItems=${BaseFormElement.getDisposalTypesDisabled(additionalType)}
-                .items=${BaseFormElement.getDisposalTypes(this._i18n, additionalType)}
+                .items=${BaseFormElement.getDisposalTypes(this._i18nTugraz, additionalType)}
                 .value=${fileCommon.disposalType || 'archival'}
                 required
                 @change=${updateField('disposalType')}></dbp-form-enum-element>
@@ -690,7 +690,7 @@ export class BaseViewElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
                 label=${this._i18nTugraz.t('tugraz:doc-modal-disposal-type')}
                 .value=${baseData.disposalType}
                 .items=${BaseFormElement.getDisposalTypes(
-                    this._i18n,
+                    this._i18nTugraz,
                     baseData.additionalType.key,
                 )}></dbp-form-enum-view>
 
