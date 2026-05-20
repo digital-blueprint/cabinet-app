@@ -1,14 +1,17 @@
 import {css, html} from 'lit';
 import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
 import {ref, createRef} from 'lit/directives/ref.js';
-import {ScopedElementsMixin, sendNotification} from '@dbp-toolkit/common';
-import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
+import {AuthMixin, LangMixin, ScopedElementsMixin, sendNotification} from '@dbp-toolkit/common';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import {createInstance} from '../i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal} from '@dbp-toolkit/common';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {pascalToKebab} from '../utils';
 
-export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement) {
+export class CabinetViewPerson extends ScopedElementsMixin(
+    LangMixin(AuthMixin(DBPLitElement), createInstance),
+) {
     constructor() {
         super();
         this.objectTypeFormComponents = {};

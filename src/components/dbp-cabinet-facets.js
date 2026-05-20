@@ -1,9 +1,10 @@
 // noinspection CssUnusedSymbol,JSUnresolvedReference
 
-import {Icon, ScopedElementsMixin} from '@dbp-toolkit/common';
+import {AuthMixin, LangMixin, Icon, ScopedElementsMixin} from '@dbp-toolkit/common';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import {createInstance} from '../i18n.js';
 import {css, html} from 'lit';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {repeat} from 'lit/directives/repeat.js';
 import {FacetPanel} from './facet-panel.js';
@@ -13,7 +14,9 @@ import {DateRangeRefinement, connectComplexDateRangeRefinement} from './date-ran
 import {connectConfigure} from 'instantsearch.js/es/connectors';
 import {ConfigureWidget} from './configure-widget.js';
 
-export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
+export class CabinetFacets extends ScopedElementsMixin(
+    LangMixin(AuthMixin(DBPLitElement), createInstance),
+) {
     constructor() {
         super();
         this.facets = [];

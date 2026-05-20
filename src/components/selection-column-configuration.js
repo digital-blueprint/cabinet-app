@@ -1,13 +1,16 @@
 import {css, html} from 'lit';
 import {ref, createRef} from 'lit/directives/ref.js';
-import {ScopedElementsMixin} from '@dbp-toolkit/common';
-import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
+import {AuthMixin, LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import {createInstance} from '../i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, IconButton, Modal} from '@dbp-toolkit/common';
 import {scopedElements as modalNotificationScopedElements} from './modal-notification.js';
 import {CabinetSettings} from '../cabinet-settings.js';
 
-export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinetLitElement) {
+export class SelectionColumnConfiguration extends ScopedElementsMixin(
+    LangMixin(AuthMixin(DBPLitElement), createInstance),
+) {
     constructor() {
         super();
         this.cabinetSettings = new CabinetSettings();

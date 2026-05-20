@@ -1,7 +1,6 @@
 import {css, html} from 'lit';
 import {ref, createRef} from 'lit/directives/ref.js';
 import {AuthMixin, LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
-import DBPCabinetLitElement from './dbp-cabinet-lit-element';
 import {CabinetSettings} from './cabinet-settings.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -108,7 +107,9 @@ let isFirstOnPageSymbol = Symbol('isFirstOnPage');
 let isLastOnPageSymbol = Symbol('isLastOnPage');
 let isFirstOfGroupSymbol = Symbol('isFirstOfGroup');
 
-class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
+class CabinetSearch extends ScopedElementsMixin(
+    LangMixin(AuthMixin(DBPLitElement), createInstance),
+) {
     static HitSelectAllState = {
         SELECT: 'select',
         DESELECT: 'deselect',

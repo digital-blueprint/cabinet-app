@@ -1,7 +1,8 @@
 import {css, html} from 'lit';
 import {ref, createRef} from 'lit/directives/ref.js';
-import {IconButton, ScopedElementsMixin} from '@dbp-toolkit/common';
-import DBPCabinetLitElement from '../dbp-cabinet-lit-element.js';
+import {AuthMixin, LangMixin, IconButton, ScopedElementsMixin} from '@dbp-toolkit/common';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
+import {createInstance} from '../i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, Modal, DBPSelect} from '@dbp-toolkit/common';
 import {TabulatorTable} from '@dbp-toolkit/tabulator-table';
@@ -17,7 +18,9 @@ import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
 import {CabinetApi} from '../api.js';
 import {HitSelectionType, createEmptyHitSelection} from '../hit-selection.js';
 
-export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
+export class SelectionDialog extends ScopedElementsMixin(
+    LangMixin(AuthMixin(DBPLitElement), createInstance),
+) {
     constructor() {
         super();
         this.cabinetSettings = new CabinetSettings();
@@ -85,6 +88,11 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     static get properties() {
         return {
             ...super.properties,
+            nextcloudWebAppPasswordURL: {type: String, attribute: 'nextcloud-web-app-password-url'},
+            nextcloudWebDavURL: {type: String, attribute: 'nextcloud-webdav-url'},
+            nextcloudName: {type: String, attribute: 'nextcloud-name'},
+            nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
+            nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             fileHandlingEnabledTargets: {type: String, attribute: 'file-handling-enabled-targets'},
             hitSelections: {type: Object, attribute: false},
