@@ -344,12 +344,13 @@ class CabinetSearch extends ScopedElementsMixin(
 
         const objectType = hit.objectType;
 
-        if (objectType === 'person') {
+        if (objectType === this.cabinetConfig.getPersonObjectTypeName()) {
             /**
              * @type {CabinetViewPerson}
              */
             const component = this.documentViewPersonModalRef.value;
-            component.setObjectTypeViewComponents(this.objectTypeViewComponents);
+            let object = await this.cabinetConfig.loadObjectType(objectType);
+            component.setViewComponent(object.getViewComponent());
             await component.openDialogWithHit(hit);
         } else {
             this.openDocumentViewDialogWithId(hit.id);
@@ -366,7 +367,10 @@ class CabinetSearch extends ScopedElementsMixin(
             return false;
         }
 
-        component.setObjectTypeViewComponents(this.objectTypeViewComponents);
+        let object = await this.cabinetConfig.loadObjectType(
+            this.cabinetConfig.getPersonObjectTypeName(),
+        );
+        component.setViewComponent(object.getViewComponent());
 
         const hit = await this._getTypesenseService().fetchItem(id);
         console.assert(hit !== null, 'Error fetching item:', id);
@@ -1680,7 +1684,7 @@ class CabinetSearch extends ScopedElementsMixin(
             // Load all object types in parallel
             const objects = await Promise.all(
                 this.cabinetConfig
-                    .getObjectTypeNames()
+                    .getDocumentObjectTypeNames()
                     .map((name) => this.cabinetConfig.loadObjectType(name)),
             );
 
@@ -1690,8 +1694,7 @@ class CabinetSearch extends ScopedElementsMixin(
                 if (object.name) {
                     const name = object.name;
                     console.log(name);
-                    // If the name starts with "file", add it to the list of file document types
-                    if (name.startsWith('file') && object.getAdditionalTypes) {
+                    if (object.getAdditionalTypes) {
                         for (const [key, value] of Object.entries(object.getAdditionalTypes())) {
                             this.fileDocumentTypeNames[name + '---' + key] = value;
                         }
@@ -1708,6 +1711,11 @@ class CabinetSearch extends ScopedElementsMixin(
                     viewComponents[object.name] = object.getViewComponent();
                 }
             }
+
+            const object = await this.cabinetConfig.loadObjectType(
+                this.cabinetConfig.getPersonObjectTypeName(),
+            );
+            hitComponents[object.name] = object.getHitComponent();
 
             this.objectTypeFormComponents = formComponents;
             console.log('formComponents', formComponents);

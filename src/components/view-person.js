@@ -1,38 +1,25 @@
 import {css, html} from 'lit';
-import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
 import {ref, createRef} from 'lit/directives/ref.js';
 import {AuthMixin, LangMixin, ScopedElementsMixin, sendNotification} from '@dbp-toolkit/common';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from '../i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {Button, Icon, Modal} from '@dbp-toolkit/common';
-import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
-import {pascalToKebab} from '../utils';
+import {Icon, Modal} from '@dbp-toolkit/common';
 
 export class CabinetViewPerson extends ScopedElementsMixin(
     LangMixin(AuthMixin(DBPLitElement), createInstance),
 ) {
     constructor() {
         super();
-        this.objectTypeFormComponents = {};
-        this.objectTypeHitComponents = {};
-        this.objectTypeViewComponents = {};
-        this.hitData = {
-            id: '',
-            objectType: '',
-        };
         this.modalRef = createRef();
-        this.documentFile = null;
-        this.fileDocumentTypeNames = {};
-        this.documentType = '';
+        this.hitData = null;
+        this.viewComponent = null;
     }
 
     static get scopedElements() {
         return {
             'dbp-icon': Icon,
-            'dbp-pdf-viewer': PdfViewer,
             'dbp-modal': Modal,
-            'dbp-button': Button,
         };
     }
 
@@ -41,13 +28,22 @@ export class CabinetViewPerson extends ScopedElementsMixin(
             ...super.properties,
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             hitData: {type: Object, attribute: false},
-            documentFile: {type: File, attribute: false},
-            documentType: {type: String, attribute: false},
         };
     }
 
-    setObjectTypeViewComponents(objectTypeViewComponents) {
-        this.objectTypeViewComponents = objectTypeViewComponents;
+    close() {
+        /**
+         * @type {Modal}
+         */
+        const modal = this.modalRef.value;
+
+        if (modal) {
+            modal.close();
+        }
+    }
+
+    setViewComponent(viewComponent) {
+        this.viewComponent = viewComponent;
     }
 
     async openDialogWithHit(hit = null) {
@@ -75,24 +71,6 @@ export class CabinetViewPerson extends ScopedElementsMixin(
         const modal = this.modalRef.value;
         console.log('modal', modal);
         modal.open();
-    }
-
-    async openDocumentAddDialog() {
-        this.documentType = '';
-
-        // Make sure the dialog is closed
-        this.close();
-    }
-
-    close() {
-        /**
-         * @type {Modal}
-         */
-        const modal = this.modalRef.value;
-
-        if (modal) {
-            modal.close();
-        }
     }
 
     static get styles() {
@@ -153,34 +131,16 @@ export class CabinetViewPerson extends ScopedElementsMixin(
      */
     render() {
         const hit = this.hitData;
-        console.log('hit', hit);
-        const objectType = hit.objectType;
-        if (objectType === '') {
-            console.log('objectType empty', objectType);
-            return html`
-                <dbp-modal ${ref(this.modalRef)} modal-id="view-modal"></dbp-modal>
-            `;
+        if (!hit || !this.viewComponent) {
+            return html``;
         }
-
         const id = hit.id;
-        const tagPart = pascalToKebab(objectType);
-        const tagName = 'dbp-cabinet-object-type-view-' + tagPart;
-
-        console.log('objectType', objectType);
-        console.log('tagName', tagName);
-        console.log(
-            'this.objectTypeViewComponents[objectType]',
-            this.objectTypeViewComponents[objectType],
-        );
-
+        const tagName = 'dbp-cabinet-object-type-view-person';
         if (!this.registry.get(tagName)) {
-            this.registry.define(tagName, this.objectTypeViewComponents[objectType]);
+            this.registry.define(tagName, this.viewComponent);
         }
 
-        // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
-        // a variable and need to set the "data" property from a variable too!
-        return staticHtml`
-        
+        return html`
             <dbp-modal
                 ${ref(this.modalRef)}
                 id="view-modal"
@@ -193,16 +153,20 @@ export class CabinetViewPerson extends ScopedElementsMixin(
                 @dbp-modal-closed="${this.onClosePersonModal}">
                 <div slot="title" class="modal-title modal-title-person">
                     <dbp-icon name="user" class="person-modal-icon" aria-hidden="true"></dbp-icon>
-                    <h2 class="person-modal-title" aria-label="${this._i18n.t('hitbox.person-entry')} ${hit.person.fullName}"> ${hit.person.fullName}</h2>
+                    <h2
+                        class="person-modal-title"
+                        aria-label="${this._i18n.t('hitbox.person-entry')} ${hit.person.fullName}">
+                        ${hit.person.fullName}
+                    </h2>
                 </div>
-                <div slot="header">
-                </div>
+                <div slot="header"></div>
                 <div slot="content">
-                    <${unsafeStatic(tagName)} id="dbp-cabinet-object-type-view-${id}" subscribe="lang,auth,entry-point-url" .data=${hit}></${unsafeStatic(tagName)}>
+                    <dbp-cabinet-object-type-view-person
+                        id="dbp-cabinet-object-type-view-${id}"
+                        subscribe="lang,auth,entry-point-url"
+                        .data=${hit}></dbp-cabinet-object-type-view-person>
                 </div>
-                <div slot="footer" class="modal-footer">
-
-                </div>
+                <div slot="footer" class="modal-footer"></div>
             </dbp-modal>
         `;
     }

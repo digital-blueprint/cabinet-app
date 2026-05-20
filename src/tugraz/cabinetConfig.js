@@ -48,7 +48,7 @@ export default class CabinetConfig {
      * Returns an array of all available object type names.
      * @returns {string[]}
      */
-    getObjectTypeNames() {
+    getDocumentObjectTypeNames() {
         return [
             'file-admission-notice',
             'file-cabinet-communication',
@@ -59,8 +59,11 @@ export default class CabinetConfig {
             'file-cabinet-englMasterDataSheet',
             'file-cabinet-entranceQualificationApplication',
             'file-cabinet-entranceQualificationRecognition',
-            'person',
         ];
+    }
+
+    getPersonObjectTypeName() {
+        return 'person';
     }
 
     /**
