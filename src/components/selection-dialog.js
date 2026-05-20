@@ -13,7 +13,7 @@ import {
 } from './modal-notification.js';
 import {SelectionColumnConfiguration} from './selection-column-configuration';
 import {getSelectorFixCSS} from '../styles.js';
-import {CabinetSettings} from '../cabinet-settings.js';
+import {CabinetSettings} from '../settings.js';
 import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
 import {CabinetApi} from '../api.js';
 import {HitSelectionType, createEmptyHitSelection} from '../hit-selection.js';

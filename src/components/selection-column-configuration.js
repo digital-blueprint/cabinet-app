@@ -6,7 +6,7 @@ import {createInstance} from '../i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, IconButton, Modal} from '@dbp-toolkit/common';
 import {scopedElements as modalNotificationScopedElements} from './modal-notification.js';
-import {CabinetSettings} from '../cabinet-settings.js';
+import {CabinetSettings} from '../settings.js';
 
 export class SelectionColumnConfiguration extends ScopedElementsMixin(
     LangMixin(AuthMixin(DBPLitElement), createInstance),

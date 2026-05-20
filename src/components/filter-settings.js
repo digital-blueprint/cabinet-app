@@ -9,7 +9,7 @@ import {
     scopedElements as modalNotificationScopedElements,
     sendModalNotification,
 } from './modal-notification.js';
-import {CabinetSettings} from '../cabinet-settings.js';
+import {CabinetSettings} from '../settings.js';
 
 export class CabinetFilterSettings extends ScopedElementsMixin(
     LangMixin(AuthMixin(DBPLitElement), createInstance),
