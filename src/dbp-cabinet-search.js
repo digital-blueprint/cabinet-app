@@ -1187,9 +1187,6 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             this.getTypesenseInstantsearchAdapterConfig(),
         );
 
-        /** @type {CabinetFacets} */
-        const ref = this.cabinetFacetsRef.value;
-        typesenseInstantsearchAdapter.setFacetComponent(ref);
         typesenseInstantsearchAdapter.setFacetConfigs(this.facetConfigs);
 
         // We need to leak the typesenseInstantsearchAdapter instance to the global scope,
@@ -1444,7 +1441,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div class="search-box-container">
                     <button id="filter-header-button" class="button filter-header-button"
                         @click="${() => {
-                            const cabinetFacets = this.cabinetFacetsRef.value;
+                            const cabinetFacets = this.getCabinetFacets();
                             cabinetFacets.toggleFilters();
                         }}">
                         <dbp-icon name="funnel" class="facet-filter-button-icon"></dbp-icon>

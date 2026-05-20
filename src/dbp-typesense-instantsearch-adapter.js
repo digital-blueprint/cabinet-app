@@ -1,14 +1,10 @@
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
-import {CabinetFacets} from './components/dbp-cabinet-facets.js';
 
 // rollup and rolldown resolve the import differently
 let TypesenseInstantSearchAdapterClass =
     TypesenseInstantSearchAdapter.default ?? TypesenseInstantSearchAdapter;
 
 export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSearchAdapterClass {
-    /** @type {CabinetFacets} */
-    facetComponent = null;
-
     facetConfigs = {};
 
     removedFacetNames = ['person.person'];
@@ -18,13 +14,6 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
         'study.status.text',
         'study.status.textEn',
     ];
-
-    /**
-     * @param {CabinetFacets} facetComponent
-     */
-    setFacetComponent(facetComponent) {
-        this.facetComponent = facetComponent;
-    }
 
     setFacetConfigs(facetConfigs) {
         this.facetConfigs = facetConfigs;
