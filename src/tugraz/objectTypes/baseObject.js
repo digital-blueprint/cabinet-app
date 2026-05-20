@@ -11,7 +11,7 @@ import {
     gatherFormDataFromElement,
     validateRequiredFields,
 } from '@dbp-toolkit/form-elements/src/utils.js';
-import DBPCabinetTugrazLitElement from '../dbp-cabinet-tugraz-lit-element.js';
+import DBPCabinetTugrazLitElement from '../tugraz-lit-element.js';
 import {
     DbpDateTimeView,
     DbpDateView,

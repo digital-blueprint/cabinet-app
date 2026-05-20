@@ -11,7 +11,7 @@ import {
     sendNotification,
     getIconSVGURL,
 } from '@dbp-toolkit/common';
-import DBPCabinetTugrazLitElement from '../tugraz/dbp-cabinet-tugraz-lit-element.js';
+import DBPCabinetTugrazLitElement from '../tugraz/tugraz-lit-element.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {FileSink, FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
