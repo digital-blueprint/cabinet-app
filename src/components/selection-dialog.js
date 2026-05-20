@@ -12,12 +12,14 @@ import {
 } from './modal-notification.js';
 import {SelectionColumnConfiguration} from './selection-column-configuration';
 import {getSelectorFixCSS} from '../styles.js';
+import {CabinetSettings} from '../cabinet-settings.js';
 import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
 import {CabinetApi} from '../api.js';
 
 export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
+        this.cabinetSettings = new CabinetSettings();
         this.modalRef = createRef();
         this.personTableRef = createRef();
         this.documentTableRef = createRef();
@@ -56,6 +58,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             setOverridesByGlobalCache(this._i18n, this).then(() => {
                 that.requestUpdate();
             });
+        }
+    }
+
+    update(changedProperties) {
+        super.update(changedProperties);
+        if (changedProperties.has('auth')) {
+            this.cabinetSettings.setAuth(this.auth);
         }
     }
 
@@ -164,33 +173,15 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Load column visibility states from localStorage
      */
     loadColumnVisibilityStates() {
-        if (!this.settingsLocalStoragePrefix) {
-            // Initialize with defaults
-            this.personColumnVisibilityStates = this.getDefaultColumnVisibility('person');
-            this.documentColumnVisibilityStates = this.getDefaultColumnVisibility('document');
-            return;
-        }
-
         // Load person column visibility
-        const personKey = `${this.settingsLocalStoragePrefix}columnVisibilityStates:person`;
-        try {
-            const saved = JSON.parse(localStorage.getItem(personKey));
-            this.personColumnVisibilityStates = saved || this.getDefaultColumnVisibility('person');
-        } catch (e) {
-            console.warn('Failed to load person column visibility states', e);
-            this.personColumnVisibilityStates = this.getDefaultColumnVisibility('person');
-        }
+        const savedPerson = this.cabinetSettings.get('columnVisibilityStates:person');
+        this.personColumnVisibilityStates =
+            savedPerson || this.getDefaultColumnVisibility('person');
 
         // Load document column visibility
-        const documentKey = `${this.settingsLocalStoragePrefix}columnVisibilityStates:document`;
-        try {
-            const saved = JSON.parse(localStorage.getItem(documentKey));
-            this.documentColumnVisibilityStates =
-                saved || this.getDefaultColumnVisibility('document');
-        } catch (e) {
-            console.warn('Failed to load document column visibility states', e);
-            this.documentColumnVisibilityStates = this.getDefaultColumnVisibility('document');
-        }
+        const savedDocument = this.cabinetSettings.get('columnVisibilityStates:document');
+        this.documentColumnVisibilityStates =
+            savedDocument || this.getDefaultColumnVisibility('document');
     }
 
     /**
@@ -2312,7 +2303,6 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // const i18n = this._i18n;
         console.log('-- Render SelectionDialog --', {
             auth: this.auth,
-            settingsLocalStoragePrefix: this.settingsLocalStoragePrefix,
         });
 
         if (!this.cabinetConfig) {

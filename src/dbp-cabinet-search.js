@@ -2,6 +2,7 @@ import {css, html} from 'lit';
 import {ref, createRef} from 'lit/directives/ref.js';
 import {AuthMixin, LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
 import DBPCabinetLitElement from './dbp-cabinet-lit-element';
+import {CabinetSettings} from './cabinet-settings.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {getPaginationCSS} from './styles.js';
@@ -124,6 +125,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     constructor() {
         super();
+        this.cabinetSettings = new CabinetSettings();
+        this.facetVisibilityStates = {};
         this.objectTypeFormComponents = {};
         this.objectTypeHitComponents = {};
         this.objectTypeViewComponents = {};
@@ -196,6 +199,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     static get properties() {
         return {
             ...super.properties,
+            facetVisibilityStates: {type: Object, attribute: false},
             hitData: {type: Object, attribute: false},
             cabinetConfig: {type: Object, attribute: false},
             documentFile: {type: File, attribute: false},
@@ -211,13 +215,17 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     }
 
     update(changedProperties) {
-        // We need to call super.update first, so the property facetVisibilityStates is set correctly!
         super.update(changedProperties);
         this.initializeScrollToTopButton();
 
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'auth':
+                    this.cabinetSettings.setAuth(this.auth);
+                    // Load facet visibility states now that we have a user-id
+                    if (this.isLoggedIn()) {
+                        this.loadFacetVisibilityStates();
+                    }
                     // Update the Typesense Instantsearch adapter configuration with the new bearer token
                     if (this.typesenseInstantsearchAdapter) {
                         this.typesenseInstantsearchAdapter.updateConfiguration(
@@ -237,6 +245,29 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     break;
             }
         });
+    }
+
+    setFacetVisibilityStates(facetVisibilityStates) {
+        if (typeof facetVisibilityStates !== 'object' || facetVisibilityStates === null) {
+            return false;
+        }
+        this.facetVisibilityStates = facetVisibilityStates;
+        return true;
+    }
+
+    loadFacetVisibilityStates() {
+        this.setFacetVisibilityStates(this.cabinetSettings.get('facetVisibilityStates') || {});
+    }
+
+    getVisibleFacetIds() {
+        return this.getVisibleFacetIdsFromFacetStates(this.facetVisibilityStates);
+    }
+
+    getVisibleFacetIdsFromFacetStates(facetStates) {
+        if (!facetStates || typeof facetStates !== 'object') {
+            return [];
+        }
+        return Object.keys(facetStates).filter((facetName) => facetStates[facetName] === true);
     }
 
     resetHitSelectAllStateIfNeeded() {
@@ -531,10 +562,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
             );
 
             // Store the hitsPerPage setting in localStorage
-            let prefix = this.getSettingsLocalStoragePrefix();
-            if (prefix !== null) {
-                localStorage.setItem(prefix + 'hitsPerPage', search.helper.state.hitsPerPage);
-            }
+            this.cabinetSettings.set('hitsPerPage', search.helper.state.hitsPerPage);
         });
     }
 
@@ -1198,14 +1226,11 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         let defaultHitsPerPage = 20;
 
         // Restore default hits per page from local storage
-        let prefix = this.getSettingsLocalStoragePrefix();
-        if (prefix !== null) {
-            let hitsPerPageString = localStorage.getItem(prefix + 'hitsPerPage');
-            if (hitsPerPageString !== null) {
-                let parsed = parseInt(hitsPerPageString);
-                if (availableHitsPerPage.includes(parsed)) {
-                    defaultHitsPerPage = parsed;
-                }
+        const savedHitsPerPage = this.cabinetSettings.get('hitsPerPage');
+        if (savedHitsPerPage !== null) {
+            let parsed = parseInt(savedHitsPerPage);
+            if (availableHitsPerPage.includes(parsed)) {
+                defaultHitsPerPage = parsed;
             }
         }
 

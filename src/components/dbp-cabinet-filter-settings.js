@@ -8,10 +8,13 @@ import {
     scopedElements as modalNotificationScopedElements,
     sendModalNotification,
 } from './modal-notification.js';
+import {CabinetSettings} from '../cabinet-settings.js';
 
 export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
+        this.cabinetSettings = new CabinetSettings();
+        this.facetVisibilityStates = {};
         this.modalRef = createRef();
         this.facetConfigs = [];
         this.facetNumber = 0;
@@ -29,8 +32,21 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
     static get properties() {
         return {
             ...super.properties,
+            facetVisibilityStates: {type: Object, attribute: false},
             facetConfigs: {type: Array, attribute: false},
         };
+    }
+
+    update(changedProperties) {
+        super.update(changedProperties);
+        if (changedProperties.has('auth')) {
+            this.cabinetSettings.setAuth(this.auth);
+        }
+    }
+
+    loadFacetVisibilityStates() {
+        const saved = this.cabinetSettings.get('facetVisibilityStates');
+        this.facetVisibilityStates = saved && typeof saved === 'object' ? saved : {};
     }
 
     async open(facetConfigs) {
@@ -246,10 +262,9 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
      * in the file source
      */
     getModalHtml() {
-        let prefix = this.getSettingsLocalStoragePrefix();
         const i18n = this._i18n;
         const buttonsDisabled =
-            !this.facetConfigs || this.facetConfigs.length === 0 || prefix === null;
+            !this.facetConfigs || this.facetConfigs.length === 0 || !this.isLoggedIn();
 
         return html`
             <dbp-modal
@@ -440,12 +455,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
     }
 
     storeSettings(e) {
-        let prefix = this.getSettingsLocalStoragePrefix();
-        if (prefix === null) {
-            console.warn('No settingsLocalStoragePrefix set, cannot store settings.');
-            return;
-        }
-
         /**
          * @type {IconButton}
          */
@@ -453,10 +462,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         button.start();
 
         // Store the current facet visibility states in localStorage
-        localStorage.setItem(
-            prefix + 'facetVisibilityStates',
-            JSON.stringify(this.facetVisibilityStates),
-        );
+        this.cabinetSettings.set('facetVisibilityStates', this.facetVisibilityStates);
 
         button.stop();
 

@@ -5,9 +5,12 @@ import DBPCabinetLitElement from '../dbp-cabinet-lit-element';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Button, Icon, IconButton, Modal} from '@dbp-toolkit/common';
 import {scopedElements as modalNotificationScopedElements} from './modal-notification.js';
+import {CabinetSettings} from '../cabinet-settings.js';
+
 export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
         super();
+        this.cabinetSettings = new CabinetSettings();
         this.modalRef = createRef();
         this.storeSettingsButtonRef = createRef();
         this.selectionType = '';
@@ -36,21 +39,19 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
         };
     }
 
+    update(changedProperties) {
+        super.update(changedProperties);
+        if (changedProperties.has('auth')) {
+            this.cabinetSettings.setAuth(this.auth);
+        }
+    }
+
     async open(selectionType) {
         const modal = this.modalRef.value;
         this.selectionType = selectionType;
 
-        // Ensure settingsLocalStoragePrefix is set
-        if (!this.settingsLocalStoragePrefix) {
-            console.log('SelectionColumnConfiguration: generating settingsLocalStoragePrefix...');
-            this.getSettingsLocalStoragePrefix();
-            // Force update to ensure the property is set
-            await this.requestUpdate();
-        }
-
         console.log('SelectionColumnConfiguration.open:', {
             selectionType,
-            settingsLocalStoragePrefix: this.settingsLocalStoragePrefix,
             auth: this.auth,
             userId: this.auth?.['user-id'],
         });
@@ -72,11 +73,8 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
         console.log('Opening column configuration modal:', {
             selectionType,
             columnConfigsLength: this.columnConfigs.length,
-            settingsLocalStoragePrefix: this.settingsLocalStoragePrefix,
             willButtonsBeDisabled:
-                !this.columnConfigs ||
-                this.columnConfigs.length === 0 ||
-                !this.settingsLocalStoragePrefix,
+                !this.columnConfigs || this.columnConfigs.length === 0 || !this.isLoggedIn(),
         });
 
         modal.open();
@@ -88,41 +86,17 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
     }
 
     /**
-     * Generate localStorage key for column visibility settings
-     */
-    getColumnStorageKey() {
-        if (!this.settingsLocalStoragePrefix) {
-            return null;
-        }
-        // Use the prefix and add column visibility suffix
-        return `${this.settingsLocalStoragePrefix}columnVisibilityStates:${this.selectionType}`;
-    }
-
-    /**
      * Load column visibility states from localStorage
      */
     loadColumnVisibilityStates() {
-        const storageKey = this.getColumnStorageKey();
-        if (!storageKey) {
-            // Initialize with default visibility if no storage key
-            this.columnVisibilityStates = this.getDefaultColumnVisibility();
-            return false;
-        }
-
-        try {
-            const saved = JSON.parse(localStorage.getItem(storageKey));
-            if (saved && typeof saved === 'object') {
-                this.columnVisibilityStates = saved;
-            } else {
-                // Initialize with defaults if nothing saved
-                this.columnVisibilityStates = this.getDefaultColumnVisibility();
-            }
+        const saved = this.cabinetSettings.get(`columnVisibilityStates:${this.selectionType}`);
+        if (saved && typeof saved === 'object') {
+            this.columnVisibilityStates = saved;
             return true;
-        } catch (e) {
-            console.warn('Failed to load column visibility states', e);
-            this.columnVisibilityStates = this.getDefaultColumnVisibility();
-            return false;
         }
+        // Initialize with defaults if nothing saved or no prefix
+        this.columnVisibilityStates = this.getDefaultColumnVisibility();
+        return false;
     }
 
     /**
@@ -142,12 +116,6 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
      * @param {Event} e - The button click event
      */
     storeSettings(e) {
-        const storageKey = this.getColumnStorageKey();
-        if (!storageKey) {
-            console.warn('No storage key available, cannot store settings.');
-            return;
-        }
-
         /**
          * @type {Button}
          */
@@ -156,7 +124,10 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
         button.start();
 
         // Store the current column visibility states in localStorage
-        localStorage.setItem(storageKey, JSON.stringify(this.columnVisibilityStates));
+        this.cabinetSettings.set(
+            `columnVisibilityStates:${this.selectionType}`,
+            this.columnVisibilityStates,
+        );
 
         button.stop();
 
@@ -439,13 +410,10 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(DBPCabinet
     render() {
         const i18n = this._i18n;
         const buttonsDisabled =
-            !this.columnConfigs ||
-            this.columnConfigs.length === 0 ||
-            !this.settingsLocalStoragePrefix;
+            !this.columnConfigs || this.columnConfigs.length === 0 || !this.isLoggedIn();
 
         console.log('SelectionColumnConfiguration render:', {
             columnConfigs: this.columnConfigs?.length,
-            settingsLocalStoragePrefix: this.settingsLocalStoragePrefix,
             buttonsDisabled: buttonsDisabled,
         });
 
