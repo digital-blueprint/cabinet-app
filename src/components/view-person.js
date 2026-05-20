@@ -151,7 +151,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(
      * Returns the modal dialog for adding a document to a person after the document was selected
      * in the file source
      */
-    getModalHtml() {
+    render() {
         const hit = this.hitData;
         console.log('hit', hit);
         const objectType = hit.objectType;
@@ -215,38 +215,5 @@ export class CabinetViewPerson extends ScopedElementsMixin(
                 composed: true,
             }),
         );
-    }
-
-    render() {
-        // const i18n = this._i18n;
-        console.log('-- Render --');
-
-        return html`
-            ${this.getModalHtml()}
-        `;
-    }
-
-    /**
-     * @param ev
-     */
-    async onDocumentFileSelected(ev) {
-        console.log('ev.detail.file', ev.detail.file);
-        this.documentFile = ev.detail.file;
-
-        // We need to wait until rendering is complete after this.documentFile has changed
-        await this.updateComplete;
-
-        const pdfViewer = this._('#document-add-pdf-viewer');
-
-        // Load the PDF in the PDF viewer with the double reloading workaround,
-        // because the page wasn't always shown
-        await pdfViewer.showPDF(this.documentFile, {}, true);
-
-        // Workaround to trigger a resize after the PDF was loaded, so the PDF is shown correctly
-        pdfViewer._onWindowResize();
-
-        // Opens the modal dialog for adding a document to a person after the document was
-        // selected in the file source
-        this.modalRef.value.open();
     }
 }
