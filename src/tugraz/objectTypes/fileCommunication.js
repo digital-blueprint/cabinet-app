@@ -1,6 +1,7 @@
 import {html} from 'lit';
 import {BaseObject, BaseFormElement, BaseViewElement} from './baseObject.js';
 import {getDocumentHit, getCommunication} from './schema.js';
+import {createInstance} from '../i18n.js';
 import {
     DbpDateTimeElement,
     DbpDateTimeView,
@@ -24,8 +25,15 @@ export default class extends BaseObject {
         return CabinetViewElement;
     }
 
-    getAdditionalTypes() {
-        return CabinetFormElement.getAdditionalTypes();
+    getAdditionalTypes(lang) {
+        let i18n = createInstance();
+        let translatedTypes = {};
+        i18n.changeLanguage(lang);
+        for (let [key, translationKey] of Object.entries(CabinetFormElement.getAdditionalTypes())) {
+            let value = i18n.t(translationKey);
+            translatedTypes[key] = value;
+        }
+        return translatedTypes;
     }
 }
 

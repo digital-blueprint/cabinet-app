@@ -1,6 +1,8 @@
 import {css, html, unsafeCSS} from 'lit';
 import {html as staticHtml, unsafeStatic} from 'lit/static-html.js';
 import {createRef, ref} from 'lit/directives/ref.js';
+import {AuthMixin, LangMixin} from '@dbp-toolkit/common';
+import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {
     Button,
     combineURLs,
@@ -11,7 +13,6 @@ import {
     sendNotification,
     getIconSVGURL,
 } from '@dbp-toolkit/common';
-import DBPCabinetTugrazLitElement from '../tugraz/tugraz-lit-element.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {FileSink, FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
@@ -27,6 +28,7 @@ import {
 import {createUUID} from '@dbp-toolkit/common/utils';
 import {PdfValidationErrorList} from './pdf-validation-error-list.js';
 import {CabinetApi} from '../api.js';
+import {createInstance} from '../i18n.js';
 
 const getFieldsetCSS = () => {
     // language=css
@@ -50,7 +52,9 @@ const getFieldsetCSS = () => {
     `;
 };
 
-export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement) {
+export class CabinetFile extends ScopedElementsMixin(
+    LangMixin(AuthMixin(DBPLitElement), createInstance),
+) {
     // Always allow creating new versions if true
     static DEV_MODE = false;
 
@@ -167,6 +171,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
     static get properties() {
         return {
             ...super.properties,
+            nextcloudWebAppPasswordURL: {type: String, attribute: 'nextcloud-web-app-password-url'},
+            nextcloudWebDavURL: {type: String, attribute: 'nextcloud-webdav-url'},
+            nextcloudName: {type: String, attribute: 'nextcloud-name'},
+            nextcloudFileURL: {type: String, attribute: 'nextcloud-file-url'},
+            nextcloudAuthInfo: {type: String, attribute: 'nextcloud-auth-info'},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             fileHandlingEnabledTargets: {type: String, attribute: 'file-handling-enabled-targets'},
             person: {type: Object, attribute: false},
@@ -1631,6 +1640,16 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
         await this.openViewDialogWithFileHit(hit);
     }
 
+    _getAdditionalTypeName(additionalTypeKey) {
+        for (const objectType of Object.values(this.objectTypes)) {
+            let types = objectType.getAdditionalTypes(this.lang);
+            if (types[additionalTypeKey]) {
+                return types[additionalTypeKey];
+            }
+        }
+        return '';
+    }
+
     /**
      * Returns the modal dialog for adding a document to a person after the document was selected
      * in the file source
@@ -1651,9 +1670,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
         const headline =
             this.mode === CabinetFile.Modes.ADD
                 ? i18n.t('doc-modal-upload-document')
-                : this._i18nTugraz.t(
-                      `tugraz:typesense-schema.file.base.additionalType.key.${additionalType}`,
-                  );
+                : this._getAdditionalTypeName(additionalType);
         console.log('additionalType', additionalType);
         this.updateStatus();
         const options = [];
@@ -2008,11 +2025,11 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
 
         const items = [];
         for (const [name, object] of Object.entries(this.objectTypes)) {
-            for (const [key, value] of Object.entries(object.getAdditionalTypes())) {
+            for (const [key, value] of Object.entries(object.getAdditionalTypes(this.lang))) {
                 const compoundKey = name + '---' + key;
                 items.push({
                     key: compoundKey,
-                    translatedText: this._i18nTugraz.t(value),
+                    translatedText: value,
                     selected: compoundKey === fileDocumentType,
                 });
             }
