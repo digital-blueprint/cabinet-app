@@ -1670,8 +1670,6 @@ class CabinetSearch extends ScopedElementsMixin(
             const cabinetConfigModule = await import(path);
             this.cabinetConfig = new cabinetConfigModule.default();
 
-            let fileDocumentTypeNames = {};
-
             // Load all object types in parallel
             const objects = await Promise.all(
                 this.cabinetConfig
@@ -1684,26 +1682,10 @@ class CabinetSearch extends ScopedElementsMixin(
                 this.documentObjectTypes[object.name] = object;
             }
 
-            for (const object of objects) {
-                console.log('object', object);
-
-                if (object.name) {
-                    const name = object.name;
-                    console.log(name);
-                    if (object.getAdditionalTypes) {
-                        for (const [key, value] of Object.entries(object.getAdditionalTypes())) {
-                            fileDocumentTypeNames[name + '---' + key] = value;
-                        }
-                    }
-                }
-            }
-
-            const object = await this.cabinetConfig.loadObjectType(
+            const personObject = await this.cabinetConfig.loadObjectType(
                 this.cabinetConfig.getPersonObjectTypeName(),
             );
-            this.objectTypes[object.name] = object;
-
-            console.log('fileDocumentTypeNames', fileDocumentTypeNames);
+            this.objectTypes[personObject.name] = personObject;
 
             await this.updateComplete;
             /**
@@ -1711,7 +1693,6 @@ class CabinetSearch extends ScopedElementsMixin(
              */
             const addDocumentComponent = this.documentFileComponentRef.value;
             addDocumentComponent.setObjectTypes(this.documentObjectTypes);
-            addDocumentComponent.setFileDocumentTypeNames(fileDocumentTypeNames);
         } catch (error) {
             console.error('Error loading modules:', error);
         }

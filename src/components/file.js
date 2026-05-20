@@ -87,7 +87,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
         this.documentModalRef = createRef();
         this.documentPdfViewerRef = createRef();
         this.documentPdfValidationErrorList = createRef();
-        this.fileDocumentTypeNames = {};
         // TODO: Do we need a prefix?
         this.blobDocumentPrefix = 'document-';
         this.modalRef = createRef();
@@ -186,10 +185,6 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
 
     setObjectTypes(objectTypes) {
         this.objectTypes = objectTypes;
-    }
-
-    setFileDocumentTypeNames(fileDocumentTypeNames) {
-        this.fileDocumentTypeNames = fileDocumentTypeNames;
     }
 
     async storeDocumentToBlob(formData) {
@@ -2005,29 +2000,32 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
     }
 
     getDocumentTypeSelector() {
-        const fileDocumentTypeNames = this.fileDocumentTypeNames;
         const additionalType =
             this.fileHitData?.file?.base?.additionalType?.key || this.additionalType || '';
         const objectType = this.fileHitData.objectType || this.objectType || '';
         const fileDocumentType =
             additionalType !== '' && objectType !== '' ? objectType + '---' + additionalType : '';
 
-        const options = Object.keys(fileDocumentTypeNames)
-            .map((key) => {
-                return {
-                    key: key,
-                    translatedText: this._i18nTugraz.t(fileDocumentTypeNames[key]),
-                    selected: key === fileDocumentType,
-                };
-            })
-            .sort((a, b) => a.translatedText.localeCompare(b.translatedText))
-            .map((item) => {
-                return html`
-                    <option value="${item.key}" ?selected=${item.selected}>
-                        ${item.translatedText}
-                    </option>
-                `;
-            });
+        const items = [];
+        for (const [name, object] of Object.entries(this.objectTypes)) {
+            for (const [key, value] of Object.entries(object.getAdditionalTypes())) {
+                const compoundKey = name + '---' + key;
+                items.push({
+                    key: compoundKey,
+                    translatedText: this._i18nTugraz.t(value),
+                    selected: compoundKey === fileDocumentType,
+                });
+            }
+        }
+        items.sort((a, b) => a.translatedText.localeCompare(b.translatedText));
+
+        const options = items.map(
+            (item) => html`
+                <option value="${item.key}" ?selected=${item.selected}>
+                    ${item.translatedText}
+                </option>
+            `,
+        );
 
         if (fileDocumentType === '') {
             options.unshift(html`
