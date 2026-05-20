@@ -7,7 +7,6 @@ let TypesenseInstantSearchAdapterClass =
 export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSearchAdapterClass {
     facetConfigs = {};
 
-    removedFacetNames = ['person.person'];
     facetsThatNeedGrouping = [
         'study.name',
         'study.type',
@@ -20,13 +19,20 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
     }
 
     _removeFacets(instantsearchRequests) {
-        // Remove facets for which we don't need any data
+        let removedFacetNames = [];
+        for (let config of this.facetConfigs) {
+            if (config.hidden) {
+                removedFacetNames.push(config.schemaField);
+            }
+        }
+
+        // Remove facets for which we don't need any data because they are hidden.
         for (const request of instantsearchRequests) {
             let originalFacetNames = request.params.facets;
             // facets can be undefined a string or an array
             if (Array.isArray(originalFacetNames)) {
                 originalFacetNames = originalFacetNames.filter(
-                    (item) => !this.removedFacetNames.includes(item),
+                    (item) => !removedFacetNames.includes(item),
                 );
                 request.params.facets = originalFacetNames;
             }
