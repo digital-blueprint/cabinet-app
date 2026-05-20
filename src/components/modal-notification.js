@@ -13,21 +13,24 @@ export const sendModalNotification = (
     summary,
     body,
     type = 'info',
-    timeout = undefined,
+    timeout = null,
     replaceId = null,
 ) => {
-    if (timeout === undefined) {
+    if (timeout === null) {
         switch (type) {
             case 'info':
             case 'success':
                 timeout = 3;
                 break;
             case 'warning':
-                timeout = 10;
+                timeout = 0;
                 break;
             case 'danger':
-                timeout = 15;
+                timeout = 0;
                 // delete options.timeout;
+                break;
+            default:
+                timeout = 0;
                 break;
         }
     }
