@@ -130,9 +130,8 @@ class CabinetSearch extends ScopedElementsMixin(
         this.entryPointUrl = '';
         this.cabinetSettings = new CabinetSettings();
         this.facetVisibilityStates = {};
-        this.objectTypeFormComponents = {};
-        this.objectTypeHitComponents = {};
-        this.objectTypeViewComponents = {};
+        this.objectTypes = {};
+        this.documentObjectTypes = {};
         this.hitData = {
             id: '',
             objectType: '',
@@ -144,7 +143,6 @@ class CabinetSearch extends ScopedElementsMixin(
         this.cabinetFacetsRef = createRef();
         this.selectionDialogRef = createRef();
         this.documentFile = null;
-        this.fileDocumentTypeNames = {};
         this.cabinetConfig = null;
         this.facetConfigs = [];
         this.typesenseInstantsearchAdapter = null;
@@ -363,7 +361,7 @@ class CabinetSearch extends ScopedElementsMixin(
          */
         const component = this.documentViewPersonModalRef.value;
 
-        if (!component || this.objectTypeViewComponents.length === 0) {
+        if (!component) {
             return false;
         }
 
@@ -380,11 +378,6 @@ class CabinetSearch extends ScopedElementsMixin(
     }
 
     async openDocumentViewDialogWithId(id) {
-        // We need an extra check, because we need to be very quick in returning false
-        if (this.objectTypeViewComponents.length === 0) {
-            return false;
-        }
-
         /**
          * @type {CabinetFile}
          */
@@ -399,7 +392,7 @@ class CabinetSearch extends ScopedElementsMixin(
         // multiple error messages if the document was not found
         this.lockDocumentViewDialog = true;
 
-        component.setObjectTypeViewComponents(this.objectTypeViewComponents);
+        component.setObjectTypes(this.documentObjectTypes);
 
         await component.openViewDialogWithFileId(id);
         this.lockDocumentViewDialog = false;
@@ -419,7 +412,7 @@ class CabinetSearch extends ScopedElementsMixin(
              * @type {CabinetFile}
              */
             const component = that.documentFileComponentRef.value;
-            component.setObjectTypeViewComponents(this.objectTypeViewComponents);
+            component.setObjectTypes(this.documentObjectTypes);
             component.openDocumentAddDialogWithPersonHit(event.detail.hit);
         });
 
@@ -1295,7 +1288,7 @@ class CabinetSearch extends ScopedElementsMixin(
                     const objectType = hit.objectType;
                     const tagPart = pascalToKebab(hit.objectType);
                     const tagName = 'dbp-cabinet-object-type-hit-' + tagPart;
-                    const objectTypeHitComponent = this.objectTypeHitComponents[objectType];
+                    const objectTypeHitComponent = this.objectTypes[objectType].getHitComponent();
                     const type = hit['@type'];
                     cabinetSearch.defineScopedElement(tagName, objectTypeHitComponent);
                     let hitElement = cabinetSearch.createScopedElement(tagName);
@@ -1677,9 +1670,7 @@ class CabinetSearch extends ScopedElementsMixin(
             const cabinetConfigModule = await import(path);
             this.cabinetConfig = new cabinetConfigModule.default();
 
-            let formComponents = {};
-            let hitComponents = {};
-            let viewComponents = {};
+            let fileDocumentTypeNames = {};
 
             // Load all object types in parallel
             const objects = await Promise.all(
@@ -1689,6 +1680,11 @@ class CabinetSearch extends ScopedElementsMixin(
             );
 
             for (const object of objects) {
+                this.objectTypes[object.name] = object;
+                this.documentObjectTypes[object.name] = object;
+            }
+
+            for (const object of objects) {
                 console.log('object', object);
 
                 if (object.name) {
@@ -1696,43 +1692,26 @@ class CabinetSearch extends ScopedElementsMixin(
                     console.log(name);
                     if (object.getAdditionalTypes) {
                         for (const [key, value] of Object.entries(object.getAdditionalTypes())) {
-                            this.fileDocumentTypeNames[name + '---' + key] = value;
+                            fileDocumentTypeNames[name + '---' + key] = value;
                         }
                     }
-                }
-
-                if (object.getFormComponent) {
-                    formComponents[object.name] = object.getFormComponent();
-                }
-                if (object.getHitComponent) {
-                    hitComponents[object.name] = object.getHitComponent();
-                }
-                if (object.getViewComponent) {
-                    viewComponents[object.name] = object.getViewComponent();
                 }
             }
 
             const object = await this.cabinetConfig.loadObjectType(
                 this.cabinetConfig.getPersonObjectTypeName(),
             );
-            hitComponents[object.name] = object.getHitComponent();
+            this.objectTypes[object.name] = object;
 
-            this.objectTypeFormComponents = formComponents;
-            console.log('formComponents', formComponents);
-            this.objectTypeHitComponents = hitComponents;
-            console.log('hitComponents', hitComponents);
-            this.objectTypeViewComponents = viewComponents;
-            console.log('viewComponents', viewComponents);
-            console.log('fileDocumentTypeNames', this.fileDocumentTypeNames);
+            console.log('fileDocumentTypeNames', fileDocumentTypeNames);
 
             await this.updateComplete;
             /**
              * @type {CabinetFile}
              */
             const addDocumentComponent = this.documentFileComponentRef.value;
-            addDocumentComponent.setFileDocumentTypeNames(this.fileDocumentTypeNames);
-            addDocumentComponent.setObjectTypeViewComponents(this.objectTypeViewComponents);
-            addDocumentComponent.setFileDocumentFormComponents(formComponents);
+            addDocumentComponent.setObjectTypes(this.documentObjectTypes);
+            addDocumentComponent.setFileDocumentTypeNames(fileDocumentTypeNames);
         } catch (error) {
             console.error('Error loading modules:', error);
         }

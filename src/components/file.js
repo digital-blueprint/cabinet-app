@@ -83,9 +83,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
     constructor() {
         super();
         this.entryPointUrl = '';
-        this.objectTypeFormComponents = {};
-        this.objectTypeHitComponents = {};
-        this.objectTypeViewComponents = {};
+        this.objectTypes = {};
         this.documentModalRef = createRef();
         this.documentPdfViewerRef = createRef();
         this.documentPdfValidationErrorList = createRef();
@@ -186,16 +184,12 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
         };
     }
 
+    setObjectTypes(objectTypes) {
+        this.objectTypes = objectTypes;
+    }
+
     setFileDocumentTypeNames(fileDocumentTypeNames) {
         this.fileDocumentTypeNames = fileDocumentTypeNames;
-    }
-
-    setFileDocumentFormComponents(fileDocumentFormComponents) {
-        this.objectTypeFormComponents = fileDocumentFormComponents;
-    }
-
-    setObjectTypeViewComponents(objectTypeViewComponents) {
-        this.objectTypeViewComponents = objectTypeViewComponents;
     }
 
     async storeDocumentToBlob(formData) {
@@ -554,13 +548,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
 
         console.log('getDocumentEditFormHtml objectType', objectType);
         console.log('getDocumentEditFormHtml tagName', tagName);
-        console.log(
-            'getDocumentEditFormHtml this.objectTypeFormComponents[objectType]',
-            this.objectTypeFormComponents[objectType],
-        );
 
+        let formComponent = this.objectTypes[objectType].getFormComponent();
         if (!this.registry.get(tagName)) {
-            this.registry.define(tagName, this.objectTypeFormComponents[objectType]);
+            this.registry.define(tagName, formComponent);
         }
 
         let fileHitData = this.fileHitData;
@@ -612,13 +603,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
 
         console.log('objectType', objectType);
         console.log('tagName', tagName);
-        console.log(
-            'this.objectTypeViewComponents[objectType]',
-            this.objectTypeViewComponents[objectType],
-        );
 
+        let viewComponent = this.objectTypes[objectType].getViewComponent();
         if (!this.registry.get(tagName)) {
-            this.registry.define(tagName, this.objectTypeViewComponents[objectType]);
+            this.registry.define(tagName, viewComponent);
         }
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from a variable and need to set the "data" property from a variable too!
@@ -1998,9 +1986,10 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
             return;
         }
 
-        // Set the default data for the object type from the objectTypeFormComponents
-        this.fileHitDataCache[objectType] =
-            this.objectTypeFormComponents[objectType].getDefaultData();
+        // Set the default data for the object type from the objectType form component
+        this.fileHitDataCache[objectType] = this.objectTypes[objectType]
+            .getFormComponent()
+            .getDefaultData();
         console.log('presetHitData this.fileHitDataCache before', this.fileHitDataCache);
 
         // If previous hit data was set, copy the file base data from it
