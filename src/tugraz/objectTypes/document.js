@@ -2,6 +2,7 @@ import {css, html} from 'lit';
 import {BaseHitElement, getCommonStyles} from './baseObject.js';
 import {renderFieldWithHighlight} from '../../utils.js';
 import {getDocumentHit} from './schema.js';
+import {HitSelectionType, sendHitSelectionEvent} from '../../hit-selection.js';
 
 export class BaseDocumentHitElement extends BaseHitElement {
     static get styles() {
@@ -179,12 +180,7 @@ export class BaseDocumentHitElement extends BaseHitElement {
     selectCheckboxChanged(e) {
         const id = e.target.value;
         const checked = e.target.checked;
-        this.sendHitSelectionEvent(
-            this.constructor.HitSelectionType.DOCUMENT_FILE,
-            id,
-            checked,
-            this.hit,
-        );
+        sendHitSelectionEvent(this, HitSelectionType.DOCUMENT_FILE, id, checked, this.hit);
     }
 
     _renderContent() {

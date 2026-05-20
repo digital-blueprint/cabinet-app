@@ -23,6 +23,7 @@ import {createInstance} from './i18n';
 import {createClearRefinements} from './components/clear-refinements.js';
 import {createCurrentRefinements} from './components/current-refinements.js';
 import {SelectionDialog} from './components/selection-dialog.js';
+import {HitSelectionType, HitSelectionEventType, createEmptyHitSelection} from './hit-selection.js';
 
 class StatsWidget extends LangMixin(AuthMixin(DBPLitElement), createInstance) {
     constructor() {
@@ -166,7 +167,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     resetHitSelection() {
         // Use the static method to get a fresh copy and maintain single source of truth
-        this.hitSelections = this.constructor.createEmptyHitSelection();
+        this.hitSelections = createEmptyHitSelection();
         this.hitSelectAllState = this.constructor.HitSelectAllState.SELECT;
     }
 
@@ -278,8 +279,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         const isEmptySelection = (v) =>
             v == null || (typeof v === 'object' && Object.keys(v).length === 0);
         if (
-            isEmptySelection(this.hitSelections[this.constructor.HitSelectionType.PERSON]) &&
-            isEmptySelection(this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE])
+            isEmptySelection(this.hitSelections[HitSelectionType.PERSON]) &&
+            isEmptySelection(this.hitSelections[HitSelectionType.DOCUMENT_FILE])
         ) {
             this.hitSelectAllState = this.constructor.HitSelectAllState.SELECT;
         }
@@ -289,17 +290,15 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         const isEmptySelection = (v) =>
             v == null || (typeof v === 'object' && Object.keys(v).length === 0);
         return !(
-            isEmptySelection(this.hitSelections[this.constructor.HitSelectionType.PERSON]) &&
-            isEmptySelection(this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE])
+            isEmptySelection(this.hitSelections[HitSelectionType.PERSON]) &&
+            isEmptySelection(this.hitSelections[HitSelectionType.DOCUMENT_FILE])
         );
     }
 
     getSelectionCountsDisplay() {
-        const personCount = Object.keys(
-            this.hitSelections[this.constructor.HitSelectionType.PERSON] || {},
-        ).length;
+        const personCount = Object.keys(this.hitSelections[HitSelectionType.PERSON] || {}).length;
         const documentCount = Object.keys(
-            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {},
+            this.hitSelections[HitSelectionType.DOCUMENT_FILE] || {},
         ).length;
 
         const totalCount = personCount + documentCount;
@@ -445,7 +444,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
         });
 
         // Listen to hitSelectionChanged events
-        this.addEventListener(this.constructor.EventType.HIT_SELECTION_CHANGED, (event) => {
+        this.addEventListener(HitSelectionEventType.HIT_SELECTION_CHANGED, (event) => {
             console.log('Hit selection changed:', event.detail);
             const {type, identifier, state, hit} = event.detail;
             console.log('hit hit', hit);
@@ -1612,15 +1611,12 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div class="cabinet-search-selection">
                         <span>
                             ${this._i18n.t('cabinet-search.persons-selected')}:
-                            ${Object.keys(
-                                this.hitSelections[this.constructor.HitSelectionType.PERSON],
-                            ).length}
+                            ${Object.keys(this.hitSelections[HitSelectionType.PERSON]).length}
                         </span>
                         <span>
                             ${this._i18n.t('cabinet-search.documents-selected')}:
-                            ${Object.keys(
-                                this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE],
-                            ).length}
+                            ${Object.keys(this.hitSelections[HitSelectionType.DOCUMENT_FILE])
+                                .length}
                         </span>
                     </div>
                     <div class="reset-area">

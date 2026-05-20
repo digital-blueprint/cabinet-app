@@ -13,6 +13,7 @@ import {Notification} from '@dbp-toolkit/notification';
 import {getPersonHit} from './schema.js';
 import {generateExportPersonPdf} from './export.js';
 import {CabinetApi} from '../../api.js';
+import {HitSelectionType, sendHitSelectionEvent} from '../../hit-selection.js';
 import FileSaver from 'file-saver';
 
 export default class extends BaseObject {
@@ -520,7 +521,7 @@ class CabinetHitElement extends BaseHitElement {
         const id = e.target.value;
         const checked = e.target.checked;
         console.log('selectCheckboxChanged this.hit', this.hit);
-        this.sendHitSelectionEvent(this.constructor.HitSelectionType.PERSON, id, checked, this.hit);
+        sendHitSelectionEvent(this, HitSelectionType.PERSON, id, checked, this.hit);
     }
 }
 

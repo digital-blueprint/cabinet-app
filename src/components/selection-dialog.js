@@ -15,6 +15,7 @@ import {getSelectorFixCSS} from '../styles.js';
 import {CabinetSettings} from '../cabinet-settings.js';
 import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
 import {CabinetApi} from '../api.js';
+import {HitSelectionType, createEmptyHitSelection} from '../hit-selection.js';
 
 export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     constructor() {
@@ -28,9 +29,9 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.documentColumnConfigRef = createRef();
         this.fileSinkRef = createRef();
         this.fileSinkStreamedRef = createRef();
-        this.hitSelections = this.constructor.createEmptyHitSelection();
+        this.hitSelections = createEmptyHitSelection();
         this.facetNumber = 0;
-        this.activeTab = this.constructor.HitSelectionType.PERSON;
+        this.activeTab = HitSelectionType.PERSON;
         this.activeDocumentTab = 'active'; // 'active' or 'deleted'
         this.personGearButton = null;
         this.documentGearButton = null;
@@ -114,9 +115,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         this.deletedDocumentGearButton = null;
 
         // Set the active tab based on whether there are person selections
-        const personSelections = hitSelections[this.constructor.HitSelectionType.PERSON] || {};
-        const documentSelections =
-            hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+        const personSelections = hitSelections[HitSelectionType.PERSON] || {};
+        const documentSelections = hitSelections[HitSelectionType.DOCUMENT_FILE] || {};
         const hasPersonSelections = Object.keys(personSelections).length > 0;
         const hasDocumentSelections = Object.keys(documentSelections).length > 0;
 
@@ -146,9 +146,9 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         // If no person was selected but there are documents, open the Documents tab
         // Otherwise, default to Persons tab
         if (!hasPersonSelections && hasDocumentSelections) {
-            this.activeTab = this.constructor.HitSelectionType.DOCUMENT_FILE;
+            this.activeTab = HitSelectionType.DOCUMENT_FILE;
         } else {
-            this.activeTab = this.constructor.HitSelectionType.PERSON;
+            this.activeTab = HitSelectionType.PERSON;
         }
 
         // Load column visibility states
@@ -279,8 +279,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
      */
     async scheduleActiveDocumentsForDeletion() {
         const i18n = this._i18n;
-        const documentSelections =
-            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+        const documentSelections = this.hitSelections[HitSelectionType.DOCUMENT_FILE] || {};
 
         // Get active documents only
         const activeDocuments = Object.entries(documentSelections).filter(
@@ -332,10 +331,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 'success',
             );
             // Clear only successfully deleted items
-            this.clearSelectionItems(
-                this.constructor.HitSelectionType.DOCUMENT_FILE,
-                successfulIds,
-            );
+            this.clearSelectionItems(HitSelectionType.DOCUMENT_FILE, successfulIds);
         }
 
         if (failCount > 0) {
@@ -350,7 +346,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Trigger a re-render
         await this.requestUpdate();
-        this.updateTableData(this.constructor.HitSelectionType.DOCUMENT_FILE);
+        this.updateTableData(HitSelectionType.DOCUMENT_FILE);
     }
 
     /**
@@ -358,8 +354,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
      */
     async undeleteDeletedDocuments() {
         const i18n = this._i18n;
-        const documentSelections =
-            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+        const documentSelections = this.hitSelections[HitSelectionType.DOCUMENT_FILE] || {};
 
         // Get deleted documents only
         const deletedDocuments = Object.entries(documentSelections).filter(
@@ -411,10 +406,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 'success',
             );
             // Clear only successfully undeleted items
-            this.clearSelectionItems(
-                this.constructor.HitSelectionType.DOCUMENT_FILE,
-                successfulIds,
-            );
+            this.clearSelectionItems(HitSelectionType.DOCUMENT_FILE, successfulIds);
         }
 
         if (failCount > 0) {
@@ -429,7 +421,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
 
         // Trigger a re-render
         await this.requestUpdate();
-        this.updateTableData(this.constructor.HitSelectionType.DOCUMENT_FILE);
+        this.updateTableData(HitSelectionType.DOCUMENT_FILE);
     }
 
     /**
@@ -457,7 +449,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         e.target.selectedIndex = 0;
 
         const i18n = this._i18n;
-        const personSelections = this.hitSelections[this.constructor.HitSelectionType.PERSON] || {};
+        const personSelections = this.hitSelections[HitSelectionType.PERSON] || {};
 
         const persons = Object.entries(personSelections);
 
@@ -701,8 +693,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         console.log('Exporting active documents...');
 
         const i18n = this._i18n;
-        const documentSelections =
-            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+        const documentSelections = this.hitSelections[HitSelectionType.DOCUMENT_FILE] || {};
 
         // Filter active documents only
         const activeDocuments = Object.entries(documentSelections).filter(
@@ -737,8 +728,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         e.target.selectedIndex = 0;
 
         const i18n = this._i18n;
-        const documentSelections =
-            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+        const documentSelections = this.hitSelections[HitSelectionType.DOCUMENT_FILE] || {};
 
         // Filter deleted documents only
         const deletedDocuments = Object.entries(documentSelections).filter(
@@ -1359,7 +1349,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 @dbp-modal-closed="${this.onCloseModal}">
                 <div slot="title" class="modal-title">
                     <h2>
-                        ${this.activeTab === this.constructor.HitSelectionType.PERSON
+                        ${this.activeTab === HitSelectionType.PERSON
                             ? i18n.t('selection-dialog.batch-operations-person', '')
                             : i18n.t('selection-dialog.batch-operations-document', '')}
                     </h2>
@@ -1560,8 +1550,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     const rowData = cell.getRow().getData();
                     const selectionType =
                         type === 'person'
-                            ? this.constructor.HitSelectionType.PERSON
-                            : this.constructor.HitSelectionType.DOCUMENT_FILE;
+                            ? HitSelectionType.PERSON
+                            : HitSelectionType.DOCUMENT_FILE;
                     this.removeSelection(selectionType, rowData.id);
                 });
                 return button;
@@ -1663,9 +1653,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             `;
         }
 
-        const personSelections = this.hitSelections[this.constructor.HitSelectionType.PERSON] || {};
-        const documentSelections =
-            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+        const personSelections = this.hitSelections[HitSelectionType.PERSON] || {};
+        const documentSelections = this.hitSelections[HitSelectionType.DOCUMENT_FILE] || {};
 
         console.log('renderContent this.hitSelections', this.hitSelections);
         console.log('renderContent personSelections', personSelections);
@@ -1785,16 +1774,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 <div class="modal-nav" role="tablist">
                     <button
                         role="tab"
-                        aria-selected="${this.activeTab ===
-                        this.constructor.HitSelectionType.PERSON}"
+                        aria-selected="${this.activeTab === HitSelectionType.PERSON}"
                         aria-controls="select-persons"
                         title="${i18n.t('selection-dialog.persons-tab', 'Personen')}"
                         @click="${() => {
-                            this.activeTab = this.constructor.HitSelectionType.PERSON;
+                            this.activeTab = HitSelectionType.PERSON;
                         }}"
-                        class="${this.activeTab === this.constructor.HitSelectionType.PERSON
-                            ? 'active'
-                            : ''}">
+                        class="${this.activeTab === HitSelectionType.PERSON ? 'active' : ''}">
                         <dbp-icon class="nav-icon" name="user" aria-hidden="true"></dbp-icon>
                         <p>
                             ${i18n.t('selection-dialog.persons-tab', 'Personen')}
@@ -1803,14 +1789,13 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     </button>
                     <button
                         role="tab"
-                        aria-selected="${this.activeTab ===
-                        this.constructor.HitSelectionType.DOCUMENT_FILE}"
+                        aria-selected="${this.activeTab === HitSelectionType.DOCUMENT_FILE}"
                         aria-controls="select-documents"
                         title="${i18n.t('selection-dialog.documents-tab', 'Dokumente')}"
                         @click="${() => {
-                            this.activeTab = this.constructor.HitSelectionType.DOCUMENT_FILE;
+                            this.activeTab = HitSelectionType.DOCUMENT_FILE;
                         }}"
-                        class="${this.activeTab === this.constructor.HitSelectionType.DOCUMENT_FILE
+                        class="${this.activeTab === HitSelectionType.DOCUMENT_FILE
                             ? 'active'
                             : ''}">
                         <dbp-icon class="nav-icon" name="files" aria-hidden="true"></dbp-icon>
@@ -1825,8 +1810,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div
                         id="select-persons"
                         role="tabpanel"
-                        class="tab-content ${this.activeTab ===
-                        this.constructor.HitSelectionType.PERSON
+                        class="tab-content ${this.activeTab === HitSelectionType.PERSON
                             ? 'active'
                             : ''}">
                         ${Object.keys(personSelections).length > 0
@@ -1886,8 +1870,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                     <div
                         id="select-documents"
                         role="tabpanel"
-                        class="tab-content ${this.activeTab ===
-                        this.constructor.HitSelectionType.DOCUMENT_FILE
+                        class="tab-content ${this.activeTab === HitSelectionType.DOCUMENT_FILE
                             ? 'active'
                             : ''}">
                         <!-- Sub-tabs for active and deleted documents -->
@@ -2102,27 +2085,26 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
      * Remove all person selections
      */
     removeAllPersonSelections() {
-        const personSelections = this.hitSelections[this.constructor.HitSelectionType.PERSON] || {};
+        const personSelections = this.hitSelections[HitSelectionType.PERSON] || {};
         const ids = Object.keys(personSelections);
 
         // Create a new object to trigger reactivity
         const newSelections = {...this.hitSelections};
-        newSelections[this.constructor.HitSelectionType.PERSON] = {};
+        newSelections[HitSelectionType.PERSON] = {};
         this.hitSelections = newSelections;
 
         // Notify parent to clear selections
-        this.clearSelectionItems(this.constructor.HitSelectionType.PERSON, ids);
+        this.clearSelectionItems(HitSelectionType.PERSON, ids);
 
         // Update the table data immediately
-        this.updateTableData(this.constructor.HitSelectionType.PERSON);
+        this.updateTableData(HitSelectionType.PERSON);
     }
 
     /**
      * Remove all active document selections
      */
     removeAllActiveDocumentSelections() {
-        const documentSelections =
-            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+        const documentSelections = this.hitSelections[HitSelectionType.DOCUMENT_FILE] || {};
         const activeIds = Object.entries(documentSelections)
             .filter(
                 ([_id, hit]) => hit && typeof hit === 'object' && !hit.base?.isScheduledForDeletion,
@@ -2133,22 +2115,21 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const newSelections = {...this.hitSelections};
         const newDocumentSelections = {...documentSelections};
         activeIds.forEach((id) => delete newDocumentSelections[id]);
-        newSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] = newDocumentSelections;
+        newSelections[HitSelectionType.DOCUMENT_FILE] = newDocumentSelections;
         this.hitSelections = newSelections;
 
         // Notify parent to clear selections
-        this.clearSelectionItems(this.constructor.HitSelectionType.DOCUMENT_FILE, activeIds);
+        this.clearSelectionItems(HitSelectionType.DOCUMENT_FILE, activeIds);
 
         // Update the table data immediately
-        this.updateTableData(this.constructor.HitSelectionType.DOCUMENT_FILE);
+        this.updateTableData(HitSelectionType.DOCUMENT_FILE);
     }
 
     /**
      * Remove all deleted document selections
      */
     removeAllDeletedDocumentSelections() {
-        const documentSelections =
-            this.hitSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] || {};
+        const documentSelections = this.hitSelections[HitSelectionType.DOCUMENT_FILE] || {};
         const deletedIds = Object.entries(documentSelections)
             .filter(
                 ([_id, hit]) => hit && typeof hit === 'object' && hit.base?.isScheduledForDeletion,
@@ -2159,14 +2140,14 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const newSelections = {...this.hitSelections};
         const newDocumentSelections = {...documentSelections};
         deletedIds.forEach((id) => delete newDocumentSelections[id]);
-        newSelections[this.constructor.HitSelectionType.DOCUMENT_FILE] = newDocumentSelections;
+        newSelections[HitSelectionType.DOCUMENT_FILE] = newDocumentSelections;
         this.hitSelections = newSelections;
 
         // Notify parent to clear selections
-        this.clearSelectionItems(this.constructor.HitSelectionType.DOCUMENT_FILE, deletedIds);
+        this.clearSelectionItems(HitSelectionType.DOCUMENT_FILE, deletedIds);
 
         // Update the table data immediately
-        this.updateTableData(this.constructor.HitSelectionType.DOCUMENT_FILE);
+        this.updateTableData(HitSelectionType.DOCUMENT_FILE);
     }
 
     removeSelection(type, id) {
@@ -2194,16 +2175,16 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
         const selections = this.hitSelections[type] || {};
 
         // Prepare the new data with all field values
-        const tableType = type === this.constructor.HitSelectionType.PERSON ? 'person' : 'document';
+        const tableType = type === HitSelectionType.PERSON ? 'person' : 'document';
 
         // Update the appropriate table
-        if (type === this.constructor.HitSelectionType.PERSON) {
+        if (type === HitSelectionType.PERSON) {
             const tableData = this.buildTableData(tableType, selections);
             const personTable = this.personTableRef.value;
             if (personTable && personTable.tabulatorTable) {
                 personTable.tabulatorTable.setData(tableData);
             }
-        } else if (type === this.constructor.HitSelectionType.DOCUMENT_FILE) {
+        } else if (type === HitSelectionType.DOCUMENT_FILE) {
             // Separate active and deleted documents
             const activeDocuments = {};
             const deletedDocuments = {};
@@ -2243,7 +2224,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             } else if (!personTable.tableBuilding) {
                 // Table is already built, update its data
                 console.log('Updating person table data');
-                this.updateTableData(this.constructor.HitSelectionType.PERSON);
+                this.updateTableData(HitSelectionType.PERSON);
                 personTable.tabulatorTable.redraw();
             }
         }
@@ -2257,7 +2238,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
             } else if (!documentTable.tableBuilding) {
                 // Table is already built, update its data
                 console.log('Updating document table data');
-                this.updateTableData(this.constructor.HitSelectionType.DOCUMENT_FILE);
+                this.updateTableData(HitSelectionType.DOCUMENT_FILE);
                 documentTable.tabulatorTable.redraw();
             }
         }
@@ -2269,7 +2250,7 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
                 console.log('Building deleted document table');
                 deletedDocumentTable.buildTable();
             } else if (!deletedDocumentTable.tableBuilding) {
-                this.updateTableData(this.constructor.HitSelectionType.DOCUMENT_FILE);
+                this.updateTableData(HitSelectionType.DOCUMENT_FILE);
                 deletedDocumentTable.tabulatorTable.redraw();
             }
         }
