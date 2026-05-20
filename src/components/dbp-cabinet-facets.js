@@ -411,7 +411,7 @@ export class CabinetFacets extends ScopedElementsMixin(DBPCabinetLitElement) {
                                 <dbp-cabinet-facet-panel
                                     .lang="${this.lang}"
                                     class="${classMap({'display-none': hidden})}"
-                                    .titleKey="${facetConfig.name}">
+                                    .title="${facetConfig.name}">
                                     <div
                                         id="${cssClass}"
                                         class="filter filter--${cssClass} filter-type-${cssTypeClass}"></div>

@@ -9,12 +9,12 @@ import {css, html} from 'lit';
 export class FacetPanel extends LangMixin(ScopedElementsMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
-        this.titleKey = '';
+        this.title = '';
         this.isOpen = false;
     }
 
     static properties = {
-        titleKey: {type: String},
+        title: {type: String},
         isOpen: {type: Boolean, state: true},
     };
 
@@ -73,7 +73,7 @@ export class FacetPanel extends LangMixin(ScopedElementsMixin(DBPLitElement), cr
                     aria-expanded="${this.isOpen}"
                     aria-controls="content"
                     @click="${this._toggleContent}">
-                    <span>${this._i18n.t(this.titleKey)}</span>
+                    <span>${this.title}</span>
                     <dbp-icon
                         class="chevron-container"
                         name="${this.isOpen ? 'chevron-up' : 'chevron-down'}"

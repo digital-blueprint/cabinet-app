@@ -1,10 +1,5 @@
 import {createInstance} from '../tugraz/i18n.js';
 
-// Dummy function to make translations
-function t(key) {
-    return key;
-}
-
 function translationRenderFunction(lang, schemaField, value, operator = null) {
     let i18n = createInstance();
     i18n.changeLanguage(lang);
@@ -125,9 +120,8 @@ export default class CabinetConfig {
 
     async generateExportPersonPdf(hit, lang, withInternalData = false) {
         let module = await import('./objectTypes/export.js');
-        let i18n = createInstance();
-        i18n.changeLanguage(lang);
-        return await module.generateExportPersonPdf(i18n, hit, withInternalData);
+        this._i18n.changeLanguage(lang);
+        return await module.generateExportPersonPdf(this._i18n, hit, withInternalData);
     }
 
     /**
@@ -152,18 +146,26 @@ export default class CabinetConfig {
     getFacetsConfig(lang = 'de') {
         const showMoreLimitValue = 50;
 
+        let i18n = this._i18n;
+        i18n.changeLanguage(lang);
+
         const selectField = (parentField) => {
             return lang === 'de' ? `${parentField}.text` : `${parentField}.textEn`;
         };
 
         return [
-            {'filter-group': {id: 'category', name: t('cabinet-search.type-filter-group-title')}},
+            {
+                'filter-group': {
+                    id: 'category',
+                    name: i18n.t('tugraz:cabinet-search.type-filter-group-title'),
+                },
+            },
             {
                 id: '@type',
                 groupId: 'category',
                 schemaField: '@type',
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-type-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-type-title'),
                 renderFunction: translationRenderFunction,
                 facetOptions: {
                     facet: {
@@ -174,13 +176,18 @@ export default class CabinetConfig {
                 usePanel: false,
             },
             // Person properties
-            {'filter-group': {id: 'person', name: t('cabinet-search.person-filter-group-title')}},
+            {
+                'filter-group': {
+                    id: 'person',
+                    name: i18n.t('tugraz:cabinet-search.person-filter-group-title'),
+                },
+            },
             {
                 id: 'person.person',
                 groupId: 'person',
                 schemaField: 'person.person',
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-person-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-person-person-title'),
                 hidden: true,
                 facetOptions: {
                     facet: {
@@ -193,7 +200,7 @@ export default class CabinetConfig {
                 id: 'person.birthDateTimestamp',
                 groupId: 'person',
                 schemaField: 'person.birthDateTimestamp',
-                name: t('cabinet-search.filter-person-birth-date-timestamp-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-person-birth-date-timestamp-title'),
                 schemaFieldType: 'datepicker',
                 renderFunction: datePickerUTCRenderFunction,
                 facetOptions: {
@@ -207,7 +214,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: selectField('person.personalStatus'),
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-personal-status-text-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-person-personal-status-text-title'),
                 facetOptions: {
                     facet: {
                         searchable: false,
@@ -220,7 +227,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: selectField('person.studentStatus'),
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-student-status-text-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-person-student-status-text-title'),
                 facetOptions: {
                     facet: {
                         searchable: false,
@@ -233,7 +240,9 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: selectField('person.exmatriculationStatus'),
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-exmatriculation-status-text-title'),
+                name: i18n.t(
+                    'tugraz:cabinet-search.filter-person-exmatriculation-status-text-title',
+                ),
                 facetOptions: {
                     facet: {
                         showMore: false,
@@ -246,7 +255,9 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: selectField('person.admissionQualificationType'),
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-admission-qualification-type-text-title'),
+                name: i18n.t(
+                    'tugraz:cabinet-search.filter-person-admission-qualification-type-text-title',
+                ),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -259,7 +270,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: selectField('person.nationalities'),
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-nationalities-text-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-person-nationalities-text-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -272,7 +283,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: selectField('person.gender'),
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-gender-text-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-person-gender-text-title'),
                 facetOptions: {
                     facet: {
                         searchable: false,
@@ -284,7 +295,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'person.immatriculationSemester',
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-immatriculation-semester-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-person-immatriculation-semester-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -297,7 +308,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'person.exmatriculationSemester',
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-exmatriculation-semester-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-person-exmatriculation-semester-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -310,7 +321,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: selectField('person.homeAddress.country'),
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-home-address-country-text-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-person-home-address-country-text-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -323,7 +334,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'person.homeAddress.region',
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-home-address-region-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-person-home-address-region-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -336,7 +347,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'person.homeAddress.place',
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-home-address-place-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-person-home-address-place-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -349,7 +360,9 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: selectField('person.studyAddress.country'),
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-study-address-country-text-title'),
+                name: i18n.t(
+                    'tugraz:cabinet-search.filter-person-study-address-country-text-title',
+                ),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -362,7 +375,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'person.studyAddress.region',
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-study-address-region-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-person-study-address-region-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -375,7 +388,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'person.studyAddress.place',
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-person-study-address-place-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-person-study-address-place-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -388,7 +401,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'study.name',
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-study-name-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-study-name-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -401,7 +414,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'study.type',
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-study-type-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-study-type-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -414,7 +427,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: selectField('study.status'),
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-study-status-text-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-study-status-text-title'),
                 facetOptions: {
                     facet: {
                         searchable: false,
@@ -423,14 +436,19 @@ export default class CabinetConfig {
                 },
             },
             // Document properties
-            {'filter-group': {id: 'file', name: t('cabinet-search.document-filter-group-title')}},
+            {
+                'filter-group': {
+                    id: 'file',
+                    name: i18n.t('tugraz:cabinet-search.document-filter-group-title'),
+                },
+            },
             {
                 id: 'file.base.additionalType',
                 groupId: 'file',
                 schemaField: 'file.base.additionalType.key',
                 schemaFieldType: 'checkbox',
                 renderFunction: translationRenderFunction,
-                name: t('cabinet-search.filter-file-base-additional-type-text-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-file-base-additional-type-text-title'),
                 facetOptions: {facet: {searchable: false}},
             },
             {
@@ -438,7 +456,7 @@ export default class CabinetConfig {
                 groupId: 'file',
                 schemaField: 'file.base.createdTimestamp',
                 schemaFieldType: 'datepicker',
-                name: t('cabinet-search.filter-file-base-created-timestamp-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-file-base-created-timestamp-title'),
                 renderFunction: datePickerLocalRenderFunction,
             },
             {
@@ -446,7 +464,9 @@ export default class CabinetConfig {
                 groupId: 'file',
                 schemaField: 'file.base.recommendedDeletionTimestamp',
                 schemaFieldType: 'datepicker',
-                name: t('cabinet-search.filter-file-base-recommended-deletion-timestamp-title'),
+                name: i18n.t(
+                    'tugraz:cabinet-search.filter-file-base-recommended-deletion-timestamp-title',
+                ),
                 renderFunction: datePickerLocalRenderFunction,
             },
             {
@@ -455,7 +475,7 @@ export default class CabinetConfig {
                 schemaField: 'file.base.fileSource',
                 schemaFieldType: 'checkbox',
                 renderFunction: translationRenderFunction,
-                name: t('cabinet-search.filter-file-base-file-source-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-file-base-file-source-title'),
                 facetOptions: {facet: {searchable: false}},
             },
             {
@@ -463,7 +483,7 @@ export default class CabinetConfig {
                 groupId: 'file',
                 schemaField: selectField('file.base.studyField'),
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-file-base-study-field-name-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-file-base-study-field-name-title'),
                 facetOptions: {facet: {searchable: false}},
             },
             {
@@ -471,7 +491,7 @@ export default class CabinetConfig {
                 groupId: 'file',
                 schemaField: 'file.base.semester',
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-file-base-semester-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-file-base-semester-title'),
                 facetOptions: {facet: {searchable: false}},
             },
             {
@@ -480,7 +500,7 @@ export default class CabinetConfig {
                 schemaField: 'file.base.isPartOf',
                 schemaFieldType: 'checkbox',
                 renderFunction: translationRenderFunction,
-                name: t('cabinet-search.filter-file-base-is-part-of-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-file-base-is-part-of-title'),
                 facetOptions: {facet: {searchable: false}},
             },
             {
@@ -489,7 +509,9 @@ export default class CabinetConfig {
                 schemaField: 'file.file-cabinet-admissionNotice.decision',
                 schemaFieldType: 'checkbox',
                 renderFunction: translationRenderFunction,
-                name: t('cabinet-search.filter-file-file-cabinet-admission-notice-decision-title'),
+                name: i18n.t(
+                    'tugraz:cabinet-search.filter-file-file-cabinet-admission-notice-decision-title',
+                ),
                 facetOptions: {facet: {searchable: false}},
             },
             {
@@ -497,7 +519,7 @@ export default class CabinetConfig {
                 groupId: 'file',
                 schemaField: selectField('file.shared.nationality'),
                 schemaFieldType: 'checkbox',
-                name: t('cabinet-search.filter-file-file-shared-nationality-title'),
+                name: i18n.t('tugraz:cabinet-search.filter-file-file-shared-nationality-title'),
                 facetOptions: {facet: {searchable: true}},
             },
         ];
@@ -509,7 +531,7 @@ export default class CabinetConfig {
      * @returns {Array} - Array of column configurations
      */
     getPersonColumns(lang = 'de') {
-        let i18n = createInstance();
+        let i18n = this._i18n;
         i18n.changeLanguage(lang);
         return [
             {
@@ -668,9 +690,8 @@ export default class CabinetConfig {
         const selectField = (parentField) => {
             return lang === 'de' ? `${parentField}.text` : `${parentField}.textEn`;
         };
-        let i18n = createInstance();
+        let i18n = this._i18n;
         i18n.changeLanguage(lang);
-        // Use t() to ensure i18next detects these keys and doesn't remove them during tree-shaking
         return [
             {
                 id: 'file.base.additionalType',

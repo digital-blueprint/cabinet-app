@@ -322,13 +322,11 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
     }
 
     renderFacetListItem(item, key) {
-        const i18n = this._i18n;
-
         if (item['filter-group']) {
             return html`
                 <li class="facet-fields ${item.id}" data-index="${key}">
                     <div class="category-field">
-                        <h3>${i18n.t(item['filter-group'].name)}</h3>
+                        <h3>${item['filter-group'].name}</h3>
                         ${this.renderFacetGroupVisibilityIconButton(item)}
                     </div>
                 </li>
@@ -339,7 +337,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 <li class="facet-fields ${item.id}" data-index="${key}">
                     <div class="facet-field">
                         <span class="facet-button facet-order">${this.facetNumber}</span>
-                        <span class="facet-title"><strong>${i18n.t(item.name)}</strong></span>
+                        <span class="facet-title"><strong>${item.name}</strong></span>
                         ${this.renderFacetVisibilityIconButton(item)}
                     </div>
                 </li>
@@ -367,7 +365,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
 
     renderFacetVisibilityIconButton(item) {
         const visible = this.facetVisibilityStates[item.id] === true;
-        const name = this._i18n.t(item.name);
 
         // We need to define "filter-settings.facet-hide" and "filter-settings.facet-show" separately,
         // or "npm run fix" will remove the translation keys
@@ -377,10 +374,10 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
                 class="facet-visibility-icon"
                 title="${visible
                     ? this._i18n.t('filter-settings.facet-hide', {
-                          name: name,
+                          name: item.name,
                       })
                     : this._i18n.t('filter-settings.facet-show', {
-                          name: name,
+                          name: item.name,
                       })}"
                 @click="${() => {
                     this.changeFacetVisibility(item, !visible);
@@ -492,7 +489,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
         const visible = Object.keys(this.facetVisibilityStates).some(
             (key) => this.facetVisibilityStates[key] === true && key.startsWith(groupId),
         );
-        const groupName = this._i18n.t(item['filter-group'].name);
+        const groupName = item['filter-group'].name;
 
         // We need to define "filter-settings.group-hide" and "filter-settings.group-show" separately,
         // or "npm run fix" will remove the translation keys

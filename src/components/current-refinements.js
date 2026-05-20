@@ -128,12 +128,12 @@ class CurrentRefinements extends LangMixin(DBPLitElement, createInstance) {
 
                 return html`
                     <li class="ais-CurrentRefinements-category">
-                        <div class="refinement-title">${i18n.t(facetConfig.name)}</div>
+                        <div class="refinement-title">${facetConfig.name}</div>
                         <div class="refinement-value">
                             <span class="ais-CurrentRefinements-categoryLabel">${label}</span>
                             <button
                                 class="ais-CurrentRefinements-delete"
-                                aria-label="${i18n.t(facetConfig.name)} ${label}"
+                                aria-label="${facetConfig.name} ${label}"
                                 title="${i18n.t(
                                     'cabinet-search.refinement-delete-filter-button-text',
                                 )}"
