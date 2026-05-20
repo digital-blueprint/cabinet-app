@@ -6,16 +6,9 @@ export default class DBPCabinetLitElement extends LangMixin(
     AuthMixin(DBPLitElement),
     createInstance,
 ) {
-    constructor() {
-        super();
-        this.entryPointUrl = '';
-    }
-
     static get properties() {
         return {
             ...super.properties,
-            entryPointUrl: {type: String, attribute: 'entry-point-url'},
-            fileHandlingEnabledTargets: {type: String, attribute: 'file-handling-enabled-targets'},
             nextcloudWebAppPasswordURL: {type: String, attribute: 'nextcloud-web-app-password-url'},
             nextcloudWebDavURL: {type: String, attribute: 'nextcloud-webdav-url'},
             nextcloudName: {type: String, attribute: 'nextcloud-name'},

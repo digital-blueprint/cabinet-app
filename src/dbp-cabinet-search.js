@@ -125,6 +125,7 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
 
     constructor() {
         super();
+        this.entryPointUrl = '';
         this.cabinetSettings = new CabinetSettings();
         this.facetVisibilityStates = {};
         this.objectTypeFormComponents = {};
@@ -199,6 +200,8 @@ class CabinetSearch extends ScopedElementsMixin(DBPCabinetLitElement) {
     static get properties() {
         return {
             ...super.properties,
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            fileHandlingEnabledTargets: {type: String, attribute: 'file-handling-enabled-targets'},
             facetVisibilityStates: {type: Object, attribute: false},
             hitData: {type: Object, attribute: false},
             cabinetConfig: {type: Object, attribute: false},

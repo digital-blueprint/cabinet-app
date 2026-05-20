@@ -82,6 +82,7 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
 
     constructor() {
         super();
+        this.entryPointUrl = '';
         this.objectTypeFormComponents = {};
         this.objectTypeHitComponents = {};
         this.objectTypeViewComponents = {};
@@ -169,6 +170,8 @@ export class CabinetFile extends ScopedElementsMixin(DBPCabinetTugrazLitElement)
     static get properties() {
         return {
             ...super.properties,
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            fileHandlingEnabledTargets: {type: String, attribute: 'file-handling-enabled-targets'},
             person: {type: Object, attribute: false},
             fileHitData: {type: Object, attribute: false},
             versions: {type: Array, attribute: false},

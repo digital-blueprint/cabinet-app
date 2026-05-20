@@ -32,6 +32,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(DBPCabinetLitElem
     static get properties() {
         return {
             ...super.properties,
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
             facetVisibilityStates: {type: Object, attribute: false},
             facetConfigs: {type: Array, attribute: false},
         };

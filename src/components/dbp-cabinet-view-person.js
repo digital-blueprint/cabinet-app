@@ -36,6 +36,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(DBPCabinetLitElement)
     static get properties() {
         return {
             ...super.properties,
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
             hitData: {type: Object, attribute: false},
             documentFile: {type: File, attribute: false},
             documentType: {type: String, attribute: false},

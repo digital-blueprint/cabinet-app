@@ -84,6 +84,8 @@ export class SelectionDialog extends ScopedElementsMixin(DBPCabinetLitElement) {
     static get properties() {
         return {
             ...super.properties,
+            entryPointUrl: {type: String, attribute: 'entry-point-url'},
+            fileHandlingEnabledTargets: {type: String, attribute: 'file-handling-enabled-targets'},
             hitSelections: {type: Object, attribute: false},
             activeTab: {type: String, attribute: false},
             activeDocumentTab: {type: String, attribute: false},
