@@ -544,7 +544,7 @@ class CabinetSearch extends ScopedElementsMixin(
                 body: this._i18n.t('search.search-failed-body', {message: error.message}),
                 type: 'danger',
                 replaceId: 'search-failed',
-                timeout: 10,
+                timeout: 0,
             });
         });
 
