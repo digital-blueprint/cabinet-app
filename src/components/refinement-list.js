@@ -163,7 +163,7 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
         const {
             items = [],
             canRefine = true,
-            canToggleShowMore = false,
+            hasExhaustiveItems = false,
             widgetParams = {},
         } = this.refinementListRenderOptions;
 
@@ -201,7 +201,7 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
 
         return html`
             <div class="refinement-list-container">
-                <ul class="refinement-list ${canToggleShowMore ? 'has-gradients' : ''}">
+                <ul class="refinement-list ${!hasExhaustiveItems ? 'has-gradients' : ''}">
                     ${repeat(
                         items,
                         (item) => item.value,
