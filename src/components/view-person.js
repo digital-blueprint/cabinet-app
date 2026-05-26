@@ -59,7 +59,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(
             return;
         }
 
-        this.sendSetPropertyEvent('routing-url', `/person/${hit.id}`, true);
+        this.sendSetPropertyEvent('routing-url', `/person/${encodeURIComponent(hit.id)}`, true);
         this.hitData = hit;
 
         // Wait until hit data is set and rendering is complete

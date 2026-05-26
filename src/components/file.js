@@ -228,7 +228,11 @@ export class CabinetFile extends ScopedElementsMixin(
             }
 
             // Update URL, especially if a new version was created
-            this.sendSetPropertyEvent('routing-url', `/document/${this.fileHitData.id}`, true);
+            this.sendSetPropertyEvent(
+                'routing-url',
+                `/document/${encodeURIComponent(this.fileHitData.id)}`,
+                true,
+            );
         }
     }
 
