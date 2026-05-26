@@ -131,6 +131,13 @@
     },
     "info": "info",
     "loading-message": "",
+    "pagination": {
+        "first-page": "First page",
+        "last-page": "Last page",
+        "next-page": "Next page",
+        "page": "Page",
+        "previous-page": "Previous page"
+    },
     "person": {
         "person-not-found-body": "The requested person could not be found!",
         "person-not-found-summary": "Person not found"

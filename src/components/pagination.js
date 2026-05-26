@@ -45,7 +45,7 @@ class Pagination extends LangMixin(DBPLitElement, createInstance) {
                 display: block;
                 text-align: center;
                 line-height: 2em;
-                padding: 0 0.7em;
+                padding: 0 0.5em;
                 border: none;
                 cursor: pointer;
                 color: var(--dbp-content);
@@ -100,7 +100,7 @@ class Pagination extends LangMixin(DBPLitElement, createInstance) {
             event.preventDefault();
             refine(page);
         };
-
+        const i18n = this._i18n;
         const firstItem = html`
             <li
                 class="ais-Pagination-item ais-Pagination-item--firstPage ${isFirstPage
@@ -108,13 +108,17 @@ class Pagination extends LangMixin(DBPLitElement, createInstance) {
                     : ''}">
                 ${isFirstPage
                     ? html`
-                          <span class="ais-Pagination-link" aria-label="First Page">«</span>
+                          <span
+                              class="ais-Pagination-link"
+                              aria-label="${i18n.t('pagination.first-page')}">
+                              «
+                          </span>
                       `
                     : html`
                           <a
                               class="ais-Pagination-link"
                               href="${createURL(0)}"
-                              aria-label="First Page"
+                              aria-label="${i18n.t('pagination.first-page')}"
                               @click="${(e) => handleClick(e, 0)}">
                               «
                           </a>
@@ -129,13 +133,17 @@ class Pagination extends LangMixin(DBPLitElement, createInstance) {
                     : ''}">
                 ${isFirstPage
                     ? html`
-                          <span class="ais-Pagination-link" aria-label="Previous Page">‹</span>
+                          <span
+                              class="ais-Pagination-link"
+                              aria-label="${i18n.t('pagination.previous-page')}">
+                              ‹
+                          </span>
                       `
                     : html`
                           <a
                               class="ais-Pagination-link"
                               href="${createURL(currentRefinement - 1)}"
-                              aria-label="Previous Page"
+                              aria-label="${i18n.t('pagination.previous-page')} "
                               @click="${(e) => handleClick(e, currentRefinement - 1)}">
                               ‹
                           </a>
@@ -153,7 +161,7 @@ class Pagination extends LangMixin(DBPLitElement, createInstance) {
                     <a
                         class="ais-Pagination-link"
                         href="${createURL(page)}"
-                        aria-label="Page ${page + 1}"
+                        aria-label="${i18n.t('pagination.page')} ${page + 1}"
                         aria-current="${currentRefinement === page ? 'page' : 'false'}"
                         @click="${(e) => handleClick(e, page)}">
                         ${page + 1}
@@ -169,13 +177,17 @@ class Pagination extends LangMixin(DBPLitElement, createInstance) {
                     : ''}">
                 ${isLastPage
                     ? html`
-                          <span class="ais-Pagination-link" aria-label="Next Page">›</span>
+                          <span
+                              class="ais-Pagination-link"
+                              aria-label="${i18n.t('pagination.next-page')}">
+                              ›
+                          </span>
                       `
                     : html`
                           <a
                               class="ais-Pagination-link"
                               href="${createURL(currentRefinement + 1)}"
-                              aria-label="Next Page"
+                              aria-label="${i18n.t('pagination.next-page')}"
                               @click="${(e) => handleClick(e, currentRefinement + 1)}">
                               ›
                           </a>
@@ -190,13 +202,19 @@ class Pagination extends LangMixin(DBPLitElement, createInstance) {
                     : ''}">
                 ${isLastPage
                     ? html`
-                          <span class="ais-Pagination-link" aria-label="Last Page">»</span>
+                          <span
+                              class="ais-Pagination-link"
+                              aria-label="${i18n.t('pagination.last-page')}">
+                              »
+                          </span>
                       `
                     : html`
                           <a
                               class="ais-Pagination-link"
                               href="${createURL(nbPages - 1)}"
-                              aria-label="Last Page, Page ${nbPages}"
+                              aria-label="${i18n.t('pagination.last-page')}, ${i18n.t(
+                                  'pagination.page',
+                              )} ${nbPages}"
                               @click="${(e) => handleClick(e, nbPages - 1)}">
                               »
                           </a>
