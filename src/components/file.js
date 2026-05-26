@@ -221,9 +221,12 @@ export class CabinetFile extends ScopedElementsMixin(
                 'success',
             );
 
-            if (isCurrent && obsoleteBlobIds.length > 0) {
+            if (isCurrent) {
                 // Wait until all versions from obsoleteBlobIds are updated to have isCurrent set the false in Typesense
-                await this.waitForVersionsUpdatedInTypesense(obsoleteBlobIds);
+                await this.waitForUpdatedInTypesense(
+                    obsoleteBlobIds,
+                    (item) => item.base?.isCurrent === false,
+                );
             }
 
             // Update URL, especially if a new version was created
@@ -2395,102 +2398,22 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     /**
-     * Waits until versions from updatedBlobIds are updated in Typesense with isCurrent set to false
-     * @param {Array<string>} updatedBlobIds - Array of blob IDs that were marked as obsolete
-     * @param {number} increment - Current attempt counter (used for recursion)
+     * Waits until items identified by ids are updated in Typesense according to the provided check callback
+     * @param {Array<string>} ids - Array of file IDs to check
+     * @param {(item: object) => boolean} isUpdated - Callback that receives the item and returns true if the update happened
      * @returns {Promise<void>}
      */
-    async waitForVersionsUpdatedInTypesense(updatedBlobIds, increment = 0) {
-        // Stop after 10 attempts
-        if (increment >= 10) {
-            console.warn(
-                'waitForVersionsUpdatedInTypesense: Could not verify all versions were updated in Typesense after 10 attempts',
-            );
-            this.documentModalNotification(
-                this._i18n.t('cabinet-file.notification-title-versions-sync-warning'),
-                this._i18n.t('cabinet-file.notification-body-versions-sync-warning'),
-                'warning',
-            );
-            return;
-        }
-
-        if (!updatedBlobIds || updatedBlobIds.length === 0) {
-            return;
-        }
-
-        console.log(
-            `waitForVersionsUpdatedInTypesense: Checking ${updatedBlobIds.length} versions (attempt ${increment + 1})`,
-        );
-
-        try {
-            // Check each updated blob ID to see if it's been updated in Typesense
-            const checkPromises = updatedBlobIds.map(async (blobId) => {
-                try {
-                    const item =
-                        await this._getTypesenseService().fetchFileDocumentByBlobId(blobId);
-
-                    // If the item exists and isCurrent is false, it has been updated
-                    if (item && item.base?.isCurrent === false) {
-                        return {blobId, updated: true};
-                    }
-
-                    return {blobId, updated: false};
-                } catch (error) {
-                    // If we can't fetch the item, assume it's not updated yet
-                    console.log(
-                        `waitForVersionsUpdatedInTypesense: Could not fetch ${blobId}:`,
-                        error,
-                    );
-                    return {blobId, updated: false};
-                }
-            });
-
-            const results = await Promise.all(checkPromises);
-            const notUpdatedYet = results.filter((result) => !result.updated);
-
-            // If all versions have been updated, we're done
-            if (notUpdatedYet.length === 0) {
-                console.log(
-                    'waitForVersionsUpdatedInTypesense: All versions have been updated in Typesense',
-                );
-                return;
-            }
-
-            console.log(
-                `waitForVersionsUpdatedInTypesense: ${notUpdatedYet.length} versions still not updated, waiting...`,
-            );
-        } catch (error) {
-            console.error('waitForVersionsUpdatedInTypesense: Error checking versions:', error);
-        }
-
-        // Wait for a second before trying again
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // Try again with incremented counter
-        await this.waitForVersionsUpdatedInTypesense(updatedBlobIds, increment + 1);
-    }
-
-    /**
-     * Waits until versions from deletedFileIds are updated in Typesense with isScheduledForDeletion set to true
-     * @param {Array<string>} deletedFileIds - Array of file IDs that were marked for deletion
-     * @returns {Promise<void>}
-     */
-    async waitForVersionsDeletionUpdatedInTypesense(deletedFileIds) {
+    async waitForUpdatedInTypesense(ids, isUpdated) {
         const MAX_ATTEMPTS = 10;
 
         for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-            // Check each deleted file ID to see if it's been updated in Typesense
-            const checkPromises = deletedFileIds.map(async (fileId) => {
+            // Check each ID to see if it's been updated in Typesense
+            const checkPromises = ids.map(async (fileId) => {
                 try {
                     const item =
                         await this._getTypesenseService().fetchFileDocumentByBlobId(fileId);
 
-                    // If the item exists and isScheduledForDeletion is true, it has been updated
-                    if (item && item.base?.isScheduledForDeletion === true) {
-                        return {fileId, updated: true};
-                    }
-
-                    return {fileId, updated: false};
+                    return {fileId, updated: !!item && isUpdated(item) === true};
                 } catch {
                     return {fileId, updated: false};
                 }
@@ -2560,9 +2483,10 @@ export class CabinetFile extends ScopedElementsMixin(
             console.log('handleDeleteAllVersions: All versions have been marked for deletion');
 
             // Wait until all deleted versions are properly updated in Typesense
-            if (deletedFileIds.length > 0) {
-                await this.waitForVersionsDeletionUpdatedInTypesense(deletedFileIds);
-            }
+            await this.waitForUpdatedInTypesense(
+                deletedFileIds,
+                (item) => item.base?.isScheduledForDeletion === true,
+            );
 
             // Refetch and set current hit data
             const currentHitId = this.fileHitData?.id;
