@@ -132,7 +132,6 @@ export class CabinetFile extends ScopedElementsMixin(
         this.allowStateReset = true;
         this.state = CabinetFile.States.NONE;
         this.versions = [];
-        this.currentVersionsCount = 0;
 
         // Will be used when canceling the form in EDIT mode, when the data was changed via this.fileHitDataCache
         this.fileHitDataBackup = {};
@@ -1494,7 +1493,6 @@ export class CabinetFile extends ScopedElementsMixin(
         try {
             // Could throw an exception if there was another error than 404
             versions = [
-                ...versions,
                 ...(await this._getTypesenseService().fetchFileDocumentsByGroupId(
                     groupId,
                     false,
@@ -1516,9 +1514,6 @@ export class CabinetFile extends ScopedElementsMixin(
 
     async updateVersions() {
         this.versions = await this.fetchGroupedHits();
-        this.currentVersionsCount = this.versions.filter(
-            (version) => version.base?.isCurrent,
-        ).length;
     }
 
     renderGroupingContainer() {
@@ -2231,6 +2226,10 @@ export class CabinetFile extends ScopedElementsMixin(
         const isDeletionDateReached =
             this.fileHitData.file.base.recommendedDeletionTimestamp < Math.floor(Date.now() / 1000);
 
+        let currentVersionsCount = this.versions.filter(
+            (version) => version.base?.isCurrent,
+        ).length;
+
         // this.addStatusMessageBlock(CabinetFile.Status.WARNING, 'Another message');
 
         if (this.fileHitData.base.isScheduledForDeletion) {
@@ -2239,7 +2238,7 @@ export class CabinetFile extends ScopedElementsMixin(
                 i18n.t('status-scheduled-for-deletion'),
                 this.deleteAtDateTime,
             );
-        } else if (isDeletionDateReached || this.currentVersionsCount !== 1) {
+        } else if (isDeletionDateReached || currentVersionsCount !== 1) {
             if (isDeletionDateReached) {
                 this.addStatusMessageBlock(
                     CabinetFile.Status.WARNING,
@@ -2248,9 +2247,9 @@ export class CabinetFile extends ScopedElementsMixin(
                 );
             }
 
-            if (this.currentVersionsCount === 0) {
+            if (currentVersionsCount === 0) {
                 this.addStatusMessageBlock(CabinetFile.Status.WARNING, i18n.t('status-no-current'));
-            } else if (this.currentVersionsCount > 1) {
+            } else if (currentVersionsCount > 1) {
                 this.addStatusMessageBlock(
                     CabinetFile.Status.WARNING,
                     i18n.t('status-too-many-current'),
