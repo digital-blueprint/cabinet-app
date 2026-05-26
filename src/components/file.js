@@ -627,9 +627,9 @@ export class CabinetFile extends ScopedElementsMixin(
         await this.openDocumentAddDialog();
     }
 
-    async downloadFileFromBlob(fileId, includeData = false) {
+    async downloadFileFromBlob(fileId) {
         let api = new CabinetApi(this);
-        return api.downloadFileFromBlob(fileId, includeData);
+        return api.downloadFileFromBlob(fileId);
     }
 
     /**
@@ -719,10 +719,7 @@ export class CabinetFile extends ScopedElementsMixin(
         if (hit.file) {
             try {
                 // This could throw an exception if the file was deleted in the meantime
-                const file = await this.downloadFileFromBlob(
-                    this.fileHitData.file.base.fileId,
-                    true,
-                );
+                const file = await this.downloadFileFromBlob(this.fileHitData.file.base.fileId);
                 console.log('openDialogWithHit file', file);
                 this.state = CabinetFile.States.FILE_LOADED;
 

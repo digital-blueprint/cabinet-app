@@ -245,11 +245,10 @@ export class CabinetApi {
     /**
      * Download a file from blob storage
      * @param {string} fileId - The file identifier
-     * @param {boolean} includeData - Whether to include data in the response
      * @returns {Promise<File>} - The downloaded file
      */
-    async downloadFileFromBlob(fileId, includeData = true) {
-        const url = await this.createBlobGetUrl(fileId, includeData);
+    async downloadFileFromBlob(fileId) {
+        const url = await this.createBlobGetUrl(fileId, true);
         let blobItem = await this.loadBlobItem(url);
 
         if (!blobItem.contentUrl) {
