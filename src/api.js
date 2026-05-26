@@ -1,4 +1,5 @@
 import {TypesenseService} from './typesense.js';
+import {BLOB_PREFIX} from './utils.js';
 
 export class CabinetApi {
     constructor(element) {
@@ -100,7 +101,7 @@ export class CabinetApi {
 
         let params = {
             method: method,
-            prefix: 'document-',
+            prefix: BLOB_PREFIX,
             identifier: identifier,
         };
 

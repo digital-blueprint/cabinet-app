@@ -28,6 +28,7 @@ import {createUUID} from '@dbp-toolkit/common/utils';
 import {PdfValidationErrorList} from './pdf-validation-error-list.js';
 import {CabinetApi} from '../api.js';
 import {createInstance} from '../i18n.js';
+import {BLOB_PREFIX} from '../utils.js';
 
 const getFieldsetCSS = () => {
     // language=css
@@ -90,8 +91,6 @@ export class CabinetFile extends ScopedElementsMixin(
         this.documentModalRef = createRef();
         this.documentPdfViewerRef = createRef();
         this.documentPdfValidationErrorList = createRef();
-        // TODO: Do we need a prefix?
-        this.blobDocumentPrefix = 'document-';
         this.modalRef = createRef();
         this.fileSourceRef = createRef();
         this.fileSinkRef = createRef();
@@ -338,8 +337,9 @@ export class CabinetFile extends ScopedElementsMixin(
             method: method,
         };
         if (blobUrlType === CabinetFile.BlobUrlTypes.UPLOAD) {
-            params['prefix'] = this.blobDocumentPrefix;
-            params['type'] = this.objectType.replace('file-cabinet-', '');
+            let objectType = await this.cabinetConfig.loadObjectType(this.objectType);
+            params['prefix'] = BLOB_PREFIX;
+            params['type'] = objectType.getBlobType();
         }
 
         if (identifier !== '') {
@@ -438,7 +438,7 @@ export class CabinetFile extends ScopedElementsMixin(
             formData.append('file', this.documentFile);
             formData.append('fileName', this.documentFile.name);
         }
-        formData.append('prefix', this.blobDocumentPrefix);
+        formData.append('prefix', BLOB_PREFIX);
 
         const options = {
             method: blobId === '' ? 'POST' : 'PATCH',
@@ -810,7 +810,7 @@ export class CabinetFile extends ScopedElementsMixin(
 
             const formData = new FormData();
             formData.append('metadata', JSON.stringify(metadata));
-            formData.append('prefix', this.blobDocumentPrefix);
+            formData.append('prefix', BLOB_PREFIX);
 
             const options = {
                 method: 'PATCH',
@@ -2345,7 +2345,7 @@ export class CabinetFile extends ScopedElementsMixin(
 
                     const formData = new FormData();
                     formData.append('metadata', JSON.stringify(obsoleteMetadata));
-                    formData.append('prefix', this.blobDocumentPrefix);
+                    formData.append('prefix', BLOB_PREFIX);
 
                     const options = {
                         method: 'PATCH',

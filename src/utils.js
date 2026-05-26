@@ -57,3 +57,6 @@ export function formatDate(value) {
               year: 'numeric',
           });
 }
+
+// TODO: Do we need a prefix?
+export const BLOB_PREFIX = 'document-';
