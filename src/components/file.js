@@ -1473,9 +1473,11 @@ export class CabinetFile extends ScopedElementsMixin(
               `;
     }
 
-    async fetchGroupedHits() {
+    async fetchCurrentVersions() {
+        if (this.fileHitData === null) {
+            return [];
+        }
         const groupId = this.fileHitData.file.base.groupId;
-        console.log('fetchGroupedHits groupId', groupId);
 
         if (!groupId) {
             // If there was no groupId set, return the current hit
@@ -1483,7 +1485,6 @@ export class CabinetFile extends ScopedElementsMixin(
         }
 
         let versions = [];
-
         try {
             // Could throw an exception if there was another error than 404
             versions = [
@@ -1494,20 +1495,18 @@ export class CabinetFile extends ScopedElementsMixin(
                 )),
             ];
         } catch (error) {
+            console.error(error);
             this.documentModalNotification(
                 this._i18n.t('cabinet-file.notification-title-versions-load-failed'),
                 this._i18n.t('cabinet-file.notification-body-versions-load-failed'),
                 'danger',
             );
-            console.error(error);
         }
-
-        console.log('fetchGroupedHits versions', versions);
         return versions;
     }
 
     async updateVersions() {
-        this.versions = await this.fetchGroupedHits();
+        this.versions = await this.fetchCurrentVersions();
     }
 
     async updateCurrent() {
@@ -2442,7 +2441,7 @@ export class CabinetFile extends ScopedElementsMixin(
     async handleDeleteAllVersions() {
         try {
             // Fetch all versions
-            const allVersions = await this.fetchGroupedHits();
+            const allVersions = await this.fetchCurrentVersions();
 
             // Filter out versions that are already marked for deletion
             const versionsToDelete = allVersions.filter(
