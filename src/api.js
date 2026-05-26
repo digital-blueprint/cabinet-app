@@ -245,11 +245,10 @@ export class CabinetApi {
     /**
      * Download a file from blob storage
      * @param {string} fileId - The file identifier
-     * @param {function(string): File} dataURLtoFile - Function to convert data URL to File object
      * @param {boolean} includeData - Whether to include data in the response
      * @returns {Promise<File>} - The downloaded file
      */
-    async downloadFileFromBlob(fileId, dataURLtoFile, includeData = true) {
+    async downloadFileFromBlob(fileId, includeData = true) {
         const url = await this.createBlobGetUrl(fileId, includeData);
         let blobItem = await this.loadBlobItem(url);
 
@@ -257,7 +256,12 @@ export class CabinetApi {
             throw new Error('No contentUrl in blob response');
         }
 
-        return dataURLtoFile(blobItem.contentUrl, blobItem.fileName);
+        const res = await fetch(blobItem.contentUrl);
+        if (!res.ok) {
+            throw new Error(`Failed to download file from blob: ${res.statusText}`);
+        }
+        const blob = await res.blob();
+        return new File([blob], blobItem.fileName, {type: blob.type});
     }
 
     /**

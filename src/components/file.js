@@ -16,7 +16,7 @@ import {
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {FileSink, FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
-import {dataURLtoFile, pascalToKebab} from '../utils';
+import {pascalToKebab} from '../utils';
 import {classMap} from 'lit/directives/class-map.js';
 import {formatDate} from '../utils.js';
 import {TypesenseService} from '../typesense.js';
@@ -629,7 +629,7 @@ export class CabinetFile extends ScopedElementsMixin(
 
     async downloadFileFromBlob(fileId, includeData = false) {
         let api = new CabinetApi(this);
-        return api.downloadFileFromBlob(fileId, dataURLtoFile, includeData);
+        return api.downloadFileFromBlob(fileId, includeData);
     }
 
     /**
