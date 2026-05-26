@@ -4,12 +4,11 @@ import {AuthMixin, LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
 import {CabinetSettings} from './settings.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {getPaginationCSS} from './styles.js';
 import {Icon, InlineNotification, Modal, sendNotification} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
 import instantsearch from 'instantsearch.js';
 import DbpTypesenseInstantSearchAdapter from './instantsearch-adapter.js';
-import {hits, searchBox, stats, pagination, hitsPerPage} from 'instantsearch.js/es/widgets';
+import {hits, searchBox, stats, hitsPerPage} from 'instantsearch.js/es/widgets';
 import {configure} from 'instantsearch.js/es/widgets';
 import {pascalToKebab, preactRefReplaceChildren} from './utils';
 import {CabinetFile} from './components/file.js';
@@ -21,6 +20,7 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from './i18n';
 import {createClearRefinements} from './components/clear-refinements.js';
 import {createCurrentRefinements} from './components/current-refinements.js';
+import {createPagination} from './components/pagination.js';
 import {SelectionDialog} from './components/selection-dialog.js';
 import {HitSelectionType, HitSelectionEventType, createEmptyHitSelection} from './hit-selection.js';
 
@@ -524,7 +524,7 @@ class CabinetSearch extends ScopedElementsMixin(
             this.createHitsPerPageWidget(),
             this.createHits(),
             this.createStats(),
-            this.createPagination('#pagination-bottom'),
+            createPagination(this, this._('#pagination-bottom')),
             createClearRefinements(this, this._('#clear-filters')),
             createCurrentRefinements(this, this._('#current-filters'), this.facetConfigs),
         ]);
@@ -576,7 +576,6 @@ class CabinetSearch extends ScopedElementsMixin(
             commonStyles.getActivityCSS(),
             commonStyles.getRadioAndCheckboxCss(),
             commonStyles.getFormAddonsCSS(),
-            getPaginationCSS(),
             // language=css
             css`
                 [class^='ais-'] {
@@ -1331,19 +1330,6 @@ class CabinetSearch extends ScopedElementsMixin(
         });
     }
 
-    createPagination(id) {
-        const config = {
-            container: this._(id),
-        };
-        if (window.innerWidth <= 489) {
-            config.padding = 1;
-        } else {
-            config.padding = 3;
-        }
-
-        console.log('Final config:', config);
-        return pagination(config);
-    }
     /**
      * This will be used as createFacets() in the CabinetFacets component.
      * @returns {Promise<*[]>}
