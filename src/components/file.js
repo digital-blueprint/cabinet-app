@@ -601,7 +601,9 @@ export class CabinetFile extends ScopedElementsMixin(
 
         if (!this.objectType || objectType === '') {
             console.log('objectType empty', objectType);
-            return this.getMiniSpinnerHtml();
+            return html`
+                <dbp-mini-spinner></dbp-mini-spinner>
+            `;
         }
 
         const hit = this.fileHitData;
@@ -1465,14 +1467,6 @@ export class CabinetFile extends ScopedElementsMixin(
         `;
     }
 
-    getMiniSpinnerHtml($hide) {
-        return $hide
-            ? ''
-            : html`
-                  <dbp-mini-spinner></dbp-mini-spinner>
-              `;
-    }
-
     async fetchCurrentVersions() {
         if (this.fileHitData === null) {
             return [];
@@ -1733,7 +1727,11 @@ export class CabinetFile extends ScopedElementsMixin(
                                     @click="${() => this.openReplacePdfDialog()}"
                                     ?disabled="${this.uploadFailed ? false : !id}">
                                     ${i18n.t('buttons.replace-document')}
-                                    ${this.getMiniSpinnerHtml(id)}
+                                    ${id
+                                        ? ''
+                                        : html`
+                                              <dbp-mini-spinner></dbp-mini-spinner>
+                                          `}
                                 </button>
                                 ${this.renderActionDropDown(hit, file)}
                                 <button
@@ -1749,9 +1747,11 @@ export class CabinetFile extends ScopedElementsMixin(
                                         aria-label="${i18n.t('doc-modal-undelete-document')}"
                                         name="undo"></dbp-icon>
                                     ${i18n.t('doc-modal-undelete-document')}
-                                    ${this.getMiniSpinnerHtml(
-                                        this.state !== CabinetFile.States.LOADING_FILE,
-                                    )}
+                                    ${this.state !== CabinetFile.States.LOADING_FILE
+                                        ? ''
+                                        : html`
+                                              <dbp-mini-spinner></dbp-mini-spinner>
+                                          `}
                                 </button>
                                 <dbp-select
                                     id="download-dropdown"
