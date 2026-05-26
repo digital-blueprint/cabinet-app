@@ -248,25 +248,19 @@ class CabinetSearch extends ScopedElementsMixin(
     }
 
     setFacetVisibilityStates(facetVisibilityStates) {
-        if (typeof facetVisibilityStates !== 'object' || facetVisibilityStates === null) {
-            return false;
-        }
         this.facetVisibilityStates = facetVisibilityStates;
-        return true;
     }
 
     loadFacetVisibilityStates() {
-        this.setFacetVisibilityStates(this.cabinetSettings.get('facetVisibilityStates') || {});
+        let value = this.cabinetSettings.get('facetVisibilityStates') || {};
+        if (typeof value !== 'object') {
+            value = {};
+        }
+        this.setFacetVisibilityStates(value);
     }
 
     getVisibleFacetIds() {
-        return this.getVisibleFacetIdsFromFacetStates(this.facetVisibilityStates);
-    }
-
-    getVisibleFacetIdsFromFacetStates(facetStates) {
-        if (!facetStates || typeof facetStates !== 'object') {
-            return [];
-        }
+        let facetStates = this.facetVisibilityStates;
         return Object.keys(facetStates).filter((facetName) => facetStates[facetName] === true);
     }
 
