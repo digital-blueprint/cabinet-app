@@ -122,7 +122,7 @@ export class CabinetFile extends ScopedElementsMixin(
         this.objectType = '';
         this.additionalType = '';
         this.mode = CabinetFile.Modes.VIEW;
-        this.fileHitData = {};
+        this.fileHitData = null;
         this.fileHitDataCache = {};
         this.isFileDirty = false;
         this.dataWasChanged = false;
@@ -643,10 +643,10 @@ export class CabinetFile extends ScopedElementsMixin(
      * @returns {Promise<void>}
      */
     async openViewDialogWithFileId(id) {
-        const hit = {id: id};
-        console.log('openViewDialogWithFileId hit', hit);
-
-        return this.openViewDialogWithFileHit(hit);
+        let hit = await this._getTypesenseService().fetchItem(id);
+        if (hit !== null) {
+            return this.openViewDialogWithFileHit(hit);
+        }
     }
 
     async openViewDialogWithFileHit(hit) {
@@ -654,6 +654,7 @@ export class CabinetFile extends ScopedElementsMixin(
         const i18n = this._i18n;
         this.initializeState();
         this.mode = CabinetFile.Modes.VIEW;
+        this.fileHitData = hit;
 
         /** @type {FileSource} */
         const fileSource = this.fileSourceRef.value;
@@ -674,10 +675,7 @@ export class CabinetFile extends ScopedElementsMixin(
 
         this.state = CabinetFile.States.LOADING_FILE;
 
-        // Fetch the hit data from Typesense again in case it changed
-        hit = await this._getTypesenseService().fetchItem(hit.id);
-
-        if (!hit) {
+        if (!this.fileHitData) {
             modal.close();
 
             sendNotification({
@@ -691,7 +689,6 @@ export class CabinetFile extends ScopedElementsMixin(
             return;
         }
 
-        this.fileHitData = hit;
         this.fileHitDataBackup = this.fileHitData;
         console.log('openDialogWithHit hit', hit);
         // Set person from hit
@@ -839,11 +836,6 @@ export class CabinetFile extends ScopedElementsMixin(
                 );
                 return;
             }
-
-            // // Optimistically update local state
-            // if (this.fileHitData?.base) {
-            //     this.fileHitData.base.isCurrent = enable;
-            // }
 
             // Refresh from Typesense (will also wait for obsolete updates if needed)
             try {
@@ -1084,7 +1076,7 @@ export class CabinetFile extends ScopedElementsMixin(
     async openDocumentAddDialog(resetObjectType = true) {
         if (resetObjectType) {
             this.objectType = '';
-            this.fileHitData = {};
+            this.fileHitData = null;
         }
 
         this.isFileDirty = false;
@@ -1518,6 +1510,12 @@ export class CabinetFile extends ScopedElementsMixin(
         this.versions = await this.fetchGroupedHits();
     }
 
+    async updateCurrent() {
+        if (this.fileHitData !== null) {
+            this.fileHitData = await this._getTypesenseService().fetchItem(this.fileHitData.id);
+        }
+    }
+
     renderGroupingContainer() {
         const i18n = this._i18n;
         // Only show the grouping container in view mode if there are multiple versions
@@ -1652,6 +1650,9 @@ export class CabinetFile extends ScopedElementsMixin(
      */
     getDocumentModalHtml() {
         const hit = this.fileHitData;
+        if (hit === null) {
+            return html``;
+        }
         console.log('getDocumentModalHtml this.fileHitData', this.fileHitData);
         const person = this.person;
         console.log('getDocumentModalHtml this.person', this.person);
@@ -1964,13 +1965,13 @@ export class CabinetFile extends ScopedElementsMixin(
             this.fileHitDataCache[this.objectType] = this.fileHitData;
 
             // Now also reset the fileHitData
-            this.fileHitData = {};
+            this.fileHitData = null;
 
             // Preset the hit data for the new object type if possible
             this.presetHitData(objectType);
         } else {
             // Reset the fileHitData so that it can set with default values in the object type modules
-            this.fileHitData = {};
+            this.fileHitData = null;
         }
 
         this.objectType = objectType;
@@ -2221,7 +2222,7 @@ export class CabinetFile extends ScopedElementsMixin(
     updateStatus() {
         const i18n = this._i18n;
         this.statusMessageBlocks = [];
-        if (!this.fileHitData.base) {
+        if (this.fileHitData === null) {
             return;
         }
 
@@ -2488,22 +2489,7 @@ export class CabinetFile extends ScopedElementsMixin(
             );
 
             // Refetch and set current hit data
-            const currentHitId = this.fileHitData?.id;
-            if (currentHitId) {
-                console.log('handleDeleteAllVersions: Refetching current hit data to update UI');
-                try {
-                    const updatedHit = await this._getTypesenseService().fetchItem(currentHitId);
-                    if (updatedHit) {
-                        this.fileHitData = updatedHit;
-                    }
-                } catch (error) {
-                    console.warn(
-                        'handleDeleteAllVersions: Could not refetch current hit data:',
-                        error,
-                    );
-                    // Don't fail the entire operation if we can't refetch - the deletion was successful
-                }
-            }
+            await this.updateCurrent();
 
             // Show success notification to user
             this.documentModalNotification(
