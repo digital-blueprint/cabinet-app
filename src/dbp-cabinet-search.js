@@ -705,10 +705,6 @@ class CabinetSearch extends ScopedElementsMixin(
                     gap: 0 2em;
                 }
 
-                .result-container.wide-facets {
-                    grid-template-columns: 40em minmax(0, 1fr);
-                }
-
                 .result-container.no-facets {
                     grid-template-columns: minmax(0, 1fr);
                     grid-template-rows: auto auto 1fr;
@@ -790,12 +786,6 @@ class CabinetSearch extends ScopedElementsMixin(
                     justify-content: space-between;
                 }
 
-                .hits-doc-footer {
-                    position: relative;
-                    display: flex;
-                    justify-content: flex-end;
-                }
-
                 .hits-per-page-widget {
                     display: flex;
                     gap: 0.5em;
@@ -811,58 +801,9 @@ class CabinetSearch extends ScopedElementsMixin(
                     gap: 1em;
                 }
 
-                .ais-Stats {
-                    color: var(--dbp-content);
-                }
-
-                .ais-Pagination-list {
-                    padding-top: 0px;
-                    gap: 8px;
-                    margin-top: 0;
-                    padding-left: 0;
-                }
-
-                .ais-Stats-text {
-                    font-size: 0.8em;
-                }
-
-                .ais-Hits-item {
-                    width: inherit;
-                }
-
-                .button-view {
-                    padding: 0.3em 2em;
-                    font-size: 1em;
-                    background-color: var(--dbp-primary-surface);
-                    color: var(--dbp-on-primary-surface);
-                    text-align: center;
-                    white-space: nowrap;
-                    font-size: inherit;
-                    font-weight: bolder;
-                    font-family: inherit;
-                    transition:
-                        0.15s,
-                        color 0.15s;
-                    border: none;
-                }
-
-                .ais-CurrentRefinements-categoryLabel {
-                    color: var(--dbp-content);
-                }
-
                 .hit-selection-container h2 {
                     font-size: 1.2em;
                     font-weight: bold;
-                }
-
-                .hit-selection-container .button-area {
-                    margin: 0.5em 0;
-                    display: flex;
-                    gap: 0.5em;
-                }
-
-                .hit-selection-container .button-area .button {
-                    flex: 1;
                 }
 
                 .hit-selection-container .reset-area {
@@ -1027,13 +968,6 @@ class CabinetSearch extends ScopedElementsMixin(
                         display: flex;
                         align-items: center;
                     }
-
-                    .deleted-only {
-                        display: flex;
-                        flex-wrap: nowrap;
-                        justify-content: end;
-                        padding-right: 0.4em;
-                    }
                 }
                 @media (min-width: 1100px) {
                     #filter-header-button {
@@ -1046,14 +980,6 @@ class CabinetSearch extends ScopedElementsMixin(
                         display: none;
                     }
 
-                    .dbp-cabinet-facets {
-                    }
-
-                    .filter {
-                        min-width: 24em;
-                        max-width: max-content;
-                    }
-
                     .result-container {
                         gap: 0.5em;
                     }
@@ -1064,25 +990,11 @@ class CabinetSearch extends ScopedElementsMixin(
                         grid-template-columns: auto 1fr;
                         gap: 0;
                     }
-                    .ais-Pagination-list {
-                        justify-content: center;
-                        gap: 0.001em;
-                    }
                     .ais-Hits-list {
                         padding: 0;
                         display: initial;
                     }
 
-                    .hit-selection-container .button-batch-container {
-                        display: grid;
-                        grid-template-rows: 1fr;
-                        align-items: center;
-                        gap: 0.5em;
-                    }
-
-                    .hit-selection-container .button-area {
-                        flex-direction: column;
-                    }
                     .hit-selection-container .reset-area {
                         justify-content: left;
                     }
