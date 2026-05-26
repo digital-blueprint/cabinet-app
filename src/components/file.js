@@ -18,7 +18,6 @@ import {FileSink, FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {dataURLtoFile, pascalToKebab} from '../utils';
 import {classMap} from 'lit/directives/class-map.js';
-import {getSelectorFixCSS} from '../styles.js';
 import {formatDate} from '../utils.js';
 import {TypesenseService} from '../typesense.js';
 import {
@@ -1116,7 +1115,6 @@ export class CabinetFile extends ScopedElementsMixin(
             commonStyles.getButtonCSS(),
             commonStyles.getRadioAndCheckboxCss(),
             getFieldsetCSS(),
-            getSelectorFixCSS(),
 
             // language=css
             css`

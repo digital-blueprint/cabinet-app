@@ -12,7 +12,6 @@ import {
     sendModalNotification,
 } from './modal-notification.js';
 import {SelectionColumnConfiguration} from './selection-column-configuration';
-import {getSelectorFixCSS} from '../styles.js';
 import {CabinetSettings} from '../settings.js';
 import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
 import {CabinetApi} from '../api.js';
@@ -1029,7 +1028,6 @@ export class SelectionDialog extends ScopedElementsMixin(
             commonStyles.getThemeCSS(),
             commonStyles.getGeneralCSS(false),
             commonStyles.getButtonCSS(),
-            getSelectorFixCSS(),
             // language=css
             css`
                 :host {
