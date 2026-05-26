@@ -89,26 +89,18 @@ export class CabinetApi {
     /**
      * Create a blob URL through the blob-urls API endpoint
      * @param {string} identifier - The file identifier
-     * @param {string} objectType - The object type (e.g., 'file-cabinet-document')
      * @param {string} method - HTTP method for the blob operation (e.g., 'PATCH', 'GET')
      * @param {boolean} includeData - Whether to include data
      * @param {object} extraParams - Additional parameters
      * @returns {Promise<string>} - The blob URL
      */
-    async _createBlobUrl(
-        identifier,
-        objectType,
-        method = 'PATCH',
-        includeData = false,
-        extraParams = {},
-    ) {
+    async _createBlobUrl(identifier, method = 'PATCH', includeData = false, extraParams = {}) {
         const baseUrl = `${this._element.entryPointUrl}/cabinet/blob-urls`;
         const apiUrl = new URL(baseUrl);
 
         let params = {
             method: method,
             prefix: 'document-',
-            type: objectType.replace('file-cabinet-', ''),
             identifier: identifier,
         };
 
@@ -141,12 +133,11 @@ export class CabinetApi {
     /**
      * Create a blob delete URL
      * @param {string} fileId - The file identifier
-     * @param {string} objectType - The object type (e.g., 'file-cabinet-document')
      * @param {boolean} undelete - Whether to undelete the file
      * @returns {Promise<string>} - The blob URL for deletion
      */
-    async createBlobDeleteUrl(fileId, objectType, undelete = false) {
-        return this._createBlobUrl(fileId, objectType, 'PATCH', false, {
+    async createBlobDeleteUrl(fileId, undelete = false) {
+        return this._createBlobUrl(fileId, 'PATCH', false, {
             deleteIn: undelete ? 'null' : 'P7D',
         });
     }
@@ -154,14 +145,13 @@ export class CabinetApi {
     /**
      * Delete or undelete a file by ID (schedule for deletion)
      * @param {string} fileId - The file identifier
-     * @param {string} objectType - The object type (e.g., 'file-cabinet-document')
      * @param {boolean} undelete - Whether to undelete the file
      * @returns {Promise<object>} - The response data
      */
-    async doFileDeletionForFileId(fileId, objectType, undelete = false) {
-        console.log('doFileDeletionForFileId fileId', fileId, 'objectType', objectType);
+    async doFileDeletionForFileId(fileId, undelete = false) {
+        console.log('doFileDeletionForFileId fileId', fileId);
 
-        const deleteUrl = await this.createBlobDeleteUrl(fileId, objectType, undelete);
+        const deleteUrl = await this.createBlobDeleteUrl(fileId, undelete);
         console.log('doFileDeletionForFileId deleteUrl', deleteUrl);
 
         const options = {

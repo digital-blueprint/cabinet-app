@@ -316,7 +316,7 @@ export class SelectionDialog extends ScopedElementsMixin(
                     continue;
                 }
 
-                await this.doFileDeletionForFileId(fileId, objectType, false);
+                await this.doFileDeletionForFileId(fileId, false);
 
                 // Update the hit data locally
                 hit.base.isScheduledForDeletion = true;
@@ -391,7 +391,7 @@ export class SelectionDialog extends ScopedElementsMixin(
                     continue;
                 }
 
-                await this.doFileDeletionForFileId(fileId, objectType, true);
+                await this.doFileDeletionForFileId(fileId, true);
 
                 // Update the hit data locally
                 hit.base.isScheduledForDeletion = false;
@@ -434,12 +434,11 @@ export class SelectionDialog extends ScopedElementsMixin(
     /**
      * Delete a file by ID (schedule for deletion)
      * @param {string} fileId - The file identifier
-     * @param {string} objectType - The object type (e.g., 'file-cabinet-document')
      * @param {boolean} undelete - Whether to undelete the file
      */
-    async doFileDeletionForFileId(fileId, objectType, undelete = false) {
+    async doFileDeletionForFileId(fileId, undelete = false) {
         let api = new CabinetApi(this);
-        return api.doFileDeletionForFileId(fileId, objectType, undelete);
+        return api.doFileDeletionForFileId(fileId, undelete);
     }
 
     /**

@@ -396,7 +396,7 @@ export class CabinetFile extends ScopedElementsMixin(
      */
     async createBlobDeleteUrl(fileId, undelete = false) {
         let api = new CabinetApi(this);
-        return api.createBlobDeleteUrl(fileId, this.objectType, undelete);
+        return api.createBlobDeleteUrl(fileId, undelete);
     }
 
     async loadBlobItem(url) {
@@ -947,7 +947,7 @@ export class CabinetFile extends ScopedElementsMixin(
         let api = new CabinetApi(this);
 
         try {
-            return await api.doFileDeletionForFileId(fileId, this.objectType, undelete);
+            return await api.doFileDeletionForFileId(fileId, undelete);
         } catch (error) {
             if (undelete) {
                 this.documentModalNotification(
