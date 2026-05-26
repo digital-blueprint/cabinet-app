@@ -343,9 +343,8 @@ export class CabinetFile extends ScopedElementsMixin(
             method: method,
         };
         if (blobUrlType === CabinetFile.BlobUrlTypes.UPLOAD) {
-            let objectType = await this.cabinetConfig.loadObjectType(this.objectType);
             params['prefix'] = BLOB_PREFIX;
-            params['type'] = objectType.getBlobType();
+            params['type'] = this.objectTypes[this.objectType].getBlobType();
         }
 
         if (identifier !== '') {
