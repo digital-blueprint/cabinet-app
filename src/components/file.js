@@ -2473,32 +2473,12 @@ export class CabinetFile extends ScopedElementsMixin(
     /**
      * Waits until versions from deletedFileIds are updated in Typesense with isScheduledForDeletion set to true
      * @param {Array<string>} deletedFileIds - Array of file IDs that were marked for deletion
-     * @param {number} increment - Current attempt counter (used for recursion)
      * @returns {Promise<void>}
      */
-    async waitForVersionsDeletionUpdatedInTypesense(deletedFileIds, increment = 0) {
-        // Stop after 10 attempts
-        if (increment >= 10) {
-            console.warn(
-                'waitForVersionsDeletionUpdatedInTypesense: Could not verify all versions were updated in Typesense after 10 attempts',
-            );
-            this.documentModalNotification(
-                this._i18n.t('cabinet-file.notification-title-versions-sync-warning'),
-                this._i18n.t('cabinet-file.notification-body-versions-sync-warning'),
-                'warning',
-            );
-            return;
-        }
+    async waitForVersionsDeletionUpdatedInTypesense(deletedFileIds) {
+        const MAX_ATTEMPTS = 10;
 
-        if (!deletedFileIds || deletedFileIds.length === 0) {
-            return;
-        }
-
-        console.log(
-            `waitForVersionsDeletionUpdatedInTypesense: Checking ${deletedFileIds.length} deleted versions (attempt ${increment + 1})`,
-        );
-
-        try {
+        for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
             // Check each deleted file ID to see if it's been updated in Typesense
             const checkPromises = deletedFileIds.map(async (fileId) => {
                 try {
@@ -2511,12 +2491,7 @@ export class CabinetFile extends ScopedElementsMixin(
                     }
 
                     return {fileId, updated: false};
-                } catch (error) {
-                    // If we can't fetch the item, assume it's not updated yet
-                    console.log(
-                        `waitForVersionsDeletionUpdatedInTypesense: Could not fetch ${fileId}:`,
-                        error,
-                    );
+                } catch {
                     return {fileId, updated: false};
                 }
             });
@@ -2526,27 +2501,19 @@ export class CabinetFile extends ScopedElementsMixin(
 
             // If all versions have been updated, we're done
             if (notUpdatedYet.length === 0) {
-                console.log(
-                    'waitForVersionsDeletionUpdatedInTypesense: All deleted versions have been updated in Typesense',
-                );
                 return;
             }
 
-            console.log(
-                `waitForVersionsDeletionUpdatedInTypesense: ${notUpdatedYet.length} versions still not updated, waiting...`,
-            );
-        } catch (error) {
-            console.error(
-                'waitForVersionsDeletionUpdatedInTypesense: Error checking versions:',
-                error,
-            );
+            // Wait for a second before trying again
+            await new Promise((resolve) => setTimeout(resolve, 1000));
         }
 
-        // Wait for a second before trying again
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // Try again with incremented counter
-        await this.waitForVersionsDeletionUpdatedInTypesense(deletedFileIds, increment + 1);
+        // Reached max attempts without all versions being updated
+        this.documentModalNotification(
+            this._i18n.t('cabinet-file.notification-title-versions-sync-warning'),
+            this._i18n.t('cabinet-file.notification-body-versions-sync-warning'),
+            'warning',
+        );
     }
 
     async handleDeleteAllVersions() {
