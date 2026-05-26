@@ -39,6 +39,10 @@ export class BaseObject {
         return BaseViewElement;
     }
 
+    getBlobType() {
+        throw new Error('getBlobType() must be implemented');
+    }
+
     getAdditionalTypes() {
         return BaseFormElement.getAdditionalTypes();
     }

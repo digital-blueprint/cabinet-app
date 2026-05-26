@@ -20,6 +20,10 @@ export default class extends BaseObject {
         return CabinetViewElement;
     }
 
+    getBlobType() {
+        return 'entranceQualificationRecognition';
+    }
+
     getAdditionalTypes(lang) {
         let i18n = createInstance();
         let translatedTypes = {};

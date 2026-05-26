@@ -27,6 +27,10 @@ export default class extends BaseObject {
         return CabinetViewElement;
     }
 
+    getBlobType() {
+        return 'admissionNotice';
+    }
+
     getAdditionalTypes(lang) {
         let i18n = createInstance();
         let translatedTypes = {};

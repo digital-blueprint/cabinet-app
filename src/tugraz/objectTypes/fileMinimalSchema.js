@@ -20,6 +20,10 @@ export default class extends BaseObject {
         return CabinetViewElement;
     }
 
+    getBlobType() {
+        return 'minimalSchema';
+    }
+
     getAdditionalTypes(lang) {
         let i18n = createInstance();
         let translatedTypes = {};

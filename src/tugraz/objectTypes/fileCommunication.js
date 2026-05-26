@@ -25,6 +25,10 @@ export default class extends BaseObject {
         return CabinetViewElement;
     }
 
+    getBlobType() {
+        return 'communication';
+    }
+
     getAdditionalTypes(lang) {
         let i18n = createInstance();
         let translatedTypes = {};
