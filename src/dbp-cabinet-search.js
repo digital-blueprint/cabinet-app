@@ -186,6 +186,8 @@ class CabinetSearch extends ScopedElementsMixin(
     }
 
     async loginCallback(auth) {
+        this.cabinetSettings.setAuth(auth);
+        this.loadFacetVisibilityStates();
         await this.ensureModules();
         await this.ensureInstantsearch();
         await this.updateComplete;
@@ -224,11 +226,6 @@ class CabinetSearch extends ScopedElementsMixin(
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'auth':
-                    this.cabinetSettings.setAuth(this.auth);
-                    // Load facet visibility states now that we have a user-id
-                    if (this.isLoggedIn()) {
-                        this.loadFacetVisibilityStates();
-                    }
                     // Update the Typesense Instantsearch adapter configuration with the new bearer token
                     if (this.typesenseInstantsearchAdapter) {
                         this.typesenseInstantsearchAdapter.updateConfiguration(
