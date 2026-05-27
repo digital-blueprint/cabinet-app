@@ -354,7 +354,7 @@ class CabinetHitElement extends BaseHitElement {
     render() {
         let hit = getPersonHit(this.data);
         this.hit = hit;
-        const i18n = this._i18nTugraz;
+        const i18n = this._i18nCustom;
         const studies = hit.person.studies || [];
         const sortedStudies = studies.sort((a, b) => {
             const dateA = a.immatriculationDate
@@ -843,8 +843,8 @@ class CabinetViewElement extends BaseViewElement {
             let api = new CabinetApi(this);
             this.data = await api.syncTypesenseDocument(this.data);
             sendNotification({
-                summary: this._i18nTugraz.t('tugraz:person.sync.notification.success.title'),
-                body: this._i18nTugraz.t('tugraz:person.sync.notification.success.body'),
+                summary: this._i18nCustom.t('tugraz:person.sync.notification.success.title'),
+                body: this._i18nCustom.t('tugraz:person.sync.notification.success.body'),
                 type: 'success',
                 targetNotificationId: 'dbp-modal-notification-person',
                 replaceId: '-',
@@ -853,8 +853,8 @@ class CabinetViewElement extends BaseViewElement {
         } catch (error) {
             console.error('Error during sync:', error);
             sendNotification({
-                summary: this._i18nTugraz.t('tugraz:person.sync.notification.error.title'),
-                body: this._i18nTugraz.t('tugraz:person.sync.notification.error.body', {
+                summary: this._i18nCustom.t('tugraz:person.sync.notification.error.title'),
+                body: this._i18nCustom.t('tugraz:person.sync.notification.error.body', {
                     error: error.message,
                 }),
                 type: 'danger',
@@ -877,7 +877,7 @@ class CabinetViewElement extends BaseViewElement {
 
     render() {
         let hit = getPersonHit(this.data);
-        const i18n = this._i18nTugraz;
+        const i18n = this._i18nCustom;
         const displayValue = (value) => {
             return value === undefined || value === null || value === '' ? '-' : value;
         };

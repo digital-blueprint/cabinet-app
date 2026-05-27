@@ -84,7 +84,7 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousHigherEducationInstitution"
-                    label=${this._i18nTugraz.t(
+                    label=${this._i18nCustom.t(
                         'tugraz:doc-modal-previous-higher-education-institution',
                     )}
                     .value=${datasheet.previousHigherEducationInstitution}></dbp-form-string-element>
@@ -92,19 +92,19 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousHigherEducationPlace"
-                    label=${this._i18nTugraz.t('tugraz:doc-modal-previous-higher-education-place')}
+                    label=${this._i18nCustom.t('tugraz:doc-modal-previous-higher-education-place')}
                     .value=${datasheet.previousHigherEducationPlace}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousHigherEducationField"
-                    label=${this._i18nTugraz.t('tugraz:doc-modal-previous-higher-education-field')}
+                    label=${this._i18nCustom.t('tugraz:doc-modal-previous-higher-education-field')}
                     .value=${datasheet.previousHigherEducationField}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousHigherEducationCurriculum"
-                    label=${this._i18nTugraz.t(
+                    label=${this._i18nCustom.t(
                         'tugraz:doc-modal-previous-higher-education-curriculum',
                     )}
                     .value=${datasheet.previousHigherEducationCurriculum}
@@ -113,7 +113,7 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousHigherEducationGrading"
-                    label=${this._i18nTugraz.t(
+                    label=${this._i18nCustom.t(
                         'tugraz:doc-modal-previous-higher-education-grading',
                     )}
                     .value=${datasheet.previousHigherEducationGrading}></dbp-form-string-element>
@@ -121,7 +121,7 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousHigherEducationCPGA"
-                    label=${this._i18nTugraz.t('tugraz:doc-modal-previous-higher-education-cpga')}
+                    label=${this._i18nCustom.t('tugraz:doc-modal-previous-higher-education-cpga')}
                     .value=${datasheet.previousHigherEducationCPGA}></dbp-form-string-element>
 
                 ${this.getCommonFormElements()}
@@ -153,7 +153,7 @@ class CabinetViewElement extends BaseViewElement {
         let hit = getDocumentHit(this.data);
         let datasheet = getEnglMasterDataSheet(hit);
 
-        const i18n = this._i18nTugraz;
+        const i18n = this._i18nCustom;
 
         return html`
             <dbp-form-string-view

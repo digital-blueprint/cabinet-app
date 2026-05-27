@@ -6,7 +6,7 @@ import {createInstance as createInstanceTugraz} from './i18n.js';
 export default class DBPCabinetTugrazLitElement extends LangMixin(
     LangMixin(AuthMixin(DBPLitElement), createInstanceCabinet),
     createInstanceTugraz,
-    '_i18nTugraz',
+    '_i18nCustom',
 ) {
     static get properties() {
         return {

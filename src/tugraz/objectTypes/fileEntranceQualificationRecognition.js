@@ -79,7 +79,7 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-string-element
                     subscribe="lang"
                     name="signedBy"
-                    label=${this._i18nTugraz.t('tugraz:doc-modal-signed-by')}
+                    label=${this._i18nCustom.t('tugraz:doc-modal-signed-by')}
                     .value=${recognition.signedBy}
                     required></dbp-form-string-element>
 
@@ -112,7 +112,7 @@ class CabinetViewElement extends BaseViewElement {
         let hit = getDocumentHit(this.data);
         let recognition = getEntranceQualificationRecognition(hit);
 
-        const i18n = this._i18nTugraz;
+        const i18n = this._i18nCustom;
 
         return html`
             <dbp-form-string-view

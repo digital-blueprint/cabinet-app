@@ -80,14 +80,14 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousEducation"
-                    label=${this._i18nTugraz.t('tugraz:doc-modal-previous-education')}
+                    label=${this._i18nCustom.t('tugraz:doc-modal-previous-education')}
                     .value=${application.previousEducation}
                     required></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="electiveSubject"
-                    label=${this._i18nTugraz.t('tugraz:doc-modal-elective-subject')}
+                    label=${this._i18nCustom.t('tugraz:doc-modal-elective-subject')}
                     .state=${application.electiveSubject}></dbp-form-string-element>
 
                 ${this.getCommonFormElements()}
@@ -119,7 +119,7 @@ class CabinetViewElement extends BaseViewElement {
         let hit = getDocumentHit(this.data);
         let application = getEntranceQualificationApplication(hit);
 
-        const i18n = this._i18nTugraz;
+        const i18n = this._i18nCustom;
 
         return html`
             <dbp-form-string-view

@@ -84,7 +84,7 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-date-element
                     subscribe="lang"
                     name="dateCreated"
-                    label=${this._i18nTugraz.t('tugraz:doc-modal-issue-date')}
+                    label=${this._i18nCustom.t('tugraz:doc-modal-issue-date')}
                     .value=${minimalSchema.dateCreated || ''}
                     required></dbp-form-date-element>
 
@@ -98,7 +98,7 @@ class CabinetHitElement extends BaseDocumentHitElement {
     _renderContent() {
         let hit = getDocumentHit(this.data);
         let minimalSchema = getMinimalSchema(hit);
-        const i18n = this._i18nTugraz;
+        const i18n = this._i18nCustom;
         const issueDate = minimalSchema.dateCreated;
         let formattedDate = issueDate
             ? new Intl.DateTimeFormat('de', {
@@ -137,7 +137,7 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <dbp-form-date-view
                 subscribe="lang"
-                label=${this._i18nTugraz.t('tugraz:doc-modal-issue-date')}
+                label=${this._i18nCustom.t('tugraz:doc-modal-issue-date')}
                 .value=${minimalSchema.dateCreated
                     ? new Date(minimalSchema.dateCreated)
                     : ''}></dbp-form-date-view>

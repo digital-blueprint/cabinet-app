@@ -91,21 +91,21 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-string-element
                     subscribe="lang"
                     name="identifier"
-                    label=${this._i18nTugraz.t('tugraz:doc-modal-Identifier')}
+                    label=${this._i18nCustom.t('tugraz:doc-modal-Identifier')}
                     .value=${identityDocument.identifier}
                     required></dbp-form-string-element>
 
                 <dbp-cabinet-form-nationality-element
                     subscribe="lang"
                     name="nationality"
-                    label=${this._i18nTugraz.t('tugraz:doc-modal-nationality')}
+                    label=${this._i18nCustom.t('tugraz:doc-modal-nationality')}
                     .value=${identityDocument.nationality}
                     required></dbp-cabinet-form-nationality-element>
 
                 <dbp-form-date-element
                     subscribe="lang"
                     name="dateCreated"
-                    label=${this._i18nTugraz.t('tugraz:doc-modal-issue-date')}
+                    label=${this._i18nCustom.t('tugraz:doc-modal-issue-date')}
                     .value=${identityDocument.dateCreated}
                     required></dbp-form-date-element>
 
@@ -119,7 +119,7 @@ class CabinetHitElement extends BaseDocumentHitElement {
     _renderContent() {
         let hit = getDocumentHit(this.data);
         let identityDocument = getIdentityDocument(hit);
-        const i18n = this._i18nTugraz;
+        const i18n = this._i18nCustom;
         const issueDate = identityDocument.dateCreated;
         let formattedDate = issueDate
             ? new Intl.DateTimeFormat('de', {
@@ -160,17 +160,17 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18nTugraz.t('tugraz:doc-modal-Identifier')}
+                label=${this._i18nCustom.t('tugraz:doc-modal-Identifier')}
                 .value=${identityDocument.identifier || ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18nTugraz.t('tugraz:doc-modal-nationality')}
+                label=${this._i18nCustom.t('tugraz:doc-modal-nationality')}
                 .value=${`${getNationalityDisplayName(nationalityCode, this.lang)} (${nationalityCode})`}></dbp-form-string-view>
 
             <dbp-form-date-view
                 subscribe="lang"
-                label=${this._i18nTugraz.t('tugraz:doc-modal-issue-date')}
+                label=${this._i18nCustom.t('tugraz:doc-modal-issue-date')}
                 .value=${identityDocument.dateCreated
                     ? new Date(identityDocument.dateCreated)
                     : ''}></dbp-form-date-view>

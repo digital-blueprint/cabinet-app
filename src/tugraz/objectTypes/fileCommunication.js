@@ -89,29 +89,29 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-string-element
                     subscribe="lang"
                     name="agent[givenName]"
-                    label=${this._i18nTugraz.t('tugraz:person.given-name')}
-                    placeholder=${this._i18nTugraz.t('tugraz:person.given-name')}
+                    label=${this._i18nCustom.t('tugraz:person.given-name')}
+                    placeholder=${this._i18nCustom.t('tugraz:person.given-name')}
                     .value=${communication.agent.givenName}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="agent[familyName]"
-                    label=${this._i18nTugraz.t('tugraz:person.family-name')}
-                    placeholder=${this._i18nTugraz.t('tugraz:person.family-name')}
+                    label=${this._i18nCustom.t('tugraz:person.family-name')}
+                    placeholder=${this._i18nCustom.t('tugraz:person.family-name')}
                     .value=${communication.agent.familyName}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="abstract"
-                    label=${this._i18nTugraz.t('tugraz:person.communication-abstract')}
-                    placeholder=${this._i18nTugraz.t('tugraz:person.communication-abstract')}
+                    label=${this._i18nCustom.t('tugraz:person.communication-abstract')}
+                    placeholder=${this._i18nCustom.t('tugraz:person.communication-abstract')}
                     rows="10"
                     .value=${communication.abstract}></dbp-form-string-element>
 
                 <dbp-form-datetime-element
                     subscribe="lang"
                     name="dateCreated"
-                    label=${this._i18nTugraz.t('tugraz:doc-modal-issue-date')}
+                    label=${this._i18nCustom.t('tugraz:doc-modal-issue-date')}
                     value=${communication.dateCreated}
                     required></dbp-form-datetime-element>
 
@@ -125,7 +125,7 @@ class CabinetHitElement extends BaseDocumentHitElement {
     _renderContent() {
         let hit = getDocumentHit(this.data);
         let communication = getCommunication(hit);
-        const i18n = this._i18nTugraz;
+        const i18n = this._i18nCustom;
         const issueDate = communication.dateCreated;
         let formattedDate = new Intl.DateTimeFormat('de', {
             day: '2-digit',
@@ -163,26 +163,26 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18nTugraz.t('tugraz:person.given-name')}
+                label=${this._i18nCustom.t('tugraz:person.given-name')}
                 .value=${communication.agent
                     ? communication.agent.givenName
                     : ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18nTugraz.t('tugraz:person.family-name')}
+                label=${this._i18nCustom.t('tugraz:person.family-name')}
                 .value=${communication.agent
                     ? communication.agent.familyName
                     : ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18nTugraz.t('tugraz:person.communication-abstract')}
+                label=${this._i18nCustom.t('tugraz:person.communication-abstract')}
                 .value=${communication.abstract || ''}></dbp-form-string-view>
 
             <dbp-form-datetime-view
                 subscribe="lang"
-                label=${this._i18nTugraz.t('tugraz:doc-modal-issue-date')}
+                label=${this._i18nCustom.t('tugraz:doc-modal-issue-date')}
                 .value=${communication.dateCreated
                     ? new Date(communication.dateCreated)
                     : ''}></dbp-form-datetime-view>

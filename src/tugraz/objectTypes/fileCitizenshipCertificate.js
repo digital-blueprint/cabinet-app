@@ -88,14 +88,14 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-cabinet-form-nationality-element
                     subscribe="lang"
                     name="nationality"
-                    label=${this._i18nTugraz.t('tugraz:doc-modal-nationality')}
+                    label=${this._i18nCustom.t('tugraz:doc-modal-nationality')}
                     .value=${citizenshipCertificate.nationality}
                     required></dbp-cabinet-form-nationality-element>
 
                 <dbp-form-date-element
                     subscribe="lang"
                     name="dateCreated"
-                    label=${this._i18nTugraz.t('tugraz:doc-modal-issue-date')}
+                    label=${this._i18nCustom.t('tugraz:doc-modal-issue-date')}
                     .value=${citizenshipCertificate.dateCreated}
                     required></dbp-form-date-element>
 
@@ -109,7 +109,7 @@ class CabinetHitElement extends BaseDocumentHitElement {
     _renderContent() {
         let hit = getDocumentHit(this.data);
         let citizenshipCertificate = getCitizenshipCertificate(hit);
-        const i18n = this._i18nTugraz;
+        const i18n = this._i18nCustom;
 
         const issueDate = citizenshipCertificate.dateCreated;
         let formattedDate = issueDate
@@ -147,7 +147,7 @@ class CabinetViewElement extends BaseViewElement {
         let hit = getDocumentHit(this.data);
         let citizenshipCertificate = getCitizenshipCertificate(hit);
 
-        const i18n = this._i18nTugraz;
+        const i18n = this._i18nCustom;
         let nationalityCode = citizenshipCertificate.nationality;
 
         return html`

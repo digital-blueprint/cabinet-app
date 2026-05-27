@@ -44,7 +44,7 @@ export class BaseDocumentHitElement extends BaseHitElement {
         let hit = getDocumentHit(this.data);
         this.hit = hit;
 
-        const i18n = this._i18nTugraz;
+        const i18n = this._i18nCustom;
 
         const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString(
             'de-DE',
