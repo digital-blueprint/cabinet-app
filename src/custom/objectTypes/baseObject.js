@@ -11,7 +11,7 @@ import {
     gatherFormDataFromElement,
     validateRequiredFields,
 } from '@dbp-toolkit/form-elements/src/utils.js';
-import DBPCabinetTugrazLitElement from '../tugraz-lit-element.js';
+import CustomLitElement from '../custom-lit-element.js';
 import {
     DbpDateTimeView,
     DbpDateView,
@@ -173,7 +173,7 @@ export const getCommonStyles = () => css`
     }*/
 `;
 
-export class BaseFormElement extends ScopedElementsMixin(DBPCabinetTugrazLitElement) {
+export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
     constructor() {
         super();
         this.data = {};
@@ -475,7 +475,7 @@ export class BaseFormElement extends ScopedElementsMixin(DBPCabinetTugrazLitElem
     }
 }
 
-export class BaseHitElement extends ScopedElementsMixin(DBPCabinetTugrazLitElement) {
+export class BaseHitElement extends ScopedElementsMixin(CustomLitElement) {
     constructor() {
         super();
         this.data = {};
@@ -575,7 +575,7 @@ export class BaseHitElement extends ScopedElementsMixin(DBPCabinetTugrazLitEleme
     }
 }
 
-export class BaseViewElement extends ScopedElementsMixin(DBPCabinetTugrazLitElement) {
+export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
     constructor() {
         super();
         this.auth = {};

@@ -1,4 +1,4 @@
-import {createInstance} from '../tugraz/i18n.js';
+import {createInstance} from './i18n.js';
 
 function translationRenderFunction(lang, schemaField, value, operator = null) {
     let i18n = createInstance();

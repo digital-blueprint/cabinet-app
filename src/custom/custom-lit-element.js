@@ -3,7 +3,7 @@ import {AuthMixin, LangMixin} from '@dbp-toolkit/common';
 import {createInstance as createInstanceCabinet} from '../i18n.js';
 import {createInstance as createInstanceTugraz} from './i18n.js';
 
-export default class DBPCabinetTugrazLitElement extends LangMixin(
+export default class CustomLitElement extends LangMixin(
     LangMixin(AuthMixin(DBPLitElement), createInstanceCabinet),
     createInstanceTugraz,
     '_i18nCustom',

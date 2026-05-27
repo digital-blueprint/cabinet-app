@@ -1555,7 +1555,7 @@ class CabinetSearch extends ScopedElementsMixin(
 
     async _performLoadModules() {
         try {
-            let path = './cabinetConfig.js';
+            let path = './customConfig.js';
             const cabinetConfigModule = await import(path);
             this.cabinetConfig = new cabinetConfigModule.default();
 
