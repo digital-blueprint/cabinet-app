@@ -654,7 +654,7 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     async openViewDialogWithFileHit(hit) {
-        this.sendSetPropertyEvent('routing-url', `/document/${hit.id}`, true);
+        this.sendSetPropertyEvent('routing-url', `/document/${encodeURIComponent(hit.id)}`, true);
         const i18n = this._i18n;
         this.resetState();
         this.mode = CabinetFile.Modes.VIEW;
