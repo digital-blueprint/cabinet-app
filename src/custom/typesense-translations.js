@@ -30,6 +30,4 @@ t('custom:typesense-schema.file.base.isPartOf.other-delete-3')
 t('custom:typesense-schema.file.base.isPartOf.study-archive-80')
 t('custom:typesense-schema.file.base.isPartOf.subordination-delete-3')
 t('custom:typesense-schema.file.base.isPartOf.vacation-archive-3')
-t('custom:typesense-schema.file.base.disposalType.archival')
-t('custom:typesense-schema.file.base.disposalType.deletion')
 */
