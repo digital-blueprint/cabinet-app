@@ -63,6 +63,7 @@ export class CabinetFile extends ScopedElementsMixin(
         EDIT: 'edit',
         NEW_VERSION: 'new-version',
         ADD: 'add',
+        CLOSED: 'closed',
     };
 
     static States = {
@@ -97,7 +98,7 @@ export class CabinetFile extends ScopedElementsMixin(
         this.formRef = createRef();
         this.uploadFailed = false;
         // Initialize the state in the beginning
-        this.initializeState();
+        this.resetState();
     }
 
     _getTypesenseService() {
@@ -114,27 +115,25 @@ export class CabinetFile extends ScopedElementsMixin(
      * This is important so when the dialog is opened again, the state is clean and no
      * old data is shown by accident
      */
-    initializeState() {
-        console.log('initializeState');
-
+    resetState() {
         this.person = {};
         this.documentFile = null;
         this.objectType = '';
         this.additionalType = '';
-        this.mode = CabinetFile.Modes.VIEW;
-        this.fileHitData = {};
+        this.mode = CabinetFile.Modes.CLOSED;
+        this.fileHitData = null;
         this.fileHitDataCache = {};
         this.isFileDirty = false;
         this.dataWasChanged = false;
-        this.documentStatus = 'success';
         this.statusMessageBlocks = [];
         this.deleteAtDateTime = '';
         this.allowStateReset = true;
         this.state = CabinetFile.States.NONE;
         this.versions = [];
+        this.versionsLoaded = false;
 
         // Will be used when canceling the form in EDIT mode, when the data was changed via this.fileHitDataCache
-        this.fileHitDataBackup = {};
+        this.fileHitDataBackup = null;
     }
 
     connectedCallback() {
@@ -181,7 +180,6 @@ export class CabinetFile extends ScopedElementsMixin(
             documentFile: {type: File, attribute: false},
             objectType: {type: String, attribute: false},
             additionalType: {type: String, attribute: false},
-            documentStatus: {type: String, attribute: false},
             deleteAtDateTime: {type: String, attribute: false},
             state: {type: String, attribute: false},
             mode: {type: String},
@@ -580,7 +578,7 @@ export class CabinetFile extends ScopedElementsMixin(
              ${ref(this.formRef)}
              id="edit-form"
              subscribe="auth,lang,entry-point-url"
-             .data=${fileHitData}
+             .data=${fileHitData || {}}
              .person=${this.person}
              additional-type="${this.additionalType}"
              .saveButtonEnabled=${!this.uploadFailed}
@@ -645,17 +643,22 @@ export class CabinetFile extends ScopedElementsMixin(
      * @returns {Promise<void>}
      */
     async openViewDialogWithFileId(id) {
-        const hit = {id: id};
-        console.log('openViewDialogWithFileId hit', hit);
-
-        return this.openViewDialogWithFileHit(hit);
+        // Hacky: otherwise vesion change triggers two loads
+        if (this.mode == CabinetFile.Modes.VIEW && id === this.fileHitData?.id) {
+            return;
+        }
+        let hit = await this._getTypesenseService().fetchItem(id);
+        if (hit !== null) {
+            return this.openViewDialogWithFileHit(hit);
+        }
     }
 
     async openViewDialogWithFileHit(hit) {
         this.sendSetPropertyEvent('routing-url', `/document/${hit.id}`, true);
         const i18n = this._i18n;
-        this.initializeState();
+        this.resetState();
         this.mode = CabinetFile.Modes.VIEW;
+        this.fileHitData = hit;
 
         /** @type {FileSource} */
         const fileSource = this.fileSourceRef.value;
@@ -676,10 +679,7 @@ export class CabinetFile extends ScopedElementsMixin(
 
         this.state = CabinetFile.States.LOADING_FILE;
 
-        // Fetch the hit data from Typesense again in case it changed
-        hit = await this._getTypesenseService().fetchItem(hit.id);
-
-        if (!hit) {
+        if (!this.fileHitData) {
             modal.close();
 
             sendNotification({
@@ -693,7 +693,6 @@ export class CabinetFile extends ScopedElementsMixin(
             return;
         }
 
-        this.fileHitData = hit;
         this.fileHitDataBackup = this.fileHitData;
         console.log('openDialogWithHit hit', hit);
         // Set person from hit
@@ -841,11 +840,6 @@ export class CabinetFile extends ScopedElementsMixin(
                 );
                 return;
             }
-
-            // // Optimistically update local state
-            // if (this.fileHitData?.base) {
-            //     this.fileHitData.base.isCurrent = enable;
-            // }
 
             // Refresh from Typesense (will also wait for obsolete updates if needed)
             try {
@@ -1086,7 +1080,7 @@ export class CabinetFile extends ScopedElementsMixin(
     async openDocumentAddDialog(resetObjectType = true) {
         if (resetObjectType) {
             this.objectType = '';
-            this.fileHitData = {};
+            this.fileHitData = null;
         }
 
         this.isFileDirty = false;
@@ -1095,8 +1089,10 @@ export class CabinetFile extends ScopedElementsMixin(
         /** @type {Modal} */
         const documentModal = this.documentModalRef.value;
 
-        // Make sure the document dialog is closed
-        documentModal.close();
+        if (documentModal) {
+            // Make sure the document dialog is closed
+            documentModal.close();
+        }
 
         /** @type {FileSource} */
         const fileSource = this.fileSourceRef.value;
@@ -1509,6 +1505,13 @@ export class CabinetFile extends ScopedElementsMixin(
 
     async updateVersions() {
         this.versions = await this.fetchCurrentVersions();
+        this.versionsLoaded = true;
+    }
+
+    async updateCurrent() {
+        if (this.fileHitData !== null) {
+            this.fileHitData = await this._getTypesenseService().fetchItem(this.fileHitData.id);
+        }
     }
 
     renderGroupingContainer() {
@@ -1654,13 +1657,17 @@ export class CabinetFile extends ScopedElementsMixin(
         console.log('getDocumentModalHtml this.documentFile', this.documentFile);
         console.log('this.mode', this.mode);
         const i18n = this._i18n;
-        const id = hit.id;
-        let additionalType = this.additionalType || hit?.file?.base.additionalType.key;
-        const headline =
-            this.mode === CabinetFile.Modes.ADD
-                ? i18n.t('doc-modal-upload-document')
-                : this._getAdditionalTypeName(additionalType);
-        console.log('additionalType', additionalType);
+
+        let headline;
+        if (this.mode === CabinetFile.Modes.ADD) {
+            headline = i18n.t('doc-modal-upload-document');
+        } else if (this.mode === CabinetFile.Modes.NEW_VERSION) {
+            headline = i18n.t('doc-modal-upload-new-version');
+        } else {
+            console.assert(hit, this.mode);
+            headline = this._getAdditionalTypeName(hit.file.base.additionalType.key);
+        }
+
         this.updateStatus();
         const options = [];
 
@@ -1718,19 +1725,15 @@ export class CabinetFile extends ScopedElementsMixin(
                             <div class="fileButtons">
                                 <button
                                     class="button ${classMap({
-                                        hidden: this.uploadFailed
-                                            ? false
-                                            : this.mode !== CabinetFile.Modes.EDIT &&
-                                              this.mode !== CabinetFile.Modes.NEW_VERSION,
+                                        hidden: !(
+                                            this.uploadFailed ||
+                                            this.mode === CabinetFile.Modes.EDIT ||
+                                            this.mode === CabinetFile.Modes.NEW_VERSION
+                                        ),
                                     })}"
                                     @click="${() => this.openReplacePdfDialog()}"
-                                    ?disabled="${this.uploadFailed ? false : !id}">
+                                    ?disabled="${this.uploadFailed || !hit}">
                                     ${i18n.t('buttons.replace-document')}
-                                    ${id
-                                        ? ''
-                                        : html`
-                                              <dbp-mini-spinner></dbp-mini-spinner>
-                                          `}
                                 </button>
                                 ${this.renderActionDropDown(hit, file)}
                                 <button
@@ -1739,7 +1742,7 @@ export class CabinetFile extends ScopedElementsMixin(
                                     class="${classMap({
                                         hidden:
                                             this.mode === CabinetFile.Modes.ADD ||
-                                            !hit.base?.isScheduledForDeletion,
+                                            (hit && !hit.base?.isScheduledForDeletion),
                                     })} button is-secondary undo-button">
                                     <dbp-icon
                                         title="${i18n.t('doc-modal-undelete-document')}"
@@ -1775,7 +1778,7 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     renderActionDropDown(hit, file) {
-        if (this.mode !== CabinetFile.Modes.VIEW || hit.base?.isScheduledForDeletion) {
+        if (this.mode !== CabinetFile.Modes.VIEW || !hit || hit.base?.isScheduledForDeletion) {
             return null;
         }
 
@@ -1887,7 +1890,7 @@ export class CabinetFile extends ScopedElementsMixin(
         // the "Replace Document" button
         if (this.allowStateReset) {
             // Reset the state of the component when the modal is closed
-            this.initializeState();
+            this.resetState();
         }
 
         // Send a close event to the parent component
@@ -1953,23 +1956,20 @@ export class CabinetFile extends ScopedElementsMixin(
         console.log('onDocumentTypeSelected objectType', objectType);
         console.log('onDocumentTypeSelected additionalType', additionalType);
 
-        // Check if the fileHitData is empty, which means we created a new document
-        const isFileHitDataEmpty = Object.keys(this.fileHitData).length === 0;
-
         // Only try to preset data if we are editing an existing document
-        if (this.objectType && !isFileHitDataEmpty) {
+        if (this.objectType && this.fileHitData !== null) {
             // Save the current fileHitData to the cache to keep the data when switching between object types in edit mode
             // In the future there could also be an event on every form element change to save the data to the cache when it changes
             this.fileHitDataCache[this.objectType] = this.fileHitData;
 
             // Now also reset the fileHitData
-            this.fileHitData = {};
+            this.fileHitData = null;
 
             // Preset the hit data for the new object type if possible
             this.presetHitData(objectType);
         } else {
             // Reset the fileHitData so that it can set with default values in the object type modules
-            this.fileHitData = {};
+            this.fileHitData = null;
         }
 
         this.objectType = objectType;
@@ -2012,9 +2012,14 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     getDocumentTypeSelector() {
-        const additionalType =
-            this.fileHitData?.file?.base?.additionalType?.key || this.additionalType || '';
-        const objectType = this.fileHitData.objectType || this.objectType || '';
+        let additionalType = '';
+        let objectType = '';
+        if (this.fileHitData !== null) {
+            additionalType =
+                this.fileHitData.file?.base?.additionalType?.key || this.additionalType || '';
+            objectType = this.fileHitData.objectType || this.objectType || '';
+        }
+
         const fileDocumentType =
             additionalType !== '' && objectType !== '' ? objectType + '---' + additionalType : '';
 
@@ -2076,11 +2081,8 @@ export class CabinetFile extends ScopedElementsMixin(
             case CabinetFile.Modes.VIEW:
             case CabinetFile.Modes.ADD:
                 return this.getHtml();
-            default:
-                console.error('mode not found', this.mode);
-                return html`
-                    <dbp-modal ${ref(this.modalRef)} modal-id="view-modal"></dbp-modal>
-                `;
+            case CabinetFile.Modes.CLOSED:
+                return html``;
         }
     }
 
@@ -2220,7 +2222,7 @@ export class CabinetFile extends ScopedElementsMixin(
     updateStatus() {
         const i18n = this._i18n;
         this.statusMessageBlocks = [];
-        if (!this.fileHitData.base) {
+        if (this.fileHitData === null) {
             return;
         }
 
@@ -2231,15 +2233,13 @@ export class CabinetFile extends ScopedElementsMixin(
             (version) => version.base?.isCurrent,
         ).length;
 
-        // this.addStatusMessageBlock(CabinetFile.Status.WARNING, 'Another message');
-
         if (this.fileHitData.base.isScheduledForDeletion) {
             this.addStatusMessageBlock(
                 CabinetFile.Status.DANGER,
                 i18n.t('status-scheduled-for-deletion'),
                 this.deleteAtDateTime,
             );
-        } else if (isDeletionDateReached || currentVersionsCount !== 1) {
+        } else if (isDeletionDateReached || (currentVersionsCount !== 1 && this.versionsLoaded)) {
             if (isDeletionDateReached) {
                 this.addStatusMessageBlock(
                     CabinetFile.Status.WARNING,
@@ -2487,22 +2487,7 @@ export class CabinetFile extends ScopedElementsMixin(
             );
 
             // Refetch and set current hit data
-            const currentHitId = this.fileHitData?.id;
-            if (currentHitId) {
-                console.log('handleDeleteAllVersions: Refetching current hit data to update UI');
-                try {
-                    const updatedHit = await this._getTypesenseService().fetchItem(currentHitId);
-                    if (updatedHit) {
-                        this.fileHitData = updatedHit;
-                    }
-                } catch (error) {
-                    console.warn(
-                        'handleDeleteAllVersions: Could not refetch current hit data:',
-                        error,
-                    );
-                    // Don't fail the entire operation if we can't refetch - the deletion was successful
-                }
-            }
+            await this.updateCurrent();
 
             // Show success notification to user
             this.documentModalNotification(

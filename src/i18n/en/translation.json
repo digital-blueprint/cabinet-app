@@ -95,6 +95,7 @@
     "doc-modal-select-version": "Select version",
     "doc-modal-undelete-document": "Undelete",
     "doc-modal-upload-document": "Upload document",
+    "doc-modal-upload-new-version": "Upload new version",
     "document": {
         "document-not-found-body": "The requested document could not be found!",
         "document-not-found-summary": "Document not found"

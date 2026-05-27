@@ -1596,11 +1596,17 @@ class CabinetSearch extends ScopedElementsMixin(
         } else {
             switch (routingData.pathSegments[0]) {
                 case 'document':
+                    if (id === this.documentViewId) {
+                        return;
+                    }
                     this.documentViewId = id;
                     this.resetRoutingUrl = true;
                     await this.handleAutomaticDocumentViewOpen();
                     break;
                 case 'person':
+                    if (id === this.personViewId) {
+                        return;
+                    }
                     this.personViewId = id;
                     this.resetRoutingUrl = true;
                     await this.handleAutomaticPersonViewOpen();
