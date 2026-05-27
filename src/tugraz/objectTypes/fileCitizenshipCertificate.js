@@ -58,7 +58,7 @@ class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
             CitizenshipCertificate:
-                'tugraz:typesense-schema.file.base.additionalType.key.CitizenshipCertificate',
+                'custom:typesense-schema.file.base.additionalType.key.CitizenshipCertificate',
         };
     }
 
@@ -88,14 +88,14 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-cabinet-form-nationality-element
                     subscribe="lang"
                     name="nationality"
-                    label=${this._i18nCustom.t('tugraz:doc-modal-nationality')}
+                    label=${this._i18nCustom.t('custom:doc-modal-nationality')}
                     .value=${citizenshipCertificate.nationality}
                     required></dbp-cabinet-form-nationality-element>
 
                 <dbp-form-date-element
                     subscribe="lang"
                     name="dateCreated"
-                    label=${this._i18nCustom.t('tugraz:doc-modal-issue-date')}
+                    label=${this._i18nCustom.t('custom:doc-modal-issue-date')}
                     .value=${citizenshipCertificate.dateCreated}
                     required></dbp-form-date-element>
 
@@ -122,7 +122,7 @@ class CabinetHitElement extends BaseDocumentHitElement {
         return html`
             ${issueDate
                 ? html`
-                      ${i18n.t('tugraz:document-issue-date')}: ${formattedDate}
+                      ${i18n.t('custom:document-issue-date')}: ${formattedDate}
                   `
                 : ''}
         `;
@@ -153,12 +153,12 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <dbp-form-string-view
                 subscribe="lang"
-                label=${i18n.t('tugraz:doc-modal-nationality')}
+                label=${i18n.t('custom:doc-modal-nationality')}
                 .value=${`${getNationalityDisplayName(nationalityCode, this.lang)} (${nationalityCode})`}></dbp-form-string-view>
 
             <dbp-form-date-view
                 subscribe="lang"
-                label=${i18n.t('tugraz:doc-modal-issue-date')}
+                label=${i18n.t('custom:doc-modal-issue-date')}
                 .value=${citizenshipCertificate.dateCreated
                     ? new Date(citizenshipCertificate.dateCreated)
                     : ''}></dbp-form-date-view>

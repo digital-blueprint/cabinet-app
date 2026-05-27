@@ -50,13 +50,13 @@ class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
             BirthCertificate:
-                'tugraz:typesense-schema.file.base.additionalType.key.BirthCertificate',
+                'custom:typesense-schema.file.base.additionalType.key.BirthCertificate',
             MaritalStatusCertificate:
-                'tugraz:typesense-schema.file.base.additionalType.key.MaritalStatusCertificate',
+                'custom:typesense-schema.file.base.additionalType.key.MaritalStatusCertificate',
             SupervisionAcceptance:
-                'tugraz:typesense-schema.file.base.additionalType.key.SupervisionAcceptance',
-            Recognition: 'tugraz:typesense-schema.file.base.additionalType.key.Recognition',
-            Graduation: 'tugraz:typesense-schema.file.base.additionalType.key.Graduation',
+                'custom:typesense-schema.file.base.additionalType.key.SupervisionAcceptance',
+            Recognition: 'custom:typesense-schema.file.base.additionalType.key.Recognition',
+            Graduation: 'custom:typesense-schema.file.base.additionalType.key.Graduation',
         };
     }
 
@@ -84,7 +84,7 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-date-element
                     subscribe="lang"
                     name="dateCreated"
-                    label=${this._i18nCustom.t('tugraz:doc-modal-issue-date')}
+                    label=${this._i18nCustom.t('custom:doc-modal-issue-date')}
                     .value=${minimalSchema.dateCreated || ''}
                     required></dbp-form-date-element>
 
@@ -110,7 +110,7 @@ class CabinetHitElement extends BaseDocumentHitElement {
         return html`
             ${issueDate
                 ? html`
-                      ${i18n.t('tugraz:document-issue-date')}: ${formattedDate}
+                      ${i18n.t('custom:document-issue-date')}: ${formattedDate}
                   `
                 : ''}
         `;
@@ -137,7 +137,7 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <dbp-form-date-view
                 subscribe="lang"
-                label=${this._i18nCustom.t('tugraz:doc-modal-issue-date')}
+                label=${this._i18nCustom.t('custom:doc-modal-issue-date')}
                 .value=${minimalSchema.dateCreated
                     ? new Date(minimalSchema.dateCreated)
                     : ''}></dbp-form-date-view>

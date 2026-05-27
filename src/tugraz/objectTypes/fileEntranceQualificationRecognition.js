@@ -50,7 +50,7 @@ class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
             EntranceQualificationRecognition:
-                'tugraz:typesense-schema.file.base.additionalType.key.EntranceQualificationRecognition',
+                'custom:typesense-schema.file.base.additionalType.key.EntranceQualificationRecognition',
         };
     }
 
@@ -79,7 +79,7 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-string-element
                     subscribe="lang"
                     name="signedBy"
-                    label=${this._i18nCustom.t('tugraz:doc-modal-signed-by')}
+                    label=${this._i18nCustom.t('custom:doc-modal-signed-by')}
                     .value=${recognition.signedBy}
                     required></dbp-form-string-element>
 
@@ -117,7 +117,7 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <dbp-form-string-view
                 subscribe="lang"
-                label=${i18n.t('tugraz:doc-modal-signed-by')}
+                label=${i18n.t('custom:doc-modal-signed-by')}
                 .value=${recognition.signedBy || ''}
                 required></dbp-form-string-view>
         `;

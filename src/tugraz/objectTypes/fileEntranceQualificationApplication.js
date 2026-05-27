@@ -51,7 +51,7 @@ class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
             EntranceQualificationApplication:
-                'tugraz:typesense-schema.file.base.additionalType.key.EntranceQualificationApplication',
+                'custom:typesense-schema.file.base.additionalType.key.EntranceQualificationApplication',
         };
     }
 
@@ -80,14 +80,14 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousEducation"
-                    label=${this._i18nCustom.t('tugraz:doc-modal-previous-education')}
+                    label=${this._i18nCustom.t('custom:doc-modal-previous-education')}
                     .value=${application.previousEducation}
                     required></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="electiveSubject"
-                    label=${this._i18nCustom.t('tugraz:doc-modal-elective-subject')}
+                    label=${this._i18nCustom.t('custom:doc-modal-elective-subject')}
                     .state=${application.electiveSubject}></dbp-form-string-element>
 
                 ${this.getCommonFormElements()}
@@ -124,12 +124,12 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <dbp-form-string-view
                 subscribe="lang"
-                label=${i18n.t('tugraz:doc-modal-previous-education')}
+                label=${i18n.t('custom:doc-modal-previous-education')}
                 .value=${application.previousEducation || ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${i18n.t('tugraz:doc-modal-elective-subject')}
+                label=${i18n.t('custom:doc-modal-elective-subject')}
                 .value=${application.electiveSubject || ''}></dbp-form-string-view>
         `;
     }

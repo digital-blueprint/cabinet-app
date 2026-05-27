@@ -97,7 +97,7 @@ export class NationalityInput extends LangMixin(DbpBaseElement, createInstance, 
         this._codes = getAllNationalityCodes();
         this.customValidator = (value) => {
             if (!isValidCode(value)) {
-                return [this._i18nSub.t('tugraz:nationality-input.invalid-code-format')];
+                return [this._i18nSub.t('custom:nationality-input.invalid-code-format')];
             } else {
                 return [];
             }
@@ -233,7 +233,7 @@ export class NationalityInput extends LangMixin(DbpBaseElement, createInstance, 
         if (!this._filteredCodes.length) {
             return html`
                 <div class="country-option" role="option">
-                    ${this._i18nSub.t('tugraz:nationality-input.no-matches-found')}
+                    ${this._i18nSub.t('custom:nationality-input.no-matches-found')}
                 </div>
             `;
         }
@@ -262,7 +262,7 @@ export class NationalityInput extends LangMixin(DbpBaseElement, createInstance, 
                         id="${this.formElementId}"
                         type="text"
                         class="form-input"
-                        placeholder="${this._i18nSub.t('tugraz:nationality-input.placeholder')}"
+                        placeholder="${this._i18nSub.t('custom:nationality-input.placeholder')}"
                         autocomplete="off"
                         .value="${this.value}"
                         ?disabled="${this.disabled}"

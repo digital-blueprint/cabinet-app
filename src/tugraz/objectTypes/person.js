@@ -377,8 +377,8 @@ class CabinetHitElement extends BaseHitElement {
         const displayedStudies = studies.slice(0, maxStudies);
         const extraCount = sortedStudies.length - maxStudies;
         const focusButtonLabel = isFocused
-            ? i18n.t('tugraz:person.unselect-button-name')
-            : i18n.t('tugraz:person.focus-button-name');
+            ? i18n.t('custom:person.unselect-button-name')
+            : i18n.t('custom:person.focus-button-name');
 
         const selectTranslation = (keyedText) => {
             if (!keyedText) return keyedText;
@@ -387,7 +387,7 @@ class CabinetHitElement extends BaseHitElement {
 
         let spacingTop = this.isFirstOfGroup && !this.isFirstOnPage;
         let borderTop = spacingTop || this.isFirstOnPage;
-        this.ariaLabel = `${i18n.t('tugraz:person.hitbox.person-entry')} ${hit.person.familyName}, ${hit.person.givenName}`;
+        this.ariaLabel = `${i18n.t('custom:person.hitbox.person-entry')} ${hit.person.familyName}, ${hit.person.givenName}`;
         return html`
            <div class="wrapper ${spacingTop ? 'spacing-top' : ''} ${borderTop ? 'border-top' : ''}">
             <header class="ais-Hits-header" @keydown=${(e) => {
@@ -453,7 +453,7 @@ class CabinetHitElement extends BaseHitElement {
                                       ? html`
                                             <span>
                                                 ${extraCount}&nbsp;${i18n.t(
-                                                    'tugraz:person.person-hit',
+                                                    'custom:person.person-hit',
                                                 )}
                                             </span>
                                         `
@@ -470,7 +470,7 @@ class CabinetHitElement extends BaseHitElement {
                 <footer class="hits-person-footer">
                     <button
                         class="button"
-                        aria-label="${i18n.t('tugraz:person.buttons.add.documents')}: ${hit.person.familyName}, ${hit.person.givenName}"
+                        aria-label="${i18n.t('custom:person.buttons.add.documents')}: ${hit.person.familyName}, ${hit.person.givenName}"
                         @click=${() => {
                             this.dispatchEvent(
                                 new CustomEvent('DbpCabinetDocumentAdd', {
@@ -480,7 +480,7 @@ class CabinetHitElement extends BaseHitElement {
                                 }),
                             );
                         }}><dbp-icon name="plus" aria-hidden="true"></dbp-icon>
-                        ${i18n.t('tugraz:person.buttons.add.documents')}
+                        ${i18n.t('custom:person.buttons.add.documents')}
                     </button>
                     <button
                         class="button"
@@ -498,7 +498,7 @@ class CabinetHitElement extends BaseHitElement {
                     </button>
                     <button
                         class="button is-secondary"
-                        aria-label="${i18n.t('tugraz:person.buttons.view-short')} ${i18n.t('tugraz:person.hitbox.person-entry')} ${hit.person.familyName}, ${hit.person.givenName}"
+                        aria-label="${i18n.t('custom:person.buttons.view-short')} ${i18n.t('custom:person.hitbox.person-entry')} ${hit.person.familyName}, ${hit.person.givenName}"
                         @click=${() => {
                             this.dispatchEvent(
                                 new CustomEvent('DbpCabinetDocumentView', {
@@ -508,7 +508,7 @@ class CabinetHitElement extends BaseHitElement {
                                 }),
                             );
                         }}><dbp-icon  name="keyword-research" aria-hidden="true"></dbp-icon>
-                        ${i18n.t('tugraz:person.buttons.view')}
+                        ${i18n.t('custom:person.buttons.view')}
                     </button>
                 </footer>
             </div>
@@ -843,8 +843,8 @@ class CabinetViewElement extends BaseViewElement {
             let api = new CabinetApi(this);
             this.data = await api.syncTypesenseDocument(this.data);
             sendNotification({
-                summary: this._i18nCustom.t('tugraz:person.sync.notification.success.title'),
-                body: this._i18nCustom.t('tugraz:person.sync.notification.success.body'),
+                summary: this._i18nCustom.t('custom:person.sync.notification.success.title'),
+                body: this._i18nCustom.t('custom:person.sync.notification.success.body'),
                 type: 'success',
                 targetNotificationId: 'dbp-modal-notification-person',
                 replaceId: '-',
@@ -853,8 +853,8 @@ class CabinetViewElement extends BaseViewElement {
         } catch (error) {
             console.error('Error during sync:', error);
             sendNotification({
-                summary: this._i18nCustom.t('tugraz:person.sync.notification.error.title'),
-                body: this._i18nCustom.t('tugraz:person.sync.notification.error.body', {
+                summary: this._i18nCustom.t('custom:person.sync.notification.error.title'),
+                body: this._i18nCustom.t('custom:person.sync.notification.error.body', {
                     error: error.message,
                 }),
                 type: 'danger',
@@ -895,7 +895,7 @@ class CabinetViewElement extends BaseViewElement {
 
         <div class="header-container">
         <div class="last-sync-info">
-        <p class="last-sync-title">${i18n.t('tugraz:person.sync.status-label')}:&nbsp;</p><div class="person-sync-date">${Intl.DateTimeFormat(
+        <p class="last-sync-title">${i18n.t('custom:person.sync.status-label')}:&nbsp;</p><div class="person-sync-date">${Intl.DateTimeFormat(
             'de',
             {
                 day: '2-digit',
@@ -918,21 +918,21 @@ class CabinetViewElement extends BaseViewElement {
                     : html`
                           <a href="#" @click=${this._onSync}>
                               <dbp-icon
-                                  title="${i18n.t('tugraz:person.sync.button-title')}"
+                                  title="${i18n.t('custom:person.sync.button-title')}"
                                   aria-hidden="true"
                                   name="reload"></dbp-icon>
-                              ${i18n.t('tugraz:person.sync.button-title')}
+                              ${i18n.t('custom:person.sync.button-title')}
                           </a>
                       `
             }
         </button>
         <button class=" button is-secondary header-person-button">
             <a href="${hit.person.coUrl}" @click=${this._onEdit}>
-                <dbp-icon  title='${i18n.t('tugraz:person.Edit-student-data')}'
+                <dbp-icon  title='${i18n.t('custom:person.Edit-student-data')}'
                 aria-hidden="true"
                 name='pencil'>
                 </dbp-icon>
-                ${i18n.t('tugraz:person.Edit-student-data')}
+                ${i18n.t('custom:person.Edit-student-data')}
             </a>
         </button>
         <button class="button is-secondary header-person-button">
@@ -940,10 +940,10 @@ class CabinetViewElement extends BaseViewElement {
                 exportPersonPdf(i18n, hit);
                 return false;
             }}">
-                <dbp-icon title='${i18n.t('tugraz:person.export.button-label')}'
+                <dbp-icon title='${i18n.t('custom:person.export.button-label')}'
                 name='download' aria-hidden="true">
                 </dbp-icon>
-                ${i18n.t('tugraz:person.export.button-label')}
+                ${i18n.t('custom:person.export.button-label')}
             </a>
         </button>
         </div>
@@ -953,38 +953,38 @@ class CabinetViewElement extends BaseViewElement {
                     <dbp-icon name="graduation" aria-hidden="true"></dbp-icon>
                 </div>
                 <div class="modal-Gi-header-title">
-                    <h3>${i18n.t('tugraz:person.General-information')}</h3>
+                    <h3>${i18n.t('custom:person.General-information')}</h3>
                 </div>
             </div>
             <hr/>
             <div class="info-container">
                 <div class="info-column">
                     <ul class="info-list">
-                        <li class="info-row"><div>${i18n.t('tugraz:person.academic-titles')}</div><span> ${displayValue(hit.person.academicTitles.join(', '))}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.given-name')}</div><span> ${displayValue(hit.person.givenName)}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.family-name')}</div><span> ${displayValue(hit.person.familyName)}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.former-family-name')}</div><span> ${displayValue(hit.person.formerFamilyName)}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.academic-title-following')}</div><span> ${displayValue(hit.person.academicTitleFollowing)}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.stud-id')}</div><span> ${displayValue(hit.person.studId)}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.st-PersonNr')}</div><span> ${displayValue(hit.person.stPersonNr)} </span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.birth-date')}</div><span> ${formatDate(hit.person.birthDate)}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.nationalities')}</div><span> ${displayValue(hit.person.nationalities.map((n) => selectTranslation(n)).join(', '))}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.gender')}</div><span> ${displayValue(selectTranslation(hit.person.gender))}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.social-SecurityNr')}</div><span> ${displayValue(hit.person.socialSecurityNr)}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.academic-titles')}</div><span> ${displayValue(hit.person.academicTitles.join(', '))}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.given-name')}</div><span> ${displayValue(hit.person.givenName)}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.family-name')}</div><span> ${displayValue(hit.person.familyName)}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.former-family-name')}</div><span> ${displayValue(hit.person.formerFamilyName)}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.academic-title-following')}</div><span> ${displayValue(hit.person.academicTitleFollowing)}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.stud-id')}</div><span> ${displayValue(hit.person.studId)}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.st-PersonNr')}</div><span> ${displayValue(hit.person.stPersonNr)} </span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.birth-date')}</div><span> ${formatDate(hit.person.birthDate)}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.nationalities')}</div><span> ${displayValue(hit.person.nationalities.map((n) => selectTranslation(n)).join(', '))}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.gender')}</div><span> ${displayValue(selectTranslation(hit.person.gender))}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.social-SecurityNr')}</div><span> ${displayValue(hit.person.socialSecurityNr)}</span></li>
                     </ul>
                 </div>
                 <div class="info-column">
                     <ul class="info-list">
-                        <li class="info-row"><div>${i18n.t('tugraz:person.ssPIN')}</div><span> ${displayValue(hit.person.bpk)}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.personal-Status')}</div><span> ${displayValue(selectTranslation(hit.person.personalStatus))}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.student-Status')}</div><span> ${displayValue(selectTranslation(hit.person.studentStatus))}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.tuitionStatus')}</div><span> ${displayValue(hit.person.tuitionStatus)}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.immatriculation-date')}</div><span> ${formatDate(hit.person.immatriculationDate)}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.immatriculationSemester')}</div><span> ${displayValue(hit.person.immatriculationSemester)}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.exmatriculation-GI')}</div><span> ${displayValue(selectTranslation(hit.person.exmatriculationStatus))} ${formatDate(hit.person.exmatriculationDate)}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.admission-Qualification-Type')}</div><span> ${displayValue(selectTranslation(hit.person.admissionQualificationType))}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.school-Certificate-Date')}</div><span> ${formatDate(hit.person.schoolCertificateDate)}</span></li>
-                        <li class="info-row"><div>${i18n.t('tugraz:person.note')}</div><span> ${displayValue(hit.person.note)}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.ssPIN')}</div><span> ${displayValue(hit.person.bpk)}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.personal-Status')}</div><span> ${displayValue(selectTranslation(hit.person.personalStatus))}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.student-Status')}</div><span> ${displayValue(selectTranslation(hit.person.studentStatus))}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.tuitionStatus')}</div><span> ${displayValue(hit.person.tuitionStatus)}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.immatriculation-date')}</div><span> ${formatDate(hit.person.immatriculationDate)}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.immatriculationSemester')}</div><span> ${displayValue(hit.person.immatriculationSemester)}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.exmatriculation-GI')}</div><span> ${displayValue(selectTranslation(hit.person.exmatriculationStatus))} ${formatDate(hit.person.exmatriculationDate)}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.admission-Qualification-Type')}</div><span> ${displayValue(selectTranslation(hit.person.admissionQualificationType))}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.school-Certificate-Date')}</div><span> ${formatDate(hit.person.schoolCertificateDate)}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.note')}</div><span> ${displayValue(hit.person.note)}</span></li>
                     </ul>
                 </div>
             </div>
@@ -993,7 +993,7 @@ class CabinetViewElement extends BaseViewElement {
                     <dbp-icon name="book" aria-hidden="true"></dbp-icon>
                 </div>
                 <div class="modal-Si-header-title">
-                    <h3>${i18n.t('tugraz:person.Study-information')}</h3>
+                    <h3>${i18n.t('custom:person.Study-information')}</h3>
                 </div>
             </div>
             <hr/>
@@ -1018,21 +1018,21 @@ class CabinetViewElement extends BaseViewElement {
                                         </li>
                                     </div>
                                     <li class="study-row">
-                                        <div>${i18n.t('tugraz:person.semester')}</div>
+                                        <div>${i18n.t('custom:person.semester')}</div>
                                         <span>${displayValue(study.semester)}</span>
                                     </li>
                                     <li class="study-row">
-                                        <div>${i18n.t('tugraz:person.status')}</div>
+                                        <div>${i18n.t('custom:person.status')}</div>
                                         <span>
                                             ${displayValue(selectTranslation(study.status))}
                                         </span>
                                     </li>
                                     <li class="study-row">
-                                        <div>${i18n.t('tugraz:person.immatriculation-date')}</div>
+                                        <div>${i18n.t('custom:person.immatriculation-date')}</div>
                                         <span>${formatDate(study.immatriculationDate)}</span>
                                     </li>
                                     <li class="study-row">
-                                        <div>${i18n.t('tugraz:person.qualification-study')}</div>
+                                        <div>${i18n.t('custom:person.qualification-study')}</div>
                                         <span>
                                             ${displayValue(
                                                 selectTranslation(study.qualificationType),
@@ -1042,7 +1042,7 @@ class CabinetViewElement extends BaseViewElement {
                                         </span>
                                     </li>
                                     <li class="study-row">
-                                        <div>${i18n.t('tugraz:person.exmatriculation')}</div>
+                                        <div>${i18n.t('custom:person.exmatriculation')}</div>
                                         <span>
                                             ${displayValue(
                                                 selectTranslation(study.exmatriculationType),
@@ -1051,7 +1051,7 @@ class CabinetViewElement extends BaseViewElement {
                                         </span>
                                     </li>
                                     <li class="study-row">
-                                        <div>${i18n.t('tugraz:person.curriculum-version')}</div>
+                                        <div>${i18n.t('custom:person.curriculum-version')}</div>
                                         <span>${displayValue(study.curriculumVersion)}</span>
                                     </li>
                                 </ul>
@@ -1062,16 +1062,16 @@ class CabinetViewElement extends BaseViewElement {
                 <div class="modal-Ci-header-svg">
                     <dbp-icon name="phone" aria-hidden="true"></dbp-icon>
                 </div>
-                <div class="modal-Ci-header-title"><h3>${i18n.t('tugraz:person.Contact-information')}</h3></div>
+                <div class="modal-Ci-header-title"><h3>${i18n.t('custom:person.Contact-information')}</h3></div>
             </div>
             <hr/>
             <ul class="Ci-flex-info">
-                <li class="Ci-item"><div>${i18n.t('tugraz:person.emailAddressUniversity')}</div><span>${displayValue(hit.person.emailAddressUniversity)}</span></li>
-                <li class="Ci-item"><div>${i18n.t('tugraz:person.emailAddressConfirmed')}</div><span>${displayValue(hit.person.emailAddressConfirmed)}</span></li>
-                <li class="Ci-item"><div>${i18n.t('tugraz:person.emailAddressTemporary')}</div><span>${displayValue(hit.person.emailAddressTemporary)}</span></li>
+                <li class="Ci-item"><div>${i18n.t('custom:person.emailAddressUniversity')}</div><span>${displayValue(hit.person.emailAddressUniversity)}</span></li>
+                <li class="Ci-item"><div>${i18n.t('custom:person.emailAddressConfirmed')}</div><span>${displayValue(hit.person.emailAddressConfirmed)}</span></li>
+                <li class="Ci-item"><div>${i18n.t('custom:person.emailAddressTemporary')}</div><span>${displayValue(hit.person.emailAddressTemporary)}</span></li>
             </ul>
                 </br/>
-                <li class="Address-flex-item"><div>${i18n.t('tugraz:person.homeAddress.heading')}</li></div>
+                <li class="Address-flex-item"><div>${i18n.t('custom:person.homeAddress.heading')}</li></div>
                     <ul class="address-info">
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.note)}</li>
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.street)}</li>
@@ -1083,7 +1083,7 @@ class CabinetViewElement extends BaseViewElement {
                     </ul>
 
                 </br>
-                <li class="Address-flex-item"><div>${i18n.t('tugraz:person.studyAddress.heading')} </li></div>
+                <li class="Address-flex-item"><div>${i18n.t('custom:person.studyAddress.heading')} </li></div>
                     <ul class="address-info">
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.note)}</li>
                         <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.street)}</li>

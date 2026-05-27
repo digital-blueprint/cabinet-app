@@ -55,7 +55,7 @@ class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
             EnglMasterDataSheet:
-                'tugraz:typesense-schema.file.base.additionalType.key.EnglMasterDataSheet',
+                'custom:typesense-schema.file.base.additionalType.key.EnglMasterDataSheet',
         };
     }
 
@@ -85,27 +85,27 @@ class CabinetFormElement extends BaseFormElement {
                     subscribe="lang"
                     name="previousHigherEducationInstitution"
                     label=${this._i18nCustom.t(
-                        'tugraz:doc-modal-previous-higher-education-institution',
+                        'custom:doc-modal-previous-higher-education-institution',
                     )}
                     .value=${datasheet.previousHigherEducationInstitution}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousHigherEducationPlace"
-                    label=${this._i18nCustom.t('tugraz:doc-modal-previous-higher-education-place')}
+                    label=${this._i18nCustom.t('custom:doc-modal-previous-higher-education-place')}
                     .value=${datasheet.previousHigherEducationPlace}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousHigherEducationField"
-                    label=${this._i18nCustom.t('tugraz:doc-modal-previous-higher-education-field')}
+                    label=${this._i18nCustom.t('custom:doc-modal-previous-higher-education-field')}
                     .value=${datasheet.previousHigherEducationField}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousHigherEducationCurriculum"
                     label=${this._i18nCustom.t(
-                        'tugraz:doc-modal-previous-higher-education-curriculum',
+                        'custom:doc-modal-previous-higher-education-curriculum',
                     )}
                     .value=${datasheet.previousHigherEducationCurriculum}
                     type="url"></dbp-form-string-element>
@@ -114,14 +114,14 @@ class CabinetFormElement extends BaseFormElement {
                     subscribe="lang"
                     name="previousHigherEducationGrading"
                     label=${this._i18nCustom.t(
-                        'tugraz:doc-modal-previous-higher-education-grading',
+                        'custom:doc-modal-previous-higher-education-grading',
                     )}
                     .value=${datasheet.previousHigherEducationGrading}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousHigherEducationCPGA"
-                    label=${this._i18nCustom.t('tugraz:doc-modal-previous-higher-education-cpga')}
+                    label=${this._i18nCustom.t('custom:doc-modal-previous-higher-education-cpga')}
                     .value=${datasheet.previousHigherEducationCPGA}></dbp-form-string-element>
 
                 ${this.getCommonFormElements()}
@@ -158,32 +158,32 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <dbp-form-string-view
                 subscribe="lang"
-                label=${i18n.t('tugraz:doc-modal-previous-higher-education-institution')}
+                label=${i18n.t('custom:doc-modal-previous-higher-education-institution')}
                 .value=${datasheet.previousHigherEducationInstitution || ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${i18n.t('tugraz:doc-modal-previous-higher-education-place')}
+                label=${i18n.t('custom:doc-modal-previous-higher-education-place')}
                 .value=${datasheet.previousHigherEducationPlace || ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${i18n.t('tugraz:doc-modal-previous-higher-education-field')}
+                label=${i18n.t('custom:doc-modal-previous-higher-education-field')}
                 .value=${datasheet.previousHigherEducationField || ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${i18n.t('tugraz:doc-modal-previous-higher-education-curriculum')}
+                label=${i18n.t('custom:doc-modal-previous-higher-education-curriculum')}
                 .value=${datasheet.previousHigherEducationCurriculum || ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${i18n.t('tugraz:doc-modal-previous-higher-education-grading')}
+                label=${i18n.t('custom:doc-modal-previous-higher-education-grading')}
                 .value=${datasheet.previousHigherEducationGrading || ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${i18n.t('tugraz:doc-modal-previous-higher-education-cpga')}
+                label=${i18n.t('custom:doc-modal-previous-higher-education-cpga')}
                 .value=${datasheet.previousHigherEducationCPGA || ''}></dbp-form-string-view>
         `;
     }

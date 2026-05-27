@@ -57,7 +57,7 @@ export class BaseDocumentHitElement extends BaseHitElement {
         let spacingTop = this.isFirstOfGroup && !this.isFirstOnPage;
         let borderTop = spacingTop || this.isFirstOnPage;
 
-        this.ariaLabel = `${i18n.t('tugraz:hitbox.document-entry')} ${this.lang === 'de' ? hit.file.base.additionalType.text : hit.file.base.additionalType.textEn} ${i18n.t('tugraz:hitbox.document-of')} ${hit.person.familyName}, ${hit.person.givenName}`;
+        this.ariaLabel = `${i18n.t('custom:hitbox.document-entry')} ${this.lang === 'de' ? hit.file.base.additionalType.text : hit.file.base.additionalType.textEn} ${i18n.t('custom:hitbox.document-of')} ${hit.person.familyName}, ${hit.person.givenName}`;
 
         // Prettier is messing with commas in the template literal, so we disable it for this part
         // prettier-ignore
@@ -95,7 +95,7 @@ export class BaseDocumentHitElement extends BaseHitElement {
                               <div class="text-container">
                                   <h3
                                       class="ais-doc-Hits-header-items header-item1"
-                                      aria-label="${i18n.t('tugraz:full-family-name')} ${hit.person
+                                      aria-label="${i18n.t('custom:full-family-name')} ${hit.person
                                           .familyName}, ${hit.person.givenName} ${i18n.t(
                                           'birth-date',
                                       )} ${hit.person.birthDateDe}">
@@ -108,7 +108,7 @@ export class BaseDocumentHitElement extends BaseHitElement {
                                   &nbsp
                                   <div
                                       class="ais-doc-Hits-header-items header-item2"
-                                      aria-label="${i18n.t('tugraz:person.st-PersonNr')} ${hit.person.studId}">
+                                      aria-label="${i18n.t('custom:person.st-PersonNr')} ${hit.person.studId}">
                                       ${renderFieldWithHighlight(hit, 'person.studId')} |
                                       ${renderFieldWithHighlight(hit, 'person.stPersonNr')}
                                   </div>
@@ -120,7 +120,7 @@ export class BaseDocumentHitElement extends BaseHitElement {
                                   ${hit.file.base.subjectOf
                                       ? html`
                                             <span>
-                                                ${i18n.t('tugraz:file.subject-of')}:
+                                                ${i18n.t('custom:file.subject-of')}:
                                                 ${renderFieldWithHighlight(
                                                     hit,
                                                     'file.base.subjectOf',
@@ -129,10 +129,10 @@ export class BaseDocumentHitElement extends BaseHitElement {
                                         `
                                       : ''}
                                   <span>
-                                      ${i18n.t('tugraz:file.added')}:
+                                      ${i18n.t('custom:file.added')}:
                                       <strong>${dateCreated}</strong>
                                   </span>
-                                  <span>${i18n.t('tugraz:file.last-modified')}: ${lastModified}</span>
+                                  <span>${i18n.t('custom:file.last-modified')}: ${lastModified}</span>
                               </div>
                               ${this.renderViewButton(hit)}
                           </main>
@@ -153,14 +153,14 @@ export class BaseDocumentHitElement extends BaseHitElement {
                                   </label>
                                   <strong>${dateCreated}</strong>
                                   ,
-                                  <span>${i18n.t('tugraz:file.modified')} ${lastModified}</span>
-                                  (${i18n.t('tugraz:file.obsolete')})
+                                  <span>${i18n.t('custom:file.modified')} ${lastModified}</span>
+                                  (${i18n.t('custom:file.obsolete')})
                                   <div class="hit-content-item">
                                       ${this._renderContent()}
                                       ${hit.file.base.subjectOf
                                           ? html`
                                                 <span>
-                                                    ${i18n.t('tugraz:file.subject-of')}:
+                                                    ${i18n.t('custom:file.subject-of')}:
                                                     ${renderFieldWithHighlight(
                                                         hit,
                                                         'file.base.subjectOf',

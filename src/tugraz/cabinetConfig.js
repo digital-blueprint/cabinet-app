@@ -3,7 +3,7 @@ import {createInstance} from '../tugraz/i18n.js';
 function translationRenderFunction(lang, schemaField, value, operator = null) {
     let i18n = createInstance();
     i18n.changeLanguage(lang);
-    return i18n.t(`tugraz:typesense-schema.${schemaField}.${value}`, value);
+    return i18n.t(`custom:typesense-schema.${schemaField}.${value}`, value);
 }
 
 function _renderDate(lang, value, operator, timeZone = undefined) {
@@ -20,8 +20,8 @@ function _renderDate(lang, value, operator, timeZone = undefined) {
     }
     let operatorLabel =
         operator === '>='
-            ? i18n.t('tugraz:cabinet-search.refinement-date-after-text')
-            : i18n.t('tugraz:cabinet-search.refinement-date-before-text');
+            ? i18n.t('custom:cabinet-search.refinement-date-after-text')
+            : i18n.t('custom:cabinet-search.refinement-date-before-text');
     return `${operatorLabel} ${date}`;
 }
 
@@ -160,7 +160,7 @@ export default class CabinetConfig {
             {
                 'filter-group': {
                     id: 'category',
-                    name: i18n.t('tugraz:cabinet-search.type-filter-group-title'),
+                    name: i18n.t('custom:cabinet-search.type-filter-group-title'),
                 },
             },
             {
@@ -168,7 +168,7 @@ export default class CabinetConfig {
                 groupId: 'category',
                 schemaField: '@type',
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-type-title'),
+                name: i18n.t('custom:cabinet-search.filter-type-title'),
                 renderFunction: translationRenderFunction,
                 facetOptions: {
                     facet: {
@@ -182,7 +182,7 @@ export default class CabinetConfig {
             {
                 'filter-group': {
                     id: 'person',
-                    name: i18n.t('tugraz:cabinet-search.person-filter-group-title'),
+                    name: i18n.t('custom:cabinet-search.person-filter-group-title'),
                 },
             },
             {
@@ -190,7 +190,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'person.person',
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-person-person-title'),
+                name: i18n.t('custom:cabinet-search.filter-person-person-title'),
                 hidden: true,
                 facetOptions: {
                     facet: {
@@ -203,7 +203,7 @@ export default class CabinetConfig {
                 id: 'person.birthDateTimestamp',
                 groupId: 'person',
                 schemaField: 'person.birthDateTimestamp',
-                name: i18n.t('tugraz:cabinet-search.filter-person-birth-date-timestamp-title'),
+                name: i18n.t('custom:cabinet-search.filter-person-birth-date-timestamp-title'),
                 schemaFieldType: 'datepicker',
                 renderFunction: datePickerUTCRenderFunction,
                 facetOptions: {
@@ -217,7 +217,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: selectField('person.personalStatus'),
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-person-personal-status-text-title'),
+                name: i18n.t('custom:cabinet-search.filter-person-personal-status-text-title'),
                 facetOptions: {
                     facet: {
                         searchable: false,
@@ -230,7 +230,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: selectField('person.studentStatus'),
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-person-student-status-text-title'),
+                name: i18n.t('custom:cabinet-search.filter-person-student-status-text-title'),
                 facetOptions: {
                     facet: {
                         searchable: false,
@@ -244,7 +244,7 @@ export default class CabinetConfig {
                 schemaField: selectField('person.exmatriculationStatus'),
                 schemaFieldType: 'checkbox',
                 name: i18n.t(
-                    'tugraz:cabinet-search.filter-person-exmatriculation-status-text-title',
+                    'custom:cabinet-search.filter-person-exmatriculation-status-text-title',
                 ),
                 facetOptions: {
                     facet: {
@@ -259,7 +259,7 @@ export default class CabinetConfig {
                 schemaField: selectField('person.admissionQualificationType'),
                 schemaFieldType: 'checkbox',
                 name: i18n.t(
-                    'tugraz:cabinet-search.filter-person-admission-qualification-type-text-title',
+                    'custom:cabinet-search.filter-person-admission-qualification-type-text-title',
                 ),
                 facetOptions: {
                     facet: {
@@ -273,7 +273,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: selectField('person.nationalities'),
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-person-nationalities-text-title'),
+                name: i18n.t('custom:cabinet-search.filter-person-nationalities-text-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -286,7 +286,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: selectField('person.gender'),
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-person-gender-text-title'),
+                name: i18n.t('custom:cabinet-search.filter-person-gender-text-title'),
                 facetOptions: {
                     facet: {
                         searchable: false,
@@ -298,7 +298,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'person.immatriculationSemester',
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-person-immatriculation-semester-title'),
+                name: i18n.t('custom:cabinet-search.filter-person-immatriculation-semester-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -311,7 +311,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'person.exmatriculationSemester',
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-person-exmatriculation-semester-title'),
+                name: i18n.t('custom:cabinet-search.filter-person-exmatriculation-semester-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -324,7 +324,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: selectField('person.homeAddress.country'),
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-person-home-address-country-text-title'),
+                name: i18n.t('custom:cabinet-search.filter-person-home-address-country-text-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -337,7 +337,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'person.homeAddress.region',
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-person-home-address-region-title'),
+                name: i18n.t('custom:cabinet-search.filter-person-home-address-region-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -350,7 +350,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'person.homeAddress.place',
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-person-home-address-place-title'),
+                name: i18n.t('custom:cabinet-search.filter-person-home-address-place-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -364,7 +364,7 @@ export default class CabinetConfig {
                 schemaField: selectField('person.studyAddress.country'),
                 schemaFieldType: 'checkbox',
                 name: i18n.t(
-                    'tugraz:cabinet-search.filter-person-study-address-country-text-title',
+                    'custom:cabinet-search.filter-person-study-address-country-text-title',
                 ),
                 facetOptions: {
                     facet: {
@@ -378,7 +378,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'person.studyAddress.region',
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-person-study-address-region-title'),
+                name: i18n.t('custom:cabinet-search.filter-person-study-address-region-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -391,7 +391,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'person.studyAddress.place',
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-person-study-address-place-title'),
+                name: i18n.t('custom:cabinet-search.filter-person-study-address-place-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -404,7 +404,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'study.name',
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-study-name-title'),
+                name: i18n.t('custom:cabinet-search.filter-study-name-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -417,7 +417,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: 'study.type',
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-study-type-title'),
+                name: i18n.t('custom:cabinet-search.filter-study-type-title'),
                 facetOptions: {
                     facet: {
                         showMore: true,
@@ -430,7 +430,7 @@ export default class CabinetConfig {
                 groupId: 'person',
                 schemaField: selectField('study.status'),
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-study-status-text-title'),
+                name: i18n.t('custom:cabinet-search.filter-study-status-text-title'),
                 facetOptions: {
                     facet: {
                         searchable: false,
@@ -442,7 +442,7 @@ export default class CabinetConfig {
             {
                 'filter-group': {
                     id: 'file',
-                    name: i18n.t('tugraz:cabinet-search.document-filter-group-title'),
+                    name: i18n.t('custom:cabinet-search.document-filter-group-title'),
                 },
             },
             {
@@ -451,7 +451,7 @@ export default class CabinetConfig {
                 schemaField: 'file.base.additionalType.key',
                 schemaFieldType: 'checkbox',
                 renderFunction: translationRenderFunction,
-                name: i18n.t('tugraz:cabinet-search.filter-file-base-additional-type-text-title'),
+                name: i18n.t('custom:cabinet-search.filter-file-base-additional-type-text-title'),
                 facetOptions: {facet: {searchable: false}},
             },
             {
@@ -459,7 +459,7 @@ export default class CabinetConfig {
                 groupId: 'file',
                 schemaField: 'file.base.createdTimestamp',
                 schemaFieldType: 'datepicker',
-                name: i18n.t('tugraz:cabinet-search.filter-file-base-created-timestamp-title'),
+                name: i18n.t('custom:cabinet-search.filter-file-base-created-timestamp-title'),
                 renderFunction: datePickerLocalRenderFunction,
             },
             {
@@ -468,7 +468,7 @@ export default class CabinetConfig {
                 schemaField: 'file.base.recommendedDeletionTimestamp',
                 schemaFieldType: 'datepicker',
                 name: i18n.t(
-                    'tugraz:cabinet-search.filter-file-base-recommended-deletion-timestamp-title',
+                    'custom:cabinet-search.filter-file-base-recommended-deletion-timestamp-title',
                 ),
                 renderFunction: datePickerLocalRenderFunction,
             },
@@ -478,7 +478,7 @@ export default class CabinetConfig {
                 schemaField: 'file.base.fileSource',
                 schemaFieldType: 'checkbox',
                 renderFunction: translationRenderFunction,
-                name: i18n.t('tugraz:cabinet-search.filter-file-base-file-source-title'),
+                name: i18n.t('custom:cabinet-search.filter-file-base-file-source-title'),
                 facetOptions: {facet: {searchable: false}},
             },
             {
@@ -486,7 +486,7 @@ export default class CabinetConfig {
                 groupId: 'file',
                 schemaField: selectField('file.base.studyField'),
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-file-base-study-field-name-title'),
+                name: i18n.t('custom:cabinet-search.filter-file-base-study-field-name-title'),
                 facetOptions: {facet: {searchable: false}},
             },
             {
@@ -494,7 +494,7 @@ export default class CabinetConfig {
                 groupId: 'file',
                 schemaField: 'file.base.semester',
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-file-base-semester-title'),
+                name: i18n.t('custom:cabinet-search.filter-file-base-semester-title'),
                 facetOptions: {facet: {searchable: false}},
             },
             {
@@ -503,7 +503,7 @@ export default class CabinetConfig {
                 schemaField: 'file.base.isPartOf',
                 schemaFieldType: 'checkbox',
                 renderFunction: translationRenderFunction,
-                name: i18n.t('tugraz:cabinet-search.filter-file-base-is-part-of-title'),
+                name: i18n.t('custom:cabinet-search.filter-file-base-is-part-of-title'),
                 facetOptions: {facet: {searchable: false}},
             },
             {
@@ -513,7 +513,7 @@ export default class CabinetConfig {
                 schemaFieldType: 'checkbox',
                 renderFunction: translationRenderFunction,
                 name: i18n.t(
-                    'tugraz:cabinet-search.filter-file-file-cabinet-admission-notice-decision-title',
+                    'custom:cabinet-search.filter-file-file-cabinet-admission-notice-decision-title',
                 ),
                 facetOptions: {facet: {searchable: false}},
             },
@@ -522,7 +522,7 @@ export default class CabinetConfig {
                 groupId: 'file',
                 schemaField: selectField('file.shared.nationality'),
                 schemaFieldType: 'checkbox',
-                name: i18n.t('tugraz:cabinet-search.filter-file-file-shared-nationality-title'),
+                name: i18n.t('custom:cabinet-search.filter-file-file-shared-nationality-title'),
                 facetOptions: {facet: {searchable: true}},
             },
         ];
@@ -539,145 +539,145 @@ export default class CabinetConfig {
         return [
             {
                 id: 'person.studId',
-                name: i18n.t('tugraz:selection-column-config.person.studId'),
+                name: i18n.t('custom:selection-column-config.person.studId'),
                 field: 'person.studId',
                 defaultVisible: true,
             },
             {
                 id: 'person.stPersonNr',
-                name: i18n.t('tugraz:selection-column-config.person.stPersonNr'),
+                name: i18n.t('custom:selection-column-config.person.stPersonNr'),
                 field: 'person.stPersonNr',
                 defaultVisible: true,
             },
             {
                 id: 'person.givenName',
-                name: i18n.t('tugraz:selection-column-config.person.givenName'),
+                name: i18n.t('custom:selection-column-config.person.givenName'),
                 field: 'person.givenName',
                 defaultVisible: true,
             },
             {
                 id: 'person.familyName',
-                name: i18n.t('tugraz:selection-column-config.person.familyName'),
+                name: i18n.t('custom:selection-column-config.person.familyName'),
                 field: 'person.familyName',
                 defaultVisible: true,
             },
             {
                 id: 'person.birthDate',
-                name: i18n.t('tugraz:selection-column-config.person.birthDate'),
+                name: i18n.t('custom:selection-column-config.person.birthDate'),
                 field: 'person.birthDate',
                 defaultVisible: true,
             },
             {
                 id: 'person.nationality',
-                name: i18n.t('tugraz:selection-column-config.person.nationality'),
+                name: i18n.t('custom:selection-column-config.person.nationality'),
                 field: 'person.nationality.text',
                 defaultVisible: true,
             },
             {
                 id: 'person.personalStatus',
-                name: i18n.t('tugraz:selection-column-config.person.personalStatus'),
+                name: i18n.t('custom:selection-column-config.person.personalStatus'),
                 field: 'person.personalStatus.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.studentStatus',
-                name: i18n.t('tugraz:selection-column-config.person.studentStatus'),
+                name: i18n.t('custom:selection-column-config.person.studentStatus'),
                 field: 'person.studentStatus.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.exmatriculationStatus',
-                name: i18n.t('tugraz:selection-column-config.person.exmatriculationStatus'),
+                name: i18n.t('custom:selection-column-config.person.exmatriculationStatus'),
                 field: 'person.exmatriculationStatus.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.admissionQualificationType',
-                name: i18n.t('tugraz:selection-column-config.person.admissionQualificationType'),
+                name: i18n.t('custom:selection-column-config.person.admissionQualificationType'),
                 field: 'person.admissionQualificationType.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.nationalities',
-                name: i18n.t('tugraz:selection-column-config.person.nationalities'),
+                name: i18n.t('custom:selection-column-config.person.nationalities'),
                 field: 'person.nationalities.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.gender',
-                name: i18n.t('tugraz:selection-column-config.person.gender'),
+                name: i18n.t('custom:selection-column-config.person.gender'),
                 field: 'person.gender.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.immatriculationSemester',
-                name: i18n.t('tugraz:selection-column-config.person.immatriculationSemester'),
+                name: i18n.t('custom:selection-column-config.person.immatriculationSemester'),
                 field: 'person.immatriculationSemester',
                 defaultVisible: false,
             },
             {
                 id: 'person.exmatriculationSemester',
-                name: i18n.t('tugraz:selection-column-config.person.exmatriculationSemester'),
+                name: i18n.t('custom:selection-column-config.person.exmatriculationSemester'),
                 field: 'person.exmatriculationSemester',
                 defaultVisible: false,
             },
             {
                 id: 'person.homeAddress.country',
-                name: i18n.t('tugraz:selection-column-config.person.homeAddress.country'),
+                name: i18n.t('custom:selection-column-config.person.homeAddress.country'),
                 field: 'person.homeAddress.country.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.homeAddress.region',
-                name: i18n.t('tugraz:selection-column-config.person.homeAddress.region'),
+                name: i18n.t('custom:selection-column-config.person.homeAddress.region'),
                 field: 'person.homeAddress.region',
                 defaultVisible: false,
             },
             {
                 id: 'person.homeAddress.place',
-                name: i18n.t('tugraz:selection-column-config.person.homeAddress.place'),
+                name: i18n.t('custom:selection-column-config.person.homeAddress.place'),
                 field: 'person.homeAddress.place',
                 defaultVisible: false,
             },
             {
                 id: 'person.studyAddress.country',
-                name: i18n.t('tugraz:selection-column-config.person.studyAddress.country'),
+                name: i18n.t('custom:selection-column-config.person.studyAddress.country'),
                 field: 'person.studyAddress.country.text',
                 defaultVisible: false,
             },
             {
                 id: 'person.studyAddress.region',
-                name: i18n.t('tugraz:selection-column-config.person.studyAddress.region'),
+                name: i18n.t('custom:selection-column-config.person.studyAddress.region'),
                 field: 'person.studyAddress.region',
                 defaultVisible: false,
             },
             {
                 id: 'person.studyAddress.place',
-                name: i18n.t('tugraz:selection-column-config.person.studyAddress.place'),
+                name: i18n.t('custom:selection-column-config.person.studyAddress.place'),
                 field: 'person.studyAddress.place',
                 defaultVisible: false,
             },
             {
                 id: 'person.emailAddressUniversity',
-                name: i18n.t('tugraz:selection-column-config.person.emailAddressUniversity'),
+                name: i18n.t('custom:selection-column-config.person.emailAddressUniversity'),
                 field: 'person.emailAddressUniversity',
                 defaultVisible: false,
             },
             {
                 id: 'person.study.name',
-                name: i18n.t('tugraz:selection-column-config.person.study.name'),
+                name: i18n.t('custom:selection-column-config.person.study.name'),
                 field: 'study.name',
                 defaultVisible: false,
             },
             {
                 id: 'person.study.type',
-                name: i18n.t('tugraz:selection-column-config.person.study.type'),
+                name: i18n.t('custom:selection-column-config.person.study.type'),
                 field: 'study.type',
                 defaultVisible: false,
             },
             {
                 id: 'person.study.status',
-                name: i18n.t('tugraz:selection-column-config.person.study.status'),
+                name: i18n.t('custom:selection-column-config.person.study.status'),
                 field: 'study.status.text',
                 defaultVisible: false,
             },
@@ -698,33 +698,33 @@ export default class CabinetConfig {
         return [
             {
                 id: 'file.base.additionalType',
-                name: i18n.t('tugraz:selection-column-config.document.additionalType'),
+                name: i18n.t('custom:selection-column-config.document.additionalType'),
                 field: selectField('file.base.additionalType'),
                 defaultVisible: true,
                 renderFunction: translationRenderFunction,
             },
             {
                 id: 'person.familyName',
-                name: i18n.t('tugraz:selection-column-config.person.familyName'),
+                name: i18n.t('custom:selection-column-config.person.familyName'),
                 field: 'person.familyName',
                 defaultVisible: true,
             },
             {
                 id: 'person.givenName',
-                name: i18n.t('tugraz:selection-column-config.person.givenName'),
+                name: i18n.t('custom:selection-column-config.person.givenName'),
                 field: 'person.givenName',
                 defaultVisible: true,
             },
             {
                 id: 'file.base.createdTimestamp',
-                name: i18n.t('tugraz:selection-column-config.document.createdTimestamp'),
+                name: i18n.t('custom:selection-column-config.document.createdTimestamp'),
                 field: 'file.base.createdTimestamp',
                 defaultVisible: true,
                 renderFunction: renderDateForExport,
             },
             {
                 id: 'file.base.modifiedTimestamp',
-                name: i18n.t('tugraz:selection-column-config.document.modifiedTimestamp'),
+                name: i18n.t('custom:selection-column-config.document.modifiedTimestamp'),
                 field: 'file.base.modifiedTimestamp',
                 defaultVisible: false,
                 renderFunction: renderDateForExport,
@@ -732,7 +732,7 @@ export default class CabinetConfig {
             {
                 id: 'file.base.recommendedDeletionTimestamp',
                 name: i18n.t(
-                    'tugraz:selection-column-config.document.recommendedDeletionTimestamp',
+                    'custom:selection-column-config.document.recommendedDeletionTimestamp',
                 ),
                 field: 'file.base.recommendedDeletionTimestamp',
                 defaultVisible: true,
@@ -740,46 +740,46 @@ export default class CabinetConfig {
             },
             {
                 id: 'file.base.studyField',
-                name: i18n.t('tugraz:selection-column-config.document.studyField'),
+                name: i18n.t('custom:selection-column-config.document.studyField'),
                 field: selectField('file.base.studyField'),
                 defaultVisible: true,
             },
             {
                 id: 'file.base.semester',
-                name: i18n.t('tugraz:selection-column-config.document.semester'),
+                name: i18n.t('custom:selection-column-config.document.semester'),
                 field: 'file.base.semester',
                 defaultVisible: true,
             },
             {
                 id: 'file.base.fileSource',
-                name: i18n.t('tugraz:selection-column-config.document.fileSource'),
+                name: i18n.t('custom:selection-column-config.document.fileSource'),
                 field: 'file.base.fileSource',
                 defaultVisible: true,
                 renderFunction: translationRenderFunction,
             },
             {
                 id: 'file.base.disposalType',
-                name: i18n.t('tugraz:selection-column-config.document.disposalType'),
+                name: i18n.t('custom:selection-column-config.document.disposalType'),
                 field: 'file.base.disposalType',
                 defaultVisible: false,
                 renderFunction: translationRenderFunction,
             },
             {
                 id: 'file.base.isPartOf',
-                name: i18n.t('tugraz:selection-column-config.document.isPartOf'),
+                name: i18n.t('custom:selection-column-config.document.isPartOf'),
                 field: 'file.base.isPartOf',
                 defaultVisible: true,
                 renderFunction: translationRenderFunction,
             },
             {
                 id: 'file.base.comment',
-                name: i18n.t('tugraz:selection-column-config.document.comment'),
+                name: i18n.t('custom:selection-column-config.document.comment'),
                 field: 'file.base.comment',
                 defaultVisible: false,
             },
             {
                 id: 'file.base.subjectOf',
-                name: i18n.t('tugraz:selection-column-config.document.subjectOf'),
+                name: i18n.t('custom:selection-column-config.document.subjectOf'),
                 field: 'file.base.subjectOf',
                 defaultVisible: true,
             },

@@ -58,9 +58,9 @@ const DEFAULT_IDENTITY_DOCUMENT = {
 class CabinetFormElement extends BaseFormElement {
     static getAdditionalTypes() {
         return {
-            DriversLicence: 'tugraz:typesense-schema.file.base.additionalType.key.DriversLicence',
-            Passport: 'tugraz:typesense-schema.file.base.additionalType.key.Passport',
-            PersonalLicence: 'tugraz:typesense-schema.file.base.additionalType.key.PersonalLicence',
+            DriversLicence: 'custom:typesense-schema.file.base.additionalType.key.DriversLicence',
+            Passport: 'custom:typesense-schema.file.base.additionalType.key.Passport',
+            PersonalLicence: 'custom:typesense-schema.file.base.additionalType.key.PersonalLicence',
         };
     }
 
@@ -91,21 +91,21 @@ class CabinetFormElement extends BaseFormElement {
                 <dbp-form-string-element
                     subscribe="lang"
                     name="identifier"
-                    label=${this._i18nCustom.t('tugraz:doc-modal-Identifier')}
+                    label=${this._i18nCustom.t('custom:doc-modal-Identifier')}
                     .value=${identityDocument.identifier}
                     required></dbp-form-string-element>
 
                 <dbp-cabinet-form-nationality-element
                     subscribe="lang"
                     name="nationality"
-                    label=${this._i18nCustom.t('tugraz:doc-modal-nationality')}
+                    label=${this._i18nCustom.t('custom:doc-modal-nationality')}
                     .value=${identityDocument.nationality}
                     required></dbp-cabinet-form-nationality-element>
 
                 <dbp-form-date-element
                     subscribe="lang"
                     name="dateCreated"
-                    label=${this._i18nCustom.t('tugraz:doc-modal-issue-date')}
+                    label=${this._i18nCustom.t('custom:doc-modal-issue-date')}
                     .value=${identityDocument.dateCreated}
                     required></dbp-form-date-element>
 
@@ -131,7 +131,7 @@ class CabinetHitElement extends BaseDocumentHitElement {
         return html`
             ${issueDate
                 ? html`
-                      ${i18n.t('tugraz:document-issue-date')}: ${formattedDate}
+                      ${i18n.t('custom:document-issue-date')}: ${formattedDate}
                   `
                 : ''}
         `;
@@ -160,17 +160,17 @@ class CabinetViewElement extends BaseViewElement {
         return html`
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18nCustom.t('tugraz:doc-modal-Identifier')}
+                label=${this._i18nCustom.t('custom:doc-modal-Identifier')}
                 .value=${identityDocument.identifier || ''}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18nCustom.t('tugraz:doc-modal-nationality')}
+                label=${this._i18nCustom.t('custom:doc-modal-nationality')}
                 .value=${`${getNationalityDisplayName(nationalityCode, this.lang)} (${nationalityCode})`}></dbp-form-string-view>
 
             <dbp-form-date-view
                 subscribe="lang"
-                label=${this._i18nCustom.t('tugraz:doc-modal-issue-date')}
+                label=${this._i18nCustom.t('custom:doc-modal-issue-date')}
                 .value=${identityDocument.dateCreated
                     ? new Date(identityDocument.dateCreated)
                     : ''}></dbp-form-date-view>
