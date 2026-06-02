@@ -1,8 +1,7 @@
 # yaml-language-server: $schema=https://devenv.sh/devenv.schema.json
 inputs:
   nixpkgs:
-    # Rolling is broken with current nixpkgs-unstable
-    # url: github:cachix/devenv-nixpkgs/rolling
+    # We need Node.js >=24.15.0 for the npm dependency engine constraints.
     url: github:NixOS/nixpkgs/nixpkgs-unstable
   shared:
     url: github:digital-blueprint/shared
