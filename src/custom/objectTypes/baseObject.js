@@ -665,6 +665,16 @@ export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
             userFullNamePromise = Promise.resolve('-');
         }
 
+        const dateCreated = new Date(baseData.createdTimestamp * 1000).toLocaleString('de-DE', {
+            dateStyle: 'medium',
+            timeStyle: 'medium',
+        });
+
+        const dateModified = new Date(baseData.modifiedTimestamp * 1000).toLocaleString('de-DE', {
+            dateStyle: 'medium',
+            timeStyle: 'medium',
+        });
+
         return html`
             <dbp-form-string-view
                 subscribe="lang"
@@ -730,19 +740,19 @@ export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
                 label=${this._i18nCustom.t('custom:doc-modal-comment')}
                 .value=${baseData.comment || ''}></dbp-form-string-view>
 
-            <dbp-form-datetime-view
+            <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:doc-modal-added')}
-                .value=${baseData.createdTimestamp === 0
-                    ? ''
-                    : new Date(baseData.createdTimestamp * 1000)}></dbp-form-datetime-view>
+                .value=${`${dateCreated}${
+                    baseData.fileSource
+                        ? ` (${this._i18nCustom.t(`custom:typesense-schema.file.base.fileSource.${baseData.fileSource}`)})`
+                        : ''
+                }`}></dbp-form-string-view>
 
-            <dbp-form-datetime-view
+            <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:doc-modal-modified')}
-                .value=${baseData.modifiedTimestamp === 0
-                    ? ''
-                    : new Date(baseData.modifiedTimestamp * 1000)}></dbp-form-datetime-view>
+                .value=${dateModified}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"

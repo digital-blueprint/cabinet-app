@@ -262,8 +262,9 @@
                     "deletion": "Deletion"
                 },
                 "fileSource": {
-                    "cabinet-bucket": "Manually uploaded",
-                    "TUGraz": ""
+                    "blob-cabinetBucket": "Manually uploaded",
+                    "blob-campusOnlineDmsBucket": "TUGRAZonline",
+                    "cabinet-bucket": "Manually uploaded"
                 },
                 "isPartOf": {
                     "admission-archive-80": "Application for registration",

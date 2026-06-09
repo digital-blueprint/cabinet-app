@@ -262,8 +262,9 @@
                     "deletion": "Löschung"
                 },
                 "fileSource": {
-                    "cabinet-bucket": "Manuell hochgeladen",
-                    "TUGraz": ""
+                    "blob-cabinetBucket": "Manuell hochgeladen",
+                    "blob-campusOnlineDmsBucket": "TUGRAZonline",
+                    "cabinet-bucket": "Manuell hochgeladen"
                 },
                 "isPartOf": {
                     "admission-archive-80": "Ansuchen um Zulassung",
