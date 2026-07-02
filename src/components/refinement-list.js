@@ -163,9 +163,17 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
         const {
             items = [],
             canRefine = true,
-            hasExhaustiveItems = false,
             widgetParams = {},
+            isShowingMore = false,
         } = this.refinementListRenderOptions;
+
+        // Typesense does not reliably return `hasExhaustiveItems` (it's always false),
+        // so we derive whether more items might be hidden by checking if the list is capped
+        // at the current limit (12 by default, 50 when "show more" is active).
+        const currentLimit = isShowingMore
+            ? (widgetParams.showMoreLimit ?? widgetParams.limit)
+            : widgetParams.limit;
+        const hasMoreItems = currentLimit != null && items.length >= currentLimit;
 
         if (!canRefine) {
             return html`
@@ -201,7 +209,7 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
 
         return html`
             <div class="refinement-list-container">
-                <ul class="refinement-list ${!hasExhaustiveItems ? 'has-gradients' : ''}">
+                <ul class="refinement-list ${hasMoreItems ? 'has-gradients' : ''}">
                     ${repeat(
                         items,
                         (item) => item.value,
