@@ -391,13 +391,15 @@ export class CabinetFilterSettings extends ScopedElementsMixin(
             <dbp-icon-button
                 icon-name="${visible ? 'source_icons_eye-empty' : 'source_icons_eye-off'}"
                 class="facet-visibility-icon"
-                title="${visible
-                    ? this._i18n.t('filter-settings.facet-hide', {
-                          name: item.name,
-                      })
-                    : this._i18n.t('filter-settings.facet-show', {
-                          name: item.name,
-                      })}"
+                title="${
+                    visible
+                        ? this._i18n.t('filter-settings.facet-hide', {
+                              name: item.name,
+                          })
+                        : this._i18n.t('filter-settings.facet-show', {
+                              name: item.name,
+                          })
+                }"
                 @click="${() => {
                     this.changeFacetVisibility(item, !visible);
                 }}"></dbp-icon-button>
@@ -507,13 +509,15 @@ export class CabinetFilterSettings extends ScopedElementsMixin(
             <dbp-icon-button
                 icon-name="${visible ? 'source_icons_eye-empty' : 'source_icons_eye-off'}"
                 class="facet-visibility-icon"
-                title="${visible
-                    ? this._i18n.t('filter-settings.group-hide', {
-                          name: groupName,
-                      })
-                    : this._i18n.t('filter-settings.group-show', {
-                          name: groupName,
-                      })}"
+                title="${
+                    visible
+                        ? this._i18n.t('filter-settings.group-hide', {
+                              name: groupName,
+                          })
+                        : this._i18n.t('filter-settings.group-show', {
+                              name: groupName,
+                          })
+                }"
                 @click="${() => {
                     this.changeFacetGroupVisibility(item, !visible);
                 }}"></dbp-icon-button>

@@ -271,19 +271,21 @@ export class NationalityInput extends LangMixin(DbpBaseElement, createInstance, 
                         role="combobox"
                         @input="${this._handleInput}"
                         @keydown="${this._handleKeydown}" />
-                    ${this._showResults
-                        ? html`
-                              <div class="dropdown-results" role="listbox">
-                                  ${this._renderDropdownOptions()}
-                              </div>
-                          `
-                        : ''}
+                    ${
+                        this._showResults
+                            ? html`
+                                  <div class="dropdown-results" role="listbox">
+                                      ${this._renderDropdownOptions()}
+                                  </div>
+                              `
+                            : ''
+                    }
                 </div>
 
                 <span
-                    class="country-display ${this._isUnknown
-                        ? 'unknown-country'
-                        : 'selected-country'}"
+                    class="country-display ${
+                        this._isUnknown ? 'unknown-country' : 'selected-country'
+                    }"
                     aria-live="polite">
                     ${this._selectedCountry}
                 </span>

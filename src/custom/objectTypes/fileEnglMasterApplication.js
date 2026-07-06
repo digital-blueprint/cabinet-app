@@ -153,9 +153,11 @@ class CabinetViewElement extends BaseViewElement {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${i18n.t('custom:doc-modal-previous-enrolment-in-austria')}
-                .value=${application.previousEnrolmentInAustria
-                    ? i18n.t('custom:doc-modal-yes')
-                    : i18n.t('custom:doc-modal-no')}></dbp-form-string-view>
+                .value=${
+                    application.previousEnrolmentInAustria
+                        ? i18n.t('custom:doc-modal-yes')
+                        : i18n.t('custom:doc-modal-no')
+                }></dbp-form-string-view>
         `;
     }
 }

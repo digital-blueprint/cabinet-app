@@ -449,15 +449,17 @@ class CabinetHitElement extends BaseHitElement {
                                           </div>
                                       `,
                                   )}
-                                  ${extraCount > 0
-                                      ? html`
-                                            <span>
-                                                ${extraCount}&nbsp;${i18n.t(
-                                                    'custom:person.person-hit',
-                                                )}
-                                            </span>
-                                        `
-                                      : ''}
+                                  ${
+                                      extraCount > 0
+                                          ? html`
+                                                <span>
+                                                    ${extraCount}&nbsp;${i18n.t(
+                                                        'custom:person.person-hit',
+                                                    )}
+                                                </span>
+                                            `
+                                          : ''
+                                  }
                               `
                             : html`
                                   — —

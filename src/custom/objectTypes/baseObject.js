@@ -560,9 +560,11 @@ export class BaseHitElement extends ScopedElementsMixin(CustomLitElement) {
             <button
                 class="button"
                 type="is-secondary"
-                aria-label="${i18n.t('custom:buttons.view-short')} ${this.lang === 'de'
-                    ? hit.file.base.additionalType.text
-                    : hit.file.base.additionalType.textEn} ${i18n.t(
+                aria-label="${i18n.t('custom:buttons.view-short')} ${
+                    this.lang === 'de'
+                        ? hit.file.base.additionalType.text
+                        : hit.file.base.additionalType.textEn
+                } ${i18n.t(
                     'custom:hitbox.document-of',
                 )} ${hit.person.familyName}, ${hit.person.givenName}"
                 @click=${(e) => {
@@ -709,31 +711,43 @@ export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
                 )}></dbp-form-enum-view>
 
             <dbp-form-date-view
-                .hidden=${baseData.recommendedDeletionTimestamp === undefined &&
-                baseData.recommendedArchivalTimestamp === undefined}
+                .hidden=${
+                    baseData.recommendedDeletionTimestamp === undefined &&
+                    baseData.recommendedArchivalTimestamp === undefined
+                }
                 subscribe="lang"
-                label=${baseData.disposalType === 'archival'
-                    ? this._i18nCustom.t('custom:doc-modal-recommended-archival')
-                    : this._i18nCustom.t('custom:doc-modal-recommended-deletion')}
-                .value=${baseData.disposalType === 'archival'
-                    ? new Date(baseData.recommendedArchivalTimestamp * 1000)
-                    : new Date(baseData.recommendedDeletionTimestamp * 1000)}
+                label=${
+                    baseData.disposalType === 'archival'
+                        ? this._i18nCustom.t('custom:doc-modal-recommended-archival')
+                        : this._i18nCustom.t('custom:doc-modal-recommended-deletion')
+                }
+                .value=${
+                    baseData.disposalType === 'archival'
+                        ? new Date(baseData.recommendedArchivalTimestamp * 1000)
+                        : new Date(baseData.recommendedDeletionTimestamp * 1000)
+                }
                 :></dbp-form-date-view>
 
             <dbp-form-string-view
-                .hidden=${baseData.recommendedDeletionTimestamp !== undefined ||
-                baseData.recommendedArchivalTimestamp !== undefined}
+                .hidden=${
+                    baseData.recommendedDeletionTimestamp !== undefined ||
+                    baseData.recommendedArchivalTimestamp !== undefined
+                }
                 subscribe="lang"
-                label=${baseData.disposalType === 'archival'
-                    ? this._i18nCustom.t('custom:doc-modal-recommended-archival')
-                    : this._i18nCustom.t('custom:doc-modal-recommended-deletion')}
-                .value=${baseData.disposalType === 'archival'
-                    ? this._i18nCustom.t('custom:doc-modal-recommended-archival-summary')
-                    : this._i18nCustom.t('custom:doc-modal-recommended-deletion-summary', {
-                          years: this.getRetentionDurationByDocumentType(
-                              baseData.additionalType.key,
-                          ),
-                      })}></dbp-form-string-view>
+                label=${
+                    baseData.disposalType === 'archival'
+                        ? this._i18nCustom.t('custom:doc-modal-recommended-archival')
+                        : this._i18nCustom.t('custom:doc-modal-recommended-deletion')
+                }
+                .value=${
+                    baseData.disposalType === 'archival'
+                        ? this._i18nCustom.t('custom:doc-modal-recommended-archival-summary')
+                        : this._i18nCustom.t('custom:doc-modal-recommended-deletion-summary', {
+                              years: this.getRetentionDurationByDocumentType(
+                                  baseData.additionalType.key,
+                              ),
+                          })
+                }></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"

@@ -450,9 +450,9 @@ export class CabinetFacets extends ScopedElementsMixin(
                         return html`
                             <div
                                 id="${filterGroup.id}"
-                                class="filter-group filter-group--${filterGroup.id} ${hidden
-                                    ? 'display-none'
-                                    : ''}">
+                                class="filter-group filter-group--${filterGroup.id} ${
+                                    hidden ? 'display-none' : ''
+                                }">
                                 <h3 class="filter-title">${this._i18n.t(`${filterGroup.name}`)}</h3>
                                 ${renderGroupFacets(facets)}
                             </div>

@@ -341,20 +341,24 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(
             <dbp-icon-button
                 icon-name="${visible ? 'source_icons_eye-empty' : 'source_icons_eye-off'}"
                 class="column-visibility-icon"
-                aria-label="${visible
-                    ? this._i18n.t('selection-column-config.column-hide', {
-                          name: name,
-                      })
-                    : this._i18n.t('selection-column-config.column-show', {
-                          name: name,
-                      })}"
-                title="${visible
-                    ? this._i18n.t('selection-column-config.column-hide', {
-                          name: name,
-                      })
-                    : this._i18n.t('selection-column-config.column-show', {
-                          name: name,
-                      })}"
+                aria-label="${
+                    visible
+                        ? this._i18n.t('selection-column-config.column-hide', {
+                              name: name,
+                          })
+                        : this._i18n.t('selection-column-config.column-show', {
+                              name: name,
+                          })
+                }"
+                title="${
+                    visible
+                        ? this._i18n.t('selection-column-config.column-hide', {
+                              name: name,
+                          })
+                        : this._i18n.t('selection-column-config.column-show', {
+                              name: name,
+                          })
+                }"
                 @click="${() => {
                     this.changeColumnVisibility(column, !visible);
                 }}"></dbp-icon-button>
