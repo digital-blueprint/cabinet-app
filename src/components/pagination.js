@@ -103,61 +103,64 @@ class Pagination extends LangMixin(DBPLitElement, createInstance) {
         const i18n = this._i18n;
         const firstItem = html`
             <li
-                class="ais-Pagination-item ais-Pagination-item--firstPage ${isFirstPage
-                    ? 'ais-Pagination-item--disabled'
-                    : ''}">
-                ${isFirstPage
-                    ? html`
-                          <span
-                              class="ais-Pagination-link"
-                              aria-label="${i18n.t('pagination.first-page')}">
-                              «
-                          </span>
-                      `
-                    : html`
-                          <a
-                              class="ais-Pagination-link"
-                              href="${createURL(0)}"
-                              aria-label="${i18n.t('pagination.first-page')}"
-                              @click="${(e) => handleClick(e, 0)}">
-                              «
-                          </a>
-                      `}
+                class="ais-Pagination-item ais-Pagination-item--firstPage ${
+                    isFirstPage ? 'ais-Pagination-item--disabled' : ''
+                }">
+                ${
+                    isFirstPage
+                        ? html`
+                              <span
+                                  class="ais-Pagination-link"
+                                  aria-label="${i18n.t('pagination.first-page')}">
+                                  «
+                              </span>
+                          `
+                        : html`
+                              <a
+                                  class="ais-Pagination-link"
+                                  href="${createURL(0)}"
+                                  aria-label="${i18n.t('pagination.first-page')}"
+                                  @click="${(e) => handleClick(e, 0)}">
+                                  «
+                              </a>
+                          `
+                }
             </li>
         `;
 
         const previousItem = html`
             <li
-                class="ais-Pagination-item ais-Pagination-item--previousPage ${isFirstPage
-                    ? 'ais-Pagination-item--disabled'
-                    : ''}">
-                ${isFirstPage
-                    ? html`
-                          <span
-                              class="ais-Pagination-link"
-                              aria-label="${i18n.t('pagination.previous-page')}">
-                              ‹
-                          </span>
-                      `
-                    : html`
-                          <a
-                              class="ais-Pagination-link"
-                              href="${createURL(currentRefinement - 1)}"
-                              aria-label="${i18n.t('pagination.previous-page')} "
-                              @click="${(e) => handleClick(e, currentRefinement - 1)}">
-                              ‹
-                          </a>
-                      `}
+                class="ais-Pagination-item ais-Pagination-item--previousPage ${
+                    isFirstPage ? 'ais-Pagination-item--disabled' : ''
+                }">
+                ${
+                    isFirstPage
+                        ? html`
+                              <span
+                                  class="ais-Pagination-link"
+                                  aria-label="${i18n.t('pagination.previous-page')}">
+                                  ‹
+                              </span>
+                          `
+                        : html`
+                              <a
+                                  class="ais-Pagination-link"
+                                  href="${createURL(currentRefinement - 1)}"
+                                  aria-label="${i18n.t('pagination.previous-page')} "
+                                  @click="${(e) => handleClick(e, currentRefinement - 1)}">
+                                  ‹
+                              </a>
+                          `
+                }
             </li>
         `;
 
         const pageItems = pages.map(
             (page) => html`
                 <li
-                    class="ais-Pagination-item ais-Pagination-item--page ${currentRefinement ===
-                    page
-                        ? 'ais-Pagination-item--selected'
-                        : ''}">
+                    class="ais-Pagination-item ais-Pagination-item--page ${
+                        currentRefinement === page ? 'ais-Pagination-item--selected' : ''
+                    }">
                     <a
                         class="ais-Pagination-link"
                         href="${createURL(page)}"
@@ -172,53 +175,57 @@ class Pagination extends LangMixin(DBPLitElement, createInstance) {
 
         const nextItem = html`
             <li
-                class="ais-Pagination-item ais-Pagination-item--nextPage ${isLastPage
-                    ? 'ais-Pagination-item--disabled'
-                    : ''}">
-                ${isLastPage
-                    ? html`
-                          <span
-                              class="ais-Pagination-link"
-                              aria-label="${i18n.t('pagination.next-page')}">
-                              ›
-                          </span>
-                      `
-                    : html`
-                          <a
-                              class="ais-Pagination-link"
-                              href="${createURL(currentRefinement + 1)}"
-                              aria-label="${i18n.t('pagination.next-page')}"
-                              @click="${(e) => handleClick(e, currentRefinement + 1)}">
-                              ›
-                          </a>
-                      `}
+                class="ais-Pagination-item ais-Pagination-item--nextPage ${
+                    isLastPage ? 'ais-Pagination-item--disabled' : ''
+                }">
+                ${
+                    isLastPage
+                        ? html`
+                              <span
+                                  class="ais-Pagination-link"
+                                  aria-label="${i18n.t('pagination.next-page')}">
+                                  ›
+                              </span>
+                          `
+                        : html`
+                              <a
+                                  class="ais-Pagination-link"
+                                  href="${createURL(currentRefinement + 1)}"
+                                  aria-label="${i18n.t('pagination.next-page')}"
+                                  @click="${(e) => handleClick(e, currentRefinement + 1)}">
+                                  ›
+                              </a>
+                          `
+                }
             </li>
         `;
 
         const lastItem = html`
             <li
-                class="ais-Pagination-item ais-Pagination-item--lastPage ${isLastPage
-                    ? 'ais-Pagination-item--disabled'
-                    : ''}">
-                ${isLastPage
-                    ? html`
-                          <span
-                              class="ais-Pagination-link"
-                              aria-label="${i18n.t('pagination.last-page')}">
-                              »
-                          </span>
-                      `
-                    : html`
-                          <a
-                              class="ais-Pagination-link"
-                              href="${createURL(nbPages - 1)}"
-                              aria-label="${i18n.t('pagination.last-page')}, ${i18n.t(
-                                  'pagination.page',
-                              )} ${nbPages}"
-                              @click="${(e) => handleClick(e, nbPages - 1)}">
-                              »
-                          </a>
-                      `}
+                class="ais-Pagination-item ais-Pagination-item--lastPage ${
+                    isLastPage ? 'ais-Pagination-item--disabled' : ''
+                }">
+                ${
+                    isLastPage
+                        ? html`
+                              <span
+                                  class="ais-Pagination-link"
+                                  aria-label="${i18n.t('pagination.last-page')}">
+                                  »
+                              </span>
+                          `
+                        : html`
+                              <a
+                                  class="ais-Pagination-link"
+                                  href="${createURL(nbPages - 1)}"
+                                  aria-label="${i18n.t('pagination.last-page')}, ${i18n.t(
+                                      'pagination.page',
+                                  )} ${nbPages}"
+                                  @click="${(e) => handleClick(e, nbPages - 1)}">
+                                  »
+                              </a>
+                          `
+                }
             </li>
         `;
 

@@ -83,13 +83,15 @@ class EmptyWidget extends LangMixin(DBPLitElement, createInstance) {
     render() {
         return html`
             <div class="no-results">
-                ${this.incompleteResults
-                    ? html`
-                          ${this._i18n.t('search.incomplete-results')}
-                      `
-                    : html`
-                          ${this._i18n.t('search.no-results')}
-                      `}
+                ${
+                    this.incompleteResults
+                        ? html`
+                              ${this._i18n.t('search.incomplete-results')}
+                          `
+                        : html`
+                              ${this._i18n.t('search.no-results')}
+                          `
+                }
             </div>
         `;
     }
@@ -1478,9 +1480,9 @@ class CabinetSearch extends ScopedElementsMixin(
                             aria-label="${this._i18n.t(
                                 'buttons.aria-label.open-dialog',
                             )}${this.getSelectionCountsDisplay()}"
-                            class="button is-primary open-dialog ${this.hasHitSelections
-                                ? 'enabled'
-                                : ''}"
+                            class="button is-primary open-dialog ${
+                                this.hasHitSelections ? 'enabled' : ''
+                            }"
                             id="open-dialog"
                             ?disabled="${!this.hasHitSelections}"
                             @click="${() => {
@@ -1499,8 +1501,10 @@ class CabinetSearch extends ScopedElementsMixin(
                         </span>
                         <span>
                             ${this._i18n.t('cabinet-search.documents-selected')}:
-                            ${Object.keys(this.hitSelections[HitSelectionType.DOCUMENT_FILE])
-                                .length}
+                            ${
+                                Object.keys(this.hitSelections[HitSelectionType.DOCUMENT_FILE])
+                                    .length
+                            }
                         </span>
                     </div>
                     <div class="reset-area">

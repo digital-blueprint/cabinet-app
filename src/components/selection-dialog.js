@@ -1354,9 +1354,11 @@ export class SelectionDialog extends ScopedElementsMixin(
                 @dbp-modal-closed="${this.onCloseModal}">
                 <div slot="title" class="modal-title">
                     <h2>
-                        ${this.activeTab === HitSelectionType.PERSON
-                            ? i18n.t('selection-dialog.batch-operations-person', '')
-                            : i18n.t('selection-dialog.batch-operations-document', '')}
+                        ${
+                            this.activeTab === HitSelectionType.PERSON
+                                ? i18n.t('selection-dialog.batch-operations-person', '')
+                                : i18n.t('selection-dialog.batch-operations-document', '')
+                        }
                     </h2>
                 </div>
                 <div slot="header" class="header">
@@ -1800,9 +1802,9 @@ export class SelectionDialog extends ScopedElementsMixin(
                         @click="${() => {
                             this.activeTab = HitSelectionType.DOCUMENT_FILE;
                         }}"
-                        class="${this.activeTab === HitSelectionType.DOCUMENT_FILE
-                            ? 'active'
-                            : ''}">
+                        class="${
+                            this.activeTab === HitSelectionType.DOCUMENT_FILE ? 'active' : ''
+                        }">
                         <dbp-icon class="nav-icon" name="files" aria-hidden="true"></dbp-icon>
                         <p>
                             ${i18n.t('selection-dialog.documents-tab', 'Dokumente')}
@@ -1815,75 +1817,81 @@ export class SelectionDialog extends ScopedElementsMixin(
                     <div
                         id="select-persons"
                         role="tabpanel"
-                        class="tab-content ${this.activeTab === HitSelectionType.PERSON
-                            ? 'active'
-                            : ''}">
-                        ${Object.keys(personSelections).length > 0
-                            ? html`
-                                  <div class="export-controls col-right">
-                                      <div class="export-buttons">
-                                          <dbp-select
-                                              id="export-persons-select"
-                                              class="export-persons-select"
-                                              label="${i18n.t('selection-dialog.export')}"
-                                              aria-label="${i18n.t(
-                                                  'buttons.aria-label.export-persons',
-                                              )}"
-                                              .options=${personDownloadOptions}
-                                              @change="${this.exportPersons}"></dbp-select>
-                                          <button
-                                              class="button deselect-all"
-                                              aria-label="${i18n.t(
-                                                  'buttons.aria-label.deselect-all-persons',
-                                              )}${Object.keys(personSelections).length}"
-                                              value="${i18n.t(
-                                                  'selection-dialog.remove-all-persons',
-                                                  'Remove selections',
-                                              )}"
-                                              @click="${() => this.removeAllPersonSelections()}"
-                                              type="is-secondary">
-                                              <dbp-icon name="close" aria-hidden="true"></dbp-icon>
-                                              ${i18n.t(
-                                                  'selection-dialog.remove-all-persons',
-                                                  'Remove selections',
-                                              )}
-                                              <span>(${Object.keys(personSelections).length})</span>
-                                          </button>
+                        class="tab-content ${
+                            this.activeTab === HitSelectionType.PERSON ? 'active' : ''
+                        }">
+                        ${
+                            Object.keys(personSelections).length > 0
+                                ? html`
+                                      <div class="export-controls col-right">
+                                          <div class="export-buttons">
+                                              <dbp-select
+                                                  id="export-persons-select"
+                                                  class="export-persons-select"
+                                                  label="${i18n.t('selection-dialog.export')}"
+                                                  aria-label="${i18n.t(
+                                                      'buttons.aria-label.export-persons',
+                                                  )}"
+                                                  .options=${personDownloadOptions}
+                                                  @change="${this.exportPersons}"></dbp-select>
+                                              <button
+                                                  class="button deselect-all"
+                                                  aria-label="${i18n.t(
+                                                      'buttons.aria-label.deselect-all-persons',
+                                                  )}${Object.keys(personSelections).length}"
+                                                  value="${i18n.t(
+                                                      'selection-dialog.remove-all-persons',
+                                                      'Remove selections',
+                                                  )}"
+                                                  @click="${() => this.removeAllPersonSelections()}"
+                                                  type="is-secondary">
+                                                  <dbp-icon
+                                                      name="close"
+                                                      aria-hidden="true"></dbp-icon>
+                                                  ${i18n.t(
+                                                      'selection-dialog.remove-all-persons',
+                                                      'Remove selections',
+                                                  )}
+                                                  <span>
+                                                      (${Object.keys(personSelections).length})
+                                                  </span>
+                                              </button>
+                                          </div>
                                       </div>
-                                  </div>
-                                  <dbp-tabulator-table
-                                      ${ref(this.personTableRef)}
-                                      lang="${this.lang}"
-                                      class="selection-table"
-                                      identifier="person-selection-table"
-                                      overflow-y-scroll-enabled
-                                      pagination-enabled
-                                      pagination-size="10"
-                                      .data=${personTableData}
-                                      .options=${personTableOptions}></dbp-tabulator-table>
-                              `
-                            : html`
-                                  <p>
-                                      ${i18n.t(
-                                          'selection-dialog.no-persons',
-                                          'No persons selected.',
-                                      )}
-                                  </p>
-                              `}
+                                      <dbp-tabulator-table
+                                          ${ref(this.personTableRef)}
+                                          lang="${this.lang}"
+                                          class="selection-table"
+                                          identifier="person-selection-table"
+                                          overflow-y-scroll-enabled
+                                          pagination-enabled
+                                          pagination-size="10"
+                                          .data=${personTableData}
+                                          .options=${personTableOptions}></dbp-tabulator-table>
+                                  `
+                                : html`
+                                      <p>
+                                          ${i18n.t(
+                                              'selection-dialog.no-persons',
+                                              'No persons selected.',
+                                          )}
+                                      </p>
+                                  `
+                        }
                     </div>
 
                     <div
                         id="select-documents"
                         role="tabpanel"
-                        class="tab-content ${this.activeTab === HitSelectionType.DOCUMENT_FILE
-                            ? 'active'
-                            : ''}">
+                        class="tab-content ${
+                            this.activeTab === HitSelectionType.DOCUMENT_FILE ? 'active' : ''
+                        }">
                         <!-- Sub-tabs for active and deleted documents -->
                         <div class="document-sub-tabs">
                             <button
-                                class="sub-tab ${this.activeDocumentTab === 'active'
-                                    ? 'active'
-                                    : ''}"
+                                class="sub-tab ${
+                                    this.activeDocumentTab === 'active' ? 'active' : ''
+                                }"
                                 @click="${() => {
                                     this.activeDocumentTab = 'active';
                                 }}">
@@ -1893,9 +1901,9 @@ export class SelectionDialog extends ScopedElementsMixin(
                                 </span>
                             </button>
                             <button
-                                class="sub-tab ${this.activeDocumentTab === 'deleted'
-                                    ? 'active'
-                                    : ''}"
+                                class="sub-tab ${
+                                    this.activeDocumentTab === 'deleted' ? 'active' : ''
+                                }"
                                 @click="${() => {
                                     this.activeDocumentTab = 'deleted';
                                 }}">
@@ -1908,146 +1916,156 @@ export class SelectionDialog extends ScopedElementsMixin(
 
                         <!-- Active documents table -->
                         <div
-                            class="document-table-container ${this.activeDocumentTab === 'active'
-                                ? 'active'
-                                : ''}">
-                            ${Object.keys(activeDocuments).length > 0
-                                ? html`
-                                      <div class="export-controls">
-                                          <dbp-button
-                                              value="${i18n.t(
-                                                  'selection-dialog.delete-all-active',
-                                                  'Delete All',
-                                              )}"
-                                              @click="${() =>
-                                                  this.scheduleActiveDocumentsForDeletion()}"
-                                              type="is-secondary">
-                                              <dbp-icon name="trash" aria-hidden="true"></dbp-icon>
-                                              ${i18n.t(
-                                                  'selection-dialog.delete-all-active',
-                                                  'Delete All',
-                                              )}&nbsp(${Object.keys(activeDocuments).length})
-                                          </dbp-button>
-                                          <div class="export-buttons">
-                                              <dbp-select
-                                                  id="export-active-select"
-                                                  class="export-active-select"
-                                                  label="${i18n.t(
-                                                      'selection-dialog.export',
-                                                      'Export Documents',
-                                                  )}"
-                                                  .options=${docDownloadOptions}
-                                                  @change=${this
-                                                      .exportActiveDocuments}></dbp-select>
-                                              <button
-                                                  class="button deselect-all"
+                            class="document-table-container ${
+                                this.activeDocumentTab === 'active' ? 'active' : ''
+                            }">
+                            ${
+                                Object.keys(activeDocuments).length > 0
+                                    ? html`
+                                          <div class="export-controls">
+                                              <dbp-button
                                                   value="${i18n.t(
-                                                      'selection-dialog.remove-all-active',
-                                                      'Remove selections',
+                                                      'selection-dialog.delete-all-active',
+                                                      'Delete All',
                                                   )}"
                                                   @click="${() =>
-                                                      this.removeAllActiveDocumentSelections()}"
+                                                      this.scheduleActiveDocumentsForDeletion()}"
                                                   type="is-secondary">
                                                   <dbp-icon
-                                                      name="close"
+                                                      name="trash"
                                                       aria-hidden="true"></dbp-icon>
                                                   ${i18n.t(
-                                                      'selection-dialog.remove-all-active',
-                                                      'Remove selections',
+                                                      'selection-dialog.delete-all-active',
+                                                      'Delete All',
                                                   )}&nbsp(${Object.keys(activeDocuments).length})
-                                              </button>
+                                              </dbp-button>
+                                              <div class="export-buttons">
+                                                  <dbp-select
+                                                      id="export-active-select"
+                                                      class="export-active-select"
+                                                      label="${i18n.t(
+                                                          'selection-dialog.export',
+                                                          'Export Documents',
+                                                      )}"
+                                                      .options=${docDownloadOptions}
+                                                      @change=${
+                                                          this.exportActiveDocuments
+                                                      }></dbp-select>
+                                                  <button
+                                                      class="button deselect-all"
+                                                      value="${i18n.t(
+                                                          'selection-dialog.remove-all-active',
+                                                          'Remove selections',
+                                                      )}"
+                                                      @click="${() =>
+                                                          this.removeAllActiveDocumentSelections()}"
+                                                      type="is-secondary">
+                                                      <dbp-icon
+                                                          name="close"
+                                                          aria-hidden="true"></dbp-icon>
+                                                      ${i18n.t(
+                                                          'selection-dialog.remove-all-active',
+                                                          'Remove selections',
+                                                      )}&nbsp(${Object.keys(activeDocuments).length})
+                                                  </button>
+                                              </div>
                                           </div>
-                                      </div>
-                                      <dbp-tabulator-table
-                                          ${ref(this.documentTableRef)}
-                                          lang="${this.lang}"
-                                          class="selection-table"
-                                          identifier="document-selection-table"
-                                          overflow-y-scroll-enabled
-                                          pagination-enabled
-                                          pagination-size="10"
-                                          .data=${activeDocumentTableData}
-                                          .options=${documentTableOptions}></dbp-tabulator-table>
-                                  `
-                                : html`
-                                      <p>
-                                          ${i18n.t(
-                                              'selection-dialog.no-active-documents',
-                                              'No active documents selected.',
-                                          )}
-                                      </p>
-                                  `}
+                                          <dbp-tabulator-table
+                                              ${ref(this.documentTableRef)}
+                                              lang="${this.lang}"
+                                              class="selection-table"
+                                              identifier="document-selection-table"
+                                              overflow-y-scroll-enabled
+                                              pagination-enabled
+                                              pagination-size="10"
+                                              .data=${activeDocumentTableData}
+                                              .options=${documentTableOptions}></dbp-tabulator-table>
+                                      `
+                                    : html`
+                                          <p>
+                                              ${i18n.t(
+                                                  'selection-dialog.no-active-documents',
+                                                  'No active documents selected.',
+                                              )}
+                                          </p>
+                                      `
+                            }
                         </div>
 
                         <!-- Deleted documents table -->
                         <div
-                            class="document-table-container ${this.activeDocumentTab === 'deleted'
-                                ? 'active'
-                                : ''}">
-                            ${Object.keys(deletedDocuments).length > 0
-                                ? html`
-                                      <div class="export-controls">
-                                          <dbp-button
-                                              value="${i18n.t(
-                                                  'selection-dialog.undelete-all-deleted',
-                                                  'Undelete All',
-                                              )}"
-                                              @click="${() => this.undeleteDeletedDocuments()}"
-                                              type="is-secondary">
-                                              <dbp-icon name="undo" aria-hidden="true"></dbp-icon>
-                                              ${i18n.t(
-                                                  'selection-dialog.undelete-all-deleted',
-                                                  'Undelete All',
-                                              )}&nbsp(${Object.keys(deletedDocuments).length})
-                                          </dbp-button>
-                                          <div class="export-buttons">
-                                              <dbp-select
-                                                  id="export-deleted-select"
-                                                  label="${i18n.t(
-                                                      'selection-dialog.export',
-                                                      'Export Documents',
-                                                  )}"
-                                                  .options=${docDownloadOptions}
-                                                  @change="${this
-                                                      .exportDeletedDocuments}"></dbp-select>
-                                              <button
-                                                  class="button deselect-all"
+                            class="document-table-container ${
+                                this.activeDocumentTab === 'deleted' ? 'active' : ''
+                            }">
+                            ${
+                                Object.keys(deletedDocuments).length > 0
+                                    ? html`
+                                          <div class="export-controls">
+                                              <dbp-button
                                                   value="${i18n.t(
-                                                      'selection-dialog.remove-all-deleted',
-                                                      'Remove selections',
+                                                      'selection-dialog.undelete-all-deleted',
+                                                      'Undelete All',
                                                   )}"
-                                                  @click="${() =>
-                                                      this.removeAllDeletedDocumentSelections()}"
+                                                  @click="${() => this.undeleteDeletedDocuments()}"
                                                   type="is-secondary">
                                                   <dbp-icon
-                                                      name="close"
+                                                      name="undo"
                                                       aria-hidden="true"></dbp-icon>
                                                   ${i18n.t(
-                                                      'selection-dialog.remove-all-deleted',
-                                                      'Remove selections',
+                                                      'selection-dialog.undelete-all-deleted',
+                                                      'Undelete All',
                                                   )}&nbsp(${Object.keys(deletedDocuments).length})
-                                              </button>
+                                              </dbp-button>
+                                              <div class="export-buttons">
+                                                  <dbp-select
+                                                      id="export-deleted-select"
+                                                      label="${i18n.t(
+                                                          'selection-dialog.export',
+                                                          'Export Documents',
+                                                      )}"
+                                                      .options=${docDownloadOptions}
+                                                      @change="${
+                                                          this.exportDeletedDocuments
+                                                      }"></dbp-select>
+                                                  <button
+                                                      class="button deselect-all"
+                                                      value="${i18n.t(
+                                                          'selection-dialog.remove-all-deleted',
+                                                          'Remove selections',
+                                                      )}"
+                                                      @click="${() =>
+                                                          this.removeAllDeletedDocumentSelections()}"
+                                                      type="is-secondary">
+                                                      <dbp-icon
+                                                          name="close"
+                                                          aria-hidden="true"></dbp-icon>
+                                                      ${i18n.t(
+                                                          'selection-dialog.remove-all-deleted',
+                                                          'Remove selections',
+                                                      )}&nbsp(${Object.keys(deletedDocuments).length})
+                                                  </button>
+                                              </div>
                                           </div>
-                                      </div>
-                                      <dbp-tabulator-table
-                                          ${ref(this.deletedDocumentTableRef)}
-                                          lang="${this.lang}"
-                                          class="selection-table"
-                                          identifier="deleted-document-selection-table"
-                                          overflow-y-scroll-enabled
-                                          pagination-enabled
-                                          pagination-size="10"
-                                          .data=${deletedDocumentTableData}
-                                          .options=${deletedDocumentTableOptions}></dbp-tabulator-table>
-                                  `
-                                : html`
-                                      <p>
-                                          ${i18n.t(
-                                              'selection-dialog.no-deleted-documents',
-                                              'No deleted documents selected.',
-                                          )}
-                                      </p>
-                                  `}
+                                          <dbp-tabulator-table
+                                              ${ref(this.deletedDocumentTableRef)}
+                                              lang="${this.lang}"
+                                              class="selection-table"
+                                              identifier="deleted-document-selection-table"
+                                              overflow-y-scroll-enabled
+                                              pagination-enabled
+                                              pagination-size="10"
+                                              .data=${deletedDocumentTableData}
+                                              .options=${deletedDocumentTableOptions}></dbp-tabulator-table>
+                                      `
+                                    : html`
+                                          <p>
+                                              ${i18n.t(
+                                                  'selection-dialog.no-deleted-documents',
+                                                  'No deleted documents selected.',
+                                              )}
+                                          </p>
+                                      `
+                            }
                         </div>
                     </div>
                 </div>
@@ -2304,15 +2322,17 @@ export class SelectionDialog extends ScopedElementsMixin(
                 lang="${this.lang}"
                 .auth="${this.auth}"
                 .cabinetConfig="${this.cabinetConfig}"
-                @columnSettingsStored="${this
-                    .onColumnSettingsStored}"></dbp-selection-column-configuration>
+                @columnSettingsStored="${
+                    this.onColumnSettingsStored
+                }"></dbp-selection-column-configuration>
             <dbp-selection-column-configuration
                 ${ref(this.documentColumnConfigRef)}
                 lang="${this.lang}"
                 .auth="${this.auth}"
                 .cabinetConfig="${this.cabinetConfig}"
-                @columnSettingsStored="${this
-                    .onColumnSettingsStored}"></dbp-selection-column-configuration>
+                @columnSettingsStored="${
+                    this.onColumnSettingsStored
+                }"></dbp-selection-column-configuration>
             <dbp-file-sink
                 ${ref(this.fileSinkRef)}
                 subscribe="nextcloud-store-session:nextcloud-store-session"

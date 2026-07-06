@@ -240,9 +240,11 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
                 class="button is-small ${!canToggleShowMore ? 'hidden' : ''}"
                 ?disabled=${!canToggleShowMore}
                 @click=${this._handleShowMoreClick}>
-                ${isShowingMore
-                    ? this._i18n.t('facets.show-less')
-                    : this._i18n.t('facets.show-more')}
+                ${
+                    isShowingMore
+                        ? this._i18n.t('facets.show-less')
+                        : this._i18n.t('facets.show-more')
+                }
             </button>
         `;
     }

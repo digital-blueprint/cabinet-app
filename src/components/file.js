@@ -1749,11 +1749,13 @@ export class CabinetFile extends ScopedElementsMixin(
                                         aria-label="${i18n.t('doc-modal-undelete-document')}"
                                         name="undo"></dbp-icon>
                                     ${i18n.t('doc-modal-undelete-document')}
-                                    ${this.state !== CabinetFile.States.LOADING_FILE
-                                        ? ''
-                                        : html`
-                                              <dbp-mini-spinner></dbp-mini-spinner>
-                                          `}
+                                    ${
+                                        this.state !== CabinetFile.States.LOADING_FILE
+                                            ? ''
+                                            : html`
+                                                  <dbp-mini-spinner></dbp-mini-spinner>
+                                              `
+                                    }
                                 </button>
                                 <dbp-select
                                     id="download-dropdown"
@@ -2519,11 +2521,15 @@ export class CabinetFile extends ScopedElementsMixin(
                         (block) => html`
                             <li class="${block.status}">
                                 <span class="message">${block.message}</span>
-                                ${block.extraMessage
-                                    ? html`
-                                          <span class="extra-message">| ${block.extraMessage}</span>
-                                      `
-                                    : ''}
+                                ${
+                                    block.extraMessage
+                                        ? html`
+                                              <span class="extra-message">
+                                                  | ${block.extraMessage}
+                                              </span>
+                                          `
+                                        : ''
+                                }
                             </li>
                         `,
                     )}

@@ -120,11 +120,13 @@ class CabinetHitElement extends BaseDocumentHitElement {
               }).format(new Date(issueDate))
             : '';
         return html`
-            ${issueDate
-                ? html`
-                      ${i18n.t('custom:document-issue-date')}: ${formattedDate}
-                  `
-                : ''}
+            ${
+                issueDate
+                    ? html`
+                          ${i18n.t('custom:document-issue-date')}: ${formattedDate}
+                      `
+                    : ''
+            }
         `;
     }
 }
@@ -159,9 +161,11 @@ class CabinetViewElement extends BaseViewElement {
             <dbp-form-date-view
                 subscribe="lang"
                 label=${i18n.t('custom:doc-modal-issue-date')}
-                .value=${citizenshipCertificate.dateCreated
-                    ? new Date(citizenshipCertificate.dateCreated)
-                    : ''}></dbp-form-date-view>
+                .value=${
+                    citizenshipCertificate.dateCreated
+                        ? new Date(citizenshipCertificate.dateCreated)
+                        : ''
+                }></dbp-form-date-view>
         `;
     }
 }

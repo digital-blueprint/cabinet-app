@@ -133,11 +133,13 @@ class CabinetHitElement extends BaseDocumentHitElement {
             year: 'numeric',
         }).format(new Date(issueDate));
         return html`
-            ${issueDate
-                ? html`
-                      ${i18n.t('custom:document-issue-date')}: ${formattedDate}
-                  `
-                : ''}
+            ${
+                issueDate
+                    ? html`
+                          ${i18n.t('custom:document-issue-date')}: ${formattedDate}
+                      `
+                    : ''
+            }
         `;
     }
 }
@@ -164,16 +166,16 @@ class CabinetViewElement extends BaseViewElement {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:person.given-name')}
-                .value=${communication.agent
-                    ? communication.agent.givenName
-                    : ''}></dbp-form-string-view>
+                .value=${
+                    communication.agent ? communication.agent.givenName : ''
+                }></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:person.family-name')}
-                .value=${communication.agent
-                    ? communication.agent.familyName
-                    : ''}></dbp-form-string-view>
+                .value=${
+                    communication.agent ? communication.agent.familyName : ''
+                }></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
@@ -183,9 +185,9 @@ class CabinetViewElement extends BaseViewElement {
             <dbp-form-datetime-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:doc-modal-issue-date')}
-                .value=${communication.dateCreated
-                    ? new Date(communication.dateCreated)
-                    : ''}></dbp-form-datetime-view>
+                .value=${
+                    communication.dateCreated ? new Date(communication.dateCreated) : ''
+                }></dbp-form-datetime-view>
         `;
     }
 }

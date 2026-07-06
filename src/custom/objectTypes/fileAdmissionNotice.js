@@ -145,11 +145,13 @@ class CabinetHitElement extends BaseDocumentHitElement {
               }).format(dateObject)
             : '';
         return html`
-            ${issueDate
-                ? html`
-                      ${i18n.t('custom:document-issue-date')}: ${formattedDate}
-                  `
-                : ''}
+            ${
+                issueDate
+                    ? html`
+                          ${i18n.t('custom:document-issue-date')}: ${formattedDate}
+                      `
+                    : ''
+            }
         `;
     }
 }
@@ -193,9 +195,9 @@ class CabinetViewElement extends BaseViewElement {
             <dbp-form-date-view
                 subscribe="lang"
                 label=${i18n.t('custom:doc-modal-issue-date')}
-                .value=${admissionNotice.dateCreated
-                    ? new Date(admissionNotice.dateCreated)
-                    : ''}></dbp-form-date-view>
+                .value=${
+                    admissionNotice.dateCreated ? new Date(admissionNotice.dateCreated) : ''
+                }></dbp-form-date-view>
 
             <dbp-form-string-view
                 subscribe="lang"
