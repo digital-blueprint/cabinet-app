@@ -131,7 +131,7 @@
         "person-entry": "Personeneintrag von"
     },
     "info": "Info",
-    "loading-message": "",
+    "loading-message": "Lädt...",
     "pagination": {
         "first-page": "Erste Seite",
         "last-page": "Letzte Seite",
