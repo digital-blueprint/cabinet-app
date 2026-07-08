@@ -1,4 +1,4 @@
-import {ScopedElementsMixin, Icon} from '@dbp-toolkit/common';
+import {ScopedElementsMixin, Icon, MiniSpinner} from '@dbp-toolkit/common';
 import {css, html} from 'lit';
 import '@dbp-toolkit/form-elements';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -189,6 +189,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
             'dbp-form-string-element': DbpStringElement,
             'dbp-form-enum-element': DbpEnumElement,
             'dbp-icon': Icon,
+            'dbp-mini-spinner': MiniSpinner,
         };
     }
     _getData() {
@@ -294,7 +295,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
                 @change=${updateField('comment')}></dbp-form-string-element>
 
             <input type="hidden" name="additionalType" value="${additionalType}" />
-            ${this.getButtonRowHtml()}
+            ${this._getButtonRowHtml()}
         `;
     }
 
@@ -378,7 +379,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
         this.dispatchEvent(customEvent);
     }
 
-    getButtonRowHtml() {
+    _getButtonRowHtml() {
         const i18n = this._i18nCustom;
         return html`
             <div class="button-row">
@@ -407,7 +408,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
         return html`
             <form>
                 <h2>${data.objectType}</h2>
-                ${this.getButtonRowHtml()}
+                ${this._getButtonRowHtml()}
             </form>
         `;
     }

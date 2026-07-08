@@ -1,6 +1,6 @@
 import {css, html} from 'lit';
 import {ref, createRef} from 'lit/directives/ref.js';
-import {AuthMixin, LangMixin, ScopedElementsMixin} from '@dbp-toolkit/common';
+import {AuthMixin, LangMixin, ScopedElementsMixin, MiniSpinner} from '@dbp-toolkit/common';
 import {CabinetSettings} from './settings.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -184,6 +184,7 @@ class CabinetSearch extends ScopedElementsMixin(
             'dbp-cabinet-stats-widget': StatsWidget,
             'dbp-cabinet-empty-widget': EmptyWidget,
             'dbp-cabinet-selection-dialog': SelectionDialog,
+            'dbp-mini-spinner': MiniSpinner,
         };
     }
 
@@ -1312,7 +1313,7 @@ class CabinetSearch extends ScopedElementsMixin(
                     hidden: this.isLoggedIn() || !this.isAuthPending() || !this.loadingTranslations,
                 })}">
                 <span class="loading">
-                    <dbp-mini-spinner text=${i18n.t('loading-message')}></dbp-mini-spinner>
+                    <dbp-mini-spinner text="${i18n.t('loading-message')}"></dbp-mini-spinner>
                 </span>
             </div>
             <div
