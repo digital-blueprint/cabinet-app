@@ -7,6 +7,82 @@ export class CabinetApi {
     }
 
     /**
+     * Create a blob URL through the blob-urls API endpoint.
+     * @param {string} method - HTTP method for the blob operation (e.g. 'POST', 'PATCH', 'GET', 'DELETE', 'DOWNLOAD')
+     * @param {object} [options]
+     * @param {?string} [options.identifier] - The file identifier (omitted when null)
+     * @param {boolean} [options.includeData] - Whether to include file data in the response
+     * @param {?string} [options.type] - The blob type (e.g. objectType.getBlobType())
+     * @param {object} [options.extraParams] - Additional query parameters
+     * @returns {Promise<string>} - The blob URL
+     */
+    async _createBlobUrl(
+        method,
+        {identifier = null, includeData = false, type = null, extraParams = {}} = {},
+    ) {
+        // POST creates a new blob and must not carry an identifier, every other
+        // method operates on an existing blob and therefore requires one.
+        if (method === 'POST' && identifier !== null) {
+            throw new Error(`Blob method "${method}" must not be given an identifier`);
+        }
+        if (method !== 'POST' && identifier === null) {
+            throw new Error(`Blob method "${method}" requires an identifier`);
+        }
+
+        const baseUrl = `${this._element.entryPointUrl}/cabinet/blob-urls`;
+        const apiUrl = new URL(baseUrl);
+        let params = {
+            method: method,
+        };
+        // The prefix is only relevant when creating or updating a blob.
+        if (method === 'POST' || method === 'PATCH') {
+            params['prefix'] = BLOB_PREFIX;
+        }
+        if (type !== null) {
+            params['type'] = type;
+        }
+        if (identifier !== null) {
+            params['identifier'] = identifier;
+        }
+        if (includeData) {
+            params['includeData'] = '1';
+        }
+
+        params = {...params, ...extraParams};
+        apiUrl.search = new URLSearchParams(params).toString();
+
+        let response = await fetch(apiUrl.toString(), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/ld+json',
+                Authorization: 'Bearer ' + this._element.auth.token,
+            },
+            body: '{}',
+        });
+        if (!response.ok) {
+            throw new Error(`Error while creating storage URL: ${response.statusText}`);
+        }
+        const url = await response.json();
+
+        return url['blobUrl'];
+    }
+
+    /**
+     * Creates a Blob POST or PATCH URL for uploading a document.
+     * @param {?string} identifier - The file identifier, or null for a new upload
+     * @param {?string} type - The blob type (e.g. objectType.getBlobType())
+     * @param {object} extraParams - Additional query parameters
+     * @returns {Promise<string>}
+     */
+    async createBlobUploadUrl(identifier = null, type = null, extraParams = {}) {
+        return this._createBlobUrl(identifier === null ? 'POST' : 'PATCH', {
+            identifier,
+            type,
+            extraParams,
+        });
+    }
+
+    /**
      * Trigger a person sync
      * @param {string} documentId - The ID of the typesense document.
      */
@@ -88,58 +164,15 @@ export class CabinetApi {
     }
 
     /**
-     * Create a blob URL through the blob-urls API endpoint
-     * @param {string} identifier - The file identifier
-     * @param {string} method - HTTP method for the blob operation (e.g., 'PATCH', 'GET')
-     * @param {boolean} includeData - Whether to include data
-     * @param {object} extraParams - Additional parameters
-     * @returns {Promise<string>} - The blob URL
-     */
-    async _createBlobUrl(identifier, method = 'PATCH', includeData = false, extraParams = {}) {
-        const baseUrl = `${this._element.entryPointUrl}/cabinet/blob-urls`;
-        const apiUrl = new URL(baseUrl);
-
-        let params = {
-            method: method,
-            prefix: BLOB_PREFIX,
-            identifier: identifier,
-        };
-
-        if (includeData) {
-            params['includeData'] = '1';
-        }
-
-        params = {...params, ...extraParams};
-        apiUrl.search = new URLSearchParams(params).toString();
-
-        let response = await fetch(apiUrl.toString(), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this._element.auth.token,
-            },
-            body: '{}',
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error while creating storage URL: ${response.statusText}`);
-        }
-
-        const result = await response.json();
-        console.log('createBlobUrl result', result);
-
-        return result['blobUrl'];
-    }
-
-    /**
      * Create a blob delete URL
      * @param {string} fileId - The file identifier
      * @param {boolean} undelete - Whether to undelete the file
      * @returns {Promise<string>} - The blob URL for deletion
      */
     async createBlobDeleteUrl(fileId, undelete = false) {
-        return this._createBlobUrl(fileId, 'PATCH', false, {
-            deleteIn: undelete ? 'null' : 'P7D',
+        return this._createBlobUrl('PATCH', {
+            identifier: fileId,
+            extraParams: {deleteIn: undelete ? 'null' : 'P7D'},
         });
     }
 
@@ -203,34 +236,7 @@ export class CabinetApi {
      * @returns {Promise<string>} - The blob download URL
      */
     async createBlobGetUrl(identifier, includeData = false) {
-        const baseUrl = `${this._element.entryPointUrl}/cabinet/blob-urls`;
-        const apiUrl = new URL(baseUrl);
-        const params = {
-            method: 'GET',
-            identifier: identifier,
-        };
-
-        if (includeData) {
-            params['includeData'] = '1';
-        }
-
-        apiUrl.search = new URLSearchParams(params).toString();
-
-        let response = await fetch(apiUrl.toString(), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this._element.auth.token,
-            },
-            body: '{}',
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to create download URL: ${response.statusText}`);
-        }
-
-        const url = await response.json();
-        return url['blobUrl'];
+        return this._createBlobUrl('GET', {identifier, includeData});
     }
 
     /**
@@ -260,29 +266,6 @@ export class CabinetApi {
      * @returns {Promise<string>} - The blob download URL
      */
     async createBlobDownloadUrl(identifier) {
-        const baseUrl = `${this._element.entryPointUrl}/cabinet/blob-urls`;
-        const apiUrl = new URL(baseUrl);
-        const params = {
-            method: 'DOWNLOAD',
-            identifier: identifier,
-        };
-
-        apiUrl.search = new URLSearchParams(params).toString();
-
-        let response = await fetch(apiUrl.toString(), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this._element.auth.token,
-            },
-            body: '{}',
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to create download URL: ${response.statusText}`);
-        }
-
-        const url = await response.json();
-        return url['blobUrl'];
+        return this._createBlobUrl('DOWNLOAD', {identifier});
     }
 }

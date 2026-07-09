@@ -5,7 +5,6 @@ import {AuthMixin, LangMixin} from '@dbp-toolkit/common';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {
     Button,
-    combineURLs,
     Icon,
     Modal,
     DBPSelect,
@@ -314,69 +313,22 @@ export class CabinetFile extends ScopedElementsMixin(
      * @param extraParams
      * @returns {Promise<string>}
      */
-    async createBlobUrl(blobUrlType, identifier = '', includeData = false, extraParams = {}) {
-        if (this.entryPointUrl === '') {
-            return '';
-        }
-
-        let method;
+    async createBlobUrl(blobUrlType, identifier = null, includeData = false, extraParams = {}) {
+        let api = new CabinetApi(this);
         switch (blobUrlType) {
-            case CabinetFile.BlobUrlTypes.UPLOAD:
+            case CabinetFile.BlobUrlTypes.UPLOAD: {
                 if (!identifier) {
-                    identifier = this.getFileHitDataBlobId();
+                    identifier = this.getFileHitDataBlobId() || null;
                 }
-                method = identifier === '' ? 'POST' : 'PATCH';
-                break;
+                const type = this.objectTypes[this.objectType].getBlobType();
+                return api.createBlobUploadUrl(identifier, type, extraParams);
+            }
             case CabinetFile.BlobUrlTypes.DOWNLOAD:
-                method = 'GET';
-                break;
+                return api.createBlobGetUrl(identifier, includeData);
             case CabinetFile.BlobUrlTypes.DELETE:
-                method = 'DELETE';
-                break;
+                return api.createBlobDeleteUrl(identifier);
         }
-
-        const baseUrl = combineURLs(this.entryPointUrl, `/cabinet/blob-urls`);
-        const apiUrl = new URL(baseUrl);
-        let params = {
-            method: method,
-        };
-        if (blobUrlType === CabinetFile.BlobUrlTypes.UPLOAD) {
-            params['prefix'] = BLOB_PREFIX;
-            params['type'] = this.objectTypes[this.objectType].getBlobType();
-        }
-
-        if (identifier !== '') {
-            params['identifier'] = identifier;
-        }
-
-        if (includeData) {
-            params['includeData'] = '1';
-        }
-
-        params = {...params, ...extraParams};
-        apiUrl.search = new URLSearchParams(params).toString();
-
-        let response = await fetch(apiUrl.toString(), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/ld+json',
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-            body: '{}',
-        });
-        if (!response.ok) {
-            this.documentModalNotification(
-                this._i18n.t('cabinet-file.notification-title-storage-error'),
-                this._i18n.t('cabinet-file.notification-body-storage-error'),
-                'danger',
-            );
-
-            throw response;
-        }
-        const url = await response.json();
-        console.log(blobUrlType, 'url', url['blobUrl']);
-
-        return url['blobUrl'];
+        return '';
     }
 
     getFileHitDataBlobId() {
@@ -389,7 +341,8 @@ export class CabinetFile extends ScopedElementsMixin(
      * @returns {Promise<string>}
      */
     async createBlobDownloadUrl(identifier, includeData = false) {
-        return this.createBlobUrl(CabinetFile.BlobUrlTypes.DOWNLOAD, identifier, includeData);
+        let api = new CabinetApi(this);
+        return api.createBlobGetUrl(identifier, includeData);
     }
 
     /**
