@@ -68,18 +68,78 @@ export class CabinetApi {
     }
 
     /**
-     * Creates a Blob POST or PATCH URL for uploading a document.
-     * @param {?string} identifier - The file identifier, or null for a new upload
-     * @param {?string} type - The blob type (e.g. objectType.getBlobType())
-     * @param {object} extraParams - Additional query parameters
-     * @returns {Promise<string>}
+     * Send a blob upload request (POST to create, PATCH to update).
+     * @param {string} method - 'POST' or 'PATCH'
+     * @param {string} uploadUrl - The blob upload URL
+     * @param {object} metadata - The metadata object to store
+     * @param {?File} [file] - The file to upload (omitted for metadata-only updates)
+     * @returns {Promise<Response>} - The raw fetch response
      */
-    async createBlobUploadUrl(identifier = null, type = null, extraParams = {}) {
-        return this._createBlobUrl(identifier === null ? 'POST' : 'PATCH', {
-            identifier,
+    async _sendBlobUpload(method, uploadUrl, metadata, file = null) {
+        const formData = new FormData();
+        formData.append('metadata', JSON.stringify(metadata));
+        if (file !== null) {
+            formData.append('file', file);
+            formData.append('fileName', file.name);
+        }
+        formData.append('prefix', BLOB_PREFIX);
+
+        return fetch(uploadUrl, {
+            method,
+            headers: {
+                Authorization: 'Bearer ' + this._element.auth.token,
+            },
+            body: formData,
+        });
+    }
+
+    /**
+     * Create a new file in blob storage.
+     *
+     * The raw fetch Response is returned so callers can implement their own
+     * success/error handling.
+     * @param {object} options
+     * @param {?string} [options.type] - The blob type (e.g. objectType.getBlobType())
+     * @param {object} [options.metadata] - The metadata object to store
+     * @param {?File} [options.file] - The file to upload
+     * @param {object} [options.extraParams] - Additional query parameters for the URL
+     * @returns {Promise<Response>} - The raw fetch response
+     */
+    async createFile({type = null, metadata = {}, file = null, extraParams = {}} = {}) {
+        const uploadUrl = await this._createBlobUrl('POST', {type, extraParams});
+        return this._sendBlobUpload('POST', uploadUrl, metadata, file);
+    }
+
+    /**
+     * Update an existing file and/or its metadata in blob storage.
+     *
+     * The raw fetch Response is returned so callers can implement their own
+     * success/error handling.
+     * @param {string} fileId - The file identifier
+     * @param {object} options
+     * @param {?string} [options.type] - The blob type (e.g. objectType.getBlobType())
+     * @param {object} [options.metadata] - The metadata object to store
+     * @param {?File} [options.file] - The file to upload (omitted for metadata-only updates)
+     * @param {object} [options.extraParams] - Additional query parameters for the URL
+     * @returns {Promise<Response>} - The raw fetch response
+     */
+    async updateFile(fileId, {type = null, metadata = {}, file = null, extraParams = {}} = {}) {
+        const uploadUrl = await this._createBlobUrl('PATCH', {
+            identifier: fileId,
             type,
             extraParams,
         });
+        return this._sendBlobUpload('PATCH', uploadUrl, metadata, file);
+    }
+
+    /**
+     * Update the metadata of an existing file in blob storage.
+     * @param {string} fileId - The file identifier
+     * @param {object} metadata - The metadata object to store
+     * @returns {Promise<Response>} - The raw fetch response
+     */
+    async updateFileMetadata(fileId, metadata) {
+        return this.updateFile(fileId, {metadata});
     }
 
     /**

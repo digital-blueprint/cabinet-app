@@ -27,7 +27,6 @@ import {createUUID} from '@dbp-toolkit/common/utils';
 import {PdfValidationErrorList} from './pdf-validation-error-list.js';
 import {CabinetApi} from '../api.js';
 import {createInstance} from '../i18n.js';
-import {BLOB_PREFIX} from '../utils.js';
 
 const getFieldsetCSS = () => {
     // language=css
@@ -70,10 +69,6 @@ export class CabinetFile extends ScopedElementsMixin(
         LOADING_FILE: 'loading-file',
         LOADING_FILE_FAILED: 'loading-file-failed',
         FILE_LOADED: 'file-loaded',
-    };
-
-    static BlobUrlTypes = {
-        UPLOAD: 'upload',
     };
 
     static Status = {
@@ -296,34 +291,6 @@ export class CabinetFile extends ScopedElementsMixin(
         await this.fetchFileDocumentFromTypesense(fileId, increment + 1);
     }
 
-    /**
-     * Creates a Blob POST or PATCH URL for uploading a document
-     * @returns {Promise<string>}
-     */
-    async createBlobUploadUrl() {
-        return this.createBlobUrl(CabinetFile.BlobUrlTypes.UPLOAD);
-    }
-
-    /**
-     * @param blobUrlType
-     * @param identifier
-     * @param extraParams
-     * @returns {Promise<string>}
-     */
-    async createBlobUrl(blobUrlType, identifier = null, extraParams = {}) {
-        let api = new CabinetApi(this);
-        switch (blobUrlType) {
-            case CabinetFile.BlobUrlTypes.UPLOAD: {
-                if (!identifier) {
-                    identifier = this.getFileHitDataBlobId() || null;
-                }
-                const type = this.objectTypes[this.objectType].getBlobType();
-                return api.createBlobUploadUrl(identifier, type, extraParams);
-            }
-        }
-        return '';
-    }
-
     getFileHitDataBlobId() {
         return this.fileHitData?.file?.base?.fileId || '';
     }
@@ -336,7 +303,6 @@ export class CabinetFile extends ScopedElementsMixin(
     async storeDocumentInBlob(metaData) {
         const blobId = this.getFileHitDataBlobId();
         console.log('storeDocumentInBlob', 'blobId', blobId);
-        const uploadUrl = await this.createBlobUploadUrl();
         const groupId = this.fileHitData?.file?.base?.groupId;
         const isCurrent = this.fileHitData?.base?.isCurrent ?? false;
         console.log('storeDocumentInBlob this.fileHitData', this.fileHitData);
@@ -355,24 +321,15 @@ export class CabinetFile extends ScopedElementsMixin(
         // metaData['dateCreated'] = new Date().toISOString().split('T')[0];
         console.log('storeDocumentInBlob metaData', metaData);
 
-        let formData = new FormData();
-        formData.append('metadata', JSON.stringify(metaData));
-        // Check if we really need to upload the file again
-        if (this.isFileDirty) {
-            formData.append('file', this.documentFile);
-            formData.append('fileName', this.documentFile.name);
-        }
-        formData.append('prefix', BLOB_PREFIX);
+        const api = new CabinetApi(this);
+        const type = this.objectTypes[this.objectType].getBlobType();
+        // Only upload the file data again if it actually changed.
+        const file = this.isFileDirty ? this.documentFile : null;
 
-        const options = {
-            method: blobId === '' ? 'POST' : 'PATCH',
-            headers: {
-                Authorization: 'Bearer ' + this.auth.token,
-            },
-            body: formData,
-        };
-
-        let response = await fetch(uploadUrl, options);
+        let response =
+            blobId === ''
+                ? await api.createFile({type, metadata: metaData, file})
+                : await api.updateFile(blobId, {type, metadata: metaData, file});
         if (!response.ok) {
             let json = await response.json();
 
@@ -730,20 +687,9 @@ export class CabinetFile extends ScopedElementsMixin(
             metadata.isCurrent = enable;
             metadata.lastModifiedBy = this.auth['user-id'];
 
-            // Prepare PATCH request to update metadata
-            const patchUrl = await this.createBlobUrl(CabinetFile.BlobUrlTypes.UPLOAD, fileId);
-
-            const formData = new FormData();
-            formData.append('metadata', JSON.stringify(metadata));
-            formData.append('prefix', BLOB_PREFIX);
-
-            const options = {
-                method: 'PATCH',
-                headers: {Authorization: 'Bearer ' + this.auth.token},
-                body: formData,
-            };
-
-            const response = await fetch(patchUrl, options);
+            // Update the metadata
+            const api = new CabinetApi(this);
+            const response = await api.updateFileMetadata(fileId, metadata);
             if (!response.ok) {
                 console.error(
                     'setIsCurrentVersion: Failed to patch isCurrent',
@@ -2248,12 +2194,6 @@ export class CabinetFile extends ScopedElementsMixin(
                 console.log('markOtherVersionsObsoleteInBlob: metadata', obsoleteMetadata);
 
                 try {
-                    // Create a PATCH URL for this specific version
-                    const patchUrl = await this.createBlobUrl(
-                        CabinetFile.BlobUrlTypes.UPLOAD,
-                        versionFileId,
-                    );
-
                     obsoleteMetadata.isCurrent = false;
                     obsoleteMetadata.lastModifiedBy = this.auth['user-id'];
 
@@ -2262,19 +2202,8 @@ export class CabinetFile extends ScopedElementsMixin(
                         obsoleteMetadata,
                     );
 
-                    const formData = new FormData();
-                    formData.append('metadata', JSON.stringify(obsoleteMetadata));
-                    formData.append('prefix', BLOB_PREFIX);
-
-                    const options = {
-                        method: 'PATCH',
-                        headers: {
-                            Authorization: 'Bearer ' + this.auth.token,
-                        },
-                        body: formData,
-                    };
-
-                    const response = await fetch(patchUrl, options);
+                    const api = new CabinetApi(this);
+                    const response = await api.updateFileMetadata(versionFileId, obsoleteMetadata);
                     if (!response.ok) {
                         console.error(
                             `markOtherVersionsObsoleteInBlob: Failed to mark version ${versionFileId} as obsolete:`,
