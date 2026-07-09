@@ -835,14 +835,10 @@ export class SelectionDialog extends ScopedElementsMixin(
                         metadataFileName = `${baseFilename}.json`;
                     }
 
-                    // Get the document blob URL (without downloading the file content)
-                    const blobUrl = await api.createBlobGetUrl(fileId);
+                    // get relevant json data (without downloading the file content)
+                    let jsonMini = await api.downloadFileMetadata(fileId);
 
-                    // get relevant json data
-                    let blobItem = await api.loadBlobItem(blobUrl);
-
-                    // parse and stringify json to format it with 4 spaces indentation
-                    let jsonMini = JSON.parse(blobItem['metadata']);
+                    // stringify json to format it with 4 spaces indentation
                     const json = JSON.stringify(jsonMini, null, 4);
 
                     // convert json string to json file

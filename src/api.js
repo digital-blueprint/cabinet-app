@@ -268,4 +268,18 @@ export class CabinetApi {
     async createBlobDownloadUrl(identifier) {
         return this._createBlobUrl('DOWNLOAD', {identifier});
     }
+
+    /**
+     * Download and parse the metadata of a file from blob storage.
+     * @param {string} fileId - The file identifier
+     * @returns {Promise<object>} - The parsed metadata object
+     */
+    async downloadFileMetadata(fileId) {
+        const url = await this.createBlobGetUrl(fileId);
+        const blobItem = await this.loadBlobItem(url);
+        if (!blobItem || !blobItem.metadata) {
+            throw new Error(`No metadata in blob response for ${fileId}`);
+        }
+        return JSON.parse(blobItem.metadata);
+    }
 }

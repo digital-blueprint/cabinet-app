@@ -731,19 +731,17 @@ export class CabinetFile extends ScopedElementsMixin(
         }
 
         try {
-            // Load current blob item metadata
-            const downloadUrl = await this.createBlobDownloadUrl(fileId);
-            let blobItem = await this.loadBlobItem(downloadUrl);
-            if (!blobItem || !blobItem.metadata) {
-                console.warn('setIsCurrentVersion: No metadata found for fileId', fileId);
-                return;
-            }
-
+            // Load current metadata
             let metadata;
             try {
-                metadata = JSON.parse(blobItem.metadata);
+                let api = new CabinetApi(this);
+                metadata = await api.downloadFileMetadata(fileId);
             } catch (e) {
-                console.error('setIsCurrentVersion: Failed to parse metadata JSON', e);
+                console.warn(
+                    'setIsCurrentVersion: Failed to load/parse metadata for fileId',
+                    fileId,
+                    e,
+                );
                 return;
             }
 
@@ -2266,20 +2264,20 @@ export class CabinetFile extends ScopedElementsMixin(
 
                 console.log('markOtherVersionsObsoleteInBlob: versionFileId', versionFileId);
 
-                const url = await this.createBlobDownloadUrl(versionFileId);
-                console.log('markOtherVersionsObsoleteInBlob url', url);
-                let blobItem = await this.loadBlobItem(url);
-                console.log('markOtherVersionsObsoleteInBlob blobItem', blobItem);
-
-                if (!blobItem) {
+                let obsoleteMetadata;
+                try {
+                    let api = new CabinetApi(this);
+                    obsoleteMetadata = await api.downloadFileMetadata(versionFileId);
+                } catch (e) {
                     console.warn(
-                        'markOtherVersionsObsoleteInBlob: No blob item found for fileId',
+                        'markOtherVersionsObsoleteInBlob: No metadata found for fileId',
                         versionFileId,
+                        e,
                     );
                     return;
                 }
 
-                console.log('markOtherVersionsObsoleteInBlob: blobItem', blobItem);
+                console.log('markOtherVersionsObsoleteInBlob: metadata', obsoleteMetadata);
 
                 try {
                     // Create a PATCH URL for this specific version
@@ -2287,13 +2285,7 @@ export class CabinetFile extends ScopedElementsMixin(
                         CabinetFile.BlobUrlTypes.UPLOAD,
                         versionFileId,
                     );
-                    // const patchUrl = await this.createBlobUploadUrl();
 
-                    // Prepare metadata to mark as obsolete
-                    // const obsoleteMetadata = {
-                    //     isCurrent: false
-                    // };
-                    let obsoleteMetadata = JSON.parse(blobItem.metadata);
                     obsoleteMetadata.isCurrent = false;
                     obsoleteMetadata.lastModifiedBy = this.auth['user-id'];
 
