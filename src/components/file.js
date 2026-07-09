@@ -74,7 +74,6 @@ export class CabinetFile extends ScopedElementsMixin(
 
     static BlobUrlTypes = {
         UPLOAD: 'upload',
-        DELETE: 'delete',
     };
 
     static Status = {
@@ -321,24 +320,12 @@ export class CabinetFile extends ScopedElementsMixin(
                 const type = this.objectTypes[this.objectType].getBlobType();
                 return api.createBlobUploadUrl(identifier, type, extraParams);
             }
-            case CabinetFile.BlobUrlTypes.DELETE:
-                return api.createBlobDeleteUrl(identifier);
         }
         return '';
     }
 
     getFileHitDataBlobId() {
         return this.fileHitData?.file?.base?.fileId || '';
-    }
-
-    /**
-     * @param fileId
-     * @param undelete Whether to undelete the file
-     * @returns {Promise<string>}
-     */
-    async createBlobDeleteUrl(fileId, undelete = false) {
-        let api = new CabinetApi(this);
-        return api.createBlobDeleteUrl(fileId, undelete);
     }
 
     /**

@@ -164,19 +164,6 @@ export class CabinetApi {
     }
 
     /**
-     * Create a blob delete URL
-     * @param {string} fileId - The file identifier
-     * @param {boolean} undelete - Whether to undelete the file
-     * @returns {Promise<string>} - The blob URL for deletion
-     */
-    async createBlobDeleteUrl(fileId, undelete = false) {
-        return this._createBlobUrl('PATCH', {
-            identifier: fileId,
-            extraParams: {deleteIn: undelete ? 'null' : 'P7D'},
-        });
-    }
-
-    /**
      * Delete or undelete a file by ID (schedule for deletion)
      * @param {string} fileId - The file identifier
      * @param {boolean} undelete - Whether to undelete the file
@@ -185,7 +172,10 @@ export class CabinetApi {
     async doFileDeletionForFileId(fileId, undelete = false) {
         console.log('doFileDeletionForFileId fileId', fileId);
 
-        const deleteUrl = await this.createBlobDeleteUrl(fileId, undelete);
+        const deleteUrl = await this._createBlobUrl('PATCH', {
+            identifier: fileId,
+            extraParams: {deleteIn: undelete ? 'null' : 'P7D'},
+        });
         console.log('doFileDeletionForFileId deleteUrl', deleteUrl);
 
         const options = {
