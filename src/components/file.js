@@ -18,14 +18,14 @@ import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {pascalToKebab} from '../utils';
 import {classMap} from 'lit/directives/class-map.js';
 import {formatDate} from '../utils.js';
-import {TypesenseService} from '../typesense.js';
+import {CabinetDocumentStore, PollTimeoutError} from '../document-store.js';
 import {
     scopedElements as modalNotificationScopedElements,
     sendModalNotification,
 } from './modal-notification.js';
 import {createUUID} from '@dbp-toolkit/common/utils';
 import {PdfValidationErrorList} from './pdf-validation-error-list.js';
-import {CabinetApi, ApiError} from '../api.js';
+import {ApiError} from '../api.js';
 import {createInstance} from '../i18n.js';
 
 const getFieldsetCSS = () => {
@@ -93,12 +93,8 @@ export class CabinetFile extends ScopedElementsMixin(
         this.resetState();
     }
 
-    _getTypesenseService() {
-        let serverConfig = TypesenseService.getServerConfigForEntryPointUrl(
-            this.entryPointUrl,
-            this.auth.token,
-        );
-        return new TypesenseService(serverConfig);
+    _getDocumentStore() {
+        return new CabinetDocumentStore(this);
     }
 
     /**
@@ -189,21 +185,76 @@ export class CabinetFile extends ScopedElementsMixin(
         console.log('storeDocumentToBlob fileData', fileData);
         const groupId = this.fileHitData?.file?.base?.groupId;
         const isCurrent = this.fileHitData?.base?.isCurrent ?? true;
-        let obsoleteBlobIds = [];
+        let syncTimedOut = false;
 
         if (isCurrent) {
-            // Mark all other versions as obsolete in Blob
-            obsoleteBlobIds = await this.markOtherVersionsObsoleteInBlob(
-                groupId,
-                fileData.identifier,
-            );
+            try {
+                // Mark all other versions as obsolete in Blob (waits for Typesense sync)
+                await this._getDocumentStore().markOtherVersionsObsolete(
+                    groupId,
+                    fileData.identifier,
+                    this.auth['user-id'],
+                );
+            } catch (error) {
+                if (!(error instanceof PollTimeoutError)) {
+                    throw error;
+                }
+                // Non-fatal: the patches succeeded, only the index lagged.
+                syncTimedOut = true;
+            }
         }
 
-        console.log('storeDocumentToBlob obsoleteBlobIds', obsoleteBlobIds);
-
         if (fileData.identifier) {
+            // The current fileHitData at the time of the call, captured so the
+            // propagation predicate compares against a stable value.
+            const previousModifiedTimestamp = this.fileHitData?.file?.base?.modifiedTimestamp;
+
+            // The document has propagated once it was found and we were in
+            // ADD/NEW_VERSION/EDIT mode or its modified timestamp is newer than
+            // what we had before.
+            const hasPropagated = (item) =>
+                this.mode === CabinetFile.Modes.ADD ||
+                this.mode === CabinetFile.Modes.NEW_VERSION ||
+                this.mode === CabinetFile.Modes.EDIT ||
+                !previousModifiedTimestamp ||
+                previousModifiedTimestamp < item.file.base.modifiedTimestamp;
+
             // Try to fetch the document from Typesense again and again until it is found
-            await this.fetchFileDocumentFromTypesense(fileData.identifier);
+            let item;
+            try {
+                item = await this._getDocumentStore().pollForDocumentByBlobId(
+                    fileData.identifier,
+                    hasPropagated,
+                );
+            } catch (error) {
+                this.documentModalNotification(
+                    this._i18n.t('cabinet-file.notification-title-fetch-failed'),
+                    this._i18n.t('cabinet-file.notification-body-fetch-failed'),
+                    'danger',
+                );
+
+                if (error instanceof PollTimeoutError) {
+                    // We polled but the document never showed up in time.
+                    const form = this.formRef.value;
+                    // Enable the save button again in the form
+                    form.enableSaveButton();
+                } else {
+                    // A real fetch error (something other than "not found").
+                    this.state = CabinetFile.States.LOADING_FILE_FAILED;
+
+                    // The save button will still be disabled and has a spinner, enabling it
+                    // again doesn't make a lot of sense, because the document was already
+                    // stored to Blob and we are in a failed state
+                    // TODO: Is there something else we should do here?
+                }
+
+                return;
+            }
+
+            this.fileHitData = item;
+            this.fileHitDataBackup = this.fileHitData;
+            this.mode = CabinetFile.Modes.VIEW;
+            await this.updateVersions();
 
             this.documentModalNotification(
                 this._i18n.t('cabinet-file.notification-title-stored'),
@@ -211,11 +262,11 @@ export class CabinetFile extends ScopedElementsMixin(
                 'success',
             );
 
-            if (isCurrent) {
-                // Wait until all versions from obsoleteBlobIds are updated to have isCurrent set the false in Typesense
-                await this.waitForUpdatedInTypesense(
-                    obsoleteBlobIds,
-                    (item) => item.base?.isCurrent === false,
+            if (isCurrent && syncTimedOut) {
+                this.documentModalNotification(
+                    this._i18n.t('cabinet-file.notification-title-versions-sync-warning'),
+                    this._i18n.t('cabinet-file.notification-body-versions-sync-warning'),
+                    'warning',
                 );
             }
 
@@ -226,69 +277,6 @@ export class CabinetFile extends ScopedElementsMixin(
                 true,
             );
         }
-    }
-
-    async fetchFileDocumentFromTypesense(fileId, increment = 0) {
-        // Stop after 10 attempts
-        if (increment >= 10) {
-            this.documentModalNotification(
-                this._i18n.t('cabinet-file.notification-title-fetch-failed'),
-                this._i18n.t('cabinet-file.notification-body-fetch-failed'),
-                'danger',
-            );
-
-            const form = this.formRef.value;
-            // Enable the save button again in the form
-            form.enableSaveButton();
-
-            return;
-        }
-
-        try {
-            // Could throw an exception if there was another error than 404
-            const item = await this._getTypesenseService().fetchFileDocumentByBlobId(fileId);
-
-            // If the document was found, and we were in ADD mode or the item was already updated in Typesense
-            // set the hit data and switch to view mode
-            if (
-                item !== null &&
-                (this.mode === CabinetFile.Modes.ADD ||
-                    this.mode === CabinetFile.Modes.NEW_VERSION ||
-                    this.mode === CabinetFile.Modes.EDIT ||
-                    !this.fileHitData?.file?.base?.modifiedTimestamp ||
-                    this.fileHitData.file.base.modifiedTimestamp < item.file.base.modifiedTimestamp)
-            ) {
-                console.log('fetchFileDocumentFromTypesense this.fileHitData', this.fileHitData);
-                console.log('fetchFileDocumentFromTypesense item', item);
-
-                this.fileHitData = item;
-                this.fileHitDataBackup = this.fileHitData;
-                this.mode = CabinetFile.Modes.VIEW;
-                await this.updateVersions();
-
-                return;
-            }
-            // eslint-disable-next-line no-unused-vars
-        } catch (error) {
-            this.documentModalNotification(
-                this._i18n.t('cabinet-file.notification-title-fetch-failed'),
-                this._i18n.t('cabinet-file.notification-body-fetch-failed'),
-                'danger',
-            );
-            this.state = CabinetFile.States.LOADING_FILE_FAILED;
-
-            // The save button will still be disabled and has a spinner, enabling it again doesn't
-            // make a lot of sense, because because the document was already stored to Blob and
-            // we are in a failed state
-            // TODO: Is there something else we should do here?
-            return;
-        }
-
-        // First wait for a second
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // Then try another attempt to load the file document from typesense
-        await this.fetchFileDocumentFromTypesense(fileId, increment + 1);
     }
 
     getFileHitDataBlobId() {
@@ -321,17 +309,18 @@ export class CabinetFile extends ScopedElementsMixin(
         // metaData['dateCreated'] = new Date().toISOString().split('T')[0];
         console.log('storeDocumentInBlob metaData', metaData);
 
-        const api = new CabinetApi(this);
         const type = this.objectTypes[this.objectType].getBlobType();
         // Only upload the file data again if it actually changed.
         const file = this.isFileDirty ? this.documentFile : null;
 
         let data;
         try {
-            data =
-                blobId === ''
-                    ? await api.createFile({type, metadata: metaData, file})
-                    : await api.updateFile(blobId, {type, metadata: metaData, file});
+            data = await this._getDocumentStore().saveDocument({
+                blobId,
+                type,
+                metadata: metaData,
+                file,
+            });
         } catch (error) {
             if (!(error instanceof ApiError)) {
                 throw error;
@@ -513,11 +502,6 @@ export class CabinetFile extends ScopedElementsMixin(
         await this.openDocumentAddDialog();
     }
 
-    async downloadFileFromBlob(fileId) {
-        let api = new CabinetApi(this);
-        return api.downloadFileFromBlob(fileId);
-    }
-
     /**
      * Since we are loading the document from typesense we don't need a hit object
      * @param id
@@ -528,7 +512,7 @@ export class CabinetFile extends ScopedElementsMixin(
         if (this.mode == CabinetFile.Modes.VIEW && id === this.fileHitData?.id) {
             return;
         }
-        let hit = await this._getTypesenseService().fetchItem(id);
+        let hit = await this._getDocumentStore().fetchItem(id);
         if (hit !== null) {
             return this.openViewDialogWithFileHit(hit);
         }
@@ -606,7 +590,9 @@ export class CabinetFile extends ScopedElementsMixin(
         if (hit.file) {
             try {
                 // This could throw an exception if the file was deleted in the meantime
-                const file = await this.downloadFileFromBlob(this.fileHitData.file.base.fileId);
+                const file = await this._getDocumentStore().downloadFile(
+                    this.fileHitData.file.base.fileId,
+                );
                 console.log('openDialogWithHit file', file);
                 this.state = CabinetFile.States.FILE_LOADED;
 
@@ -658,86 +644,40 @@ export class CabinetFile extends ScopedElementsMixin(
             return;
         }
 
+        const i18n = this._i18n;
+
+        let document;
         try {
-            // Load current metadata
-            let metadata;
-            try {
-                let api = new CabinetApi(this);
-                metadata = await api.downloadFileMetadata(fileId);
-            } catch (e) {
-                console.warn(
-                    'setIsCurrentVersion: Failed to load/parse metadata for fileId',
-                    fileId,
-                    e,
-                );
-                return;
-            }
-
-            const i18n = this._i18n;
-
-            if (metadata.isCurrent === enable) {
-                console.log('setIsCurrentVersion: isCurrent already', enable);
-                this.documentModalNotification(
-                    i18n.t('info'),
-                    enable
-                        ? i18n.t('cabinet-file.notification-body-version-already-current')
-                        : i18n.t('cabinet-file.notification-body-version-already-obsolete'),
-                    'info',
-                );
-                return;
-            }
-
-            metadata.isCurrent = enable;
-            metadata.lastModifiedBy = this.auth['user-id'];
-
-            // Update the metadata
-            const api = new CabinetApi(this);
-            try {
-                await api.updateFileMetadata(fileId, metadata);
-            } catch (error) {
-                if (!(error instanceof ApiError)) {
-                    throw error;
-                }
-                console.error(
-                    'setIsCurrentVersion: Failed to patch isCurrent',
-                    error.status,
-                    error.statusText,
-                );
-                this.documentModalNotification(
-                    i18n.t('cabinet-file.notification-title-version-update-failed'),
-                    enable
-                        ? i18n.t('cabinet-file.notification-body-version-mark-current-failed')
-                        : i18n.t('cabinet-file.notification-body-version-mark-obsolete-failed'),
-                    'danger',
-                );
-                return;
-            }
-
-            // Refresh from Typesense (will also wait for obsolete updates if needed)
-            try {
-                await this.fetchFileDocumentFromTypesense(fileId);
-                // await this.updateVersions();
-            } catch (e) {
-                console.warn('setIsCurrentVersion: Typesense refresh issue', e);
-            }
-
-            this.documentModalNotification(
-                i18n.t('cabinet-file.notification-title-version-updated'),
-                enable
-                    ? i18n.t('cabinet-file.notification-body-version-marked-current')
-                    : i18n.t('cabinet-file.notification-body-version-marked-obsolete'),
-                'success',
+            document = await this._getDocumentStore().setVersionCurrent(
+                fileId,
+                enable,
+                this.auth['user-id'],
             );
         } catch (error) {
-            console.error('setIsCurrentVersion: Unexpected error', error);
+            console.error('setIsCurrentVersion: Failed to update version', error);
             this.documentModalNotification(
-                this._i18n.t('cabinet-file.notification-title-version-update-failed'),
+                i18n.t('cabinet-file.notification-title-version-update-failed'),
                 enable
-                    ? this._i18n.t('cabinet-file.notification-body-version-mark-current-error')
-                    : this._i18n.t('cabinet-file.notification-body-version-mark-obsolete-error'),
+                    ? i18n.t('cabinet-file.notification-body-version-mark-current-failed')
+                    : i18n.t('cabinet-file.notification-body-version-mark-obsolete-failed'),
                 'danger',
             );
+            return;
         }
+
+        // Adopt the propagated document as the current state.
+        this.fileHitData = document;
+        this.fileHitDataBackup = this.fileHitData;
+        this.mode = CabinetFile.Modes.VIEW;
+        await this.updateVersions();
+
+        this.documentModalNotification(
+            i18n.t('cabinet-file.notification-title-version-updated'),
+            enable
+                ? i18n.t('cabinet-file.notification-body-version-marked-current')
+                : i18n.t('cabinet-file.notification-body-version-marked-obsolete'),
+            'success',
+        );
     }
 
     /**
@@ -835,10 +775,10 @@ export class CabinetFile extends ScopedElementsMixin(
     async _setFileDeletion(fileId, undelete = false) {
         console.log('_setFileDeletion fileId', fileId);
 
-        let api = new CabinetApi(this);
+        const store = this._getDocumentStore();
 
         try {
-            return undelete ? await api.restoreFile(fileId) : await api.softDeleteFile(fileId);
+            return undelete ? await store.restore(fileId) : await store.softDelete(fileId);
         } catch (error) {
             if (undelete) {
                 this.documentModalNotification(
@@ -1376,11 +1316,9 @@ export class CabinetFile extends ScopedElementsMixin(
         try {
             // Could throw an exception if there was another error than 404
             versions = [
-                ...(await this._getTypesenseService().fetchFileDocumentsByGroupId(
-                    groupId,
-                    false,
-                    this.cabinetConfig.getSortSpec(this.lang),
-                )),
+                ...(await this._getDocumentStore().fetchVersions(groupId, {
+                    sortSpec: this.cabinetConfig.getSortSpec(this.lang),
+                })),
             ];
         } catch (error) {
             console.error(error);
@@ -1400,7 +1338,7 @@ export class CabinetFile extends ScopedElementsMixin(
 
     async updateCurrent() {
         if (this.fileHitData !== null) {
-            this.fileHitData = await this._getTypesenseService().fetchItem(this.fileHitData.id);
+            this.fileHitData = await this._getDocumentStore().fetchItem(this.fileHitData.id);
         }
     }
 
@@ -2161,203 +2099,26 @@ export class CabinetFile extends ScopedElementsMixin(
         await this.openReplacePdfDialog();
     }
 
-    async markOtherVersionsObsoleteInBlob(groupId, currentIdentifier) {
-        if (!groupId) {
-            console.warn('markOtherVersionsObsoleteInBlob: No groupId provided');
-            return [];
-        }
-
-        try {
-            // Fetch all current versions in the group from Typesense
-            const versions = await this._getTypesenseService().fetchFileDocumentsByGroupId(
-                groupId,
-                true,
-            );
-
-            // Filter out the current version that was just stored
-            const otherVersions = versions.filter(
-                (version) => version.file?.base?.fileId !== currentIdentifier,
-            );
-
-            if (otherVersions.length === 0) {
-                console.log(
-                    'markOtherVersionsObsoleteInBlob: No other versions to mark as obsolete',
-                );
-                return [];
-            }
-
-            console.log(
-                `markOtherVersionsObsoleteInBlob: Marking ${otherVersions.length} versions as obsolete for group ${groupId}`,
-            );
-
-            let updatedBlobIds = [];
-
-            // Mark each other version as obsolete
-            const updatePromises = otherVersions.map(async (version) => {
-                console.log('markOtherVersionsObsoleteInBlob: version', version);
-                const versionFileId = version.file?.base?.fileId;
-                if (!versionFileId) {
-                    console.warn('markOtherVersionsObsoleteInBlob: Version has no fileId', version);
-                    return;
-                }
-
-                console.log('markOtherVersionsObsoleteInBlob: versionFileId', versionFileId);
-
-                let obsoleteMetadata;
-                try {
-                    let api = new CabinetApi(this);
-                    obsoleteMetadata = await api.downloadFileMetadata(versionFileId);
-                } catch (e) {
-                    console.warn(
-                        'markOtherVersionsObsoleteInBlob: No metadata found for fileId',
-                        versionFileId,
-                        e,
-                    );
-                    return;
-                }
-
-                console.log('markOtherVersionsObsoleteInBlob: metadata', obsoleteMetadata);
-
-                try {
-                    obsoleteMetadata.isCurrent = false;
-                    obsoleteMetadata.lastModifiedBy = this.auth['user-id'];
-
-                    console.log(
-                        'markOtherVersionsObsoleteInBlob: obsoleteMetadata',
-                        obsoleteMetadata,
-                    );
-
-                    const api = new CabinetApi(this);
-                    try {
-                        await api.updateFileMetadata(versionFileId, obsoleteMetadata);
-                    } catch (error) {
-                        if (!(error instanceof ApiError)) {
-                            throw error;
-                        }
-                        console.error(
-                            `markOtherVersionsObsoleteInBlob: Failed to mark version ${versionFileId} as obsolete:`,
-                            error.status,
-                            error.statusText,
-                        );
-                        return;
-                    }
-
-                    updatedBlobIds.push(versionFileId);
-
-                    console.log(
-                        `markOtherVersionsObsoleteInBlob: Successfully marked version ${versionFileId} as obsolete`,
-                    );
-                } catch (error) {
-                    console.error(
-                        `markOtherVersionsObsoleteInBlob: Error marking version ${versionFileId} as obsolete:`,
-                        error,
-                    );
-                }
-            });
-
-            // Wait for all updates to complete
-            await Promise.allSettled(updatePromises);
-
-            return updatedBlobIds;
-        } catch (error) {
-            console.error(
-                'markOtherVersionsObsoleteInBlob: Error fetching versions from Typesense:',
-                error,
-            );
-            // Don't throw the error as this is not critical for the main flow
-        }
-    }
-
-    /**
-     * Waits until items identified by ids are updated in Typesense according to the provided check callback
-     * @param {Array<string>} ids - Array of file IDs to check
-     * @param {(item: object) => boolean} isUpdated - Callback that receives the item and returns true if the update happened
-     * @returns {Promise<void>}
-     */
-    async waitForUpdatedInTypesense(ids, isUpdated) {
-        const MAX_ATTEMPTS = 10;
-
-        for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-            // Check each ID to see if it's been updated in Typesense
-            const checkPromises = ids.map(async (fileId) => {
-                try {
-                    const item =
-                        await this._getTypesenseService().fetchFileDocumentByBlobId(fileId);
-
-                    return {fileId, updated: !!item && isUpdated(item) === true};
-                } catch {
-                    return {fileId, updated: false};
-                }
-            });
-
-            const results = await Promise.all(checkPromises);
-            const notUpdatedYet = results.filter((result) => !result.updated);
-
-            // If all versions have been updated, we're done
-            if (notUpdatedYet.length === 0) {
-                return;
-            }
-
-            // Wait for a second before trying again
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-        }
-
-        // Reached max attempts without all versions being updated
-        this.documentModalNotification(
-            this._i18n.t('cabinet-file.notification-title-versions-sync-warning'),
-            this._i18n.t('cabinet-file.notification-body-versions-sync-warning'),
-            'warning',
-        );
-    }
-
     async handleDeleteAllVersions() {
         try {
             // Fetch all versions
             const allVersions = await this.fetchCurrentVersions();
 
-            // Filter out versions that are already marked for deletion
-            const versionsToDelete = allVersions.filter(
-                (version) => !version.base?.isScheduledForDeletion,
-            );
-
-            console.log(
-                `handleDeleteAllVersions: Found ${versionsToDelete.length} versions to delete`,
-            );
-
-            if (versionsToDelete.length === 0) {
+            try {
+                await this._getDocumentStore().deleteAllVersions(allVersions);
+            } catch (error) {
+                if (!(error instanceof PollTimeoutError)) {
+                    throw error;
+                }
+                // Non-fatal: the deletes succeeded, only the index lagged.
+                // Surface the sync warning and stop.
                 this.documentModalNotification(
-                    this._i18n.t('cabinet-file.notification-title-all-versions-already-deleted'),
-                    this._i18n.t('cabinet-file.notification-body-all-versions-already-deleted'),
-                    'info',
+                    this._i18n.t('cabinet-file.notification-title-versions-sync-warning'),
+                    this._i18n.t('cabinet-file.notification-body-versions-sync-warning'),
+                    'warning',
                 );
                 return;
             }
-
-            // Collect fileIds for tracking
-            const deletedFileIds = [];
-
-            // Delete them with softDeleteFile
-            for (const version of versionsToDelete) {
-                const fileId = version.file?.base?.fileId;
-                if (fileId) {
-                    console.log(`handleDeleteAllVersions: Deleting version with fileId: ${fileId}`);
-                    await this.softDeleteFile(fileId);
-                    deletedFileIds.push(fileId);
-                } else {
-                    console.warn(
-                        'handleDeleteAllVersions: Version has no fileId, skipping:',
-                        version,
-                    );
-                }
-            }
-
-            console.log('handleDeleteAllVersions: All versions have been marked for deletion');
-
-            // Wait until all deleted versions are properly updated in Typesense
-            await this.waitForUpdatedInTypesense(
-                deletedFileIds,
-                (item) => item.base?.isScheduledForDeletion === true,
-            );
 
             // Refetch and set current hit data
             await this.updateCurrent();
@@ -2365,9 +2126,7 @@ export class CabinetFile extends ScopedElementsMixin(
             // Show success notification to user
             this.documentModalNotification(
                 this._i18n.t('cabinet-file.notification-title-all-versions-deleted'),
-                this._i18n.t('cabinet-file.notification-body-all-versions-deleted', {
-                    count: versionsToDelete.length,
-                }),
+                this._i18n.t('cabinet-file.notification-body-all-versions-deleted'),
                 'success',
             );
         } catch (error) {

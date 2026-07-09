@@ -1,4 +1,3 @@
-import {TypesenseService} from './typesense.js';
 import {BLOB_PREFIX} from './utils.js';
 
 /**
@@ -292,47 +291,6 @@ export class CabinetApi {
         }
         const data = await response.json();
         return `${data.givenName} ${data.familyName}`;
-    }
-
-    /**
-     * Synchronizes a person's data by triggering a sync operation and polling for updates.
-     * @param {object} hit - The object containing person information.
-     * @param {object} hit.person - The person object to be synchronized.
-     * @param {number} hit.person.syncTimestamp - The current synchronization timestamp of the person.
-     * @param {string} hit.id - The ID of the document associated with the person.
-     * @throws {Error} Throws an error if synchronization fails after the maximum number of retries.
-     * @returns {Promise<object>} A promise that resolves to the updated document after synchronization.
-     */
-    async syncTypesenseDocument(hit) {
-        let syncTimestamp = hit.person.syncTimestamp;
-        let documentId = hit.id;
-
-        await this.triggerPersonSync(documentId);
-
-        let serverConfig = TypesenseService.getServerConfigForEntryPointUrl(
-            this._element.entryPointUrl,
-            this._element.auth.token,
-        );
-        let typesense = new TypesenseService(serverConfig);
-
-        let maxRetries = 5;
-        let retryCount = 0;
-        let document;
-        do {
-            document = await typesense.fetchItem(documentId);
-            if (document.person.syncTimestamp !== syncTimestamp) {
-                break;
-            }
-            let delay = 1 + retryCount * 0.5;
-            await new Promise((resolve) => setTimeout(resolve, delay));
-            retryCount++;
-        } while (retryCount < maxRetries);
-
-        if (retryCount === maxRetries) {
-            throw new Error(`Failed to sync person after ${maxRetries} attempts`);
-        }
-
-        return document;
     }
 
     /**

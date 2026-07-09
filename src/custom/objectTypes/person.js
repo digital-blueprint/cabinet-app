@@ -12,7 +12,7 @@ import {MiniSpinner, Icon, sendNotification} from '@dbp-toolkit/common';
 import {Notification} from '@dbp-toolkit/notification';
 import {getPersonHit} from './schema.js';
 import {generateExportPersonPdf} from './export.js';
-import {CabinetApi} from '../../api.js';
+import {CabinetDocumentStore} from '../../document-store.js';
 import {HitSelectionType, sendHitSelectionEvent} from '../../hit-selection.js';
 import FileSaver from 'file-saver';
 
@@ -842,8 +842,8 @@ class CabinetViewElement extends BaseViewElement {
     async _onSync() {
         this._syncing = true;
         try {
-            let api = new CabinetApi(this);
-            this.data = await api.syncTypesenseDocument(this.data);
+            let store = new CabinetDocumentStore(this);
+            this.data = await store.syncPersonDocument(this.data);
             sendNotification({
                 summary: this._i18nCustom.t('custom:person.sync.notification.success.title'),
                 body: this._i18nCustom.t('custom:person.sync.notification.success.body'),
