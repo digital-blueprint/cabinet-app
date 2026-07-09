@@ -230,22 +230,12 @@ export class CabinetApi {
     }
 
     /**
-     * Create a blob GET URL for a file
-     * @param {string} identifier - The file identifier
-     * @param {boolean} includeData - Whether to include file data in the response
-     * @returns {Promise<string>} - The blob download URL
-     */
-    async createBlobGetUrl(identifier, includeData = false) {
-        return this._createBlobUrl('GET', {identifier, includeData});
-    }
-
-    /**
      * Download a file from blob storage
      * @param {string} fileId - The file identifier
      * @returns {Promise<File>} - The downloaded file
      */
     async downloadFileFromBlob(fileId) {
-        const url = await this.createBlobGetUrl(fileId, true);
+        const url = await this._createBlobUrl('GET', {identifier: fileId, includeData: true});
         let blobItem = await this._loadBlobItem(url);
 
         if (!blobItem.contentUrl) {
@@ -275,7 +265,7 @@ export class CabinetApi {
      * @returns {Promise<object>} - The parsed metadata object
      */
     async downloadFileMetadata(fileId) {
-        const url = await this.createBlobGetUrl(fileId);
+        const url = await this._createBlobUrl('GET', {identifier: fileId});
         const blobItem = await this._loadBlobItem(url);
         if (!blobItem || !blobItem.metadata) {
             throw new Error(`No metadata in blob response for ${fileId}`);

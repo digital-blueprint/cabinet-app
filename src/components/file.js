@@ -74,7 +74,6 @@ export class CabinetFile extends ScopedElementsMixin(
 
     static BlobUrlTypes = {
         UPLOAD: 'upload',
-        DOWNLOAD: 'download',
         DELETE: 'delete',
     };
 
@@ -309,11 +308,10 @@ export class CabinetFile extends ScopedElementsMixin(
     /**
      * @param blobUrlType
      * @param identifier
-     * @param includeData Whether to include file data in the response
      * @param extraParams
      * @returns {Promise<string>}
      */
-    async createBlobUrl(blobUrlType, identifier = null, includeData = false, extraParams = {}) {
+    async createBlobUrl(blobUrlType, identifier = null, extraParams = {}) {
         let api = new CabinetApi(this);
         switch (blobUrlType) {
             case CabinetFile.BlobUrlTypes.UPLOAD: {
@@ -323,8 +321,6 @@ export class CabinetFile extends ScopedElementsMixin(
                 const type = this.objectTypes[this.objectType].getBlobType();
                 return api.createBlobUploadUrl(identifier, type, extraParams);
             }
-            case CabinetFile.BlobUrlTypes.DOWNLOAD:
-                return api.createBlobGetUrl(identifier, includeData);
             case CabinetFile.BlobUrlTypes.DELETE:
                 return api.createBlobDeleteUrl(identifier);
         }
@@ -333,16 +329,6 @@ export class CabinetFile extends ScopedElementsMixin(
 
     getFileHitDataBlobId() {
         return this.fileHitData?.file?.base?.fileId || '';
-    }
-
-    /**
-     * @param identifier
-     * @param includeData Whether to include file data in the response
-     * @returns {Promise<string>}
-     */
-    async createBlobDownloadUrl(identifier, includeData = false) {
-        let api = new CabinetApi(this);
-        return api.createBlobGetUrl(identifier, includeData);
     }
 
     /**
