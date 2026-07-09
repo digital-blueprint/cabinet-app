@@ -741,7 +741,7 @@ export class CabinetFile extends ScopedElementsMixin(
     async handleFileDeletion(undelete = false) {
         const i18n = this._i18n;
         const fileId = this.fileHitData.file.base.fileId;
-        const data = await this.doFileDeletionForFileId(fileId, undelete);
+        const data = undelete ? await this.restoreFile(fileId) : await this.softDeleteFile(fileId);
         let success = false;
 
         if (undelete) {
@@ -807,13 +807,31 @@ export class CabinetFile extends ScopedElementsMixin(
         }
     }
 
-    async doFileDeletionForFileId(fileId, undelete = false) {
-        console.log('doFileDeletionForFileId fileId', fileId);
+    /**
+     * Soft-delete a file by ID, showing an error notification on failure
+     * @param {string} fileId - The file identifier
+     * @returns {Promise<object>} - The response data
+     */
+    async softDeleteFile(fileId) {
+        return this._setFileDeletion(fileId, false);
+    }
+
+    /**
+     * Restore a soft-deleted file by ID, showing an error notification on failure
+     * @param {string} fileId - The file identifier
+     * @returns {Promise<object>} - The response data
+     */
+    async restoreFile(fileId) {
+        return this._setFileDeletion(fileId, true);
+    }
+
+    async _setFileDeletion(fileId, undelete = false) {
+        console.log('_setFileDeletion fileId', fileId);
 
         let api = new CabinetApi(this);
 
         try {
-            return await api.doFileDeletionForFileId(fileId, undelete);
+            return undelete ? await api.restoreFile(fileId) : await api.softDeleteFile(fileId);
         } catch (error) {
             if (undelete) {
                 this.documentModalNotification(
@@ -2307,12 +2325,12 @@ export class CabinetFile extends ScopedElementsMixin(
             // Collect fileIds for tracking
             const deletedFileIds = [];
 
-            // Delete them with doFileDeletionForFileId
+            // Delete them with softDeleteFile
             for (const version of versionsToDelete) {
                 const fileId = version.file?.base?.fileId;
                 if (fileId) {
                     console.log(`handleDeleteAllVersions: Deleting version with fileId: ${fileId}`);
-                    await this.doFileDeletionForFileId(fileId);
+                    await this.softDeleteFile(fileId);
                     deletedFileIds.push(fileId);
                 } else {
                     console.warn(

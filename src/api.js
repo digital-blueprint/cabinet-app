@@ -221,19 +221,34 @@ export class CabinetApi {
     }
 
     /**
-     * Delete or undelete a file by ID (schedule for deletion)
+     * Soft-delete a file by ID (schedule for deletion)
      * @param {string} fileId - The file identifier
-     * @param {boolean} undelete - Whether to undelete the file
      * @returns {Promise<object>} - The response data
      */
-    async doFileDeletionForFileId(fileId, undelete = false) {
-        console.log('doFileDeletionForFileId fileId', fileId);
+    async softDeleteFile(fileId) {
+        return this._setFileDeletion(fileId, false);
+    }
 
+    /**
+     * Restore a previously soft-deleted file by ID (cancel scheduled deletion)
+     * @param {string} fileId - The file identifier
+     * @returns {Promise<object>} - The response data
+     */
+    async restoreFile(fileId) {
+        return this._setFileDeletion(fileId, true);
+    }
+
+    /**
+     * Set the deletion state of a file by ID (schedule for deletion or restore)
+     * @param {string} fileId - The file identifier
+     * @param {boolean} undelete - Whether to restore (undelete) the file
+     * @returns {Promise<object>} - The response data
+     */
+    async _setFileDeletion(fileId, undelete = false) {
         const deleteUrl = await this._createBlobUrl('PATCH', {
             identifier: fileId,
             extraParams: {deleteIn: undelete ? 'null' : 'P7D'},
         });
-        console.log('doFileDeletionForFileId deleteUrl', deleteUrl);
 
         const options = {
             // We are doing soft-delete here, so we need to use PATCH
