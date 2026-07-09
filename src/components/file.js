@@ -355,11 +355,6 @@ export class CabinetFile extends ScopedElementsMixin(
         return api.createBlobDeleteUrl(fileId, undelete);
     }
 
-    async loadBlobItem(url) {
-        let api = new CabinetApi(this);
-        return api.loadBlobItem(url);
-    }
-
     /**
      * Creates or updates a document in the blob storage
      * @param metaData

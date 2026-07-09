@@ -215,7 +215,7 @@ export class CabinetApi {
      * @param {string} url - The blob URL
      * @returns {Promise<object>} - The blob item data
      */
-    async loadBlobItem(url) {
+    async _loadBlobItem(url) {
         const response = await fetch(url, {
             headers: {
                 Authorization: 'Bearer ' + this._element.auth.token,
@@ -246,7 +246,7 @@ export class CabinetApi {
      */
     async downloadFileFromBlob(fileId) {
         const url = await this.createBlobGetUrl(fileId, true);
-        let blobItem = await this.loadBlobItem(url);
+        let blobItem = await this._loadBlobItem(url);
 
         if (!blobItem.contentUrl) {
             throw new Error('No contentUrl in blob response');
@@ -276,7 +276,7 @@ export class CabinetApi {
      */
     async downloadFileMetadata(fileId) {
         const url = await this.createBlobGetUrl(fileId);
-        const blobItem = await this.loadBlobItem(url);
+        const blobItem = await this._loadBlobItem(url);
         if (!blobItem || !blobItem.metadata) {
             throw new Error(`No metadata in blob response for ${fileId}`);
         }
