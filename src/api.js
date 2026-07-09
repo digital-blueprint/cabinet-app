@@ -3,8 +3,9 @@ import {BLOB_PREFIX} from './utils.js';
 /**
  * A blob file resource as returned by the Blob storage API.
  *
- * This is a documentation-only ("dummy") class describing the shape of the
- * JSON object returned by the blob endpoints; it is never instantiated.
+ * This is a documentation-only typedef describing the shape of the JSON object
+ * returned by the blob endpoints.
+ * @typedef {object} BlobFile
  * @property {string} identifier - The file identifier
  * @property {string} fileName - The file name
  * @property {string} prefix - The blob prefix
@@ -17,7 +18,6 @@ import {BLOB_PREFIX} from './utils.js';
  * @property {?string} contentUrl - A URL to download the file content (only
  *   present when includeData was requested)
  */
-class BlobFile {}
 
 /**
  * The result of a person sync operation, as returned by the
@@ -84,7 +84,7 @@ export class ApiError extends Error {
  *
  * This is a documentation-only ("dummy") class describing the base set of
  * fields that the application writes on every save (see
- * `storeDocumentInBlob`) and relies on when reading metadata back. The object
+ * `_storeDocumentToBlob`) and relies on when reading metadata back. The object
  * is technically free-form and may contain additional object-type-specific
  * fields, but these base fields are always expected to be present. It is never
  * instantiated.

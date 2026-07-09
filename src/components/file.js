@@ -179,186 +179,169 @@ export class CabinetFile extends ScopedElementsMixin(
         this.objectTypes = objectTypes;
     }
 
-    async storeDocumentToBlob(formData) {
-        console.log('storeDocumentToBlob formData', formData);
-        const fileData = await this.storeDocumentInBlob(formData);
-        console.log('storeDocumentToBlob fileData', fileData);
-        const groupId = this.fileHitData?.file?.base?.groupId;
-        const isCurrent = this.fileHitData?.base?.isCurrent ?? true;
-        let syncTimedOut = false;
+    async _storeDocumentToBlob(metaData) {
+        // Either a valid existing blob id or null; null means "no blob yet".
+        const blobId = this.fileHitData?.file?.base?.fileId ?? null;
+        console.log('_storeDocumentToBlob', 'blobId', blobId);
+        console.log('_storeDocumentToBlob this.fileHitData', this.fileHitData);
+        console.log('_storeDocumentToBlob this.mode', this.mode);
 
-        if (isCurrent) {
+        // A missing blobId means there is no existing blob yet, so we are adding
+        // a brand new document. Two cases produce this: a fresh "add" (where
+        // fileHitData is null) and a "new version" (where fileHitData is kept so
+        // the new blob reuses the existing groupId). Otherwise fileHitData holds
+        // an existing blob and we are updating it in place.
+        const isNewDocument = blobId === null;
+
+        metaData['@type'] = 'DocumentFile';
+        metaData['fileSource'] = 'blob-cabinetBucket';
+        metaData['objectType'] = this.objectType;
+        // A new document is always current; an update keeps its current flag.
+        metaData['isCurrent'] = isNewDocument || (this.fileHitData?.base?.isCurrent ?? false);
+        metaData['lastModifiedBy'] = this.auth['user-id'];
+        // A fresh add starts a new group; a new version and updates reuse the
+        // existing one.
+        metaData['groupId'] = this.fileHitData?.file?.base?.groupId || createUUID();
+        // metaData['dateCreated'] = new Date().toISOString().split('T')[0];
+        console.log('_storeDocumentToBlob metaData', metaData);
+
+        const type = this.objectTypes[this.objectType].getBlobType();
+        // Only upload the file data again if it actually changed.
+        const file = this.isFileDirty ? this.documentFile : null;
+        const store = this._getDocumentStore();
+
+        // Store the document to Blob and wait until it has propagated into the
+        // Typesense search index. The store owns both the write and the polling.
+        let blob, item;
+        try {
+            if (isNewDocument) {
+                // Add: create a new blob and wait until it shows up in the index.
+                ({blob, item} = await store.addDocument({type, metadata: metaData, file}));
+            } else {
+                // Update: patch the existing blob and wait until the index
+                // reflects a newer modification timestamp than before. Captured
+                // up front so the poll compares against a stable value.
+                const previousModifiedTimestamp = this.fileHitData.file.base.modifiedTimestamp;
+                ({blob, item} = await store.updateDocument(blobId, {
+                    type,
+                    metadata: metaData,
+                    file,
+                    previousModifiedTimestamp,
+                }));
+            }
+        } catch (error) {
+            if (error instanceof ApiError) {
+                // The upload itself failed; show the specific validation UI.
+                this._handleUploadApiError(error);
+                throw error;
+            }
+
+            // Everything else is a failure while polling Typesense for the
+            // stored document to show up in the search index.
+            this.documentModalNotification(
+                this._i18n.t('cabinet-file.notification-title-fetch-failed'),
+                this._i18n.t('cabinet-file.notification-body-fetch-failed'),
+                'danger',
+            );
+
+            if (error instanceof PollTimeoutError) {
+                // The blob was stored but the document never showed up in the
+                // search index in time. Enable the save button again in the form.
+                this.formRef.value.enableSaveButton();
+            } else {
+                // A real fetch error (something other than "not found").
+                // The save button will still be disabled and has a spinner, enabling it
+                // again doesn't make a lot of sense, because the document was already
+                // stored to Blob and we are in a failed state
+                // TODO: Is there something else we should do here?
+                this.state = CabinetFile.States.LOADING_FILE_FAILED;
+            }
+
+            return;
+        }
+
+        console.log('File data', JSON.stringify(blob));
+
+        // If the document is current, mark all other versions as obsolete in
+        // Blob (this also waits for Typesense to sync). Non-fatal: the patches
+        // succeed, only the index may lag.
+        let syncTimedOut = false;
+        if (item.base?.isCurrent) {
             try {
-                // Mark all other versions as obsolete in Blob (waits for Typesense sync)
-                await this._getDocumentStore().markOtherVersionsObsolete(
-                    groupId,
-                    fileData.identifier,
+                await store.markOtherVersionsObsolete(
+                    item.file.base.groupId,
+                    blob.identifier,
                     this.auth['user-id'],
                 );
             } catch (error) {
                 if (!(error instanceof PollTimeoutError)) {
                     throw error;
                 }
-                // Non-fatal: the patches succeeded, only the index lagged.
                 syncTimedOut = true;
             }
         }
 
-        if (fileData.identifier) {
-            // The current fileHitData at the time of the call, captured so the
-            // propagation predicate compares against a stable value.
-            const previousModifiedTimestamp = this.fileHitData?.file?.base?.modifiedTimestamp;
-
-            // The document has propagated once it was found and we were in
-            // ADD/NEW_VERSION/EDIT mode or its modified timestamp is newer than
-            // what we had before.
-            const hasPropagated = (item) =>
-                this.mode === CabinetFile.Modes.ADD ||
-                this.mode === CabinetFile.Modes.NEW_VERSION ||
-                this.mode === CabinetFile.Modes.EDIT ||
-                !previousModifiedTimestamp ||
-                previousModifiedTimestamp < item.file.base.modifiedTimestamp;
-
-            // Try to fetch the document from Typesense again and again until it is found
-            let item;
-            try {
-                item = await this._getDocumentStore().pollForDocumentByBlobId(
-                    fileData.identifier,
-                    hasPropagated,
-                );
-            } catch (error) {
-                this.documentModalNotification(
-                    this._i18n.t('cabinet-file.notification-title-fetch-failed'),
-                    this._i18n.t('cabinet-file.notification-body-fetch-failed'),
-                    'danger',
-                );
-
-                if (error instanceof PollTimeoutError) {
-                    // We polled but the document never showed up in time.
-                    const form = this.formRef.value;
-                    // Enable the save button again in the form
-                    form.enableSaveButton();
-                } else {
-                    // A real fetch error (something other than "not found").
-                    this.state = CabinetFile.States.LOADING_FILE_FAILED;
-
-                    // The save button will still be disabled and has a spinner, enabling it
-                    // again doesn't make a lot of sense, because the document was already
-                    // stored to Blob and we are in a failed state
-                    // TODO: Is there something else we should do here?
-                }
-
-                return;
-            }
-
-            this.fileHitData = item;
-            this.fileHitDataBackup = this.fileHitData;
-            this.mode = CabinetFile.Modes.VIEW;
-            await this.updateVersions();
-
-            this.documentModalNotification(
-                this._i18n.t('cabinet-file.notification-title-stored'),
-                this._i18n.t('cabinet-file.notification-body-stored'),
-                'success',
-            );
-
-            if (isCurrent && syncTimedOut) {
-                this.documentModalNotification(
-                    this._i18n.t('cabinet-file.notification-title-versions-sync-warning'),
-                    this._i18n.t('cabinet-file.notification-body-versions-sync-warning'),
-                    'warning',
-                );
-            }
-
-            // Update URL, especially if a new version was created
-            this.sendSetPropertyEvent(
-                'routing-url',
-                `/document/${encodeURIComponent(this.fileHitData.id)}`,
-                true,
-            );
-        }
-    }
-
-    getFileHitDataBlobId() {
-        return this.fileHitData?.file?.base?.fileId || '';
-    }
-
-    /**
-     * Creates or updates a document in the blob storage
-     * @param metaData
-     * @returns {Promise<any>}
-     */
-    async storeDocumentInBlob(metaData) {
-        const blobId = this.getFileHitDataBlobId();
-        console.log('storeDocumentInBlob', 'blobId', blobId);
-        const groupId = this.fileHitData?.file?.base?.groupId;
-        const isCurrent = this.fileHitData?.base?.isCurrent ?? false;
-        console.log('storeDocumentInBlob this.fileHitData', this.fileHitData);
-        // console.log('storeDocumentInBlob isCurrent', isCurrent);
-        console.log('storeDocumentInBlob this.mode', this.mode);
-
-        metaData['@type'] = 'DocumentFile';
-        metaData['fileSource'] = 'blob-cabinetBucket';
-        metaData['objectType'] = this.objectType;
-        metaData['isCurrent'] =
-            this.mode === CabinetFile.Modes.NEW_VERSION ||
-            this.mode === CabinetFile.Modes.ADD ||
-            isCurrent;
-        metaData['lastModifiedBy'] = this.auth['user-id'];
-        metaData['groupId'] = groupId || createUUID();
-        // metaData['dateCreated'] = new Date().toISOString().split('T')[0];
-        console.log('storeDocumentInBlob metaData', metaData);
-
-        const type = this.objectTypes[this.objectType].getBlobType();
-        // Only upload the file data again if it actually changed.
-        const file = this.isFileDirty ? this.documentFile : null;
-
-        let data;
-        try {
-            data = await this._getDocumentStore().saveDocument({
-                blobId,
-                type,
-                metadata: metaData,
-                file,
-            });
-        } catch (error) {
-            if (!(error instanceof ApiError)) {
-                throw error;
-            }
-
-            // if document is too big
-            if (error.errorId === 'verity:create-report-backend-exception') {
-                this.documentPdfValidationErrorList.value.errors = [error.detail];
-                this.documentPdfValidationErrorList.value.errorSummary = this._i18n.t(
-                    'cabinet-file.document-upload-failed-pdfa-too-big-summary',
-                );
-            }
-            // if document is not in a valid PDF/A format
-            if (error.errorId?.includes('-file-data-file-does-not-validate-against-type')) {
-                this.documentPdfValidationErrorList.value.errors = error.errorDetails;
-            }
-
-            this.uploadFailed = true;
-            if (this.shadowRoot.querySelector('.status-badge')) {
-                this.shadowRoot.querySelector('.status-badge').classList.add('hidden');
-            }
-            this.requestUpdate();
-            throw error;
-        }
-
-        // Check if the documentModalRef modal is still open
+        // Bail out if the modal was closed while the upload was in flight.
         /** @type {Modal} */
         const modal = this.documentModalRef.value;
         if (!modal.isOpen()) {
-            console.log('storeDocumentInBlob modal is not open any more');
-            return {};
+            console.log('_storeDocumentToBlob modal is not open any more');
+            return;
         }
 
-        console.log('File data', JSON.stringify(data));
         this.isFileDirty = false;
         this.dataWasChanged = true;
 
-        return data;
+        this.fileHitData = item;
+        this.fileHitDataBackup = this.fileHitData;
+        this.mode = CabinetFile.Modes.VIEW;
+        await this.updateVersions();
+
+        this.documentModalNotification(
+            this._i18n.t('cabinet-file.notification-title-stored'),
+            this._i18n.t('cabinet-file.notification-body-stored'),
+            'success',
+        );
+
+        if (syncTimedOut) {
+            this.documentModalNotification(
+                this._i18n.t('cabinet-file.notification-title-versions-sync-warning'),
+                this._i18n.t('cabinet-file.notification-body-versions-sync-warning'),
+                'warning',
+            );
+        }
+
+        // Update URL, especially if a new version was created
+        this.sendSetPropertyEvent(
+            'routing-url',
+            `/document/${encodeURIComponent(this.fileHitData.id)}`,
+            true,
+        );
+    }
+
+    /**
+     * Show the appropriate validation UI for an {@link ApiError} raised while
+     * uploading a document to Blob storage.
+     * @param {ApiError} error
+     */
+    _handleUploadApiError(error) {
+        // if document is too big
+        if (error.errorId === 'verity:create-report-backend-exception') {
+            this.documentPdfValidationErrorList.value.errors = [error.detail];
+            this.documentPdfValidationErrorList.value.errorSummary = this._i18n.t(
+                'cabinet-file.document-upload-failed-pdfa-too-big-summary',
+            );
+        }
+        // if document is not in a valid PDF/A format
+        if (error.errorId?.includes('-file-data-file-does-not-validate-against-type')) {
+            this.documentPdfValidationErrorList.value.errors = error.errorDetails;
+        }
+
+        this.uploadFailed = true;
+        if (this.shadowRoot.querySelector('.status-badge')) {
+            this.shadowRoot.querySelector('.status-badge').classList.add('hidden');
+        }
+        this.requestUpdate();
     }
     async scrollDocumentModalToTop() {
         await this.updateComplete;
@@ -391,7 +374,7 @@ export class CabinetFile extends ScopedElementsMixin(
         const data = event.detail;
 
         try {
-            await this.storeDocumentToBlob(data.formData);
+            await this._storeDocumentToBlob(data.formData);
             console.log('handleDocumentAddSave data', data);
         } finally {
             await this.scrollDocumentModalToTop();
@@ -634,16 +617,11 @@ export class CabinetFile extends ScopedElementsMixin(
 
     /**
      * Sets isCurrent to true or false for this version in blob
-     * @param fileId
-     * @param enable
+     * @param {string} fileId - The blob file id
+     * @param {boolean} [enable]
      * @returns {Promise<void>}
      */
     async setIsCurrentVersion(fileId, enable = true) {
-        if (!fileId) {
-            console.error('setIsCurrentVersion: No fileId set');
-            return;
-        }
-
         const i18n = this._i18n;
 
         let document;
@@ -855,7 +833,7 @@ export class CabinetFile extends ScopedElementsMixin(
             action = el.value || el.dataset?.action;
         }
 
-        const fileId = this.getFileHitDataBlobId();
+        const fileId = this.fileHitData?.file?.base?.fileId ?? null;
 
         try {
             switch (action) {
@@ -866,10 +844,12 @@ export class CabinetFile extends ScopedElementsMixin(
                     await this.editFile();
                     break;
                 case 'mark-current':
-                    await this.setIsCurrentVersion(fileId);
-                    break;
                 case 'mark-obsolete':
-                    await this.setIsCurrentVersion(fileId, false);
+                    if (fileId === null) {
+                        console.error('handleFileAction: No fileId set for', action);
+                        break;
+                    }
+                    await this.setIsCurrentVersion(fileId, action === 'mark-current');
                     break;
                 case 'delete':
                     await this.deleteFile();
@@ -2093,7 +2073,9 @@ export class CabinetFile extends ScopedElementsMixin(
 
     async addNewVersion() {
         console.log('addNewVersion');
-        this.fileHitData.file.base.fileId = '';
+        // Drop the existing blob id so this is stored as a brand new blob; the
+        // rest of fileHitData is kept so the new version reuses the groupId.
+        this.fileHitData.file.base.fileId = null;
         // this.fileHitData.file.base.isCurrent = true;
         this.mode = CabinetFile.Modes.NEW_VERSION;
         await this.openReplacePdfDialog();

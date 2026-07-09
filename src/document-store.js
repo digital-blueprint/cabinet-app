@@ -215,22 +215,59 @@ export class CabinetDocumentStore {
     }
 
     /**
-     * Create or update a document in blob storage.
+     * Create a new document in blob storage, then poll Typesense until the new
+     * document shows up in the search index.
      *
-     * When `blobId` is empty a new blob is created, otherwise the existing blob
-     * is updated. Any {@link ApiError} from the upload is propagated unchanged
-     * so callers can react to specific validation errors.
+     * Use this for freshly created blobs (e.g. adding a document or uploading a
+     * new version): there is no prior document to compare against, so the poll
+     * simply waits for the document to exist. Any {@link ApiError} from the
+     * upload is propagated unchanged so callers can react to specific validation
+     * errors, and a {@link PollTimeoutError} is thrown if the index never
+     * catches up.
      * @param {object} options
-     * @param {string} options.blobId - Existing blob id, or '' to create
      * @param {?string} options.type - The blob type (objectType.getBlobType())
      * @param {object} options.metadata - The metadata to store
      * @param {?File} [options.file] - The file to upload (null for metadata-only)
-     * @returns {Promise<object>} - The parsed blob file resource
+     * @returns {Promise<{blob: import('./api.js').BlobFile, item: object}>} - The
+     *   created blob file resource and the propagated Typesense document
+     * @throws {PollTimeoutError} If the index did not catch up in time
      */
-    async saveDocument({blobId, type, metadata, file = null}) {
-        return blobId === ''
-            ? this._api.createFile({type, metadata, file})
-            : this._api.updateFile(blobId, {type, metadata, file});
+    async addDocument({type, metadata, file = null}) {
+        const blob = await this._api.createFile({type, metadata, file});
+        const item = await this.pollForDocumentByBlobId(blob.identifier, () => true);
+        return {blob, item};
+    }
+
+    /**
+     * Update an existing document in blob storage, then poll Typesense until the
+     * change has propagated into the search index.
+     *
+     * Propagation is detected via the document's `modifiedTimestamp`: the poll
+     * resolves once the indexed document is newer than
+     * `previousModifiedTimestamp`. When no previous timestamp is provided (e.g.
+     * it is unknown) the poll resolves as soon as the document is found. Any
+     * {@link ApiError} from the upload is propagated unchanged, and a
+     * {@link PollTimeoutError} is thrown if the index never catches up.
+     * @param {string} blobId - The existing blob id to update
+     * @param {object} options
+     * @param {?string} options.type - The blob type (objectType.getBlobType())
+     * @param {object} options.metadata - The metadata to store
+     * @param {?File} [options.file] - The file to upload (null for metadata-only)
+     * @param {?number} [options.previousModifiedTimestamp] - The
+     *   `modifiedTimestamp` before the update, used as the propagation marker
+     * @returns {Promise<{blob: import('./api.js').BlobFile, item: object}>} - The
+     *   updated blob file resource and the propagated Typesense document
+     * @throws {PollTimeoutError} If the index did not catch up in time
+     */
+    async updateDocument(blobId, {type, metadata, file = null, previousModifiedTimestamp = null}) {
+        const blob = await this._api.updateFile(blobId, {type, metadata, file});
+        const item = await this.pollForDocumentByBlobId(
+            blob.identifier,
+            (doc) =>
+                !previousModifiedTimestamp ||
+                previousModifiedTimestamp < doc.file.base.modifiedTimestamp,
+        );
+        return {blob, item};
     }
 
     /**
