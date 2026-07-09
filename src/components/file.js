@@ -25,7 +25,7 @@ import {
 } from './modal-notification.js';
 import {createUUID} from '@dbp-toolkit/common/utils';
 import {PdfValidationErrorList} from './pdf-validation-error-list.js';
-import {CabinetApi} from '../api.js';
+import {CabinetApi, ApiError} from '../api.js';
 import {createInstance} from '../i18n.js';
 
 const getFieldsetCSS = () => {
@@ -326,23 +326,27 @@ export class CabinetFile extends ScopedElementsMixin(
         // Only upload the file data again if it actually changed.
         const file = this.isFileDirty ? this.documentFile : null;
 
-        let response =
-            blobId === ''
-                ? await api.createFile({type, metadata: metaData, file})
-                : await api.updateFile(blobId, {type, metadata: metaData, file});
-        if (!response.ok) {
-            let json = await response.json();
+        let data;
+        try {
+            data =
+                blobId === ''
+                    ? await api.createFile({type, metadata: metaData, file})
+                    : await api.updateFile(blobId, {type, metadata: metaData, file});
+        } catch (error) {
+            if (!(error instanceof ApiError)) {
+                throw error;
+            }
 
             // if document is too big
-            if (json['relay:errorId'] === 'verity:create-report-backend-exception') {
-                this.documentPdfValidationErrorList.value.errors = [json['detail']];
+            if (error.errorId === 'verity:create-report-backend-exception') {
+                this.documentPdfValidationErrorList.value.errors = [error.detail];
                 this.documentPdfValidationErrorList.value.errorSummary = this._i18n.t(
                     'cabinet-file.document-upload-failed-pdfa-too-big-summary',
                 );
             }
             // if document is not in a valid PDF/A format
-            if (json['relay:errorId'].includes('-file-data-file-does-not-validate-against-type')) {
-                this.documentPdfValidationErrorList.value.errors = json['relay:errorDetails'];
+            if (error.errorId?.includes('-file-data-file-does-not-validate-against-type')) {
+                this.documentPdfValidationErrorList.value.errors = error.errorDetails;
             }
 
             this.uploadFailed = true;
@@ -350,7 +354,7 @@ export class CabinetFile extends ScopedElementsMixin(
                 this.shadowRoot.querySelector('.status-badge').classList.add('hidden');
             }
             this.requestUpdate();
-            throw response;
+            throw error;
         }
 
         // Check if the documentModalRef modal is still open
@@ -361,7 +365,6 @@ export class CabinetFile extends ScopedElementsMixin(
             return {};
         }
 
-        const data = await response.json();
         console.log('File data', JSON.stringify(data));
         this.isFileDirty = false;
         this.dataWasChanged = true;
@@ -689,12 +692,16 @@ export class CabinetFile extends ScopedElementsMixin(
 
             // Update the metadata
             const api = new CabinetApi(this);
-            const response = await api.updateFileMetadata(fileId, metadata);
-            if (!response.ok) {
+            try {
+                await api.updateFileMetadata(fileId, metadata);
+            } catch (error) {
+                if (!(error instanceof ApiError)) {
+                    throw error;
+                }
                 console.error(
                     'setIsCurrentVersion: Failed to patch isCurrent',
-                    response.status,
-                    response.statusText,
+                    error.status,
+                    error.statusText,
                 );
                 this.documentModalNotification(
                     i18n.t('cabinet-file.notification-title-version-update-failed'),
@@ -2221,12 +2228,16 @@ export class CabinetFile extends ScopedElementsMixin(
                     );
 
                     const api = new CabinetApi(this);
-                    const response = await api.updateFileMetadata(versionFileId, obsoleteMetadata);
-                    if (!response.ok) {
+                    try {
+                        await api.updateFileMetadata(versionFileId, obsoleteMetadata);
+                    } catch (error) {
+                        if (!(error instanceof ApiError)) {
+                            throw error;
+                        }
                         console.error(
                             `markOtherVersionsObsoleteInBlob: Failed to mark version ${versionFileId} as obsolete:`,
-                            response.status,
-                            response.statusText,
+                            error.status,
+                            error.statusText,
                         );
                         return;
                     }

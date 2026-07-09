@@ -33,6 +33,54 @@ class BlobFile {}
 class CabinetSyncPersonAction {}
 
 /**
+ * Error thrown when an API request fails.
+ *
+ * Carries the HTTP status and the parsed RFC 7807 Problem Details body,
+ * unpacking the standard (`title`, `detail`) and Relay-specific
+ * (`relay:errorId`, `relay:errorDetails`) fields into named members so callers
+ * can react to specific error conditions without having to re-read the
+ * response.
+ */
+export class ApiError extends Error {
+    /**
+     * @param {number} status
+     * @param {string} statusText
+     * @param {object} body
+     */
+    constructor(status, statusText, body) {
+        super(`[${status}] ${body.title ?? statusText} - ${body.detail}`);
+
+        // Generic
+        this.name = 'ApiError';
+        /** @member {number} */
+        this.status = status;
+        /** @member {string} */
+        this.statusText = statusText;
+
+        // Problem Details
+        /** @member {string} */
+        this.detail = body.detail;
+        /** @member {string} */
+        this.title = body.title ?? null;
+
+        // Relay-specific
+        /** @member {string|null} */
+        this.errorId = body['relay:errorId'] ?? null;
+        /** @member {object} */
+        this.errorDetails = body['relay:errorDetails'] ?? {};
+    }
+
+    /**
+     * @param {Response} response
+     * @returns {Promise<ApiError>}
+     */
+    static async fromResponse(response) {
+        const body = await response.json();
+        return new ApiError(response.status, response.statusText, body);
+    }
+}
+
+/**
  * The metadata stored alongside a document file in blob storage.
  *
  * This is a documentation-only ("dummy") class describing the base set of
@@ -121,11 +169,16 @@ export class CabinetApi {
 
     /**
      * Send a blob upload request (POST to create, PATCH to update).
+     *
+     * On a non-ok response an {@link ApiError} carrying the status and parsed
+     * Problem Details body is thrown. On success the parsed JSON response is
+     * returned.
      * @param {string} method - 'POST' or 'PATCH'
      * @param {string} uploadUrl - The blob upload URL
      * @param {object} metadata - The metadata object to store
      * @param {?File} [file] - The file to upload (omitted for metadata-only updates)
-     * @returns {Promise<Response>} - The raw fetch response
+     * @returns {Promise<BlobFile>} - The parsed blob file resource
+     * @throws {ApiError} If the upload request fails
      */
     async _sendBlobUpload(method, uploadUrl, metadata, file = null) {
         const formData = new FormData();
@@ -136,25 +189,32 @@ export class CabinetApi {
         }
         formData.append('prefix', BLOB_PREFIX);
 
-        return fetch(uploadUrl, {
+        const response = await fetch(uploadUrl, {
             method,
             headers: {
                 Authorization: 'Bearer ' + this._element.auth.token,
             },
             body: formData,
         });
+
+        if (!response.ok) {
+            throw await ApiError.fromResponse(response);
+        }
+
+        return response.json();
     }
 
     /**
      * Create a new file in blob storage.
      *
-     * The raw fetch Response is returned so callers can implement their own
-     * success/error handling.
+     * On success the parsed blob file resource is returned; on failure a
+     * {@link ApiError} is thrown.
      * @param {object} options
      * @param {?string} [options.type] - The blob type (e.g. objectType.getBlobType())
      * @param {object} [options.metadata] - The metadata object to store
      * @param {?File} [options.file] - The file to upload
-     * @returns {Promise<Response>} - The raw fetch response
+     * @returns {Promise<BlobFile>} - The parsed blob file resource
+     * @throws {ApiError} If the upload request fails
      */
     async createFile({type = null, metadata = {}, file = null} = {}) {
         const uploadUrl = await this._createBlobUrl('POST', {type});
@@ -164,14 +224,15 @@ export class CabinetApi {
     /**
      * Update an existing file and/or its metadata in blob storage.
      *
-     * The raw fetch Response is returned so callers can implement their own
-     * success/error handling.
+     * On success the parsed blob file resource is returned; on failure a
+     * {@link ApiError} is thrown.
      * @param {string} fileId - The file identifier
      * @param {object} options
      * @param {?string} [options.type] - The blob type (e.g. objectType.getBlobType())
      * @param {object} [options.metadata] - The metadata object to store
      * @param {?File} [options.file] - The file to upload (omitted for metadata-only updates)
-     * @returns {Promise<Response>} - The raw fetch response
+     * @returns {Promise<BlobFile>} - The parsed blob file resource
+     * @throws {ApiError} If the upload request fails
      */
     async updateFile(fileId, {type = null, metadata = {}, file = null} = {}) {
         const uploadUrl = await this._createBlobUrl('PATCH', {
@@ -185,7 +246,8 @@ export class CabinetApi {
      * Update the metadata of an existing file in blob storage.
      * @param {string} fileId - The file identifier
      * @param {object} metadata - The metadata object to store
-     * @returns {Promise<Response>} - The raw fetch response
+     * @returns {Promise<BlobFile>} - The parsed blob file resource
+     * @throws {ApiError} If the upload request fails
      */
     async updateFileMetadata(fileId, metadata) {
         return this.updateFile(fileId, {metadata});
