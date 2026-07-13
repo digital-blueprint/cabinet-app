@@ -3,6 +3,7 @@ import {BaseObject, BaseFormElement, BaseViewElement} from './baseObject.js';
 import {getDocumentHit, getEntranceQualificationApplication} from './schema.js';
 import {createInstance} from '../i18n.js';
 import {DbpStringElement, DbpStringView} from '@dbp-toolkit/form-elements';
+import {DEFAULT_FILE_BASE} from './fileCommon.js';
 import {BaseDocumentHitElement} from './document.js';
 
 export default class extends BaseObject {
@@ -44,6 +45,7 @@ const DEFAULT_ENTRANCE_QUALIFICATION_APPLICATION = {
             previousEducation: '',
             electiveSubject: '',
         },
+        ...DEFAULT_FILE_BASE,
     },
 };
 
@@ -70,7 +72,7 @@ class CabinetFormElement extends BaseFormElement {
         console.log('-- Render CabinetFormElement --');
         console.log('this.data', this._getData());
 
-        let hit = getDocumentHit(this._getData() ?? DEFAULT_ENTRANCE_QUALIFICATION_APPLICATION);
+        let hit = getDocumentHit(this._getData());
         let application = getEntranceQualificationApplication(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/englMasterApplication.schema.json

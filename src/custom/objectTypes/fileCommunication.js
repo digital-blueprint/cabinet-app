@@ -2,6 +2,7 @@ import {html} from 'lit';
 import {BaseObject, BaseFormElement, BaseViewElement} from './baseObject.js';
 import {getDocumentHit, getCommunication} from './schema.js';
 import {createInstance} from '../i18n.js';
+import {DEFAULT_FILE_BASE} from './fileCommon.js';
 import {
     DbpDateTimeElement,
     DbpDateTimeView,
@@ -53,6 +54,7 @@ const DEFAULT_COMMUNICATION = {
             },
             dateCreated: '',
         },
+        ...DEFAULT_FILE_BASE,
     },
 };
 
@@ -79,7 +81,7 @@ class CabinetFormElement extends BaseFormElement {
         console.log('-- Render CabinetFormElement --');
         console.log('render this.data', this.data);
 
-        let hit = getDocumentHit(this._getData() ?? DEFAULT_COMMUNICATION);
+        let hit = getDocumentHit(this._getData());
         let communication = getCommunication(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/communication.schema.json

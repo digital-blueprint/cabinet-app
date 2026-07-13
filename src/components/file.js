@@ -120,6 +120,7 @@ export class CabinetFile extends ScopedElementsMixin(
 
         // Will be used when canceling the form in EDIT mode, when the data was changed via this.fileHitDataCache
         this.fileHitDataBackup = null;
+        this.fileHitDataCache = {};
     }
 
     connectedCallback() {

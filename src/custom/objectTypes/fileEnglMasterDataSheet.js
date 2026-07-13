@@ -2,6 +2,7 @@ import {html} from 'lit';
 import {BaseObject, BaseFormElement, BaseViewElement} from './baseObject.js';
 import {getDocumentHit, getEnglMasterDataSheet} from './schema.js';
 import {createInstance} from '../i18n.js';
+import {DEFAULT_FILE_BASE} from './fileCommon.js';
 import {DbpStringElement, DbpStringView} from '@dbp-toolkit/form-elements';
 import {BaseDocumentHitElement} from './document.js';
 
@@ -48,6 +49,7 @@ const DEFAULT_ENGL_MASTER_DATA_SHEET = {
             previousHigherEducationGrading: '',
             previousHigherEducationCPGA: '',
         },
+        ...DEFAULT_FILE_BASE,
     },
 };
 
@@ -74,7 +76,7 @@ class CabinetFormElement extends BaseFormElement {
         console.log('-- Render CabinetFormElement --');
         console.log('this.data', this._getData());
 
-        let hit = getDocumentHit(this._getData() ?? DEFAULT_ENGL_MASTER_DATA_SHEET);
+        let hit = getDocumentHit(this._getData());
         let datasheet = getEnglMasterDataSheet(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/englMasterApplication.schema.json

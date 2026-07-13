@@ -54,23 +54,20 @@ export function getSemesters() {
     return semesters;
 }
 
-export const DEFAULT_FILE_COMMON = {
-    '@type': 'DocumentFile',
-    file: {
-        base: {
-            additionalType: {
-                key: '',
-                text: '',
-            },
-            groupId: null,
-            comment: null,
-            isPartOf: [],
-            studyField: {
-                key: '',
-                text: '',
-            },
-            subjectOf: null,
-            semester: getDefaultSemester(),
+export const DEFAULT_FILE_BASE = {
+    base: {
+        additionalType: {
+            key: '',
+            text: '',
         },
+        groupId: null,
+        comment: null,
+        isPartOf: [],
+        studyField: {
+            key: '',
+            text: '',
+        },
+        subjectOf: null,
+        semester: getDefaultSemester(),
     },
 };

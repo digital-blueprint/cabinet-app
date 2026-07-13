@@ -2,6 +2,7 @@ import {html} from 'lit';
 import {BaseObject, BaseFormElement, BaseViewElement} from './baseObject.js';
 import {getDocumentHit, getMinimalSchema} from './schema.js';
 import {createInstance} from '../i18n.js';
+import {DEFAULT_FILE_BASE} from './fileCommon.js';
 import {DbpDateElement, DbpDateView} from '@dbp-toolkit/form-elements';
 import {BaseDocumentHitElement} from './document.js';
 
@@ -43,6 +44,7 @@ const DEFAULT_MINIMAL_SCHEMA = {
         'file-cabinet-minimalSchema': {
             dateCreated: null,
         },
+        ...DEFAULT_FILE_BASE,
     },
 };
 
@@ -74,7 +76,7 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
         console.log('render this.data', this.data);
-        let hit = getDocumentHit(this._getData() ?? DEFAULT_MINIMAL_SCHEMA);
+        let hit = getDocumentHit(this._getData());
         let minimalSchema = getMinimalSchema(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/minimalSchema.schema.json

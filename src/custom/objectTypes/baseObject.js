@@ -4,7 +4,7 @@ import '@dbp-toolkit/form-elements';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './formElements';
 import {getDocumentHit} from './schema.js';
-import {getSemesters, DEFAULT_FILE_COMMON} from './fileCommon.js';
+import {getSemesters} from './fileCommon.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {until} from 'lit/directives/until.js';
 import {
@@ -193,11 +193,12 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
             'dbp-mini-spinner': MiniSpinner,
         };
     }
+
     _getData() {
-        // Return the hit if set, otherwise null
+        // Set default if nothing is set
         // FIXME: make this.data nullable
         if (Object.keys(this.data).length === 0) {
-            return null;
+            this.data = structuredClone(this.constructor.getDefaultData());
         }
         return this.data;
     }
@@ -215,7 +216,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
     }
 
     getCommonFormElements() {
-        let hit = getDocumentHit(this._getData() ?? DEFAULT_FILE_COMMON);
+        let hit = getDocumentHit(this._getData());
         let fileCommon = hit.file.base;
         const additionalType = this.additionalType || fileCommon.additionalType.key;
 

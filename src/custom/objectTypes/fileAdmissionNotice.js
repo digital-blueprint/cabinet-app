@@ -2,6 +2,7 @@ import {html} from 'lit';
 import {BaseObject, BaseFormElement, BaseViewElement} from './baseObject.js';
 import {getDocumentHit, getAdmissionNotice} from './schema.js';
 import {createInstance} from '../i18n.js';
+import {DEFAULT_FILE_BASE} from './fileCommon.js';
 import {
     DbpDateElement,
     DbpDateView,
@@ -52,6 +53,7 @@ const DEFAULT_ADMISSION_NOTICE = {
             previousStudy: '',
             decision: '',
         },
+        ...DEFAULT_FILE_BASE,
     },
 };
 
@@ -97,7 +99,7 @@ class CabinetFormElement extends BaseFormElement {
         console.log('-- Render CabinetFormElement --');
         console.log('this.data', this._getData());
 
-        let hit = getDocumentHit(this._getData() ?? DEFAULT_ADMISSION_NOTICE);
+        let hit = getDocumentHit(this._getData());
         let admissionNotice = getAdmissionNotice(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/admissionNotice.schema.json

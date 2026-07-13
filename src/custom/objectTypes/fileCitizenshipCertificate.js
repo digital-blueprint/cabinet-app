@@ -3,6 +3,7 @@ import {BaseFormElement, BaseObject, BaseViewElement} from './baseObject.js';
 import {getDocumentHit, getCitizenshipCertificate} from './schema.js';
 import {createInstance} from '../i18n.js';
 import {getNationalityDisplayName} from './nationalityCodes.js';
+import {DEFAULT_FILE_BASE} from './fileCommon.js';
 import {
     DbpDateElement,
     DbpDateView,
@@ -51,6 +52,7 @@ const DEFAULT_CITIZENSHIP_CERTIFICATE = {
             nationality: '',
             dateCreated: '',
         },
+        ...DEFAULT_FILE_BASE,
     },
 };
 
@@ -78,7 +80,7 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         console.log('-- Render CabinetFormElement --');
 
-        let hit = getDocumentHit(this._getData() ?? DEFAULT_CITIZENSHIP_CERTIFICATE);
+        let hit = getDocumentHit(this._getData());
         let citizenshipCertificate = getCitizenshipCertificate(hit);
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/citizenshipCertificate.schema.json
