@@ -1961,7 +1961,7 @@ export class CabinetFile extends ScopedElementsMixin(
             (version) => version.base?.isCurrent,
         ).length;
 
-        if (this.fileHitData.base.isScheduledForDeletion) {
+        if (this.fileHitData.base?.isScheduledForDeletion) {
             this.addStatusMessageBlock(
                 CabinetFile.Status.DANGER,
                 i18n.t('status-scheduled-for-deletion'),
