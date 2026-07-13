@@ -265,7 +265,6 @@ export class CabinetFile extends ScopedElementsMixin(
         this.isFileDirty = false;
 
         this.fileHitData = item;
-        this.fileHitDataBackup = this.fileHitData;
         this.mode = CabinetFile.Modes.VIEW;
         await this.updateVersions();
 
@@ -350,6 +349,7 @@ export class CabinetFile extends ScopedElementsMixin(
             this.objectType = null;
         } else {
             this.fileHitData = this.fileHitDataBackup;
+            this.fileHitDataCache = {};
             this.objectType = this.fileHitData.objectType;
             this.mode = CabinetFile.Modes.VIEW;
         }
@@ -505,7 +505,6 @@ export class CabinetFile extends ScopedElementsMixin(
             return;
         }
 
-        this.fileHitDataBackup = this.fileHitData;
         console.log('openDialogWithHit hit', hit);
         // Set person from hit
         this.person = hit.person;
@@ -565,6 +564,7 @@ export class CabinetFile extends ScopedElementsMixin(
 
     async editFile() {
         this.mode = CabinetFile.Modes.EDIT;
+        this.fileHitDataBackup = structuredClone(this.fileHitData);
     }
 
     async deleteFile() {
@@ -609,7 +609,6 @@ export class CabinetFile extends ScopedElementsMixin(
 
         // Adopt the propagated document as the current state.
         this.fileHitData = document;
-        this.fileHitDataBackup = this.fileHitData;
         this.mode = CabinetFile.Modes.VIEW;
         await this.updateVersions();
 
