@@ -80,19 +80,6 @@ class CabinetFormElement extends BaseFormElement {
 
         let hit = getDocumentHit(this._getData() ?? DEFAULT_ENGL_MASTER_APPLICATION);
         let application = getEnglMasterApplication(hit);
-        const updateField = (field) => (e) => {
-            const value = e.detail?.value ?? e.target?.value;
-
-            // Support nested fields using dot notation
-            const keys = field.split('.');
-            const lastKey = keys.pop();
-
-            let current = application;
-            for (const key of keys) {
-                current = current[key];
-            }
-            current[lastKey] = value;
-        };
 
         // Schema:  https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/englMasterApplication.schema.json
         // Example: https://gitlab.tugraz.at/dbp/middleware/api/-/blob/main/config/packages/schemas/relay-blob-bundle/cabinet-bucket/examples/englMasterApplication_example.json
@@ -109,7 +96,6 @@ class CabinetFormElement extends BaseFormElement {
                     name="previousEnrolmentInAustria"
                     label=${this._i18nCustom.t('custom:doc-modal-previous-enrolment-in-austria')}
                     .items=${this.getEnrolmentOptions()}
-                    @change=${updateField('previousEnrolmentInAustria')}
                     .value="${application.previousEnrolmentInAustria.toString()}"
                     required></dbp-form-enum-element>
 
