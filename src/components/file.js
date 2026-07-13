@@ -114,7 +114,6 @@ export class CabinetFile extends ScopedElementsMixin(
         this.isFileDirty = false;
         this.statusMessageBlocks = [];
         this.deleteAtDateTime = '';
-        this.allowStateReset = true;
         this.state = CabinetFile.States.NONE;
         this.versions = [];
         this.versionsLoaded = false;
@@ -125,17 +124,6 @@ export class CabinetFile extends ScopedElementsMixin(
 
     connectedCallback() {
         super.connectedCallback();
-    }
-
-    onFileSinkDialogClosed() {
-        /** @type {Modal} */
-        const documentModal = this.documentModalRef.value;
-
-        // Open the document modal again, so the user can see the document
-        documentModal.open();
-
-        // Allow the state to be reset again
-        this.allowStateReset = true;
     }
 
     static get scopedElements() {
@@ -807,15 +795,6 @@ export class CabinetFile extends ScopedElementsMixin(
         this.fileSinkRef.value.files = files;
         // Reset the selector to the default value, so there isn't a selected value after the download
         e.target.selectedIndex = 0;
-
-        // Don't allow the reset the state of the component when the document modal is closed
-        this.allowStateReset = false;
-
-        /** @type {Modal} */
-        const documentModal = this.documentModalRef.value;
-
-        // Make sure the document dialog is closed, so we can see the file sink dialog
-        documentModal.close();
     }
 
     async handleFileAction(evOrAction) {
@@ -867,9 +846,6 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     async openReplacePdfDialog() {
-        // Don't allow resetting state while switching from document modal to file picker
-        this.allowStateReset = false;
-
         // Enable the save button again in the form if upload failed previously
         if (this.uploadFailed) {
             const form = this.formRef.value;
@@ -891,14 +867,6 @@ export class CabinetFile extends ScopedElementsMixin(
 
         this.isFileDirty = false;
 
-        /** @type {Modal} */
-        const documentModal = this.documentModalRef.value;
-
-        if (documentModal) {
-            // Make sure the document dialog is closed
-            documentModal.close();
-        }
-
         /** @type {FileSource} */
         const fileSource = this.fileSourceRef.value;
 
@@ -907,9 +875,7 @@ export class CabinetFile extends ScopedElementsMixin(
             await this.updateComplete;
         }
 
-        console.log('openDocumentAddDialog fileSource', fileSource);
-
-        // Open the file source dialog to select a file
+        // Open the file source dialog on top of the document modal (native dialogs stack)
         fileSource.setAttribute('dialog-open', '');
     }
 
@@ -1684,12 +1650,8 @@ export class CabinetFile extends ScopedElementsMixin(
         // DbpCabinetIndexChanged once the Typesense index has caught up, so no
         // close-based refresh dispatch is needed here anymore.
 
-        // Prevent the state reset when the document modal is closed if it was closed by
-        // the "Replace Document" button
-        if (this.allowStateReset) {
-            // Reset the state of the component when the modal is closed
-            this.resetState();
-        }
+        // Reset the state of the component when the modal is closed
+        this.resetState();
 
         // Send a close event to the parent component
         this.dispatchEvent(
@@ -1906,7 +1868,6 @@ export class CabinetFile extends ScopedElementsMixin(
                 max-file-size="32000"
                 text="${i18n.t('cabinet-file.upload-area-text')}"
                 button-label="${i18n.t('cabinet-file.upload-button-label')}"
-                @dbp-file-source-dialog-closed="${this.onFileSelectDialogClosed}"
                 @dbp-file-source-file-selected="${this.onDocumentFileSelected}"></dbp-file-source>
         `;
     }
@@ -1923,32 +1884,8 @@ export class CabinetFile extends ScopedElementsMixin(
                 nextcloud-web-dav-url="${this.nextcloudWebDavURL}"
                 nextcloud-name="${this.nextcloudName}"
                 nextcloud-auth-info="${this.nextcloudAuthInfo}"
-                nextcloud-file-url="${this.nextcloudFileURL}"
-                @dbp-file-sink-dialog-closed="${this.onFileSinkDialogClosed}"></dbp-file-sink>
+                nextcloud-file-url="${this.nextcloudFileURL}"></dbp-file-sink>
         `;
-    }
-
-    /**
-     * Note: It seems like that the dbp-file-source-dialog-closed event is fired multiple times
-     *       when the file-source dialog is closed!
-     * @returns {Promise<void>}
-     */
-    async onFileSelectDialogClosed() {
-        console.log('file-source onFileSelectDialogClosed');
-
-        // Open the document modal dialog after the file source dialog was closed if we were in edit mode
-        // Unfortunately, if Escape was pressed, all dialogs will be closed, so this only works with the "X" button
-        if (this.mode === CabinetFile.Modes.EDIT || this.mode === CabinetFile.Modes.NEW_VERSION) {
-            /** @type {Modal} */
-            const modal = this.documentModalRef.value;
-
-            // Note: Modal is checking if the dialog is already open
-            modal.open();
-        }
-
-        // In case we can here via the "Replace Document" button, allow the state to be reset
-        // after the document dialog was closed again
-        this.allowStateReset = true;
     }
 
     /**
@@ -1963,17 +1900,8 @@ export class CabinetFile extends ScopedElementsMixin(
             this.mode = CabinetFile.Modes.EDIT;
         }
 
-        /** @type {Modal} */
-        const modal = this.documentModalRef.value;
-
-        // Opens the modal dialog for adding a document to a person after the document was
-        // selected in the file source
-        // Note: Modal is checking if the dialog is already open, if it was opened by onFileSelectDialogClosed()
-        modal.open();
-
-        // In case we can here via the "Replace Document" button, allow the state to be reset
-        // after the document dialog was closed again
-        this.allowStateReset = true;
+        // Open the document modal (no-op if it is already open underneath the file source)
+        this.documentModalRef.value?.open();
     }
 
     /**
