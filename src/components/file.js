@@ -1701,11 +1701,18 @@ export class CabinetFile extends ScopedElementsMixin(
             // In the future there could also be an event on every form element change to save the data to the cache when it changes
             this.fileHitDataCache[this.objectType] = this.fileHitData;
 
-            // Now also reset the fileHitData
-            this.fileHitData = null;
+            // Set the default data for the object type from the objectType form component
+            let newFileHitData =
+                this.fileHitDataCache[objectType] ??
+                this.objectTypes[objectType].getFormComponent().getDefaultData();
 
-            // Preset the hit data for the new object type if possible
-            this.presetHitData(objectType);
+            // If previous hit data was set, copy the file base data from it
+            if (this.fileHitData.file?.base) {
+                newFileHitData.file.base = this.fileHitData.file.base;
+            }
+
+            // Then take the preset data from the cache
+            this.fileHitData = newFileHitData;
         } else {
             // Reset the fileHitData so that it can set with default values in the object type modules
             this.fileHitData = null;
@@ -1713,41 +1720,6 @@ export class CabinetFile extends ScopedElementsMixin(
 
         this.objectType = objectType;
         this.additionalType = additionalType;
-    }
-
-    /**
-     * Presets the hit data for the given object type with data from the previously selected object type if no data is present.
-     * @param objectType
-     */
-    presetHitData(objectType) {
-        // Check if the hit data cache is empty for the given object type
-        const isHitDataCacheEmpty =
-            !this.fileHitDataCache[objectType] || !this.fileHitDataCache[objectType]['@type'];
-
-        console.log('presetHitData isHitDataCacheEmpty', isHitDataCacheEmpty);
-        console.log('presetHitData this.fileHitData', this.fileHitData);
-
-        // Return if the hit data cache is not empty for the given object type
-        if (!isHitDataCacheEmpty) {
-            return;
-        }
-
-        // Set the default data for the object type from the objectType form component
-        this.fileHitDataCache[objectType] = this.objectTypes[objectType]
-            .getFormComponent()
-            .getDefaultData();
-        console.log('presetHitData this.fileHitDataCache before', this.fileHitDataCache);
-
-        // If previous hit data was set, copy the file base data from it
-        if (this.fileHitDataCache[this.objectType]?.file?.base) {
-            this.fileHitDataCache[objectType].file.base =
-                this.fileHitDataCache[this.objectType].file.base;
-        }
-
-        console.log('presetHitData this.fileHitDataCache after', this.fileHitDataCache);
-
-        // Then take the preset data from the cache
-        this.fileHitData = this.fileHitDataCache[objectType];
     }
 
     getDocumentTypeSelector() {
