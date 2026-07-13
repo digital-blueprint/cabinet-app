@@ -15,6 +15,7 @@ import {SelectionColumnConfiguration} from './selection-column-configuration';
 import {CabinetSettings} from '../settings.js';
 import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
 import {CabinetApi} from '../api.js';
+import {CabinetDocumentStore} from '../document-store.js';
 import {HitSelectionType, createEmptyHitSelection} from '../hit-selection.js';
 
 export class SelectionDialog extends ScopedElementsMixin(
@@ -316,7 +317,7 @@ export class SelectionDialog extends ScopedElementsMixin(
                     continue;
                 }
 
-                await new CabinetApi(this).softDeleteFile(fileId);
+                await new CabinetDocumentStore(this).softDelete(fileId);
 
                 // Update the hit data locally
                 hit.base.isScheduledForDeletion = true;
@@ -391,7 +392,7 @@ export class SelectionDialog extends ScopedElementsMixin(
                     continue;
                 }
 
-                await new CabinetApi(this).restoreFile(fileId);
+                await new CabinetDocumentStore(this).restore(fileId);
 
                 // Update the hit data locally
                 hit.base.isScheduledForDeletion = false;

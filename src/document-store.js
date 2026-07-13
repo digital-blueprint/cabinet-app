@@ -114,24 +114,6 @@ export class CabinetDocumentStore {
         return this._api.downloadFileFromBlob(fileId);
     }
 
-    /**
-     * Soft-delete a file (schedule for deletion) in blob storage.
-     * @param {string} fileId
-     * @returns {Promise<object>}
-     */
-    async softDelete(fileId) {
-        return this._api.softDeleteFile(fileId);
-    }
-
-    /**
-     * Restore a soft-deleted file in blob storage.
-     * @param {string} fileId
-     * @returns {Promise<object>}
-     */
-    async restore(fileId) {
-        return this._api.restoreFile(fileId);
-    }
-
     // -- Polling primitive ----------------------------------------------------
 
     /**
@@ -411,6 +393,52 @@ export class CabinetDocumentStore {
         }
 
         return updatedFileIds;
+    }
+
+    /**
+     * Soft-delete a single file (schedule for deletion) in blob storage, then
+     * poll Typesense until the change has propagated into the search index.
+     *
+     * This is the same write-then-poll pattern as the other mutating
+     * operations: the blob is patched, then the search index is polled until the
+     * document reflects `isScheduledForDeletion === true`. The blob response is
+     * returned to the caller (which inspects `deleteAt`), and a
+     * {@link PollTimeoutError} is thrown if the index never catches up.
+     * @param {string} fileId - The Blob fileId to soft-delete
+     * @returns {Promise<import('./api.js').BlobFile>} - The updated blob file resource
+     * @throws {PollTimeoutError} If the index did not catch up in time
+     */
+    async softDelete(fileId) {
+        const blob = await this._api.softDeleteFile(fileId);
+        await this.pollForDocumentByBlobId(
+            fileId,
+            (item) => item.base?.isScheduledForDeletion === true,
+        );
+        this._emitIndexChanged({operation: 'delete', fileIds: [fileId]});
+        return blob;
+    }
+
+    /**
+     * Restore a soft-deleted file (cancel scheduled deletion) in blob storage,
+     * then poll Typesense until the change has propagated into the search index.
+     *
+     * This is the same write-then-poll pattern as the other mutating
+     * operations: the blob is patched, then the search index is polled until the
+     * document reflects `isScheduledForDeletion === false`. The blob response is
+     * returned to the caller (which inspects `deleteAt`), and a
+     * {@link PollTimeoutError} is thrown if the index never catches up.
+     * @param {string} fileId - The Blob fileId to restore
+     * @returns {Promise<import('./api.js').BlobFile>} - The updated blob file resource
+     * @throws {PollTimeoutError} If the index did not catch up in time
+     */
+    async restore(fileId) {
+        const blob = await this._api.restoreFile(fileId);
+        await this.pollForDocumentByBlobId(
+            fileId,
+            (item) => item.base?.isScheduledForDeletion === false,
+        );
+        this._emitIndexChanged({operation: 'restore', fileIds: [fileId]});
+        return blob;
     }
 
     /**
