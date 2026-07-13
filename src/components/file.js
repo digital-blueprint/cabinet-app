@@ -18,7 +18,7 @@ import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
 import {pascalToKebab} from '../utils';
 import {classMap} from 'lit/directives/class-map.js';
 import {formatDate} from '../utils.js';
-import {CabinetDocumentStore, PollTimeoutError} from '../document-store.js';
+import {CabinetDocumentStore} from '../document-store.js';
 import {
     scopedElements as modalNotificationScopedElements,
     sendModalNotification,
@@ -231,18 +231,12 @@ export class CabinetFile extends ScopedElementsMixin(
                 'danger',
             );
 
-            if (error instanceof PollTimeoutError) {
-                // The blob was stored but the document never showed up in the
-                // search index in time. Enable the save button again in the form.
-                this.formRef.value.enableSaveButton();
-            } else {
-                // A real fetch error (something other than "not found").
-                // The save button will still be disabled and has a spinner, enabling it
-                // again doesn't make a lot of sense, because the document was already
-                // stored to Blob and we are in a failed state
-                // TODO: Is there something else we should do here?
-                this.state = CabinetFile.States.LOADING_FILE_FAILED;
-            }
+            // A real fetch error.
+            // The save button will still be disabled and has a spinner, enabling it
+            // again doesn't make a lot of sense, because the document was already
+            // stored to Blob and we are in a failed state
+            // TODO: Is there something else we should do here?
+            this.state = CabinetFile.States.LOADING_FILE_FAILED;
 
             return;
         }
@@ -250,22 +244,13 @@ export class CabinetFile extends ScopedElementsMixin(
         console.log('File data', JSON.stringify(blob));
 
         // If the document is current, mark all other versions as obsolete in
-        // Blob (this also waits for Typesense to sync). Non-fatal: the patches
-        // succeed, only the index may lag.
-        let syncTimedOut = false;
+        // Blob (this also waits for Typesense to sync).
         if (item.base?.isCurrent) {
-            try {
-                await store.markOtherVersionsObsolete(
-                    item.file.base.groupId,
-                    blob.identifier,
-                    this.auth['user-id'],
-                );
-            } catch (error) {
-                if (!(error instanceof PollTimeoutError)) {
-                    throw error;
-                }
-                syncTimedOut = true;
-            }
+            await store.markOtherVersionsObsolete(
+                item.file.base.groupId,
+                blob.identifier,
+                this.auth['user-id'],
+            );
         }
 
         // Bail out if the modal was closed while the upload was in flight.
@@ -288,14 +273,6 @@ export class CabinetFile extends ScopedElementsMixin(
             this._i18n.t('cabinet-file.notification-body-stored'),
             'success',
         );
-
-        if (syncTimedOut) {
-            this.documentModalNotification(
-                this._i18n.t('cabinet-file.notification-title-versions-sync-warning'),
-                this._i18n.t('cabinet-file.notification-body-versions-sync-warning'),
-                'warning',
-            );
-        }
 
         // Update URL, especially if a new version was created
         this.sendSetPropertyEvent(
@@ -2004,21 +1981,7 @@ export class CabinetFile extends ScopedElementsMixin(
             // Fetch all versions
             const allVersions = await this.fetchCurrentVersions();
 
-            try {
-                await this._getDocumentStore().deleteAllVersions(allVersions);
-            } catch (error) {
-                if (!(error instanceof PollTimeoutError)) {
-                    throw error;
-                }
-                // Non-fatal: the deletes succeeded, only the index lagged.
-                // Surface the sync warning and stop.
-                this.documentModalNotification(
-                    this._i18n.t('cabinet-file.notification-title-versions-sync-warning'),
-                    this._i18n.t('cabinet-file.notification-body-versions-sync-warning'),
-                    'warning',
-                );
-                return;
-            }
+            await this._getDocumentStore().deleteAllVersions(allVersions);
 
             // Refetch and set current hit data
             await this.updateCurrent();
