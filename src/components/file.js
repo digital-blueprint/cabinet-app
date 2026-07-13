@@ -112,7 +112,6 @@ export class CabinetFile extends ScopedElementsMixin(
         this.fileHitData = null;
         this.fileHitDataCache = {};
         this.isFileDirty = false;
-        this.dataWasChanged = false;
         this.statusMessageBlocks = [];
         this.deleteAtDateTime = '';
         this.allowStateReset = true;
@@ -290,7 +289,6 @@ export class CabinetFile extends ScopedElementsMixin(
         }
 
         this.isFileDirty = false;
-        this.dataWasChanged = true;
 
         this.fileHitData = item;
         this.fileHitDataBackup = this.fileHitData;
@@ -721,7 +719,6 @@ export class CabinetFile extends ScopedElementsMixin(
 
         // Switch delete/undelete buttons if the operation was successful
         if (success) {
-            this.dataWasChanged = true;
             // Mark the file as deleted/undeleted in the fileHitData
             this.fileHitData.base.isScheduledForDeletion = !undelete;
             // Update status manually, because we didn't trigger a this.fileHitData change
@@ -861,7 +858,6 @@ export class CabinetFile extends ScopedElementsMixin(
                     break;
             }
         } finally {
-            this.dataWasChanged = true;
             if (fromSelect) {
                 evOrAction.currentTarget.selectedIndex = 0;
                 evOrAction.currentTarget.value = '';
@@ -894,7 +890,6 @@ export class CabinetFile extends ScopedElementsMixin(
         }
 
         this.isFileDirty = false;
-        this.dataWasChanged = false;
 
         /** @type {Modal} */
         const documentModal = this.documentModalRef.value;
@@ -1685,16 +1680,9 @@ export class CabinetFile extends ScopedElementsMixin(
         this.documentPdfValidationErrorList.value.errors = []; // reset error list
         this.documentPdfValidationErrorList.value.errorSummary = null; // reset error summary
         this.uploadFailed = false;
-        // If the file was created, updated or deleted, we need to inform the parent component to refresh the search results
-        if (this.dataWasChanged) {
-            this.dispatchEvent(
-                new CustomEvent('DbpCabinetDocumentChanged', {
-                    detail: {hit: this.fileHitData},
-                    bubbles: true,
-                    composed: true,
-                }),
-            );
-        }
+        // Search refresh is handled live by CabinetDocumentStore emitting
+        // DbpCabinetIndexChanged once the Typesense index has caught up, so no
+        // close-based refresh dispatch is needed here anymore.
 
         // Prevent the state reset when the document modal is closed if it was closed by
         // the "Replace Document" button

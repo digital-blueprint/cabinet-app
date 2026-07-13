@@ -27,8 +27,9 @@ export class PollTimeoutError extends Error {
  */
 export class CabinetDocumentStore {
     /**
-     * @param {object} element - The host element, providing `entryPointUrl`,
-     *   `auth` and `objectTypes`.
+     * @param {HTMLElement & {entryPointUrl: string, auth: {token: string}, objectTypes: object}} element -
+     *   The host element, providing `entryPointUrl`, `auth` and `objectTypes`,
+     *   and used as the dispatch target for `DbpCabinetIndexChanged` events.
      */
     constructor(element) {
         this._element = element;
@@ -51,6 +52,25 @@ export class CabinetDocumentStore {
             this._element.auth.token,
         );
         return new TypesenseService(serverConfig);
+    }
+
+    /**
+     * Emit a bubbling, composed `DbpCabinetIndexChanged` event on the host
+     * element. This is dispatched right after a mutating operation has confirmed
+     * (via polling) that the change has propagated into the Typesense search
+     * index, so listeners (e.g. the search component) can refresh the currently
+     * active search. Multiple emits in quick succession are expected; listeners
+     * are responsible for coalescing/debouncing.
+     * @param {object} [detail] - Optional event detail payload
+     */
+    _emitIndexChanged(detail = {}) {
+        this._element.dispatchEvent(
+            new CustomEvent('DbpCabinetIndexChanged', {
+                detail,
+                bubbles: true,
+                composed: true,
+            }),
+        );
     }
 
     // -- Read passthroughs ----------------------------------------------------
@@ -235,6 +255,7 @@ export class CabinetDocumentStore {
     async addDocument({type, metadata, file = null}) {
         const blob = await this._api.createFile({type, metadata, file});
         const item = await this.pollForDocumentByBlobId(blob.identifier, () => true);
+        this._emitIndexChanged({operation: 'add', item});
         return {blob, item};
     }
 
@@ -267,6 +288,7 @@ export class CabinetDocumentStore {
                 !previousModifiedTimestamp ||
                 previousModifiedTimestamp < doc.file.base.modifiedTimestamp,
         );
+        this._emitIndexChanged({operation: 'update', item});
         return {blob, item};
     }
 
@@ -296,7 +318,12 @@ export class CabinetDocumentStore {
         await this._api.updateFileMetadata(fileId, metadata);
 
         // Poll Typesense until the version reflects the new isCurrent value.
-        return this.pollForDocumentByBlobId(fileId, (item) => item.base?.isCurrent === enable);
+        const item = await this.pollForDocumentByBlobId(
+            fileId,
+            (item) => item.base?.isCurrent === enable,
+        );
+        this._emitIndexChanged({operation: 'setVersionCurrent', item});
+        return item;
     }
 
     /**
@@ -379,6 +406,10 @@ export class CabinetDocumentStore {
         // Throws PollTimeoutError on timeout (non-fatal; caller warns).
         await this._waitUntilUpdated(updatedFileIds, (item) => item.base?.isCurrent === false);
 
+        if (updatedFileIds.length > 0) {
+            this._emitIndexChanged({operation: 'markObsolete', fileIds: updatedFileIds});
+        }
+
         return updatedFileIds;
     }
 
@@ -423,6 +454,7 @@ export class CabinetDocumentStore {
                 deletedFileIds,
                 (item) => item.base?.isScheduledForDeletion === true,
             );
+            this._emitIndexChanged({operation: 'delete', fileIds: deletedFileIds});
         }
     }
 
@@ -448,11 +480,13 @@ export class CabinetDocumentStore {
 
         const typesense = this._getTypesense();
 
-        return this._poll(async () => {
+        const item = await this._poll(async () => {
             const document = await typesense.fetchItem(documentId);
             return document.person.syncTimestamp !== previousSyncTimestamp
                 ? document
                 : CabinetDocumentStore.NOT_READY;
         });
+        this._emitIndexChanged({operation: 'syncPerson', item});
+        return item;
     }
 }

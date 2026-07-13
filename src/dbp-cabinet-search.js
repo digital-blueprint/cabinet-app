@@ -97,11 +97,41 @@ class EmptyWidget extends LangMixin(DBPLitElement, createInstance) {
     }
 }
 
-function debounce(func, delay) {
+/**
+ * Debounce a function.
+ *
+ * By default this is trailing-edge only: the call fires `delay` ms after the
+ * last invocation. With `{leading: true}` the first invocation of a burst
+ * fires immediately, and any further invocations during the window are
+ * collapsed into a single trailing call once the window elapses (only if there
+ * was at least one call after the leading one).
+ * @param {(...args: any[]) => any} func - The function to debounce
+ * @param {number} delay - The debounce window in milliseconds
+ * @param {object} [options]
+ * @param {boolean} [options.leading] - Fire immediately on the leading edge
+ * @returns {(...args: any[]) => void}
+ */
+function debounce(func, delay, {leading = false} = {}) {
+    /** @type {ReturnType<typeof setTimeout> | undefined} */
     let timerId;
-    return function (...args) {
+    // Whether a call happened during the window that still needs a trailing
+    // fire. In trailing-only mode every call sets this; in leading mode the
+    // leading call fires immediately and only *subsequent* calls set it.
+    let trailingPending = false;
+    return function (/** @type {any[]} */ ...args) {
+        if (leading && timerId === undefined) {
+            func.apply(this, args);
+        } else {
+            trailingPending = true;
+        }
         clearTimeout(timerId);
-        timerId = setTimeout(() => func.apply(this, args), delay);
+        timerId = setTimeout(() => {
+            timerId = undefined;
+            if (trailingPending) {
+                trailingPending = false;
+                func.apply(this, args);
+            }
+        }, delay);
     };
 }
 
@@ -158,6 +188,20 @@ class CabinetSearch extends ScopedElementsMixin(
         this._loadModulesPromise = null;
         this._initInstantsearchPromise = null;
         this._initialUiState = null;
+        // Debounced refresh of the active search, used when the Typesense index
+        // changes. The first index change refreshes immediately (leading edge)
+        // so results update as soon as possible; any further changes in the
+        // same burst (e.g. an update followed by marking other versions
+        // obsolete) are coalesced into a single trailing refresh.
+        this._debouncedSearchRefresh = debounce(
+            () => {
+                if (this.search) {
+                    this.search.refresh();
+                }
+            },
+            300,
+            {leading: true},
+        );
         this.hitSelectionCollapsed = true;
         this.showHitCheckboxes = false;
         this.disabled = true;
@@ -415,10 +459,12 @@ class CabinetSearch extends ScopedElementsMixin(
             that.openDocumentViewDialog(event.detail.hit);
         });
 
-        // Listen to DbpCabinetDocumentChanged events to refresh the search
-        this.addEventListener('DbpCabinetDocumentChanged', () => {
-            console.log('Refresh after document changed');
-            this.search.refresh();
+        // Listen to DbpCabinetIndexChanged events to refresh the active search.
+        // These are emitted by CabinetDocumentStore once a mutation has been
+        // confirmed to have propagated into the Typesense search index.
+        this.addEventListener('DbpCabinetIndexChanged', () => {
+            console.log('Refresh after index changed');
+            this._debouncedSearchRefresh();
         });
 
         // Listen to DbpCabinetFilterPerson events to filter to a specific person
