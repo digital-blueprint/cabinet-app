@@ -178,7 +178,8 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
         super();
         this.data = {};
         this.person = {};
-        this.additionalType = '';
+        /** @type {string|null} */
+        this.additionalType = null;
         this.entryPointUrl = '';
         this.auth = {};
         this.saveButtonEnabled = true;

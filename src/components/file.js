@@ -106,8 +106,8 @@ export class CabinetFile extends ScopedElementsMixin(
     resetState() {
         this.person = {};
         this.documentFile = null;
-        this.objectType = '';
-        this.additionalType = '';
+        this.objectType = null;
+        this.additionalType = null;
         this.mode = CabinetFile.Modes.CLOSED;
         this.fileHitData = null;
         this.fileHitDataCache = {};
@@ -381,7 +381,7 @@ export class CabinetFile extends ScopedElementsMixin(
 
     async handleDocumentFormCancel(event) {
         if (this.mode === CabinetFile.Modes.ADD) {
-            this.objectType = '';
+            this.objectType = null;
         } else {
             this.fileHitData = this.fileHitDataBackup;
             this.objectType = this.fileHitData.objectType;
@@ -395,7 +395,7 @@ export class CabinetFile extends ScopedElementsMixin(
     getDocumentEditFormHtml(useFileHitDataCache = false) {
         const objectType = this.objectType;
 
-        if (objectType === '') {
+        if (!objectType) {
             console.log('objectType empty', objectType);
             return html``;
         }
@@ -431,7 +431,7 @@ export class CabinetFile extends ScopedElementsMixin(
              subscribe="auth,lang,entry-point-url"
              .data=${fileHitData || {}}
              .person=${this.person}
-             additional-type="${this.additionalType}"
+             .additionalType=${this.additionalType}
              .saveButtonEnabled=${!this.uploadFailed}
              @DbpCabinetDocumentFormCancel=${(event) => {
                  void this.handleDocumentFormCancel(event);
@@ -448,7 +448,7 @@ export class CabinetFile extends ScopedElementsMixin(
         const objectType = this.objectType;
         console.log('objectType', objectType);
 
-        if (!this.objectType || objectType === '') {
+        if (!objectType) {
             console.log('objectType empty', objectType);
             return html`
                 <dbp-mini-spinner></dbp-mini-spinner>
@@ -885,7 +885,7 @@ export class CabinetFile extends ScopedElementsMixin(
     }
     async openDocumentAddDialog(resetObjectType = true) {
         if (resetObjectType) {
-            this.objectType = '';
+            this.objectType = null;
             this.fileHitData = null;
         }
 
@@ -1708,7 +1708,7 @@ export class CabinetFile extends ScopedElementsMixin(
                     ${this.getDocumentViewFormHtml()}
                 `;
             case CabinetFile.Modes.ADD:
-                if (this.objectType === '') {
+                if (!this.objectType) {
                     return html`
                         <h3>${this._i18n.t('Document-details-modal')}</h3>
                         <p>
@@ -1750,7 +1750,9 @@ export class CabinetFile extends ScopedElementsMixin(
         // Split document type into object type and additional type
         const documentType = this._('#document-type').value;
         console.log('onDocumentTypeSelected documentType', documentType);
-        const [objectType, additionalType] = documentType.split('---');
+        const [objectType, additionalType] = documentType
+            ? documentType.split('---')
+            : [null, null];
         console.log('onDocumentTypeSelected objectType', objectType);
         console.log('onDocumentTypeSelected additionalType', additionalType);
 
@@ -1810,16 +1812,16 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     getDocumentTypeSelector() {
-        let additionalType = '';
-        let objectType = '';
+        let additionalType = this.additionalType;
+        let objectType = this.objectType;
         if (this.fileHitData !== null) {
             additionalType =
-                this.fileHitData.file?.base?.additionalType?.key || this.additionalType || '';
-            objectType = this.fileHitData.objectType || this.objectType || '';
+                this.fileHitData.file?.base?.additionalType?.key || this.additionalType;
+            objectType = this.fileHitData.objectType || this.objectType;
         }
 
         const fileDocumentType =
-            additionalType !== '' && objectType !== '' ? objectType + '---' + additionalType : '';
+            additionalType && objectType ? objectType + '---' + additionalType : null;
 
         const items = [];
         for (const [name, object] of Object.entries(this.objectTypes)) {
@@ -1842,7 +1844,7 @@ export class CabinetFile extends ScopedElementsMixin(
             `,
         );
 
-        if (fileDocumentType === '') {
+        if (!fileDocumentType) {
             options.unshift(html`
                 <option value="" selected>-Select document type-</option>
             `);
