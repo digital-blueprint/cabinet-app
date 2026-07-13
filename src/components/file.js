@@ -170,9 +170,6 @@ export class CabinetFile extends ScopedElementsMixin(
     async _storeDocumentToBlob(metaData) {
         // Either a valid existing blob id or null; null means "no blob yet".
         const blobId = this.fileHitData?.file?.base?.fileId ?? null;
-        console.log('_storeDocumentToBlob', 'blobId', blobId);
-        console.log('_storeDocumentToBlob this.fileHitData', this.fileHitData);
-        console.log('_storeDocumentToBlob this.mode', this.mode);
 
         // A missing blobId means there is no existing blob yet, so we are adding
         // a brand new document. Two cases produce this: a fresh "add" (where
@@ -190,8 +187,6 @@ export class CabinetFile extends ScopedElementsMixin(
         // A fresh add starts a new group; a new version and updates reuse the
         // existing one.
         metaData['groupId'] = this.fileHitData?.file?.base?.groupId || createUUID();
-        // metaData['dateCreated'] = new Date().toISOString().split('T')[0];
-        console.log('_storeDocumentToBlob metaData', metaData);
 
         const type = this.objectTypes[this.objectType].getBlobType();
         // Only upload the file data again if it actually changed.
@@ -242,8 +237,6 @@ export class CabinetFile extends ScopedElementsMixin(
             return;
         }
 
-        console.log('File data', JSON.stringify(blob));
-
         // If the document is current, mark all other versions as obsolete in
         // Blob (this also waits for Typesense to sync).
         if (item.base?.isCurrent) {
@@ -258,7 +251,6 @@ export class CabinetFile extends ScopedElementsMixin(
         /** @type {Modal} */
         const modal = this.documentModalRef.value;
         if (!modal.isOpen()) {
-            console.log('_storeDocumentToBlob modal is not open any more');
             return;
         }
 
@@ -309,7 +301,6 @@ export class CabinetFile extends ScopedElementsMixin(
     async scrollDocumentModalToTop() {
         await this.updateComplete;
         await new Promise((resolve) => requestAnimationFrame(resolve));
-        console.log('scrollDocumentModalToTop this.documentModalRef', this.documentModalRef);
         const modal = this.documentModalRef.value;
         if (!modal) {
             return;
@@ -321,10 +312,8 @@ export class CabinetFile extends ScopedElementsMixin(
             this.shadowRoot?.querySelector('#document-modal .content'),
             modal,
         ].filter(Boolean);
-        console.log('scrollDocumentModalToTop candidates', candidates);
 
         const scrollTarget = candidates.find((el) => el.scrollHeight > el.clientHeight) || modal;
-        console.log('scrollDocumentModalToTop scrollTarget', scrollTarget);
         scrollTarget.scrollTo({
             top: 0,
             behavior: 'smooth',
@@ -332,13 +321,10 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     async handleDocumentAddSave(event) {
-        console.log('JSON.stringify(event.detail)', JSON.stringify(event.detail));
-
         const data = event.detail;
 
         try {
             await this._storeDocumentToBlob(data.formData);
-            console.log('handleDocumentAddSave data', data);
         } finally {
             await this.scrollDocumentModalToTop();
         }
@@ -362,15 +348,11 @@ export class CabinetFile extends ScopedElementsMixin(
         const objectType = this.objectType;
 
         if (!objectType) {
-            console.log('objectType empty', objectType);
             return html``;
         }
 
         const tagPart = pascalToKebab(objectType);
         const tagName = 'dbp-cabinet-object-type-edit-form-' + tagPart;
-
-        console.log('getDocumentEditFormHtml objectType', objectType);
-        console.log('getDocumentEditFormHtml tagName', tagName);
 
         let formComponent = this.objectTypes[objectType].getFormComponent();
         if (!this.registry.get(tagName)) {
@@ -383,10 +365,6 @@ export class CabinetFile extends ScopedElementsMixin(
         if (useFileHitDataCache && this.fileHitDataCache[objectType]) {
             fileHitData = this.fileHitDataCache[objectType];
         }
-
-        console.log('getDocumentEditFormHtml fileHitData', fileHitData);
-        console.log('getDocumentEditFormHtml this.additionalType', this.additionalType);
-        console.log('getDocumentEditFormHtml this.uploadFailed', this.uploadFailed);
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "fileHitData" property from a variable too!
@@ -401,7 +379,6 @@ export class CabinetFile extends ScopedElementsMixin(
              .saveButtonEnabled=${!this.uploadFailed}
              @DbpCabinetDocumentFormCancel=${(event) => {
                  void this.handleDocumentFormCancel(event);
-                 console.log('handleDocumentFormCancel event', event);
              }}
              @DbpCabinetDocumentAddSave=${(event) => {
                  void this.handleDocumentAddSave(event);
@@ -412,10 +389,8 @@ export class CabinetFile extends ScopedElementsMixin(
 
     getDocumentViewFormHtml() {
         const objectType = this.objectType;
-        console.log('objectType', objectType);
 
         if (!objectType) {
-            console.log('objectType empty', objectType);
             return html`
                 <dbp-mini-spinner></dbp-mini-spinner>
             `;
@@ -425,9 +400,6 @@ export class CabinetFile extends ScopedElementsMixin(
         const id = hit.id;
         const tagPart = pascalToKebab(objectType);
         const tagName = 'dbp-cabinet-object-type-view-' + tagPart;
-
-        console.log('objectType', objectType);
-        console.log('tagName', tagName);
 
         let viewComponent = this.objectTypes[objectType].getViewComponent();
         if (!this.registry.get(tagName)) {
@@ -484,7 +456,6 @@ export class CabinetFile extends ScopedElementsMixin(
 
         /** @type {Modal} */
         const modal = this.documentModalRef.value;
-        console.log('openDialogWithHit modal', modal);
         if (!modal.isOpen()) {
             modal.open();
         }
@@ -505,7 +476,6 @@ export class CabinetFile extends ScopedElementsMixin(
             return;
         }
 
-        console.log('openDialogWithHit hit', hit);
         // Set person from hit
         this.person = hit.person;
         this.objectType = hit.objectType;
@@ -539,7 +509,6 @@ export class CabinetFile extends ScopedElementsMixin(
                 const file = await this._getDocumentStore().downloadFile(
                     this.fileHitData.file.base.fileId,
                 );
-                console.log('openDialogWithHit file', file);
                 this.state = CabinetFile.States.FILE_LOADED;
 
                 // We need to set the documentFile, so that the PDF viewer will be rendered again
@@ -713,8 +682,6 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     async _setFileDeletion(fileId, undelete = false) {
-        console.log('_setFileDeletion fileId', fileId);
-
         const store = this._getDocumentStore();
 
         try {
@@ -754,7 +721,6 @@ export class CabinetFile extends ScopedElementsMixin(
             return;
         }
 
-        console.log('downloadFile selectorValue', selectorValue);
         let files = [];
 
         if (selectorValue !== 'document-file-only') {
@@ -1276,7 +1242,6 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     renderVersionsSelector() {
-        console.log('renderVersionsSelector this.versions', this.versions);
         if (!Array.isArray(this.versions)) {
             return html``;
         }
@@ -1360,16 +1325,12 @@ export class CabinetFile extends ScopedElementsMixin(
 
     async onChangeVersion(e) {
         this.selectedVersionId = e.detail.value;
-        console.log('onUpdateVersion e', e);
         const selectorValue = e.target.value;
         if (!selectorValue) {
             return;
         }
 
-        console.log('onUpdateVersion selectorValue', selectorValue);
-
         const hit = this.versions.find((item) => item.id === selectorValue);
-        console.log('onUpdateVersion hit', hit);
 
         if (!hit) {
             return;
@@ -1394,14 +1355,10 @@ export class CabinetFile extends ScopedElementsMixin(
      */
     getDocumentModalHtml() {
         const hit = this.fileHitData;
-        console.log('getDocumentModalHtml this.fileHitData', this.fileHitData);
         const person = this.person;
-        console.log('getDocumentModalHtml this.person', this.person);
 
         // Keep in mind that this.documentFile will be null until the file is loaded by openViewDialogWithFileHit
         let file = this.documentFile;
-        console.log('getDocumentModalHtml this.documentFile', this.documentFile);
-        console.log('this.mode', this.mode);
         const i18n = this._i18n;
 
         let headline;
@@ -1640,7 +1597,6 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     getObjectTypeFormPartHtml() {
-        console.log('getObjectTypeFormPartHtml this.mode', this.mode);
         switch (this.mode) {
             case CabinetFile.Modes.VIEW:
                 return html`
@@ -1688,12 +1644,9 @@ export class CabinetFile extends ScopedElementsMixin(
     onDocumentTypeSelected(event) {
         // Split document type into object type and additional type
         const documentType = this._('#document-type').value;
-        console.log('onDocumentTypeSelected documentType', documentType);
         const [objectType, additionalType] = documentType
             ? documentType.split('---')
             : [null, null];
-        console.log('onDocumentTypeSelected objectType', objectType);
-        console.log('onDocumentTypeSelected additionalType', additionalType);
 
         // Only try to preset data if we are editing an existing document
         if (this.objectType && this.fileHitData !== null) {
@@ -1784,8 +1737,6 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     render() {
-        console.log('-- Render --');
-
         switch (this.mode) {
             case CabinetFile.Modes.EDIT:
             case CabinetFile.Modes.NEW_VERSION:
@@ -1841,7 +1792,6 @@ export class CabinetFile extends ScopedElementsMixin(
      * @param ev
      */
     async onDocumentFileSelected(ev) {
-        console.log('file-source onDocumentFileSelected ev.detail.file', ev.detail.file);
         this.isFileDirty = true;
         await this.showPdf(ev.detail.file);
 
@@ -1857,7 +1807,6 @@ export class CabinetFile extends ScopedElementsMixin(
      * @param documentFile
      */
     async showPdf(documentFile) {
-        console.log('documentFile', documentFile);
         this.documentFile = documentFile;
 
         // We need to wait until rendering is complete after this.documentFile has changed
@@ -1876,10 +1825,8 @@ export class CabinetFile extends ScopedElementsMixin(
         changedProperties.forEach((oldValue, propName) => {
             switch (propName) {
                 case 'mode':
-                    console.log('this.mode changed from', oldValue, 'to', this.mode);
                     break;
                 case 'fileHitData':
-                    console.log('this.fileHitData changed from', oldValue, 'to', this.fileHitData);
                     this.updateStatus();
                     break;
             }
@@ -1939,7 +1886,6 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     async addNewVersion() {
-        console.log('addNewVersion');
         // Drop the existing blob id so this is stored as a brand new blob; the
         // rest of fileHitData is kept so the new version reuses the groupId.
         this.fileHitData.file.base.fileId = null;
