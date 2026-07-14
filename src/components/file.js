@@ -8,6 +8,7 @@ import {
     Icon,
     Modal,
     DBPSelect,
+    MiniSpinner,
     ScopedElementsMixin,
     sendNotification,
     getIconSVGURL,
@@ -117,6 +118,8 @@ export class CabinetFile extends ScopedElementsMixin(
         this.state = CabinetFile.States.NONE;
         this.versions = [];
         this.versionsLoaded = false;
+        // Whether a (slow, network-bound) action from the actions menu is running
+        this.actionRunning = false;
 
         // Will be used when canceling the form in EDIT mode, when the data was changed via this.fileHitDataCache
         this.fileHitDataBackup = null;
@@ -140,6 +143,7 @@ export class CabinetFile extends ScopedElementsMixin(
             'dbp-button': Button,
             'dbp-pdf-validation-error-list': PdfValidationErrorList,
             'dbp-select': DBPSelect,
+            'dbp-mini-spinner': MiniSpinner,
         };
     }
 
@@ -164,6 +168,7 @@ export class CabinetFile extends ScopedElementsMixin(
             mode: {type: String},
             cabinetConfig: {type: Object, attribute: false},
             uploadFailed: {type: Boolean, state: true},
+            actionRunning: {type: Boolean, state: true},
         };
     }
 
@@ -808,6 +813,12 @@ export class CabinetFile extends ScopedElementsMixin(
 
         const fileId = this.fileHitData?.file?.base?.fileId ?? null;
 
+        // Slow, network-bound actions that should show a spinner next to the menu.
+        const slowActions = ['delete', 'delete-all', 'mark-current', 'mark-obsolete'];
+        if (slowActions.includes(action)) {
+            this.actionRunning = true;
+        }
+
         try {
             switch (action) {
                 case 'add':
@@ -837,6 +848,7 @@ export class CabinetFile extends ScopedElementsMixin(
                     break;
             }
         } finally {
+            this.actionRunning = false;
             if (fromSelect) {
                 evOrAction.currentTarget.selectedIndex = 0;
                 evOrAction.currentTarget.value = '';
@@ -1047,6 +1059,18 @@ export class CabinetFile extends ScopedElementsMixin(
                     gap: 5px;
                     justify-content: flex-end;
                     flex-wrap: wrap;
+                }
+
+                #document-modal .action-with-spinner {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 0.5em;
+                }
+
+                #document-modal .action-spinner {
+                    width: 1.2em;
+                    height: 1.2em;
                 }
 
                 #document-modal .fileButtons > * {
@@ -1630,13 +1654,22 @@ export class CabinetFile extends ScopedElementsMixin(
         });
 
         return html`
-            <dbp-select
-                id="action-dropdown"
-                class="actions-dropdown-doc-edit"
-                ?disabled=${!file}
-                label="${i18n.t('doc-modal-Actions')}"
-                .options=${options}
-                @change="${(e) => this.handleFileAction(e.detail.value)}"></dbp-select>
+            <div class="action-with-spinner">
+                ${
+                    this.actionRunning
+                        ? html`
+                              <dbp-mini-spinner class="action-spinner"></dbp-mini-spinner>
+                          `
+                        : ''
+                }
+                <dbp-select
+                    id="action-dropdown"
+                    class="actions-dropdown-doc-edit"
+                    ?disabled=${!file || this.actionRunning}
+                    label="${i18n.t('doc-modal-Actions')}"
+                    .options=${options}
+                    @change="${(e) => this.handleFileAction(e.detail.value)}"></dbp-select>
+            </div>
         `;
     }
 
