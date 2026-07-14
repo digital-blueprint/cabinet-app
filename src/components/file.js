@@ -1419,6 +1419,10 @@ export class CabinetFile extends ScopedElementsMixin(
             headline = i18n.t('doc-modal-upload-document');
         } else if (this.mode === CabinetFile.Modes.NEW_VERSION) {
             headline = i18n.t('doc-modal-upload-new-version');
+        } else if (this.mode === CabinetFile.Modes.EDIT) {
+            headline = i18n.t('doc-modal-edit');
+        } else if (this.mode === CabinetFile.Modes.REPLACE_FILE) {
+            headline = i18n.t('buttons.replace-document');
         } else {
             console.assert(hit, this.mode);
             headline = this._getAdditionalTypeName(hit.file.base.additionalType.key);
