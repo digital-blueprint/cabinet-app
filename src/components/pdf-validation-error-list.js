@@ -50,6 +50,7 @@ export class PdfValidationErrorList extends LangMixin(DBPLitElement, createInsta
                               ${this._i18n.t('cabinet-file.document-upload-failed-pdfa-title')}
                           </h3>
                           <h4 class="red-text-bold">${this.errorSummary}</h4>
+                          <slot name="action"></slot>
                           <h4 class="red-text-bold">
                               ${this._i18n.t('cabinet-file.document-upload-failed-pdfa-details')}
                           </h4>
@@ -72,6 +73,7 @@ export class PdfValidationErrorList extends LangMixin(DBPLitElement, createInsta
                                   'cabinet-file.document-upload-failed-pdfa-validation-summary',
                               )}
                           </h4>
+                          <slot name="action"></slot>
                           <h4 class="red-text-bold">
                               ${this._i18n.t('cabinet-file.document-upload-failed-pdfa-details')}
                           </h4>

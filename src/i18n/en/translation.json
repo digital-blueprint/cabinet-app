@@ -55,6 +55,7 @@
         "notification-title-version-update-failed": "Version update failed",
         "notification-title-version-updated": "Version updated",
         "notification-title-versions-load-failed": "Could not load versions",
+        "select-another-document": "Select another document",
         "upload-area-text": "",
         "upload-button-label": "Select documents",
         "version-modified": "modified",

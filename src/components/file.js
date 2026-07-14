@@ -329,9 +329,7 @@ export class CabinetFile extends ScopedElementsMixin(
             this.shadowRoot.querySelector('.status-badge').classList.add('hidden');
         }
 
-        if (this.formRef.value) {
-            this.formRef.value.disabled = false;
-        }
+        // Form stays disabled until a new document is selected.
     }
 
     async scrollDocumentModalToTop() {
@@ -837,6 +835,13 @@ export class CabinetFile extends ScopedElementsMixin(
         }
     }
 
+    /**
+     * Reopens the file picker after a failed upload, keeping entered form data.
+     */
+    async selectAnotherDocument() {
+        await this.openDocumentAddDialog(false);
+    }
+
     async openReplacePdfDialog() {
         // Back up the current data so a cancel of the replace/new-version flow
         // can restore it (both the metadata and the currently shown PDF).
@@ -1013,6 +1018,10 @@ export class CabinetFile extends ScopedElementsMixin(
 
                 #document-modal .pdf-preview {
                     grid-area: 2 / 1 / 3 / 2;
+                }
+
+                #document-modal .select-another-document-button {
+                    margin: 0.5em 0 0;
                 }
 
                 #document-modal .form {
@@ -1199,10 +1208,24 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     getDocumentValidationErrorHtml() {
+        const i18n = this._i18n;
         return html`
             <dbp-pdf-validation-error-list
                 subscribe="lang"
-                ${ref(this.documentPdfValidationErrorList)}></dbp-pdf-validation-error-list>
+                ${ref(this.documentPdfValidationErrorList)}>
+                ${
+                    this.uploadFailed
+                        ? html`
+                              <button
+                                  slot="action"
+                                  class="button is-primary select-another-document-button"
+                                  @click="${this.selectAnotherDocument}">
+                                  ${i18n.t('cabinet-file.select-another-document')}
+                              </button>
+                          `
+                        : html``
+                }
+            </dbp-pdf-validation-error-list>
         `;
     }
 
@@ -1625,8 +1648,8 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     onCloseDocumentModal() {
-        this.documentPdfValidationErrorList.value.errors = []; // reset error list
-        this.documentPdfValidationErrorList.value.errorSummary = null; // reset error summary
+        this.documentPdfValidationErrorList.value.errors = [];
+        this.documentPdfValidationErrorList.value.errorSummary = null;
         this.uploadFailed = false;
         // Search refresh is handled live by CabinetDocumentStore emitting
         // DbpCabinetIndexChanged once the Typesense index has caught up, so no
@@ -1848,6 +1871,16 @@ export class CabinetFile extends ScopedElementsMixin(
         // means we are editing it AND replacing its PDF.
         if (this.mode === CabinetFile.Modes.VIEW) {
             this.mode = CabinetFile.Modes.REPLACE_FILE;
+        }
+
+        // Recover from a failed upload: clear the error state and re-enable the form.
+        if (this.uploadFailed) {
+            this.uploadFailed = false;
+            this.documentPdfValidationErrorList.value.errors = [];
+            this.documentPdfValidationErrorList.value.errorSummary = null;
+            if (this.formRef.value) {
+                this.formRef.value.disabled = false;
+            }
         }
 
         // Open the document modal (no-op if it is already open underneath the file source)
