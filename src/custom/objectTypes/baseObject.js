@@ -182,9 +182,10 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
         this.additionalType = null;
         this.entryPointUrl = '';
         this.auth = {};
-        // When true the form is locked (during a save request): all fields and
-        // the cancel/save buttons are disabled and the save button shows a spinner.
+        // When true the form fields and cancel/save buttons are disabled.
         this.disabled = false;
+        // When true a save request is in progress and the save button shows a spinner.
+        this.saving = false;
         this.mode = '';
     }
 
@@ -329,6 +330,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
         }
 
         this.disabled = true;
+        this.saving = true;
         const formElement = this.shadowRoot.querySelector('form');
         const data = {
             formData: {
@@ -356,6 +358,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
             data: {type: Object},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             disabled: {type: Boolean},
+            saving: {type: Boolean},
             mode: {type: String},
         };
     }
@@ -426,7 +429,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
                     <dbp-icon name="save" aria-hidden="true"></dbp-icon>
                     ${this._getSaveButtonText()}
                     <dbp-mini-spinner
-                        class="${classMap({hidden: !this.disabled})}"></dbp-mini-spinner>
+                        class="${classMap({hidden: !this.saving})}"></dbp-mini-spinner>
                 </button>
             </div>
         `;

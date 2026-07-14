@@ -329,7 +329,10 @@ export class CabinetFile extends ScopedElementsMixin(
             this.shadowRoot.querySelector('.status-badge').classList.add('hidden');
         }
 
-        // Form stays disabled until a new document is selected.
+        // Stop the spinner but keep the form disabled until a new document is selected.
+        if (this.formRef.value) {
+            this.formRef.value.saving = false;
+        }
     }
 
     async scrollDocumentModalToTop() {
@@ -848,8 +851,7 @@ export class CabinetFile extends ScopedElementsMixin(
         this.fileHitDataBackup = structuredClone(this.fileHitData);
         this.documentFileBackup = this.documentFile;
 
-        // Re-enable the form (bound via `.disabled=${this.uploadFailed}`) if a
-        // previous upload had failed.
+        // Clear a previous upload failure before reopening.
         if (this.uploadFailed) {
             this.uploadFailed = false;
         }
