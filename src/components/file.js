@@ -256,15 +256,12 @@ export class CabinetFile extends ScopedElementsMixin(
             return;
         }
 
+        const {title, body} = this._getSaveNotificationText(this.mode);
+        this.documentModalNotification(title, body, 'success');
+
         this.fileHitData = item;
         this.mode = CabinetFile.Modes.VIEW;
         await this.updateVersions();
-
-        this.documentModalNotification(
-            this._i18n.t('cabinet-file.notification-title-stored'),
-            this._i18n.t('cabinet-file.notification-body-stored'),
-            'success',
-        );
 
         // Update URL, especially if a new version was created
         this.sendSetPropertyEvent(
@@ -272,6 +269,39 @@ export class CabinetFile extends ScopedElementsMixin(
             `/document/${encodeURIComponent(this.fileHitData.id)}`,
             true,
         );
+    }
+
+    /**
+     * Returns the "document saved" notification title/body, matching the mode
+     * the document was saved in.
+     * @param {string} mode
+     * @returns {{title: string, body: string}}
+     */
+    _getSaveNotificationText(mode) {
+        const i18n = this._i18n;
+        switch (mode) {
+            case CabinetFile.Modes.ADD:
+                return {
+                    title: i18n.t('cabinet-file.notification-title-stored-add'),
+                    body: i18n.t('cabinet-file.notification-body-stored-add'),
+                };
+            case CabinetFile.Modes.NEW_VERSION:
+                return {
+                    title: i18n.t('cabinet-file.notification-title-stored-new-version'),
+                    body: i18n.t('cabinet-file.notification-body-stored-new-version'),
+                };
+            case CabinetFile.Modes.REPLACE_FILE:
+                return {
+                    title: i18n.t('cabinet-file.notification-title-stored-replace-file'),
+                    body: i18n.t('cabinet-file.notification-body-stored-replace-file'),
+                };
+            case CabinetFile.Modes.EDIT:
+            default:
+                return {
+                    title: i18n.t('cabinet-file.notification-title-stored'),
+                    body: i18n.t('cabinet-file.notification-body-stored'),
+                };
+        }
     }
 
     /**
