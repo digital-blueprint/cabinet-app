@@ -906,7 +906,6 @@ export class CabinetFile extends ScopedElementsMixin(
                     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
                     gap: 10px 10px;
                     grid-auto-flow: row;
-                    padding-right: 0.5em;
                 }
 
                 #document-modal .description {
@@ -955,6 +954,10 @@ export class CabinetFile extends ScopedElementsMixin(
                 .pdf-preview {
                     grid-column: 1 / -1;
                     min-width: 0;
+                }
+
+                #document-modal .form {
+                    padding-right: 0.5em;
                 }
 
                 #document-modal .description,
