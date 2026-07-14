@@ -370,6 +370,8 @@ export class CabinetFile extends ScopedElementsMixin(
     async handleDocumentFormCancel(event) {
         if (this.mode === CabinetFile.Modes.ADD) {
             this.objectType = null;
+            // Drop the seeded add data so a subsequent add starts clean.
+            this.fileHitData = null;
         } else {
             // A replace-file/new-version flow also swapped out the shown PDF, so
             // we need to restore that too, not just the metadata.
@@ -416,6 +418,11 @@ export class CabinetFile extends ScopedElementsMixin(
             fileHitData = this.fileHitDataCache[objectType];
         }
 
+        // Whenever an object type is selected we always have a data object (a real
+        // hit, a cache entry, or seeded defaults for a fresh add), so the form never
+        // needs to deal with empty data. Fail hard instead of silently degrading.
+        console.assert(fileHitData, 'getDocumentEditFormHtml: missing fileHitData for', objectType);
+
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from
         // a variable and need to set the "fileHitData" property from a variable too!
         return staticHtml`
@@ -423,7 +430,7 @@ export class CabinetFile extends ScopedElementsMixin(
              ${ref(this.formRef)}
              id="edit-form"
              subscribe="auth,lang,entry-point-url"
-             .data=${fileHitData || {}}
+             .data=${fileHitData}
              .person=${this.person}
              .additionalType=${this.additionalType}
              .mode=${this.mode}
@@ -1728,10 +1735,11 @@ export class CabinetFile extends ScopedElementsMixin(
             // In the future there could also be an event on every form element change to save the data to the cache when it changes
             this.fileHitDataCache[this.objectType] = this.fileHitData;
 
-            // Set the default data for the object type from the objectType form component
+            // Set the default data for the object type from the objectType form component.
+            // Clone the default so we never mutate the shared module-level constant in place.
             let newFileHitData =
                 this.fileHitDataCache[objectType] ??
-                this.objectTypes[objectType].getFormComponent().getDefaultData();
+                structuredClone(this.objectTypes[objectType].getFormComponent().getDefaultData());
 
             // If previous hit data was set, copy the file base data from it
             if (this.fileHitData.file?.base) {
@@ -1740,8 +1748,13 @@ export class CabinetFile extends ScopedElementsMixin(
 
             // Then take the preset data from the cache
             this.fileHitData = newFileHitData;
+        } else if (objectType) {
+            // Fresh add: seed a stable data object so common fields (which write
+            // back in place) survive re-renders. Clone to avoid mutating the default.
+            this.fileHitData = structuredClone(
+                this.objectTypes[objectType].getFormComponent().getDefaultData(),
+            );
         } else {
-            // Reset the fileHitData so that it can set with default values in the object type modules
             this.fileHitData = null;
         }
 

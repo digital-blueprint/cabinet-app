@@ -176,8 +176,10 @@ export const getCommonStyles = () => css`
 export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
     constructor() {
         super();
-        this.data = {};
-        this.person = {};
+        /** @type {object|null} */
+        this.data = null;
+        /** @type {object|null} */
+        this.person = null;
         /** @type {string|null} */
         this.additionalType = null;
         this.entryPointUrl = '';
@@ -199,12 +201,17 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
     }
 
     _getData() {
-        // Set default if nothing is set
-        // FIXME: make this.data nullable
-        if (Object.keys(this.data).length === 0) {
-            this.data = structuredClone(this.constructor.getDefaultData());
+        if (!this.data) {
+            throw new Error('BaseFormElement: data is not set');
         }
         return this.data;
+    }
+
+    _getPerson() {
+        if (!this.person) {
+            throw new Error('BaseFormElement: person is not set');
+        }
+        return this.person;
     }
 
     static getAdditionalTypes() {
@@ -336,7 +343,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
             formData: {
                 about: {
                     '@type': 'Person',
-                    persId: this.person.identNrObfuscated,
+                    persId: this._getPerson().identNrObfuscated,
                 },
                 ...gatherFormDataFromElement(formElement),
             },
@@ -436,7 +443,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
     }
 
     render() {
-        const data = this.data;
+        const data = this._getData();
 
         return html`
             <form>
