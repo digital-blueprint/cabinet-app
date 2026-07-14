@@ -762,6 +762,9 @@ export class CabinetFile extends ScopedElementsMixin(
                 case 'edit':
                     await this.editFile();
                     break;
+                case 'replace':
+                    await this.openReplacePdfDialog();
+                    break;
                 case 'mark-current':
                 case 'mark-obsolete':
                     if (fileId === null) {
@@ -1426,18 +1429,6 @@ export class CabinetFile extends ScopedElementsMixin(
                             })}">
                             ${this.renderStatusBadge()}
                             <div class="fileButtons">
-                                <button
-                                    class="button ${classMap({
-                                        hidden: !(
-                                            this.uploadFailed ||
-                                            this.mode === CabinetFile.Modes.EDIT ||
-                                            this.mode === CabinetFile.Modes.NEW_VERSION
-                                        ),
-                                    })}"
-                                    @click="${() => this.openReplacePdfDialog()}"
-                                    ?disabled="${this.uploadFailed || !hit}">
-                                    ${i18n.t('buttons.replace-document')}
-                                </button>
                                 ${this.renderActionDropDown(hit, file)}
                                 <button
                                     @click="${this.undeleteFile}"
@@ -1548,6 +1539,12 @@ export class CabinetFile extends ScopedElementsMixin(
                 iconName: 'trash',
             });
         }
+
+        options.push({
+            value: 'replace',
+            label: i18n.t('buttons.replace-document'),
+            iconName: 'reload',
+        });
 
         return html`
             <dbp-select
