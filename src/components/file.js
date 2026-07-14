@@ -1973,6 +1973,10 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     renderStatusBadge() {
+        if (this.mode !== CabinetFile.Modes.VIEW) {
+            return null;
+        }
+
         if (this.statusMessageBlocks.length === 0) {
             return null;
         }
