@@ -86,19 +86,22 @@ class CabinetFormElement extends BaseFormElement {
                     label=${this._i18nCustom.t(
                         'custom:doc-modal-previous-higher-education-institution',
                     )}
-                    .value=${datasheet.previousHigherEducationInstitution}></dbp-form-string-element>
+                    .value=${datasheet.previousHigherEducationInstitution}
+                    ?disabled=${this.disabled}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousHigherEducationPlace"
                     label=${this._i18nCustom.t('custom:doc-modal-previous-higher-education-place')}
-                    .value=${datasheet.previousHigherEducationPlace}></dbp-form-string-element>
+                    .value=${datasheet.previousHigherEducationPlace}
+                    ?disabled=${this.disabled}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousHigherEducationField"
                     label=${this._i18nCustom.t('custom:doc-modal-previous-higher-education-field')}
-                    .value=${datasheet.previousHigherEducationField}></dbp-form-string-element>
+                    .value=${datasheet.previousHigherEducationField}
+                    ?disabled=${this.disabled}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
@@ -107,7 +110,8 @@ class CabinetFormElement extends BaseFormElement {
                         'custom:doc-modal-previous-higher-education-curriculum',
                     )}
                     .value=${datasheet.previousHigherEducationCurriculum}
-                    type="url"></dbp-form-string-element>
+                    type="url"
+                    ?disabled=${this.disabled}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
@@ -115,13 +119,15 @@ class CabinetFormElement extends BaseFormElement {
                     label=${this._i18nCustom.t(
                         'custom:doc-modal-previous-higher-education-grading',
                     )}
-                    .value=${datasheet.previousHigherEducationGrading}></dbp-form-string-element>
+                    .value=${datasheet.previousHigherEducationGrading}
+                    ?disabled=${this.disabled}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousHigherEducationCPGA"
                     label=${this._i18nCustom.t('custom:doc-modal-previous-higher-education-cpga')}
-                    .value=${datasheet.previousHigherEducationCPGA}></dbp-form-string-element>
+                    .value=${datasheet.previousHigherEducationCPGA}
+                    ?disabled=${this.disabled}></dbp-form-string-element>
 
                 ${this.getCommonFormElements()}
             </form>

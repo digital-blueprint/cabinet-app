@@ -86,7 +86,8 @@ class CabinetFormElement extends BaseFormElement {
                     name="dateCreated"
                     label=${this._i18nCustom.t('custom:doc-modal-issue-date')}
                     .value=${minimalSchema.dateCreated || ''}
-                    required></dbp-form-date-element>
+                    required
+                    ?disabled=${this.disabled}></dbp-form-date-element>
 
                 ${this.getCommonFormElements()}
             </form>

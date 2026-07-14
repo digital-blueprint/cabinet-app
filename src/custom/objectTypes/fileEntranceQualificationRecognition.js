@@ -80,7 +80,8 @@ class CabinetFormElement extends BaseFormElement {
                     name="signedBy"
                     label=${this._i18nCustom.t('custom:doc-modal-signed-by')}
                     .value=${recognition.signedBy}
-                    required></dbp-form-string-element>
+                    required
+                    ?disabled=${this.disabled}></dbp-form-string-element>
 
                 ${this.getCommonFormElements()}
             </form>

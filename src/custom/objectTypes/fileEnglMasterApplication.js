@@ -88,7 +88,8 @@ class CabinetFormElement extends BaseFormElement {
                     subscribe="lang"
                     name="nativeLanguage"
                     label=${this._i18nCustom.t('custom:doc-modal-native-language')}
-                    .value=${application.nativeLanguage}></dbp-form-string-element>
+                    .value=${application.nativeLanguage}
+                    ?disabled=${this.disabled}></dbp-form-string-element>
 
                 <dbp-form-enum-element
                     subscribe="lang"
@@ -96,7 +97,8 @@ class CabinetFormElement extends BaseFormElement {
                     label=${this._i18nCustom.t('custom:doc-modal-previous-enrolment-in-austria')}
                     .items=${this.getEnrolmentOptions()}
                     .value="${application.previousEnrolmentInAustria.toString()}"
-                    required></dbp-form-enum-element>
+                    required
+                    ?disabled=${this.disabled}></dbp-form-enum-element>
 
                 ${this.getCommonFormElements()}
             </form>

@@ -90,14 +90,16 @@ class CabinetFormElement extends BaseFormElement {
                     name="agent[givenName]"
                     label=${this._i18nCustom.t('custom:person.given-name')}
                     placeholder=${this._i18nCustom.t('custom:person.given-name')}
-                    .value=${communication.agent.givenName}></dbp-form-string-element>
+                    .value=${communication.agent.givenName}
+                    ?disabled=${this.disabled}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="agent[familyName]"
                     label=${this._i18nCustom.t('custom:person.family-name')}
                     placeholder=${this._i18nCustom.t('custom:person.family-name')}
-                    .value=${communication.agent.familyName}></dbp-form-string-element>
+                    .value=${communication.agent.familyName}
+                    ?disabled=${this.disabled}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
@@ -105,14 +107,16 @@ class CabinetFormElement extends BaseFormElement {
                     label=${this._i18nCustom.t('custom:person.communication-abstract')}
                     placeholder=${this._i18nCustom.t('custom:person.communication-abstract')}
                     rows="10"
-                    .value=${communication.abstract}></dbp-form-string-element>
+                    .value=${communication.abstract}
+                    ?disabled=${this.disabled}></dbp-form-string-element>
 
                 <dbp-form-datetime-element
                     subscribe="lang"
                     name="dateCreated"
                     label=${this._i18nCustom.t('custom:doc-modal-issue-date')}
                     value=${communication.dateCreated}
-                    required></dbp-form-datetime-element>
+                    required
+                    ?disabled=${this.disabled}></dbp-form-datetime-element>
 
                 ${this.getCommonFormElements()}
             </form>

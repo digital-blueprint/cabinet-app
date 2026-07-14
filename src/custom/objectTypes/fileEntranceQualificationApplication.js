@@ -81,13 +81,15 @@ class CabinetFormElement extends BaseFormElement {
                     name="previousEducation"
                     label=${this._i18nCustom.t('custom:doc-modal-previous-education')}
                     .value=${application.previousEducation}
-                    required></dbp-form-string-element>
+                    required
+                    ?disabled=${this.disabled}></dbp-form-string-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="electiveSubject"
                     label=${this._i18nCustom.t('custom:doc-modal-elective-subject')}
-                    .state=${application.electiveSubject}></dbp-form-string-element>
+                    .state=${application.electiveSubject}
+                    ?disabled=${this.disabled}></dbp-form-string-element>
 
                 ${this.getCommonFormElements()}
             </form>

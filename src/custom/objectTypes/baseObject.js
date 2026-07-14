@@ -182,7 +182,9 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
         this.additionalType = null;
         this.entryPointUrl = '';
         this.auth = {};
-        this.saveButtonEnabled = true;
+        // When true the form is locked (during a save request): all fields and
+        // the cancel/save buttons are disabled and the save button shows a spinner.
+        this.disabled = false;
         this.mode = '';
     }
 
@@ -202,10 +204,6 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
             this.data = structuredClone(this.constructor.getDefaultData());
         }
         return this.data;
-    }
-
-    enableSaveButton() {
-        this.saveButtonEnabled = true;
     }
 
     static getAdditionalTypes() {
@@ -246,6 +244,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
                     id: '987654-AB/2023',
                 })}
                 .value=${fileCommon.subjectOf || ''}
+                ?disabled=${this.disabled}
                 @change=${updateField('subjectOf')}></dbp-form-string-element>
 
             <dbp-form-enum-element
@@ -255,6 +254,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
                 .items=${this.getStudyFields()}
                 .value=${fileCommon.studyField.key}
                 required
+                ?disabled=${this.disabled}
                 @change=${updateField('studyField.key')}></dbp-form-enum-element>
 
             <dbp-form-enum-element
@@ -266,6 +266,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
                 .items=${BaseFormElement.getDisposalTypes(this._i18nCustom, additionalType)}
                 .value=${fileCommon.disposalType || 'archival'}
                 required
+                ?disabled=${this.disabled}
                 @change=${updateField('disposalType')}></dbp-form-enum-element>
 
             <dbp-form-enum-element
@@ -275,6 +276,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
                 .items=${getSemesters()}
                 .value=${fileCommon.semester}
                 required
+                ?disabled=${this.disabled}
                 @change=${updateField('semester')}></dbp-form-enum-element>
 
             <dbp-form-enum-element
@@ -286,6 +288,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
                 multiple
                 display-mode="tags"
                 required
+                ?disabled=${this.disabled}
                 @change=${updateField('isPartOf')}></dbp-form-enum-element>
 
             <dbp-form-string-element
@@ -295,6 +298,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
                 placeholder=${this._i18nCustom.t('custom:doc-modal-comment')}
                 rows="5"
                 .value=${fileCommon.comment || ''}
+                ?disabled=${this.disabled}
                 @change=${updateField('comment')}></dbp-form-string-element>
 
             <input type="hidden" name="additionalType" value="${additionalType}" />
@@ -324,7 +328,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
             return;
         }
 
-        this.saveButtonEnabled = false;
+        this.disabled = true;
         const formElement = this.shadowRoot.querySelector('form');
         const data = {
             formData: {
@@ -351,7 +355,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
             additionalType: {type: String, attribute: 'additional-type'},
             data: {type: Object},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
-            saveButtonEnabled: {type: Boolean},
+            disabled: {type: Boolean},
             mode: {type: String},
         };
     }
@@ -406,19 +410,23 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
         const i18n = this._i18nCustom;
         return html`
             <div class="button-row">
-                <button class="button is-secondary" type="button" @click=${this.cancelForm}>
+                <button
+                    class="button is-secondary"
+                    type="button"
+                    ?disabled=${this.disabled}
+                    @click=${this.cancelForm}>
                     <dbp-icon name="close" aria-hidden="true"></dbp-icon>
                     ${i18n.t('custom:buttons.cancel')}
                 </button>
                 <button
                     class="button is-primary"
                     type="submit"
-                    ?disabled=${!this.saveButtonEnabled}
+                    ?disabled=${this.disabled}
                     @click=${this.storeBlobItem}>
                     <dbp-icon name="save" aria-hidden="true"></dbp-icon>
                     ${this._getSaveButtonText()}
                     <dbp-mini-spinner
-                        class="${classMap({hidden: this.saveButtonEnabled})}"></dbp-mini-spinner>
+                        class="${classMap({hidden: !this.disabled})}"></dbp-mini-spinner>
                 </button>
             </div>
         `;

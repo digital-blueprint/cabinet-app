@@ -420,7 +420,7 @@ export class CabinetFile extends ScopedElementsMixin(
              .data=${fileHitData || {}}
              .person=${this.person}
              .additionalType=${this.additionalType}
-             .saveButtonEnabled=${!this.uploadFailed}
+             .disabled=${this.uploadFailed}
              .mode=${this.mode}
              @DbpCabinetDocumentFormCancel=${(event) => {
                  void this.handleDocumentFormCancel(event);
@@ -842,14 +842,9 @@ export class CabinetFile extends ScopedElementsMixin(
         this.fileHitDataBackup = structuredClone(this.fileHitData);
         this.documentFileBackup = this.documentFile;
 
-        // Enable the save button again in the form if upload failed previously
+        // Re-enable the form (bound via `.disabled=${this.uploadFailed}`) if a
+        // previous upload had failed.
         if (this.uploadFailed) {
-            const form = this.formRef.value;
-
-            if (form?.enableSaveButton) {
-                form.enableSaveButton();
-            }
-
             this.uploadFailed = false;
         }
 

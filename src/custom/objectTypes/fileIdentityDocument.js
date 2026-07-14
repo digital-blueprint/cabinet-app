@@ -92,21 +92,24 @@ class CabinetFormElement extends BaseFormElement {
                     name="identifier"
                     label=${this._i18nCustom.t('custom:doc-modal-Identifier')}
                     .value=${identityDocument.identifier}
-                    required></dbp-form-string-element>
+                    required
+                    ?disabled=${this.disabled}></dbp-form-string-element>
 
                 <dbp-cabinet-form-nationality-element
                     subscribe="lang"
                     name="nationality"
                     label=${this._i18nCustom.t('custom:doc-modal-nationality')}
                     .value=${identityDocument.nationality}
-                    required></dbp-cabinet-form-nationality-element>
+                    required
+                    ?disabled=${this.disabled}></dbp-cabinet-form-nationality-element>
 
                 <dbp-form-date-element
                     subscribe="lang"
                     name="dateCreated"
                     label=${this._i18nCustom.t('custom:doc-modal-issue-date')}
                     .value=${identityDocument.dateCreated}
-                    required></dbp-form-date-element>
+                    required
+                    ?disabled=${this.disabled}></dbp-form-date-element>
 
                 ${this.getCommonFormElements()}
             </form>

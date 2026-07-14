@@ -108,20 +108,23 @@ class CabinetFormElement extends BaseFormElement {
                     name="dateCreated"
                     label=${this._i18nCustom.t('custom:doc-modal-issue-date')}
                     .value=${admissionNotice.dateCreated}
-                    required></dbp-form-date-element>
+                    required
+                    ?disabled=${this.disabled}></dbp-form-date-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
                     name="previousStudy"
                     label=${this._i18nCustom.t('custom:doc-modal-previousStudy')}
-                    .value=${admissionNotice.previousStudy}></dbp-form-string-element>
+                    .value=${admissionNotice.previousStudy}
+                    ?disabled=${this.disabled}></dbp-form-string-element>
 
                 <dbp-form-enum-element
                     subscribe="lang"
                     name="decision"
                     label=${this._i18nCustom.t('custom:doc-modal-decision')}
                     .items=${this.getDecisions()}
-                    .value=${admissionNotice.decision}></dbp-form-enum-element>
+                    .value=${admissionNotice.decision}
+                    ?disabled=${this.disabled}></dbp-form-enum-element>
 
                 ${this.getCommonFormElements()}
             </form>
