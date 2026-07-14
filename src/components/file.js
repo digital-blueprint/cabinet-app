@@ -607,7 +607,12 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     async undeleteFile() {
-        await this.handleFileDeletion(true);
+        this.actionRunning = true;
+        try {
+            await this.handleFileDeletion(true);
+        } finally {
+            this.actionRunning = false;
+        }
     }
 
     /**
@@ -1066,6 +1071,10 @@ export class CabinetFile extends ScopedElementsMixin(
                     flex-direction: row;
                     align-items: center;
                     gap: 0.5em;
+                }
+
+                #document-modal .action-with-spinner.hidden {
+                    display: none;
                 }
 
                 #document-modal .action-spinner {
@@ -1537,27 +1546,32 @@ export class CabinetFile extends ScopedElementsMixin(
                             ${this.renderStatusBadge()}
                             <div class="fileButtons">
                                 ${this.renderActionDropDown(hit, file)}
-                                <button
-                                    @click="${this.undeleteFile}"
-                                    ?disabled="${!file}"
-                                    class="${classMap({
+                                <div
+                                    class="action-with-spinner ${classMap({
                                         hidden:
                                             this.mode === CabinetFile.Modes.ADD ||
                                             (hit && !hit.base?.isScheduledForDeletion),
-                                    })} button is-secondary undo-button">
-                                    <dbp-icon
-                                        title="${i18n.t('doc-modal-undelete-document')}"
-                                        aria-label="${i18n.t('doc-modal-undelete-document')}"
-                                        name="undo"></dbp-icon>
-                                    ${i18n.t('doc-modal-undelete-document')}
+                                    })}">
                                     ${
-                                        this.state !== CabinetFile.States.LOADING_FILE
-                                            ? ''
-                                            : html`
-                                                  <dbp-mini-spinner></dbp-mini-spinner>
+                                        this.state === CabinetFile.States.LOADING_FILE ||
+                                        this.actionRunning
+                                            ? html`
+                                                  <dbp-mini-spinner
+                                                      class="action-spinner"></dbp-mini-spinner>
                                               `
+                                            : ''
                                     }
-                                </button>
+                                    <button
+                                        @click="${this.undeleteFile}"
+                                        ?disabled="${!file || this.actionRunning}"
+                                        class="button is-secondary undo-button">
+                                        <dbp-icon
+                                            title="${i18n.t('doc-modal-undelete-document')}"
+                                            aria-label="${i18n.t('doc-modal-undelete-document')}"
+                                            name="undo"></dbp-icon>
+                                        ${i18n.t('doc-modal-undelete-document')}
+                                    </button>
+                                </div>
                                 <dbp-select
                                     id="download-dropdown"
                                     class=" ${classMap({
