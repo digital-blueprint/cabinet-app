@@ -294,8 +294,8 @@ export class CabinetFile extends ScopedElementsMixin(
                 };
             case CabinetFile.Modes.REPLACE_FILE:
                 return {
-                    title: i18n.t('cabinet-file.notification-title-stored-replace-file'),
-                    body: i18n.t('cabinet-file.notification-body-stored-replace-file'),
+                    title: i18n.t('cabinet-file.notification-title-stored-replace-document'),
+                    body: i18n.t('cabinet-file.notification-body-stored-replace-document'),
                 };
             case CabinetFile.Modes.EDIT:
             default:
@@ -571,8 +571,8 @@ export class CabinetFile extends ScopedElementsMixin(
                 await this.updateComplete;
             } catch {
                 this.documentModalNotification(
-                    this._i18n.t('cabinet-file.notification-title-file-load-failed'),
-                    this._i18n.t('cabinet-file.notification-body-file-load-failed'),
+                    this._i18n.t('cabinet-file.notification-title-document-load-failed'),
+                    this._i18n.t('cabinet-file.notification-body-document-load-failed'),
                     'danger',
                 );
                 this.state = CabinetFile.States.LOADING_FILE_FAILED;

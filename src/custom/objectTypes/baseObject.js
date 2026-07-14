@@ -398,7 +398,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
             case 'new-version':
                 return i18n.t('custom:buttons.save-add-new-version');
             case 'replace-file':
-                return i18n.t('custom:buttons.save-replace-file');
+                return i18n.t('custom:buttons.save-replace-document');
             case 'edit':
                 return i18n.t('custom:buttons.save');
             default:
