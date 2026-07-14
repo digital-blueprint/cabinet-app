@@ -183,6 +183,8 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
         this.entryPointUrl = '';
         this.auth = {};
         this.saveButtonEnabled = true;
+        this.mode = '';
+        this.fileDirty = false;
     }
 
     static get scopedElements() {
@@ -353,6 +355,8 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
             data: {type: Object},
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             saveButtonEnabled: {type: Boolean},
+            mode: {type: String},
+            fileDirty: {type: Boolean, attribute: 'file-dirty'},
         };
     }
 
@@ -381,6 +385,28 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
         this.dispatchEvent(customEvent);
     }
 
+    /**
+     * Returns the save button label based on the current file mode.
+     * @returns {string}
+     */
+    _getSaveButtonText() {
+        const i18n = this._i18nCustom;
+
+        switch (this.mode) {
+            case 'add':
+                return i18n.t('custom:buttons.save-add-document');
+            case 'new-version':
+                return i18n.t('custom:buttons.save-add-new-version');
+            case 'edit':
+                // A dirty file means the user picked a new file (replace flow)
+                return this.fileDirty
+                    ? i18n.t('custom:buttons.save-replace-file')
+                    : i18n.t('custom:buttons.save');
+            default:
+                return i18n.t('custom:buttons.save');
+        }
+    }
+
     _getButtonRowHtml() {
         const i18n = this._i18nCustom;
         return html`
@@ -395,7 +421,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
                     ?disabled=${!this.saveButtonEnabled}
                     @click=${this.storeBlobItem}>
                     <dbp-icon name="save" aria-hidden="true"></dbp-icon>
-                    ${i18n.t('custom:buttons.save')}
+                    ${this._getSaveButtonText()}
                     <dbp-mini-spinner
                         class="${classMap({hidden: this.saveButtonEnabled})}"></dbp-mini-spinner>
                 </button>

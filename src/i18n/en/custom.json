@@ -2,6 +2,9 @@
     "buttons": {
         "cancel": "Cancel",
         "save": "Save",
+        "save-add-document": "Add document",
+        "save-add-new-version": "Add new version",
+        "save-replace-file": "Replace file",
         "view": "View",
         "view-short": "View"
     },

@@ -377,6 +377,8 @@ export class CabinetFile extends ScopedElementsMixin(
              .person=${this.person}
              .additionalType=${this.additionalType}
              .saveButtonEnabled=${!this.uploadFailed}
+             .mode=${this.mode}
+             .fileDirty=${this.isFileDirty}
              @DbpCabinetDocumentFormCancel=${(event) => {
                  void this.handleDocumentFormCancel(event);
              }}
