@@ -121,6 +121,9 @@ export class CabinetFile extends ScopedElementsMixin(
         // Will be used when canceling the form in EDIT mode, when the data was changed via this.fileHitDataCache
         this.fileHitDataBackup = null;
         this.fileHitDataCache = {};
+
+        // Will be used when canceling a replace-file/new-version flow to restore the shown PDF
+        this.documentFileBackup = null;
     }
 
     connectedCallback() {
@@ -364,10 +367,23 @@ export class CabinetFile extends ScopedElementsMixin(
         if (this.mode === CabinetFile.Modes.ADD) {
             this.objectType = null;
         } else {
+            // A replace-file/new-version flow also swapped out the shown PDF, so
+            // we need to restore that too, not just the metadata.
+            const pdfReplaced =
+                this.mode === CabinetFile.Modes.REPLACE_FILE ||
+                this.mode === CabinetFile.Modes.NEW_VERSION;
+
+            // Restore the pre-edit data. We should always have a backup here,
+            // so fail hard if we don't instead of ending up in a broken state.
+            console.assert(this.fileHitDataBackup, 'no fileHitDataBackup to restore');
             this.fileHitData = this.fileHitDataBackup;
             this.fileHitDataCache = {};
             this.objectType = this.fileHitData.objectType;
             this.mode = CabinetFile.Modes.VIEW;
+
+            if (pdfReplaced) {
+                await this.showPdf(this.documentFileBackup);
+            }
         }
 
         await this.updateComplete;
@@ -823,6 +839,11 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     async openReplacePdfDialog() {
+        // Back up the current data so a cancel of the replace/new-version flow
+        // can restore it (both the metadata and the currently shown PDF).
+        this.fileHitDataBackup = structuredClone(this.fileHitData);
+        this.documentFileBackup = this.documentFile;
+
         // Enable the save button again in the form if upload failed previously
         if (this.uploadFailed) {
             const form = this.formRef.value;
@@ -1915,12 +1936,13 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     async addNewVersion() {
+        this.mode = CabinetFile.Modes.NEW_VERSION;
+        // openReplacePdfDialog() backs up fileHitData, so mutate it afterwards.
+        await this.openReplacePdfDialog();
         // Drop the existing blob id so this is stored as a brand new blob; the
         // rest of fileHitData is kept so the new version reuses the groupId.
         this.fileHitData.file.base.fileId = null;
         // this.fileHitData.file.base.isCurrent = true;
-        this.mode = CabinetFile.Modes.NEW_VERSION;
-        await this.openReplacePdfDialog();
     }
 
     async handleDeleteAllVersions() {
