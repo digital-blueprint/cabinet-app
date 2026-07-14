@@ -53,12 +53,6 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(
         const modal = this.modalRef.value;
         this.selectionType = selectionType;
 
-        console.log('SelectionColumnConfiguration.open:', {
-            selectionType,
-            auth: this.auth,
-            userId: this.auth?.['user-id'],
-        });
-
         // Load column configurations based on type
         if (selectionType === 'person') {
             this.columnConfigs = this.cabinetConfig.getPersonColumns(this.lang);
@@ -72,13 +66,6 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(
         // Rerender the modal content with all properties set
         await this.requestUpdate();
         await this.updateComplete;
-
-        console.log('Opening column configuration modal:', {
-            selectionType,
-            columnConfigsLength: this.columnConfigs.length,
-            willButtonsBeDisabled:
-                !this.columnConfigs || this.columnConfigs.length === 0 || !this.isLoggedIn(),
-        });
 
         modal.open();
     }
@@ -418,11 +405,6 @@ export class SelectionColumnConfiguration extends ScopedElementsMixin(
         const i18n = this._i18n;
         const buttonsDisabled =
             !this.columnConfigs || this.columnConfigs.length === 0 || !this.isLoggedIn();
-
-        console.log('SelectionColumnConfiguration render:', {
-            columnConfigs: this.columnConfigs?.length,
-            buttonsDisabled: buttonsDisabled,
-        });
 
         return html`
             <dbp-modal

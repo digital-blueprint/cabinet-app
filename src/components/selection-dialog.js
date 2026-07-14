@@ -165,8 +165,6 @@ export class SelectionDialog extends ScopedElementsMixin(
         // Rerender the modal content with new data
         await this.requestUpdate();
 
-        console.log('open modal', modal);
-        console.log('open this.hitSelections', this.hitSelections);
         modal.open();
 
         // Wait for the content to render and tables to receive their properties
@@ -687,7 +685,6 @@ export class SelectionDialog extends ScopedElementsMixin(
 
         // Reset selector immediately before async operations
         e.target.selectedIndex = 0;
-        console.log('Exporting active documents...');
 
         const i18n = this._i18n;
         const documentSelections = this.hitSelections[HitSelectionType.DOCUMENT_FILE] || {};
@@ -850,7 +847,6 @@ export class SelectionDialog extends ScopedElementsMixin(
         }
 
         if (files.length > 0) {
-            console.log('exportDocuments files', files);
             // Use FileSink to download all files
             const fileSink = this.fileSinkStreamedRef.value;
             fileSink.files = files;
@@ -1431,9 +1427,6 @@ export class SelectionDialog extends ScopedElementsMixin(
                 ? this.personColumnVisibilityStates
                 : this.documentColumnVisibilityStates;
 
-        console.log(`[${type}] buildTableColumns - visibilityStates:`, visibilityStates);
-        console.log(`[${type}] buildTableColumns - columnConfigs:`, columnConfigs);
-
         // Add row number column
         columns.push({
             title: 'rowNumber',
@@ -1447,10 +1440,6 @@ export class SelectionDialog extends ScopedElementsMixin(
 
         // Add visible data columns
         columnConfigs.forEach((colConfig) => {
-            console.log(
-                `[${type}] Checking column ${colConfig.id}: visibility =`,
-                visibilityStates[colConfig.id],
-            );
             if (visibilityStates[colConfig.id] === true) {
                 columns.push({
                     title: colConfig.name,
@@ -1567,22 +1556,8 @@ export class SelectionDialog extends ScopedElementsMixin(
                 : this.cabinetConfig.getDocumentColumns(this.lang);
 
         const selectionEntries = Object.entries(selections);
-        console.log(`[${type}] Building table data for ${selectionEntries.length} selections`);
-        console.log(`[${type}] Column configs:`, columnConfigs);
 
         return selectionEntries.map(([id, hit], index) => {
-            console.log(`[${type}] Hit object for ${id}:`, hit);
-            console.log(
-                `[${type}] Hit type:`,
-                typeof hit,
-                'Is object?',
-                typeof hit === 'object' && hit !== null,
-            );
-
-            if (hit && typeof hit === 'object' && hit !== null) {
-                console.log(`[${type}] Hit keys:`, Object.keys(hit));
-            }
-
             const rowData = {
                 rowNumber: index + 1,
                 id: id,
@@ -1594,16 +1569,11 @@ export class SelectionDialog extends ScopedElementsMixin(
                 if (hit && typeof hit === 'object' && hit !== null && hit !== true) {
                     const value = this.getNestedValue(hit, colConfig.field);
                     rowData[colConfig.id] = value;
-                    console.log(
-                        `[${type}] Column ${colConfig.id} (field: ${colConfig.field}):`,
-                        value,
-                    );
                 } else {
                     console.warn(`[${type}] Invalid hit for ${id}:`, hit);
                 }
             });
 
-            console.log(`[${type}] Row data for ${id}:`, rowData);
             return rowData;
         });
     }
@@ -1639,7 +1609,6 @@ export class SelectionDialog extends ScopedElementsMixin(
 
     renderContent() {
         const i18n = this._i18n;
-        console.log('renderContent hitSelections', this.hitSelections);
 
         if (!this.hitSelections) {
             return html`
@@ -1649,9 +1618,6 @@ export class SelectionDialog extends ScopedElementsMixin(
 
         const personSelections = this.hitSelections[HitSelectionType.PERSON] || {};
         const documentSelections = this.hitSelections[HitSelectionType.DOCUMENT_FILE] || {};
-
-        console.log('renderContent this.hitSelections', this.hitSelections);
-        console.log('renderContent personSelections', personSelections);
 
         // Separate active and deleted documents
         const activeDocuments = {};
@@ -1665,9 +1631,6 @@ export class SelectionDialog extends ScopedElementsMixin(
                 activeDocuments[id] = hit;
             }
         });
-
-        console.log('renderContent activeDocuments', activeDocuments);
-        console.log('renderContent deletedDocuments', deletedDocuments);
 
         // Build table data with all field values
         const personTableData = this.buildTableData('person', personSelections);
@@ -1692,18 +1655,6 @@ export class SelectionDialog extends ScopedElementsMixin(
                 this.openColumnConfiguration('person'),
             ),
         };
-
-        console.log('[person] Table options:', personTableOptions);
-        console.log('[person] Table columns:', personTableOptions.columns);
-        console.log(
-            '[person] Table columns detail:',
-            personTableOptions.columns.map((c) => ({title: c.title, field: c.field})),
-        );
-        console.log('[person] Table data:', personTableData);
-        console.log(
-            '[person] First row data keys:',
-            personTableData[0] ? Object.keys(personTableData[0]) : 'no data',
-        );
 
         // Build table options for active documents
         const documentTableOptions = {
@@ -2161,7 +2112,6 @@ export class SelectionDialog extends ScopedElementsMixin(
     }
 
     removeSelection(type, id) {
-        console.log('removeSelection', type, id);
         // Create a new object to trigger reactivity
         const newSelections = {...this.hitSelections};
         delete newSelections[type][id];
@@ -2229,11 +2179,9 @@ export class SelectionDialog extends ScopedElementsMixin(
         const personTable = this.personTableRef.value;
         if (personTable) {
             if (!personTable.tableReady && !personTable.tableBuilding) {
-                console.log('Building person table');
                 personTable.buildTable();
             } else if (!personTable.tableBuilding) {
                 // Table is already built, update its data
-                console.log('Updating person table data');
                 this.updateTableData(HitSelectionType.PERSON);
                 personTable.tabulatorTable.redraw();
             }
@@ -2243,11 +2191,9 @@ export class SelectionDialog extends ScopedElementsMixin(
         const documentTable = this.documentTableRef.value;
         if (documentTable) {
             if (!documentTable.tableReady && !documentTable.tableBuilding) {
-                console.log('Building document table');
                 documentTable.buildTable();
             } else if (!documentTable.tableBuilding) {
                 // Table is already built, update its data
-                console.log('Updating document table data');
                 this.updateTableData(HitSelectionType.DOCUMENT_FILE);
                 documentTable.tabulatorTable.redraw();
             }
@@ -2257,7 +2203,6 @@ export class SelectionDialog extends ScopedElementsMixin(
         const deletedDocumentTable = this.deletedDocumentTableRef.value;
         if (deletedDocumentTable) {
             if (!deletedDocumentTable.tableReady && !deletedDocumentTable.tableBuilding) {
-                console.log('Building deleted document table');
                 deletedDocumentTable.buildTable();
             } else if (!deletedDocumentTable.tableBuilding) {
                 this.updateTableData(HitSelectionType.DOCUMENT_FILE);
@@ -2267,7 +2212,6 @@ export class SelectionDialog extends ScopedElementsMixin(
     }
 
     openColumnConfiguration(type) {
-        console.log('openColumnConfiguration', type);
         if (type === 'person') {
             const configDialog = this.personColumnConfigRef.value;
             if (configDialog) {
@@ -2294,10 +2238,6 @@ export class SelectionDialog extends ScopedElementsMixin(
 
     render() {
         // const i18n = this._i18n;
-        console.log('-- Render SelectionDialog --', {
-            auth: this.auth,
-        });
-
         if (!this.cabinetConfig) {
             return html``;
         }

@@ -50,7 +50,6 @@ function waitForWindowClose(windowRef) {
 
 class CabinetFormElement extends BaseFormElement {
     render() {
-        console.log('-- Render CabinetFormElement --');
         let hit = getPersonHit(this.data);
 
         return html`
@@ -522,7 +521,6 @@ class CabinetHitElement extends BaseHitElement {
     selectCheckboxChanged(e) {
         const id = e.target.value;
         const checked = e.target.checked;
-        console.log('selectCheckboxChanged this.hit', this.hit);
         sendHitSelectionEvent(this, HitSelectionType.PERSON, id, checked, this.hit);
     }
 }

@@ -312,7 +312,6 @@ class CabinetSearch extends ScopedElementsMixin(
     }
 
     resetHitSelectAllStateIfNeeded() {
-        console.log('resetHitSelectAllStateIfNeeded this.hitSelections', this.hitSelections);
         const isEmptySelection = (v) =>
             v == null || (typeof v === 'object' && Object.keys(v).length === 0);
         if (
@@ -463,7 +462,6 @@ class CabinetSearch extends ScopedElementsMixin(
         // These are emitted by CabinetDocumentStore once a mutation has been
         // confirmed to have propagated into the Typesense search index.
         this.addEventListener('DbpCabinetIndexChanged', () => {
-            console.log('Refresh after index changed');
             this._debouncedSearchRefresh();
         });
 
@@ -483,9 +481,7 @@ class CabinetSearch extends ScopedElementsMixin(
 
         // Listen to hitSelectionChanged events
         this.addEventListener(HitSelectionEventType.HIT_SELECTION_CHANGED, (event) => {
-            console.log('Hit selection changed:', event.detail);
             const {type, identifier, state, hit} = event.detail;
-            console.log('hit hit', hit);
             if (state) {
                 this.hitSelections[type][identifier] = hit || true;
             } else {
@@ -498,7 +494,6 @@ class CabinetSearch extends ScopedElementsMixin(
 
         // Listen to selection-removed events from selection dialog
         this.addEventListener('selection-removed', (event) => {
-            console.log('Selection removed:', event.detail);
             const {type, id} = event.detail;
             delete this.hitSelections[type][id];
             this.hitSelectAllState = this.constructor.HitSelectAllState.DESELECT;
@@ -512,7 +507,6 @@ class CabinetSearch extends ScopedElementsMixin(
 
         // Listen to close events from selection dialog
         this.addEventListener('close', (event) => {
-            console.log('Selection dialog closed:', event.detail);
             // Reload instant search when dialog closes to reflect changes
             if (event.detail?.reloadSearch && this.search) {
                 this.search.refresh();
@@ -521,7 +515,6 @@ class CabinetSearch extends ScopedElementsMixin(
 
         // Listen to clear-selection-items events from selection dialog
         this.addEventListener('clear-selection-items', (event) => {
-            console.log('Clearing selection items:', event.detail);
             const {type, ids} = event.detail;
             if (ids && ids.length > 0) {
                 // Remove each successfully processed item from selection
@@ -571,7 +564,6 @@ class CabinetSearch extends ScopedElementsMixin(
 
         this.facetWidgets = await this.createFacets();
         search.addWidgets(this.facetWidgets);
-        console.log('initInstantsearch this.createFacets()', this.facetWidgets);
 
         search.start();
 
@@ -1247,9 +1239,6 @@ class CabinetSearch extends ScopedElementsMixin(
                     hitElement.setAttribute('objectType', objectType);
                     hitElement.setAttribute('role', 'group');
                     hitElement.data = hit;
-                    console.log('item objectType', objectType);
-                    console.log('item hit', hit);
-                    console.log('item type', hit['@type']);
                     hitElement.selected = !!this.hitSelections[type][hit.id];
                     hitElement.showHitCheckboxes = this.showHitCheckboxes;
                     hitElement.searchHelper = cabinetSearch.search.helper;
@@ -1350,8 +1339,6 @@ class CabinetSearch extends ScopedElementsMixin(
 
     render() {
         const i18n = this._i18n;
-
-        console.log('-- Render --');
 
         return html`
             <div
@@ -1687,8 +1674,6 @@ class CabinetSearch extends ScopedElementsMixin(
         if (personComponent) {
             personComponent.close();
         }
-
-        console.log('handleRoutingUrlChange reset');
     }
 
     async updateFacetVisibility() {

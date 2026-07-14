@@ -308,7 +308,6 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
         // Validate the form before proceeding
         const validationResult = await validateRequiredFields(formElement);
 
-        console.log('validateAndSendSubmission validationResult', validationResult);
         if (!validationResult) {
             return false;
         }
@@ -337,7 +336,6 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
             },
         };
 
-        console.log('storeBlobItem data', data);
         const customEvent = new CustomEvent('DbpCabinetDocumentAddSave', {
             detail: data,
             bubbles: true,
@@ -427,7 +425,6 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
     }
 
     render() {
-        console.log('-- Render BaseFormElement --');
         const data = this.data;
 
         return html`

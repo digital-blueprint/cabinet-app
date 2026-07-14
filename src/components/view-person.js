@@ -69,7 +69,6 @@ export class CabinetViewPerson extends ScopedElementsMixin(
          * @type {Modal}
          */
         const modal = this.modalRef.value;
-        console.log('modal', modal);
         modal.open();
     }
 

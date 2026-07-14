@@ -371,7 +371,6 @@ export class CabinetFacets extends ScopedElementsMixin(
     }
 
     openFilterSettings() {
-        console.log('DbpCabinetOpenFilterSettings -- Open Filter Settings --');
         this.dispatchEvent(
             new CustomEvent('DbpCabinetOpenFilterSettings', {
                 bubbles: true,
@@ -382,7 +381,6 @@ export class CabinetFacets extends ScopedElementsMixin(
 
     render() {
         const i18n = this._i18n;
-        console.log('-- Render Facets --');
 
         let getFacetsForGroup = (groupId) => {
             return this._facetsConfigs.filter((facetConfig) => {

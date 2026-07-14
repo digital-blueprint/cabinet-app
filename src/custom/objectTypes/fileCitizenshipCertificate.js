@@ -78,8 +78,6 @@ class CabinetFormElement extends BaseFormElement {
     }
 
     render() {
-        console.log('-- Render CabinetFormElement --');
-
         let hit = getDocumentHit(this._getData());
         let citizenshipCertificate = getCitizenshipCertificate(hit);
 

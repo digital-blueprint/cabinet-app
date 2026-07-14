@@ -58,8 +58,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(
         // because the modal might have been closed without saving the settings
         this.loadFacetVisibilityStates();
 
-        console.log('open facetConfigs', facetConfigs);
-
         // Filter facetConfigs to only include items with groupId 'person' or 'file', don't include 'person.person'
         this.facetConfigs = (facetConfigs || []).filter(
             (item) =>
@@ -72,7 +70,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(
          * @type {Modal}
          */
         const modal = this.modalRef.value;
-        console.log('modal', modal);
         modal.open();
     }
 
@@ -407,8 +404,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(
     }
 
     changeFacetVisibility(item, visible) {
-        console.log('changeFacetVisibility item', item);
-
         // Change the visibility of the facet
         // Currently we only support toggling the visibility
         this.facetVisibilityStates[item.id] = visible;
@@ -417,8 +412,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(
         if (!visible) {
             delete this.facetVisibilityStates[item.id];
         }
-
-        console.log('changeFacetVisibility this.facetVisibilityStates', this.facetVisibilityStates);
 
         // Because the visibility state has changed, we need to re-render the list
         // Setting a property of this.facetVisibilityStates will not trigger a re-render
@@ -453,8 +446,6 @@ export class CabinetFilterSettings extends ScopedElementsMixin(
 
     render() {
         // const i18n = this._i18n;
-        console.log('-- Render --');
-
         return html`
             ${this.getModalHtml()}
         `;

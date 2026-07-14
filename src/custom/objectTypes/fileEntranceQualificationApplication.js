@@ -69,9 +69,6 @@ class CabinetFormElement extends BaseFormElement {
     }
 
     render() {
-        console.log('-- Render CabinetFormElement --');
-        console.log('this.data', this._getData());
-
         let hit = getDocumentHit(this._getData());
         let application = getEntranceQualificationApplication(hit);
 

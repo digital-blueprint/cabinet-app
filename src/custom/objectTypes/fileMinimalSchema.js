@@ -74,8 +74,6 @@ class CabinetFormElement extends BaseFormElement {
     }
 
     render() {
-        console.log('-- Render CabinetFormElement --');
-        console.log('render this.data', this.data);
         let hit = getDocumentHit(this._getData());
         let minimalSchema = getMinimalSchema(hit);
 
