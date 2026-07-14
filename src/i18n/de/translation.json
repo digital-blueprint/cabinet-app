@@ -19,7 +19,7 @@
         "document-upload-failed-pdfa-details": "Erkannte Probleme:",
         "document-upload-failed-pdfa-title": "Upload fehlgeschlagen",
         "document-upload-failed-pdfa-too-big-summary": "Die Dateigröße des Dokumentes ist zu groß. Bitte ersetzen Sie das Dokument. ",
-        "document-upload-failed-pdfa-validation-summary": "Das Dokument ist nicht im PDF/A Format. Bitte ersetzen Sie das Dokument. ",
+        "document-upload-failed-pdfa-validation-summary": "Das Dokument ist nicht im PDF/A Format. Bitte wählen Sie ein anderes Dokument aus.",
         "file-picker-context": "Dokument zum Hochladen auswählen",
         "notification-body-all-versions-deleted": "Die Versionen wurden zur Löschung vorgemerkt.",
         "notification-body-all-versions-deletion-failed": "Die Versionen konnten nicht zur Löschung vorgemerkt werden. Bitte versuchen Sie es erneut.",

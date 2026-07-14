@@ -19,7 +19,7 @@
         "document-upload-failed-pdfa-details": "Problems detected:",
         "document-upload-failed-pdfa-title": "Upload failed",
         "document-upload-failed-pdfa-too-big-summary": "The filesize of the document is too big. Please replace the file.",
-        "document-upload-failed-pdfa-validation-summary": "The document is not a valid PDF/A. Please replace the file.",
+        "document-upload-failed-pdfa-validation-summary": "The document is not a valid PDF/A. Please choose a different document.",
         "file-picker-context": "select document for uploading",
         "notification-body-all-versions-deleted": "The versions have been scheduled for deletion.",
         "notification-body-all-versions-deletion-failed": "The versions could not be scheduled for deletion. Please try again.",
