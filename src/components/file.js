@@ -241,10 +241,8 @@ export class CabinetFile extends ScopedElementsMixin(
 
             return;
         }
-
-        // If the document is current, mark all other versions as obsolete in
-        // Blob (this also waits for Typesense to sync).
-        if (item.base?.isCurrent) {
+        // Only a new version can make other versions obsolete.
+        if (this.mode === CabinetFile.Modes.NEW_VERSION && item.base?.isCurrent) {
             await store.markOtherVersionsObsolete(
                 item.file.base.groupId,
                 blob.identifier,
