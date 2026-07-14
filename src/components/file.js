@@ -163,6 +163,7 @@ export class CabinetFile extends ScopedElementsMixin(
             state: {type: String, attribute: false},
             mode: {type: String},
             cabinetConfig: {type: Object, attribute: false},
+            uploadFailed: {type: Boolean, state: true},
         };
     }
 
@@ -327,8 +328,12 @@ export class CabinetFile extends ScopedElementsMixin(
         if (this.shadowRoot.querySelector('.status-badge')) {
             this.shadowRoot.querySelector('.status-badge').classList.add('hidden');
         }
-        this.requestUpdate();
+
+        if (this.formRef.value) {
+            this.formRef.value.disabled = false;
+        }
     }
+
     async scrollDocumentModalToTop() {
         await this.updateComplete;
         await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -420,7 +425,6 @@ export class CabinetFile extends ScopedElementsMixin(
              .data=${fileHitData || {}}
              .person=${this.person}
              .additionalType=${this.additionalType}
-             .disabled=${this.uploadFailed}
              .mode=${this.mode}
              @DbpCabinetDocumentFormCancel=${(event) => {
                  void this.handleDocumentFormCancel(event);
@@ -702,9 +706,6 @@ export class CabinetFile extends ScopedElementsMixin(
             this.fileHitData.base.isScheduledForDeletion = !undelete;
             // Update status manually, because we didn't trigger a this.fileHitData change
             this.updateStatus();
-
-            // We need to request an update to re-render the view, because we only changed a property
-            await this.requestUpdate();
         }
     }
 
