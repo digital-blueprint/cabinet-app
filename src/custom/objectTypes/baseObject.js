@@ -184,7 +184,6 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
         this.auth = {};
         this.saveButtonEnabled = true;
         this.mode = '';
-        this.fileDirty = false;
     }
 
     static get scopedElements() {
@@ -356,7 +355,6 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
             entryPointUrl: {type: String, attribute: 'entry-point-url'},
             saveButtonEnabled: {type: Boolean},
             mode: {type: String},
-            fileDirty: {type: Boolean, attribute: 'file-dirty'},
         };
     }
 
@@ -397,11 +395,10 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
                 return i18n.t('custom:buttons.save-add-document');
             case 'new-version':
                 return i18n.t('custom:buttons.save-add-new-version');
+            case 'replace-file':
+                return i18n.t('custom:buttons.save-replace-file');
             case 'edit':
-                // A dirty file means the user picked a new file (replace flow)
-                return this.fileDirty
-                    ? i18n.t('custom:buttons.save-replace-file')
-                    : i18n.t('custom:buttons.save');
+                return i18n.t('custom:buttons.save');
             default:
                 return i18n.t('custom:buttons.save');
         }

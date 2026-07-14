@@ -59,6 +59,7 @@ export class CabinetFile extends ScopedElementsMixin(
     static Modes = {
         VIEW: 'view',
         EDIT: 'edit',
+        REPLACE_FILE: 'replace-file',
         NEW_VERSION: 'new-version',
         ADD: 'add',
         CLOSED: 'closed',
@@ -111,7 +112,6 @@ export class CabinetFile extends ScopedElementsMixin(
         this.mode = CabinetFile.Modes.CLOSED;
         this.fileHitData = null;
         this.fileHitDataCache = {};
-        this.isFileDirty = false;
         this.statusMessageBlocks = [];
         this.deleteAtDateTime = '';
         this.state = CabinetFile.States.NONE;
@@ -189,8 +189,10 @@ export class CabinetFile extends ScopedElementsMixin(
         metaData['groupId'] = this.fileHitData?.file?.base?.groupId || createUUID();
 
         const type = this.objectTypes[this.objectType].getBlobType();
-        // Only upload the file data again if it actually changed.
-        const file = this.isFileDirty ? this.documentFile : null;
+        // Only upload the file data again if the mode involves a (new) file. A
+        // plain metadata EDIT keeps the existing blob file; ADD, NEW_VERSION and
+        // REPLACE_FILE all (re)upload the selected PDF.
+        const file = this.mode !== CabinetFile.Modes.EDIT ? this.documentFile : null;
         const store = this._getDocumentStore();
 
         // Store the document to Blob and wait until it has propagated into the
@@ -253,8 +255,6 @@ export class CabinetFile extends ScopedElementsMixin(
         if (!modal.isOpen()) {
             return;
         }
-
-        this.isFileDirty = false;
 
         this.fileHitData = item;
         this.mode = CabinetFile.Modes.VIEW;
@@ -378,7 +378,6 @@ export class CabinetFile extends ScopedElementsMixin(
              .additionalType=${this.additionalType}
              .saveButtonEnabled=${!this.uploadFailed}
              .mode=${this.mode}
-             .fileDirty=${this.isFileDirty}
              @DbpCabinetDocumentFormCancel=${(event) => {
                  void this.handleDocumentFormCancel(event);
              }}
@@ -812,8 +811,6 @@ export class CabinetFile extends ScopedElementsMixin(
             this.objectType = null;
             this.fileHitData = null;
         }
-
-        this.isFileDirty = false;
 
         /** @type {FileSource} */
         const fileSource = this.fileSourceRef.value;
@@ -1626,6 +1623,7 @@ export class CabinetFile extends ScopedElementsMixin(
                     `;
                 }
             case CabinetFile.Modes.EDIT:
+            case CabinetFile.Modes.REPLACE_FILE:
             case CabinetFile.Modes.NEW_VERSION:
                 return html`
                     <h3>${this._i18n.t('Document-details-modal')}</h3>
@@ -1738,6 +1736,7 @@ export class CabinetFile extends ScopedElementsMixin(
     render() {
         switch (this.mode) {
             case CabinetFile.Modes.EDIT:
+            case CabinetFile.Modes.REPLACE_FILE:
             case CabinetFile.Modes.NEW_VERSION:
             case CabinetFile.Modes.VIEW:
             case CabinetFile.Modes.ADD:
@@ -1791,11 +1790,12 @@ export class CabinetFile extends ScopedElementsMixin(
      * @param ev
      */
     async onDocumentFileSelected(ev) {
-        this.isFileDirty = true;
         await this.showPdf(ev.detail.file);
 
+        // Picking a file for an existing document (from the VIEW "replace" flow)
+        // means we are editing it AND replacing its PDF.
         if (this.mode === CabinetFile.Modes.VIEW) {
-            this.mode = CabinetFile.Modes.EDIT;
+            this.mode = CabinetFile.Modes.REPLACE_FILE;
         }
 
         // Open the document modal (no-op if it is already open underneath the file source)
