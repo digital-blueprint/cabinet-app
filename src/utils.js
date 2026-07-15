@@ -46,7 +46,7 @@ export function getNestedProperty(obj, path) {
     return path.split('.').reduce((current, key) => current && current[key], obj) ?? null;
 }
 
-export function formatDate(value, defaultText = '-') {
+export function formatDate(value, defaultText = '–') {
     if (!value) return defaultText;
     const date = new Date(value);
     return isNaN(date.getTime())

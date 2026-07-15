@@ -651,40 +651,56 @@ class CabinetViewElement extends BaseViewElement {
 
                 .study-row {
                     display: flex;
-                    justify-content: space-between;
                     margin-bottom: 8px;
                 }
 
                 .study-row div {
-                    flex: 1;
+                    flex: 0 0 20%;
                     text-align: left;
                     font-weight: bold;
+                    text-indent: 1.5em;
                 }
 
                 .study-row span {
-                    flex: 2;
-                    text-align: start;
+                    flex: 1;
+                    text-align: left;
+                    padding-left: 3em;
+                }
+
+                .study-key-group .study-row span {
+                    padding-left: 0;
                 }
 
                 .Address-flex-item {
                     display: flex;
                     gap: 20px;
                     align-items: flex-start;
-                }
-
-                .Address-flex-item {
                     font-weight: bold;
+                    margin-bottom: 8px;
                 }
 
                 .address-info {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr 1fr;
                     list-style-type: none;
                     padding: 0;
+                    margin: 0;
                 }
 
                 .address-info-item {
-                    grid-column: 2;
+                    display: flex;
+                    margin-bottom: 8px;
+                }
+
+                .address-info-item .address-label {
+                    flex: 0 0 20%;
+                    text-align: left;
+                    font-weight: bold;
+                    text-indent: 1.5em;
+                }
+
+                .address-info-item span {
+                    flex: 1;
+                    text-align: left;
+                    padding-left: 3em;
                 }
 
                 .address-info li {
@@ -699,19 +715,19 @@ class CabinetViewElement extends BaseViewElement {
 
                 .Ci-item {
                     display: flex;
-                    justify-content: space-between;
                     margin-bottom: 8px;
                 }
 
                 .Ci-item div {
-                    flex: 1;
+                    flex: 0 0 20%;
                     text-align: left;
                     font-weight: bold;
                 }
 
                 .Ci-item span {
-                    flex: 2;
-                    text-align: start;
+                    flex: 1;
+                    text-align: left;
+                    padding-left: 3em;
                 }
 
                 .header-container {
@@ -775,8 +791,10 @@ class CabinetViewElement extends BaseViewElement {
                         flex-direction: column;
                     }
 
-                    .Ci-item span {
-                        padding-left: 0.5em;
+                    .study-row div,
+                    .Ci-item div,
+                    .address-info-item .address-label {
+                        flex: 0 0 40%;
                     }
 
                     .button-container {
@@ -810,12 +828,32 @@ class CabinetViewElement extends BaseViewElement {
                         flex-direction: column;
                     }
 
+                    .study-row span {
+                        padding-left: 0;
+                    }
+
+                    .study-row div {
+                        text-indent: 0;
+                    }
+
                     .Ci-item {
                         flex-direction: column;
                     }
 
-                    .address-info {
-                        display: inline;
+                    .Ci-item span {
+                        padding-left: 0;
+                    }
+
+                    .address-info-item {
+                        flex-direction: column;
+                    }
+
+                    .address-info-item span {
+                        padding-left: 0;
+                    }
+
+                    .address-info-item .address-label {
+                        text-indent: 0;
                     }
 
                     .button-container {
@@ -878,7 +916,7 @@ class CabinetViewElement extends BaseViewElement {
     render() {
         let hit = getPersonHit(this.data);
         const i18n = this._i18nCustom;
-        const displayValue = (value, defaultText = '-') => {
+        const displayValue = (value, defaultText = '–') => {
             return value === undefined || value === null || value === '' ? defaultText : value;
         };
 
@@ -888,66 +926,70 @@ class CabinetViewElement extends BaseViewElement {
         };
 
         return html`
-        <dbp-notification
-            id="dbp-modal-notification-person"
-            inline
-            lang="${this.lang}"></dbp-notification>
+            <dbp-notification
+                id="dbp-modal-notification-person"
+                inline
+                lang="${this.lang}"></dbp-notification>
 
-        <div class="header-container">
-        <div class="last-sync-info">
-        <p class="last-sync-title">${i18n.t('custom:person.sync.status-label')}:&nbsp;</p><div class="person-sync-date">${Intl.DateTimeFormat(
-            'de',
-            {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-            },
-        ).format(new Date(hit.person.syncTimestamp * 1000))}
-        </div>
-        </div>
-        <div class="button-container">   
-        <button class="button is-secondary header-person-button">
-            ${
-                this._syncing
-                    ? html`
-                          <dbp-mini-spinner></dbp-mini-spinner>
-                      `
-                    : html`
-                          <a href="#" @click=${this._onSync}>
-                              <dbp-icon
-                                  title="${i18n.t('custom:person.sync.button-title')}"
-                                  aria-hidden="true"
-                                  name="reload"></dbp-icon>
-                              ${i18n.t('custom:person.sync.button-title')}
-                          </a>
-                      `
-            }
-        </button>
-        <button class=" button is-secondary header-person-button">
-            <a href="${hit.person.coUrl}" @click=${this._onEdit}>
-                <dbp-icon  title='${i18n.t('custom:person.Edit-student-data')}'
-                aria-hidden="true"
-                name='pencil'>
-                </dbp-icon>
-                ${i18n.t('custom:person.Edit-student-data')}
-            </a>
-        </button>
-        <button class="button is-secondary header-person-button">
-            <a href="#" @click="${() => {
-                exportPersonPdf(i18n, hit);
-                return false;
-            }}">
-                <dbp-icon title='${i18n.t('custom:person.export.button-label')}'
-                name='download' aria-hidden="true">
-                </dbp-icon>
-                ${i18n.t('custom:person.export.button-label')}
-            </a>
-        </button>
-        </div>
-        </div>
+            <div class="header-container">
+                <div class="last-sync-info">
+                    <p class="last-sync-title">
+                        ${i18n.t('custom:person.sync.status-label')}:&nbsp;
+                    </p>
+                    <div class="person-sync-date">
+                        ${Intl.DateTimeFormat('de', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                        }).format(new Date(hit.person.syncTimestamp * 1000))}
+                    </div>
+                </div>
+                <div class="button-container">
+                    <button class="button is-secondary header-person-button">
+                        ${
+                            this._syncing
+                                ? html`
+                                      <dbp-mini-spinner></dbp-mini-spinner>
+                                  `
+                                : html`
+                                      <a href="#" @click=${this._onSync}>
+                                          <dbp-icon
+                                              title="${i18n.t('custom:person.sync.button-title')}"
+                                              aria-hidden="true"
+                                              name="reload"></dbp-icon>
+                                          ${i18n.t('custom:person.sync.button-title')}
+                                      </a>
+                                  `
+                        }
+                    </button>
+                    <button class=" button is-secondary header-person-button">
+                        <a href="${hit.person.coUrl}" @click=${this._onEdit}>
+                            <dbp-icon
+                                title="${i18n.t('custom:person.Edit-student-data')}"
+                                aria-hidden="true"
+                                name="pencil"></dbp-icon>
+                            ${i18n.t('custom:person.Edit-student-data')}
+                        </a>
+                    </button>
+                    <button class="button is-secondary header-person-button">
+                        <a
+                            href="#"
+                            @click="${() => {
+                                exportPersonPdf(i18n, hit);
+                                return false;
+                            }}">
+                            <dbp-icon
+                                title="${i18n.t('custom:person.export.button-label')}"
+                                name="download"
+                                aria-hidden="true"></dbp-icon>
+                            ${i18n.t('custom:person.export.button-label')}
+                        </a>
+                    </button>
+                </div>
+            </div>
             <div class="modal-Gi-header-container">
                 <div class="modal-Gi-header-svg">
                     <dbp-icon name="graduation" aria-hidden="true"></dbp-icon>
@@ -956,35 +998,109 @@ class CabinetViewElement extends BaseViewElement {
                     <h3>${i18n.t('custom:person.General-information')}</h3>
                 </div>
             </div>
-            <hr/>
+            <hr />
             <div class="info-container">
                 <div class="info-column">
                     <ul class="info-list">
-                        <li class="info-row"><div>${i18n.t('custom:person.academic-titles')}</div><span> ${displayValue(hit.person.academicTitles.join(', '))}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.given-name')}</div><span> ${displayValue(hit.person.givenName)}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.family-name')}</div><span> ${displayValue(hit.person.familyName)}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.former-family-name')}</div><span> ${displayValue(hit.person.formerFamilyName)}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.academic-title-following')}</div><span> ${displayValue(hit.person.academicTitleFollowing)}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.stud-id')}</div><span> ${displayValue(hit.person.studId)}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.st-PersonNr')}</div><span> ${displayValue(hit.person.stPersonNr)} </span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.birth-date')}</div><span> ${formatDate(hit.person.birthDate)}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.nationalities')}</div><span> ${displayValue(hit.person.nationalities.map((n) => selectTranslation(n)).join(', '))}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.gender')}</div><span> ${displayValue(selectTranslation(hit.person.gender))}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.social-SecurityNr')}</div><span> ${displayValue(hit.person.socialSecurityNr)}</span></li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.academic-titles')}</div>
+                            <span>${displayValue(hit.person.academicTitles.join(', '))}</span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.given-name')}</div>
+                            <span>${displayValue(hit.person.givenName)}</span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.family-name')}</div>
+                            <span>${displayValue(hit.person.familyName)}</span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.former-family-name')}</div>
+                            <span>${displayValue(hit.person.formerFamilyName)}</span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.academic-title-following')}</div>
+                            <span>${displayValue(hit.person.academicTitleFollowing)}</span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.stud-id')}</div>
+                            <span>${displayValue(hit.person.studId)}</span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.st-PersonNr')}</div>
+                            <span>${displayValue(hit.person.stPersonNr)}</span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.birth-date')}</div>
+                            <span>${formatDate(hit.person.birthDate)}</span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.nationalities')}</div>
+                            <span>
+                                ${displayValue(hit.person.nationalities.map((n) => selectTranslation(n)).join(', '))}
+                            </span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.gender')}</div>
+                            <span>${displayValue(selectTranslation(hit.person.gender))}</span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.social-SecurityNr')}</div>
+                            <span>${displayValue(hit.person.socialSecurityNr)}</span>
+                        </li>
                     </ul>
                 </div>
                 <div class="info-column">
                     <ul class="info-list">
-                        <li class="info-row"><div>${i18n.t('custom:person.ssPIN')}</div><span> ${displayValue(hit.person.bpk)}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.personal-Status')}</div><span> ${displayValue(selectTranslation(hit.person.personalStatus))}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.student-Status')}</div><span> ${displayValue(selectTranslation(hit.person.studentStatus))}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.tuitionStatus')}</div><span> ${displayValue(hit.person.tuitionStatus)}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.immatriculation-date')}</div><span> ${formatDate(hit.person.immatriculationDate)}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.immatriculationSemester')}</div><span> ${displayValue(hit.person.immatriculationSemester)}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.exmatriculation-GI')}</div><span> ${displayValue(selectTranslation(hit.person.exmatriculationStatus))} ${formatDate(hit.person.exmatriculationDate, '')}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.admission-Qualification-Type')}</div><span> ${displayValue(selectTranslation(hit.person.admissionQualificationType))}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.school-Certificate-Date')}</div><span> ${formatDate(hit.person.schoolCertificateDate)}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.note')}</div><span> ${displayValue(hit.person.note)}</span></li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.ssPIN')}</div>
+                            <span>${displayValue(hit.person.bpk)}</span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.personal-Status')}</div>
+                            <span>
+                                ${displayValue(selectTranslation(hit.person.personalStatus))}
+                            </span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.student-Status')}</div>
+                            <span>
+                                ${displayValue(selectTranslation(hit.person.studentStatus))}
+                            </span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.tuitionStatus')}</div>
+                            <span>${displayValue(hit.person.tuitionStatus)}</span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.immatriculation-date')}</div>
+                            <span>${formatDate(hit.person.immatriculationDate)}</span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.immatriculationSemester')}</div>
+                            <span>${displayValue(hit.person.immatriculationSemester)}</span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.exmatriculation-GI')}</div>
+                            <span>
+                                ${displayValue(selectTranslation(hit.person.exmatriculationStatus))}
+                                ${formatDate(hit.person.exmatriculationDate, '')}
+                            </span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.admission-Qualification-Type')}</div>
+                            <span>
+                                ${displayValue(selectTranslation(hit.person.admissionQualificationType))}
+                            </span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.school-Certificate-Date')}</div>
+                            <span>${formatDate(hit.person.schoolCertificateDate)}</span>
+                        </li>
+                        <li class="info-row">
+                            <div>${i18n.t('custom:person.note')}</div>
+                            <span>${displayValue(hit.person.note)}</span>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -996,103 +1112,155 @@ class CabinetViewElement extends BaseViewElement {
                     <h3>${i18n.t('custom:person.Study-information')}</h3>
                 </div>
             </div>
-            <hr/>
-                ${hit.person.studies
-                    .slice()
-                    .sort((a, b) => {
-                        const dateA = a.immatriculationDate
-                            ? new Date(a.immatriculationDate).getTime()
-                            : Infinity;
-                        const dateB = b.immatriculationDate
-                            ? new Date(b.immatriculationDate).getTime()
-                            : Infinity;
-                        return dateB - dateA;
-                    })
-                    .map(
-                        (study) => html`
-                            <li>
-                                <ul class="study-info">
-                                    <div class="study-key-group">
-                                        <li class="study-row">
-                                            <b><span>${displayValue(study.name)}</span></b>
-                                        </li>
-                                    </div>
+            <hr />
+            ${hit.person.studies
+                .slice()
+                .sort((a, b) => {
+                    const dateA = a.immatriculationDate
+                        ? new Date(a.immatriculationDate).getTime()
+                        : Infinity;
+                    const dateB = b.immatriculationDate
+                        ? new Date(b.immatriculationDate).getTime()
+                        : Infinity;
+                    return dateB - dateA;
+                })
+                .map(
+                    (study) => html`
+                        <li>
+                            <ul class="study-info">
+                                <div class="study-key-group">
                                     <li class="study-row">
-                                        <div>${i18n.t('custom:person.semester')}</div>
-                                        <span>${displayValue(study.semester)}</span>
+                                        <b><span>${displayValue(study.name)}</span></b>
                                     </li>
-                                    <li class="study-row">
-                                        <div>${i18n.t('custom:person.status')}</div>
-                                        <span>
-                                            ${displayValue(selectTranslation(study.status))}
-                                        </span>
-                                    </li>
-                                    <li class="study-row">
-                                        <div>${i18n.t('custom:person.immatriculation-date')}</div>
-                                        <span>${formatDate(study.immatriculationDate)}</span>
-                                    </li>
-                                    <li class="study-row">
-                                        <div>${i18n.t('custom:person.qualification-study')}</div>
-                                        <span>
-                                            ${displayValue(
-                                                selectTranslation(study.qualificationType),
-                                            )}
-                                            ${formatDate(study.qualificationDate, '')}
-                                            ${selectTranslation(study.qualificationState)}
-                                        </span>
-                                    </li>
-                                    <li class="study-row">
-                                        <div>${i18n.t('custom:person.exmatriculation')}</div>
-                                        <span>
-                                            ${displayValue(
-                                                selectTranslation(study.exmatriculationType),
-                                            )}
-                                            ${formatDate(study.exmatriculationDate, '')}
-                                        </span>
-                                    </li>
-                                    <li class="study-row">
-                                        <div>${i18n.t('custom:person.curriculum-version')}</div>
-                                        <span>${displayValue(study.curriculumVersion)}</span>
-                                    </li>
-                                </ul>
-                            </li>
-                        `,
-                    )}
+                                </div>
+                                <li class="study-row">
+                                    <div>${i18n.t('custom:person.semester')}</div>
+                                    <span>${displayValue(study.semester)}</span>
+                                </li>
+                                <li class="study-row">
+                                    <div>${i18n.t('custom:person.status')}</div>
+                                    <span>${displayValue(selectTranslation(study.status))}</span>
+                                </li>
+                                <li class="study-row">
+                                    <div>${i18n.t('custom:person.immatriculation-date')}</div>
+                                    <span>${formatDate(study.immatriculationDate)}</span>
+                                </li>
+                                <li class="study-row">
+                                    <div>${i18n.t('custom:person.qualification-study')}</div>
+                                    <span>
+                                        ${displayValue(selectTranslation(study.qualificationType))}
+                                        ${formatDate(study.qualificationDate, '')}
+                                        ${selectTranslation(study.qualificationState)}
+                                    </span>
+                                </li>
+                                <li class="study-row">
+                                    <div>${i18n.t('custom:person.exmatriculation')}</div>
+                                    <span>
+                                        ${displayValue(
+                                            selectTranslation(study.exmatriculationType),
+                                        )}
+                                        ${formatDate(study.exmatriculationDate, '')}
+                                    </span>
+                                </li>
+                                <li class="study-row">
+                                    <div>${i18n.t('custom:person.curriculum-version')}</div>
+                                    <span>${displayValue(study.curriculumVersion)}</span>
+                                </li>
+                            </ul>
+                        </li>
+                    `,
+                )}
             <div class="modal-Ci-header-container">
                 <div class="modal-Ci-header-svg">
                     <dbp-icon name="phone" aria-hidden="true"></dbp-icon>
                 </div>
-                <div class="modal-Ci-header-title"><h3>${i18n.t('custom:person.Contact-information')}</h3></div>
+                <div class="modal-Ci-header-title">
+                    <h3>${i18n.t('custom:person.Contact-information')}</h3>
+                </div>
             </div>
-            <hr/>
+            <hr />
             <ul class="Ci-flex-info">
-                <li class="Ci-item"><div>${i18n.t('custom:person.emailAddressUniversity')}</div><span>${displayValue(hit.person.emailAddressUniversity)}</span></li>
-                <li class="Ci-item"><div>${i18n.t('custom:person.emailAddressConfirmed')}</div><span>${displayValue(hit.person.emailAddressConfirmed)}</span></li>
-                <li class="Ci-item"><div>${i18n.t('custom:person.emailAddressTemporary')}</div><span>${displayValue(hit.person.emailAddressTemporary)}</span></li>
+                <li class="Ci-item">
+                    <div>${i18n.t('custom:person.emailAddressUniversity')}</div>
+                    <span>${displayValue(hit.person.emailAddressUniversity)}</span>
+                </li>
+                <li class="Ci-item">
+                    <div>${i18n.t('custom:person.emailAddressConfirmed')}</div>
+                    <span>${displayValue(hit.person.emailAddressConfirmed)}</span>
+                </li>
+                <li class="Ci-item">
+                    <div>${i18n.t('custom:person.emailAddressTemporary')}</div>
+                    <span>${displayValue(hit.person.emailAddressTemporary)}</span>
+                </li>
             </ul>
-                </br/>
-                <li class="Address-flex-item"><div>${i18n.t('custom:person.homeAddress.heading')}</li></div>
-                    <ul class="address-info">
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.note)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.street)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.place)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.region)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.postCode)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(selectTranslation(hit.person.homeAddress?.country))}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.telephoneNumber)}</li>
-                    </ul>
-
-                </br>
-                <li class="Address-flex-item"><div>${i18n.t('custom:person.studyAddress.heading')} </li></div>
-                    <ul class="address-info">
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.note)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.street)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.place)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.region)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.postCode)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(selectTranslation(hit.person.studyAddress?.country))}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.telephoneNumber)}</li>
-                    </ul>
+            <div class="Address-flex-item">${i18n.t('custom:person.homeAddress.heading')}</div>
+            <ul class="address-info">
+                <li class="address-info-item">
+                    <div class="address-label">${i18n.t('custom:person.homeAddress.street')}</div>
+                    <span>${displayValue(hit.person.homeAddress?.street)}</span>
+                </li>
+                <li class="address-info-item">
+                    <div class="address-label">${i18n.t('custom:person.homeAddress.place')}</div>
+                    <span>${displayValue(hit.person.homeAddress?.place)}</span>
+                </li>
+                <li class="address-info-item">
+                    <div class="address-label">${i18n.t('custom:person.homeAddress.region')}</div>
+                    <span>${displayValue(hit.person.homeAddress?.region)}</span>
+                </li>
+                <li class="address-info-item">
+                    <div class="address-label">${i18n.t('custom:person.homeAddress.postCode')}</div>
+                    <span>${displayValue(hit.person.homeAddress?.postCode)}</span>
+                </li>
+                <li class="address-info-item">
+                    <div class="address-label">${i18n.t('custom:person.homeAddress.country')}</div>
+                    <span>${displayValue(selectTranslation(hit.person.homeAddress?.country))}</span>
+                </li>
+                <li class="address-info-item">
+                    <div class="address-label">
+                        ${i18n.t('custom:person.homeAddress.telephoneNumber')}
+                    </div>
+                    <span>${displayValue(hit.person.homeAddress?.telephoneNumber)}</span>
+                </li>
+                <li class="address-info-item">
+                    <div class="address-label">${i18n.t('custom:person.homeAddress.note')}</div>
+                    <span>${displayValue(hit.person.homeAddress?.note)}</span>
+                </li>
+            </ul>
+            <div class="Address-flex-item">${i18n.t('custom:person.studyAddress.heading')}</div>
+            <ul class="address-info">
+                <li class="address-info-item">
+                    <div class="address-label">${i18n.t('custom:person.studyAddress.street')}</div>
+                    <span>${displayValue(hit.person.studyAddress?.street)}</span>
+                </li>
+                <li class="address-info-item">
+                    <div class="address-label">${i18n.t('custom:person.studyAddress.place')}</div>
+                    <span>${displayValue(hit.person.studyAddress?.place)}</span>
+                </li>
+                <li class="address-info-item">
+                    <div class="address-label">${i18n.t('custom:person.studyAddress.region')}</div>
+                    <span>${displayValue(hit.person.studyAddress?.region)}</span>
+                </li>
+                <li class="address-info-item">
+                    <div class="address-label">
+                        ${i18n.t('custom:person.studyAddress.postCode')}
+                    </div>
+                    <span>${displayValue(hit.person.studyAddress?.postCode)}</span>
+                </li>
+                <li class="address-info-item">
+                    <div class="address-label">${i18n.t('custom:person.studyAddress.country')}</div>
+                    <span>
+                        ${displayValue(selectTranslation(hit.person.studyAddress?.country))}
+                    </span>
+                </li>
+                <li class="address-info-item">
+                    <div class="address-label">
+                        ${i18n.t('custom:person.studyAddress.telephoneNumber')}
+                    </div>
+                    <span>${displayValue(hit.person.studyAddress?.telephoneNumber)}</span>
+                </li>
+                <li class="address-info-item">
+                    <div class="address-label">${i18n.t('custom:person.studyAddress.note')}</div>
+                    <span>${displayValue(hit.person.studyAddress?.note)}</span>
                 </li>
             </ul>
         `;
