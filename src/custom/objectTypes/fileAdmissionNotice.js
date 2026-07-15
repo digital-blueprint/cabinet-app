@@ -204,12 +204,12 @@ class CabinetViewElement extends BaseViewElement {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${i18n.t('custom:doc-modal-previousStudy')}
-                .value=${admissionNotice.previousStudy || ''}></dbp-form-string-view>
+                .value=${admissionNotice.previousStudy || '–'}></dbp-form-string-view>
 
             <dbp-form-enum-view
                 subscribe="lang"
                 label=${i18n.t('custom:doc-modal-decision')}
-                .value=${admissionNotice.decision || ''}
+                .value=${admissionNotice.decision || '–'}
                 .items=${this.getDecisions()}></dbp-form-enum-view>
         `;
     }

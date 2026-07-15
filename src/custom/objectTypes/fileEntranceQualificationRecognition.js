@@ -118,7 +118,7 @@ class CabinetViewElement extends BaseViewElement {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${i18n.t('custom:doc-modal-signed-by')}
-                .value=${recognition.signedBy || ''}
+                .value=${recognition.signedBy || '–'}
                 required></dbp-form-string-view>
         `;
     }

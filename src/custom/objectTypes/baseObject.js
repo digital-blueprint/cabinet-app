@@ -722,7 +722,7 @@ export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:doc-modal-subject-of')}
-                .value=${baseData.subjectOf || ''}></dbp-form-string-view>
+                .value=${baseData.subjectOf || '–'}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
@@ -734,7 +734,7 @@ export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:doc-modal-semester')}
-                .value=${baseData.semester || ''}></dbp-form-string-view>
+                .value=${baseData.semester || '–'}></dbp-form-string-view>
 
             <dbp-form-enum-view
                 subscribe="lang"
@@ -793,7 +793,7 @@ export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:doc-modal-comment')}
-                .value=${baseData.comment || ''}></dbp-form-string-view>
+                .value=${baseData.comment || '–'}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
@@ -849,7 +849,7 @@ export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
             <dbp-form-enum-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:doc-modal-document-type')}
-                .value=${baseData.additionalType?.key || ''}
+                .value=${baseData.additionalType?.key || '–'}
                 .items=${translatedTypes}></dbp-form-enum-view>
             ${this._getCustomViewElements()} ${this._getCommonViewElements()}
         `;

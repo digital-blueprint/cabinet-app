@@ -164,32 +164,32 @@ class CabinetViewElement extends BaseViewElement {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${i18n.t('custom:doc-modal-previous-higher-education-institution')}
-                .value=${datasheet.previousHigherEducationInstitution || ''}></dbp-form-string-view>
+                .value=${datasheet.previousHigherEducationInstitution || '–'}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
                 label=${i18n.t('custom:doc-modal-previous-higher-education-place')}
-                .value=${datasheet.previousHigherEducationPlace || ''}></dbp-form-string-view>
+                .value=${datasheet.previousHigherEducationPlace || '–'}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
                 label=${i18n.t('custom:doc-modal-previous-higher-education-field')}
-                .value=${datasheet.previousHigherEducationField || ''}></dbp-form-string-view>
+                .value=${datasheet.previousHigherEducationField || '–'}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
                 label=${i18n.t('custom:doc-modal-previous-higher-education-curriculum')}
-                .value=${datasheet.previousHigherEducationCurriculum || ''}></dbp-form-string-view>
+                .value=${datasheet.previousHigherEducationCurriculum || '–'}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
                 label=${i18n.t('custom:doc-modal-previous-higher-education-grading')}
-                .value=${datasheet.previousHigherEducationGrading || ''}></dbp-form-string-view>
+                .value=${datasheet.previousHigherEducationGrading || '–'}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
                 label=${i18n.t('custom:doc-modal-previous-higher-education-cpga')}
-                .value=${datasheet.previousHigherEducationCPGA || ''}></dbp-form-string-view>
+                .value=${datasheet.previousHigherEducationCPGA || '–'}></dbp-form-string-view>
         `;
     }
 }

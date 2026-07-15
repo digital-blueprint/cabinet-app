@@ -126,12 +126,12 @@ class CabinetViewElement extends BaseViewElement {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${i18n.t('custom:doc-modal-previous-education')}
-                .value=${application.previousEducation || ''}></dbp-form-string-view>
+                .value=${application.previousEducation || '–'}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
                 label=${i18n.t('custom:doc-modal-elective-subject')}
-                .value=${application.electiveSubject || ''}></dbp-form-string-view>
+                .value=${application.electiveSubject || '–'}></dbp-form-string-view>
         `;
     }
 }

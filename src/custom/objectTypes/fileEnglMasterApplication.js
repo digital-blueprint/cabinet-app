@@ -135,7 +135,7 @@ class CabinetViewElement extends BaseViewElement {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${i18n.t('custom:doc-modal-native-language')}
-                .value=${application.nativeLanguage || ''}></dbp-form-string-view>
+                .value=${application.nativeLanguage || '–'}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"

@@ -183,7 +183,7 @@ class CabinetViewElement extends BaseViewElement {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:person.communication-abstract')}
-                .value=${communication.abstract || ''}></dbp-form-string-view>
+                .value=${communication.abstract || '–'}></dbp-form-string-view>
 
             <dbp-form-datetime-view
                 subscribe="lang"
