@@ -670,21 +670,31 @@ class CabinetViewElement extends BaseViewElement {
                     display: flex;
                     gap: 20px;
                     align-items: flex-start;
-                }
-
-                .Address-flex-item {
                     font-weight: bold;
+                    margin-bottom: 8px;
                 }
 
                 .address-info {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr 1fr;
                     list-style-type: none;
-                    padding: 0;
+                    padding: 0 0 0 1.5em;
+                    margin: 0;
                 }
 
                 .address-info-item {
-                    grid-column: 2;
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 8px;
+                }
+
+                .address-info-item .address-label {
+                    flex: 1;
+                    text-align: left;
+                    font-weight: bold;
+                }
+
+                .address-info-item span {
+                    flex: 2;
+                    text-align: start;
                 }
 
                 .address-info li {
@@ -814,8 +824,8 @@ class CabinetViewElement extends BaseViewElement {
                         flex-direction: column;
                     }
 
-                    .address-info {
-                        display: inline;
+                    .address-info-item {
+                        flex-direction: column;
                     }
 
                     .button-container {
@@ -1070,28 +1080,26 @@ class CabinetViewElement extends BaseViewElement {
                 <li class="Ci-item"><div>${i18n.t('custom:person.emailAddressConfirmed')}</div><span>${displayValue(hit.person.emailAddressConfirmed)}</span></li>
                 <li class="Ci-item"><div>${i18n.t('custom:person.emailAddressTemporary')}</div><span>${displayValue(hit.person.emailAddressTemporary)}</span></li>
             </ul>
-                </br/>
                 <li class="Address-flex-item"><div>${i18n.t('custom:person.homeAddress.heading')}</li></div>
                     <ul class="address-info">
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.note)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.street)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.place)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.region)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.postCode)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(selectTranslation(hit.person.homeAddress?.country))}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.homeAddress?.telephoneNumber)}</li>
+                        <li class="address-info-item"><div class="address-label">${i18n.t('custom:person.homeAddress.street')}</div><span>${displayValue(hit.person.homeAddress?.street)}</span></li>
+                        <li class="address-info-item"><div class="address-label">${i18n.t('custom:person.homeAddress.place')}</div><span>${displayValue(hit.person.homeAddress?.place)}</span></li>
+                        <li class="address-info-item"><div class="address-label">${i18n.t('custom:person.homeAddress.region')}</div><span>${displayValue(hit.person.homeAddress?.region)}</span></li>
+                        <li class="address-info-item"><div class="address-label">${i18n.t('custom:person.homeAddress.postCode')}</div><span>${displayValue(hit.person.homeAddress?.postCode)}</span></li>
+                        <li class="address-info-item"><div class="address-label">${i18n.t('custom:person.homeAddress.country')}</div><span>${displayValue(selectTranslation(hit.person.homeAddress?.country))}</span></li>
+                        <li class="address-info-item"><div class="address-label">${i18n.t('custom:person.homeAddress.telephoneNumber')}</div><span>${displayValue(hit.person.homeAddress?.telephoneNumber)}</span></li>
+                        <li class="address-info-item"><div class="address-label">${i18n.t('custom:person.homeAddress.note')}</div><span>${displayValue(hit.person.homeAddress?.note)}</span></li>
                     </ul>
 
-                </br>
                 <li class="Address-flex-item"><div>${i18n.t('custom:person.studyAddress.heading')} </li></div>
                     <ul class="address-info">
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.note)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.street)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.place)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.region)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.postCode)}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(selectTranslation(hit.person.studyAddress?.country))}</li>
-                        <li class="address-info-item"><b></b> ${displayValue(hit.person.studyAddress?.telephoneNumber)}</li>
+                        <li class="address-info-item"><div class="address-label">${i18n.t('custom:person.studyAddress.street')}</div><span>${displayValue(hit.person.studyAddress?.street)}</span></li>
+                        <li class="address-info-item"><div class="address-label">${i18n.t('custom:person.studyAddress.place')}</div><span>${displayValue(hit.person.studyAddress?.place)}</span></li>
+                        <li class="address-info-item"><div class="address-label">${i18n.t('custom:person.studyAddress.region')}</div><span>${displayValue(hit.person.studyAddress?.region)}</span></li>
+                        <li class="address-info-item"><div class="address-label">${i18n.t('custom:person.studyAddress.postCode')}</div><span>${displayValue(hit.person.studyAddress?.postCode)}</span></li>
+                        <li class="address-info-item"><div class="address-label">${i18n.t('custom:person.studyAddress.country')}</div><span>${displayValue(selectTranslation(hit.person.studyAddress?.country))}</span></li>
+                        <li class="address-info-item"><div class="address-label">${i18n.t('custom:person.studyAddress.telephoneNumber')}</div><span>${displayValue(hit.person.studyAddress?.telephoneNumber)}</span></li>
+                        <li class="address-info-item"><div class="address-label">${i18n.t('custom:person.studyAddress.note')}</div><span>${displayValue(hit.person.studyAddress?.note)}</span></li>
                     </ul>
                 </li>
             </ul>
