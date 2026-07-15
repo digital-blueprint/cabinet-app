@@ -461,7 +461,7 @@ class CabinetHitElement extends BaseHitElement {
                                   }
                               `
                             : html`
-                                  — —
+                                  –
                               `
                     }
                 </div>
@@ -878,8 +878,8 @@ class CabinetViewElement extends BaseViewElement {
     render() {
         let hit = getPersonHit(this.data);
         const i18n = this._i18nCustom;
-        const displayValue = (value) => {
-            return value === undefined || value === null || value === '' ? '-' : value;
+        const displayValue = (value, defaultText = '-') => {
+            return value === undefined || value === null || value === '' ? defaultText : value;
         };
 
         const selectTranslation = (keyedText) => {
@@ -981,7 +981,7 @@ class CabinetViewElement extends BaseViewElement {
                         <li class="info-row"><div>${i18n.t('custom:person.tuitionStatus')}</div><span> ${displayValue(hit.person.tuitionStatus)}</span></li>
                         <li class="info-row"><div>${i18n.t('custom:person.immatriculation-date')}</div><span> ${formatDate(hit.person.immatriculationDate)}</span></li>
                         <li class="info-row"><div>${i18n.t('custom:person.immatriculationSemester')}</div><span> ${displayValue(hit.person.immatriculationSemester)}</span></li>
-                        <li class="info-row"><div>${i18n.t('custom:person.exmatriculation-GI')}</div><span> ${displayValue(selectTranslation(hit.person.exmatriculationStatus))} ${formatDate(hit.person.exmatriculationDate)}</span></li>
+                        <li class="info-row"><div>${i18n.t('custom:person.exmatriculation-GI')}</div><span> ${displayValue(selectTranslation(hit.person.exmatriculationStatus))} ${formatDate(hit.person.exmatriculationDate, '')}</span></li>
                         <li class="info-row"><div>${i18n.t('custom:person.admission-Qualification-Type')}</div><span> ${displayValue(selectTranslation(hit.person.admissionQualificationType))}</span></li>
                         <li class="info-row"><div>${i18n.t('custom:person.school-Certificate-Date')}</div><span> ${formatDate(hit.person.schoolCertificateDate)}</span></li>
                         <li class="info-row"><div>${i18n.t('custom:person.note')}</div><span> ${displayValue(hit.person.note)}</span></li>
@@ -1037,7 +1037,7 @@ class CabinetViewElement extends BaseViewElement {
                                             ${displayValue(
                                                 selectTranslation(study.qualificationType),
                                             )}
-                                            ${formatDate(study.qualificationDate)}
+                                            ${formatDate(study.qualificationDate, '')}
                                             ${selectTranslation(study.qualificationState)}
                                         </span>
                                     </li>
@@ -1047,7 +1047,7 @@ class CabinetViewElement extends BaseViewElement {
                                             ${displayValue(
                                                 selectTranslation(study.exmatriculationType),
                                             )}
-                                            ${formatDate(study.exmatriculationDate)}
+                                            ${formatDate(study.exmatriculationDate, '')}
                                         </span>
                                     </li>
                                     <li class="study-row">
