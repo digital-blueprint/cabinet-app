@@ -136,13 +136,13 @@
         },
         "homeAddress": {
             "country": "Country",
-            "heading": "Home Address",
+            "heading": "Home address",
             "note": "Note",
             "place": "City/Place",
-            "postCode": "Postal Code",
+            "postCode": "Postal code",
             "region": "Region",
             "street": "Street",
-            "telephoneNumber": "Phone Number"
+            "telephoneNumber": "Phone number"
         },
         "immatriculation-date": "Immatriculation date",
         "immatriculationSemester": "Immatriculation semester",
@@ -162,13 +162,13 @@
         "Study-information": "Study information",
         "studyAddress": {
             "country": "Country",
-            "heading": "Study Address",
+            "heading": "Study address",
             "note": "Note",
             "place": "City/Place",
-            "postCode": "Postal Code",
+            "postCode": "Postal code",
             "region": "Region",
             "street": "Street",
-            "telephoneNumber": "Phone Number"
+            "telephoneNumber": "Phone number"
         },
         "sync": {
             "button-title": "Synchronize data",
