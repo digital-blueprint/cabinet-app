@@ -204,7 +204,7 @@ export default (async () => {
             warn(warning);
         },
         resolve: {
-            modules: [import.meta.dirname + '/node_modules'],
+            modules: [process.env.npm_config_local_prefix + '/node_modules'],
         },
         plugins: [
             emitEJS({
