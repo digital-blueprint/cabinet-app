@@ -203,6 +203,9 @@ export default (async () => {
             }
             warn(warning);
         },
+        resolve: {
+            modules: [import.meta.dirname + '/node_modules'],
+        },
         plugins: [
             emitEJS({
                 src: assetsPath,
