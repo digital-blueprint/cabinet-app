@@ -4,7 +4,13 @@ import {AuthMixin, LangMixin, ScopedElementsMixin, MiniSpinner} from '@dbp-toolk
 import {CabinetSettings} from './settings.js';
 import * as commonUtils from '@dbp-toolkit/common/utils';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {Icon, InlineNotification, Modal, sendNotification} from '@dbp-toolkit/common';
+import {
+    Icon,
+    InlineNotification,
+    Modal,
+    sendNotification,
+    DBPLoginRequired,
+} from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
 import instantsearch from 'instantsearch.js';
 import DbpTypesenseInstantSearchAdapter from './instantsearch-adapter.js';
@@ -229,6 +235,7 @@ class CabinetSearch extends ScopedElementsMixin(
             'dbp-cabinet-empty-widget': EmptyWidget,
             'dbp-cabinet-selection-dialog': SelectionDialog,
             'dbp-mini-spinner': MiniSpinner,
+            'dbp-login-required': DBPLoginRequired,
         };
     }
 
@@ -1349,13 +1356,10 @@ class CabinetSearch extends ScopedElementsMixin(
                     <dbp-mini-spinner text="${i18n.t('loading-message')}"></dbp-mini-spinner>
                 </span>
             </div>
-            <div
-                class="notification is-warning ${classMap({
-                    hidden: this.isLoggedIn() || this.isAuthPending() || this.loadingTranslations,
-                })}">
-                ${i18n.t('error-login-message')}
-                <a href="#" @click="${this._onLoginClicked}">${i18n.t('error-login-link')}</a>
-            </div>
+            <dbp-login-required
+                subscribe="auth,lang"
+                @dbp-login-requested=${this._onLoginClicked}>
+            </dbp-login-required>
 
             <div
                 class="${classMap({
