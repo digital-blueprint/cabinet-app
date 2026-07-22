@@ -66,7 +66,7 @@
         "typesense-instantsearch-adapter": "^3.0.0"
     },
     "scripts": {
-        "build": "rolldown -c rollup.config.js",
+        "build": "rolldown -c rolldown.config.js",
         "i18next:fix": "i18next-cli extract",
         "i18next": "i18next-cli extract --ci --dry-run",
         "fix": "npm run eslint:fix && npm run prettier:fix && npm run i18next:fix",
@@ -75,13 +75,13 @@
         "eslint": "eslint \"**/*.{js,ts}\"",
         "prettier:fix": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --write",
         "prettier": "prettier \"**/*.{js,json,ts,md,yaml,yml}\" --check",
-        "watch": "rolldown -c rollup.config.js --watch",
+        "watch": "rolldown -c rolldown.config.js --watch",
         "watch-local": "npm run watch",
-        "watch-full": "rolldown -c rollup.config.js --watch --environment FORCE_FULL",
-        "watch-bs": "rolldown -c rollup.config.js --watch --environment APP_ENV:bs",
-        "watch-custom": "rolldown -c rollup.config.js --watch --environment APP_ENV:localCustom",
-        "test": "rolldown -c rollup.config.js --environment APP_ENV:test && web-test-runner",
-        "test-full": "rolldown -c rollup.config.js --environment FORCE_FULL,APP_ENV:test && web-test-runner",
+        "watch-full": "rolldown -c rolldown.config.js --watch --environment FORCE_FULL",
+        "watch-bs": "rolldown -c rolldown.config.js --watch --environment APP_ENV:bs",
+        "watch-custom": "rolldown -c rolldown.config.js --watch --environment APP_ENV:localCustom",
+        "test": "rolldown -c rolldown.config.js --environment APP_ENV:test && web-test-runner",
+        "test-full": "rolldown -c rolldown.config.js --environment FORCE_FULL,APP_ENV:test && web-test-runner",
         "tsc": "tsc -p jsconfig.json"
     }
 }
