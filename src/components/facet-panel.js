@@ -11,11 +11,13 @@ export class FacetPanel extends LangMixin(ScopedElementsMixin(DBPLitElement), cr
         super();
         this.title = '';
         this.isOpen = false;
+        this.facetId = '';
     }
 
     static properties = {
         title: {type: String},
-        isOpen: {type: Boolean, state: true},
+        facetId: {type: String},
+        isOpen: {type: Boolean},
     };
 
     static get scopedElements() {
@@ -63,6 +65,13 @@ export class FacetPanel extends LangMixin(ScopedElementsMixin(DBPLitElement), cr
     _toggleContent(event) {
         event.stopPropagation();
         this.isOpen = !this.isOpen;
+        this.dispatchEvent(
+            new CustomEvent('facet-panel-toggle', {
+                bubbles: true,
+                composed: true,
+                detail: {facetId: this.facetId, isOpen: this.isOpen},
+            }),
+        );
     }
 
     render() {

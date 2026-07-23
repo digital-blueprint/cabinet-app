@@ -194,6 +194,8 @@ class CabinetSearch extends ScopedElementsMixin(
         this._loadModulesPromise = null;
         this._initInstantsearchPromise = null;
         this._initialUiState = null;
+        // facetConfig.id -> facet panel expand state, restored after a re-init.
+        this._facetExpandStates = {};
         // Debounced refresh of the active search, used when the Typesense index
         // changes. The first index change refreshes immediately (leading edge)
         // so results update as soon as possible; any further changes in the
@@ -1418,6 +1420,8 @@ class CabinetSearch extends ScopedElementsMixin(
                         class="dbp-cabinet-facets"
                         ${ref(this.cabinetFacetsRef)}
                         .search="${this.search}"
+                        .facetExpandStates="${this._facetExpandStates}"
+                        @facet-panel-toggle="${this._onFacetPanelToggle}"
                         subscribe="lang"></dbp-cabinet-facets>
                     <div class="results">
                       
@@ -1678,6 +1682,14 @@ class CabinetSearch extends ScopedElementsMixin(
         if (personComponent) {
             personComponent.close();
         }
+    }
+
+    _onFacetPanelToggle(event) {
+        const {facetId, isOpen} = event.detail;
+        if (!facetId) {
+            return;
+        }
+        this._facetExpandStates[facetId] = isOpen;
     }
 
     async updateFacetVisibility() {

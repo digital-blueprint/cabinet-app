@@ -24,6 +24,8 @@ export class CabinetFacets extends ScopedElementsMixin(
         this.facetWidgetHash = {};
         this.active = false;
         this._facetsConfigs = [];
+        // facetConfig.id -> facet panel expand state, provided by the parent.
+        this.facetExpandStates = {};
     }
 
     static get scopedElements() {
@@ -42,6 +44,7 @@ export class CabinetFacets extends ScopedElementsMixin(
             ...super.properties,
             active: {type: Boolean, state: true},
             _facetsConfigs: {type: Array, state: true},
+            facetExpandStates: {type: Object, attribute: false},
         };
     }
 
@@ -370,6 +373,14 @@ export class CabinetFacets extends ScopedElementsMixin(
         ];
     }
 
+    _onFacetPanelToggle(event) {
+        const {facetId, isOpen} = event.detail;
+        if (!facetId) {
+            return;
+        }
+        this.facetExpandStates = {...this.facetExpandStates, [facetId]: isOpen};
+    }
+
     openFilterSettings() {
         this.dispatchEvent(
             new CustomEvent('DbpCabinetOpenFilterSettings', {
@@ -412,6 +423,8 @@ export class CabinetFacets extends ScopedElementsMixin(
                                 <dbp-cabinet-facet-panel
                                     .lang="${this.lang}"
                                     class="${classMap({'display-none': hidden})}"
+                                    .facetId="${facetConfig.id}"
+                                    .isOpen="${this.facetExpandStates[facetConfig.id] ?? false}"
                                     .title="${facetConfig.name}">
                                     <div
                                         id="${cssClass}"
@@ -461,7 +474,9 @@ export class CabinetFacets extends ScopedElementsMixin(
         };
 
         return html`
-            <div class="filters ${classMap({active: this.active})}">
+            <div
+                class="filters ${classMap({active: this.active})}"
+                @facet-panel-toggle="${this._onFacetPanelToggle}">
                 <div class="filter-header">
                     <h2 class="filter-header__title">${i18n.t('cabinet-search.filters')}</h2>
                     <button
