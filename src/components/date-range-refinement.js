@@ -426,12 +426,49 @@ export function connectComplexDateRangeRefinement(renderFn, unmountFn = () => {}
                 );
             },
 
-            dispose(disposeOptions) {
+            dispose({state}) {
                 unmountFn();
+                // Drop our refinement from the state on unmount so a disposed
+                // instance doesn't leak into a recreated one.
+                return state.removeNumericRefinement(attribute);
+            },
+
+            getWidgetUiState(uiState, {searchParameters}) {
+                // Serialize the current numeric refinement into uiState as
+                // "min:max" (empty side left blank), so getUiState() captures it
+                // and it round-trips through initialUiState on a recreation.
+                const refinements = searchParameters.getNumericRefinements(attribute);
+                const min = refinements?.['>=']?.[0];
+                const max = refinements?.['<=']?.[0];
+                if (min === undefined && max === undefined) {
+                    return uiState;
+                }
+                return {
+                    ...uiState,
+                    complexDateRange: {
+                        ...uiState.complexDateRange,
+                        [attribute]: `${min ?? ''}:${max ?? ''}`,
+                    },
+                };
             },
 
             getWidgetSearchParameters(searchParameters, {uiState}) {
-                return searchParameters;
+                // Restore the numeric refinement from the (restored) uiState.
+                const value = uiState.complexDateRange?.[attribute];
+                let params = searchParameters.removeNumericRefinement(attribute);
+                if (!value || value.indexOf(':') === -1) {
+                    return params;
+                }
+                const [minStr, maxStr] = value.split(':');
+                const min = minStr === '' ? null : parseFloat(minStr);
+                const max = maxStr === '' ? null : parseFloat(maxStr);
+                if (min !== null && Number.isFinite(min)) {
+                    params = params.addNumericRefinement(attribute, '>=', min);
+                }
+                if (max !== null && Number.isFinite(max)) {
+                    params = params.addNumericRefinement(attribute, '<=', max);
+                }
+                return params;
             },
         };
 
