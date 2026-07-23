@@ -11,8 +11,7 @@ import {FacetPanel} from './facet-panel.js';
 import {connectRefinementList} from 'instantsearch.js/es/connectors/index.js';
 import {RefinementList} from './refinement-list.js';
 import {DateRangeRefinement, connectComplexDateRangeRefinement} from './date-range-refinement.js';
-import {connectConfigure} from 'instantsearch.js/es/connectors';
-import {ConfigureWidget} from './configure-widget.js';
+import {DocumentStatusWidget, connectDocumentStatus} from './document-status-widget.js';
 
 export class CabinetFacets extends ScopedElementsMixin(
     LangMixin(AuthMixin(DBPLitElement), createInstance),
@@ -35,7 +34,7 @@ export class CabinetFacets extends ScopedElementsMixin(
             'dbp-cabinet-facet-panel': FacetPanel,
             'dbp-cabinet-refinement-list': RefinementList,
             'dbp-cabinet-date-range-refinement': DateRangeRefinement,
-            'dbp-cabinet-configure-widget': ConfigureWidget,
+            'dbp-cabinet-document-status-widget': DocumentStatusWidget,
         };
     }
 
@@ -85,27 +84,28 @@ export class CabinetFacets extends ScopedElementsMixin(
         return this.facetWidgetHash;
     }
 
-    createConfigureWidget() {
+    createDocumentStatusWidget() {
         let cabinetFacets = this;
 
         const renderConfig = (renderOptions, isFirstRender) => {
             const container = renderOptions.widgetParams.container;
 
-            let configureWidget;
+            let documentStatusWidget;
             if (isFirstRender) {
-                configureWidget = cabinetFacets.createScopedElement('dbp-cabinet-configure-widget');
-                configureWidget.setAttribute('subscribe', 'lang');
-                container.replaceChildren(configureWidget);
+                documentStatusWidget = cabinetFacets.createScopedElement(
+                    'dbp-cabinet-document-status-widget',
+                );
+                documentStatusWidget.setAttribute('subscribe', 'lang');
+                container.replaceChildren(documentStatusWidget);
             } else {
-                configureWidget = container.children[0];
+                documentStatusWidget = container.children[0];
             }
-            configureWidget.configureRenderOptions = renderOptions;
+            documentStatusWidget.documentStatusRenderOptions = renderOptions;
         };
 
-        let customConfigure = connectConfigure(renderConfig);
-        return customConfigure({
-            searchParameters: {filters: 'base.isScheduledForDeletion:false && base.isCurrent:true'},
-            container: this._(`#custom-configure`),
+        let documentStatus = connectDocumentStatus(renderConfig);
+        return documentStatus({
+            container: this._(`#document-status`),
         });
     }
 
@@ -306,7 +306,7 @@ export class CabinetFacets extends ScopedElementsMixin(
                     padding: 0;
                 }
 
-                #custom-configure {
+                #document-status {
                     margin-top: 1em;
                 }
 
@@ -496,7 +496,7 @@ export class CabinetFacets extends ScopedElementsMixin(
                         }}></dbp-icon>
                 </div>
                 <div id="filters-container" class="filters-container">${renderGroups()}</div>
-                <div id="custom-configure"></div>
+                <div id="document-status"></div>
             </div>
         `;
     }

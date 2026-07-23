@@ -561,7 +561,7 @@ class CabinetSearch extends ScopedElementsMixin(
         let facets = this.getCabinetFacets();
         search.addWidgets([
             configure({}),
-            facets.createConfigureWidget(),
+            facets.createDocumentStatusWidget(),
             this.createSearchBox(),
             this.createHitsPerPageWidget(),
             this.createHits(),
