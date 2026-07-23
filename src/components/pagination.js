@@ -93,8 +93,26 @@ class Pagination extends LangMixin(DBPLitElement, createInstance) {
             return html``;
         }
 
-        const {pages, currentRefinement, nbPages, isFirstPage, isLastPage, refine, createURL} =
-            this.paginationRenderOptions;
+        const {
+            pages,
+            currentRefinement,
+            nbPages,
+            isFirstPage,
+            isLastPage,
+            refine,
+            createURL,
+            instantSearchInstance,
+        } = this.paginationRenderOptions;
+
+        // This component subscribes to `lang` and can re-render independently
+        // of InstantSearch's own render cycle, e.g. after a language change
+        // disposes and re-initializes the search. In that window the stored
+        // `createURL` closure references a disposed instance and throws
+        // (`localInstantSearchInstance is null`). A disposed instance has
+        // `started === false`, so render nothing until the search is live again.
+        if (!instantSearchInstance || !instantSearchInstance.started) {
+            return html``;
+        }
 
         const handleClick = (event, page) => {
             event.preventDefault();
