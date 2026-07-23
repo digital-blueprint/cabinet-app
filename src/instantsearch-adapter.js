@@ -114,7 +114,6 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
      * @returns {string|null}
      */
     translateFacetValue(fromAttribute, toAttribute, value) {
-        console.log('translateFacetValue', this.facetParentByValue);
         const parent = this.facetParentByValue[fromAttribute]?.[value];
         if (!parent) {
             return null;
