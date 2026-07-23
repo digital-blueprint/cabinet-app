@@ -143,6 +143,10 @@ export default class CabinetConfig {
      *  - facet options: https://www.algolia.com/doc/api-reference/widgets/refinement-list/js/
      *  usePanel: A boolean indicating whether to use a panel for the facet (optional, defaults to true).
      *  hidden: A boolean indicating whether the facet should be hidden (optional, defaults to false).
+     *  localized: Set automatically for `selectField` facets; marks a facet
+     *    whose value is language-dependent so the search requests
+     *    `facet_return_parent` and the parent object (with the other language's
+     *    value) is returned, allowing selections to survive a language change.
      * @param lang
      * @returns {Array} - Array of search facets config
      */
@@ -152,11 +156,18 @@ export default class CabinetConfig {
         let i18n = this._i18n;
         i18n.changeLanguage(lang);
 
+        // A "select field" is a localized leaf (`.text`/`.textEn`) of a parent
+        // object that also holds the other language's value. Facets built with
+        // it are flagged with `localized: true` (see the post-pass below) so
+        // we can request `facet_return_parent` for them.
+        const parentTextFields = new Set();
         const selectField = (parentField) => {
-            return lang === 'de' ? `${parentField}.text` : `${parentField}.textEn`;
+            const field = lang === 'de' ? `${parentField}.text` : `${parentField}.textEn`;
+            parentTextFields.add(field);
+            return field;
         };
 
-        return [
+        const facetsConfig = [
             {
                 'filter-group': {
                     id: 'category',
@@ -526,6 +537,16 @@ export default class CabinetConfig {
                 facetOptions: {facet: {searchable: true}},
             },
         ];
+
+        // Flag facets whose value is language-dependent, so the search can
+        // request `facet_return_parent` for them.
+        for (const facetConfig of facetsConfig) {
+            if (parentTextFields.has(facetConfig.schemaField)) {
+                facetConfig.localized = true;
+            }
+        }
+
+        return facetsConfig;
     }
 
     /**

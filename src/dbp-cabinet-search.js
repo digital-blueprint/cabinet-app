@@ -1107,9 +1107,18 @@ class CabinetSearch extends ScopedElementsMixin(
         let facetFields = this.facetConfigs
             .filter((facetConfig) => facetConfig.schemaField)
             .map((facetConfig) => facetConfig.schemaField);
+        // For facets flagged as `localized`, ask Typesense to return the parent
+        // object so we can translate selected values across languages.
+        let facetReturnParent = this.facetConfigs
+            .filter((facetConfig) => facetConfig.localized && facetConfig.schemaField)
+            .map((facetConfig) => facetConfig.schemaField);
+        let additionalSearchParameters = this.getSearchParameters(this.lang);
+        if (facetReturnParent.length > 0) {
+            additionalSearchParameters.facet_return_parent = facetReturnParent.join(',');
+        }
         return {
             server: serverConfig,
-            additionalSearchParameters: this.getSearchParameters(this.lang),
+            additionalSearchParameters,
             // study.status.text can contain ":" for example
             facetableFieldsWithSpecialCharacters: facetFields,
         };
@@ -1692,6 +1701,48 @@ class CabinetSearch extends ScopedElementsMixin(
         this._facetExpandStates[facetId] = isOpen;
     }
 
+    /**
+     * Remaps refinementList entries in the saved uiState when a facet's
+     * schemaField changed between the old and new config (e.g. on a language
+     * change). Both the attribute key and the selected values are translated
+     * from the old to the new language. Facets are matched by their stable `id`.
+     * @param {Array} oldFacetConfigs
+     * @param {Array} newFacetConfigs
+     */
+    _remapUiStateAttributes(oldFacetConfigs, newFacetConfigs) {
+        const uiState = this._initialUiState?.[TYPESENSE_COLLECTION];
+        const refinementList = uiState?.refinementList;
+        if (!refinementList) {
+            return;
+        }
+
+        // The adapter (still the pre-reinit one here) holds the value maps
+        // collected via facet_return_parent, used to translate selected values.
+        const adapter = this.typesenseInstantsearchAdapter;
+        const newSchemaById = new Map(
+            newFacetConfigs.filter((c) => c.id).map((c) => [c.id, c.schemaField]),
+        );
+
+        const remapped = {...refinementList};
+        for (const oldConfig of oldFacetConfigs) {
+            const oldSchema = oldConfig.schemaField;
+            if (!oldConfig.id || !(oldSchema in refinementList)) {
+                continue;
+            }
+            const newSchema = newSchemaById.get(oldConfig.id) ?? oldSchema;
+            if (newSchema === oldSchema) {
+                continue;
+            }
+
+            const oldValues = refinementList[oldSchema];
+            remapped[newSchema] = oldValues.map(
+                (value) => adapter?.translateFacetValue(oldSchema, newSchema, value) ?? value,
+            );
+            delete remapped[oldSchema];
+        }
+        uiState.refinementList = remapped;
+    }
+
     async updateFacetVisibility() {
         if (!this.search) {
             return;
@@ -1700,10 +1751,18 @@ class CabinetSearch extends ScopedElementsMixin(
         let fullReInit = true;
 
         if (fullReInit) {
+            const oldFacetConfigs = this.facetConfigs;
             this._initialUiState = this.search.getUiState();
             this.search.dispose();
             this.search = null;
             this._initInstantsearchPromise = null;
+            // The schemaField (== refinementList attribute) of some facets is
+            // language dependent (e.g. `.text` vs `.textEn`), so remap the saved
+            // uiState from the old to the new schemaField keyed by facet id.
+            this._remapUiStateAttributes(
+                oldFacetConfigs,
+                this.cabinetConfig.getFacetsConfig(this.lang),
+            );
             await this.ensureInstantsearch();
         } else {
             // XXX: this doesn't work completely. it still sends the facets in the request

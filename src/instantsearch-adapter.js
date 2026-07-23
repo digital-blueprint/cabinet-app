@@ -7,6 +7,12 @@ let TypesenseInstantSearchAdapterClass =
 export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSearchAdapterClass {
     facetConfigs = {};
 
+    // Maps a faceted attribute (e.g. `person.gender.textEn`) to a map of
+    // display value -> parent object (holding each language's sibling value),
+    // collected from the `facet_return_parent` data in the Typesense facet
+    // response. Used to translate selected facet values across languages.
+    facetParentByValue = {};
+
     facetsThatNeedGrouping = [
         'study.name',
         'study.type',
@@ -72,6 +78,48 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
     async _adaptAndPerformTypesenseRequest(instantsearchRequests) {
         this._removeFacets(instantsearchRequests);
         this._customGrouping(instantsearchRequests);
-        return super._adaptAndPerformTypesenseRequest(instantsearchRequests);
+        const response = await super._adaptAndPerformTypesenseRequest(instantsearchRequests);
+        this._collectFacetParentKeys(response);
+        return response;
+    }
+
+    // Capture the parent object exposed via facet_return_parent from the raw
+    // Typesense response, before the response adapter drops it, keyed by
+    // attribute and display value.
+    _collectFacetParentKeys(response) {
+        const results = response?.results ?? (response ? [response] : []);
+        for (const result of results) {
+            for (const facet of result?.facet_counts ?? []) {
+                for (const count of facet.counts ?? []) {
+                    if (!count.parent) {
+                        continue;
+                    }
+                    const byValue = (this.facetParentByValue[facet.field_name] ??= {});
+                    byValue[count.value] = count.parent;
+                }
+            }
+        }
+    }
+
+    /**
+     * Translates a facet value selected under `fromAttribute` to the equivalent
+     * value under `toAttribute`, using the collected parent objects. Both
+     * attributes must be sibling leaves of the same parent object (e.g.
+     * `<parent>.text` and `<parent>.textEn`); the target value is read from the
+     * parent property named by the last path segment of `toAttribute`. Returns
+     * null if no mapping is known.
+     * @param {string} fromAttribute
+     * @param {string} toAttribute
+     * @param {string} value
+     * @returns {string|null}
+     */
+    translateFacetValue(fromAttribute, toAttribute, value) {
+        console.log('translateFacetValue', this.facetParentByValue);
+        const parent = this.facetParentByValue[fromAttribute]?.[value];
+        if (!parent) {
+            return null;
+        }
+        const toField = toAttribute.split('.').pop();
+        return parent[toField] ?? null;
     }
 }
