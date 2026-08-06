@@ -976,11 +976,6 @@ class CabinetSearch extends ScopedElementsMixin(
                     grid-template-row: 1fr;
                     margin: 0.5em 0;
                 }
-                @media (max-width: 900px) {
-                    #result-count {
-                        justify-items: right;
-                    }
-                }
                 @media (max-width: 768px) {
                     .hit-selection-container-desktop {
                         width: 0;
