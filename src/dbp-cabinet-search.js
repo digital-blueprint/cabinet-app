@@ -774,6 +774,8 @@ class CabinetSearch extends ScopedElementsMixin(
 
                 .results {
                     grid-area: main;
+                    container-type: inline-size;
+                    container-name: results;
                 }
 
                 .search-box-container {
@@ -845,10 +847,21 @@ class CabinetSearch extends ScopedElementsMixin(
                 #hits-footer {
                     display: flex;
                     flex-direction: row;
+                    flex-wrap: nowrap;
                     justify-content: space-between;
-                    row-gap: 0.5em;
                     align-items: center;
                     gap: 1em;
+                }
+
+                /* Stack the footer children vertically once the results area
+                   gets too narrow to hold them side by side. Uses a container
+                   query so it reacts to the available width, not the viewport. */
+                @container results (max-width: 700px) {
+                    #hits-footer {
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 0.5em;
+                    }
                 }
 
                 .hit-selection-container h2 {
@@ -964,9 +977,6 @@ class CabinetSearch extends ScopedElementsMixin(
                     margin: 0.5em 0;
                 }
                 @media (max-width: 900px) {
-                    #hits-footer {
-                        flex-direction: column;
-                    }
                     #result-count {
                         justify-items: right;
                     }

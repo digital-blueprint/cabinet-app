@@ -277,5 +277,6 @@ export function createPagination(parent, container) {
 
     return customPagination({
         container: container,
+        padding: 2,
     });
 }
