@@ -11,8 +11,6 @@ import {
     scopedElements as modalNotificationScopedElements,
     sendModalNotification,
 } from './modal-notification.js';
-import {SelectionColumnConfiguration} from './selection-column-configuration';
-import {CabinetSettings} from '../settings.js';
 import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
 import {CabinetApi} from '../api.js';
 import {CabinetDocumentStore} from '../document-store.js';
@@ -23,26 +21,17 @@ export class SelectionDialog extends ScopedElementsMixin(
 ) {
     constructor() {
         super();
-        this.cabinetSettings = new CabinetSettings();
         this.modalRef = createRef();
         this.personTableRef = createRef();
         this.documentTableRef = createRef();
         this.deletedDocumentTableRef = createRef();
-        this.personColumnConfigRef = createRef();
-        this.documentColumnConfigRef = createRef();
         this.fileSinkRef = createRef();
         this.fileSinkStreamedRef = createRef();
+        this.columnConfigurationExcludedFields = ['rowNumber', 'actions'];
         this.hitSelections = createEmptyHitSelection();
         this.facetNumber = 0;
         this.activeTab = HitSelectionType.PERSON;
         this.activeDocumentTab = 'active'; // 'active' or 'deleted'
-        this.personGearButton = null;
-        this.documentGearButton = null;
-        this.deletedDocumentGearButton = null;
-        // Initialized to empty; populated by loadColumnVisibilityStates() when open() is called
-        // (cabinetConfig is not available yet in the constructor)
-        this.personColumnVisibilityStates = {};
-        this.documentColumnVisibilityStates = {};
 
         // used for translation overrides
         this.langDir = undefined;
@@ -65,13 +54,6 @@ export class SelectionDialog extends ScopedElementsMixin(
         }
     }
 
-    update(changedProperties) {
-        super.update(changedProperties);
-        if (changedProperties.has('auth')) {
-            this.cabinetSettings.setAuth(this.auth);
-        }
-    }
-
     static get scopedElements() {
         return {
             ...modalNotificationScopedElements(),
@@ -79,7 +61,6 @@ export class SelectionDialog extends ScopedElementsMixin(
             'dbp-button': Button,
             'dbp-icon-button': IconButton,
             'dbp-tabulator-table': TabulatorTable,
-            'dbp-selection-column-configuration': SelectionColumnConfiguration,
             'dbp-file-sink': FileSink,
             'dbp-select': DBPSelect,
         };
@@ -98,8 +79,6 @@ export class SelectionDialog extends ScopedElementsMixin(
             hitSelections: {type: Object, attribute: false},
             activeTab: {type: String, attribute: false},
             activeDocumentTab: {type: String, attribute: false},
-            personColumnVisibilityStates: {type: Object, attribute: false},
-            documentColumnVisibilityStates: {type: Object, attribute: false},
             langDir: {type: String, attribute: 'lang-dir'},
             cabinetConfig: {type: Object, attribute: false},
         };
@@ -116,11 +95,6 @@ export class SelectionDialog extends ScopedElementsMixin(
          */
         const modal = this.modalRef.value;
         this.hitSelections = hitSelections;
-
-        // Reset gear buttons to ensure clean state
-        this.personGearButton = null;
-        this.documentGearButton = null;
-        this.deletedDocumentGearButton = null;
 
         // Set the active tab based on whether there are person selections
         const personSelections = hitSelections[HitSelectionType.PERSON] || {};
@@ -159,9 +133,6 @@ export class SelectionDialog extends ScopedElementsMixin(
             this.activeTab = HitSelectionType.PERSON;
         }
 
-        // Load column visibility states
-        this.loadColumnVisibilityStates();
-
         // Rerender the modal content with new data
         await this.requestUpdate();
 
@@ -175,101 +146,6 @@ export class SelectionDialog extends ScopedElementsMixin(
 
         // Now build the tables
         this.buildTablesIfNeeded();
-    }
-
-    /**
-     * Load column visibility states from localStorage
-     */
-    loadColumnVisibilityStates() {
-        // Load person column visibility
-        const savedPerson = this.cabinetSettings.get('columnVisibilityStates:person');
-        this.personColumnVisibilityStates =
-            savedPerson || this.getDefaultColumnVisibility('person');
-
-        // Load document column visibility
-        const savedDocument = this.cabinetSettings.get('columnVisibilityStates:document');
-        this.documentColumnVisibilityStates =
-            savedDocument || this.getDefaultColumnVisibility('document');
-    }
-
-    /**
-     * Get default column visibility
-     * @param type
-     */
-    getDefaultColumnVisibility(type) {
-        const columns =
-            type === 'person'
-                ? this.cabinetConfig.getPersonColumns(this.lang)
-                : this.cabinetConfig.getDocumentColumns(this.lang);
-
-        return columns.reduce((acc, col) => {
-            if (col.defaultVisible) {
-                acc[col.id] = true;
-            }
-            return acc;
-        }, {});
-    }
-
-    /**
-     * Handle column settings stored event
-     * @param {CustomEvent} e - The column settings stored event
-     */
-    async onColumnSettingsStored(e) {
-        const {selectionType, columnVisibilityStates} = e.detail;
-
-        if (selectionType === 'person') {
-            this.personColumnVisibilityStates = columnVisibilityStates;
-        } else if (selectionType === 'document') {
-            this.documentColumnVisibilityStates = columnVisibilityStates;
-        }
-
-        // Rebuild the tables with new columns
-        await this.requestUpdate();
-        await this.updateComplete;
-
-        // Force rebuild the tables with new column configuration
-        const personTable = this.personTableRef.value;
-        const documentTable = this.documentTableRef.value;
-        const deletedDocumentTable = this.deletedDocumentTableRef.value;
-
-        if (selectionType === 'person' && personTable) {
-            if (personTable.tabulatorTable) {
-                // Destroy and rebuild the table with new columns
-                personTable.tabulatorTable.destroy();
-                personTable.tableReady = false;
-            }
-            personTable.buildTable();
-        } else if (selectionType === 'document') {
-            // Rebuild active documents table
-            if (documentTable) {
-                if (documentTable.tabulatorTable) {
-                    documentTable.tabulatorTable.destroy();
-                    documentTable.tableReady = false;
-                }
-                documentTable.buildTable();
-            }
-
-            // Rebuild deleted documents table
-            if (deletedDocumentTable) {
-                if (deletedDocumentTable.tabulatorTable) {
-                    deletedDocumentTable.tabulatorTable.destroy();
-                    deletedDocumentTable.tableReady = false;
-                }
-                deletedDocumentTable.buildTable();
-            }
-        }
-
-        /**
-         * @type {Modal}
-         */
-        const modal = this.modalRef.value;
-
-        // This a very crude, yet effective workaround to prevent a horizontal scrollbar after column changes
-        // All more same methods seemed to fail
-        modal.close();
-        setTimeout(() => {
-            modal.open();
-        }, 100);
     }
 
     close() {
@@ -528,12 +404,7 @@ export class SelectionDialog extends ScopedElementsMixin(
      * @param {Array} persons - Array of [id, hit] tuples
      */
     async exportPersonsAsCSV(persons) {
-        const columnConfigs = this.cabinetConfig.getPersonColumns(this.lang);
-
-        // Filter to only include visible columns
-        const visibleColumns = columnConfigs.filter(
-            (col) => this.personColumnVisibilityStates[col.id] === true,
-        );
+        const visibleColumns = this.getVisibleColumnConfigs('person');
 
         // CSV header
         const headers = visibleColumns.map((col) => col.name);
@@ -584,12 +455,7 @@ export class SelectionDialog extends ScopedElementsMixin(
      */
     async exportPersonsAsExcel(persons) {
         const ExcelJS = (await import('exceljs')).default;
-        const columnConfigs = this.cabinetConfig.getPersonColumns(this.lang);
-
-        // Filter to only include visible columns
-        const visibleColumns = columnConfigs.filter(
-            (col) => this.personColumnVisibilityStates[col.id] === true,
-        );
+        const visibleColumns = this.getVisibleColumnConfigs('person');
 
         // Create workbook and worksheet
         const workbook = new ExcelJS.Workbook();
@@ -888,12 +754,7 @@ export class SelectionDialog extends ScopedElementsMixin(
      */
     async exportDocumentsAsTable(documents, format) {
         const i18n = this._i18n;
-        const columnConfigs = this.cabinetConfig.getDocumentColumns(this.lang);
-
-        // Filter to only include visible columns
-        const visibleColumns = columnConfigs.filter(
-            (col) => this.documentColumnVisibilityStates[col.id] === true,
-        );
+        const visibleColumns = this.getVisibleColumnConfigs('document');
 
         if (format === 'csv') {
             // CSV header
@@ -1409,24 +1270,16 @@ export class SelectionDialog extends ScopedElementsMixin(
     }
 
     /**
-     * Build table columns based on visibility configuration
+     * Build table columns with their default visibility.
      * @param {string} type
-     * @param {HTMLElement|null} gearButtonRef
-     * @param {function(): void} gearButtonCallback
-     * @param {string|null} gearButtonRefName - Optional property name to store the gear button reference
      * @returns {Array}
      */
-    buildTableColumns(type, gearButtonRef, gearButtonCallback, gearButtonRefName = null) {
+    buildTableColumns(type) {
         const columns = [];
         const columnConfigs =
             type === 'person'
                 ? this.cabinetConfig.getPersonColumns(this.lang)
                 : this.cabinetConfig.getDocumentColumns(this.lang);
-        const visibilityStates =
-            type === 'person'
-                ? this.personColumnVisibilityStates
-                : this.documentColumnVisibilityStates;
-
         // Add row number column
         columns.push({
             title: 'rowNumber',
@@ -1438,29 +1291,27 @@ export class SelectionDialog extends ScopedElementsMixin(
             resizable: false,
         });
 
-        // Add visible data columns
+        // The table applies persisted visibility and order on top of these defaults.
         columnConfigs.forEach((colConfig) => {
-            if (visibilityStates[colConfig.id] === true) {
-                columns.push({
-                    title: colConfig.name,
-                    field: colConfig.id,
-                    headerSort: true,
-                    resizable: false,
-                    sorter: 'string',
-                    formatter: (cell) => {
-                        const rowData = cell.getRow().getData();
-                        const value = rowData[colConfig.id];
-                        if (value === null || value === undefined) {
-                            return '-';
-                        }
-                        // Use the formatExportValue helper to apply consistent formatting
-                        return this.formatExportValue(value, colConfig);
-                    },
-                });
-            }
+            columns.push({
+                title: colConfig.name,
+                field: colConfig.id,
+                visible: colConfig.defaultVisible === true,
+                headerSort: true,
+                resizable: false,
+                sorter: 'string',
+                formatter: (cell) => {
+                    const rowData = cell.getRow().getData();
+                    const value = rowData[colConfig.id];
+                    if (value === null || value === undefined) {
+                        return '-';
+                    }
+                    return this.formatExportValue(value, colConfig);
+                },
+            });
         });
 
-        // Add actions column with gear button and delete button
+        // The table adds its configuration cog to the rightmost actions header.
         columns.push({
             title: 'actions',
             field: 'actions',
@@ -1470,50 +1321,6 @@ export class SelectionDialog extends ScopedElementsMixin(
             frozen: true,
             headerHozAlign: 'right',
             headerSort: false,
-            titleFormatter: (cell) => {
-                // Check if we already have a stored button reference
-                let existingButton = gearButtonRef;
-
-                // If not passed as parameter, check if we already created one
-                if (!existingButton) {
-                    if (gearButtonRefName && this[gearButtonRefName]) {
-                        existingButton = this[gearButtonRefName];
-                    } else if (type === 'person' && this.personGearButton) {
-                        existingButton = this.personGearButton;
-                    } else if (type === 'document' && this.documentGearButton) {
-                        existingButton = this.documentGearButton;
-                    }
-                }
-
-                if (existingButton) {
-                    return existingButton;
-                }
-
-                // Create new button only if we don't have one
-                const i18n = this._i18n;
-                const button = this.createScopedElement('dbp-icon-button');
-                button.setAttribute('icon-name', 'cog');
-                button.setAttribute('aria-label', i18n.t('selection-column-config.description'));
-                button.setAttribute(
-                    'title',
-                    i18n.t('selection-dialog.configure-columns', 'Configure Columns'),
-                );
-                button.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    gearButtonCallback();
-                });
-
-                // Store the button reference based on the provided name or type
-                if (gearButtonRefName) {
-                    this[gearButtonRefName] = button;
-                } else if (type === 'person') {
-                    this.personGearButton = button;
-                } else {
-                    this.documentGearButton = button;
-                }
-
-                return button;
-            },
             formatter: (cell) => {
                 const i18n = this._i18n;
                 const button = this.createScopedElement('dbp-icon-button');
@@ -1651,33 +1458,21 @@ export class SelectionDialog extends ScopedElementsMixin(
         const personTableOptions = {
             ...commonTableOptions,
             langs: this.buildTableLangs('person'),
-            columns: this.buildTableColumns('person', this.personGearButton, () =>
-                this.openColumnConfiguration('person'),
-            ),
+            columns: this.buildTableColumns('person'),
         };
 
         // Build table options for active documents
         const documentTableOptions = {
             ...commonTableOptions,
             langs: this.buildTableLangs('document'),
-            columns: this.buildTableColumns(
-                'document',
-                this.documentGearButton,
-                () => this.openColumnConfiguration('document'),
-                'documentGearButton',
-            ),
+            columns: this.buildTableColumns('document'),
         };
 
         // Build table options for deleted documents
         const deletedDocumentTableOptions = {
             ...commonTableOptions,
             langs: this.buildTableLangs('document'),
-            columns: this.buildTableColumns(
-                'document',
-                this.deletedDocumentGearButton,
-                () => this.openColumnConfiguration('document'),
-                'deletedDocumentGearButton',
-            ),
+            columns: this.buildTableColumns('document'),
         };
 
         const docDownloadOptions = [];
@@ -1801,6 +1596,14 @@ export class SelectionDialog extends ScopedElementsMixin(
                                           lang="${this.lang}"
                                           class="selection-table"
                                           identifier="person-selection-table"
+                                          column-configuration-enabled
+                                          column-configuration-in-header
+                                          .columnConfigurationStorageKey=${this.getColumnConfigurationStorageKey(
+                                              'person',
+                                          )}
+                                          .columnConfigurationExcludedFields=${
+                                              this.columnConfigurationExcludedFields
+                                          }
                                           overflow-y-scroll-enabled
                                           pagination-enabled
                                           pagination-size="10"
@@ -1913,6 +1716,17 @@ export class SelectionDialog extends ScopedElementsMixin(
                                               lang="${this.lang}"
                                               class="selection-table"
                                               identifier="document-selection-table"
+                                              column-configuration-enabled
+                                              column-configuration-in-header
+                                              .columnConfigurationStorageKey=${this.getColumnConfigurationStorageKey(
+                                                  'document',
+                                              )}
+                                              .columnConfigurationExcludedFields=${
+                                                  this.columnConfigurationExcludedFields
+                                              }
+                                              @dbp-tabulator-table-column-configuration-changed=${
+                                                  this.syncDocumentColumnConfiguration
+                                              }
                                               overflow-y-scroll-enabled
                                               pagination-enabled
                                               pagination-size="10"
@@ -1989,6 +1803,17 @@ export class SelectionDialog extends ScopedElementsMixin(
                                               lang="${this.lang}"
                                               class="selection-table"
                                               identifier="deleted-document-selection-table"
+                                              column-configuration-enabled
+                                              column-configuration-in-header
+                                              .columnConfigurationStorageKey=${this.getColumnConfigurationStorageKey(
+                                                  'document',
+                                              )}
+                                              .columnConfigurationExcludedFields=${
+                                                  this.columnConfigurationExcludedFields
+                                              }
+                                              @dbp-tabulator-table-column-configuration-changed=${
+                                                  this.syncDocumentColumnConfiguration
+                                              }
                                               overflow-y-scroll-enabled
                                               pagination-enabled
                                               pagination-size="10"
@@ -2211,16 +2036,42 @@ export class SelectionDialog extends ScopedElementsMixin(
         }
     }
 
-    openColumnConfiguration(type) {
-        if (type === 'person') {
-            const configDialog = this.personColumnConfigRef.value;
-            if (configDialog) {
-                configDialog.open(type);
-            }
-        } else if (type === 'document') {
-            const configDialog = this.documentColumnConfigRef.value;
-            if (configDialog) {
-                configDialog.open(type);
+    getColumnConfigurationStorageKey(type) {
+        const userId = this.auth?.['user-id'];
+        return userId ? `cabinet-selection-${type}-${userId}` : '';
+    }
+
+    getVisibleColumnConfigs(type) {
+        const columnConfigs =
+            type === 'person'
+                ? this.cabinetConfig.getPersonColumns(this.lang)
+                : this.cabinetConfig.getDocumentColumns(this.lang);
+        const tables =
+            type === 'person'
+                ? [this.personTableRef.value]
+                : [this.documentTableRef.value, this.deletedDocumentTableRef.value];
+        const table = tables.find((candidate) => candidate?.tableReady);
+        const configuration = table?.getColumnConfiguration();
+
+        if (!configuration?.length) {
+            return columnConfigs.filter((column) => column.defaultVisible === true);
+        }
+
+        const configsById = new Map(columnConfigs.map((column) => [column.id, column]));
+        return configuration
+            .filter((column) => column.visible)
+            .map((column) => configsById.get(column.field))
+            .filter(Boolean);
+    }
+
+    syncDocumentColumnConfiguration(event) {
+        const configuration = event.detail.columns;
+        for (const table of [this.documentTableRef.value, this.deletedDocumentTableRef.value]) {
+            if (table && table !== event.currentTarget && table.tableReady) {
+                table.applyColumnConfiguration(configuration, {
+                    persist: false,
+                    dispatchEvent: false,
+                });
             }
         }
     }
@@ -2244,22 +2095,6 @@ export class SelectionDialog extends ScopedElementsMixin(
 
         return html`
             ${this.getModalHtml()}
-            <dbp-selection-column-configuration
-                ${ref(this.personColumnConfigRef)}
-                lang="${this.lang}"
-                .auth="${this.auth}"
-                .cabinetConfig="${this.cabinetConfig}"
-                @columnSettingsStored="${
-                    this.onColumnSettingsStored
-                }"></dbp-selection-column-configuration>
-            <dbp-selection-column-configuration
-                ${ref(this.documentColumnConfigRef)}
-                lang="${this.lang}"
-                .auth="${this.auth}"
-                .cabinetConfig="${this.cabinetConfig}"
-                @columnSettingsStored="${
-                    this.onColumnSettingsStored
-                }"></dbp-selection-column-configuration>
             <dbp-file-sink
                 ${ref(this.fileSinkRef)}
                 subscribe="nextcloud-store-session:nextcloud-store-session"
