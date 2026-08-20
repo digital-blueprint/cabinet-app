@@ -737,6 +737,18 @@ export default class CabinetConfig {
                 defaultVisible: true,
             },
             {
+                id: 'person.studId',
+                name: i18n.t('custom:selection-column-config.person.studId'),
+                field: 'person.studId',
+                defaultVisible: true,
+            },
+            {
+                id: 'person.stPersonNr',
+                name: i18n.t('custom:selection-column-config.person.stPersonNr'),
+                field: 'person.stPersonNr',
+                defaultVisible: true,
+            },
+            {
                 id: 'file.base.createdTimestamp',
                 name: i18n.t('custom:selection-column-config.document.createdTimestamp'),
                 field: 'file.base.createdTimestamp',
