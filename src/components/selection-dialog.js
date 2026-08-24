@@ -1,6 +1,7 @@
 import {css, html} from 'lit';
 import {ref, createRef} from 'lit/directives/ref.js';
 import {AuthMixin, LangMixin, IconButton, ScopedElementsMixin} from '@dbp-toolkit/common';
+import {createUUID} from '@dbp-toolkit/common/utils';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from '../i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
@@ -27,6 +28,8 @@ export class SelectionDialog extends ScopedElementsMixin(
         this.deletedDocumentTableRef = createRef();
         this.fileSinkRef = createRef();
         this.fileSinkStreamedRef = createRef();
+        // Unique notification target id for THIS instance.
+        this._notificationId = 'selection-dialog-notification-' + createUUID();
         this.columnConfigurationExcludedFields = ['rowNumber', 'actions'];
         this.hitSelections = createEmptyHitSelection();
         this.facetNumber = 0;
@@ -1208,7 +1211,7 @@ export class SelectionDialog extends ScopedElementsMixin(
                 <div slot="header" class="header">
                     <div class="modal-notification">
                         <dbp-notification
-                            id="modal-notification"
+                            id="${this._notificationId}"
                             inline
                             lang="${this.lang}"></dbp-notification>
                     </div>
@@ -1228,7 +1231,7 @@ export class SelectionDialog extends ScopedElementsMixin(
      */
     sendFilterModalNotification(summary, body, type = 'info', timeout = null) {
         sendModalNotification(
-            'modal-notification',
+            this._notificationId,
             summary,
             body,
             type,
