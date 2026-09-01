@@ -28,7 +28,7 @@ export default class extends BaseObject {
     getAdditionalTypes(lang) {
         let i18n = createInstance();
         let translatedTypes = {};
-        i18n.changeLanguage(lang);
+        void i18n.changeLanguage(lang);
         for (let [key, translationKey] of Object.entries(CabinetFormElement.getAdditionalTypes())) {
             let value = i18n.t(translationKey);
             translatedTypes[key] = value;

@@ -53,7 +53,7 @@ export class SelectionDialog extends ScopedElementsMixin(
         super.connectedCallback();
         if (this.langDir) {
             const that = this;
-            setOverridesByGlobalCache(this._i18n, this).then(() => {
+            void setOverridesByGlobalCache(this._i18n, this).then(() => {
                 that.requestUpdate();
             });
         }

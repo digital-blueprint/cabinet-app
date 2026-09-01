@@ -290,11 +290,11 @@ class CabinetSearch extends ScopedElementsMixin(
                     }
                     break;
                 case 'routingUrl':
-                    this.handleRoutingUrlChange();
+                    void this.handleRoutingUrlChange();
                     break;
                 case 'lang':
                 case 'facetVisibilityStates':
-                    this.updateFacetVisibility();
+                    void this.updateFacetVisibility();
                     break;
                 case 'hitSelections':
                     this.resetHitSelectAllStateIfNeeded();
@@ -397,7 +397,7 @@ class CabinetSearch extends ScopedElementsMixin(
             component.setViewComponent(object.getViewComponent());
             await component.openDialogWithHit(hit);
         } else {
-            this.openDocumentViewDialogWithId(hit.id);
+            await this.openDocumentViewDialogWithId(hit.id);
         }
     }
 
@@ -459,12 +459,12 @@ class CabinetSearch extends ScopedElementsMixin(
              */
             const component = that.documentFileComponentRef.value;
             component.setObjectTypes(this.documentObjectTypes);
-            component.openDocumentAddDialogWithPersonHit(event.detail.hit);
+            void component.openDocumentAddDialogWithPersonHit(event.detail.hit);
         });
 
         // Listen to DbpCabinetDocumentView events, to open the file dialog in view mode
         this.addEventListener('DbpCabinetDocumentView', function (event) {
-            that.openDocumentViewDialog(event.detail.hit);
+            void that.openDocumentViewDialog(event.detail.hit);
         });
 
         // Listen to DbpCabinetIndexChanged events to refresh the active search.
@@ -1544,7 +1544,7 @@ class CabinetSearch extends ScopedElementsMixin(
                             @click="${() => {
                                 /** @type {SelectionDialog} */
                                 const selectionDialog = this.selectionDialogRef.value;
-                                selectionDialog.open(this.hitSelections);
+                                void selectionDialog.open(this.hitSelections);
                             }}">
                             <dbp-icon name="open-new-window" aria-hidden="true"></dbp-icon>
                             ${this._i18n.t('cabinet-search.open-dialog')}

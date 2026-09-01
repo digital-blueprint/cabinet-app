@@ -978,7 +978,7 @@ class CabinetViewElement extends BaseViewElement {
                         <a
                             href="#"
                             @click="${() => {
-                                exportPersonPdf(i18n, hit);
+                                void exportPersonPdf(i18n, hit);
                                 return false;
                             }}">
                             <dbp-icon

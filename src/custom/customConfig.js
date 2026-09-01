@@ -2,13 +2,13 @@ import {createInstance} from './i18n.js';
 
 function translationRenderFunction(lang, schemaField, value, operator = null) {
     let i18n = createInstance();
-    i18n.changeLanguage(lang);
+    void i18n.changeLanguage(lang);
     return i18n.t(`custom:typesense-schema.${schemaField}.${value}`, value);
 }
 
 function _renderDate(lang, value, operator, timeZone = undefined) {
     let i18n = createInstance();
-    i18n.changeLanguage(lang);
+    void i18n.changeLanguage(lang);
     let date = new Date(value * 1000).toLocaleDateString('de-AT', {
         timeZone: timeZone,
         day: '2-digit',
@@ -123,7 +123,7 @@ export default class CabinetConfig {
 
     async generateExportPersonPdf(hit, lang, withInternalData = false) {
         let module = await import('./objectTypes/export.js');
-        this._i18n.changeLanguage(lang);
+        await this._i18n.changeLanguage(lang);
         return await module.generateExportPersonPdf(this._i18n, hit, withInternalData);
     }
 
@@ -154,7 +154,7 @@ export default class CabinetConfig {
         const showMoreLimitValue = 50;
 
         let i18n = this._i18n;
-        i18n.changeLanguage(lang);
+        void i18n.changeLanguage(lang);
 
         // A "select field" is a localized leaf (`.text`/`.textEn`) of a parent
         // object that also holds the other language's value. Facets built with
@@ -556,7 +556,7 @@ export default class CabinetConfig {
      */
     getPersonColumns(lang = 'de') {
         let i18n = this._i18n;
-        i18n.changeLanguage(lang);
+        void i18n.changeLanguage(lang);
         return [
             {
                 id: 'person.studId',
@@ -715,7 +715,7 @@ export default class CabinetConfig {
             return lang === 'de' ? `${parentField}.text` : `${parentField}.textEn`;
         };
         let i18n = this._i18n;
-        i18n.changeLanguage(lang);
+        void i18n.changeLanguage(lang);
         return [
             {
                 id: 'file.base.additionalType',
