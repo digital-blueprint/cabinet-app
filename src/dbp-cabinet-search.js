@@ -1102,7 +1102,7 @@ class CabinetSearch extends ScopedElementsMixin(
             group_by: 'base.personGroupId',
             group_limit: 1,
             group_missing_values: false,
-            facet_strategy: 'exhaustive',
+            facet_strategy: /** @type {const} */ ('exhaustive'),
         };
 
         return searchParameters;

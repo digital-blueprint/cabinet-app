@@ -4,6 +4,8 @@ import {AuthMixin, LangMixin, Icon, ScopedElementsMixin} from '@dbp-toolkit/comm
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from '../i18n.js';
 import {css, html} from 'lit';
+
+/** @typedef {import('instantsearch.js/es/connectors/refinement-list/connectRefinementList').RefinementListConnectorParams} RefinementListConnectorParams */
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {classMap} from 'lit/directives/class-map.js';
 import {repeat} from 'lit/directives/repeat.js';
@@ -132,7 +134,11 @@ export class CabinetFacets extends ScopedElementsMixin(
                     fieldType: schemaFieldType,
                     container: that._(`#${cssClass}`),
                     attribute: schemaField,
-                    sortBy: ['isRefined:desc', 'count:desc', 'name:asc'],
+                    sortBy: /** @type {RefinementListConnectorParams['sortBy']} */ ([
+                        'isRefined:desc',
+                        'count:desc',
+                        'name:asc',
+                    ]),
                     limit: 12,
                     searchable: true,
                 };

@@ -25,6 +25,7 @@ export class SelectionDialog extends ScopedElementsMixin(
 ) {
     constructor() {
         super();
+        this.entryPointUrl = '';
         /** @type {ElementRef<Modal>} */
         this.modalRef = createRef();
         /** @type {ElementRef<TabulatorTable>} */

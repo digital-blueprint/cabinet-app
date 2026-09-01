@@ -622,6 +622,7 @@ export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
     constructor() {
         super();
         this.auth = {};
+        this.entryPointUrl = '';
         this.data = {};
         this.additionalTypes = {};
     }

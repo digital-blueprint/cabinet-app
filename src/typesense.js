@@ -17,13 +17,14 @@ export class TypesenseService {
             nodes: [
                 {
                     host: typesenseUrl.hostname,
-                    port:
+                    port: Number(
                         typesenseUrl.port ||
-                        (typesenseUrl.protocol === 'https:'
-                            ? '443'
-                            : typesenseUrl.protocol === 'http:'
-                              ? '80'
-                              : ''),
+                            (typesenseUrl.protocol === 'https:'
+                                ? 443
+                                : typesenseUrl.protocol === 'http:'
+                                  ? 80
+                                  : 0),
+                    ),
                     path: typesenseUrl.pathname,
                     protocol: typesenseUrl.protocol.replace(':', ''),
                 },

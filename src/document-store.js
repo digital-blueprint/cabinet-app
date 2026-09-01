@@ -29,12 +29,12 @@ export class PollTimeoutError extends Error {
  * UI concerns (notifications, modal state, rendering).
  *
  * It is constructed from the host element (like {@link CabinetApi}) so it stays
- * in sync with `entryPointUrl`, `auth` and `objectTypes` without extra wiring.
+ * in sync with `entryPointUrl` and `auth` without extra wiring.
  */
 export class CabinetDocumentStore {
     /**
-     * @param {HTMLElement & {entryPointUrl: string, auth: {token: string}, objectTypes: object}} element -
-     *   The host element, providing `entryPointUrl`, `auth` and `objectTypes`,
+     * @param {HTMLElement & {entryPointUrl: string, auth: {token?: string}}} element -
+     *   The host element, providing `entryPointUrl` and `auth`,
      *   and used as the dispatch target for `DbpCabinetIndexChanged` events.
      */
     constructor(element) {
