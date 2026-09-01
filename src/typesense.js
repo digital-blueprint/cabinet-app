@@ -1,5 +1,7 @@
 import Typesense from 'typesense';
 
+/** @typedef {{results: Array<{found: number, hits: Array<{document: object}>}>}} TypesenseMultiSearchResponse */
+
 export const TYPESENSE_COLLECTION = 'cabinet';
 
 export class TypesenseService {
@@ -64,7 +66,9 @@ export class TypesenseService {
             ],
         };
 
-        let response = await this.client.multiSearch.perform(searchRequests);
+        const response = /** @type {TypesenseMultiSearchResponse} */ (
+            await this.client.multiSearch.perform(searchRequests)
+        );
         let result = response.results[0];
         if (result.found > 1) {
             throw new Error('More than one result found for filter: ' + filter_by);
@@ -98,7 +102,9 @@ export class TypesenseService {
             searches: [search],
         };
 
-        let response = await this.client.multiSearch.perform(searchRequests);
+        const response = /** @type {TypesenseMultiSearchResponse} */ (
+            await this.client.multiSearch.perform(searchRequests)
+        );
         let result = response.results[0];
 
         if (result.found === 0) {

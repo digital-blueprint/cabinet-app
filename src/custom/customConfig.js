@@ -1,5 +1,7 @@
 import {createInstance} from './i18n.js';
 
+/** @typedef {import('./objectTypes/baseObject.js').BaseObject} BaseObject */
+
 function translationRenderFunction(lang, schemaField, value, operator = null) {
     let i18n = createInstance();
     void i18n.changeLanguage(lang);

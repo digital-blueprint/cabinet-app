@@ -8,6 +8,14 @@ export const scopedElements = () => {
     };
 };
 
+/**
+ * @param {string} targetNotificationId
+ * @param {string} summary
+ * @param {string} body
+ * @param {'danger' | 'info' | 'primary' | 'success' | 'warning'} [type]
+ * @param {number|null} [timeout]
+ * @param {string|null} [replaceId]
+ */
 export const sendModalNotification = (
     targetNotificationId,
     summary,
@@ -35,13 +43,14 @@ export const sendModalNotification = (
         }
     }
 
+    /** @type {Parameters<typeof sendNotification>[0]} */
     let options = {
         summary: summary,
         body: body,
         type: type,
         timeout: timeout,
         targetNotificationId: targetNotificationId,
-        replaceId: replaceId,
+        replaceId: replaceId ?? undefined,
     };
 
     if (timeout <= 0) {

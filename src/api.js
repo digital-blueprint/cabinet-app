@@ -19,6 +19,8 @@ import {BLOB_PREFIX} from './utils.js';
  *   present when includeData was requested)
  */
 
+/** @typedef {{title?: string, detail?: string, "relay:errorId"?: string, "relay:errorDetails"?: object}} ProblemDetails */
+
 /**
  * The result of a person sync operation, as returned by the
  * `/cabinet/sync-person-actions` endpoint (API resource
@@ -44,7 +46,7 @@ export class ApiError extends Error {
     /**
      * @param {number} status
      * @param {string} statusText
-     * @param {object} body
+     * @param {ProblemDetails} body
      */
     constructor(status, statusText, body) {
         super(`[${status}] ${body.title ?? statusText} - ${body.detail}`);

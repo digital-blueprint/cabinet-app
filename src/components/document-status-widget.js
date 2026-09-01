@@ -52,8 +52,8 @@ function optionToFilters(option) {
  * As a result the selection round-trips through getUiState()/initialUiState the
  * same way built-in widgets do, so it survives a search recreation (on facet
  * config or language changes) with no external state carrying.
- * @param {function(object, boolean): void} renderFn - called with (renderState, isFirstRender)
- * @param {function(): void} [unmountFn]
+ * @param {(renderState: object, isFirstRender: boolean) => void} renderFn - called with (renderState, isFirstRender)
+ * @param {() => void} [unmountFn]
  */
 export function connectDocumentStatus(renderFn, unmountFn = () => {}) {
     return function documentStatus(widgetParams) {

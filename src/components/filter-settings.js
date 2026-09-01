@@ -365,10 +365,10 @@ export class CabinetFilterSettings extends ScopedElementsMixin(
 
     /**
      * Sends a notification to the filter modal
-     * @param summary Summary of the notification
-     * @param body Body of the notification
-     * @param type Type can be info/success/warning/danger
-     * @param timeout Timeout in seconds, 0 means no timeout
+     * @param {string} summary Summary of the notification
+     * @param {string} body Body of the notification
+     * @param {'danger' | 'info' | 'primary' | 'success' | 'warning'} type Notification type
+     * @param {number|null} timeout Timeout in seconds, 0 means no timeout
      */
     sendFilterModalNotification(summary, body, type = 'info', timeout = null) {
         sendModalNotification(

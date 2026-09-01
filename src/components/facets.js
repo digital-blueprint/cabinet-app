@@ -111,8 +111,8 @@ export class CabinetFacets extends ScopedElementsMixin(
 
     /**
      * Generates a facet based on schema name of a configuration
-     * @param {object} facetConfig - configuration for the facet
-     * @returns {function(): *}
+     * @param {{schemaField: string, schemaFieldType?: string, facetOptions?: {facet?: object}, renderFunction?: Function}} facetConfig - configuration for the facet
+     * @returns {Function}
      */
     generateFacet(facetConfig) {
         let that = this;

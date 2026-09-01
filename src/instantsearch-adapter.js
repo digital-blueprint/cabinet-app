@@ -1,11 +1,7 @@
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 
-// rollup and rolldown resolve the import differently
-let TypesenseInstantSearchAdapterClass =
-    TypesenseInstantSearchAdapter.default ?? TypesenseInstantSearchAdapter;
-
-export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSearchAdapterClass {
-    facetConfigs = {};
+export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSearchAdapter {
+    facetConfigs = [];
 
     // Maps a faceted attribute (e.g. `person.gender.textEn`) to a map of
     // display value -> parent object (holding each language's sibling value),
@@ -20,7 +16,7 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
         'study.status.textEn',
     ];
 
-    setFacetConfigs(facetConfigs) {
+    setFacetConfigs(/** @type {object[]} */ facetConfigs) {
         this.facetConfigs = facetConfigs;
     }
 
