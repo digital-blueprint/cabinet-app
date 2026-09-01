@@ -1,51 +1,59 @@
 {
     "$schema": "./node_modules/oxlint/configuration_schema.json",
-    "plugins": ["jsdoc"],
+    "plugins": ["jsdoc", "typescript"],
+    "options": {
+        "typeAware": true
+    },
     "categories": {
         "correctness": "error"
     },
     "env": {
         "builtin": true,
-        "es2022": true,
+        "es2026": true,
         "browser": true,
         "mocha": true
     },
-    "ignorePatterns": ["dist/", "vendor/", "*.cjs"],
+    "ignorePatterns": ["dist/", "vendor/"],
     "rules": {
-        "no-undef": "error",
-        "no-unused-vars": ["error", {"args": "none"}],
-        "no-useless-assignment": "error",
+        "no-unused-vars": [
+            "error",
+            {
+                "args": "none"
+            }
+        ],
         "jsdoc/check-access": "warn",
-        "jsdoc/check-property-names": "warn",
-        "jsdoc/check-tag-names": "warn",
         "jsdoc/empty-tags": "warn",
-        "jsdoc/implements-on-classes": "warn",
-        "jsdoc/no-defaults": "warn",
-        "jsdoc/require-param": "warn",
         "jsdoc/require-param-name": "warn",
-        "jsdoc/require-property": "warn",
-        "jsdoc/require-property-description": "warn",
-        "jsdoc/require-property-name": "warn",
-        "jsdoc/require-property-type": "warn",
         "jsdoc/require-returns-type": "warn",
         "jsdoc/require-throws-type": "warn",
-        "jsdoc/require-yields": "warn",
-        "jsdoc/require-yields-type": "warn"
-    },
-    "overrides": [
-        {
-            "files": [
-                "src/api.js",
-                "src/document-store.js",
-                "src/components/file.js",
-                "src/components/filter-settings.js",
-                "src/components/selection-dialog.js",
-                "src/custom/objectTypes/export.js",
-                "src/custom/objectTypes/schema.js"
-            ],
-            "rules": {
-                "no-unused-vars": "off"
+        "jsdoc/require-yields-type": "warn",
+        "typescript/unbound-method": "off",
+        "typescript/no-floating-promises": "error",
+        "typescript/restrict-template-expressions": "error",
+        "typescript/await-thenable": "error",
+        "typescript/no-base-to-string": "error",
+        "typescript/ban-ts-comment": "error",
+        "typescript/no-empty-object-type": "error",
+        "typescript/no-explicit-any": "error",
+        "typescript/no-misused-promises": [
+            "error",
+            {
+                "checksVoidReturn": {
+                    "arguments": false,
+                    "inheritedMethods": false
+                }
             }
-        }
-    ]
+        ],
+        "typescript/no-namespace": "error",
+        "typescript/no-require-imports": "error",
+        "typescript/no-unnecessary-type-assertion": "off",
+        "typescript/no-unnecessary-type-constraint": "error",
+        "typescript/no-unsafe-enum-comparison": "error",
+        "typescript/no-unsafe-function-type": "error",
+        "typescript/only-throw-error": "error",
+        "typescript/prefer-promise-reject-errors": "error",
+        "typescript/require-await": "error",
+        "typescript/restrict-plus-operands": "error",
+        "typescript/no-useless-default-assignment": "off"
+    }
 }
