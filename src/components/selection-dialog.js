@@ -344,7 +344,7 @@ export class SelectionDialog extends ScopedElementsMixin(
         try {
             switch (selectorValue) {
                 case 'csv':
-                    await this.exportPersonsAsCSV(persons);
+                    this.exportPersonsAsCSV(persons);
                     successCount = persons.length;
                     break;
                 case 'excel':
@@ -408,7 +408,7 @@ export class SelectionDialog extends ScopedElementsMixin(
      * Export persons as CSV
      * @param {Array} persons - Array of [id, hit] tuples
      */
-    async exportPersonsAsCSV(persons) {
+    exportPersonsAsCSV(persons) {
         const visibleColumns = this.getVisibleColumnConfigs('person');
 
         // CSV header

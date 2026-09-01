@@ -372,7 +372,7 @@ class CabinetSearch extends ScopedElementsMixin(
         super.disconnectedCallback();
     }
 
-    async openDocumentAddDialog(hit) {
+    openDocumentAddDialog(hit) {
         this.hitData = hit;
         // Open the file source dialog to select a file
         this._('#file-source').setAttribute('dialog-open', '');
@@ -446,7 +446,7 @@ class CabinetSearch extends ScopedElementsMixin(
         return true;
     }
 
-    async connectedCallback() {
+    connectedCallback() {
         super.connectedCallback();
         let that = this;
         this._loginStatus = '';
@@ -481,7 +481,7 @@ class CabinetSearch extends ScopedElementsMixin(
         });
 
         // Listen to DbpCabinetFilterPerson events to filter to a specific person
-        this.addEventListener('DbpCabinetOpenFilterSettings', async (event) => {
+        this.addEventListener('DbpCabinetOpenFilterSettings', (event) => {
             /** @type {CabinetFilterSettings} */
             const filterSettingsModal = this.filterSettingsModalRef.value;
 

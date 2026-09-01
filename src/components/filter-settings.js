@@ -55,7 +55,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(
         this.facetVisibilityStates = saved && typeof saved === 'object' ? saved : {};
     }
 
-    async open(facetConfigs) {
+    open(facetConfigs) {
         // Load the facet visibility states from localStorage again,
         // because the modal might have been closed without saving the settings
         this.loadFacetVisibilityStates();

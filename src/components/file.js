@@ -594,7 +594,7 @@ export class CabinetFile extends ScopedElementsMixin(
         }
     }
 
-    async editFile() {
+    editFile() {
         this.mode = CabinetFile.Modes.EDIT;
         this.fileHitDataBackup = structuredClone(this.fileHitData);
     }
@@ -780,7 +780,7 @@ export class CabinetFile extends ScopedElementsMixin(
         sendModalNotification('document-modal-notification', summary, body, type, timeout);
     }
 
-    async downloadFile(e) {
+    downloadFile(e) {
         const selectorValue = e.target.value;
         if (!selectorValue) {
             return;
@@ -831,7 +831,7 @@ export class CabinetFile extends ScopedElementsMixin(
                     await this.addNewVersion();
                     break;
                 case 'edit':
-                    await this.editFile();
+                    this.editFile();
                     break;
                 case 'replace':
                     await this.openReplacePdfDialog();
