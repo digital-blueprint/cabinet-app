@@ -143,9 +143,9 @@ function debounce(func, delay, {leading = false} = {}) {
     };
 }
 
-let isFirstOnPageSymbol = Symbol('isFirstOnPage');
-let isLastOnPageSymbol = Symbol('isLastOnPage');
-let isFirstOfGroupSymbol = Symbol('isFirstOfGroup');
+const isFirstOnPageSymbol = Symbol('isFirstOnPage');
+const isLastOnPageSymbol = Symbol('isLastOnPage');
+const isFirstOfGroupSymbol = Symbol('isFirstOfGroup');
 
 class CabinetSearch extends ScopedElementsMixin(
     LangMixin(AuthMixin(DBPLitElement), createInstance),
@@ -1234,9 +1234,9 @@ class CabinetSearch extends ScopedElementsMixin(
                     let isFirstOfGroup = groupId === undefined || groupId !== lastGroupId;
                     lastGroupId = groupId;
 
-                    item[isFirstOfGroupSymbol] = isFirstOfGroup;
-                    item[isFirstOnPageSymbol] = isFirst;
-                    item[isLastOnPageSymbol] = isLast;
+                    Reflect.set(item, isFirstOfGroupSymbol, isFirstOfGroup);
+                    Reflect.set(item, isFirstOnPageSymbol, isFirst);
+                    Reflect.set(item, isLastOnPageSymbol, isLast);
 
                     return item;
                 });
@@ -1272,9 +1272,9 @@ class CabinetSearch extends ScopedElementsMixin(
                     hitElement.selected = !!this.hitSelections[type][hit.id];
                     hitElement.showHitCheckboxes = this.showHitCheckboxes;
                     hitElement.searchHelper = cabinetSearch.search.helper;
-                    hitElement.isFirstOnPage = hit[isFirstOnPageSymbol];
-                    hitElement.isLastOnPage = hit[isLastOnPageSymbol];
-                    hitElement.isFirstOfGroup = hit[isFirstOfGroupSymbol];
+                    hitElement.isFirstOnPage = Reflect.get(hit, isFirstOnPageSymbol);
+                    hitElement.isLastOnPage = Reflect.get(hit, isLastOnPageSymbol);
+                    hitElement.isFirstOfGroup = Reflect.get(hit, isFirstOfGroupSymbol);
 
                     return html`
                         <span ref=${preactRefReplaceChildren(hitElement)}></span>

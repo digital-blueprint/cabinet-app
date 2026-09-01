@@ -1374,6 +1374,7 @@ export class CabinetFile extends ScopedElementsMixin(
             const isModified = item.file.base.modifiedTimestamp !== item.file.base.createdTimestamp;
             const isCurrent = item.base.isCurrent;
             // const isCurrent = false;
+            /** @type {Intl.DateTimeFormatOptions} */
             const modifiedDateOptions = isCurrent
                 ? {
                       day: '2-digit',

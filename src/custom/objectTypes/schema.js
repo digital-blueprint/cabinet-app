@@ -61,6 +61,7 @@
  * @property {string} fullName - Equal to "<familyName>, <givenName>"
  * @property {string} person - Equal to "<familyName>, <givenName> (<birthDate>)"
  * @property {string} birthDate - Example: "1970-01-01"
+ * @property {string} birthDateDe - German-formatted birth date used by the search index
  * @property {number} birthDateTimestamp - Unix timestamp (UTC was used for converting), for sorting and filtering, ignore the time part
  * @property {string} identNrObfuscated - Example: "F06BCC80D6FC0BDE575B16FB2E3790D5"
  * @property {Translated} nationality - Example: key="168", text="Österreich"

@@ -165,8 +165,6 @@ export function createCurrentRefinements(parent, container, facetConfigs) {
     parent.defineScopedElement('dbp-cabinet-current-refinements', CurrentRefinements);
 
     const customCurrentRefinements = connectCurrentRefinements((renderOptions, isFirstRender) => {
-        const container = renderOptions.widgetParams.container;
-
         let currentRefinements;
         if (isFirstRender) {
             currentRefinements = parent.createScopedElement('dbp-cabinet-current-refinements');
@@ -180,7 +178,5 @@ export function createCurrentRefinements(parent, container, facetConfigs) {
         currentRefinements.currentRenderOptions = renderOptions;
     });
 
-    return customCurrentRefinements({
-        container: container,
-    });
+    return customCurrentRefinements({});
 }

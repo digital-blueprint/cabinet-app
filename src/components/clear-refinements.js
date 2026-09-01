@@ -90,8 +90,6 @@ export function createClearRefinements(parent, container) {
     parent.defineScopedElement('dbp-cabinet-clear-refinements', ClearRefinements);
 
     const customClearRefinements = connectClearRefinements((renderOptions, isFirstRender) => {
-        const container = renderOptions.widgetParams.container;
-
         let currentRefinements;
         if (isFirstRender) {
             currentRefinements = parent.createScopedElement('dbp-cabinet-clear-refinements');
@@ -104,7 +102,5 @@ export function createClearRefinements(parent, container) {
         currentRefinements.clearRenderOptions = renderOptions;
     });
 
-    return customClearRefinements({
-        container: container,
-    });
+    return customClearRefinements({});
 }

@@ -261,8 +261,6 @@ export function createPagination(parent, container) {
     parent.defineScopedElement('dbp-cabinet-pagination', Pagination);
 
     const customPagination = connectPagination((renderOptions, isFirstRender) => {
-        const container = renderOptions.widgetParams.container;
-
         let pagination;
         if (isFirstRender) {
             pagination = parent.createScopedElement('dbp-cabinet-pagination');
@@ -276,7 +274,6 @@ export function createPagination(parent, container) {
     });
 
     return customPagination({
-        container: container,
         padding: 2,
     });
 }
