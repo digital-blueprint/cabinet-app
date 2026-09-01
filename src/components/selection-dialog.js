@@ -139,7 +139,7 @@ export class SelectionDialog extends ScopedElementsMixin(
         }
 
         // Rerender the modal content with new data
-        await this.requestUpdate();
+        this.requestUpdate();
 
         modal.open();
 
@@ -232,7 +232,7 @@ export class SelectionDialog extends ScopedElementsMixin(
         }
 
         // Trigger a re-render
-        await this.requestUpdate();
+        this.requestUpdate();
         this.updateTableData(HitSelectionType.DOCUMENT_FILE);
     }
 
@@ -307,7 +307,7 @@ export class SelectionDialog extends ScopedElementsMixin(
         }
 
         // Trigger a re-render
-        await this.requestUpdate();
+        this.requestUpdate();
         this.updateTableData(HitSelectionType.DOCUMENT_FILE);
     }
 
@@ -2086,7 +2086,7 @@ export class SelectionDialog extends ScopedElementsMixin(
 
         // Build tables after render
         if (changedProperties.has('hitSelections') || changedProperties.has('activeTab')) {
-            this.updateComplete.then(() => {
+            void this.updateComplete.then(() => {
                 this.buildTablesIfNeeded();
             });
         }

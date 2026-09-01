@@ -9,7 +9,7 @@ import {
     InlineNotification,
     Modal,
     sendNotification,
-    DBPLoginRequired,
+    DBPLoginRequiredWarning,
 } from '@dbp-toolkit/common';
 import {classMap} from 'lit/directives/class-map.js';
 import instantsearch from 'instantsearch.js';
@@ -237,7 +237,7 @@ class CabinetSearch extends ScopedElementsMixin(
             'dbp-cabinet-empty-widget': EmptyWidget,
             'dbp-cabinet-selection-dialog': SelectionDialog,
             'dbp-mini-spinner': MiniSpinner,
-            'dbp-login-required': DBPLoginRequired,
+            'dbp-login-required-warning': DBPLoginRequiredWarning,
         };
     }
 
@@ -1372,10 +1372,10 @@ class CabinetSearch extends ScopedElementsMixin(
                     <dbp-mini-spinner text="${i18n.t('loading-message')}"></dbp-mini-spinner>
                 </span>
             </div>
-            <dbp-login-required
+            <dbp-login-required-warning
                 subscribe="auth,lang"
                 @dbp-login-requested=${this._onLoginClicked}>
-            </dbp-login-required>
+            </dbp-login-required-warning>
 
             <div
                 class="${classMap({
