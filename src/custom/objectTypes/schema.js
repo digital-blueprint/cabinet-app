@@ -1,830 +1,222 @@
-class Translated {
-    /**
-     * The unique key of the value
-     * @type {string}
-     */
-    key;
+/**
+ * @typedef {object} Translated
+ * @property {string} key - The unique key of the value
+ * @property {string} text - The display text of the value in German
+ * @property {string} textEn - The display text of the value in English
+ */
 
-    /**
-     * The display text of the value in German
-     * @type {string}
-     */
-    text;
-
-    /**
-     * The display text of the value in English
-     * @type {string}
-     */
-    textEn;
-}
-
-class Address {
-    /**
-     * Example: "c/o Erika Mustermann"
-     * @type {string}
-     */
-    note;
-
-    /**
-     * Example: "Hauptstraße 42/4"
-     * @type {string}
-     */
-    street;
-
-    /**
-     * Example: "Graz"
-     * @type {string}
-     */
-    place;
-
-    /**
-     * Example: "Steiermark"
-     * @type {string}
-     */
-    region;
-
-    /**
-     * Example: "8010"
-     * @type {string}
-     */
-    postCode;
-
-    /**
-     * Example: key="168", text="Österreich"
-     * @type {Translated}
-     */
-    country;
-
-    /**
-     * Example: "067612345678"
-     * @type {string}
-     */
-    telephoneNumber;
-}
+/**
+ * @typedef {object} Address
+ * @property {string} note - Example: "c/o Erika Mustermann"
+ * @property {string} street - Example: "Hauptstraße 42/4"
+ * @property {string} place - Example: "Graz"
+ * @property {string} region - Example: "Steiermark"
+ * @property {string} postCode - Example: "8010"
+ * @property {Translated} country - Example: key="168", text="Österreich"
+ * @property {string} telephoneNumber - Example: "067612345678"
+ */
 
 /**
  * A study objects for "@type" == "Person" documents
+ * @typedef {object} Study
+ * @property {string} id - Example: "252221"
+ * @property {string} coUrl - URL to CO which leads to the page for the study information
+ * @property {?string} curriculumVersion - Example: "12U_SPO"
+ * @property {?string} exmatriculationSemester - Example: "24S"
+ * @property {?string} exmatriculationDate - Example: "2010-01-01"
+ * @property {?Translated} exmatriculationType - Example: key="EZ", text="auf Antrag"
+ * @property {?string} immatriculationDate - Example: "2010-01-01"
+ * @property {?string} immatriculationSemester - Example: "20S"
+ * @property {string} key - Example: key="UF 786 600"
+ * @property {string} name - Example: "Dr.-Studium d.technischen Wissenschaften; Architektur"
+ * @property {?string} qualificationDate - Example: "2010-01-01"
+ * @property {?Translated} qualificationState - Example: key="168", text="Österreich"
+ * @property {?Translated} qualificationType - Example: key="41", text="Master-/Diplomst.eigene Univ."
+ * @property {number} semester - Example: 28
+ * @property {Translated} status - Examples: key="I", text="geschlossen (Antrag oder ex lege)"
+ * @property {string} type - Example: "Doktoratsstudium"
+ * @property {Translated[]} additionalCertificates - Example: key="ZBU", text="Zus.Prfg. - Biologie und Umweltkunde"
  */
-class Study {
-    /**
-     * Example: "252221"
-     * @type {string}
-     */
-    id;
 
-    /**
-     * URL to CO which leads to the page for the study information
-     * @type {string}
-     */
-    coUrl;
-
-    /**
-     * Example: "12U_SPO"
-     * @type {?string}
-     */
-    curriculumVersion;
-
-    /**
-     * Example: "24S"
-     * @type {?string}
-     */
-    exmatriculationSemester;
-
-    /**
-     * Example: "2010-01-01"
-     * @type {?string}
-     */
-    exmatriculationDate;
-
-    /**
-     * Example: key="EZ", text="auf Antrag"
-     * @type {?Translated}
-     */
-    exmatriculationType;
-
-    /**
-     * Example: "2010-01-01"
-     * @type {?string}
-     */
-    immatriculationDate;
-
-    /**
-     * Example: "20S"
-     * @type {?string}
-     */
-    immatriculationSemester;
-
-    /**
-     * Example: key="UF 786 600"
-     * @type {string}
-     */
-    key;
-
-    /**
-     * Example: "Dr.-Studium d.technischen Wissenschaften; Architektur"
-     * @type {string}
-     */
-    name;
-
-    /**
-     * Example: "2010-01-01"
-     * @type {?string}
-     */
-    qualificationDate;
-
-    /**
-     * Example: key="168", text="Österreich"
-     * @type {?Translated}
-     */
-    qualificationState;
-
-    /**
-     * Example: key="41", text="Master-/Diplomst.eigene Univ."
-     * @type {?Translated}
-     */
-    qualificationType;
-
-    /**
-     * Example: 28
-     * @type {number}
-     */
-    semester;
-
-    /**
-     * Examples: key="I", text="geschlossen (Antrag oder ex lege)"
-     * @type {Translated}
-     */
-    status;
-
-    /**
-     * Example: "Doktoratsstudium"
-     * @type {string}
-     */
-    type;
-
-    /**
-     * Example: key="ZBU", text="Zus.Prfg. - Biologie und Umweltkunde"
-     * @type {Translated[]}
-     */
-    additionalCertificates;
-}
-
-class Application {
-    /**
-     * Example: "30204"
-     * @type {string}
-     */
-    id;
-
-    /**
-     * Example: "252221"
-     * @type {?string}
-     */
-    studyId;
-
-    /**
-     * Example: "UF 992 840"
-     * @type {string}
-     */
-    studyKey;
-
-    /**
-     * Example: "Bachelorstudium; Physik"
-     * @type {string}
-     */
-    studyName;
-
-    /**
-     * Example: "Doktoratsstudium"
-     * @type {string}
-     */
-    studyType;
-
-    /**
-     * Example: "22W"
-     * @type {string}
-     */
-    startSemester;
-
-    /**
-     * Example: "2020-06-29"
-     * @type {?string}
-     */
-    qualificationCertificateDate;
-
-    /**
-     * Example: key="40", text="Bosnien und Herzegowina"
-     * @type {?Translated}
-     */
-    qualificationIssuingCountry;
-
-    /**
-     * Example: key="25", text="ausländische Reifeprüfung"
-     * @type {?Translated}
-     */
-    qualificationType;
-}
+/**
+ * @typedef {object} Application
+ * @property {string} id - Example: "30204"
+ * @property {?string} studyId - Example: "252221"
+ * @property {string} studyKey - Example: "UF 992 840"
+ * @property {string} studyName - Example: "Bachelorstudium; Physik"
+ * @property {string} studyType - Example: "Doktoratsstudium"
+ * @property {string} startSemester - Example: "22W"
+ * @property {?string} qualificationCertificateDate - Example: "2020-06-29"
+ * @property {?Translated} qualificationIssuingCountry - Example: key="40", text="Bosnien und Herzegowina"
+ * @property {?Translated} qualificationType - Example: key="25", text="ausländische Reifeprüfung"
+ */
 
 /**
  * Person related fields that are common to all Person/DocumentFile documents
+ * @typedef {object} Person
+ * @property {string} stPersonNr - Example: "123"
+ * @property {string} studId - Example: "01020340". Called "Identifikationsnummer" in CO
+ * @property {string} givenName - Example: "Max"
+ * @property {string} familyName - Example: "Mustermann"
+ * @property {string} fullName - Equal to "<familyName>, <givenName>"
+ * @property {string} person - Equal to "<familyName>, <givenName> (<birthDate>)"
+ * @property {string} birthDate - Example: "1970-01-01"
+ * @property {number} birthDateTimestamp - Unix timestamp (UTC was used for converting), for sorting and filtering, ignore the time part
+ * @property {string} identNrObfuscated - Example: "F06BCC80D6FC0BDE575B16FB2E3790D5"
+ * @property {Translated} nationality - Example: key="168", text="Österreich"
+ * @property {?Translated} nationalitySecondary - Example: key="168", text="Österreich"
+ * @property {Translated[]} nationalities - A list containing both person.nationality and person.nationalitySecondary, if available
+ * @property {Translated} admissionQualificationType - Example: key="38", text="Bachelorstud. and. inl. Univ."
+ * @property {?string} schoolCertificateDate - Example: "1970-01-01"
+ * @property {?Address} homeAddress - Home address of the student
+ * @property {?Address} studyAddress - Study address of the student
+ * @property {?string} emailAddressUniversity - Example: "max.mustermann@student.tugraz.at"
+ * @property {?string} emailAddressConfirmed - Example: "max.mustermann@example.com"
+ * @property {?string} emailAddressTemporary - Example: "max.mustermann@example.com"
+ * @property {Translated} personalStatus - Example: key="gültige/r Studierende/r", text="gültige/r Studierende/r"
+ * @property {Translated} studentStatus - Example: key="O", text="nicht zugelassen" - Called "Hörerstatus" in CO
+ * @property {string} immatriculationDate - Example: "1970-01-01"
+ * @property {string} immatriculationSemester - Example: "22W"
+ * @property {string} exmatriculationDate - Example: "2023-10-31"
+ * @property {string} exmatriculationSemester - Example: "22W"
+ * @property {?Translated} exmatriculationStatus - Example: key="EZ", text="ex lege"
+ * @property {?string} academicTitlePreceding - Example: "Dipl.-Ing. Dr.techn"
+ * @property {?string} academicTitleFollowing - Example: "Bakk.techn."
+ * @property {string[]} academicTitles - A list containing both academicTitlePreceding and academicTitleFollowing, if available
+ * @property {?string} formerFamilyName - Example: "Maier"
+ * @property {?string} socialSecurityNr - Example: "1234010197"
+ * @property {?string} bpk - Example: "Kxl/ufp/HOufd8y/+3n6qZ1Cn7E="
+ * @property {Translated} gender - Example: key="W", text="Weiblich"
+ * @property {string} coUrl - URL to CO which leads to the page for editing the person information
+ * @property {number} syncTimestamp - Unix timestamp when the data was last synced from CO
+ * @property {?string} telephoneNumber - Example: "067612345678"
+ * @property {?string} tuitionStatus - Example: "Ausländer gleichgestellt" - Called "Beitragsstatus" in CO
+ * @property {?string} tuitionExemptionType - Example: "L Lehrgang" - Called "Befreiungsart" in CO
+ * @property {?string} note - Free form text
+ * @property {?string} studyLimitStartSemester - Example: "23W" - Called "Befristet von" in CO
+ * @property {?string} studyLimitEndSemester - Example: "24S" - Called "Befristet bis" in CO
+ * @property {Study[]} studies - A list of all study objects
+ * @property {Application[]} applications - A list of all application objects
  */
-class Person {
-    /**
-     * Example: "123"
-     * @type {string}
-     */
-    stPersonNr;
-
-    /**
-     * Example: "01020340". Called "Identifikationsnummer" in CO
-     * @type {string}
-     */
-    studId;
-
-    /**
-     * Example: "Max"
-     * @type {string}
-     */
-    givenName;
-
-    /**
-     * Example: "Mustermann"
-     * @type {string}
-     */
-    familyName;
-
-    /**
-     * Equal to "<familyName>, <givenName>"
-     * @type {string}
-     */
-    fullName;
-
-    /**
-     * Equal to "<familyName>, <givenName> (<birthDate>)"
-     * @type {string}
-     */
-    person;
-
-    /**
-     * Example: "1970-01-01"
-     * @type {string}
-     */
-    birthDate;
-
-    /**
-     * Unix timestamp (UTC was used for converting), for sorting and filtering, ignore the time part
-     * @type {number}
-     */
-    birthDateTimestamp;
-
-    /**
-     * Example: "F06BCC80D6FC0BDE575B16FB2E3790D5"
-     * @type {string}
-     */
-    identNrObfuscated;
-
-    /**
-     * Example: key="168", text="Österreich"
-     * @type {Translated}
-     */
-    nationality;
-
-    /**
-     * Example: key="168", text="Österreich"
-     * @type {?Translated}
-     */
-    nationalitySecondary;
-
-    /**
-     * A list containing both person.nationality and person.nationalitySecondary, if available
-     * @type {Translated[]}
-     */
-    nationalities;
-
-    /**
-     * Example: key="38", text="Bachelorstud. and. inl. Univ."
-     * @type {Translated}
-     */
-    admissionQualificationType;
-
-    /**
-     * Example: "1970-01-01"
-     * @type {?string}
-     */
-    schoolCertificateDate;
-
-    /**
-     * Home address of the student
-     * @type {?Address}
-     */
-    homeAddress;
-
-    /**
-     * Study address of the student
-     * @type {?Address}
-     */
-    studyAddress;
-
-    /**
-     * Example: "max.mustermann@student.tugraz.at"
-     * @type {?string}
-     */
-    emailAddressUniversity;
-
-    /**
-     * Example: "max.mustermann@example.com"
-     * @type {?string}
-     */
-    emailAddressConfirmed;
-
-    /**
-     * Example: "max.mustermann@example.com"
-     * @type {?string}
-     */
-    emailAddressTemporary;
-
-    /**
-     * Example: key="gültige/r Studierende/r", text="gültige/r Studierende/r"
-     * @type {Translated}
-     */
-    personalStatus;
-
-    /**
-     * Example: key="O", text="nicht zugelassen" - Called "Hörerstatus" in CO
-     * @type {Translated}
-     */
-    studentStatus;
-
-    /**
-     * Example: "1970-01-01"
-     * @type {string}
-     */
-    immatriculationDate;
-
-    /**
-     * Example: "22W"
-     * @type {string}
-     */
-    immatriculationSemester;
-
-    /**
-     * Example: "2023-10-31"
-     * @type {string}
-     */
-    exmatriculationDate;
-
-    /**
-     * Example: "22W"
-     * @type {string}
-     */
-    exmatriculationSemester;
-
-    /**
-     * Example: key="EZ", text="ex lege"
-     * @type {?Translated}
-     */
-    exmatriculationStatus;
-
-    /**
-     * Example: "Dipl.-Ing. Dr.techn"
-     * @type {?string}
-     */
-    academicTitlePreceding;
-
-    /**
-     * Example: "Bakk.techn."
-     * @type {?string}
-     */
-    academicTitleFollowing;
-
-    /**
-     * A list containing both academicTitlePreceding and academicTitleFollowing, if available
-     * @type {string[]}
-     */
-    academicTitles;
-
-    /**
-     * Example: "Maier"
-     * @type {?string}
-     */
-    formerFamilyName;
-
-    /**
-     * Example: "1234010197"
-     * @type {?string}
-     */
-    socialSecurityNr;
-
-    /**
-     * Example: "Kxl/ufp/HOufd8y/+3n6qZ1Cn7E="
-     * @type {?string}
-     */
-    bpk;
-
-    /**
-     * Example: key="W", text="Weiblich"
-     * @type {Translated}
-     */
-    gender;
-
-    /**
-     * URL to CO which leads to the page for editing the person information
-     * @type {string}
-     */
-    coUrl;
-
-    /**
-     * Unix timestamp when the data was last synced from CO
-     * @type {number}
-     */
-    syncTimestamp;
-
-    /**
-     * Example: "067612345678"
-     * @type {?string}
-     */
-    telephoneNumber;
-
-    /**
-     * Example: "Ausländer gleichgestellt" - Called "Beitragsstatus" in CO
-     * @type {?string}
-     */
-    tuitionStatus;
-
-    /**
-     * Example: "L Lehrgang" - Called "Befreiungsart" in CO
-     * @type {?string}
-     */
-    tuitionExemptionType;
-
-    /**
-     * Free form text
-     * @type {?string}
-     */
-    note;
-
-    /**
-     * Example: "23W" - Called "Befristet von" in CO
-     * @type {?string}
-     */
-    studyLimitStartSemester;
-
-    /**
-     * Example: "24S" - Called "Befristet bis" in CO
-     * @type {?string}
-     */
-    studyLimitEndSemester;
-
-    /**
-     * A list of all study objects
-     * @type {Study[]}
-     */
-    studies;
-
-    /**
-     * A list of all application objects
-     * @type {Application[]}
-     */
-    applications;
-}
 
 /**
  * Fields for all "@type" == "DocumentFile" documents related to the file itself
- */
-class FileBase {
-    /**
-     * Example: "cabinet-bucket" - Currently the external blob bucket name
-     * @type {string}
-     */
-    fileSource;
-
-    /**
-     * Example: "application/pdf"
-     * @type {string}
-     */
-    mimeType;
-
-    /**
-     * Example: 1729607133 - The unix timestamp of the blob file creation
-     * @type {number}
-     */
-    createdTimestamp;
-
-    /**
-     * Example: 1729607133 - The unix timestamp of the last blob file/metadata modification
-     * @type {number}
-     */
-    modifiedTimestamp;
-
-    /**
-     * Examples: "0192b49e-6abd-7db5-9cb1-f743bbd78c18" - The blob file ID
-     * @type {string}
-     */
-    fileId;
-
-    /**
-     * Example: "detailed_article_2.pdf" - The filename of the blob file
-     * @type {string}
-     */
-    fileName;
-
-    /**
-     * Example: 1729607133 - The unix timestamp for when the file will be deleted
-     * @type {number}
-     */
-    deleteAtTimestamp;
-
-    /**
-     * Example: 4854261742 - The unix timestamp for when the file should be deleted by the user
-     * @type {?number}
-     */
-    recommendedDeletionTimestamp;
-
-    /**
-     * Example: 4854261742 - The unix timestamp for when the file should be archived
-     * @type {?number}
-     */
-    recommendedArchivalTimestamp;
-}
-
-/**
+ * and the file content
+ * @typedef {object} FileCommon
+ * @property {string} fileSource - Example: "cabinet-bucket" - Currently the external blob bucket name
+ * @property {string} mimeType - Example: "application/pdf"
+ * @property {number} createdTimestamp - Example: 1729607133 - The unix timestamp of the blob file creation
+ * @property {number} modifiedTimestamp - Example: 1729607133 - The unix timestamp of the last blob file/metadata modification
+ * @property {string} fileId - Examples: "0192b49e-6abd-7db5-9cb1-f743bbd78c18" - The blob file ID
+ * @property {string} fileName - Example: "detailed_article_2.pdf" - The filename of the blob file
+ * @property {number} deleteAtTimestamp - Example: 1729607133 - The unix timestamp for when the file will be deleted
+ * @property {?number} recommendedDeletionTimestamp - Example: 4854261742 - The unix timestamp for when the file should be deleted by the user
+ * @property {?number} recommendedArchivalTimestamp - Example: 4854261742 - The unix timestamp for when the file should be archived
  * Fields for all "@type" == "DocumentFile" documents related to the file content
+ * @property {Translated} additionalType - Example: key="AdmissionNotice", text="Zulassungsbescheid"
+ * @property {string} groupId - Example: "8794638a-c3f0-441c-a2b6-8e867980e71a" - UUID for grouping multiple versions of the same document
+ * @property {?string} comment - Example: Optional comment about the described entity
+ * @property {string[]} isPartOf - Example: ["generalApplications-archive-3"] - A list of assigned
+ * processes, e.i. purposses of storing, to which this entity is assigned
+ * to. Every document needs at least one of the values to be assigned.
+ * @property {Translated} studyField - "UF 033 243" - Study field that the described document applies to. The
+ * key is either the study field key or the value 'Unspecified'. The value
+ * is the study field named that the described document applies to.
+ * @property {?string} subjectOf - Example: "GZ 2021-0.123.456" - Optional attribute containing a registry key of a case aka the 'Geschäftszahl'
+ * @property {string} semester - Example: "24S" - The semester that the described document applies to
+ * @property {"archival"|"deletion"} disposalType - Example: "archival" - Either "archival" or "deletion"
  */
-class FileCommon extends FileBase {
-    /**
-     * Example: key="AdmissionNotice", text="Zulassungsbescheid"
-     * @type {Translated}
-     */
-    additionalType;
-
-    /**
-     * Example: "8794638a-c3f0-441c-a2b6-8e867980e71a" - UUID for grouping multiple versions of the same document
-     * @type {string}
-     */
-    groupId;
-
-    /**
-     * Example: Optional comment about the described entity
-     * @type {?string}
-     */
-    comment;
-
-    /**
-     * Example: ["generalApplications-archive-3"] - A list of assigned
-     * processes, e.i. purposses of storing, to which this entity is assigned
-     * to. Every document needs at least one of the values to be assigned.
-     * @type {string[]}
-     */
-    isPartOf;
-
-    /**
-     * "UF 033 243" - Study field that the described document applies to. The
-     * key is either the study field key or the value 'Unspecified'. The value
-     * is the study field named that the described document applies to.
-     * @type {Translated}
-     */
-    studyField;
-
-    /**
-     * Example: "GZ 2021-0.123.456" - Optional attribute containing a registry key of a case aka the 'Geschäftszahl'
-     * @type {?string}
-     */
-    subjectOf;
-
-    /**
-     * Example: "24S" - The semester that the described document applies to
-     * @type {string}
-     */
-    semester;
-
-    /**
-     * Example: "archival" - Either "archival" or "deletion"
-     * @type {"archival"|"deletion"}
-     */
-    disposalType;
-}
 
 /**
  * Fields that are common to all Person/DocumentFile documents
+ * @typedef {object} Base
+ * @property {?string} personGroupId - An ID for grouping person and study objects, which is not set for DocumentFile documents
+ * @property {boolean} isScheduledForDeletion - Example: true - true for all files that have a deleteAtTimestamp, false otherwise
+ * @property {boolean} isCurrent - Indicates whether the object has been superseded by another.
  */
-class Base {
-    /**
-     * An ID for grouping person and study objects, which is not set for DocumentFile documents
-     * @type {?string}
-     */
-    personGroupId;
 
-    /**
-     * Example: true - true for all files that have a deleteAtTimestamp, false otherwise
-     * @type {boolean}
-     */
-    isScheduledForDeletion;
+/**
+ * @typedef {object} AdmissionNotice
+ * @property {string} dateCreated - Example: "1970-01-01" - Date of the student's application in the iso8601 format
+ * @property {string} previousStudy - Example: "Something" - Name of the study programme the student graduated in
+ * @property {"string"} decision - "rejected" - The registrar's office decision about the admission (required)
+ */
 
-    /**
-     * Indicates whether the object has been superseded by another.
-     * @type {boolean}
-     */
-    isCurrent;
-}
+/**
+ * @typedef {object} EnglMasterApplication
+ * @property {string} nativeLanguage - Example: "English" - Name of the native language of the applicant
+ * @property {boolean} previousEnrolmentInAustria - "false" - true if the student has been previously enroled in austria (required)
+ */
 
-class AdmissionNotice {
-    /**
-     * Example: "1970-01-01" - Date of the student's application in the iso8601 format
-     * @type {string}
-     */
-    dateCreated;
+/**
+ * @typedef {object} EnglMasterDataSheet
+ * @property {string} previousHigherEducationInstitution - Example: "Graz University of Technology" - Name of the institution where the applicant has previously graduated from
+ * @property {string} previousHigherEducationPlace - Example: "Graz" - Name of the place where the institution is located
+ * @property {string} previousHigherEducationField - Example: "Computer Science" - Name of the educational field the applicant has previously graduated in
+ * @property {string} previousHigherEducationCurriculum - Example: "https://example.com" - Link to the curriculum
+ * @property {string} previousHigherEducationGrading - Example: "-" - Name of the educational grading system, or a URL to it
+ * @property {string} previousHigherEducationCPGA - Example: "8.9" - Float that indicated the CPGA
+ */
 
-    /**
-     * Example: "Something" - Name of the study programme the student graduated in
-     * @type {string}
-     */
-    previousStudy;
+/**
+ * @typedef {object} EntranceQualificationApplication
+ * @property {string} previousEducation - Example: "HTL" - The students previous education (required)
+ * @property {string} electiveSubject - "Medival Literature" - The suggested elective subject for the entrance qualification exam
+ */
 
-    /**
-     * "rejected" - The registrar's office decision about the admission (required)
-     * @type {"string"}
-     */
-    decision;
-}
+/**
+ * @typedef {object} EntranceQualificationRecognition
+ * @property {string} signedBy - Example: "Michael Scott" - Name of the dean that approved the recognition (required)
+ */
 
-class EnglMasterApplication {
-    /**
-     * Example: "English" - Name of the native language of the applicant
-     * @type {string}
-     */
-    nativeLanguage;
+/**
+ * @typedef {object} Agent
+ * @property {string} givenName - Example: "James" - Person's first name
+ * @property {string} familyName - "Smith" - Person's last name
+ */
 
-    /**
-     * "false" - true if the student has been previously enroled in austria (required)
-     * @type {boolean}
-     */
-    previousEnrolmentInAustria;
-}
-
-class EnglMasterDataSheet {
-    /**
-     * Example: "Graz University of Technology" - Name of the institution where the applicant has previously graduated from
-     * @type {string}
-     */
-    previousHigherEducationInstitution;
-
-    /**
-     * Example: "Graz" - Name of the place where the institution is located
-     * @type {string}
-     */
-    previousHigherEducationPlace;
-
-    /**
-     * Example: "Computer Science" - Name of the educational field the applicant has previously graduated in
-     * @type {string}
-     */
-    previousHigherEducationField;
-
-    /**
-     * Example: "https://example.com" - Link to the curriculum
-     * @type {string}
-     */
-    previousHigherEducationCurriculum;
-
-    /**
-     * Example: "-" - Name of the educational grading system, or a URL to it
-     * @type {string}
-     */
-    previousHigherEducationGrading;
-
-    /**
-     * Example: "8.9" - Float that indicated the CPGA
-     * @type {string}
-     */
-    previousHigherEducationCPGA;
-}
-
-class EntranceQualificationApplication {
-    /**
-     * Example: "HTL" - The students previous education (required)
-     * @type {string}
-     */
-    previousEducation;
-
-    /**
-     * "Medival Literature" - The suggested elective subject for the entrance qualification exam
-     * @type {string}
-     */
-    electiveSubject;
-}
-
-class EntranceQualificationRecognition {
-    /**
-     * Example: "Michael Scott" - Name of the dean that approved the recognition (required)
-     * @type {string}
-     */
-    signedBy;
-}
-
-class Agent {
-    /**
-     * Example: "James" - Person's first name
-     * @type {string}
-     */
-    givenName;
-
-    /**
-     * "Smith" - Person's last name
-     * @type {string}
-     */
-    familyName;
-}
-
-class Communication {
-    /**
-     * Example: "Something, something" - Short description or summarization of the conversation or correspondence
-     * @type {string}
-     */
-    abstract;
-
-    /** @type {Agent} */
-    agent;
-
-    /**
-     * Example: "2023-05-15T09:30:45+05:00" - Date, time and timezone of the correspondence action in the iso8601 format
-     * @type {string}
-     */
-    dateCreated;
-}
+/**
+ * @typedef {object} Communication
+ * @property {string} abstract - Example: "Something, something" - Short description or summarization of the conversation or correspondence
+ * @property {Agent} agent - The person involved in the correspondence
+ * @property {string} dateCreated - Example: "2023-05-15T09:30:45+05:00" - Date, time and timezone of the correspondence action in the iso8601 format
+ */
 
 /**
  * Fields for all "@type" == "DocumentFile" and objectType == "file-cabinet-minimalSchema" documents
+ * @typedef {object} MinimalSchema
+ * @property {?string} dateCreated - Example: "1970-01-01" - Date of issue of the physical document in the iso8601 format
  */
-class MinimalSchema {
-    /**
-     * Example: "1970-01-01" - Date of issue of the physical document in the iso8601 format
-     * @type {?string}
-     */
-    dateCreated;
-}
 
 /**
  * Fields for all "@type" == "DocumentFile" and objectType == "file-cabinet-identityDocument" documents
+ * @typedef {object} IdentityDocument
+ * @property {string} nationality - Example: "AUT" - Nationality stated in the document
+ * @property {string} identifier - Example: "AT-L-123456" - ID number
+ * @property {string} dateCreated - Example: "1970-01-01" - Date of issue of the ID in the iso8601 format
  */
-class IdentityDocument {
-    /**
-     * Example: "AUT" - Nationality stated in the document
-     * @type {string}
-     */
-    nationality;
-
-    /**
-     * Example: "AT-L-123456" - ID number
-     * @type {string}
-     */
-    identifier;
-
-    /**
-     * Example: "1970-01-01" - Date of issue of the ID in the iso8601 format
-     * @type {string}
-     */
-    dateCreated;
-}
 
 /**
  * Fields for all "@type" == "DocumentFile" and objectType == "file-cabinet-citizenshipCertificate" documents
+ * @typedef {object} CitizenshipCertificate
+ * @property {string} nationality - Example: "AUT" - Nationality stated in the document
+ * @property {string} dateCreated - Example: "1970-01-01" - Date of issue of the physical document in the iso8601 format
  */
-class CitizenshipCertificate {
-    /**
-     * Example: "AUT" - Nationality stated in the document
-     * @type {string}
-     */
-    nationality;
-
-    /**
-     * Example: "1970-01-01" - Date of issue of the physical document in the iso8601 format
-     * @type {string}
-     */
-    dateCreated;
-}
 
 /**
  * File related fields
+ * @typedef {object} File
+ * @property {?CitizenshipCertificate} file-cabinet-citizenshipCertificate - Citizenship certificate fields
+ * @property {?IdentityDocument} file-cabinet-identityDocument - Identity document fields
+ * @property {?MinimalSchema} file-cabinet-minimalSchema - Minimal schema fields
+ * @property {?Communication} file-cabinet-communication - Communication fields
+ * @property {?AdmissionNotice} file-cabinet-admissionNotice - Admission notice fields
+ * @property {?EnglMasterApplication} file-cabinet-englMasterApplication - English master's application fields
+ * @property {?EnglMasterDataSheet} file-cabinet-englMasterDataSheet - English master's data sheet fields
+ * @property {?EntranceQualificationApplication} file-cabinet-entranceQualificationApplication - Entrance qualification application fields
+ * @property {?EntranceQualificationRecognition} file-cabinet-entranceQualificationRecognition - Entrance qualification recognition fields
+ * @property {FileCommon} base - Fields common to all files
  */
-class File {
-    constructor() {
-        /** @type {?CitizenshipCertificate} */
-        this['file-cabinet-citizenshipCertificate'] = undefined;
-        /** @type {?IdentityDocument} */
-        this['file-cabinet-identityDocument'] = undefined;
-        /** @type {?MinimalSchema} */
-        this['file-cabinet-minimalSchema'] = undefined;
-        /** @type {?Communication} */
-        this['file-cabinet-communication'] = undefined;
-        /** @type {?AdmissionNotice} */
-        this['file-cabinet-admissionNotice'] = undefined;
-        /** @type {?EnglMasterApplication} */
-        this['file-cabinet-englMasterApplication'] = undefined;
-    }
-
-    /** @type {FileCommon} */
-    base;
-}
 
 /**
  * Required fields that are not user defined and always need to exist.
