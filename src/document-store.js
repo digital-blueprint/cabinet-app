@@ -2,6 +2,12 @@ import {CabinetApi} from './api.js';
 import {TypesenseService} from './typesense.js';
 
 /**
+ * @typedef {object} PersonSyncDocument
+ * @property {{syncTimestamp: number}} person - The person object being synchronized
+ * @property {string} id - The Typesense document ID
+ */
+
+/**
  * Error thrown when polling Typesense for a propagated change exhausts all
  * attempts without the expected update showing up in the search index.
  */
@@ -493,11 +499,9 @@ export class CabinetDocumentStore {
      * This is the same write-then-poll pattern as the file operations: a
      * backend mutation followed by polling the search index until the change
      * has propagated.
-     * @param {object} hit - The person document to sync
-     * @param {object} hit.person - The person object being synchronized
-     * @param {number} hit.person.syncTimestamp - The current sync timestamp
-     * @param {string} hit.id - The Typesense document id
-     * @returns {Promise<object>} - The updated Typesense document
+     * @template T
+     * @param {T & PersonSyncDocument} hit - The person document to sync
+     * @returns {Promise<T & PersonSyncDocument>} - The updated Typesense document
      * @throws {PollTimeoutError} If the sync did not propagate in time
      */
     async syncPersonDocument(hit) {
@@ -509,7 +513,9 @@ export class CabinetDocumentStore {
         const typesense = this._getTypesense();
 
         const item = await this._poll(async () => {
-            const document = await typesense.fetchItem(documentId);
+            const document = /** @type {T & PersonSyncDocument} */ (
+                await typesense.fetchItem(documentId)
+            );
             return document.person.syncTimestamp !== previousSyncTimestamp
                 ? document
                 : CabinetDocumentStore.NOT_READY;

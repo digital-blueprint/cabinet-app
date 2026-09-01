@@ -879,7 +879,7 @@ class CabinetViewElement extends BaseViewElement {
         this._syncing = true;
         try {
             let store = new CabinetDocumentStore(this);
-            this.data = await store.syncPersonDocument(this.data);
+            this.data = await store.syncPersonDocument(getPersonHit(this.data));
             sendNotification({
                 summary: this._i18nCustom.t('custom:person.sync.notification.success.title'),
                 body: this._i18nCustom.t('custom:person.sync.notification.success.body'),
