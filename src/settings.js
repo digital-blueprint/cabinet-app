@@ -19,7 +19,7 @@ export class CabinetSettings {
      * Returns null if the key doesn't exist.
      * Throws if no user-id is set.
      * @param {string} key
-     * @returns {*|null}
+     * @returns {*}
      */
     get(key) {
         const raw = localStorage.getItem(this.#prefix + key);

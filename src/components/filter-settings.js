@@ -4,12 +4,14 @@ import {AuthMixin, LangMixin, IconButton, ScopedElementsMixin} from '@dbp-toolki
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from '../i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {Button, Icon, Modal} from '@dbp-toolkit/common';
+import {Button, Icon} from '@dbp-toolkit/common';
 import {
     scopedElements as modalNotificationScopedElements,
     sendModalNotification,
 } from './modal-notification.js';
 import {CabinetSettings} from '../settings.js';
+
+/** @typedef {import('@dbp-toolkit/common').Modal} Modal */
 
 export class CabinetFilterSettings extends ScopedElementsMixin(
     LangMixin(AuthMixin(DBPLitElement), createInstance),

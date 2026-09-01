@@ -1,5 +1,6 @@
-import {PersonHit} from './schema.js';
 import {formatDate} from '../../utils.js';
+
+/** @typedef {import('./schema.js').PersonHit} PersonHit */
 
 /**
  * Generate a PDF document for a person hit.

@@ -6,7 +6,6 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {
     Button,
     Icon,
-    Modal,
     DBPSelect,
     MiniSpinner,
     ScopedElementsMixin,
@@ -28,6 +27,8 @@ import {createUUID} from '@dbp-toolkit/common/utils';
 import {PdfValidationErrorList} from './pdf-validation-error-list.js';
 import {ApiError} from '../api.js';
 import {createInstance} from '../i18n.js';
+
+/** @typedef {import('@dbp-toolkit/common').Modal} Modal */
 
 const getFieldsetCSS = () => {
     // language=css

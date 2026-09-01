@@ -103,7 +103,9 @@ if (devConfig != undefined && appEnv in devConfig) {
         enableAnnotations: true,
     };
 } else {
-    console.error(`Unknown build environment: '${appEnv}', use one of '${Object.keys(devConfig)}'`);
+    console.error(
+        `Unknown build environment: '${appEnv}', use one of '${Object.keys(devConfig).join(',')}'`,
+    );
     process.exit(1);
 }
 
@@ -164,7 +166,9 @@ const activitiesToInclude =
 
 for (let activity of activitiesToInclude) {
     if (!(activity in activities)) {
-        console.error(`Unknown activity: '${activity}', use one of '${Object.keys(activities)}'`);
+        console.error(
+            `Unknown activity: '${activity}', use one of '${Object.keys(activities).join(',')}'`,
+        );
         process.exit(1);
     }
 }

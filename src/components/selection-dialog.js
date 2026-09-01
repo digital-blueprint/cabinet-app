@@ -5,7 +5,7 @@ import {createUUID} from '@dbp-toolkit/common/utils';
 import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 import {createInstance} from '../i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
-import {Button, Icon, Modal, DBPSelect} from '@dbp-toolkit/common';
+import {Button, Icon, DBPSelect} from '@dbp-toolkit/common';
 import {TabulatorTable} from '@dbp-toolkit/tabulator-table';
 import {FileSink} from '@dbp-toolkit/file-handling';
 import {
@@ -16,6 +16,8 @@ import {setOverridesByGlobalCache} from '@dbp-toolkit/common/src/i18next.js';
 import {CabinetApi} from '../api.js';
 import {CabinetDocumentStore} from '../document-store.js';
 import {HitSelectionType, createEmptyHitSelection} from '../hit-selection.js';
+
+/** @typedef {import('@dbp-toolkit/common').Modal} Modal */
 
 export class SelectionDialog extends ScopedElementsMixin(
     LangMixin(AuthMixin(DBPLitElement), createInstance),
@@ -666,7 +668,7 @@ export class SelectionDialog extends ScopedElementsMixin(
                 // Construct the proper filename according to specification
                 const baseFilename = `${studId}_${additionalType}_${uploadDate}`;
 
-                let randomStr = undefined;
+                let randomStr = '';
                 files.forEach((file, i) => {
                     if (
                         (file instanceof File && file.name === `${baseFilename}.json`) ||

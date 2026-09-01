@@ -1,4 +1,4 @@
-import {CabinetApi, ApiError} from './api.js';
+import {CabinetApi} from './api.js';
 import {TypesenseService} from './typesense.js';
 
 /**

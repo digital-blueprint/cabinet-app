@@ -26,10 +26,10 @@ import {BLOB_PREFIX} from './utils.js';
  *
  * This is a documentation-only ("dummy") class describing the shape of the
  * JSON object returned by the endpoint; it is never instantiated.
+ * @typedef {object} CabinetSyncPersonAction
  * @property {string} identifier - The identifier of the sync action
  * @property {string} documentId - The document ID the person data was synced for
  */
-class CabinetSyncPersonAction {}
 
 /**
  * Error thrown when an API request fails.
@@ -92,13 +92,13 @@ export class ApiError extends Error {
  * The object also carries an `@type` field (always `'DocumentFile'`), which is
  * omitted from the `@property` list below because `@`-prefixed keys are not
  * valid JSDoc namepaths.
+ * @typedef {object} DocumentFileMetadata
  * @property {string} fileSource - The file source, e.g. 'blob-cabinetBucket'
  * @property {string} objectType - The object type (e.g. 'file-cabinet-minimalSchema')
  * @property {boolean} isCurrent - Whether this is the current version of the document
  * @property {string} lastModifiedBy - The user ID of the last person to modify the file
  * @property {string} groupId - The group ID linking versions of the same document
  */
-class DocumentFileMetadata {}
 
 export class CabinetApi {
     constructor(element) {
