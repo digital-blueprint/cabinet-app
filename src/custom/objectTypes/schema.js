@@ -262,7 +262,7 @@ export class DocumentHit extends PersonHit {
  */
 export function getPersonHit(hit) {
     console.assert(hit['@type'] === 'Person');
-    return hit;
+    return /** @type {PersonHit} */ (hit);
 }
 
 /**
@@ -271,7 +271,7 @@ export function getPersonHit(hit) {
  */
 export function getDocumentHit(hit) {
     console.assert(hit['@type'] === 'DocumentFile');
-    return hit;
+    return /** @type {DocumentHit} */ (hit);
 }
 
 /**

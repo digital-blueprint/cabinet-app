@@ -145,7 +145,7 @@ export class CabinetDocumentStore {
         for (let attempt = 0; attempt < CabinetDocumentStore.POLL_ATTEMPTS; attempt++) {
             const result = await probe();
             if (result !== CabinetDocumentStore.NOT_READY) {
-                return result;
+                return /** @type {T} */ (result);
             }
 
             const ms = Math.min(
