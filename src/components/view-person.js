@@ -6,11 +6,14 @@ import {createInstance} from '../i18n.js';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Icon, Modal} from '@dbp-toolkit/common';
 
+/** @template T @typedef {import('lit/directives/ref.js').Ref<T>} ElementRef */
+
 export class CabinetViewPerson extends ScopedElementsMixin(
     LangMixin(AuthMixin(DBPLitElement), createInstance),
 ) {
     constructor() {
         super();
+        /** @type {ElementRef<Modal>} */
         this.modalRef = createRef();
         this.hitData = null;
         this.viewComponent = null;

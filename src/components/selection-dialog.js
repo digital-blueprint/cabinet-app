@@ -18,17 +18,24 @@ import {CabinetDocumentStore} from '../document-store.js';
 import {HitSelectionType, createEmptyHitSelection} from '../hit-selection.js';
 
 /** @typedef {import('@dbp-toolkit/common').Modal} Modal */
+/** @template T @typedef {import('lit/directives/ref.js').Ref<T>} ElementRef */
 
 export class SelectionDialog extends ScopedElementsMixin(
     LangMixin(AuthMixin(DBPLitElement), createInstance),
 ) {
     constructor() {
         super();
+        /** @type {ElementRef<Modal>} */
         this.modalRef = createRef();
+        /** @type {ElementRef<TabulatorTable>} */
         this.personTableRef = createRef();
+        /** @type {ElementRef<TabulatorTable>} */
         this.documentTableRef = createRef();
+        /** @type {ElementRef<TabulatorTable>} */
         this.deletedDocumentTableRef = createRef();
+        /** @type {ElementRef<FileSink>} */
         this.fileSinkRef = createRef();
+        /** @type {ElementRef<FileSink>} */
         this.fileSinkStreamedRef = createRef();
         // Unique notification target id for THIS instance.
         this._notificationId = 'selection-dialog-notification-' + createUUID();

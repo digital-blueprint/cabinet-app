@@ -30,6 +30,8 @@ import {createPagination} from './components/pagination.js';
 import {SelectionDialog} from './components/selection-dialog.js';
 import {HitSelectionType, HitSelectionEventType, createEmptyHitSelection} from './hit-selection.js';
 
+/** @template T @typedef {import('lit/directives/ref.js').Ref<T>} ElementRef */
+
 class StatsWidget extends LangMixin(AuthMixin(DBPLitElement), createInstance) {
     constructor() {
         super();
@@ -175,10 +177,15 @@ class CabinetSearch extends ScopedElementsMixin(
             objectType: '',
         };
         this.resetHitSelection();
+        /** @type {ElementRef<CabinetViewPerson>} */
         this.documentViewPersonModalRef = createRef();
+        /** @type {ElementRef<CabinetFile>} */
         this.documentFileComponentRef = createRef();
+        /** @type {ElementRef<CabinetFilterSettings>} */
         this.filterSettingsModalRef = createRef();
+        /** @type {ElementRef<CabinetFacets>} */
         this.cabinetFacetsRef = createRef();
+        /** @type {ElementRef<SelectionDialog>} */
         this.selectionDialogRef = createRef();
         this.documentFile = null;
         this.cabinetConfig = null;

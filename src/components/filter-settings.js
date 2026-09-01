@@ -12,6 +12,7 @@ import {
 import {CabinetSettings} from '../settings.js';
 
 /** @typedef {import('@dbp-toolkit/common').Modal} Modal */
+/** @template T @typedef {import('lit/directives/ref.js').Ref<T>} ElementRef */
 
 export class CabinetFilterSettings extends ScopedElementsMixin(
     LangMixin(AuthMixin(DBPLitElement), createInstance),
@@ -20,6 +21,7 @@ export class CabinetFilterSettings extends ScopedElementsMixin(
         super();
         this.cabinetSettings = new CabinetSettings();
         this.facetVisibilityStates = {};
+        /** @type {ElementRef<Modal>} */
         this.modalRef = createRef();
         this.facetConfigs = [];
         this.facetNumber = 0;

@@ -29,6 +29,7 @@ import {ApiError} from '../api.js';
 import {createInstance} from '../i18n.js';
 
 /** @typedef {import('@dbp-toolkit/common').Modal} Modal */
+/** @template T @typedef {import('lit/directives/ref.js').Ref<T>} ElementRef */
 
 const getFieldsetCSS = () => {
     // language=css
@@ -84,10 +85,13 @@ export class CabinetFile extends ScopedElementsMixin(
         super();
         this.entryPointUrl = '';
         this.objectTypes = {};
+        /** @type {ElementRef<Modal>} */
         this.documentModalRef = createRef();
+        /** @type {ElementRef<PdfViewer>} */
         this.documentPdfViewerRef = createRef();
         this.documentPdfValidationErrorList = createRef();
         this.modalRef = createRef();
+        /** @type {ElementRef<FileSource>} */
         this.fileSourceRef = createRef();
         this.fileSinkRef = createRef();
         this.formRef = createRef();
