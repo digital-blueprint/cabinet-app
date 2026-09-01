@@ -25,6 +25,7 @@ export class PdfValidationErrorList extends LangMixin(DBPLitElement, createInsta
     ];
 
     static properties = {
+        ...super.properties,
         errors: {type: Array, attribute: false},
         errorSummary: {type: String, attribute: false},
     };

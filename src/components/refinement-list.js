@@ -107,6 +107,7 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
     ];
 
     static properties = {
+        ...super.properties,
         refinementListRenderOptions: {type: Object},
         _searchValue: {type: String, state: true},
         renderFunction: {type: Object, attribute: false},

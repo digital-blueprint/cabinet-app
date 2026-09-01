@@ -15,6 +15,7 @@ export class FacetPanel extends LangMixin(ScopedElementsMixin(DBPLitElement), cr
     }
 
     static properties = {
+        ...super.properties,
         title: {type: String},
         facetId: {type: String},
         isOpen: {type: Boolean},

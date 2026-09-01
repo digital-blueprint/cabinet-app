@@ -215,6 +215,7 @@ export class DocumentStatusWidget extends LangMixin(DBPLitElement, createInstanc
     ];
 
     static properties = {
+        ...super.properties,
         // The render options supplied by the connectDocumentStatus connector.
         documentStatusRenderOptions: {type: Object, attribute: false},
     };

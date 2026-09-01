@@ -128,6 +128,7 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
 
     static get properties() {
         return {
+            ...super.properties,
             refinementRenderOptions: {type: Object},
             _startDateValue: {type: String, state: true},
             _endDateValue: {type: String, state: true},
