@@ -541,7 +541,7 @@ class CabinetSearch extends ScopedElementsMixin(
     }
 
     async ensureInstantsearch() {
-        if (!this._initInstantsearchPromise) {
+        if (this._initInstantsearchPromise === null) {
             this._initInstantsearchPromise = this._performInitInstantsearch();
         }
         return this._initInstantsearchPromise;
@@ -1607,7 +1607,7 @@ class CabinetSearch extends ScopedElementsMixin(
     }
 
     async ensureModules() {
-        if (!this._loadModulesPromise) {
+        if (this._loadModulesPromise === null) {
             this._loadModulesPromise = this._performLoadModules();
         }
         return this._loadModulesPromise;
