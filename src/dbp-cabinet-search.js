@@ -222,6 +222,7 @@ class CabinetSearch extends ScopedElementsMixin(
         this.hitSelectionCollapsed = true;
         this.showHitCheckboxes = false;
         this.disabled = true;
+        this.loadingTranslations = false;
 
         // used for translation overrides
         this.langDir = undefined;
@@ -230,7 +231,7 @@ class CabinetSearch extends ScopedElementsMixin(
     resetHitSelection() {
         // Use the static method to get a fresh copy and maintain single source of truth
         this.hitSelections = createEmptyHitSelection();
-        this.hitSelectAllState = this.constructor.HitSelectAllState.SELECT;
+        this.hitSelectAllState = CabinetSearch.HitSelectAllState.SELECT;
     }
 
     static get scopedElements() {
@@ -336,7 +337,7 @@ class CabinetSearch extends ScopedElementsMixin(
             isEmptySelection(this.hitSelections[HitSelectionType.PERSON]) &&
             isEmptySelection(this.hitSelections[HitSelectionType.DOCUMENT_FILE])
         ) {
-            this.hitSelectAllState = this.constructor.HitSelectAllState.SELECT;
+            this.hitSelectAllState = CabinetSearch.HitSelectAllState.SELECT;
         }
     }
 
@@ -509,7 +510,7 @@ class CabinetSearch extends ScopedElementsMixin(
             } else {
                 delete this.hitSelections[type][identifier];
             }
-            this.hitSelectAllState = this.constructor.HitSelectAllState.DESELECT;
+            this.hitSelectAllState = CabinetSearch.HitSelectAllState.DESELECT;
             this.requestUpdate();
             this.resetHitSelectAllStateIfNeeded();
         });
@@ -519,7 +520,7 @@ class CabinetSearch extends ScopedElementsMixin(
             const {detail} = /** @type {CustomEvent} */ (event);
             const {type, id} = detail;
             delete this.hitSelections[type][id];
-            this.hitSelectAllState = this.constructor.HitSelectAllState.DESELECT;
+            this.hitSelectAllState = CabinetSearch.HitSelectAllState.DESELECT;
             this.requestUpdate();
             this.resetHitSelectAllStateIfNeeded();
             // Refresh the search to update checkbox states

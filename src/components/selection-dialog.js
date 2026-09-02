@@ -26,6 +26,13 @@ export class SelectionDialog extends ScopedElementsMixin(
     constructor() {
         super();
         this.entryPointUrl = '';
+        this.fileHandlingEnabledTargets = 'local';
+        this.nextcloudWebAppPasswordURL = '';
+        this.nextcloudWebDavURL = '';
+        this.nextcloudName = '';
+        this.nextcloudFileURL = '';
+        this.nextcloudAuthInfo = '';
+        this.cabinetConfig = null;
         /** @type {ElementRef<Modal>} */
         this.modalRef = createRef();
         /** @type {ElementRef<TabulatorTable>} */

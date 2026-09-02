@@ -65,16 +65,19 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
         // on facet changes. Ideally we would not change the global configuration
         // but rather pass the grouping parameter to the request.
         if (!needGrouping) {
-            this.configuration.additionalSearchParameters.group_by = undefined;
-            this.configuration.additionalSearchParameters.group_limit = undefined;
-            this.configuration.additionalSearchParameters.group_missing_values = undefined;
+            const {additionalSearchParameters} = /** @type {*} */ (this).configuration;
+            additionalSearchParameters.group_by = undefined;
+            additionalSearchParameters.group_limit = undefined;
+            additionalSearchParameters.group_missing_values = undefined;
         }
     }
 
     async _adaptAndPerformTypesenseRequest(instantsearchRequests) {
         this._removeFacets(instantsearchRequests);
         this._customGrouping(instantsearchRequests);
-        const response = await super._adaptAndPerformTypesenseRequest(instantsearchRequests);
+        const response = await /** @type {*} */ (
+            TypesenseInstantSearchAdapter.prototype
+        )._adaptAndPerformTypesenseRequest.call(this, instantsearchRequests);
         this._collectFacetParentKeys(response);
         return response;
     }
