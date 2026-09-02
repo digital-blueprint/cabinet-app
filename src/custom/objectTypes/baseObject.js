@@ -22,6 +22,9 @@ import {
 } from '@dbp-toolkit/form-elements';
 import {CabinetApi} from '../../api.js';
 
+/** @typedef {import('./schema.js').DocumentHit} DocumentHit */
+/** @typedef {import('./schema.js').Person} Person */
+
 export class BaseObject {
     name = 'baseObject';
 
@@ -204,14 +207,14 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
         if (!this.data) {
             throw new Error('BaseFormElement: data is not set');
         }
-        return this.data;
+        return /** @type {DocumentHit} */ (this.data);
     }
 
     _getPerson() {
         if (!this.person) {
             throw new Error('BaseFormElement: person is not set');
         }
-        return this.person;
+        return /** @type {Person} */ (this.person);
     }
 
     static getAdditionalTypes() {
@@ -454,7 +457,11 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
     }
 
     getStudyFields() {
-        const personData = this.data?.person || this.person || {};
+        const data = /** @type {{person?: Person}|null} */ (this.data);
+        const personData =
+            data?.person ||
+            /** @type {Person|null} */ (this.person) ||
+            /** @type {Partial<Person>} */ ({});
         const studies = personData.studies;
         let i18n = this._i18nCustom;
         let studyFields = {Unspecified: i18n.t('custom:doc-modal-study-field-unspecified')};
@@ -537,6 +544,7 @@ export class BaseHitElement extends ScopedElementsMixin(CustomLitElement) {
          * @property {boolean} selected - Indicates if this the item was selected.
          */
         this.selected = false;
+        this.showHitCheckboxes = false;
     }
 
     static get scopedElements() {
@@ -554,6 +562,7 @@ export class BaseHitElement extends ScopedElementsMixin(CustomLitElement) {
             isLastOnPage: {type: Boolean, state: true},
             isFirstOfGroup: {type: Boolean, state: true},
             selected: {type: Boolean, state: true},
+            showHitCheckboxes: {type: Boolean, state: true},
             ariaLabel: {type: String, reflect: true, attribute: 'aria-label'},
         };
     }

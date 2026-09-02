@@ -1,6 +1,8 @@
 import {CabinetApi} from './api.js';
 import {TypesenseService} from './typesense.js';
 
+/** @typedef {import('./custom/objectTypes/schema.js').DocumentHit} DocumentHit */
+
 /**
  * @typedef {object} PersonSyncDocument
  * @property {{syncTimestamp: number}} person - The person object being synchronized
@@ -93,10 +95,12 @@ export class CabinetDocumentStore {
     /**
      * Fetch a Typesense document by its Blob fileId.
      * @param {string} fileId
-     * @returns {Promise<object|null>}
+     * @returns {Promise<DocumentHit|null>}
      */
     async fetchByBlobId(fileId) {
-        return this._getTypesense().fetchFileDocumentByBlobId(fileId);
+        return /** @type {Promise<DocumentHit|null>} */ (
+            this._getTypesense().fetchFileDocumentByBlobId(fileId)
+        );
     }
 
     /**
@@ -105,10 +109,12 @@ export class CabinetDocumentStore {
      * @param {object} [options]
      * @param {boolean} [options.currentOnly] - Only return current versions
      * @param {string} [options.sortSpec] - Optional Typesense sort_by string
-     * @returns {Promise<Array<object>>}
+     * @returns {Promise<Array<DocumentHit>>}
      */
     async fetchVersions(groupId, {currentOnly = false, sortSpec = undefined} = {}) {
-        return this._getTypesense().fetchFileDocumentsByGroupId(groupId, currentOnly, sortSpec);
+        return /** @type {Promise<Array<DocumentHit>>} */ (
+            this._getTypesense().fetchFileDocumentsByGroupId(groupId, currentOnly, sortSpec)
+        );
     }
 
     /**
@@ -174,15 +180,17 @@ export class CabinetDocumentStore {
      * {@link PollTimeoutError} is thrown. Errors from the underlying fetch
      * (other than "not found") are propagated.
      * @param {string} fileId - The Blob fileId to look up
-     * @param {(doc: object) => boolean} predicate - Returns true when the
+     * @param {(doc: DocumentHit) => boolean} predicate - Returns true when the
      *   fetched document reflects the expected state
-     * @returns {Promise<object>} - The matching Typesense document
+     * @returns {Promise<DocumentHit>} - The matching Typesense document
      * @throws {PollTimeoutError} If the predicate is never satisfied in time
      */
     async pollForDocumentByBlobId(fileId, predicate) {
         return this._poll(async () => {
             // Could throw for errors other than "not found" (which returns null)
-            const item = await this._getTypesense().fetchFileDocumentByBlobId(fileId);
+            const item = /** @type {DocumentHit|null} */ (
+                await this._getTypesense().fetchFileDocumentByBlobId(fileId)
+            );
             return item !== null && predicate(item) === true
                 ? item
                 : CabinetDocumentStore.NOT_READY;
@@ -199,7 +207,7 @@ export class CabinetDocumentStore {
      * which propagate the timeout to their callers. Fetch errors for individual
      * ids are treated as "not updated yet".
      * @param {Array<string>} fileIds - Blob fileIds to check
-     * @param {(doc: object) => boolean} predicate - Returns true when a
+     * @param {(doc: DocumentHit) => boolean} predicate - Returns true when a
      *   document reflects the expected state
      * @returns {Promise<void>}
      * @throws {PollTimeoutError} If the index did not catch up in time
@@ -210,7 +218,9 @@ export class CabinetDocumentStore {
         await this._poll(async () => {
             const checks = fileIds.map(async (fileId) => {
                 try {
-                    const item = await typesense.fetchFileDocumentByBlobId(fileId);
+                    const item = /** @type {DocumentHit|null} */ (
+                        await typesense.fetchFileDocumentByBlobId(fileId)
+                    );
                     return !!item && predicate(item) === true;
                 } catch {
                     return false;
@@ -236,7 +246,7 @@ export class CabinetDocumentStore {
      * @param {?string} options.type - The blob type (objectType.getBlobType())
      * @param {object} options.metadata - The metadata to store
      * @param {?File} [options.file] - The file to upload (null for metadata-only)
-     * @returns {Promise<{blob: import('./api.js').BlobFile, item: object}>} - The
+     * @returns {Promise<{blob: import('./api.js').BlobFile, item: DocumentHit}>} - The
      *   created blob file resource and the propagated Typesense document
      * @throws {PollTimeoutError} If the index did not catch up in time
      */
@@ -264,7 +274,7 @@ export class CabinetDocumentStore {
      * @param {?File} [options.file] - The file to upload (null for metadata-only)
      * @param {?number} [options.previousModifiedTimestamp] - The
      *   `modifiedTimestamp` before the update, used as the propagation marker
-     * @returns {Promise<{blob: import('./api.js').BlobFile, item: object}>} - The
+     * @returns {Promise<{blob: import('./api.js').BlobFile, item: DocumentHit}>} - The
      *   updated blob file resource and the propagated Typesense document
      * @throws {PollTimeoutError} If the index did not catch up in time
      */
@@ -295,7 +305,7 @@ export class CabinetDocumentStore {
      * @param {string} fileId - The Blob fileId of the version to update
      * @param {boolean} enable - The desired `isCurrent` value
      * @param {string} userId - The user id to record as `lastModifiedBy`
-     * @returns {Promise<object>} - The propagated Typesense document
+     * @returns {Promise<DocumentHit>} - The propagated Typesense document
      * @throws {PollTimeoutError} If the index did not catch up in time
      */
     async setVersionCurrent(fileId, enable, userId) {
@@ -460,7 +470,7 @@ export class CabinetDocumentStore {
      * {@link PollTimeoutError} which the caller is expected to catch and surface
      * as a warning while continuing. When nothing needed deleting no poll runs,
      * so no `PollTimeoutError` can be thrown.
-     * @param {Array<object>} versions - The versions to consider for deletion
+     * @param {Array<DocumentHit>} versions - The versions to consider for deletion
      * @returns {Promise<void>}
      * @throws {PollTimeoutError} If the index did not catch up in time
      */

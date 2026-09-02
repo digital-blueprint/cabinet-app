@@ -30,6 +30,7 @@ import {createPagination} from './components/pagination.js';
 import {SelectionDialog} from './components/selection-dialog.js';
 import {HitSelectionType, HitSelectionEventType, createEmptyHitSelection} from './hit-selection.js';
 
+/** @typedef {import('./custom/objectTypes/baseObject.js').BaseHitElement} BaseHitElement */
 /** @template T @typedef {import('lit/directives/ref.js').Ref<T>} ElementRef */
 
 class StatsWidget extends LangMixin(AuthMixin(DBPLitElement), createInstance) {
@@ -62,6 +63,7 @@ class EmptyWidget extends LangMixin(DBPLitElement, createInstance) {
     constructor() {
         super();
         this.results = null;
+        this.incompleteResults = false;
     }
 
     static get properties() {
@@ -1251,8 +1253,8 @@ class CabinetSearch extends ScopedElementsMixin(
 
             templates: {
                 empty: (results, {html}) => {
-                    let emptyElement = cabinetSearch.createScopedElement(
-                        'dbp-cabinet-empty-widget',
+                    const emptyElement = /** @type {EmptyWidget} */ (
+                        cabinetSearch.createScopedElement('dbp-cabinet-empty-widget')
                     );
                     emptyElement.setAttribute('subscribe', 'lang');
                     emptyElement.results = results;
@@ -1271,7 +1273,9 @@ class CabinetSearch extends ScopedElementsMixin(
                     const objectTypeHitComponent = this.objectTypes[objectType].getHitComponent();
                     const type = hit['@type'];
                     cabinetSearch.defineScopedElement(tagName, objectTypeHitComponent);
-                    let hitElement = cabinetSearch.createScopedElement(tagName);
+                    const hitElement = /** @type {BaseHitElement} */ (
+                        cabinetSearch.createScopedElement(tagName)
+                    );
                     hitElement.setAttribute('subscribe', 'lang');
                     hitElement.setAttribute('objectType', objectType);
                     hitElement.setAttribute('role', 'group');
@@ -1292,7 +1296,9 @@ class CabinetSearch extends ScopedElementsMixin(
     }
 
     createStats() {
-        let statsWidget = this.createScopedElement('dbp-cabinet-stats-widget');
+        const statsWidget = /** @type {StatsWidget} */ (
+            this.createScopedElement('dbp-cabinet-stats-widget')
+        );
         statsWidget.setAttribute('subscribe', 'lang');
 
         return stats({

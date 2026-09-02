@@ -29,6 +29,8 @@ import {ApiError} from '../api.js';
 import {createInstance} from '../i18n.js';
 
 /** @typedef {import('@dbp-toolkit/common').Modal} Modal */
+/** @typedef {import('../api.js').BlobFile} BlobFile */
+/** @typedef {import('../custom/objectTypes/baseObject.js').BaseFormElement} BaseFormElement */
 /** @template T @typedef {import('lit/directives/ref.js').Ref<T>} ElementRef */
 
 const getFieldsetCSS = () => {
@@ -89,11 +91,14 @@ export class CabinetFile extends ScopedElementsMixin(
         this.documentModalRef = createRef();
         /** @type {ElementRef<PdfViewer>} */
         this.documentPdfViewerRef = createRef();
+        /** @type {ElementRef<PdfValidationErrorList>} */
         this.documentPdfValidationErrorList = createRef();
         this.modalRef = createRef();
         /** @type {ElementRef<FileSource>} */
         this.fileSourceRef = createRef();
+        /** @type {ElementRef<FileSink>} */
         this.fileSinkRef = createRef();
+        /** @type {ElementRef<BaseFormElement>} */
         this.formRef = createRef();
         this.uploadFailed = false;
         // Initialize the state in the beginning
@@ -331,7 +336,9 @@ export class CabinetFile extends ScopedElementsMixin(
         }
         // if document is not in a valid PDF/A format
         if (error.errorId?.includes('-file-data-file-does-not-validate-against-type')) {
-            this.documentPdfValidationErrorList.value.errors = error.errorDetails;
+            this.documentPdfValidationErrorList.value.errors = /** @type {Array<string>} */ (
+                error.errorDetails
+            );
         }
 
         this.uploadFailed = true;
@@ -735,7 +742,7 @@ export class CabinetFile extends ScopedElementsMixin(
     /**
      * Soft-delete a file by ID, showing an error notification on failure
      * @param {string} fileId - The file identifier
-     * @returns {Promise<object>} - The response data
+     * @returns {Promise<BlobFile>} - The response data
      */
     async softDeleteFile(fileId) {
         return this._setFileDeletion(fileId, false);
@@ -744,7 +751,7 @@ export class CabinetFile extends ScopedElementsMixin(
     /**
      * Restore a soft-deleted file by ID, showing an error notification on failure
      * @param {string} fileId - The file identifier
-     * @returns {Promise<object>} - The response data
+     * @returns {Promise<BlobFile>} - The response data
      */
     async restoreFile(fileId) {
         return this._setFileDeletion(fileId, true);
