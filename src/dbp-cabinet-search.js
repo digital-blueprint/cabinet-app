@@ -461,17 +461,19 @@ class CabinetSearch extends ScopedElementsMixin(
 
         // Listen to DbpCabinetDocumentAdd events, to open the file dialog in add mode
         this.addEventListener('DbpCabinetDocumentAdd', function (event) {
+            const {detail} = /** @type {CustomEvent} */ (event);
             /**
              * @type {CabinetFile}
              */
             const component = that.documentFileComponentRef.value;
             component.setObjectTypes(this.documentObjectTypes);
-            void component.openDocumentAddDialogWithPersonHit(event.detail.hit);
+            void component.openDocumentAddDialogWithPersonHit(detail.hit);
         });
 
         // Listen to DbpCabinetDocumentView events, to open the file dialog in view mode
         this.addEventListener('DbpCabinetDocumentView', function (event) {
-            void that.openDocumentViewDialog(event.detail.hit);
+            const {detail} = /** @type {CustomEvent} */ (event);
+            void that.openDocumentViewDialog(detail.hit);
         });
 
         // Listen to DbpCabinetIndexChanged events to refresh the active search.
@@ -483,8 +485,9 @@ class CabinetSearch extends ScopedElementsMixin(
 
         // Listen to DbpCabinetFilterPerson events to filter to a specific person
         this.addEventListener('DbpCabinetFilterPerson', function (event) {
+            const {detail} = /** @type {CustomEvent} */ (event);
             let helper = that.search.helper;
-            helper.toggleFacetRefinement('person.person', event.detail.person).search();
+            helper.toggleFacetRefinement('person.person', detail.person).search();
         });
 
         // Listen to DbpCabinetFilterPerson events to filter to a specific person
@@ -497,7 +500,8 @@ class CabinetSearch extends ScopedElementsMixin(
 
         // Listen to hitSelectionChanged events
         this.addEventListener(HitSelectionEventType.HIT_SELECTION_CHANGED, (event) => {
-            const {type, identifier, state, hit} = event.detail;
+            const {detail} = /** @type {CustomEvent} */ (event);
+            const {type, identifier, state, hit} = detail;
             if (state) {
                 this.hitSelections[type][identifier] = hit || true;
             } else {
@@ -510,7 +514,8 @@ class CabinetSearch extends ScopedElementsMixin(
 
         // Listen to selection-removed events from selection dialog
         this.addEventListener('selection-removed', (event) => {
-            const {type, id} = event.detail;
+            const {detail} = /** @type {CustomEvent} */ (event);
+            const {type, id} = detail;
             delete this.hitSelections[type][id];
             this.hitSelectAllState = this.constructor.HitSelectAllState.DESELECT;
             this.requestUpdate();
@@ -523,15 +528,17 @@ class CabinetSearch extends ScopedElementsMixin(
 
         // Listen to close events from selection dialog
         this.addEventListener('close', (event) => {
+            const {detail} = /** @type {CustomEvent} */ (event);
             // Reload instant search when dialog closes to reflect changes
-            if (event.detail?.reloadSearch && this.search) {
+            if (detail?.reloadSearch && this.search) {
                 this.search.refresh();
             }
         });
 
         // Listen to clear-selection-items events from selection dialog
         this.addEventListener('clear-selection-items', (event) => {
-            const {type, ids} = event.detail;
+            const {detail} = /** @type {CustomEvent} */ (event);
+            const {type, ids} = detail;
             if (ids && ids.length > 0) {
                 // Remove each successfully processed item from selection
                 ids.forEach((id) => {
