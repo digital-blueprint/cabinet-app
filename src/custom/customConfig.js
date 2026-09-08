@@ -8,6 +8,12 @@ function translationRenderFunction(lang, schemaField, value, operator = null) {
     return i18n.t(`custom:typesense-schema.${schemaField}.${value}`, value);
 }
 
+/**
+ * @param {string} lang
+ * @param {number} value
+ * @param {string | undefined} operator
+ * @param {string} [timeZone]
+ */
 function _renderDate(lang, value, operator, timeZone = undefined) {
     let i18n = createInstance();
     void i18n.changeLanguage(lang);

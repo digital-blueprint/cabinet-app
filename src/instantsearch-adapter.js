@@ -118,6 +118,9 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
             return null;
         }
         const toField = toAttribute.split('.').pop();
+        if (toField === undefined) {
+            return null;
+        }
         return parent[toField] ?? null;
     }
 }

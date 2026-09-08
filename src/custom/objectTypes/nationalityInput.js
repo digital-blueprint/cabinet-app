@@ -133,7 +133,7 @@ export class NationalityInput extends LangMixin(DbpBaseElement, createInstance, 
     }
 
     _handleOutsideClick(e) {
-        if (!this.shadowRoot.contains(e.target) && this._showResults) {
+        if (!this.renderRoot.contains(e.target) && this._showResults) {
             this._showResults = false;
         }
     }
@@ -215,7 +215,7 @@ export class NationalityInput extends LangMixin(DbpBaseElement, createInstance, 
 
     _scrollHighlightedIntoView() {
         requestAnimationFrame(() => {
-            const highlighted = this.shadowRoot.querySelector(
+            const highlighted = this.renderRoot.querySelector(
                 '.country-option[aria-selected="true"]',
             );
             highlighted?.scrollIntoView({block: 'nearest'});

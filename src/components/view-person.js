@@ -7,6 +7,7 @@ import * as commonStyles from '@dbp-toolkit/common/styles';
 import {Icon, Modal} from '@dbp-toolkit/common';
 
 /** @template T @typedef {import('lit/directives/ref.js').Ref<T>} ElementRef */
+/** @typedef {import('../custom/objectTypes/schema.js').PersonHit} PersonHit */
 
 export class CabinetViewPerson extends ScopedElementsMixin(
     LangMixin(AuthMixin(DBPLitElement), createInstance),
@@ -15,6 +16,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(
         super();
         /** @type {ElementRef<Modal>} */
         this.modalRef = createRef();
+        /** @type {PersonHit | null} */
         this.hitData = null;
         this.viewComponent = null;
     }
@@ -35,9 +37,6 @@ export class CabinetViewPerson extends ScopedElementsMixin(
     }
 
     close() {
-        /**
-         * @type {Modal}
-         */
         const modal = this.modalRef.value;
 
         if (modal) {
@@ -49,6 +48,9 @@ export class CabinetViewPerson extends ScopedElementsMixin(
         this.viewComponent = viewComponent;
     }
 
+    /**
+     * @param {PersonHit | null} hit
+     */
     async openDialogWithHit(hit = null) {
         if (!hit) {
             sendNotification({
@@ -68,10 +70,10 @@ export class CabinetViewPerson extends ScopedElementsMixin(
         // Wait until hit data is set and rendering is complete
         await this.updateComplete;
 
-        /**
-         * @type {Modal}
-         */
         const modal = this.modalRef.value;
+        if (!modal) {
+            throw new Error('View person modal is not rendered');
+        }
         modal.open();
     }
 

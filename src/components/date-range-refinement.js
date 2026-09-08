@@ -7,7 +7,7 @@ import {live} from 'lit/directives/live.js';
 
 function debounce(func, delay) {
     let timerId;
-    return function (...args) {
+    return /** @this {any} */ function (...args) {
         clearTimeout(timerId);
         timerId = setTimeout(() => func.apply(this, args), delay);
     };
@@ -341,7 +341,9 @@ export class DateRangeRefinement extends LangMixin(DBPLitElement, createInstance
     _refine() {
         if (!this.refinementRenderOptions?.refine) return;
 
+        /** @type {number | null} */
         let startTimestamp = null;
+        /** @type {number | null} */
         let endTimestamp = null;
 
         if (this._startDateValue) {

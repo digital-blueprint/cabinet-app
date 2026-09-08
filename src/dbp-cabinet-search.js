@@ -128,7 +128,7 @@ function debounce(func, delay, {leading = false} = {}) {
     // fire. In trailing-only mode every call sets this; in leading mode the
     // leading call fires immediately and only *subsequent* calls set it.
     let trailingPending = false;
-    return function (/** @type {any[]} */ ...args) {
+    return /** @this {any} */ function (/** @type {any[]} */ ...args) {
         if (leading && timerId === undefined) {
             func.apply(this, args);
         } else {
@@ -152,6 +152,9 @@ const isFirstOfGroupSymbol = Symbol('isFirstOfGroup');
 class CabinetSearch extends ScopedElementsMixin(
     LangMixin(AuthMixin(DBPLitElement), createInstance),
 ) {
+    hitSelectionCollapsed = true;
+    showHitCheckboxes = false;
+
     static HitSelectAllState = {
         SELECT: 'select',
         DESELECT: 'deselect',
@@ -219,8 +222,6 @@ class CabinetSearch extends ScopedElementsMixin(
             300,
             {leading: true},
         );
-        this.hitSelectionCollapsed = true;
-        this.showHitCheckboxes = false;
         this.disabled = true;
         this.loadingTranslations = false;
 
@@ -463,7 +464,7 @@ class CabinetSearch extends ScopedElementsMixin(
         this._loginState = [];
 
         // Listen to DbpCabinetDocumentAdd events, to open the file dialog in add mode
-        this.addEventListener('DbpCabinetDocumentAdd', function (event) {
+        this.addEventListener('DbpCabinetDocumentAdd', (event) => {
             const {detail} = /** @type {CustomEvent} */ (event);
             /**
              * @type {CabinetFile}

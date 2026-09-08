@@ -9,7 +9,7 @@ import DBPLitElement from '@dbp-toolkit/common/dbp-lit-element';
 
 function debounce(func, delay) {
     let timerId;
-    return function (...args) {
+    return /** @this {any} */ function (...args) {
         clearTimeout(timerId);
         timerId = setTimeout(() => func.apply(this, args), delay);
     };

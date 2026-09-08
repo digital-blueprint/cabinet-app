@@ -909,6 +909,7 @@ class CabinetViewElement extends BaseViewElement {
 
         const url = event.currentTarget.getAttribute('href');
         const win = window.open(url, '_blank');
+        if (!win) throw new Error('Failed to open edit window. The popup may have been blocked.');
         await waitForWindowClose(win);
         await this._onSync();
     }
