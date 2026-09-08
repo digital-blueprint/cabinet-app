@@ -152,13 +152,15 @@ const isFirstOfGroupSymbol = Symbol('isFirstOfGroup');
 class CabinetSearch extends ScopedElementsMixin(
     LangMixin(AuthMixin(DBPLitElement), createInstance),
 ) {
-    hitSelectionCollapsed = true;
-    showHitCheckboxes = false;
-
     static HitSelectAllState = {
         SELECT: 'select',
         DESELECT: 'deselect',
     };
+
+    hitSelectionCollapsed = true;
+    showHitCheckboxes = false;
+    hitSelections = createEmptyHitSelection();
+    hitSelectAllState = CabinetSearch.HitSelectAllState.SELECT;
 
     // 3) Add toggle method for batch activity
     toggleHitSelectionContainer() {
@@ -181,7 +183,6 @@ class CabinetSearch extends ScopedElementsMixin(
             id: '',
             objectType: '',
         };
-        this.resetHitSelection();
         /** @type {ElementRef<CabinetViewPerson>} */
         this.documentViewPersonModalRef = createRef();
         /** @type {ElementRef<CabinetFile>} */

@@ -31,6 +31,7 @@ import {createInstance} from '../i18n.js';
 /** @typedef {import('@dbp-toolkit/common').Modal} Modal */
 /** @typedef {import('../api.js').BlobFile} BlobFile */
 /** @typedef {import('../custom/objectTypes/baseObject.js').BaseFormElement} BaseFormElement */
+/** @typedef {import('../custom/objectTypes/schema.js').DocumentHit} DocumentHit */
 /** @template T @typedef {import('lit/directives/ref.js').Ref<T>} ElementRef */
 
 const getFieldsetCSS = () => {
@@ -82,6 +83,15 @@ export class CabinetFile extends ScopedElementsMixin(
         WARNING: 'warning',
         DANGER: 'danger',
     };
+
+    /** @type {Record<string, DocumentHit>} */
+    fileHitDataCache = {};
+
+    /** @type {DocumentHit[]} */
+    versions = [];
+
+    /** @type {Array<{status: string, message: string, extraMessage: string}>} */
+    statusMessageBlocks = [];
 
     constructor() {
         super();
