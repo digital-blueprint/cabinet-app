@@ -57,6 +57,14 @@ export class CabinetFilterSettings extends ScopedElementsMixin(
         this.facetVisibilityStates = saved && typeof saved === 'object' ? saved : {};
     }
 
+    get #modal() {
+        const modal = this.modalRef.value;
+        if (!modal) {
+            throw new Error('Filter settings modal is not rendered');
+        }
+        return modal;
+    }
+
     open(facetConfigs) {
         // Load the facet visibility states from localStorage again,
         // because the modal might have been closed without saving the settings
@@ -70,19 +78,11 @@ export class CabinetFilterSettings extends ScopedElementsMixin(
                 item['filter-group']?.id !== 'category',
         );
 
-        /**
-         * @type {Modal}
-         */
-        const modal = this.modalRef.value;
-        modal.open();
+        this.#modal.open();
     }
 
     close() {
-        /**
-         * @type {Modal}
-         */
-        const modal = this.modalRef.value;
-        modal.close();
+        this.#modal.close();
     }
 
     static get styles() {

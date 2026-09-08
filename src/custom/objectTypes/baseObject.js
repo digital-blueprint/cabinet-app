@@ -217,6 +217,14 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
         return /** @type {Person} */ (this.person);
     }
 
+    get #formElement() {
+        const formElement = this.renderRoot.querySelector('form');
+        if (!formElement) {
+            throw new Error('BaseFormElement: form is not rendered');
+        }
+        return formElement;
+    }
+
     static getAdditionalTypes() {
         return {};
     }
@@ -318,10 +326,8 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
     }
 
     async validateForm() {
-        const formElement = this.shadowRoot.querySelector('form');
-
         // Validate the form before proceeding
-        const validationResult = await validateRequiredFields(formElement);
+        const validationResult = await validateRequiredFields(this.#formElement);
 
         if (!validationResult) {
             return false;
@@ -341,14 +347,13 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
 
         this.disabled = true;
         this.saving = true;
-        const formElement = this.shadowRoot.querySelector('form');
         const data = {
             formData: {
                 about: {
                     '@type': 'Person',
                     persId: this._getPerson().identNrObfuscated,
                 },
-                ...gatherFormDataFromElement(formElement),
+                ...gatherFormDataFromElement(this.#formElement),
             },
         };
 

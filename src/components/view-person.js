@@ -140,9 +140,7 @@ export class CabinetViewPerson extends ScopedElementsMixin(
         }
         const id = hit.id;
         const tagName = 'dbp-cabinet-object-type-view-person';
-        if (!this.registry.get(tagName)) {
-            this.registry.define(tagName, this.viewComponent);
-        }
+        this.defineScopedElement(tagName, this.viewComponent);
 
         return html`
             <dbp-modal
