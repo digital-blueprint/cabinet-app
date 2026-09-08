@@ -50,7 +50,7 @@ function waitForWindowClose(windowRef) {
 
 class CabinetFormElement extends BaseFormElement {
     render() {
-        let hit = getPersonHit(this.data);
+        let hit = getPersonHit(this._getData());
 
         return html`
             <form>
@@ -533,6 +533,7 @@ async function exportPersonPdf(i18n, hit, withInternalData = false) {
 class CabinetViewElement extends BaseViewElement {
     constructor() {
         super();
+        this.data = {};
         this._syncing = false;
         this.showHitCheckboxes = false;
         this.selected = false;

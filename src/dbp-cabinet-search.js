@@ -29,6 +29,7 @@ import {createCurrentRefinements} from './components/current-refinements.js';
 import {createPagination} from './components/pagination.js';
 import {SelectionDialog} from './components/selection-dialog.js';
 import {HitSelectionType, HitSelectionEventType, createEmptyHitSelection} from './hit-selection.js';
+import {getPersonHit} from './custom/objectTypes/schema.js';
 
 /** @typedef {import('./custom/objectTypes/baseObject.js').BaseHitElement} BaseHitElement */
 /** @template T @typedef {import('lit/directives/ref.js').Ref<T>} ElementRef */
@@ -394,7 +395,7 @@ class CabinetSearch extends ScopedElementsMixin(
 
     async handleAutomaticDocumentViewOpen() {
         // The first process that fulfills all needs to open the document view dialog will do so
-        if (this.documentViewId && !this.lockDocumentViewDialog && this.auth.token) {
+        if (this.documentViewId && !this.lockDocumentViewDialog && this.auth?.token) {
             if (await this.openDocumentViewDialogWithId(this.documentViewId)) {
                 this.documentViewId = null;
             }
@@ -403,7 +404,7 @@ class CabinetSearch extends ScopedElementsMixin(
 
     async handleAutomaticPersonViewOpen() {
         // The first process that fulfills all needs to open the person view dialog will do so
-        if (this.personViewId && this.auth.token) {
+        if (this.personViewId && this.auth?.token) {
             if (await this.openPersonViewDialogWithId(this.personViewId)) {
                 this.personViewId = null;
             }
@@ -453,8 +454,10 @@ class CabinetSearch extends ScopedElementsMixin(
         component.setViewComponent(object.getViewComponent());
 
         const hit = await this._getTypesenseService().fetchItem(id);
-        console.assert(hit !== null, 'Error fetching item:', id);
-        await component.openDialogWithHit(hit);
+        if (!hit) {
+            throw new Error(`Error fetching item: ${id}`);
+        }
+        await component.openDialogWithHit(getPersonHit(hit));
 
         return true;
     }
@@ -1134,9 +1137,13 @@ class CabinetSearch extends ScopedElementsMixin(
      * Get the config for the Typesense Instantsearch adapter depending on the fuzzy search setting
      */
     getTypesenseInstantsearchAdapterConfig() {
+        const token = this.auth?.token;
+        if (!token) {
+            throw new Error('No auth token set');
+        }
         let serverConfig = TypesenseService.getServerConfigForEntryPointUrl(
             this.entryPointUrl,
-            this.auth.token,
+            token,
         );
         let facetFields = this.facetConfigs
             .filter((facetConfig) => facetConfig.schemaField)
@@ -1159,13 +1166,14 @@ class CabinetSearch extends ScopedElementsMixin(
     }
 
     _getTypesenseService() {
-        if (!this.auth.token) {
+        const token = this.auth?.token;
+        if (!token) {
             throw new Error('No auth token set');
         }
 
         let serverConfig = TypesenseService.getServerConfigForEntryPointUrl(
             this.entryPointUrl,
-            this.auth.token,
+            token,
         );
         return new TypesenseService(serverConfig);
     }
@@ -1366,7 +1374,7 @@ class CabinetSearch extends ScopedElementsMixin(
     }
 
     initializeScrollToTopButton() {
-        const scrollBtn = this.shadowRoot.getElementById('scroll-top');
+        const scrollBtn = this.renderRoot.querySelector('#scroll-top');
         if (!scrollBtn) return;
 
         const toggleScrollButton = () => {

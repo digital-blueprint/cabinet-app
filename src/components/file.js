@@ -157,6 +157,14 @@ export class CabinetFile extends ScopedElementsMixin(
         return new CabinetDocumentStore(this);
     }
 
+    _getUserId() {
+        const userId = this.auth?.['user-id'];
+        if (typeof userId !== 'string') {
+            throw new Error('No user id set');
+        }
+        return userId;
+    }
+
     /**
      * Initializes the state of the component, so less stuff can go on in the background
      * when the modal is closed
@@ -250,7 +258,8 @@ export class CabinetFile extends ScopedElementsMixin(
         metaData['objectType'] = this.objectType;
         // A new document is always current; an update keeps its current flag.
         metaData['isCurrent'] = isNewDocument || (this.fileHitData?.base?.isCurrent ?? false);
-        metaData['lastModifiedBy'] = this.auth['user-id'];
+        const userId = this._getUserId();
+        metaData['lastModifiedBy'] = userId;
         // A fresh add starts a new group; a new version and updates reuse the
         // existing one.
         metaData['groupId'] = this.fileHitData?.file?.base?.groupId || createUUID();
@@ -307,11 +316,7 @@ export class CabinetFile extends ScopedElementsMixin(
         }
         // Only a new version can make other versions obsolete.
         if (this.mode === CabinetFile.Modes.NEW_VERSION && item.base?.isCurrent) {
-            await store.markOtherVersionsObsolete(
-                item.file.base.groupId,
-                blob.identifier,
-                this.auth['user-id'],
-            );
+            await store.markOtherVersionsObsolete(item.file.base.groupId, blob.identifier, userId);
         }
 
         // Bail out if the modal was closed while the upload was in flight.
@@ -338,7 +343,7 @@ export class CabinetFile extends ScopedElementsMixin(
     /**
      * Returns the "document saved" notification title/body, matching the mode
      * the document was saved in.
-     * @param {string} mode
+     * @param {string|undefined} mode
      * @returns {{title: string, body: string}}
      */
     _getSaveNotificationText(mode) {
@@ -405,13 +410,14 @@ export class CabinetFile extends ScopedElementsMixin(
         }
 
         const candidates = [
-            modal.shadowRoot?.querySelector('.content'),
-            modal.shadowRoot?.querySelector('.modal-content'),
-            this.shadowRoot?.querySelector('#document-modal .content'),
+            modal.renderRoot.querySelector('.content'),
+            modal.renderRoot.querySelector('.modal-content'),
+            this.renderRoot.querySelector('#document-modal .content'),
             modal,
-        ].filter(Boolean);
+        ];
 
-        const scrollTarget = candidates.find((el) => el.scrollHeight > el.clientHeight) || modal;
+        const scrollTarget =
+            candidates.find((el) => el && el.scrollHeight > el.clientHeight) || modal;
         scrollTarget.scrollTo({
             top: 0,
             behavior: 'smooth',
@@ -677,7 +683,7 @@ export class CabinetFile extends ScopedElementsMixin(
             document = await this._getDocumentStore().setVersionCurrent(
                 fileId,
                 enable,
-                this.auth['user-id'],
+                this._getUserId(),
             );
         } catch (error) {
             console.error('setIsCurrentVersion: Failed to update version', error);

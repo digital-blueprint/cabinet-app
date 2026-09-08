@@ -35,7 +35,7 @@ export class PollTimeoutError extends Error {
  */
 export class CabinetDocumentStore {
     /**
-     * @param {HTMLElement & {entryPointUrl: string, auth: {token?: string}}} element -
+     * @param {HTMLElement & {entryPointUrl: string, auth: {token?: string}|null}} element -
      *   The host element, providing `entryPointUrl` and `auth`,
      *   and used as the dispatch target for `DbpCabinetIndexChanged` events.
      */
@@ -55,9 +55,14 @@ export class CabinetDocumentStore {
      * @returns {TypesenseService}
      */
     _getTypesense() {
+        const token = this._element.auth?.token;
+        if (!token) {
+            throw new Error('No auth token set');
+        }
+
         const serverConfig = TypesenseService.getServerConfigForEntryPointUrl(
             this._element.entryPointUrl,
-            this._element.auth.token,
+            token,
         );
         return new TypesenseService(serverConfig);
     }
