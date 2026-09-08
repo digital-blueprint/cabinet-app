@@ -32,6 +32,7 @@ import {createInstance} from '../i18n.js';
 /** @typedef {import('../api.js').BlobFile} BlobFile */
 /** @typedef {import('../custom/objectTypes/baseObject.js').BaseFormElement} BaseFormElement */
 /** @typedef {import('../custom/objectTypes/schema.js').DocumentHit} DocumentHit */
+/** @typedef {import('../custom/objectTypes/schema.js').PersonHit} PersonHit */
 /** @template T @typedef {import('lit/directives/ref.js').Ref<T>} ElementRef */
 
 const getFieldsetCSS = () => {
@@ -120,6 +121,36 @@ export class CabinetFile extends ScopedElementsMixin(
         this.uploadFailed = false;
         // Initialize the state in the beginning
         this.resetState();
+    }
+
+    get #documentModal() {
+        const modal = this.documentModalRef.value;
+        if (!modal) throw new Error('Document modal is not rendered');
+        return modal;
+    }
+
+    get #documentPdfViewer() {
+        const pdfViewer = this.documentPdfViewerRef.value;
+        if (!pdfViewer) throw new Error('PDF viewer is not rendered');
+        return pdfViewer;
+    }
+
+    get #documentPdfValidationErrors() {
+        const validationErrors = this.documentPdfValidationErrorList.value;
+        if (!validationErrors) throw new Error('PDF validation error list is not rendered');
+        return validationErrors;
+    }
+
+    get #fileSource() {
+        const fileSource = this.fileSourceRef.value;
+        if (!fileSource) throw new Error('File source is not rendered');
+        return fileSource;
+    }
+
+    get #fileSink() {
+        const fileSink = this.fileSinkRef.value;
+        if (!fileSink) throw new Error('File sink is not rendered');
+        return fileSink;
     }
 
     _getDocumentStore() {
@@ -284,8 +315,7 @@ export class CabinetFile extends ScopedElementsMixin(
         }
 
         // Bail out if the modal was closed while the upload was in flight.
-        /** @type {Modal} */
-        const modal = this.documentModalRef.value;
+        const modal = this.#documentModal;
         if (!modal.isOpen()) {
             return;
         }
@@ -344,24 +374,21 @@ export class CabinetFile extends ScopedElementsMixin(
      * @param {ApiError} error
      */
     _handleUploadApiError(error) {
+        const validationErrors = this.#documentPdfValidationErrors;
         // if document is too big
         if (error.errorId === 'verity:create-report-backend-exception') {
-            this.documentPdfValidationErrorList.value.errors = [error.detail];
-            this.documentPdfValidationErrorList.value.errorSummary = this._i18n.t(
+            validationErrors.errors = [error.detail];
+            validationErrors.errorSummary = this._i18n.t(
                 'cabinet-file.document-upload-failed-pdfa-too-big-summary',
             );
         }
         // if document is not in a valid PDF/A format
         if (error.errorId?.includes('-file-data-file-does-not-validate-against-type')) {
-            this.documentPdfValidationErrorList.value.errors = /** @type {Array<string>} */ (
-                error.errorDetails
-            );
+            validationErrors.errors = /** @type {Array<string>} */ (error.errorDetails);
         }
 
         this.uploadFailed = true;
-        if (this.shadowRoot.querySelector('.status-badge')) {
-            this.shadowRoot.querySelector('.status-badge').classList.add('hidden');
-        }
+        this.renderRoot.querySelector('.status-badge')?.classList.add('hidden');
 
         // Stop the spinner but keep the form disabled until a new document is selected.
         if (this.formRef.value) {
@@ -441,9 +468,7 @@ export class CabinetFile extends ScopedElementsMixin(
         const tagName = 'dbp-cabinet-object-type-edit-form-' + tagPart;
 
         let formComponent = this.objectTypes[objectType].getFormComponent();
-        if (!this.registry.get(tagName)) {
-            this.registry.define(tagName, formComponent);
-        }
+        this.defineScopedElement(tagName, formComponent);
 
         let fileHitData = this.fileHitData;
 
@@ -493,9 +518,7 @@ export class CabinetFile extends ScopedElementsMixin(
         const tagName = 'dbp-cabinet-object-type-view-' + tagPart;
 
         let viewComponent = this.objectTypes[objectType].getViewComponent();
-        if (!this.registry.get(tagName)) {
-            this.registry.define(tagName, viewComponent);
-        }
+        this.defineScopedElement(tagName, viewComponent);
 
         // We need to use staticHtml and unsafeStatic here, because we want to set the tag name from a variable and need to set the "data" property from a variable too!
         return staticHtml`
@@ -504,7 +527,8 @@ export class CabinetFile extends ScopedElementsMixin(
         `;
     }
 
-    async openDocumentAddDialogWithPersonHit(hit = null) {
+    /** @param {PersonHit} hit */
+    async openDocumentAddDialogWithPersonHit(hit) {
         this.mode = CabinetFile.Modes.ADD;
         // We don't need to fetch the hit data from Typesense again, because the identNrObfuscated wouldn't change
         this.person = hit.person;
@@ -535,18 +559,13 @@ export class CabinetFile extends ScopedElementsMixin(
         this.mode = CabinetFile.Modes.VIEW;
         this.fileHitData = hit;
 
-        /** @type {FileSource} */
-        const fileSource = this.fileSourceRef.value;
-        // Make sure the file source dialog is closed
-        if (fileSource) {
-            fileSource.removeAttribute('dialog-open');
-        }
-
         // Wait until hit data is set and rendering is complete
         await this.updateComplete;
 
-        /** @type {Modal} */
-        const modal = this.documentModalRef.value;
+        // Make sure the file source dialog is closed
+        this.#fileSource.removeAttribute('dialog-open');
+
+        const modal = this.#documentModal;
         if (!modal.isOpen()) {
             modal.open();
         }
@@ -828,7 +847,7 @@ export class CabinetFile extends ScopedElementsMixin(
             files.push(this.documentFile);
         }
 
-        this.fileSinkRef.value.files = files;
+        this.#fileSink.files = files;
         // Reset the selector to the default value, so there isn't a selected value after the download
         e.target.selectedIndex = 0;
     }
@@ -917,16 +936,11 @@ export class CabinetFile extends ScopedElementsMixin(
             this.fileHitData = null;
         }
 
-        /** @type {FileSource} */
-        const fileSource = this.fileSourceRef.value;
-
         // Wait until the file source dialog is ready
-        if (!fileSource) {
-            await this.updateComplete;
-        }
+        await this.updateComplete;
 
         // Open the file source dialog on top of the document modal (native dialogs stack)
-        fileSource.setAttribute('dialog-open', '');
+        this.#fileSource.setAttribute('dialog-open', '');
     }
 
     static get styles() {
@@ -1718,14 +1732,12 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     close() {
-        /** @type {FileSource} */
         const fileSource = this.fileSourceRef.value;
 
         if (fileSource) {
             fileSource.removeAttribute('dialog-open');
         }
 
-        /** @type {Modal} */
         const documentModal = this.documentModalRef.value;
 
         if (documentModal) {
@@ -1734,8 +1746,9 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     onCloseDocumentModal() {
-        this.documentPdfValidationErrorList.value.errors = [];
-        this.documentPdfValidationErrorList.value.errorSummary = null;
+        const validationErrors = this.#documentPdfValidationErrors;
+        validationErrors.errors = [];
+        validationErrors.errorSummary = null;
         this.uploadFailed = false;
         // Search refresh is handled live by CabinetDocumentStore emitting
         // DbpCabinetIndexChanged once the Typesense index has caught up, so no
@@ -1968,8 +1981,9 @@ export class CabinetFile extends ScopedElementsMixin(
         // Recover from a failed upload: clear the error state and re-enable the form.
         if (this.uploadFailed) {
             this.uploadFailed = false;
-            this.documentPdfValidationErrorList.value.errors = [];
-            this.documentPdfValidationErrorList.value.errorSummary = null;
+            const validationErrors = this.#documentPdfValidationErrors;
+            validationErrors.errors = [];
+            validationErrors.errorSummary = null;
             if (this.formRef.value) {
                 this.formRef.value.disabled = false;
             }
@@ -1988,8 +2002,7 @@ export class CabinetFile extends ScopedElementsMixin(
         // We need to wait until rendering is complete after this.documentFile has changed
         await this.updateComplete;
 
-        /** @type {PdfViewer} */
-        const pdfViewer = this.documentPdfViewerRef.value;
+        const pdfViewer = this.#documentPdfViewer;
         // const pdfViewer = this._('#document-pdf-viewer');
 
         // Load the PDF in the PDF viewer with the double reloading workaround,

@@ -64,6 +64,24 @@ export class SelectionDialog extends ScopedElementsMixin(
         });
     }
 
+    get #modal() {
+        const modal = this.modalRef.value;
+        if (!modal) throw new Error('Selection dialog modal is not rendered');
+        return modal;
+    }
+
+    get #fileSink() {
+        const fileSink = this.fileSinkRef.value;
+        if (!fileSink) throw new Error('File sink is not rendered');
+        return fileSink;
+    }
+
+    get #streamedFileSink() {
+        const fileSink = this.fileSinkStreamedRef.value;
+        if (!fileSink) throw new Error('Streamed file sink is not rendered');
+        return fileSink;
+    }
+
     connectedCallback() {
         super.connectedCallback();
         if (this.langDir) {
@@ -110,10 +128,7 @@ export class SelectionDialog extends ScopedElementsMixin(
             return;
         }
 
-        /**
-         * @type {Modal}
-         */
-        const modal = this.modalRef.value;
+        const modal = this.#modal;
         this.hitSelections = hitSelections;
 
         // Set the active tab based on whether there are person selections
@@ -169,11 +184,7 @@ export class SelectionDialog extends ScopedElementsMixin(
     }
 
     close() {
-        /**
-         * @type {Modal}
-         */
-        const modal = this.modalRef.value;
-        modal.close();
+        this.modalRef.value?.close();
     }
 
     /**
@@ -463,10 +474,10 @@ export class SelectionDialog extends ScopedElementsMixin(
         const filename = this.generateExportFilename('csv');
 
         const file = new File([blob], filename, {type: 'text/csv'});
-        this.fileSinkRef.value.files = [file];
+        this.#fileSink.files = [file];
 
         // Close modal to show FileSink dialog
-        const modal = this.modalRef.value;
+        const modal = this.#modal;
         modal.close();
     }
 
@@ -514,10 +525,10 @@ export class SelectionDialog extends ScopedElementsMixin(
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         });
 
-        this.fileSinkRef.value.files = [file];
+        this.#fileSink.files = [file];
 
         // Close modal to show FileSink dialog
-        const modal = this.modalRef.value;
+        const modal = this.#modal;
         modal.close();
     }
 
@@ -543,18 +554,14 @@ export class SelectionDialog extends ScopedElementsMixin(
 
         // Download all PDFs via FileSink
         if (pdfFiles.length > 0) {
-            /**
-             * @type {FileSink}
-             */
-            const fileSink = this.fileSinkRef.value;
-            console.assert(fileSink instanceof FileSink, 'FileSink not found');
+            const fileSink = this.#fileSink;
             fileSink.files = pdfFiles;
 
             // Generate filename with current date and time
             fileSink.filename = this.generateExportFilename('zip');
 
             // Close modal to show FileSink dialog
-            const modal = this.modalRef.value;
+            const modal = this.#modal;
             modal.close();
         }
     }
@@ -736,14 +743,14 @@ export class SelectionDialog extends ScopedElementsMixin(
 
         if (files.length > 0) {
             // Use FileSink to download all files
-            const fileSink = this.fileSinkStreamedRef.value;
+            const fileSink = this.#streamedFileSink;
             fileSink.files = files;
 
             // Set the ZIP filename to match specification: Elektronischer-Studierendenakt_YYYY-MM-DD-HHMMSS
             fileSink.filename = this.generateExportFilename('zip');
 
             // Close the modal to show the FileSink dialog
-            const modal = this.modalRef.value;
+            const modal = this.#modal;
             modal.close();
         }
 
@@ -812,10 +819,10 @@ export class SelectionDialog extends ScopedElementsMixin(
             const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
             const filename = this.generateExportFilename('csv');
             const file = new File([blob], filename, {type: 'text/csv'});
-            this.fileSinkRef.value.files = [file];
+            this.#fileSink.files = [file];
 
             // Close modal to show FileSink dialog
-            const modal = this.modalRef.value;
+            const modal = this.#modal;
             modal.close();
 
             // Show success notification
@@ -863,10 +870,10 @@ export class SelectionDialog extends ScopedElementsMixin(
                 type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             });
 
-            this.fileSinkRef.value.files = [file];
+            this.#fileSink.files = [file];
 
             // Close modal to show FileSink dialog
-            const modal = this.modalRef.value;
+            const modal = this.#modal;
             modal.close();
 
             // Show success notification

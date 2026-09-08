@@ -230,6 +230,36 @@ class CabinetSearch extends ScopedElementsMixin(
         this.langDir = undefined;
     }
 
+    get #documentViewPersonModal() {
+        const component = this.documentViewPersonModalRef.value;
+        if (!component) throw new Error('Person view component is not rendered');
+        return component;
+    }
+
+    get #documentFileComponent() {
+        const component = this.documentFileComponentRef.value;
+        if (!component) throw new Error('Document file component is not rendered');
+        return component;
+    }
+
+    get #filterSettingsModal() {
+        const modal = this.filterSettingsModalRef.value;
+        if (!modal) throw new Error('Filter settings modal is not rendered');
+        return modal;
+    }
+
+    get #cabinetFacets() {
+        const facets = this.cabinetFacetsRef.value;
+        if (!facets) throw new Error('Cabinet facets are not rendered');
+        return facets;
+    }
+
+    get #selectionDialog() {
+        const dialog = this.selectionDialogRef.value;
+        if (!dialog) throw new Error('Selection dialog is not rendered');
+        return dialog;
+    }
+
     resetHitSelection() {
         // Use the static method to get a fresh copy and maintain single source of truth
         this.hitSelections = createEmptyHitSelection();
@@ -401,10 +431,7 @@ class CabinetSearch extends ScopedElementsMixin(
         const objectType = hit.objectType;
 
         if (objectType === this.cabinetConfig.getPersonObjectTypeName()) {
-            /**
-             * @type {CabinetViewPerson}
-             */
-            const component = this.documentViewPersonModalRef.value;
+            const component = this.#documentViewPersonModal;
             let object = await this.cabinetConfig.loadObjectType(objectType);
             component.setViewComponent(object.getViewComponent());
             await component.openDialogWithHit(hit);
@@ -414,9 +441,6 @@ class CabinetSearch extends ScopedElementsMixin(
     }
 
     async openPersonViewDialogWithId(id) {
-        /**
-         * @type {CabinetViewPerson}
-         */
         const component = this.documentViewPersonModalRef.value;
 
         if (!component) {
@@ -436,9 +460,6 @@ class CabinetSearch extends ScopedElementsMixin(
     }
 
     async openDocumentViewDialogWithId(id) {
-        /**
-         * @type {CabinetFile}
-         */
         const component = this.documentFileComponentRef.value;
 
         if (!component) {
@@ -467,10 +488,7 @@ class CabinetSearch extends ScopedElementsMixin(
         // Listen to DbpCabinetDocumentAdd events, to open the file dialog in add mode
         this.addEventListener('DbpCabinetDocumentAdd', (event) => {
             const {detail} = /** @type {CustomEvent} */ (event);
-            /**
-             * @type {CabinetFile}
-             */
-            const component = that.documentFileComponentRef.value;
+            const component = that.#documentFileComponent;
             component.setObjectTypes(this.documentObjectTypes);
             void component.openDocumentAddDialogWithPersonHit(detail.hit);
         });
@@ -497,8 +515,7 @@ class CabinetSearch extends ScopedElementsMixin(
 
         // Listen to DbpCabinetFilterPerson events to filter to a specific person
         this.addEventListener('DbpCabinetOpenFilterSettings', (event) => {
-            /** @type {CabinetFilterSettings} */
-            const filterSettingsModal = this.filterSettingsModalRef.value;
+            const filterSettingsModal = this.#filterSettingsModal;
 
             filterSettingsModal.open(this.facetConfigs);
         });
@@ -566,18 +583,11 @@ class CabinetSearch extends ScopedElementsMixin(
         return this._initInstantsearchPromise;
     }
 
-    /**
-     * @returns {CabinetFacets}
-     */
-    getCabinetFacets() {
-        return this.cabinetFacetsRef.value;
-    }
-
     async _performInitInstantsearch() {
         const search = this.createInstantsearch();
         this.search = search;
 
-        let facets = this.getCabinetFacets();
+        let facets = this.#cabinetFacets;
         search.addWidgets([
             configure({}),
             facets.createDocumentStatusWidget(),
@@ -1322,15 +1332,12 @@ class CabinetSearch extends ScopedElementsMixin(
      * @returns {Promise<*[]>}
      */
     async createFacets() {
-        /** @type {CabinetFacets} */
-        const ref = this.cabinetFacetsRef.value;
-
         // Filter out facets we want to hide
         const visibleFacetIds = this.getVisibleFacetIds();
         visibleFacetIds.push('person.person'); // Always show the person facet, so we can focus
         let visibleFacetsConfigs = this.getVisibleFacetsConfig(this.facetConfigs, visibleFacetIds);
 
-        return await ref.createFacetsFromConfig(visibleFacetsConfigs);
+        return await this.#cabinetFacets.createFacetsFromConfig(visibleFacetsConfigs);
     }
 
     /**
@@ -1407,7 +1414,7 @@ class CabinetSearch extends ScopedElementsMixin(
                 <div class="search-box-container">
                     <button id="filter-header-button" class="button filter-header-button"
                         @click="${() => {
-                            const cabinetFacets = this.getCabinetFacets();
+                            const cabinetFacets = this.#cabinetFacets;
                             cabinetFacets.toggleFilters();
                         }}">
                         <dbp-icon name="funnel" class="facet-filter-button-icon"></dbp-icon>
@@ -1565,8 +1572,7 @@ class CabinetSearch extends ScopedElementsMixin(
                             id="open-dialog"
                             ?disabled="${!this.hasHitSelections}"
                             @click="${() => {
-                                /** @type {SelectionDialog} */
-                                const selectionDialog = this.selectionDialogRef.value;
+                                const selectionDialog = this.#selectionDialog;
                                 void selectionDialog.open(this.hitSelections);
                             }}">
                             <dbp-icon name="open-new-window" aria-hidden="true"></dbp-icon>
@@ -1660,10 +1666,7 @@ class CabinetSearch extends ScopedElementsMixin(
             this.objectTypes[personObject.name] = personObject;
 
             await this.updateComplete;
-            /**
-             * @type {CabinetFile}
-             */
-            const addDocumentComponent = this.documentFileComponentRef.value;
+            const addDocumentComponent = this.#documentFileComponent;
             addDocumentComponent.setObjectTypes(this.documentObjectTypes);
         } catch (error) {
             console.error('Error loading modules:', error);
@@ -1702,18 +1705,12 @@ class CabinetSearch extends ScopedElementsMixin(
         this.documentViewId = null;
         this.personViewId = null;
 
-        /**
-         * @type {CabinetFile}
-         */
         const fileComponent = this.documentFileComponentRef.value;
 
         if (fileComponent) {
             fileComponent.close();
         }
 
-        /**
-         * @type {CabinetViewPerson}
-         */
         const personComponent = this.documentViewPersonModalRef.value;
 
         if (personComponent) {
