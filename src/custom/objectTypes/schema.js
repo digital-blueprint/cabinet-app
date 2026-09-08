@@ -221,41 +221,28 @@
 
 /**
  * Required fields that are not user defined and always need to exist.
+ * @typedef {object} HitFields
+ * @property {string} id - The unique Typesense ID of the document
+ * @property {string} objectType - Either "person" or one of the various "file-*" types
+ * @property {Base} base - Fields common to all person and document hits
  */
-class Hit {
-    constructor() {
-        /**
-         * Either "Person" or "DocumentFile"
-         * @type {string}
-         */
-        this['@type'] = undefined;
-    }
 
-    /**
-     * The unique typesense ID of the document
-     * @type {string}
-     */
-    id;
+/**
+ * A search result. `@type` is either "Person" or "DocumentFile".
+ * @typedef {HitFields & {'@type': string}} Hit
+ */
 
-    /**
-     * Either "person" or various "file-*"
-     * @type {string}
-     */
-    objectType;
+/**
+ * A person search result.
+ * `person` contains the person-related fields.
+ * @typedef {Hit & {person: Person}} PersonHit
+ */
 
-    /** @type {Base} */
-    base;
-}
-
-export class PersonHit extends Hit {
-    /** @type {Person} */
-    person;
-}
-
-export class DocumentHit extends PersonHit {
-    /** @type {File} */
-    file;
-}
+/**
+ * A document search result.
+ * `file` contains the file-related fields.
+ * @typedef {PersonHit & {file: File}} DocumentHit
+ */
 
 /**
  * @param {object} hit
@@ -281,7 +268,7 @@ export function getDocumentHit(hit) {
  */
 export function getCitizenshipCertificate(hit) {
     console.assert(hit.objectType === 'file-cabinet-citizenshipCertificate');
-    return hit.file['file-cabinet-citizenshipCertificate'];
+    return /** @type {CitizenshipCertificate} */ (hit.file['file-cabinet-citizenshipCertificate']);
 }
 
 /**
@@ -290,7 +277,7 @@ export function getCitizenshipCertificate(hit) {
  */
 export function getIdentityDocument(hit) {
     console.assert(hit.objectType === 'file-cabinet-identityDocument');
-    return hit.file['file-cabinet-identityDocument'];
+    return /** @type {IdentityDocument} */ (hit.file['file-cabinet-identityDocument']);
 }
 
 /**
@@ -299,7 +286,7 @@ export function getIdentityDocument(hit) {
  */
 export function getMinimalSchema(hit) {
     console.assert(hit.objectType === 'file-cabinet-minimalSchema');
-    return hit.file['file-cabinet-minimalSchema'];
+    return /** @type {MinimalSchema} */ (hit.file['file-cabinet-minimalSchema']);
 }
 
 /**
@@ -308,7 +295,7 @@ export function getMinimalSchema(hit) {
  */
 export function getCommunication(hit) {
     console.assert(hit.objectType === 'file-cabinet-communication');
-    return hit.file['file-cabinet-communication'];
+    return /** @type {Communication} */ (hit.file['file-cabinet-communication']);
 }
 
 /**
@@ -317,7 +304,7 @@ export function getCommunication(hit) {
  */
 export function getAdmissionNotice(hit) {
     console.assert(hit.objectType === 'file-cabinet-admissionNotice');
-    return hit.file['file-cabinet-admissionNotice'];
+    return /** @type {AdmissionNotice} */ (hit.file['file-cabinet-admissionNotice']);
 }
 
 /**
@@ -326,7 +313,7 @@ export function getAdmissionNotice(hit) {
  */
 export function getEnglMasterApplication(hit) {
     console.assert(hit.objectType === 'file-cabinet-englMasterApplication');
-    return hit.file['file-cabinet-englMasterApplication'];
+    return /** @type {EnglMasterApplication} */ (hit.file['file-cabinet-englMasterApplication']);
 }
 
 /**
@@ -335,7 +322,7 @@ export function getEnglMasterApplication(hit) {
  */
 export function getEnglMasterDataSheet(hit) {
     console.assert(hit.objectType === 'file-cabinet-englMasterDataSheet');
-    return hit.file['file-cabinet-englMasterDataSheet'];
+    return /** @type {EnglMasterDataSheet} */ (hit.file['file-cabinet-englMasterDataSheet']);
 }
 
 /**
@@ -344,7 +331,9 @@ export function getEnglMasterDataSheet(hit) {
  */
 export function getEntranceQualificationApplication(hit) {
     console.assert(hit.objectType === 'file-cabinet-entranceQualificationApplication');
-    return hit.file['file-cabinet-entranceQualificationApplication'];
+    return /** @type {EntranceQualificationApplication} */ (
+        hit.file['file-cabinet-entranceQualificationApplication']
+    );
 }
 
 /**
@@ -353,5 +342,7 @@ export function getEntranceQualificationApplication(hit) {
  */
 export function getEntranceQualificationRecognition(hit) {
     console.assert(hit.objectType === 'file-cabinet-entranceQualificationRecognition');
-    return hit.file['file-cabinet-entranceQualificationRecognition'];
+    return /** @type {EntranceQualificationRecognition} */ (
+        hit.file['file-cabinet-entranceQualificationRecognition']
+    );
 }
