@@ -1483,7 +1483,6 @@ export class CabinetFile extends ScopedElementsMixin(
                 .options=${versionOptions}
                 class="select-version"
                 align="left"
-                wrap-label
                 @change=${this.onChangeVersion}></dbp-select>
         `;
     }
