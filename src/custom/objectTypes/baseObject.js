@@ -158,7 +158,11 @@ export const getCommonStyles = () => css`
         display: none;
     }
 
-    @media only screen and (max-width: 768px) {
+    .ais-doc-Hits {
+        container-type: inline-size;
+    }
+
+    @container (max-width: 768px) {
         .ais-doc-Hits-content {
             align-items: end;
             flex-wrap: wrap;
@@ -170,10 +174,6 @@ export const getCommonStyles = () => css`
             gap: 5px;
         }
     }
-
-    /*.ais-doc-title {
-        white-space: wrap;
-    }*/
 `;
 
 export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
