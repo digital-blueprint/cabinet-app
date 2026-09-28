@@ -241,7 +241,12 @@ class CabinetHitElement extends BaseHitElement {
                     display: none;
                 }
 
-                @media (max-width: 768px) {
+                .hit-person-container {
+                    container-name: hit-person;
+                    container-type: inline-size;
+                }
+
+                @container (max-width: 768px) {
                     .hit-person-info-header {
                         display: flex;
                         align-items: start;
@@ -275,12 +280,13 @@ class CabinetHitElement extends BaseHitElement {
                         grid-template-columns: 1fr;
                         grid-template-rows: auto auto;
                     }
+
                     .column-icon {
                         width: 25px;
                     }
                 }
 
-                @media (min-width: 769px) and (max-width: 1099px) {
+                @container (min-width: 769px) and (max-width: 1099px) {
                     .ais-Hits-header {
                         flex-wrap: wrap;
                         display: flex;
@@ -321,7 +327,7 @@ class CabinetHitElement extends BaseHitElement {
                     }
                 }
 
-                @media (max-width: 489px) {
+                @container (max-width: 489px) {
                     .hits-person-footer {
                         display: grid;
                         grid-template-columns: auto auto;
