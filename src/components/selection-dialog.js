@@ -1169,7 +1169,6 @@ export class SelectionDialog extends ScopedElementsMixin(
                     }
 
                     .export-buttons > * {
-                        width: 100%;
                         display: grid;
                         justify-self: stretch;
                     }
