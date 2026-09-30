@@ -252,9 +252,23 @@ export class CabinetFile extends ScopedElementsMixin(
         // the new blob reuses the existing groupId). Otherwise fileHitData holds
         // an existing blob and we are updating it in place.
         const isNewDocument = blobId === null;
+        if (isNewDocument && !this.objectTypes[this.objectType].canCreate()) {
+            throw new Error(`Cannot create document type: ${this.objectType}`);
+        }
+        const originalType = this.fileHitDataBackup?.objectType;
+        if (
+            originalType &&
+            !this.objectTypes[originalType].canCreate() &&
+            (this.objectType !== originalType ||
+                metaData.additionalType !== this.fileHitDataBackup.file.base.additionalType.key)
+        ) {
+            throw new Error(`Cannot change the type of document: ${originalType}`);
+        }
 
         metaData['@type'] = 'DocumentFile';
-        metaData['fileSource'] = 'blob-cabinetBucket';
+        metaData['fileSource'] = isNewDocument
+            ? 'blob-cabinetBucket'
+            : this.fileHitData.file.base.fileSource;
         metaData['objectType'] = this.objectType;
         // A new document is always current; an update keeps its current flag.
         metaData['isCurrent'] = isNewDocument || (this.fileHitData?.base?.isCurrent ?? false);
@@ -1679,12 +1693,14 @@ export class CabinetFile extends ScopedElementsMixin(
             });
         }
 
-        options.push({
-            value: 'add',
-            label: i18n.t('doc-modal-Add-new-version'),
-            iconName: 'plus',
-            disabled: !isCurrent && !CabinetFile.DEV_MODE,
-        });
+        if (this.objectTypes[hit.objectType].canCreate()) {
+            options.push({
+                value: 'add',
+                label: i18n.t('doc-modal-Add-new-version'),
+                iconName: 'plus',
+                disabled: !isCurrent && !CabinetFile.DEV_MODE,
+            });
+        }
 
         if (showDeleteDocumentButton) {
             options.push({
@@ -1818,11 +1834,26 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     onDocumentTypeSelected(event) {
+        const originalType = this.fileHitDataBackup?.objectType;
         // Split document type into object type and additional type
         const documentType = this._('#document-type').value;
         const [objectType, additionalType] = documentType
             ? documentType.split('---')
             : [null, null];
+
+        if (originalType && !this.objectTypes[originalType].canCreate()) {
+            if (
+                objectType !== originalType ||
+                additionalType !== this.fileHitDataBackup.file.base.additionalType.key
+            ) {
+                throw new Error(`Cannot change the type of document: ${originalType}`);
+            }
+            return;
+        }
+
+        if (objectType && !this.objectTypes[objectType].canCreate()) {
+            throw new Error(`Cannot select document type: ${documentType}`);
+        }
 
         // Only try to preset data if we are editing an existing document
         if (this.objectType && this.fileHitData !== null) {
@@ -1858,6 +1889,10 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     getDocumentTypeSelector() {
+        const originalType = this.fileHitDataBackup?.objectType;
+        const lockedType = originalType && !this.objectTypes[originalType].canCreate();
+        const originalAdditionalType = this.fileHitDataBackup?.file?.base?.additionalType?.key;
+
         let additionalType = this.additionalType;
         let objectType = this.objectType;
         if (this.fileHitData !== null) {
@@ -1866,12 +1901,21 @@ export class CabinetFile extends ScopedElementsMixin(
             objectType = this.fileHitData.objectType || this.objectType;
         }
 
-        const fileDocumentType =
-            additionalType && objectType ? objectType + '---' + additionalType : null;
+        const fileDocumentType = lockedType
+            ? `${originalType}---${originalAdditionalType}`
+            : additionalType && objectType
+              ? objectType + '---' + additionalType
+              : null;
 
         const items = [];
         for (const [name, object] of Object.entries(this.objectTypes)) {
+            if (lockedType ? name !== originalType : !object.canCreate()) {
+                continue;
+            }
             for (const [key, value] of Object.entries(object.getAdditionalTypes(this.lang))) {
+                if (lockedType && key !== originalAdditionalType) {
+                    continue;
+                }
                 const compoundKey = name + '---' + key;
                 items.push({
                     key: compoundKey,
@@ -2080,6 +2124,9 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     async addNewVersion() {
+        if (!this.objectTypes[this.objectType].canCreate()) {
+            throw new Error(`Cannot add a version of document type: ${this.objectType}`);
+        }
         this.mode = CabinetFile.Modes.NEW_VERSION;
         // openReplacePdfDialog() backs up fileHitData, so mutate it afterwards.
         await this.openReplacePdfDialog();

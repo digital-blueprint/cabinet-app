@@ -1,8 +1,12 @@
 import {html} from 'lit';
-import {BaseObject, BaseFormElement, BaseViewElement} from './baseObject.js';
+import {
+    BaseCabinetObject,
+    BaseCabinetFormElement,
+    BaseCabinetViewElement,
+} from './baseCabinetObject.js';
 import {getDocumentHit, getCommunication} from './schema.js';
 import {createInstance} from '../i18n.js';
-import {DEFAULT_FILE_BASE} from './fileCommon.js';
+import {DEFAULT_CABINET_FILE_BASE} from './fileCommon.js';
 import {
     DbpDateTimeElement,
     DbpDateTimeView,
@@ -11,7 +15,7 @@ import {
 } from '@dbp-toolkit/form-elements';
 import {BaseDocumentHitElement} from './document.js';
 
-export default class extends BaseObject {
+export default class extends BaseCabinetObject {
     name = 'file-cabinet-communication';
 
     getFormComponent() {
@@ -54,11 +58,11 @@ const DEFAULT_COMMUNICATION = {
             },
             dateCreated: '',
         },
-        ...DEFAULT_FILE_BASE,
+        ...DEFAULT_CABINET_FILE_BASE,
     },
 };
 
-class CabinetFormElement extends BaseFormElement {
+class CabinetFormElement extends BaseCabinetFormElement {
     static getAdditionalTypes() {
         return {
             Communication: 'custom:typesense-schema.file.base.additionalType.key.Communication',
@@ -147,7 +151,7 @@ class CabinetHitElement extends BaseDocumentHitElement {
     }
 }
 
-class CabinetViewElement extends BaseViewElement {
+class CabinetViewElement extends BaseCabinetViewElement {
     constructor() {
         super();
         this.setAdditionalTypes(CabinetFormElement.getAdditionalTypes());

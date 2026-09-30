@@ -61,12 +61,18 @@ export const DEFAULT_FILE_BASE = {
             text: '',
         },
         groupId: null,
-        comment: null,
         isPartOf: [],
         studyField: {
             key: '',
             text: '',
         },
+    },
+};
+
+export const DEFAULT_CABINET_FILE_BASE = {
+    base: {
+        ...DEFAULT_FILE_BASE.base,
+        comment: null,
         subjectOf: null,
         semester: getDefaultSemester(),
     },

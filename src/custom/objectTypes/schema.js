@@ -109,6 +109,7 @@
  * @property {number} createdTimestamp - Example: 1729607133 - The unix timestamp of the blob file creation
  * @property {number} modifiedTimestamp - Example: 1729607133 - The unix timestamp of the last blob file/metadata modification
  * @property {string} fileId - Examples: "0192b49e-6abd-7db5-9cb1-f743bbd78c18" - The blob file ID
+ * @property {?string} [fileSourceId] - ID of the file in its source system
  * @property {string} fileName - Example: "detailed_article_2.pdf" - The filename of the blob file
  * @property {number} deleteAtTimestamp - Example: 1729607133 - The unix timestamp for when the file will be deleted
  * @property {?number} recommendedDeletionTimestamp - Example: 4854261742 - The unix timestamp for when the file should be deleted by the user
@@ -190,6 +191,12 @@
  */
 
 /**
+ * Fields for "file-cabinet-tugonline" documents
+ * @typedef {object} Tugonline
+ * @property {string} dateCreated - ISO 8601 date, time and timezone of creation in TUGonline
+ */
+
+/**
  * Fields for all "@type" == "DocumentFile" and objectType == "file-cabinet-identityDocument" documents
  * @typedef {object} IdentityDocument
  * @property {string} nationality - Example: "AUT" - Nationality stated in the document
@@ -210,6 +217,7 @@
  * @property {?CitizenshipCertificate} file-cabinet-citizenshipCertificate - Citizenship certificate fields
  * @property {?IdentityDocument} file-cabinet-identityDocument - Identity document fields
  * @property {?MinimalSchema} file-cabinet-minimalSchema - Minimal schema fields
+ * @property {?Tugonline} file-cabinet-tugonline - TUGonline document fields
  * @property {?Communication} file-cabinet-communication - Communication fields
  * @property {?AdmissionNotice} file-cabinet-admissionNotice - Admission notice fields
  * @property {?EnglMasterApplication} file-cabinet-englMasterApplication - English master's application fields
@@ -287,6 +295,15 @@ export function getIdentityDocument(hit) {
 export function getMinimalSchema(hit) {
     console.assert(hit.objectType === 'file-cabinet-minimalSchema');
     return /** @type {MinimalSchema} */ (hit.file['file-cabinet-minimalSchema']);
+}
+
+/**
+ * @param {DocumentHit} hit
+ * @returns {Tugonline}
+ */
+export function getTugonline(hit) {
+    console.assert(hit.objectType === 'file-cabinet-tugonline');
+    return /** @type {Tugonline} */ (hit.file['file-cabinet-tugonline']);
 }
 
 /**

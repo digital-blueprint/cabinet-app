@@ -4,7 +4,6 @@ import '@dbp-toolkit/form-elements';
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import * as formElements from './formElements';
 import {getDocumentHit} from './schema.js';
-import {getSemesters} from './fileCommon.js';
 import {classMap} from 'lit/directives/class-map.js';
 import {until} from 'lit/directives/until.js';
 import {
@@ -24,6 +23,7 @@ import {CabinetApi} from '../../api.js';
 
 /** @typedef {import('./schema.js').DocumentHit} DocumentHit */
 /** @typedef {import('./schema.js').Person} Person */
+/** @typedef {import('./schema.js').FileCommon} FileCommon */
 
 export class BaseObject {
     name = 'baseObject';
@@ -44,6 +44,10 @@ export class BaseObject {
 
     getBlobType() {
         throw new Error('getBlobType() must be implemented');
+    }
+
+    canCreate() {
+        return true;
     }
 
     getAdditionalTypes() {
@@ -255,17 +259,6 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
         };
 
         return html`
-            <dbp-form-string-element
-                subscribe="lang"
-                name="subjectOf"
-                label=${this._i18nCustom.t('custom:doc-modal-subject-of')}
-                placeholder=${this._i18nCustom.t('custom:doc-modal-subject-of-placeholder', {
-                    id: '987654-AB/2023',
-                })}
-                .value=${fileCommon.subjectOf || ''}
-                ?disabled=${this.disabled}
-                @change=${updateField('subjectOf')}></dbp-form-string-element>
-
             <dbp-form-enum-element
                 subscribe="lang"
                 name="studyField"
@@ -290,16 +283,6 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
 
             <dbp-form-enum-element
                 subscribe="lang"
-                name="semester"
-                label=${this._i18nCustom.t('custom:doc-modal-semester')}
-                .items=${getSemesters()}
-                .value=${fileCommon.semester}
-                required
-                ?disabled=${this.disabled}
-                @change=${updateField('semester')}></dbp-form-enum-element>
-
-            <dbp-form-enum-element
-                subscribe="lang"
                 name="isPartOf"
                 label=${this._i18nCustom.t('custom:doc-modal-purpose-storage')}
                 .items=${BaseFormElement.getIsPartOfItems(this._i18nCustom)}
@@ -309,16 +292,6 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
                 required
                 ?disabled=${this.disabled}
                 @change=${updateField('isPartOf')}></dbp-form-enum-element>
-
-            <dbp-form-string-element
-                subscribe="lang"
-                name="comment"
-                label=${this._i18nCustom.t('custom:doc-modal-comment')}
-                placeholder=${this._i18nCustom.t('custom:doc-modal-comment')}
-                rows="5"
-                .value=${fileCommon.comment || ''}
-                ?disabled=${this.disabled}
-                @change=${updateField('comment')}></dbp-form-string-element>
 
             <input type="hidden" name="additionalType" value="${additionalType}" />
             ${this._getButtonRowHtml()}
@@ -462,7 +435,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
     }
 
     getStudyFields() {
-        const data = /** @type {{person?: Person}|null} */ (this.data);
+        const data = /** @type {{person?: Person, file?: {base?: FileCommon}}|null} */ (this.data);
         const personData =
             data?.person ||
             /** @type {Person|null} */ (this.person) ||
@@ -475,6 +448,13 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
             for (const study of studies) {
                 studyFields[study.key] = study.key + ' ' + study.name;
             }
+        }
+
+        // Keep the saved study field selectable even if it is absent from the person's studies.
+        const studyField = data?.file?.base?.studyField;
+        const key = typeof studyField === 'string' ? studyField : studyField?.key;
+        if (key && !Object.hasOwn(studyFields, key)) {
+            studyFields[key] = typeof studyField === 'string' ? key : studyField?.text || key;
         }
 
         return studyFields;
@@ -711,7 +691,7 @@ export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
         this.additionalTypes = types;
     }
 
-    _getCommonViewElements(data) {
+    _getCommonViewElements() {
         const fileData = this.data?.file || {};
         const baseData = fileData.base || {};
 
@@ -736,20 +716,10 @@ export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
         return html`
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18nCustom.t('custom:doc-modal-subject-of')}
-                .value=${baseData.subjectOf || '–'}></dbp-form-string-view>
-
-            <dbp-form-string-view
-                subscribe="lang"
                 label=${this._i18nCustom.t('custom:doc-modal-study-field')}
                 .value=${this.getStudyFieldNameForKey(
                     baseData.studyField.key,
                 )}></dbp-form-string-view>
-
-            <dbp-form-string-view
-                subscribe="lang"
-                label=${this._i18nCustom.t('custom:doc-modal-semester')}
-                .value=${baseData.semester || '–'}></dbp-form-string-view>
 
             <dbp-form-enum-view
                 subscribe="lang"
@@ -804,11 +774,6 @@ export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
                               ),
                           })
                 }></dbp-form-string-view>
-
-            <dbp-form-string-view
-                subscribe="lang"
-                label=${this._i18nCustom.t('custom:doc-modal-comment')}
-                .value=${baseData.comment || '–'}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"

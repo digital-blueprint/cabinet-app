@@ -62,6 +62,7 @@ export default class CabinetConfig {
             'file-cabinet-communication',
             'file-cabinet-identityDocument',
             'file-cabinet-minimalSchema',
+            'file-cabinet-tugonline',
             'file-cabinet-citizenshipCertificate',
             'file-cabinet-englMasterApplication',
             'file-cabinet-englMasterDataSheet',
@@ -93,6 +94,9 @@ export default class CabinetConfig {
                 break;
             case 'file-cabinet-minimalSchema':
                 module = await import('./objectTypes/fileMinimalSchema.js');
+                break;
+            case 'file-cabinet-tugonline':
+                module = await import('./objectTypes/fileTugonline.js');
                 break;
             case 'file-cabinet-citizenshipCertificate':
                 module = await import('./objectTypes/fileCitizenshipCertificate.js');
