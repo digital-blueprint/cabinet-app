@@ -15,9 +15,8 @@ import {
 import * as commonStyles from '@dbp-toolkit/common/styles';
 import {FileSink, FileSource} from '@dbp-toolkit/file-handling';
 import {PdfViewer} from '@dbp-toolkit/pdf-viewer';
-import {pascalToKebab} from '../utils';
+import {CABINET_FILE_SOURCE, formatDate, pascalToKebab} from '../utils.js';
 import {classMap} from 'lit/directives/class-map.js';
-import {formatDate} from '../utils.js';
 import {CabinetDocumentStore} from '../document-store.js';
 import {
     scopedElements as modalNotificationScopedElements,
@@ -267,7 +266,7 @@ export class CabinetFile extends ScopedElementsMixin(
 
         metaData['@type'] = 'DocumentFile';
         metaData['fileSource'] = isNewDocument
-            ? 'blob-cabinetBucket'
+            ? CABINET_FILE_SOURCE
             : this.fileHitData.file.base.fileSource;
         metaData['objectType'] = this.objectType;
         // A new document is always current; an update keeps its current flag.

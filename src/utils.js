@@ -1,3 +1,5 @@
+export const CABINET_FILE_SOURCE = 'blob-cabinetBucket';
+
 /**
  * Returns a function that replaces DOM children elements with a specified replacement element.
  * @param {HTMLElement} replacementElement - The element to replace the target children with.
@@ -57,6 +59,3 @@ export function formatDate(value, defaultText = '–') {
               year: 'numeric',
           });
 }
-
-// TODO: Do we need a prefix?
-export const BLOB_PREFIX = 'document-';

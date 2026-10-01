@@ -1,4 +1,12 @@
-import {BLOB_PREFIX} from './utils.js';
+import {CABINET_FILE_SOURCE} from './utils.js';
+
+/** @param {object} metadata */
+function blobPrefix(metadata) {
+    if (!('groupId' in metadata) || typeof metadata.groupId !== 'string' || !metadata.groupId) {
+        throw new Error('A groupId is required to write a blob');
+    }
+    return `cabinet_${metadata.groupId}`;
+}
 
 /**
  * A blob file resource as returned by the Blob storage API.
@@ -114,12 +122,13 @@ export class CabinetApi {
      * @param {?string} [options.identifier] - The file identifier (omitted when null)
      * @param {boolean} [options.includeData] - Whether to include file data in the response
      * @param {?string} [options.type] - The blob type (e.g. objectType.getBlobType())
+     * @param {?string} [options.prefix] - The prefix for a POST or PATCH request
      * @param {object} [options.extraParams] - Additional query parameters
      * @returns {Promise<string>} - The blob URL
      */
     async _createBlobUrl(
         method,
-        {identifier = null, includeData = false, type = null, extraParams = {}} = {},
+        {identifier = null, includeData = false, type = null, prefix = null, extraParams = {}} = {},
     ) {
         // POST creates a new blob and must not carry an identifier, every other
         // method operates on an existing blob and therefore requires one.
@@ -129,15 +138,18 @@ export class CabinetApi {
         if (method !== 'POST' && identifier === null) {
             throw new Error(`Blob method "${method}" requires an identifier`);
         }
+        if (method === 'POST' && prefix === null) {
+            throw new Error(`Blob method "${method}" requires a prefix`);
+        }
 
         const baseUrl = `${this._element.entryPointUrl}/cabinet/blob-urls`;
         const apiUrl = new URL(baseUrl);
         let params = {
             method: method,
         };
-        // The prefix is only relevant when creating or updating a blob.
-        if (method === 'POST' || method === 'PATCH') {
-            params['prefix'] = BLOB_PREFIX;
+        // Only include the prefix when a write provides one.
+        if (prefix !== null) {
+            params['prefix'] = prefix;
         }
         if (type !== null) {
             params['type'] = type;
@@ -177,18 +189,21 @@ export class CabinetApi {
      * @param {string} method - 'POST' or 'PATCH'
      * @param {string} uploadUrl - The blob upload URL
      * @param {object} metadata - The metadata object to store
+     * @param {?string} prefix - The blob prefix, or null to leave it unchanged
      * @param {?File} [file] - The file to upload (omitted for metadata-only updates)
      * @returns {Promise<BlobFile>} - The parsed blob file resource
      * @throws {ApiError} If the upload request fails
      */
-    async _sendBlobUpload(method, uploadUrl, metadata, file = null) {
+    async _sendBlobUpload(method, uploadUrl, metadata, prefix, file = null) {
         const formData = new FormData();
         formData.append('metadata', JSON.stringify(metadata));
         if (file !== null) {
             formData.append('file', file);
             formData.append('fileName', file.name);
         }
-        formData.append('prefix', BLOB_PREFIX);
+        if (prefix !== null) {
+            formData.append('prefix', prefix);
+        }
 
         const response = await fetch(uploadUrl, {
             method,
@@ -218,8 +233,9 @@ export class CabinetApi {
      * @throws {ApiError} If the upload request fails
      */
     async createFile({type = null, metadata = {}, file = null} = {}) {
-        const uploadUrl = await this._createBlobUrl('POST', {type});
-        return this._sendBlobUpload('POST', uploadUrl, metadata, file);
+        const prefix = blobPrefix(metadata);
+        const uploadUrl = await this._createBlobUrl('POST', {type, prefix});
+        return this._sendBlobUpload('POST', uploadUrl, metadata, prefix, file);
     }
 
     /**
@@ -236,11 +252,16 @@ export class CabinetApi {
      * @throws {ApiError} If the upload request fails
      */
     async updateFile(fileId, {type = null, metadata = {}, file = null} = {}) {
+        const prefix =
+            'fileSource' in metadata && metadata.fileSource === CABINET_FILE_SOURCE
+                ? blobPrefix(metadata)
+                : null;
         const uploadUrl = await this._createBlobUrl('PATCH', {
             identifier: fileId,
             type,
+            prefix,
         });
-        return this._sendBlobUpload('PATCH', uploadUrl, metadata, file);
+        return this._sendBlobUpload('PATCH', uploadUrl, metadata, prefix, file);
     }
 
     /**
