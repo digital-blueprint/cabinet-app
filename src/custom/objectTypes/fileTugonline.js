@@ -79,6 +79,7 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         let hit = getDocumentHit(this._getData());
         let tugonline = getTugonline(hit);
+        let fileCommon = hit.file.base;
         if (typeof hit.file.base.studyField === 'string') {
             const key = hit.file.base.studyField;
             hit.file.base.studyField = {key, text: key, textEn: key};
@@ -93,6 +94,31 @@ class CabinetFormElement extends BaseFormElement {
                     .value=${tugonline.dateCreated || ''}
                     required
                     ?disabled=${this.disabled}></dbp-form-datetime-element>
+
+                <dbp-form-string-element
+                    subscribe="lang"
+                    name="subjectOf"
+                    label=${this._i18nCustom.t('custom:doc-modal-subject-of')}
+                    placeholder=${this._i18nCustom.t('custom:doc-modal-subject-of-placeholder', {
+                        id: '987654-AB/2023',
+                    })}
+                    .value=${fileCommon.subjectOf || ''}
+                    ?disabled=${this.disabled}
+                    @change=${(e) => {
+                        fileCommon.subjectOf = e.detail?.value ?? e.target?.value;
+                    }}></dbp-form-string-element>
+
+                <dbp-form-string-element
+                    subscribe="lang"
+                    name="comment"
+                    label=${this._i18nCustom.t('custom:doc-modal-comment')}
+                    placeholder=${this._i18nCustom.t('custom:doc-modal-comment')}
+                    rows="5"
+                    .value=${fileCommon.comment || ''}
+                    ?disabled=${this.disabled}
+                    @change=${(e) => {
+                        fileCommon.comment = e.detail?.value ?? e.target?.value;
+                    }}></dbp-form-string-element>
 
                 <input
                     type="hidden"
@@ -142,13 +168,23 @@ class CabinetViewElement extends BaseViewElement {
     }
 
     _getCustomViewElements() {
-        let tugonline = getTugonline(getDocumentHit(this.data));
+        let hit = getDocumentHit(this.data);
+        let tugonline = getTugonline(hit);
+        let fileCommon = hit.file.base;
 
         return html`
             <dbp-form-datetime-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:doc-modal-issue-date')}
                 .value=${tugonline.dateCreated ? new Date(tugonline.dateCreated) : ''}></dbp-form-datetime-view>
+            <dbp-form-string-view
+                subscribe="lang"
+                label=${this._i18nCustom.t('custom:doc-modal-subject-of')}
+                .value=${fileCommon.subjectOf || '–'}></dbp-form-string-view>
+            <dbp-form-string-view
+                subscribe="lang"
+                label=${this._i18nCustom.t('custom:doc-modal-comment')}
+                .value=${fileCommon.comment || '–'}></dbp-form-string-view>
         `;
     }
 }
