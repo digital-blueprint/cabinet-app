@@ -105,7 +105,7 @@ class CabinetFormElement extends BaseFormElement {
                     label=${this._i18nCustom.t('custom:doc-modal-issue-date')}
                     .value=${tugonline.dateCreated || ''}
                     required
-                    ?disabled=${this.disabled}></dbp-form-datetime-element>
+                    ?disabled=${this.disabled || this.mode === 'edit'}></dbp-form-datetime-element>
 
                 <dbp-form-string-element
                     subscribe="lang"
@@ -137,7 +137,7 @@ class CabinetFormElement extends BaseFormElement {
                     name="fileSourceId"
                     .value=${hit.file.base.fileSourceId || ''} />
 
-                ${this.getCommonFormElements()}
+                ${this.getCommonFormElements({studyFieldDisabled: this.mode === 'edit'})}
             </form>
         `;
     }

@@ -249,7 +249,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
         return {};
     }
 
-    getCommonFormElements() {
+    getCommonFormElements({studyFieldDisabled = false} = {}) {
         let hit = getDocumentHit(this._getData());
         let fileCommon = hit.file.base;
         const additionalType = this.additionalType || fileCommon.additionalType.key;
@@ -278,7 +278,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
                 .items=${this.getStudyFields()}
                 .value=${fileCommon.studyField.key}
                 required
-                ?disabled=${this.disabled}
+                ?disabled=${this.disabled || studyFieldDisabled}
                 @change=${updateField('studyField.key')}></dbp-form-enum-element>
 
             <dbp-form-enum-element

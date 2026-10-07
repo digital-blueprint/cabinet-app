@@ -1981,6 +1981,7 @@ export class CabinetFile extends ScopedElementsMixin(
                         class="doc-type-edit-view"
                         name="object-type"
                         required
+                        ?disabled=${lockedType}
                         @change="${this.onDocumentTypeSelected}">
                         ${options}
                     </select>
