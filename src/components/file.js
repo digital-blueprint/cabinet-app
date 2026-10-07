@@ -742,6 +742,10 @@ export class CabinetFile extends ScopedElementsMixin(
      * @returns {Promise<void>}
      */
     async handleFileDeletion(undelete = false) {
+        const objectType = this.fileHitData?.objectType || this.objectType;
+        if (!this.objectTypes[objectType].canDelete()) {
+            throw new Error(`Cannot delete document type: ${objectType}`);
+        }
         const i18n = this._i18n;
         const fileId = this.fileHitData.file.base.fileId;
         const data = undelete ? await this.restoreFile(fileId) : await this.softDeleteFile(fileId);
@@ -1684,10 +1688,11 @@ export class CabinetFile extends ScopedElementsMixin(
         const i18n = this._i18n;
         const isCurrent = hit?.base?.isCurrent ?? true;
         const canModifyVersionStatus = this.objectTypes[hit.objectType].canModifyVersionStatus();
+        const canDelete = this.objectTypes[hit.objectType].canDelete();
         const hasOnlyOneVersion = this.versions.length <= 1;
-        const showDeleteDocumentButton = hasOnlyOneVersion;
-        const showDeleteVersionButton = !hasOnlyOneVersion;
-        const showDeleteAllVersionsButton = !hasOnlyOneVersion;
+        const showDeleteDocumentButton = canDelete && hasOnlyOneVersion;
+        const showDeleteVersionButton = canDelete && !hasOnlyOneVersion;
+        const showDeleteAllVersionsButton = canDelete && !hasOnlyOneVersion;
 
         const options = [];
 
@@ -2159,6 +2164,10 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     async handleDeleteAllVersions() {
+        const objectType = this.fileHitData?.objectType || this.objectType;
+        if (!this.objectTypes[objectType].canDelete()) {
+            throw new Error(`Cannot delete document type: ${objectType}`);
+        }
         try {
             // Fetch all versions
             const allVersions = await this.fetchCurrentVersions();

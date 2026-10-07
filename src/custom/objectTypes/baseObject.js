@@ -58,6 +58,10 @@ export class BaseObject {
         return true;
     }
 
+    canDelete() {
+        return true;
+    }
+
     getAdditionalTypes() {
         return BaseFormElement.getAdditionalTypes();
     }

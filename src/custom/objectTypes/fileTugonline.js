@@ -37,6 +37,10 @@ export default class extends BaseObject {
         return false;
     }
 
+    canDelete() {
+        return false;
+    }
+
     getAdditionalTypes(lang) {
         let i18n = createInstance();
         let translatedTypes = {};
