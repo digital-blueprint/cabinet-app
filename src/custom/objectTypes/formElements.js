@@ -10,7 +10,7 @@ export const getFieldsetCSS = () => {
         }
 
         fieldset label {
-            font-weight: bold;
+            font-weight: bolder;
             display: block;
         }
 

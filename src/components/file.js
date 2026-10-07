@@ -44,7 +44,7 @@ const getFieldsetCSS = () => {
         }
 
         fieldset label {
-            font-weight: bold;
+            font-weight: bolder;
             display: block;
         }
 
@@ -1188,6 +1188,10 @@ export class CabinetFile extends ScopedElementsMixin(
                     background: none;
                 }
 
+                .select-wrapper-doc-type:has(select:disabled) {
+                    --select-wrapper-icon-color: var(--dbp-muted);
+                }
+
                 :host(:not([multiple])) .select-wrapper-doc-type {
                     width: 100%;
                     position: relative;
@@ -1216,8 +1220,9 @@ export class CabinetFile extends ScopedElementsMixin(
                 }
 
                 #document-modal .doc-type-edit-view {
-                    padding: 0.14rem 1rem 0.14rem 0.14rem;
-                    width: calc(100% - 1.2em);
+                    padding: 0.25em 1rem 0.25em 0.375em;
+                    box-sizing: border-box;
+                    width: 100%;
                     background-color: var(--dbp-background);
                 }
 
