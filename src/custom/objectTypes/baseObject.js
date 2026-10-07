@@ -54,6 +54,10 @@ export class BaseObject {
         return true;
     }
 
+    canModifyVersionStatus() {
+        return true;
+    }
+
     getAdditionalTypes() {
         return BaseFormElement.getAdditionalTypes();
     }

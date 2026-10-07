@@ -33,6 +33,10 @@ export default class extends BaseObject {
         return false;
     }
 
+    canModifyVersionStatus() {
+        return false;
+    }
+
     getAdditionalTypes(lang) {
         let i18n = createInstance();
         let translatedTypes = {};

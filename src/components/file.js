@@ -697,6 +697,10 @@ export class CabinetFile extends ScopedElementsMixin(
      * @returns {Promise<void>}
      */
     async setIsCurrentVersion(fileId, enable = true) {
+        const objectType = this.fileHitData?.objectType || this.objectType;
+        if (!this.objectTypes[objectType].canModifyVersionStatus()) {
+            throw new Error(`Cannot modify version status of document type: ${objectType}`);
+        }
         const i18n = this._i18n;
 
         let document;
@@ -1679,6 +1683,7 @@ export class CabinetFile extends ScopedElementsMixin(
 
         const i18n = this._i18n;
         const isCurrent = hit?.base?.isCurrent ?? true;
+        const canModifyVersionStatus = this.objectTypes[hit.objectType].canModifyVersionStatus();
         const hasOnlyOneVersion = this.versions.length <= 1;
         const showDeleteDocumentButton = hasOnlyOneVersion;
         const showDeleteVersionButton = !hasOnlyOneVersion;
@@ -1692,7 +1697,7 @@ export class CabinetFile extends ScopedElementsMixin(
             iconName: 'pencil',
         });
 
-        if (!isCurrent) {
+        if (canModifyVersionStatus && !isCurrent) {
             options.push({
                 value: 'mark-current',
                 label: i18n.t('doc-modal-mark-document-current'),
@@ -1700,7 +1705,7 @@ export class CabinetFile extends ScopedElementsMixin(
             });
         }
 
-        if (!hasOnlyOneVersion && isCurrent) {
+        if (canModifyVersionStatus && !hasOnlyOneVersion && isCurrent) {
             options.push({
                 value: 'mark-obsolete',
                 label: i18n.t('doc-modal-mark-document-obsolete'),
