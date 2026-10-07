@@ -1625,6 +1625,7 @@ class CabinetSearch extends ScopedElementsMixin(
             <dbp-cabinet-selection-dialog
                 ${ref(this.selectionDialogRef)}
                 .cabinetConfig="${this.cabinetConfig}"
+                .objectTypes=${this.documentObjectTypes}
                 subscribe="lang,lang-dir,auth,entry-point-url"></dbp-cabinet-selection-dialog>
         `;
     }

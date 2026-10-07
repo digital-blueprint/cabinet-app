@@ -33,6 +33,7 @@ export class SelectionDialog extends ScopedElementsMixin(
         this.nextcloudFileURL = '';
         this.nextcloudAuthInfo = '';
         this.cabinetConfig = null;
+        this.objectTypes = {};
         /** @type {ElementRef<Modal>} */
         this.modalRef = createRef();
         /** @type {ElementRef<TabulatorTable>} */
@@ -119,6 +120,7 @@ export class SelectionDialog extends ScopedElementsMixin(
             activeDocumentTab: {type: String, attribute: false},
             langDir: {type: String, attribute: 'lang-dir'},
             cabinetConfig: {type: Object, attribute: false},
+            objectTypes: {type: Object, attribute: false},
         };
     }
 
@@ -222,6 +224,12 @@ export class SelectionDialog extends ScopedElementsMixin(
                     continue;
                 }
 
+                if (!this.objectTypes[objectType]?.canDelete()) {
+                    console.error('Cannot delete document type', objectType, id);
+                    failCount++;
+                    continue;
+                }
+
                 await new CabinetDocumentStore(this).softDelete(fileId);
 
                 // Update the hit data locally
@@ -293,6 +301,12 @@ export class SelectionDialog extends ScopedElementsMixin(
                 }
                 if (!objectType) {
                     console.error('No objectType found for document', id);
+                    failCount++;
+                    continue;
+                }
+
+                if (!this.objectTypes[objectType]?.canDelete()) {
+                    console.error('Cannot undelete document type', objectType, id);
                     failCount++;
                     continue;
                 }
