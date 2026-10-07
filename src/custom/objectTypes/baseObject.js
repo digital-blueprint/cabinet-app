@@ -50,6 +50,10 @@ export class BaseObject {
         return true;
     }
 
+    canReplaceFile() {
+        return true;
+    }
+
     getAdditionalTypes() {
         return BaseFormElement.getAdditionalTypes();
     }

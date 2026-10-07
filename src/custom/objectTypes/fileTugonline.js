@@ -29,6 +29,10 @@ export default class extends BaseObject {
         return false;
     }
 
+    canReplaceFile() {
+        return false;
+    }
+
     getAdditionalTypes(lang) {
         let i18n = createInstance();
         let translatedTypes = {};

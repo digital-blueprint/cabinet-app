@@ -255,6 +255,14 @@ export class CabinetFile extends ScopedElementsMixin(
             throw new Error(`Cannot create document type: ${this.objectType}`);
         }
         const originalType = this.fileHitDataBackup?.objectType;
+        const existingType = originalType || this.fileHitData?.objectType;
+        if (
+            !isNewDocument &&
+            this.mode !== CabinetFile.Modes.EDIT &&
+            !this.objectTypes[existingType].canReplaceFile()
+        ) {
+            throw new Error(`Cannot replace file of document type: ${existingType}`);
+        }
         if (
             originalType &&
             !this.objectTypes[originalType].canCreate() &&
@@ -937,6 +945,14 @@ export class CabinetFile extends ScopedElementsMixin(
     }
 
     async openReplacePdfDialog() {
+        const objectType = this.fileHitData?.objectType || this.objectType;
+        if (!this.objectTypes[objectType].canReplaceFile()) {
+            throw new Error(`Cannot replace file of document type: ${objectType}`);
+        }
+        await this.openFileChangeDialog();
+    }
+
+    async openFileChangeDialog() {
         // Back up the current data so a cancel of the replace/new-version flow
         // can restore it (both the metadata and the currently shown PDF).
         this.fileHitDataBackup = structuredClone(this.fileHitData);
@@ -1725,11 +1741,13 @@ export class CabinetFile extends ScopedElementsMixin(
             });
         }
 
-        options.push({
-            value: 'replace',
-            label: i18n.t('buttons.replace-document'),
-            iconName: 'reload',
-        });
+        if (this.objectTypes[hit.objectType].canReplaceFile()) {
+            options.push({
+                value: 'replace',
+                label: i18n.t('buttons.replace-document'),
+                iconName: 'reload',
+            });
+        }
 
         return html`
             <div class="action-with-spinner">
@@ -2127,8 +2145,8 @@ export class CabinetFile extends ScopedElementsMixin(
             throw new Error(`Cannot add a version of document type: ${this.objectType}`);
         }
         this.mode = CabinetFile.Modes.NEW_VERSION;
-        // openReplacePdfDialog() backs up fileHitData, so mutate it afterwards.
-        await this.openReplacePdfDialog();
+        // openFileChangeDialog() backs up fileHitData, so mutate it afterwards.
+        await this.openFileChangeDialog();
         // Drop the existing blob id so this is stored as a brand new blob; the
         // rest of fileHitData is kept so the new version reuses the groupId.
         this.fileHitData.file.base.fileId = null;
