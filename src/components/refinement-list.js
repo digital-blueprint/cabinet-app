@@ -142,7 +142,19 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
         this.refinementListRenderOptions.refine(item.value);
     }
     _handleShowMoreClick() {
-        this.refinementListRenderOptions.toggleShowMore();
+        const searchOptions = this.refinementListRenderOptions;
+        searchOptions.toggleShowMore();
+
+        if (searchOptions.isFromSearch) {
+            // The connector toggles synchronously but renders the main list. Keep the
+            // search matches while adopting its new expansion state.
+            this.refinementListRenderOptions = {
+                ...this.refinementListRenderOptions,
+                items: searchOptions.items,
+                isFromSearch: true,
+                canRefine: searchOptions.canRefine,
+            };
+        }
     }
 
     _renderSearchInput() {
@@ -166,7 +178,17 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
             canRefine = true,
             hasExhaustiveItems = false,
             widgetParams = {},
+            isFromSearch = false,
+            isShowingMore = false,
         } = this.refinementListRenderOptions;
+
+        const currentLimit = isShowingMore
+            ? (widgetParams.showMoreLimit ?? 20)
+            : (widgetParams.limit ?? 10);
+        // Facet search returns unsliced matches and inherits completeness from the main list.
+        // Check for overflow before applying the user's current display limit.
+        const hasMoreItems = isFromSearch ? items.length > currentLimit : !hasExhaustiveItems;
+        const visibleItems = isFromSearch ? items.slice(0, currentLimit) : items;
 
         if (!canRefine) {
             return html`
@@ -202,9 +224,9 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
 
         return html`
             <div class="refinement-list-container">
-                <ul class="refinement-list ${!hasExhaustiveItems ? 'has-gradients' : ''}">
+                <ul class="refinement-list ${hasMoreItems ? 'has-gradients' : ''}">
                     ${repeat(
-                        items,
+                        visibleItems,
                         (item) => item.value,
                         (item) => html`
                             <li class="refinement-item">
@@ -226,12 +248,21 @@ export class RefinementList extends LangMixin(DBPLitElement, createInstance) {
     }
 
     _renderShowMoreButton() {
-        const {canToggleShowMore = false, isShowingMore = false} = this.refinementListRenderOptions;
+        const {
+            canToggleShowMore = false,
+            isShowingMore = false,
+            isFromSearch = false,
+            items = [],
+            widgetParams = {},
+        } = this.refinementListRenderOptions;
+        const canToggle = isFromSearch
+            ? widgetParams.showMore && (isShowingMore || items.length > (widgetParams.limit ?? 10))
+            : canToggleShowMore;
 
         return html`
             <button
-                class="button is-small ${!canToggleShowMore ? 'hidden' : ''}"
-                ?disabled=${!canToggleShowMore}
+                class="button is-small ${!canToggle ? 'hidden' : ''}"
+                ?disabled=${!canToggle}
                 @click=${this._handleShowMoreClick}>
                 ${
                     isShowingMore
