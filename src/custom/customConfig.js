@@ -457,6 +457,7 @@ export default class CabinetConfig {
                 facetOptions: {
                     facet: {
                         searchable: false,
+                        showMore: true,
                         showMoreLimit: showMoreLimitValue,
                     },
                 },
@@ -475,7 +476,13 @@ export default class CabinetConfig {
                 schemaFieldType: 'checkbox',
                 renderFunction: translationRenderFunction,
                 name: i18n.t('custom:cabinet-search.filter-file-base-additional-type-text-title'),
-                facetOptions: {facet: {searchable: false}},
+                facetOptions: {
+                    facet: {
+                        searchable: false,
+                        showMore: true,
+                        showMoreLimit: showMoreLimitValue,
+                    },
+                },
             },
             {
                 id: 'file.base.createdTimestamp',
@@ -510,7 +517,13 @@ export default class CabinetConfig {
                 schemaField: selectField('file.base.studyField'),
                 schemaFieldType: 'checkbox',
                 name: i18n.t('custom:cabinet-search.filter-file-base-study-field-name-title'),
-                facetOptions: {facet: {searchable: false}},
+                facetOptions: {
+                    facet: {
+                        searchable: true,
+                        showMore: true,
+                        showMoreLimit: showMoreLimitValue,
+                    },
+                },
             },
             {
                 id: 'file.base.semester',
@@ -518,7 +531,13 @@ export default class CabinetConfig {
                 schemaField: 'file.base.semester',
                 schemaFieldType: 'checkbox',
                 name: i18n.t('custom:cabinet-search.filter-file-base-semester-title'),
-                facetOptions: {facet: {searchable: false}},
+                facetOptions: {
+                    facet: {
+                        searchable: true,
+                        showMore: true,
+                        showMoreLimit: showMoreLimitValue,
+                    },
+                },
             },
             {
                 id: 'file.base.isPartOf',
