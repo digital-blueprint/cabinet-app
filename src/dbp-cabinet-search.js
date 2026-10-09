@@ -592,7 +592,11 @@ class CabinetSearch extends ScopedElementsMixin(
 
         let facets = this.#cabinetFacets;
         search.addWidgets([
-            configure({}),
+            configure(
+                /** @type {import('algoliasearch-helper').PlainSearchParameters & {maxValuesPerFacet: number}} */ ({
+                    maxValuesPerFacet: 51,
+                }),
+            ),
             facets.createDocumentStatusWidget(),
             this.createSearchBox(),
             this.createHitsPerPageWidget(),
