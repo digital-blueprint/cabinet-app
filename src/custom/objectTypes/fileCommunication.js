@@ -170,16 +170,12 @@ class CabinetViewElement extends BaseCabinetViewElement {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:person.given-name')}
-                .value=${
-                    communication.agent ? communication.agent.givenName : ''
-                }></dbp-form-string-view>
+                .value=${communication.agent?.givenName || '–'}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:person.family-name')}
-                .value=${
-                    communication.agent ? communication.agent.familyName : ''
-                }></dbp-form-string-view>
+                .value=${communication.agent?.familyName || '–'}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
