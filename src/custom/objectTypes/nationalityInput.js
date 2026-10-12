@@ -262,7 +262,6 @@ export class NationalityInput extends LangMixin(DbpBaseElement, createInstance, 
                         id="${this.formElementId}"
                         type="text"
                         class="form-input"
-                        placeholder="${this._i18nSub.t('custom:nationality-input.placeholder')}"
                         autocomplete="off"
                         .value="${this.value}"
                         ?disabled="${this.disabled}"

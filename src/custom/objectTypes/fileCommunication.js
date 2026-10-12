@@ -93,7 +93,6 @@ class CabinetFormElement extends BaseCabinetFormElement {
                     subscribe="lang"
                     name="agent[givenName]"
                     label=${this._i18nCustom.t('custom:person.given-name')}
-                    placeholder=${this._i18nCustom.t('custom:person.given-name')}
                     .value=${communication.agent.givenName}
                     ?disabled=${this.disabled}></dbp-form-string-element>
 
@@ -101,7 +100,6 @@ class CabinetFormElement extends BaseCabinetFormElement {
                     subscribe="lang"
                     name="agent[familyName]"
                     label=${this._i18nCustom.t('custom:person.family-name')}
-                    placeholder=${this._i18nCustom.t('custom:person.family-name')}
                     .value=${communication.agent.familyName}
                     ?disabled=${this.disabled}></dbp-form-string-element>
 
@@ -109,7 +107,6 @@ class CabinetFormElement extends BaseCabinetFormElement {
                     subscribe="lang"
                     name="abstract"
                     label=${this._i18nCustom.t('custom:person.communication-abstract')}
-                    placeholder=${this._i18nCustom.t('custom:person.communication-abstract')}
                     rows="10"
                     .value=${communication.abstract}
                     ?disabled=${this.disabled}></dbp-form-string-element>

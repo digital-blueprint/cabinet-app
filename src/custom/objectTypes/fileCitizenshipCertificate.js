@@ -93,6 +93,7 @@ class CabinetFormElement extends BaseCabinetFormElement {
                     subscribe="lang"
                     name="nationality"
                     label=${this._i18nCustom.t('custom:doc-modal-nationality')}
+                    description=${this._i18nCustom.t('custom:nationality-input.description')}
                     .value=${citizenshipCertificate.nationality}
                     required
                     ?disabled=${this.disabled}></dbp-cabinet-form-nationality-element>

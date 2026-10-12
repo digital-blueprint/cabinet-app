@@ -78,7 +78,7 @@
     "doc-modal-study-field-unknown": "Unbekanntes Studienfach ({{studyFieldKey}})",
     "doc-modal-study-field-unspecified": "Unspezifiziert",
     "doc-modal-subject-of": "Geschäftszahl",
-    "doc-modal-subject-of-placeholder": "z.B. {{-id}}",
+    "doc-modal-subject-of-description": "z.B. {{-id}}",
     "doc-modal-yes": "Ja",
     "document-issue-date": "Datum der Ausstellung",
     "file": {
@@ -94,9 +94,9 @@
         "document-of": "von"
     },
     "nationality-input": {
+        "description": "Code eingeben, oder nach einem Land suchen",
         "invalid-code-format": "Ungültiges Format. Bitte tragen Sie 1-3 Großbuchstaben ein.",
-        "no-matches-found": "Keine Übereinstimmung gefunden",
-        "placeholder": "Code eingeben, oder nach einem Land suchen"
+        "no-matches-found": "Keine Übereinstimmung gefunden"
     },
     "person": {
         "academic-title-following": "Akad. Grad nach dem Namen",

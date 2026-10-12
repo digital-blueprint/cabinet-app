@@ -111,7 +111,7 @@ class CabinetFormElement extends BaseFormElement {
                     subscribe="lang"
                     name="subjectOf"
                     label=${this._i18nCustom.t('custom:doc-modal-subject-of')}
-                    placeholder=${this._i18nCustom.t('custom:doc-modal-subject-of-placeholder', {
+                    description=${this._i18nCustom.t('custom:doc-modal-subject-of-description', {
                         id: '987654-AB/2023',
                     })}
                     .value=${fileCommon.subjectOf || ''}
@@ -124,7 +124,6 @@ class CabinetFormElement extends BaseFormElement {
                     subscribe="lang"
                     name="comment"
                     label=${this._i18nCustom.t('custom:doc-modal-comment')}
-                    placeholder=${this._i18nCustom.t('custom:doc-modal-comment')}
                     rows="5"
                     .value=${fileCommon.comment || ''}
                     ?disabled=${this.disabled}
