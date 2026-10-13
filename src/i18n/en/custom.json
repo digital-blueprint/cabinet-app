@@ -91,7 +91,9 @@
     "full-family-name": "Name",
     "hitbox": {
         "document-entry": "Document",
-        "document-of": "of"
+        "document-of": "of",
+        "study-field": "Study field",
+        "tugonline-document": "TUGRAZonline document"
     },
     "nationality-input": {
         "description": "Enter code or search for a country",

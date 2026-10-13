@@ -28,6 +28,40 @@ export class BaseDocumentHitElement extends BaseHitElement {
                     border-top-width: 1px;
                 }
 
+                .ais-doc-title-wrapper {
+                    flex-wrap: nowrap;
+                    align-items: flex-start;
+                    gap: 0.5em;
+                }
+
+                .document-title-group {
+                    display: flex;
+                    align-items: flex-start;
+                    flex: 1 1 20em;
+                    min-width: 0;
+                }
+
+                .ais-doc-title {
+                    flex: 1;
+                    min-width: 0;
+                    overflow-wrap: anywhere;
+                }
+
+                .file-source-indicator {
+                    margin-inline-start: auto;
+                    align-self: flex-start;
+                    flex-shrink: 0;
+                    border: 1px solid var(--dbp-content);
+                    padding: 2px 6px;
+                    color: var(--dbp-content);
+                    white-space: nowrap;
+                }
+
+                .file-source-header {
+                    display: flex;
+                    margin-bottom: 0.5em;
+                }
+
                 .superseded {
                     text-decoration: line-through;
                     color: var(--dbp-muted);
@@ -45,6 +79,14 @@ export class BaseDocumentHitElement extends BaseHitElement {
         this.hit = hit;
 
         const i18n = this._i18nCustom;
+        const isTugonline = hit.file.base.fileSource === 'blob-campusOnlineDmsBucket';
+        const fileSourceIndicator = isTugonline
+            ? html`
+                  <span class="file-source-indicator">
+                      ${i18n.t('custom:hitbox.tugonline-document')}
+                  </span>
+              `
+            : '';
 
         const lastModified = new Date(hit.file.base.modifiedTimestamp * 1000).toLocaleString(
             'de-DE',
@@ -67,30 +109,33 @@ export class BaseDocumentHitElement extends BaseHitElement {
                 ${hit.base.isCurrent
                     ? html`
                           <header class="ais-doc-Hits-header">
-                              <div class="ais-doc-title-wrapper">
-                                  <label
-                                      class="checkbox-label"
-                                      ?hidden="${!this.showHitCheckboxes}">
-                                      <input
-                                          type="checkbox"
-                                          name="select"
-                                          class="checkbox"
-                                          @change=${this.selectCheckboxChanged}
-                                          ?checked=${this.selected}
-                                          value="${hit.id}" />
-                                  </label>
-                                  <dbp-icon
-                                      class="icon-container"
-                                      name="files"
-                                      aria-hidden="true"></dbp-icon>
-                                  <h2 class="ais-doc-title">
-                                      ${renderFieldWithHighlight(
-                                          hit,
-                                          this.lang === 'de'
-                                              ? 'file.base.additionalType.text'
-                                              : 'file.base.additionalType.textEn',
-                                      )}
-                                  </h2>
+                               <div class="ais-doc-title-wrapper">
+                                   <div class="document-title-group">
+                                       <label
+                                           class="checkbox-label"
+                                           ?hidden="${!this.showHitCheckboxes}">
+                                           <input
+                                               type="checkbox"
+                                               name="select"
+                                               class="checkbox"
+                                               @change=${this.selectCheckboxChanged}
+                                               ?checked=${this.selected}
+                                               value="${hit.id}" />
+                                       </label>
+                                       <dbp-icon
+                                           class="icon-container"
+                                           name="files"
+                                           aria-hidden="true"></dbp-icon>
+                                       <h2 class="ais-doc-title">
+                                           ${renderFieldWithHighlight(
+                                               hit,
+                                               this.lang === 'de'
+                                                   ? 'file.base.additionalType.text'
+                                                   : 'file.base.additionalType.textEn',
+                                           )}
+                                       </h2>
+                                   </div>
+                                   ${fileSourceIndicator}
                               </div>
                               <div class="text-container">
                                   <h3
@@ -116,6 +161,7 @@ export class BaseDocumentHitElement extends BaseHitElement {
                           </header>
                           <main class="ais-doc-Hits-content">
                               <div class="hit-content-item">
+                                  ${this._renderStudyField()}
                                   ${this._renderContent()}
                                   ${hit.file.base.subjectOf
                                       ? html`
@@ -138,6 +184,9 @@ export class BaseDocumentHitElement extends BaseHitElement {
                           </main>
                       `
                     : html`
+                          ${isTugonline
+                              ? html`<header class="file-source-header">${fileSourceIndicator}</header>`
+                              : ''}
                           <main class="ais-doc-Hits-content">
                               <div>
                                   <label
@@ -155,8 +204,9 @@ export class BaseDocumentHitElement extends BaseHitElement {
                                   ,
                                   <span>${i18n.t('custom:file.modified')} ${lastModified}</span>
                                   (${i18n.t('custom:file.obsolete')})
-                                  <div class="hit-content-item">
-                                      ${this._renderContent()}
+                                   <div class="hit-content-item">
+                                       ${this._renderStudyField()}
+                                       ${this._renderContent()}
                                       ${hit.file.base.subjectOf
                                           ? html`
                                                 <span>
@@ -181,6 +231,26 @@ export class BaseDocumentHitElement extends BaseHitElement {
         const id = e.target.value;
         const checked = e.target.checked;
         sendHitSelectionEvent(this, HitSelectionType.DOCUMENT_FILE, id, checked, this.hit);
+    }
+
+    _renderStudyField() {
+        const hit = getDocumentHit(this.data);
+        const studyField = hit.file.base.studyField;
+        if (!studyField?.key || studyField.key === 'Unspecified') {
+            return '';
+        }
+
+        return html`
+            <span>
+                ${this._i18nCustom.t('custom:hitbox.study-field')}:
+                ${renderFieldWithHighlight(
+                    hit,
+                    this.lang === 'de'
+                        ? 'file.base.studyField.text'
+                        : 'file.base.studyField.textEn',
+                )}
+            </span>
+        `;
     }
 
     _renderContent() {
