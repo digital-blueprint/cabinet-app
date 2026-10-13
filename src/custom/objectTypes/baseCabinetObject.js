@@ -191,12 +191,19 @@ export class BaseCabinetViewElement extends BaseViewElement {
 
             <dbp-form-string-view
                 subscribe="lang"
-                label=${this._i18nCustom.t('custom:doc-modal-added')}
-                .value=${`${dateCreated}${
+                label=${this._i18nCustom.t('custom:doc-modal-file-source')}
+                .value=${
                     baseData.fileSource
-                        ? ` (${this._i18nCustom.t(`custom:typesense-schema.file.base.fileSource.${baseData.fileSource}`)})`
-                        : ''
-                }`}></dbp-form-string-view>
+                        ? this._i18nCustom.t(
+                              `custom:typesense-schema.file.base.fileSource.${baseData.fileSource}`,
+                          )
+                        : '–'
+                }></dbp-form-string-view>
+
+            <dbp-form-string-view
+                subscribe="lang"
+                label=${this._i18nCustom.t('custom:doc-modal-added')}
+                .value=${dateCreated}></dbp-form-string-view>
 
             <dbp-form-string-view
                 subscribe="lang"
