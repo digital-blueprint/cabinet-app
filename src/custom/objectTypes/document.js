@@ -52,7 +52,8 @@ export class BaseDocumentHitElement extends BaseHitElement {
                     align-self: flex-start;
                     flex-shrink: 0;
                     border: 1px solid var(--dbp-content);
-                    padding: 2px 6px;
+                    border-radius: 2px;
+                    padding: 0px 0.25em;
                     color: var(--dbp-content);
                     white-space: nowrap;
                 }
