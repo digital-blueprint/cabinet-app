@@ -123,12 +123,20 @@ export class CabinetApi {
      * @param {boolean} [options.includeData] - Whether to include file data in the response
      * @param {?string} [options.type] - The blob type (e.g. objectType.getBlobType())
      * @param {?string} [options.prefix] - The prefix for a POST or PATCH request
+     * @param {?string} [options.metadata] - The serialized metadata for a POST or PATCH request
      * @param {object} [options.extraParams] - Additional query parameters
      * @returns {Promise<string>} - The blob URL
      */
     async _createBlobUrl(
         method,
-        {identifier = null, includeData = false, type = null, prefix = null, extraParams = {}} = {},
+        {
+            identifier = null,
+            includeData = false,
+            type = null,
+            prefix = null,
+            metadata = null,
+            extraParams = {},
+        } = {},
     ) {
         // POST creates a new blob and must not carry an identifier, every other
         // method operates on an existing blob and therefore requires one.
@@ -140,6 +148,9 @@ export class CabinetApi {
         }
         if (method === 'POST' && prefix === null) {
             throw new Error(`Blob method "${method}" requires a prefix`);
+        }
+        if (metadata !== null && method !== 'POST' && method !== 'PATCH') {
+            throw new Error(`Blob method "${method}" must not be given metadata`);
         }
 
         const baseUrl = `${this._element.entryPointUrl}/cabinet/blob-urls`;
@@ -170,7 +181,7 @@ export class CabinetApi {
                 'Content-Type': 'application/ld+json',
                 Authorization: 'Bearer ' + this._element.auth.token,
             },
-            body: '{}',
+            body: metadata !== null ? JSON.stringify({metadata}) : '{}',
         });
         if (!response.ok) {
             throw new Error(`Error while creating storage URL: ${response.statusText}`);
@@ -188,7 +199,7 @@ export class CabinetApi {
      * returned.
      * @param {string} method - 'POST' or 'PATCH'
      * @param {string} uploadUrl - The blob upload URL
-     * @param {object} metadata - The metadata object to store
+     * @param {string} metadata - The serialized metadata to store, identical to the signed URL request
      * @param {?string} prefix - The blob prefix, or null to leave it unchanged
      * @param {?File} [file] - The file to upload (omitted for metadata-only updates)
      * @returns {Promise<BlobFile>} - The parsed blob file resource
@@ -196,7 +207,7 @@ export class CabinetApi {
      */
     async _sendBlobUpload(method, uploadUrl, metadata, prefix, file = null) {
         const formData = new FormData();
-        formData.append('metadata', JSON.stringify(metadata));
+        formData.append('metadata', metadata);
         if (file !== null) {
             formData.append('file', file);
             formData.append('fileName', file.name);
@@ -234,8 +245,13 @@ export class CabinetApi {
      */
     async createFile({type = null, metadata = {}, file = null} = {}) {
         const prefix = blobPrefix(metadata);
-        const uploadUrl = await this._createBlobUrl('POST', {type, prefix});
-        return this._sendBlobUpload('POST', uploadUrl, metadata, prefix, file);
+        const serializedMetadata = JSON.stringify(metadata);
+        const uploadUrl = await this._createBlobUrl('POST', {
+            type,
+            prefix,
+            metadata: serializedMetadata,
+        });
+        return this._sendBlobUpload('POST', uploadUrl, serializedMetadata, prefix, file);
     }
 
     /**
@@ -256,12 +272,14 @@ export class CabinetApi {
             'fileSource' in metadata && metadata.fileSource === CABINET_FILE_SOURCE
                 ? blobPrefix(metadata)
                 : null;
+        const serializedMetadata = JSON.stringify(metadata);
         const uploadUrl = await this._createBlobUrl('PATCH', {
             identifier: fileId,
             type,
             prefix,
+            metadata: serializedMetadata,
         });
-        return this._sendBlobUpload('PATCH', uploadUrl, metadata, prefix, file);
+        return this._sendBlobUpload('PATCH', uploadUrl, serializedMetadata, prefix, file);
     }
 
     /**
