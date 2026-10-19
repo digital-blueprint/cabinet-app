@@ -131,7 +131,7 @@
         "keyCloakRealm": "tugraz",
         "keyCloakClientId": "studakt_tugraz_at",
         "matomoUrl": "https://analytics.tugraz.at/",
-        "matomoSiteId": 131,
+        "matomoSiteId": 226,
         "nextcloudBaseURL": "https://cloud.tugraz.at",
         "nextcloudName": "TU Graz cloud",
         "pdfAsQualifiedlySigningServer": "https://sig.tugraz.at",
