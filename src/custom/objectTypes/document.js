@@ -29,15 +29,14 @@ export class BaseDocumentHitElement extends BaseHitElement {
                 }
 
                 .ais-doc-title-wrapper {
-                    flex-wrap: nowrap;
                     align-items: flex-start;
                     gap: 0.5em;
+                    justify-content: space-between;
                 }
 
                 .document-title-group {
                     display: flex;
                     align-items: flex-start;
-                    flex: 1 1 20em;
                     min-width: 0;
                 }
 
@@ -48,7 +47,6 @@ export class BaseDocumentHitElement extends BaseHitElement {
                 }
 
                 .file-source-indicator {
-                    margin-inline-start: auto;
                     align-self: flex-start;
                     flex-shrink: 0;
                     border: 1px solid var(--dbp-content);
