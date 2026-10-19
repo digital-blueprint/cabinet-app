@@ -121,7 +121,7 @@ export class BaseCabinetViewElement extends BaseViewElement {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:doc-modal-study-field')}
-                .value=${this.getStudyFieldNameForKey(
+                .value=${this.getStudyFieldTextForKey(
                     baseData.studyField.key,
                 )}></dbp-form-string-view>
 

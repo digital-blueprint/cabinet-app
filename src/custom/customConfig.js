@@ -425,7 +425,7 @@ export default class CabinetConfig {
             {
                 id: 'person.study.name',
                 groupId: 'person',
-                schemaField: 'study.name',
+                schemaField: 'study.text',
                 schemaFieldType: 'checkbox',
                 name: i18n.t('custom:cabinet-search.filter-study-name-title'),
                 facetOptions: {
@@ -718,7 +718,7 @@ export default class CabinetConfig {
             {
                 id: 'person.study.name',
                 name: i18n.t('custom:selection-column-config.person.study.name'),
-                field: 'study.name',
+                field: 'study.text',
                 defaultVisible: false,
             },
             {

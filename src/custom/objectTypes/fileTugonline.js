@@ -92,10 +92,6 @@ class CabinetFormElement extends BaseFormElement {
         let hit = getDocumentHit(this._getData());
         let tugonline = getTugonline(hit);
         let fileCommon = hit.file.base;
-        if (typeof hit.file.base.studyField === 'string') {
-            const key = hit.file.base.studyField;
-            hit.file.base.studyField = {key, text: key, textEn: key};
-        }
 
         return html`
             <form>

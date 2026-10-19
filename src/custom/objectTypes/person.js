@@ -449,7 +449,8 @@ class CabinetHitElement extends BaseHitElement {
                                       (study) => html`
                                           <div class="study-entry">
                                               <span>
-                                                  ${study.name} (${selectTranslation(study.status)})
+                                                  ${study.key} / ${study.name}
+                                                  (${selectTranslation(study.status)})
                                               </span>
                                           </div>
                                       `,
@@ -1138,7 +1139,12 @@ class CabinetViewElement extends BaseViewElement {
                             <ul class="study-info">
                                 <div class="study-key-group">
                                     <li class="study-row">
-                                        <b><span>${displayValue(study.name)}</span></b>
+                                        <b>
+                                            <span>
+                                                ${displayValue(study.key)} /
+                                                ${displayValue(study.name)}
+                                            </span>
+                                        </b>
                                     </li>
                                 </div>
                                 <li class="study-row">

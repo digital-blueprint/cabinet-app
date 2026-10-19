@@ -10,7 +10,7 @@ export default class DbpTypesenseInstantsearchAdapter extends TypesenseInstantSe
     facetParentByValue = {};
 
     facetsThatNeedGrouping = [
-        'study.name',
+        'study.text',
         'study.type',
         'study.status.text',
         'study.status.textEn',

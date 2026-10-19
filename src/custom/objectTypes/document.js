@@ -237,19 +237,11 @@ export class BaseDocumentHitElement extends BaseHitElement {
     _renderStudyField() {
         const hit = getDocumentHit(this.data);
         const studyField = hit.file.base.studyField;
-        if (!studyField?.key || studyField.key === 'Unspecified') {
-            return '';
-        }
 
         return html`
             <span>
-                ${this._i18nCustom.t('custom:hitbox.study-field')}:
-                ${renderFieldWithHighlight(
-                    hit,
-                    this.lang === 'de'
-                        ? 'file.base.studyField.text'
-                        : 'file.base.studyField.textEn',
-                )}
+                ${this._i18nCustom.t('custom:hitbox.study-field')}: ${studyField.key} /
+                ${this.lang === 'de' ? studyField.name : studyField.nameEn}
             </span>
         `;
     }

@@ -458,7 +458,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
 
         if (studies) {
             for (const study of studies) {
-                studyFields[study.key] = study.name;
+                studyFields[study.key] = `${study.key} / ${study.name}`;
             }
         }
 
@@ -729,7 +729,7 @@ export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
             <dbp-form-string-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:doc-modal-study-field')}
-                .value=${this.getStudyFieldNameForKey(
+                .value=${this.getStudyFieldTextForKey(
                     baseData.studyField.key,
                 )}></dbp-form-string-view>
 
@@ -815,7 +815,7 @@ export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
         `;
     }
 
-    getStudyFieldNameForKey(key) {
+    getStudyFieldTextForKey(key) {
         let i18n = this._i18nCustom;
         let keyUnspecified = 'Unspecified';
         const personData = this.data?.person || {};
@@ -826,7 +826,7 @@ export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
 
         for (const study of studies) {
             if (study.key === key) {
-                return study.name;
+                return `${study.key} / ${study.name}`;
             }
         }
 

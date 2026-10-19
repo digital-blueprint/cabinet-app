@@ -140,7 +140,14 @@ export async function generateExportPersonPdf(i18n, hit, withInternalData = fals
                 showHead: 'firstPage',
                 headStyles: {fillColor: subFillColor, textColor: subTextColor},
                 margin: {left: subLeftMargin},
-                head: [[{content: displayValue(study.name), colSpan: 2}]],
+                head: [
+                    [
+                        {
+                            content: displayValue(study.key) + ' / ' + displayValue(study.name),
+                            colSpan: 2,
+                        },
+                    ],
+                ],
                 body: [
                     [i18n.t('custom:person.semester'), displayValue(study.semester)],
                     [i18n.t('custom:person.status'), displayValue(selectTranslation(study.status))],

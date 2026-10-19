@@ -6,6 +6,12 @@
  */
 
 /**
+ * @typedef {object} StudyFieldNames
+ * @property {string} name - The name of the value in German
+ * @property {string} nameEn - The name of the value in English
+ */
+
+/**
  * @typedef {object} Address
  * @property {string} note - Example: "c/o Erika Mustermann"
  * @property {string} street - Example: "Hauptstraße 42/4"
@@ -29,6 +35,7 @@
  * @property {?string} immatriculationSemester - Example: "20S"
  * @property {string} key - Example: key="UF 786 600"
  * @property {string} name - Example: "Dr.-Studium d.technischen Wissenschaften; Architektur"
+ * @property {string} text - Example: "UF 786 600 Dr.-Studium d.technischen Wissenschaften; Architektur"
  * @property {?string} qualificationDate - Example: "2010-01-01"
  * @property {?Translated} qualificationState - Example: key="168", text="Österreich"
  * @property {?Translated} qualificationType - Example: key="41", text="Master-/Diplomst.eigene Univ."
@@ -121,7 +128,7 @@
  * @property {string[]} isPartOf - Example: ["generalApplications-archive-3"] - A list of assigned
  * processes, e.i. purposses of storing, to which this entity is assigned
  * to. Every document needs at least one of the values to be assigned.
- * @property {Translated} studyField - "UF 033 243" - Study field that the described document applies to. The
+ * @property {Translated & StudyFieldNames} studyField - "UF 033 243" - Study field that the described document applies to. The
  * key is either the study field key or the value 'Unspecified'. The value
  * is the study field named that the described document applies to.
  * @property {?string} subjectOf - Example: "GZ 2021-0.123.456" - Optional attribute containing a registry key of a case aka the 'Geschäftszahl'
