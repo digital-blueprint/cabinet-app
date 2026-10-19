@@ -408,8 +408,13 @@ export class CabinetFile extends ScopedElementsMixin(
                 'cabinet-file.document-upload-failed-pdfa-too-big-summary',
             );
         }
-        // if document is not in a valid PDF/A format
+        // TODO: legacy error, remove: if document is not in a valid PDF/A format
         if (error.errorId?.includes('-file-data-file-does-not-validate-against-type')) {
+            validationErrors.errors = /** @type {Array<string>} */ (error.errorDetails);
+        }
+
+        // if document is not in a valid PDF/A format for example
+        if (error.errorId === 'blob:file-validation-failed') {
             validationErrors.errors = /** @type {Array<string>} */ (error.errorDetails);
         }
 
