@@ -152,6 +152,9 @@ export class CabinetApi {
         if (metadata !== null && method !== 'POST' && method !== 'PATCH') {
             throw new Error(`Blob method "${method}" must not be given metadata`);
         }
+        if ((method === 'POST' || method === 'PATCH') && metadata === null) {
+            throw new Error(`Blob method "${method}" requires metadata`);
+        }
 
         const baseUrl = `${this._element.entryPointUrl}/cabinet/blob-urls`;
         const apiUrl = new URL(baseUrl);
@@ -359,19 +362,27 @@ export class CabinetApi {
      * @returns {Promise<BlobFile>} - The updated blob file resource
      */
     async _setFileDeletion(fileId, undelete = false) {
+        const metadataUrl = await this._createBlobUrl('GET', {identifier: fileId});
+        const blobItem = await this._loadBlobItem(metadataUrl);
+        const metadata = blobItem.metadata;
+        if (metadata === null) {
+            throw new Error(`No metadata in blob response for ${fileId}`);
+        }
         const deleteUrl = await this._createBlobUrl('PATCH', {
             identifier: fileId,
+            metadata,
             extraParams: {deleteIn: undelete ? 'null' : 'P7D'},
         });
 
+        const formData = new FormData();
+        formData.append('metadata', metadata);
         const options = {
             // We are doing soft-delete here, so we need to use PATCH
             method: 'PATCH',
             headers: {
                 Authorization: 'Bearer ' + this._element.auth.token,
             },
-            // The API demands a multipart form data, so we need to send an empty body
-            body: new FormData(),
+            body: formData,
         };
 
         let response = await fetch(deleteUrl, options);
