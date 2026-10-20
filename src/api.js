@@ -362,12 +362,18 @@ export class CabinetApi {
      * @returns {Promise<BlobFile>} - The updated blob file resource
      */
     async _setFileDeletion(fileId, undelete = false) {
+        const userId = this._element.auth?.['user-id'];
+        if (typeof userId !== 'string') {
+            throw new Error('No user id set');
+        }
         const metadataUrl = await this._createBlobUrl('GET', {identifier: fileId});
         const blobItem = await this._loadBlobItem(metadataUrl);
-        const metadata = blobItem.metadata;
-        if (metadata === null) {
+        if (blobItem.metadata === null) {
             throw new Error(`No metadata in blob response for ${fileId}`);
         }
+        const parsedMetadata = JSON.parse(blobItem.metadata);
+        parsedMetadata.lastModifiedBy = userId;
+        const metadata = JSON.stringify(parsedMetadata);
         const deleteUrl = await this._createBlobUrl('PATCH', {
             identifier: fileId,
             metadata,
