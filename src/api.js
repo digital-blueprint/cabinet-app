@@ -124,6 +124,7 @@ export class CabinetApi {
      * @param {?string} [options.type] - The blob type (e.g. objectType.getBlobType())
      * @param {?string} [options.prefix] - The prefix for a POST or PATCH request
      * @param {?string} [options.metadata] - The serialized metadata for a POST or PATCH request
+     * @param {boolean} [options.updateFile] - Request permission to change file content or filename
      * @param {object} [options.extraParams] - Additional query parameters
      * @returns {Promise<string>} - The blob URL
      */
@@ -135,6 +136,7 @@ export class CabinetApi {
             type = null,
             prefix = null,
             metadata = null,
+            updateFile = false,
             extraParams = {},
         } = {},
     ) {
@@ -174,6 +176,9 @@ export class CabinetApi {
         if (includeData) {
             params['includeData'] = '1';
         }
+        if (updateFile) {
+            params['updateFile'] = '1';
+        }
 
         params = {...params, ...extraParams};
         apiUrl.search = new URLSearchParams(params).toString();
@@ -203,20 +208,19 @@ export class CabinetApi {
      * @param {string} method - 'POST' or 'PATCH'
      * @param {string} uploadUrl - The blob upload URL
      * @param {string} metadata - The serialized metadata to store, identical to the signed URL request
-     * @param {?string} prefix - The blob prefix, or null to leave it unchanged
      * @param {?File} [file] - The file to upload (omitted for metadata-only updates)
+     * @param {?string} [fileName] - The filename to store (omitted to leave it unchanged)
      * @returns {Promise<BlobFile>} - The parsed blob file resource
      * @throws {ApiError} If the upload request fails
      */
-    async _sendBlobUpload(method, uploadUrl, metadata, prefix, file = null) {
+    async _sendBlobUpload(method, uploadUrl, metadata, file = null, fileName = file?.name ?? null) {
         const formData = new FormData();
         formData.append('metadata', metadata);
         if (file !== null) {
             formData.append('file', file);
-            formData.append('fileName', file.name);
         }
-        if (prefix !== null) {
-            formData.append('prefix', prefix);
+        if (fileName !== null) {
+            formData.append('fileName', fileName);
         }
 
         const response = await fetch(uploadUrl, {
@@ -253,8 +257,9 @@ export class CabinetApi {
             type,
             prefix,
             metadata: serializedMetadata,
+            updateFile: file !== null,
         });
-        return this._sendBlobUpload('POST', uploadUrl, serializedMetadata, prefix, file);
+        return this._sendBlobUpload('POST', uploadUrl, serializedMetadata, file);
     }
 
     /**
@@ -267,10 +272,14 @@ export class CabinetApi {
      * @param {?string} [options.type] - The blob type (e.g. objectType.getBlobType())
      * @param {object} [options.metadata] - The metadata object to store
      * @param {?File} [options.file] - The file to upload (omitted for metadata-only updates)
+     * @param {?string} [options.fileName] - A new filename (defaults to the uploaded file's name)
      * @returns {Promise<BlobFile>} - The parsed blob file resource
      * @throws {ApiError} If the upload request fails
      */
-    async updateFile(fileId, {type = null, metadata = {}, file = null} = {}) {
+    async updateFile(
+        fileId,
+        {type = null, metadata = {}, file = null, fileName = file?.name ?? null} = {},
+    ) {
         const prefix =
             'fileSource' in metadata && metadata.fileSource === CABINET_FILE_SOURCE
                 ? blobPrefix(metadata)
@@ -281,8 +290,9 @@ export class CabinetApi {
             type,
             prefix,
             metadata: serializedMetadata,
+            updateFile: file !== null || fileName !== null,
         });
-        return this._sendBlobUpload('PATCH', uploadUrl, serializedMetadata, prefix, file);
+        return this._sendBlobUpload('PATCH', uploadUrl, serializedMetadata, file, fileName);
     }
 
     /**

@@ -41,8 +41,10 @@ suite('document save errors', () => {
     test('storage URL permission errors retain HTTP status and Problem Details', async () => {
         const api = new CabinetApi({entryPointUrl: 'https://example.org', auth: {token: 'token'}});
         let requests = 0;
-        globalThis.fetch = () => {
+        let signingRequest;
+        globalThis.fetch = (url, options) => {
             requests++;
+            signingRequest = {url, options};
             return Promise.resolve(
                 new Response(JSON.stringify({title: 'Forbidden', detail: 'No write permission'}), {
                     status: 403,
@@ -51,7 +53,11 @@ suite('document save errors', () => {
         };
 
         try {
-            await api.updateFile('blob-id', {type: 'englMasterApplication', metadata: {}});
+            await api.updateFile('blob-id', {
+                type: 'englMasterApplication',
+                metadata: {},
+                file: new File(['content'], 'document.pdf'),
+            });
             assert.fail('Expected the update to fail');
         } catch (error) {
             assert.instanceOf(error, ApiError);
@@ -59,6 +65,8 @@ suite('document save errors', () => {
             assert.equal(error.detail, 'No write permission');
         }
         assert.equal(requests, 1, 'The PATCH must not run when URL creation fails');
+        assert.equal(new URL(signingRequest.url).searchParams.get('updateFile'), '1');
+        assert.deepEqual(JSON.parse(signingRequest.options.body), {metadata: '{}'});
     });
 
     test('non-JSON API errors reject instead of falling back', async () => {
