@@ -313,9 +313,23 @@ export class CabinetFile extends ScopedElementsMixin(
             }
         } catch (error) {
             if (error instanceof ApiError) {
-                // The upload itself failed; show the specific validation UI.
-                this._handleUploadApiError(error);
-                throw error;
+                // Validation failures require a different PDF, not a retry.
+                if (this._handleUploadApiError(error)) {
+                    return;
+                }
+
+                const i18n = this._i18n;
+                this.documentModalNotification(
+                    i18n.t('cabinet-file.notification-title-save-failed'),
+                    i18n.t('cabinet-file.notification-body-save-failed'),
+                    'danger',
+                );
+                // Keep the entered metadata and allow correcting/retrying the save.
+                if (this.formRef.value) {
+                    this.formRef.value.saving = false;
+                    this.formRef.value.disabled = false;
+                }
+                return;
             }
 
             // Everything else is a failure while polling Typesense for the
@@ -398,8 +412,16 @@ export class CabinetFile extends ScopedElementsMixin(
      * Show the appropriate validation UI for an {@link ApiError} raised while
      * uploading a document to Blob storage.
      * @param {ApiError} error
+     * @returns {boolean} Whether the error was handled as a PDF validation failure
      */
     _handleUploadApiError(error) {
+        const isValidationError =
+            error.errorId === 'verity:create-report-backend-exception' ||
+            error.errorId?.includes('-file-data-file-does-not-validate-against-type') ||
+            error.errorId === 'blob:file-validation-failed';
+        if (!isValidationError) {
+            return false;
+        }
         const validationErrors = this.#documentPdfValidationErrors;
         // if document is too big
         if (error.errorId === 'verity:create-report-backend-exception') {
@@ -425,6 +447,7 @@ export class CabinetFile extends ScopedElementsMixin(
         if (this.formRef.value) {
             this.formRef.value.saving = false;
         }
+        return true;
     }
 
     async scrollDocumentModalToTop() {

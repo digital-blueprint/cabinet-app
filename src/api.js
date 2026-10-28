@@ -187,7 +187,7 @@ export class CabinetApi {
             body: metadata !== null ? JSON.stringify({metadata}) : '{}',
         });
         if (!response.ok) {
-            throw new Error(`Error while creating storage URL: ${response.statusText}`);
+            throw await ApiError.fromResponse(response);
         }
         const url = await response.json();
 
