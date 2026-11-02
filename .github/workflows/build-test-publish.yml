@@ -36,7 +36,7 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version: 26
           check-latest: true
           cache: "npm"
 
@@ -83,7 +83,7 @@ jobs:
 
       - uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version: 26
           check-latest: true
           registry-url: "https://registry.npmjs.org"
           cache: "npm"
