@@ -114,21 +114,24 @@ export class CabinetDocumentStore {
      * @param {object} [options]
      * @param {boolean} [options.currentOnly] - Only return current versions
      * @param {string} [options.sortSpec] - Optional Typesense sort_by string
+     * @param {AbortSignal} [options.signal] - Cancels the version lookup
      * @returns {Promise<Array<DocumentHit>>}
      */
-    async fetchVersions(groupId, {currentOnly = false, sortSpec = undefined} = {}) {
+    async fetchVersions(groupId, {currentOnly = false, sortSpec = undefined, signal} = {}) {
         return /** @type {Promise<Array<DocumentHit>>} */ (
-            this._getTypesense().fetchFileDocumentsByGroupId(groupId, currentOnly, sortSpec)
+            this._getTypesense().fetchFileDocumentsByGroupId(groupId, currentOnly, sortSpec, signal)
         );
     }
 
     /**
      * Download a file from blob storage.
      * @param {string} fileId
+     * @param {object} [options]
+     * @param {AbortSignal} [options.signal] - Cancels the download
      * @returns {Promise<File>}
      */
-    async downloadFile(fileId) {
-        return this._api.downloadFileFromBlob(fileId);
+    async downloadFile(fileId, {signal} = {}) {
+        return this._api.downloadFileFromBlob(fileId, {signal});
     }
 
     // -- Polling primitive ----------------------------------------------------

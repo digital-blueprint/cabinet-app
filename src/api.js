@@ -126,6 +126,7 @@ export class CabinetApi {
      * @param {?string} [options.metadata] - The serialized metadata for a POST or PATCH request
      * @param {boolean} [options.updateFile] - Request permission to change file content or filename
      * @param {object} [options.extraParams] - Additional query parameters
+     * @param {AbortSignal} [options.signal] - Cancels the URL request
      * @returns {Promise<string>} - The blob URL
      */
     async _createBlobUrl(
@@ -138,6 +139,7 @@ export class CabinetApi {
             metadata = null,
             updateFile = false,
             extraParams = {},
+            signal,
         } = {},
     ) {
         // POST creates a new blob and must not carry an identifier, every other
@@ -184,6 +186,7 @@ export class CabinetApi {
         apiUrl.search = new URLSearchParams(params).toString();
 
         let response = await fetch(apiUrl.toString(), {
+            signal,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/ld+json',
@@ -416,10 +419,13 @@ export class CabinetApi {
     /**
      * Load blob item from URL
      * @param {string} url - The blob URL
+     * @param {object} [options]
+     * @param {AbortSignal} [options.signal] - Cancels the blob request
      * @returns {Promise<BlobFile>} - The blob item data
      */
-    async _loadBlobItem(url) {
+    async _loadBlobItem(url, {signal} = {}) {
         const response = await fetch(url, {
+            signal,
             headers: {
                 Authorization: 'Bearer ' + this._element.auth.token,
             },
@@ -435,17 +441,23 @@ export class CabinetApi {
     /**
      * Download a file from blob storage
      * @param {string} fileId - The file identifier
+     * @param {object} [options]
+     * @param {AbortSignal} [options.signal] - Cancels all download requests
      * @returns {Promise<File>} - The downloaded file
      */
-    async downloadFileFromBlob(fileId) {
-        const url = await this._createBlobUrl('GET', {identifier: fileId, includeData: true});
-        let blobItem = await this._loadBlobItem(url);
+    async downloadFileFromBlob(fileId, {signal} = {}) {
+        const url = await this._createBlobUrl('GET', {
+            identifier: fileId,
+            includeData: true,
+            signal,
+        });
+        let blobItem = await this._loadBlobItem(url, {signal});
 
         if (!blobItem.contentUrl) {
             throw new Error('No contentUrl in blob response');
         }
 
-        const res = await fetch(blobItem.contentUrl);
+        const res = await fetch(blobItem.contentUrl, {signal});
         if (!res.ok) {
             throw new Error(`Failed to download file from blob: ${res.statusText}`);
         }

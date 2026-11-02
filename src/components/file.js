@@ -93,6 +93,9 @@ export class CabinetFile extends ScopedElementsMixin(
     /** @type {Array<{status: string, message: string, extraMessage: string}>} */
     statusMessageBlocks = [];
 
+    // Cancels pending loads when the dialog closes or another document opens.
+    #documentLoadController = new AbortController();
+
     constructor() {
         super();
         this.entryPointUrl = '';
@@ -171,6 +174,8 @@ export class CabinetFile extends ScopedElementsMixin(
      * old data is shown by accident
      */
     resetState() {
+        this.#documentLoadController.abort();
+        this.#documentLoadController = new AbortController();
         this.person = {};
         this.documentFile = null;
         this.objectType = null;
@@ -611,88 +616,97 @@ export class CabinetFile extends ScopedElementsMixin(
         this.sendSetPropertyEvent('routing-url', `/document/${encodeURIComponent(hit.id)}`, true);
         const i18n = this._i18n;
         this.resetState();
+        const signal = this.#documentLoadController.signal;
         this.mode = CabinetFile.Modes.VIEW;
         this.fileHitData = hit;
 
-        // Wait until hit data is set and rendering is complete
-        await this.updateComplete;
+        try {
+            // Wait until hit data is set and rendering is complete
+            await this.updateComplete;
+            signal.throwIfAborted();
 
-        // Make sure the file source dialog is closed
-        this.#fileSource.removeAttribute('dialog-open');
+            // Make sure the file source dialog is closed
+            this.#fileSource.removeAttribute('dialog-open');
 
-        const modal = this.#documentModal;
-        if (!modal.isOpen()) {
-            modal.open();
-        }
+            const modal = this.#documentModal;
+            if (!modal.isOpen()) {
+                modal.open();
+            }
 
-        this.state = CabinetFile.States.LOADING_FILE;
+            this.state = CabinetFile.States.LOADING_FILE;
 
-        if (!this.fileHitData) {
-            modal.close();
+            if (!this.fileHitData) {
+                modal.close();
 
-            sendNotification({
-                summary: this._i18n.t('document.document-not-found-summary'),
-                body: this._i18n.t('document.document-not-found-body'),
-                type: 'danger',
-                replaceId: 'document-not-found',
-                timeout: 5,
-            });
+                sendNotification({
+                    summary: this._i18n.t('document.document-not-found-summary'),
+                    body: this._i18n.t('document.document-not-found-body'),
+                    type: 'danger',
+                    replaceId: 'document-not-found',
+                    timeout: 5,
+                });
 
-            return;
-        }
+                return;
+            }
 
-        // Set person from hit
-        this.person = hit.person;
-        this.objectType = hit.objectType;
+            // Set person from hit
+            this.person = hit.person;
+            this.objectType = hit.objectType;
 
-        await this.updateVersions();
+            await this.updateVersions({signal});
+            signal.throwIfAborted();
 
-        // Update deleteAtDateTime based on the fresh hit data
-        const deleteAtTimestamp = hit?.file?.base?.deleteAtTimestamp;
-        if (deleteAtTimestamp) {
-            this.deleteAtDateTime = new Date(deleteAtTimestamp * 1000)
-                .toLocaleString('de-DE', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: false,
-                })
-                .replace(',', i18n.t('cabinet-file.at-time'));
-        } else {
-            this.deleteAtDateTime = '';
-        }
+            // Update deleteAtDateTime based on the fresh hit data
+            const deleteAtTimestamp = hit?.file?.base?.deleteAtTimestamp;
+            if (deleteAtTimestamp) {
+                this.deleteAtDateTime = new Date(deleteAtTimestamp * 1000)
+                    .toLocaleString('de-DE', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false,
+                    })
+                    .replace(',', i18n.t('cabinet-file.at-time'));
+            } else {
+                this.deleteAtDateTime = '';
+            }
 
-        // Wait until hit data is set and rendering is complete
-        await this.updateComplete;
+            // Wait until hit data is set and rendering is complete
+            await this.updateComplete;
+            signal.throwIfAborted();
 
-        if (hit.file) {
-            try {
+            if (hit.file) {
                 // This could throw an exception if the file was deleted in the meantime
-                const file = await this._getDocumentStore().downloadFile(
-                    this.fileHitData.file.base.fileId,
-                );
+                const file = await this._getDocumentStore().downloadFile(hit.file.base.fileId, {
+                    signal,
+                });
+                signal.throwIfAborted();
                 this.state = CabinetFile.States.FILE_LOADED;
 
                 // We need to set the documentFile, so that the PDF viewer will be rendered again
                 this.documentFile = file;
                 await this.updateComplete;
+                signal.throwIfAborted();
 
                 // Show the PDF in the PDF viewer after it was rendered
                 await this.showPdf(file);
 
                 // We need to wait until rendering is complete after this.documentFile has changed
                 await this.updateComplete;
-            } catch {
-                this.documentModalNotification(
-                    this._i18n.t('cabinet-file.notification-title-document-load-failed'),
-                    this._i18n.t('cabinet-file.notification-body-document-load-failed'),
-                    'danger',
-                );
-                this.state = CabinetFile.States.LOADING_FILE_FAILED;
             }
+        } catch {
+            if (signal.aborted) {
+                return;
+            }
+            this.documentModalNotification(
+                this._i18n.t('cabinet-file.notification-title-document-load-failed'),
+                this._i18n.t('cabinet-file.notification-body-document-load-failed'),
+                'danger',
+            );
+            this.state = CabinetFile.States.LOADING_FILE_FAILED;
         }
     }
 
@@ -1419,7 +1433,11 @@ export class CabinetFile extends ScopedElementsMixin(
         `;
     }
 
-    async fetchCurrentVersions() {
+    /**
+     * @param {object} [options]
+     * @param {AbortSignal} [options.signal] - Only supplied for cancellable view loads
+     */
+    async fetchCurrentVersions({signal} = {}) {
         if (this.fileHitData === null) {
             return [];
         }
@@ -1436,9 +1454,11 @@ export class CabinetFile extends ScopedElementsMixin(
             versions = [
                 ...(await this._getDocumentStore().fetchVersions(groupId, {
                     sortSpec: this.cabinetConfig.getSortSpec(this.lang),
+                    signal,
                 })),
             ];
         } catch (error) {
+            signal?.throwIfAborted();
             console.error(error);
             this.documentModalNotification(
                 this._i18n.t('cabinet-file.notification-title-versions-load-failed'),
@@ -1449,8 +1469,17 @@ export class CabinetFile extends ScopedElementsMixin(
         return versions;
     }
 
-    async updateVersions() {
-        this.versions = await this.fetchCurrentVersions();
+    /**
+     * @param {object} [options]
+     * @param {AbortSignal} [options.signal] - Only supplied for cancellable view loads
+     */
+    async updateVersions({signal} = {}) {
+        const dialogSignal = this.#documentLoadController.signal;
+        const versions = await this.fetchCurrentVersions({signal});
+        if (dialogSignal.aborted) {
+            return;
+        }
+        this.versions = versions;
         this.versionsLoaded = true;
     }
 
@@ -2107,10 +2136,14 @@ export class CabinetFile extends ScopedElementsMixin(
      * @param documentFile
      */
     async showPdf(documentFile) {
+        const signal = this.#documentLoadController.signal;
         this.documentFile = documentFile;
 
         // We need to wait until rendering is complete after this.documentFile has changed
         await this.updateComplete;
+        if (signal.aborted) {
+            return;
+        }
 
         const pdfViewer = this.#documentPdfViewer;
         // const pdfViewer = this._('#document-pdf-viewer');

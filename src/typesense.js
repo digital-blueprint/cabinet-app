@@ -86,9 +86,16 @@ export class TypesenseService {
      * @param {number} [per_page] - Number of results per page (default: 10).
      * @param {number} [page] - Page number to fetch (default: 1).
      * @param {string} [sort_by] - Optional Typesense sort_by string.
+     * @param {AbortSignal} [signal] - Cancels the search request.
      * @returns {Promise<Array>} Array of found document objects, or empty array if no results are found.
      */
-    async fetchItemsByFilter(filter_by, per_page = 10, page = 1, sort_by = undefined) {
+    async fetchItemsByFilter(
+        filter_by,
+        per_page = 10,
+        page = 1,
+        sort_by = undefined,
+        signal = undefined,
+    ) {
         let search = {
             collection: this.collectionName,
             q: '*',
@@ -104,7 +111,7 @@ export class TypesenseService {
         };
 
         const response = /** @type {TypesenseMultiSearchResponse} */ (
-            await this.client.multiSearch.perform(searchRequests)
+            await this.client.multiSearch.perform(searchRequests, {}, {abortSignal: signal})
         );
         let result = response.results[0];
 
@@ -135,9 +142,15 @@ export class TypesenseService {
      * @param {string} groupId
      * @param {boolean} [isCurrentOnly]
      * @param {string} [sort_by] - Optional Typesense sort_by string.
+     * @param {AbortSignal} [signal] - Cancels the version lookup.
      * @returns {Promise<Array<object>>}
      */
-    async fetchFileDocumentsByGroupId(groupId, isCurrentOnly = false, sort_by = undefined) {
+    async fetchFileDocumentsByGroupId(
+        groupId,
+        isCurrentOnly = false,
+        sort_by = undefined,
+        signal = undefined,
+    ) {
         if (!groupId) {
             throw new Error('groupId is required');
         }
@@ -150,6 +163,6 @@ export class TypesenseService {
             filter += ' && base.isCurrent:=true';
         }
 
-        return await this.fetchItemsByFilter(filter, 10, 1, sort_by);
+        return await this.fetchItemsByFilter(filter, 10, 1, sort_by, signal);
     }
 }
