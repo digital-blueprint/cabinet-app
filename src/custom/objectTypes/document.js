@@ -238,8 +238,8 @@ export class BaseDocumentHitElement extends BaseHitElement {
 
         return html`
             <span>
-                ${this._i18nCustom.t('custom:hitbox.study-field')}: ${studyField.key} /
-                ${this.lang === 'de' ? studyField.name : studyField.nameEn}
+                ${this._i18nCustom.t('custom:hitbox.study-field')}: ${studyField.key}
+                (${this.lang === 'de' ? studyField.name : studyField.nameEn})
             </span>
         `;
     }

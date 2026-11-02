@@ -458,7 +458,7 @@ export class BaseFormElement extends ScopedElementsMixin(CustomLitElement) {
 
         if (studies) {
             for (const study of studies) {
-                studyFields[study.key] = `${study.key} / ${study.name}`;
+                studyFields[study.key] = `${study.key} (${study.name})`;
             }
         }
 
@@ -826,7 +826,7 @@ export class BaseViewElement extends ScopedElementsMixin(CustomLitElement) {
 
         for (const study of studies) {
             if (study.key === key) {
-                return `${study.key} / ${study.name}`;
+                return `${study.key} (${study.name})`;
             }
         }
 

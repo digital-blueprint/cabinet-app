@@ -143,7 +143,8 @@ export async function generateExportPersonPdf(i18n, hit, withInternalData = fals
                 head: [
                     [
                         {
-                            content: displayValue(study.key) + ' / ' + displayValue(study.name),
+                            content:
+                                displayValue(study.key) + ' (' + displayValue(study.name) + ')',
                             colSpan: 2,
                         },
                     ],
