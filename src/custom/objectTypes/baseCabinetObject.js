@@ -8,7 +8,7 @@ import {CabinetApi} from '../../api.js';
 export class BaseCabinetObject extends BaseObject {}
 
 export class BaseCabinetFormElement extends BaseFormElement {
-    getCommonFormElements() {
+    getCommonFormElements({studyFieldDisabled = false, includeSemester = true} = {}) {
         const fileCommon = getDocumentHit(this._getData()).file.base;
         const additionalType = this.additionalType || fileCommon.additionalType.key;
 
@@ -43,7 +43,7 @@ export class BaseCabinetFormElement extends BaseFormElement {
                 .items=${this.getStudyFields()}
                 .value=${fileCommon.studyField.key}
                 required
-                ?disabled=${this.disabled}
+                ?disabled=${this.disabled || studyFieldDisabled}
                 @change=${updateField('studyField.key')}></dbp-form-enum-element>
 
             <dbp-form-enum-element
@@ -58,15 +58,21 @@ export class BaseCabinetFormElement extends BaseFormElement {
                 ?disabled=${this.disabled}
                 @change=${updateField('disposalType')}></dbp-form-enum-element>
 
-            <dbp-form-enum-element
-                subscribe="lang"
-                name="semester"
-                label=${this._i18nCustom.t('custom:doc-modal-semester')}
-                .items=${getSemesters()}
-                .value=${fileCommon.semester}
-                required
-                ?disabled=${this.disabled}
-                @change=${updateField('semester')}></dbp-form-enum-element>
+            ${
+                includeSemester
+                    ? html`
+                          <dbp-form-enum-element
+                              subscribe="lang"
+                              name="semester"
+                              label=${this._i18nCustom.t('custom:doc-modal-semester')}
+                              .items=${getSemesters()}
+                              .value=${fileCommon.semester}
+                              required
+                              ?disabled=${this.disabled}
+                              @change=${updateField('semester')}></dbp-form-enum-element>
+                      `
+                    : ''
+            }
 
             <dbp-form-enum-element
                 subscribe="lang"
@@ -96,7 +102,7 @@ export class BaseCabinetFormElement extends BaseFormElement {
 }
 
 export class BaseCabinetViewElement extends BaseViewElement {
-    _getCommonViewElements() {
+    _getCommonViewElements({includeSemester = true} = {}) {
         const baseData = this.data?.file?.base || {};
         let api = new CabinetApi(this);
         let userFullNamePromise = baseData.lastModifiedBy
@@ -125,10 +131,16 @@ export class BaseCabinetViewElement extends BaseViewElement {
                     baseData.studyField.key,
                 )}></dbp-form-string-view>
 
-            <dbp-form-string-view
-                subscribe="lang"
-                label=${this._i18nCustom.t('custom:doc-modal-semester')}
-                .value=${baseData.semester || '–'}></dbp-form-string-view>
+            ${
+                includeSemester
+                    ? html`
+                          <dbp-form-string-view
+                              subscribe="lang"
+                              label=${this._i18nCustom.t('custom:doc-modal-semester')}
+                              .value=${baseData.semester || '–'}></dbp-form-string-view>
+                      `
+                    : ''
+            }
 
             <dbp-form-enum-view
                 subscribe="lang"

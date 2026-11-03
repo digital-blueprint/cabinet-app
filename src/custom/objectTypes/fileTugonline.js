@@ -1,5 +1,6 @@
 import {html} from 'lit';
-import {BaseObject, BaseFormElement, BaseViewElement} from './baseObject.js';
+import {BaseObject} from './baseObject.js';
+import {BaseCabinetFormElement, BaseCabinetViewElement} from './baseCabinetObject.js';
 import {getDocumentHit, getTugonline} from './schema.js';
 import {createInstance} from '../i18n.js';
 import {DbpDateTimeElement, DbpDateTimeView} from '@dbp-toolkit/form-elements';
@@ -72,7 +73,7 @@ const DEFAULT_TUGONLINE = {
     },
 };
 
-class CabinetFormElement extends BaseFormElement {
+class CabinetFormElement extends BaseCabinetFormElement {
     static getAdditionalTypes() {
         return ADDITIONAL_TYPES;
     }
@@ -91,7 +92,6 @@ class CabinetFormElement extends BaseFormElement {
     render() {
         let hit = getDocumentHit(this._getData());
         let tugonline = getTugonline(hit);
-        let fileCommon = hit.file.base;
 
         return html`
             <form>
@@ -103,36 +103,15 @@ class CabinetFormElement extends BaseFormElement {
                     required
                     ?disabled=${this.disabled || this.mode === 'edit'}></dbp-form-datetime-element>
 
-                <dbp-form-string-element
-                    subscribe="lang"
-                    name="subjectOf"
-                    label=${this._i18nCustom.t('custom:doc-modal-subject-of')}
-                    description=${this._i18nCustom.t('custom:doc-modal-subject-of-description', {
-                        id: '987654-AB/2023',
-                    })}
-                    .value=${fileCommon.subjectOf || ''}
-                    ?disabled=${this.disabled}
-                    @change=${(e) => {
-                        fileCommon.subjectOf = e.detail?.value ?? e.target?.value;
-                    }}></dbp-form-string-element>
-
-                <dbp-form-string-element
-                    subscribe="lang"
-                    name="comment"
-                    label=${this._i18nCustom.t('custom:doc-modal-comment')}
-                    rows="5"
-                    .value=${fileCommon.comment || ''}
-                    ?disabled=${this.disabled}
-                    @change=${(e) => {
-                        fileCommon.comment = e.detail?.value ?? e.target?.value;
-                    }}></dbp-form-string-element>
-
                 <input
                     type="hidden"
                     name="fileSourceId"
                     .value=${hit.file.base.fileSourceId || ''} />
 
-                ${this.getCommonFormElements({studyFieldDisabled: this.mode === 'edit'})}
+                ${this.getCommonFormElements({
+                    studyFieldDisabled: this.mode === 'edit',
+                    includeSemester: false,
+                })}
             </form>
         `;
     }
@@ -161,7 +140,7 @@ class CabinetHitElement extends BaseDocumentHitElement {
     }
 }
 
-class CabinetViewElement extends BaseViewElement {
+class CabinetViewElement extends BaseCabinetViewElement {
     constructor() {
         super();
         this.setAdditionalTypes(ADDITIONAL_TYPES);
@@ -177,21 +156,16 @@ class CabinetViewElement extends BaseViewElement {
     _getCustomViewElements() {
         let hit = getDocumentHit(this.data);
         let tugonline = getTugonline(hit);
-        let fileCommon = hit.file.base;
 
         return html`
             <dbp-form-datetime-view
                 subscribe="lang"
                 label=${this._i18nCustom.t('custom:doc-modal-issue-date')}
                 .value=${tugonline.dateCreated ? new Date(tugonline.dateCreated) : ''}></dbp-form-datetime-view>
-            <dbp-form-string-view
-                subscribe="lang"
-                label=${this._i18nCustom.t('custom:doc-modal-subject-of')}
-                .value=${fileCommon.subjectOf || '–'}></dbp-form-string-view>
-            <dbp-form-string-view
-                subscribe="lang"
-                label=${this._i18nCustom.t('custom:doc-modal-comment')}
-                .value=${fileCommon.comment || '–'}></dbp-form-string-view>
         `;
+    }
+
+    _getCommonViewElements() {
+        return super._getCommonViewElements({includeSemester: false});
     }
 }
