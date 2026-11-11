@@ -414,6 +414,7 @@ Dependencies:
                             rename: pkg.internalName + '.webmanifest',
                         },
                         {src: `${assetsPath}/silent-check-sso.html`, dest: 'dist'},
+                        {src: `${assetsPath}/dbp-cabinet-403.html`, dest: 'dist'},
                         {
                             src: await getPackagePath('@tugraz/font-source-sans-pro', 'files'),
                             dest: 'dist/' + (await getDistPath(pkg.name, 'fonts')),
